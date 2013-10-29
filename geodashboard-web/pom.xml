@@ -1,0 +1,167 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.runwaysdk</groupId>
+		<artifactId>geodashboard</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>geodashboard-web</artifactId>
+	<packaging>war</packaging>
+
+	<name>Geo dashboard Web</name>
+	<description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>geodashboard-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>geodashboard-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>geodashboard-server</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<!-- Just for convenience, this stops us from having to add the version 
+			when we hit our webapp. -->
+		<finalName>geodashboard</finalName>
+
+		<!-- This tells maven to resolve variables in our properties files. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<packagingExcludes>
+						WEB-INF/lib/geodashboard-common*.jar,
+						WEB-INF/lib/geodashboard-client*.jar,
+						WEB-INF/lib/geodashboard-server*.jar,
+						WEB-INF/lib/catalina*.jar,
+						WEB-INF/lib/servlet-api*.jar,
+						WEB-INF/lib/annotations-api*.jar
+					</packagingExcludes>
+					<webResources>
+						<resource>
+							<directory>src/main/resources</directory>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-common</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<excludes>**/*.java,**/*.properties</excludes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-client</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<excludes>**/*.java,**/*.properties</excludes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-server</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<excludes>**/*.java,**/*.properties</excludes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-common</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+									<includes>**/*.java</includes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-client</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+									<includes>**/*.java</includes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-server</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+									<includes>**/*.java</includes>
+								</artifactItem>
+							</artifactItems>
+							<includes>**/*</includes>
+							<excludes></excludes>
+							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/webapp/WEB-INF/source</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

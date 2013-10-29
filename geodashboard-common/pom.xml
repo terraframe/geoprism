@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.runwaysdk</groupId>
+		<artifactId>geodashboard</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>geodashboard-common</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Geo dashboard Common</name>
+	<description>Common components, used in both Server and Client.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>runwaysdk-gis-common</artifactId>
+			<version>1.8.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<!-- This tells maven to resolve variables in our properties files. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/main/java</directory>
+									<targetPath>source/common/stub</targetPath>
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>src/main/java-gen/stub</directory>
+									<targetPath>source/common/stub</targetPath>
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>src/main/java-gen/base</directory>
+									<targetPath>source/common/base</targetPath>
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
