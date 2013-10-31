@@ -16,6 +16,7 @@
 		<module>geodashboard-common</module>
 		<module>geodashboard-client</module>
 		<module>geodashboard-web</module>
+		<module>../ideiq</module>
 	</modules>
 
 	<properties>
