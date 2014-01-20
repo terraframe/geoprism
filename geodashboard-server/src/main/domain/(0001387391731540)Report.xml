@@ -1,0 +1,138 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/version_gis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <enumerationMaster name="com.runwaysdk.geodashboard.report.OutputFormatMaster" label="Output format master" generateController="false" />
+
+      <object key="HTML" type="com.runwaysdk.geodashboard.report.OutputFormatMaster">
+        <attribute name="enumName" value="HTML" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="HTML" />
+        </attributeStruct>
+      </object>
+
+      <object key="PDF" type="com.runwaysdk.geodashboard.report.OutputFormatMaster">
+        <attribute name="enumName" value="PDF" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="PDF" />
+        </attributeStruct>
+      </object>
+
+      <mdEnumeration name="com.runwaysdk.geodashboard.report.OutputFormat" type="com.runwaysdk.geodashboard.report.OutputFormatMaster" label="Output format">
+        <includeAll />
+      </mdEnumeration>
+      
+      <mdView name="com.runwaysdk.geodashboard.report.ReportParameter" label="Report parameter">
+        <attributes>
+          <text name="parameterName" label="Parameter name" required="true"/>
+          <text name="parameterValue" label="Parameter value"/>
+        </attributes>
+      </mdView>
+
+      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem" label="Report item" generateController="true">
+        <attributes>
+          <file name="design" label="Report design" required="true" />
+          <file name="document" label="Report document" />
+          <char name="reportName" label="Report name" required="true" size="255" />
+          <char name="outputFormatIndex" label="Output format" required="true" size="255" />
+          <localChar name="reportLabel" label="Report label" required="true" size="255" />
+          <enumeration name="outputFormat" label="Output format" required="true" selectMultiple="false" type="com.runwaysdk.geodashboard.report.OutputFormat" />
+          <boolean name="cacheDocument" label="Use report document?" required="true" positiveLabel="Yes" negativeLabel="No" defaultValue="false" />
+        </attributes>
+        <mdMethod name="applyWithFile" label="Apply with file" returnType="void" static="false">
+          <mdParameter name="fileStream" label="fileStream" order="0" type="java.io.InputStream" />
+        </mdMethod>
+        <mdMethod name="getDesignAsStream" label="Get design as stream" returnType="java.io.InputStream" static="false" />
+        <mdMethod name="getDocumentAsStream" label="Get document as stream" returnType="java.io.InputStream" static="false" />
+        <mdMethod name="render" label="Render" returnType="void" static="false">
+          <mdParameter name="outputStream" label="outputStream" order="0" type="java.io.OutputStream" />
+          <mdParameter name="parameters" label="parameters" order="1" type="com.runwaysdk.geodashboard.report.ReportParameter[]" />
+          <mdParameter name="baseURL" label="Base URL" order="2" type="java.lang.String" />
+        </mdMethod>
+        <mdMethod name="validatePermissions" label="Validate permissions" returnType="void" static="false" />
+        <mdMethod name="getURL" label="Get url" returnType="java.lang.String" static="false" />
+      </mdBusiness>
+      
+      <mdIndex type="com.runwaysdk.geodashboard.report.ReportItem" label="Report name and format index" active="true" unique="true">
+        <attribute name="reportName" indexOrder="0"/>
+        <attribute name="outputFormatIndex" indexOrder="1"/>
+      </mdIndex>      
+
+      <mdException name="com.runwaysdk.geodashboard.report.ReportItemException" label="Report item exception" message="Report must have a report design document with the .rptdesign extension" />
+      <mdException name="com.runwaysdk.geodashboard.report.MissingReportDesignException" label="Missing report design" message="Report design does not exist" />
+      <mdException name="com.runwaysdk.geodashboard.report.MissingReportDocumentException" label="Report item exception" message="The cached report document does not exist.  Please make sure you have set up the scheduler to generate the report document." />
+      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedOutputFormatException" label="Unsupported output format exception" message="Output format [{outputFormat}] is not supported" >
+        <attributes>
+          <text name="outputFormat" label="Output format" />
+        </attributes>        
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.report.ReportRenderException" label="Report render exception" message="An error has occured while rendering the report: {errorMessage}">
+        <attributes>
+          <text name="errorMessage" label="Error message" />
+        </attributes>
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.report.UnknownReportException" label="Unknown report exception" message="Unable to find a report in the system with the report name [{reportName}] and the output format [{format}]">
+        <attributes>
+          <text name="reportName" label="Report name"/>
+          <text name="format" label="format"/>
+        </attributes>
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.report.MultipleReportException" label="Multiple report exception" message="Multiple drill through reports were found with the report name [{reportName}] and the output format [{format}]">
+        <attributes>
+          <text name="reportName" label="Report name"/>
+          <text name="format" label="format"/>
+        </attributes>
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException" label="Unsupported drill through format exception" message="The drill through report format [{outputFormat}] is not supported." >
+        <attributes>
+          <text name="outputFormat" label="Output format" />
+        </attributes>        
+      </mdException>      
+      
+      <mdException name="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" label="Unknown report exception" message="Invalid drill through definition.  Has sub report has not been defined." />
+    </create>
+    <update>
+      <mdController name="com.runwaysdk.geodashboard.report.ReportItemController">        
+        <mdAction name="create">
+          <create>
+            <mdParameter name="design" label="Report design" order="1" type="com.runwaysdk.controller.MultipartFileParameter" />
+          </create>
+        </mdAction>
+        <mdAction name="update">
+          <create>
+            <mdParameter name="design" label="Report design" order="1" type="com.runwaysdk.controller.MultipartFileParameter" />
+          </create>
+        </mdAction>
+        <create>
+          <mdAction name="generate" isPost="false" label="Generate">
+            <mdParameter name="report" label="report" order="0" type="java.lang.String" />
+          </mdAction>
+        </create>                      
+      </mdController>
+    </update>
+    <permissions>
+      <method
+        methodName="render"
+        type="com.runwaysdk.geodashboard.report.ReportItem">
+        <assignedRole
+          roleName="Administrator" />
+      </method>
+    </permissions>    
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.report.MultipleReportException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.UnknownReportException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.MissingReportDesignException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.MissingReportDocumentException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.UnsupportedOutputFormatException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.ReportRenderException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.ReportItemException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.report.ReportItem" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.report.ReportParameter" type="com.runwaysdk.system.metadata.MdView" />
+      <object key="com.runwaysdk.geodashboard.report.OutputFormat" type="com.runwaysdk.system.metadata.MdEnumeration" />
+      <object key="com.runwaysdk.geodashboard.report.OutputFormatMaster" type="com.runwaysdk.system.metadata.MdBusiness" />
+    </delete>
+  </undoIt>
+</version>

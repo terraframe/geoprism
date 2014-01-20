@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK GIS(tm).
+
+    Runway SDK GIS(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK GIS(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK GIS(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:redefine schemaLocation="datatype.xsd"> <!-- jar:runwaysdk-server-0.0.2-SNAPSHOT.jar!: -->
+  
+  <!-- GIS Module -->
+  
+    <!--A list of all possible attributes-->
+    <xs:complexType name="attributes">
+      <xs:complexContent>
+        <xs:extension base="attributes">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="point" type="point" />
+            <xs:element name="linestring" type="linestring" />
+            <xs:element name="polygon" type="polygon" />
+            <xs:element name="multipoint" type="multipoint" />
+            <xs:element name="multilinestring" type="multilinestring" />
+            <xs:element name="multipolygon" type="multipolygon" />
+          </xs:choice>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+    </xs:redefine>
+  
+   <!--Common Attributes of all attributes-->
+  <xs:attributeGroup name="attributeSpatial">
+    <xs:attributeGroup ref="attribute" />
+    <xs:attribute name="srid" type="xs:integer" use="required" />
+    <xs:attribute name="dimension" type="xs:integer" use="required" />
+  </xs:attributeGroup>
+  
+  <xs:complexType name="point">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType>
+  
+  <xs:complexType name="linestring">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType>
+  
+  <xs:complexType name="polygon">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType>
+  
+  <xs:complexType name="multipoint">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType>
+
+  <xs:complexType name="multilinestring">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType>
+
+  <xs:complexType name="multipolygon">
+    <xs:attributeGroup ref="attributeSpatial" />
+  </xs:complexType> 
+  
+</xs:schema>
