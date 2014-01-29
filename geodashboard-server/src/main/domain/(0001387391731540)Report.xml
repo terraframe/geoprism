@@ -1,4 +1,4 @@
-<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/version_gis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version_gis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
       <enumerationMaster name="com.runwaysdk.geodashboard.report.OutputFormatMaster" label="Output format master" generateController="false" />

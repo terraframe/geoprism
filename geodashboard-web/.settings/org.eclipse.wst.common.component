@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="geodashboard-web">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
+        <dependent-module archiveName="runwaysdk-gis-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-common/runwaysdk-gis-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-gis-client-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-client/runwaysdk-gis-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-gis-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-server/runwaysdk-gis-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="geodashboard"/>
+        <property name="java-output-path" value="/geodashboard-web/target/classes"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/lib/geodashboard-common*.jar,WEB-INF/lib/geodashboard-client*.jar,WEB-INF/lib/geodashboard-server*.jar,WEB-INF/lib/catalina*.jar,WEB-INF/lib/servlet-api*.jar,WEB-INF/lib/annotations-api*.jar"/>
+    </wb-module>
+</project-modules>
