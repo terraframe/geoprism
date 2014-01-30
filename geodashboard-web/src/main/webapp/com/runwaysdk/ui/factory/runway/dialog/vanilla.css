@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-runway-Overlay.com-runwaysdk-ui-factory-runway-Dialog {     
+  background-color: Moccasin;
+  backgroundColor: Moccasin;
+}
+
+.com-runwaysdk-ui-factory-runway-Dialog .title {
+  height: 25px;
+  backgroundColor: Peru;
+  background-color: Peru;
+  font: bold 120% 'trebuchet ms',helvetica,sans-serif;
+  color: Moccasin;
+}
+
+.com-runwaysdk-ui-factory-runway-Dialog .button {
+  color:#050; 
+   font: bold 84% 'trebuchet ms',helvetica,sans-serif; 
+   background-color:#fed; 
+   border: 1px solid; 
+   border-color: #696 #363 #363 #696; 
+   filter:progid:DXImageTransform.Microsoft.Gradient 
+   (GradientType=0,StartColorStr='#ffffffff',EndColorStr='#ffeeddaa');
+}
+
+.com-runwaysdk-ui-factory-runway-Dialog .closeButton {
+   background-color: Moccasin;
+   border: 1px solid;
+   border-color: #696 #363 #363 #696;
+   font: 68% arial,helvetica,clean,sans-serif;
+   filter:progid:DXImageTransform.Microsoft.Gradient 
+   (GradientType=0,StartColorStr='#ffffffff',EndColorStr='#ffeeddaa');
+}
+
+.com-runwaysdk-ui-factory-runway-Dialog .content {
+  color: Salmon;
+}

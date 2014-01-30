@@ -1,0 +1,119 @@
+/**
+ * Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-runway-datatable-DataTable {
+	margin: 0 auto;
+  clear: both;
+  width: 100%;
+  font-family: Verdana,Arial,sans-serif;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable table {
+	margin: 0 auto;
+  clear: both;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable caption {
+  width: 95%;
+  float: center;
+  font-weight: bold;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageLenDiv {
+  float: left;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .searchBar {
+	float: right;
+	txt-align: right;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .showingLabel {
+  padding-top: 3px;
+  clear: both;
+  float: left;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageButtons {
+  float: right;
+  text-align: right;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.disabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.enabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.disabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.enabled {
+  height: 19px;
+  float: left;
+  cursor: pointer;
+  *cursor: hand;
+  color: #111 !important;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.disabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.disabled {
+  color: #666 !important;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.disabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.enabled {
+  padding-left: 23px;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.disabled,
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.enabled {
+  padding-right: 23px;
+  margin-left: 10px;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.disabled {
+  background: url('./images/back_disabled.png') no-repeat top left;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pagePrevious.enabled {
+  background: url('./images/back_enabled.png') no-repeat top left;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.disabled {
+  background: url('./images/forward_disabled.png') no-repeat top right;
+}
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .pageNext.enabled {
+  background: url('./images/forward_enabled.png') no-repeat top right;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable th {
+	padding: 3px 0px 3px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid black;
+  font-weight: bold;
+  background: url('./images/sort_both.png') no-repeat center right;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable.headerrow {
+	padding: 3px 18px 3px 10px;
+  border-bottom: 1px solid black;
+  font-weight: bold;
+  cursor: pointer;
+  *cursor: hand;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .oddrow {
+	background-color: #E2E4FF;
+}
+
+.com-runwaysdk-ui-factory-runway-datatable-DataTable .evenrow {
+  background-color: white;
+}

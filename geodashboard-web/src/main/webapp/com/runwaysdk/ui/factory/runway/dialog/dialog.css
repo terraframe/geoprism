@@ -1,0 +1,74 @@
+/**
+ * Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-runway-Overlay.com-runwaysdk-ui-factory-runway-dialog-Dialog {     
+	background-color: white;
+  backgroundColor: white;
+  border: 1px solid black;
+  margin: 0px;
+  padding: 0px;
+  display: block;
+  width: 300px;
+  height: auto;
+}
+
+.com-runwaysdk-ui-factory-runway-dialog-Dialog .title {
+	width: 100%;
+  backgroundColor: gray;
+  background-color: gray;
+  cursor: move;
+  border-bottom: 1px solid black;
+  margin: 0px;
+  padding: 0px;
+  display: block;
+  font-size: 21px;
+  text-align: center;
+  color: white;
+}
+
+.com-runwaysdk-ui-factory-runway-dialog-Dialog .closeButton {
+  float: right;
+  cssFloat: right;     /* Firefox */
+  font: 68% arial,helvetica,clean,sans-serif;
+}
+
+.com-runwaysdk-ui-factory-runway-dialog-Dialog .content {    
+  display: block;
+  margin: 5px;
+  padding: 5px;
+}
+
+/* This is the div containing all our buttons. */
+.com-runwaysdk-ui-factory-runway-dialog-Dialog .buttons {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  left: 0px;
+}
+
+/* This is each individual button in the div. */
+.com-runwaysdk-ui-factory-runway-dialog-Dialog .button {
+  float: right;
+  cssFloat: right;    /* Firefox */
+  position: relative;
+  /* height: 20px; */
+  margin: 5px;
+  padding: 5px;
+  display: inline-block;
+}

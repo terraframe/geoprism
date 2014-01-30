@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-runway-Overlay {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  min-width: 50px;
+  min-height: 50px;
+  width: 300px;
+  height: 200px;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: #EEE;
+}
+
+.com-runwaysdk-ui-factory-runway-Widget.overlay-dimmer {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  backgroundColor: #000000;
+  background-color: #000000;
+  filter: alpha(opacity=60);
+  opacity: 0.6;
+}
