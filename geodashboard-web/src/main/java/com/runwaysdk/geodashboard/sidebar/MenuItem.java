@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard.menu;
+package com.runwaysdk.geodashboard.sidebar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,10 @@ public class MenuItem
   
   public void addChild(MenuItem child) {
     this.children.add(child);
+  }
+  
+  public void addChildren(ArrayList<MenuItem> children) {
+    this.children.addAll(children);
   }
   
   public String getName() {

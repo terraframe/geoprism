@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Account Management",
+    "children": [
+      {
+        "name": "User Accounts",
+        "uri": "useraccounts.jsp"
+      },
+      {
+        "name": "Roles",
+        "uri": "roles.jsp"
+      }
+    ]
+  },
+  {
+    "name": "Datatype Management",
+    "children": [
+      {
+        "name": "Term Ontology Administration",
+        "uri": "termAdmin.jsp"
+      },
+      {
+        "name": "Data Browser",
+        "uri": "dataBrowser.jsp"
+      }
+    ]
+  },
+  {
+    "name": "Sales Force Import Manager",
+    "uri": "importer.jsp"
+  }
+]

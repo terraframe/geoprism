@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard.menu;
+package com.runwaysdk.geodashboard.sidebar;
 
 import java.io.IOException;
 import java.util.List;

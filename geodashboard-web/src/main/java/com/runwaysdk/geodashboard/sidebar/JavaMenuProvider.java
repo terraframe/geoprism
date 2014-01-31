@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard.menu;
+package com.runwaysdk.geodashboard.sidebar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class JavaMenuProvider
 {
 
-  public List<MenuItem> getMenuItems()
+  public List<MenuItem> getMenu()
   {
     ArrayList<MenuItem> items = new ArrayList<MenuItem>();
     

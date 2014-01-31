@@ -21,9 +21,9 @@
 
 <%@page import="java.util.List" %>
 <%@page import="com.runwaysdk.session.Session" %>
-<%@page import="com.runwaysdk.geodashboard.menu.JavaMenuProvider" %>
-<%@page import="com.runwaysdk.geodashboard.menu.MenuItem" %>
-<%@page import="com.runwaysdk.geodashboard.menu.ActivePageWriter" %>
+<%@page import="com.runwaysdk.geodashboard.sidebar.JSONMenuProvider" %>
+<%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem" %>
+<%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter" %>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -70,7 +70,7 @@
 	<nav class="aside-nav">
     <ul>
       <% 
-      List<MenuItem> items = new JavaMenuProvider().getMenuItems();
+      List<MenuItem> items = new JSONMenuProvider().getMenu();
       
       int num = 100;
       

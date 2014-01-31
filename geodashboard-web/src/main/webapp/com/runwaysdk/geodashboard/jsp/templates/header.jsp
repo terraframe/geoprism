@@ -76,8 +76,6 @@
   <!-- main container of all the page elements -->
   <div id="wrapper">
     <section id="main">
-    <!-- header of the page -->
-      <header id="header">
         <!-- main navigation of the page -->
         <!--
         <nav id="nav">
