@@ -563,8 +563,11 @@ form legend{
 	color:#b9b9b9;
 	outline:0;
 }
-.links-list .active a,
-.widget a:hover{color:#00bfff;}
+div .aside-nav a.blueactive,
+a.blueactive,
+.widget a:hover{
+	color:#00bfff;
+}
 .links-list{
 	padding:0;	margin:0;	list-style:none;
 }

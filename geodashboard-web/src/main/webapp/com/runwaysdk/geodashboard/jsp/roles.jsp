@@ -19,20 +19,10 @@
 
 --%>
 
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
-<%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
-%>
+<jsp:include page="./templates/header.jsp"></jsp:include>
 
-<!-- Begin footer -->
-    </section> 
+<header id="header">
+  <h1>Roles</h1>
+</header>
 
-<jsp:include page="./sidebar.jsp"></jsp:include>
-    
-  </div> <!-- end wrapper -->
-  <!-- allow a user to go to the top of the page -->
-  <div class="skip">
-    <a href="#wrapper">Back to top</a>
-  </div>
-</body>
-</html>
+<jsp:include page="./templates/footer.jsp"></jsp:include>

@@ -83,6 +83,57 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>geodash-cargo-redeploy</id>
+      <activation>
+        <property>
+          <name>geodash-cargo-redeploy</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.4.2</version>
+            <executions>
+              <execution>
+                <id>geodash-cargo-redeploy</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>redeploy</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <container>
+                <containerId>tomcat6x</containerId>
+                <zipUrlInstaller>
+                  <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.zip</url>
+                </zipUrlInstaller>
+                <dependencies>
+                  <dependency>
+                    <groupId>com.runwaysdk</groupId>
+                    <artifactId>runwaysdk-tomcat6cl</artifactId>
+                  </dependency>
+                </dependencies>
+              </container>
+              <configuration>
+                <properties>
+                  <cargo.servlet.port>8080</cargo.servlet.port>
+                  <cargo.jvmargs>
+                    -Xdebug
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+                    -Xnoagent
+                    -Djava.compiler=NONE
+                  </cargo.jvmargs>
+                </properties>
+              </configuration>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 	<build>

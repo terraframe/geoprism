@@ -21,17 +21,6 @@
 <jsp:include page="./templates/header.jsp"></jsp:include>
 
 <header id="header">
-  <!-- main navigation of the page -->
-  <!--
-  <nav id="nav">
-    <ul>
-      <li><a href="#">Action</a></li>
-      <li><a href="#">Action</a></li>
-      <li><a href="#">Action</a></li>
-      <li><a href="#">Action</a></li>
-    </ul>
-  </nav>
-  -->
   <h1>User Accounts</h1>
 </header>
 
