@@ -45,8 +45,8 @@
 	  }
 	  %></h3>
 	  <ul class="links-list">
-	    <li><a href="#">Log out</a></li>
-	    <% writer.writeLiA("#", "Account"); %>
+	    <% writer.writeLiA("Log out", "session/logout"); %>
+	    <% writer.writeLiA("Account", "#"); %>
 	    <li><a href="#" class="link-viewer">Dashboard Viewer</a></li>
 	  </ul>
 	</div>
@@ -54,14 +54,14 @@
 	<div class="widget">
 	  <h3 class="marked">Manage Dashboards</h3>
 	  <ul class="links-list">
-	    <% writer.writeLiA("#", "Annual Imunization Data"); %>
-	    <% writer.writeLiA("com/runwaysdk/geodashboard/jsp/index.jsp", "Q4 Sales Engagement"); %>
+	    <% writer.writeLiA("Annual Imunization Data", "#"); %>
+	    <% writer.writeLiA("Q4 Sales Engagement", ""); %>
 	    <!-- slide block -->
 	    <li><a data-toggle="collapse" href="#collapse3">New Dashboard <span class="hidden">collapse3</span></a>
 	      <ul id="collapse3" class="panel-collapse collapse">
-	        <% writer.writeLiA("#", "Q4 Sales Leads"); %>
-	        <% writer.writeLiA("#", "Regional Marketing Programs"); %>
-	        <% writer.writeLiA("#", "New Dashboard"); %>
+	        <% writer.writeLiA("Q4 Sales Leads", "#"); %>
+	        <% writer.writeLiA("Regional Marketing Programs", "#"); %>
+	        <% writer.writeLiA("New Dashboard", "#"); %>
 	      </ul>
 	    </li>
 	  </ul>
@@ -79,7 +79,7 @@
           out.print("<li><a data-toggle=\"collapse\" href=\"#collapse" + num + "\">" + item.getName() + "</a>");
           out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse ");
           
-          if (writer.isActive(item)) {
+          if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
             out.print("in");
           }
           else {
@@ -91,7 +91,7 @@
           
           List<MenuItem> children = item.getChildren();
           for (MenuItem child : children) {
-            writer.writeLiA(child.getURL(), child.getName());
+            writer.writeLiA(child.getName(), child.getURL());
           }
           
           out.print("</ul>");
@@ -100,7 +100,7 @@
           
         }
         else {
-          writer.writeLiA(item.getURL(), item.getName());
+          writer.writeLiA(item.getName(), item.getURL());
         }
         
         num++;

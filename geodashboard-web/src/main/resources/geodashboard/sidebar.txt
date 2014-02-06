@@ -4,11 +4,11 @@
     "children": [
       {
         "name": "User Accounts",
-        "uri": "useraccounts.jsp"
+        "uri": "admin/users"
       },
       {
         "name": "Roles",
-        "uri": "roles.jsp"
+        "uri": "admin/roles"
       }
     ]
   },

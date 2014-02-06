@@ -27,14 +27,12 @@ public class JSONMenuProvider
   public ArrayList<MenuItem> toMenu(JSONArray array) throws JSONException {
     ArrayList<MenuItem> menu = new ArrayList<MenuItem>();
     
-    String jspDir = "com/runwaysdk/geodashboard/jsp/";
-    
     for (int i = 0; i < array.length(); ++i) {
       JSONObject item = array.getJSONObject(i);
       
       String uri = null;
       if (item.has("uri")) {
-        uri = jspDir + item.getString("uri");
+        uri = item.getString("uri");
       }
       
       MenuItem parent = new MenuItem(item.getString("name"), uri);

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<mappings>
+  <map uri="" redirect="/com/runwaysdk/geodashboard/jsp/index.jsp"/>
+
+  <map uri="login" redirect="/com/runwaysdk/geodashboard/jsp/login.jsp"/>
+  <map uri="session" controller="com.runwaysdk.web.SessionController">
+    <action method=".*" uri="${method}"/>
+  </map>
+  
+  <map uri="admin/users" redirect="/com/runwaysdk/geodashboard/jsp/useraccounts.jsp"/>
+</mappings>

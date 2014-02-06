@@ -6,37 +6,25 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
-import com.runwaysdk.constants.DeployProperties;
+import com.runwaysdk.controller.XMLServletRequestMapper;
 
 public class ActivePageWriter
 {
   String uri;
   JspWriter out;
-  String webappRoot;
+  String context;
+  
+  // If we've already redirected to a jsp, then we need to 
+  XMLServletRequestMapper mapper;
   
   public ActivePageWriter(HttpServletRequest request, JspWriter out) {
     this.uri = request.getRequestURI();
     this.out = out;
-    this.webappRoot = "/" + DeployProperties.getAppName() + "/";
-//    this.pageName = uri.substring(uri.lastIndexOf("/")+1);
+    this.context = request.getContextPath();
   }
   
-  public boolean isActive(MenuItem menuItem) {
-    if (menuItem.getURL() == null) { // Composite
-      List<MenuItem> children = menuItem.getChildren();
-      for (MenuItem child : children) {
-        if (this.isActive(child)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    
-    return this.uri.equals(this.webappRoot + menuItem.getURL());
-  }
-  
-  public String getActiveClass(String name) {
-    if (this.uri.equals(this.webappRoot + name)) {
+  public String getActiveClass(MenuItem item) {
+    if (item.handlesUri(this.uri, this.context)) {
       return "class=\"blueactive\"";
     }
     else {
@@ -44,22 +32,28 @@ public class ActivePageWriter
     }
   }
   
-  public void writeLiA(String url, String title) throws IOException {
+  public void writeLiA(MenuItem item) throws IOException {
     String href = "";
+    String url = item.getURL();
+    String title = item.getName();
     
     if (url.equals("#")) {
       href = "#";
     }
     else {
-      href = webappRoot + url;
+      href = context + "/" + url;
     }
     
-    String html = "<li><a " + this.getActiveClass(url) + " href=\"" + href + "\">";
+    String html = "<li><a " + this.getActiveClass(item) + " href=\"" + href + "\">";
     
     html = html + title;
     
     html = html + "</a></li>";
     
     out.print(html);
+  }
+  
+  public void writeLiA(String title, String url) throws IOException {
+    this.writeLiA(new MenuItem(title, url));
   }
 }
