@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.runwaysdk.controller.XMLServletRequestMapper;
-import com.runwaysdk.controller.XMLServletRequestMapper.RedirectMapping;
+import com.runwaysdk.controller.XMLServletRequestMapper.UriForwardMapping;
+import com.runwaysdk.controller.XMLServletRequestMapper.UriMapping;
 
 public class MenuItem
 {
@@ -20,9 +21,9 @@ public class MenuItem
     this.url = URL;
     
     if (URL != null) {
-      RedirectMapping map = mapper.getRedirectMapping(URL);
-      if (map != null) {
-        this.mappedUrl = map.getUriEnd();
+      UriMapping mapping = mapper.getMapping(URL);
+      if (mapping != null && mapping instanceof UriForwardMapping) {
+        this.mappedUrl = ( (UriForwardMapping) mapping ).getUriEnd();
       }
     }
   }
