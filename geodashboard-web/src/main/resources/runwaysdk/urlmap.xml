@@ -8,4 +8,6 @@
   </map>
   
   <map uri="admin/users" forward="/com/runwaysdk/geodashboard/jsp/useraccounts.jsp"/>
+  <map uri="admin/universal" forward="/com/runwaysdk/geodashboard/jsp/universal.jsp"/>
+  <map uri="admin/geoentity" forward="/com/runwaysdk/geodashboard/jsp/geoentity.jsp"/>
 </mappings>

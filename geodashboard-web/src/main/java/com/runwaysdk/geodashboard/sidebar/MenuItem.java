@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.sidebar;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.runwaysdk.controller.XMLServletRequestMapper;
@@ -70,5 +71,20 @@ public class MenuItem
   
   public List<MenuItem> getChildren() {
     return this.children;
+  }
+  
+  @Override
+  public String toString() {
+    String out = "MenuItem: " + this.getName();
+    if (this.getURL() != null) {
+     out = out + this.getURL();
+    }
+    
+    Iterator<MenuItem> it = this.getChildren().iterator();
+    while (it.hasNext()) {
+      out = out + it.next().toString() + "\n";
+    }
+    
+    return out;
   }
 }

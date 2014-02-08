@@ -21,7 +21,7 @@
 
 <%@page import="java.util.List" %>
 <%@page import="com.runwaysdk.session.Session" %>
-<%@page import="com.runwaysdk.geodashboard.sidebar.JSONMenuProvider" %>
+<%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter" %>
 
@@ -70,7 +70,7 @@
 	<nav class="aside-nav">
     <ul>
       <% 
-      List<MenuItem> items = new JSONMenuProvider().getMenu();
+      List<MenuItem> items = new XMLMenuProvider().getMenu();
       
       int num = 100;
       
@@ -86,7 +86,7 @@
             out.print("collapse");
           }
           out.print("\">");
-            
+          
           out.print("<ul>");
           
           List<MenuItem> children = item.getChildren();
