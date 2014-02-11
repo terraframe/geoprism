@@ -22,10 +22,14 @@
 	<property name="projectName" value="geodashboard"></property>
 	
 	<target name="deploy_presentation_files">
-		  
+		
 		<delete dir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk" />
     <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
       <fileset dir="src/main/webapp" includes="**/*" />
+    </copy>
+		
+		<copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
+      <fileset dir="../../../Documents/workspace/Runway-SDK/runwaysdk-browser/src/main/javascript" includes="**/*" />
     </copy>
 		
   </target>

@@ -7,7 +7,12 @@
     <action method=".*" uri="${method}"/>
   </map>
   
+  <map uri="universal" controller="com.runwaysdk.system.gis.geo.UniversalController">
+    <action method=".*" uri="${method}"/>
+  </map>
+  
   <map uri="admin/users" forward="/com/runwaysdk/geodashboard/jsp/useraccounts.jsp"/>
+  <map uri="admin/roles" forward="/com/runwaysdk/geodashboard/jsp/roles.jsp"/>
   <map uri="admin/universal" forward="/com/runwaysdk/geodashboard/jsp/universal.jsp"/>
   <map uri="admin/geoentity" forward="/com/runwaysdk/geodashboard/jsp/geoentity.jsp"/>
 </mappings>
