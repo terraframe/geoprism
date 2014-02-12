@@ -56,6 +56,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/UniversalTree.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -120,7 +121,7 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.TermTree({
+  var tree = new com.runwaysdk.ui.ontology.UniversalTree({
     
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,

@@ -4,13 +4,17 @@
     <item name="Manage Users" uri="admin/users"/>
     <item name="Roles" uri="admin/roles"/>
   </item>
+  <!--
   <item name="Datatype Management">
     <item name="Term Ontology Administration" uri="admin/ontology"/>
     <item name="Data Browser" uri="admin/dataBrowser"/>
   </item>
+  -->
   <item name="GIS Management">
     <item name="Manage Universals" uri="admin/universal"/>
     <item name="Manage Geoentities" uri="admin/geoentity"/>
   </item>
+  <!-- 
   <item name="Sales Force Import Manager" uri="admin/importer"/>
+  -->
 </sidebar>
