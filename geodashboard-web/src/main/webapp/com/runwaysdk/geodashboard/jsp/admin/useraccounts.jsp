@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<jsp:include page="./templates/header.jsp"></jsp:include>
+<jsp:include page="../templates/header.jsp"></jsp:include>
 
 <header id="header">
   <h1>User Accounts</h1>
@@ -113,4 +113,4 @@
 </script>
 
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../templates/footer.jsp"></jsp:include>

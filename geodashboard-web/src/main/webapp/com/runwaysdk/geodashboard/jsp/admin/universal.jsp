@@ -18,10 +18,11 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<jsp:include page="./templates/header.jsp"></jsp:include>
+<jsp:include page="../templates/header.jsp"></jsp:include>
 
 <%@page import="com.runwaysdk.system.gis.geo.Universal" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
@@ -100,7 +101,7 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 	try
 	{
 	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS
+	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS
 	    }, true);
 	  out.print(js);
 	}
@@ -122,15 +123,12 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var tree = new com.runwaysdk.ui.ontology.UniversalTree({
-    
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + Universal.getUniversal(Universal.ROOT).getId() + "\""); %>,
-    dragDrop : true
-    
   });
   tree.render("#tree");
 </script>
 
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../templates/footer.jsp"></jsp:include>

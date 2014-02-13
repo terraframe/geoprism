@@ -19,10 +19,10 @@
 
 --%>
 
-<jsp:include page="./templates/header.jsp"></jsp:include>
+<jsp:include page="../templates/header.jsp"></jsp:include>
 
 <header id="header">
   <h1>Roles</h1>
 </header>
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../templates/footer.jsp"></jsp:include>
