@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <sidebar>
-  <item name="User Management">
+  <item name="Admin">
     <item name="Manage Users" uri="admin/users"/>
     <item name="Roles" uri="admin/roles"/>
+    <item name="Job Scheduler" uri="admin/scheduler"/>
   </item>
   <!--
   <item name="Datatype Management">

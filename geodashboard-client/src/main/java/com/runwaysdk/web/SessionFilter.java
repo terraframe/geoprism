@@ -128,6 +128,11 @@ public class SessionFilter implements Filter, Reloadable
     {
       return true;
     }
+    
+    // The login page requires some JS.
+    if (uri.endsWith(".js")) {
+      return true;
+    }
 
     // Login/Logout requests
     if (uri.endsWith(SessionController.LOGIN_ACTION) || uri.endsWith(SessionController.LOGOUT_ACTION))
