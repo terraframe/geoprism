@@ -20,7 +20,6 @@
 --%>
 <jsp:include page="../templates/header.jsp"></jsp:include>
 
-<%@page import="com.runwaysdk.system.gis.geo.Universal" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
@@ -118,14 +117,12 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <div id="tree"></div>
 
 <script type="text/javascript">
-  
-
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var tree = new com.runwaysdk.ui.ontology.UniversalTree({
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + Universal.getUniversal(Universal.ROOT).getId() + "\""); %>,
+    rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
   });
   tree.render("#tree");
 </script>

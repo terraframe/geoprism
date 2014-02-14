@@ -12,6 +12,16 @@
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Structure.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Core.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_DTO.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
 
 <style type="text/css">
 input[type="button"],input[type="submit"] {

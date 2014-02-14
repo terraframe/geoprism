@@ -20,12 +20,10 @@
 --%>
 <jsp:include page="../templates/header.jsp"></jsp:include>
 
-<%@page import="com.runwaysdk.system.gis.geo.Universal" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
+<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
@@ -101,7 +99,7 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS
       }, true);
     out.print(js);
   }
@@ -118,14 +116,12 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <div id="tree"></div>
 
 <script type="text/javascript">
-  
-
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var tree = new com.runwaysdk.ui.ontology.GeoEntityTree({
-    termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-    relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + Universal.getUniversal(Universal.ROOT).getId() + "\""); %>,
+    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
+    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
+    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
   });
   tree.render("#tree");
 </script>
