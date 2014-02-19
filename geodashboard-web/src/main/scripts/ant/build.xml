@@ -17,7 +17,9 @@
   You should have received a copy of the GNU Lesser General Public
   License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 -->
-<project name="Runwaysdk Browser Test" default="deploy_presentation_files">
+<project name="Geodashboard Web" default="deploy_presentation_files">
+	
+	<!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 	
 	<property name="projectName" value="geodashboard"></property>
 	
@@ -26,10 +28,6 @@
 		<delete dir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk" />
     <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
       <fileset dir="src/main/webapp" includes="**/*" />
-    </copy>
-		
-		<copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
-      <fileset dir="../../../Documents/workspace/Runway-SDK/runwaysdk-browser/src/main/javascript" includes="**/*" />
     </copy>
 		
   </target>

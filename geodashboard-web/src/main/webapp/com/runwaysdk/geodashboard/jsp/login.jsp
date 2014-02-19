@@ -97,7 +97,6 @@ input[type="button"]:active {
   </div>
 </c:if>
 
-
 <dl>
   <dt><label> <mdss:localize key="username" />: </label></dt>
   <dd><mjl:input param="username" type="text" /></dd>

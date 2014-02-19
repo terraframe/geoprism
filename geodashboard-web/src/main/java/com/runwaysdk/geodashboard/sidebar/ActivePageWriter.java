@@ -1,12 +1,11 @@
 package com.runwaysdk.geodashboard.sidebar;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
-import com.runwaysdk.controller.XMLServletRequestMapper;
+import com.runwaysdk.controller.URLConfigurationManager;
 
 public class ActivePageWriter
 {
@@ -15,7 +14,7 @@ public class ActivePageWriter
   String context;
   
   // If we've already redirected to a jsp, then we need to 
-  XMLServletRequestMapper mapper;
+  URLConfigurationManager mapper;
   
   public ActivePageWriter(HttpServletRequest request, JspWriter out) {
     this.uri = request.getRequestURI();

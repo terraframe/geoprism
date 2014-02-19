@@ -1,0 +1,190 @@
+@import '../../shared/mixins',
+        '../../shared/reset',
+        '../../shared/about-light';
+
+/*
+ * Copyright (c) 2012-2013 Thibaut Courouble
+ * http://www.cssflow.com
+ *
+ * Licensed under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$inputHeight: 40px;
+$labelWidth: 100px;
+
+%bg { background: #373737 url('../img/bg.png') 0 0 repeat; }
+
+body {
+  font: 14px/20px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #404040;
+  @extend %bg;
+}
+
+a {
+  color: #00a1d2;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+.login {
+  position: relative;
+  margin: 80px auto;
+  width: 400px;
+  padding-right: 32px;
+  font-weight: 300;
+  color: #a8a7a8;
+  text-shadow: 1px 1px 0 rgba(black, .8);
+
+  p { margin: 0 0 10px; }
+}
+
+input, button, label {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  @include box-sizing(border-box);
+}
+
+input[type=text], input[type=password] {
+  padding: 0 10px;
+  width: 300px;
+  height: $inputHeight;
+  color: #bbb;
+  text-shadow: 1px 1px 1px black;
+  background: rgba(black, .16);
+  border: 0;
+  border-radius: 5px;
+  @include box-shadow(inset 0 1px 4px rgba(black, .3),
+                      0 1px rgba(white, .06));
+
+  &:focus {
+    color: white;
+    background: rgba(black, .10);
+    outline: 0;
+  }
+}
+
+label {
+  float: left;
+  width: $labelWidth;
+  line-height: $inputHeight;
+  padding-right: 10px;
+  font-weight: 100;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+.forgot-password {
+  padding-left: $labelWidth;
+  font-size: 13px;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+.login-submit {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  border-radius: 32px;
+  @include box-shadow(0 0 4px rgba(black, .35));
+  @extend %bg;
+
+  &:before, &:after {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    @extend %bg;
+  }
+
+  &:before {
+    top: 28px;
+    left: -4px;
+    width: 4px;
+    height: 10px;
+    @include box-shadow(inset 0 1px rgba(white, .06));
+  }
+
+  &:after {
+    top: -4px;
+    bottom: -4px;
+    right: -4px;
+    width: 36px;
+  }
+}
+
+.login-button {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  padding: 0 0 48px; /* Fix wrong positioning in Firefox 9 & older (bug 450418) */
+  text-indent: 120%;
+  white-space: nowrap;
+  overflow: hidden;
+  background: none;
+  border: 0;
+  border-radius: 24px;
+  cursor: pointer;
+  @include box-shadow(inset 0 1px 1px rgba(black, .2),
+                      0 1px rgba(white, .1));
+
+  /* Must use another pseudo element for the gradient background because Webkit */
+  /* clips the background incorrectly inside elements with a border-radius.     */
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background: #00a2d3;
+    border-radius: 24px;
+    @include linear-gradient(top, #00a2d3, #0d7796);
+    @include box-shadow(inset 0 0 0 1px #00a2d3,
+                        0 0 0 5px rgba(black, .16));
+  }
+
+  &:active:before {
+    background: #0591ba;
+    @include linear-gradient(top, #0591ba, #00a2d3);
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    width: 25px;
+    height: 19px;
+    background: url('../img/arrow.png') 0 0 no-repeat;
+
+  }
+}
+
+::-moz-focus-inner { border: 0; padding: 0; }
+
+.lt-ie9 {
+  input[type=text], input[type=password] {
+    line-height: $inputHeight;
+    background: #282828;
+  }
+
+  .login-submit {
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    padding: 4px;
+
+    &:before, &:after { display: none; }
+  }
+
+  .login-button { line-height: 48px; }
+
+  .about { background: #313131; }
+}

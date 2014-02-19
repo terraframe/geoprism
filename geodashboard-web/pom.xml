@@ -29,11 +29,17 @@
 			<artifactId>geodashboard-server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>runwaysdk-web</artifactId>
+      <version>1.8.1-SNAPSHOT</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
       <version>2.1</version>
-      <scope>provided</scope>
+      <scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
     </dependency>
 	</dependencies>
 

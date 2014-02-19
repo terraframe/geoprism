@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.runwaysdk.controller.XMLServletRequestMapper;
-import com.runwaysdk.controller.XMLServletRequestMapper.UriForwardMapping;
-import com.runwaysdk.controller.XMLServletRequestMapper.UriMapping;
+import com.runwaysdk.controller.URLConfigurationManager;
+import com.runwaysdk.controller.URLConfigurationManager.UriForwardMapping;
+import com.runwaysdk.controller.URLConfigurationManager.UriMapping;
 
 public class MenuItem
 {
@@ -15,7 +15,7 @@ public class MenuItem
   private String mappedUrl;
   private ArrayList<MenuItem> children = new ArrayList<MenuItem>();
   
-  private static XMLServletRequestMapper mapper = new XMLServletRequestMapper();
+  private static URLConfigurationManager mapper = new URLConfigurationManager();
   
   public MenuItem(String name, String URL) {
     this.name = name;

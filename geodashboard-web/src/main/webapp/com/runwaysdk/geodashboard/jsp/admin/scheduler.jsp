@@ -72,6 +72,7 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/PollingRequest.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/Cron.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/scheduler/Scheduler.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />

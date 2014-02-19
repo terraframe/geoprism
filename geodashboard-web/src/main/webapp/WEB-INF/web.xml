@@ -200,9 +200,8 @@
 
 	<filter>
 	  <filter-name>SessionFilter</filter-name>
-	  <filter-class>com.runwaysdk.web.SessionFilter</filter-class>
+	  <filter-class>com.runwaysdk.web.filter.SessionFilter</filter-class>
 	</filter>
-
 	<filter-mapping>
 	  <filter-name>SessionFilter</filter-name>
 	  <url-pattern>*</url-pattern>
@@ -210,13 +209,16 @@
   
 	<filter>
 	  <filter-name>NoExtensionFilter</filter-name>
-	  <filter-class>com.runwaysdk.web.NoExtensionDispatchFilter</filter-class>
+	  <filter-class>com.runwaysdk.web.filter.NoExtensionDispatchFilter</filter-class>
 	</filter>
-	
 	<filter-mapping>
 	  <filter-name>NoExtensionFilter</filter-name>
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<listener>
+    <listener-class>com.runwaysdk.web.context.SchedulerContextListener</listener-class>
+  </listener>
 
 	<!-- End custom web.xml settings -->
 

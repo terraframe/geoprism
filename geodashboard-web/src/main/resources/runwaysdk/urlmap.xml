@@ -2,8 +2,8 @@
 <mappings>
   <map uri="" forward="/com/runwaysdk/geodashboard/jsp/index.jsp"/>
 
-  <map uri="login" forward="/com/runwaysdk/geodashboard/jsp/login.jsp"/>
-  <map uri="session" controller="com.runwaysdk.web.SessionController">
+  <map uri="login" forward="/com/runwaysdk/geodashboard/login/login.jsp"/>
+  <map uri="session" controller="com.runwaysdk.web.controller.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
   
