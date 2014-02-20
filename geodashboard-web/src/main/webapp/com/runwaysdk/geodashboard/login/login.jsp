@@ -19,7 +19,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>GeoDashboard Login</title>
-  <link rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/login/css/style.css">
+  <link rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/login/login.css">
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>

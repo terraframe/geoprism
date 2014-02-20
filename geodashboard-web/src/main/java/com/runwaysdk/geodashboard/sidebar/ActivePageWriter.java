@@ -31,7 +31,7 @@ public class ActivePageWriter
     }
   }
   
-  public void writeLiA(MenuItem item) throws IOException {
+  public void writeLiA(MenuItem item, String classes) throws IOException {
     String href = "";
     String url = item.getURL();
     String title = item.getName();
@@ -43,7 +43,12 @@ public class ActivePageWriter
       href = context + "/" + url;
     }
     
-    String html = "<li><a " + this.getActiveClass(item) + " href=\"" + href + "\">";
+    String clazz = "";
+    if (classes != null) {
+      clazz = "class=\"" + classes + "\"";
+    }
+    
+    String html = "<li><a " + clazz + " " + this.getActiveClass(item) + " href=\"" + href + "\">";
     
     html = html + title;
     
@@ -53,6 +58,10 @@ public class ActivePageWriter
   }
   
   public void writeLiA(String title, String url) throws IOException {
-    this.writeLiA(new MenuItem(title, url));
+    this.writeLiA(new MenuItem(title, url), null);
+  }
+  
+  public void writeLiA(String title, String url, String classes) throws IOException {
+    this.writeLiA(new MenuItem(title, url), classes);
   }
 }

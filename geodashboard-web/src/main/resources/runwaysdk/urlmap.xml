@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
 <mappings>
   <map uri="" forward="/com/runwaysdk/geodashboard/jsp/index.jsp"/>
+  <map uri="DashboardViewer" forward="/com/runwaysdk/geodashboard/jsp/dashboardViewer.jsp"/>
 
   <map uri="login" forward="/com/runwaysdk/geodashboard/login/login.jsp"/>
   <map uri="session" controller="com.runwaysdk.web.controller.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
+  
+  <!--
+  <map uri="admin/.*" forward="/com/runwaysdk/geodashboard/jsp/admin/.*"/>
+  -->
   
   <map uri="admin/users" forward="/com/runwaysdk/geodashboard/jsp/admin/useraccounts.jsp"/>
   <map uri="admin/roles" forward="/com/runwaysdk/geodashboard/jsp/admin/roles.jsp"/>

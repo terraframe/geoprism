@@ -80,6 +80,7 @@ form legend{
 	min-height:100%;
 	overflow:hidden;
 	padding:0 0 50px 275px;
+	z-index:2;
 }
 /* main informative part styles */
 #main{
@@ -389,13 +390,13 @@ form legend{
 	font-size:12px;
 	line-height:18px;
 }
-/* .ui-widget-content,
+.ui-widget-content,
 .ui-datepicker{
 	width:202px;
 	padding:10px 10px 8px;
 	border-color:#bbb;
 	background:#eee;
-} */
+}
 .ui-corner-all,
 .ui-corner-bottom,
 .ui-corner-right,
@@ -563,11 +564,8 @@ form legend{
 	color:#b9b9b9;
 	outline:0;
 }
-div .aside-nav a.blueactive,
-a.blueactive,
-.widget a:hover{
-	color:#00bfff;
-}
+.links-list .active a,
+.widget a:hover{color:#00bfff;}
 .links-list{
 	padding:0;	margin:0;	list-style:none;
 }
@@ -705,8 +703,7 @@ a.blueactive,
 	width:9px;
 	height:5px;
 	background:url(../images/sprite.png) no-repeat -250px -25px;
-	text-indent:-9999px;
-	overflow:hidden;
+	text-indent:-9999px;	overflow:hidden;
 	bottom:0;
 	border:none;
 	top:auto;
@@ -907,9 +904,7 @@ a.blueactive,
 	padding:13px 16px 20px 17px;
 	background:rgba(0,0,0,0.8);
 	color:#fff;
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
+	box-sizing:border-box;	-moz-box-sizing:border-box;	-webkit-box-sizing:border-box;
 	z-index:4;
 }
 .aside>form{
@@ -922,28 +917,18 @@ a.blueactive,
 	margin:0 0 16px;
 }
 .aside .nav-bar:after{
-	content:'';
-	display:block;
-	clear:both;
+	content:'';	display:block;	clear:both;
 }
 .aside .nav-bar .opener-drop{
 	float:right; 
 	width:37px;
 	height:21px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/sprite.png) no-repeat -315px 5px;
+	text-indent:-9999px;	overflow:hidden;	background:url(../images/sprite.png) no-repeat -315px 5px;
 	margin:0;
 	position:relative;
 }
 .aside .nav-bar .opener-drop:after{
-	content:'';
-	position:absolute;
-	right:0;
-	top:50%;
-	width:5px;
-	height:6px;
-	background:url(../images/sprite.png) no-repeat -200px -25px;
+	content:'';	position:absolute;	right:0;	top:50%;	width:5px;	height:6px;	background:url(../images/sprite.png) no-repeat -200px -25px;
 	margin:-3px 0 0;
 	display:none;
 }
@@ -962,13 +947,8 @@ a.blueactive,
 	color:#26c9ff;
 }
 .sales-menu .link-opener:after{
-	content:'';
-	position:absolute;
-	right:0;
-	top:7px;
-	width:10px;
-	height:7px;
-	background:url(../images/sprite.png) no-repeat -225px -25px;
+	content:'';	position:absolute;	right:0;
+	top:7px;	width:10px;	height:7px;	background:url(../images/sprite.png) no-repeat -225px -25px;
 }
 .sales-menu .dropdown-menu{
 	width:268px;
@@ -977,8 +957,7 @@ a.blueactive,
 	font-size:14px;
 	line-height:18px;
 	background:#eee;
-	border-radius:0;
-	box-shadow:none;
+	border-radius:0;	box-shadow:none;
 }
 .sales-menu .dropdown-menu li{
 	padding:0 0 1px;
@@ -1121,9 +1100,7 @@ a.blueactive,
 	padding:0;
 }
 .sales-accortion .panel-collapse .panel-title:after{
-	content:'';
-	display:block;
-	clear:both;
+	content:'';	display:block;	clear:both;
 }
 .sales-accortion .panel-collapse .panel-title .opener-link{
 	float:left;
@@ -1146,8 +1123,7 @@ a.blueactive,
 	width:100%;
 	height:100%;
 	display:block;
-	text-indent:-9999px;
-	overflow:hidden;
+	text-indent:-9999px;	overflow:hidden;
 	position:relative;
 	z-index:20;
 }
@@ -1211,19 +1187,9 @@ a.blueactive,
 	width:73px;
 	position:relative;
 }
-.filter-block .text input{
-	background:#eee;
-	border:none;
-	width:100%;
-	height:28px;
-	padding:6px 8px 5px;
-	margin:0;
-	float:left;
-	font-size:13px;
-	line-height:15px;
-	color:#999;
-}
-.filter-block .text input::-moz-placeholder{
+.filter-block .text input{	background:#eee;	border:none;	width:100%;	height:28px;	padding:6px 8px 5px;	margin:0;	float:left;
+	font-size:13px;	line-height:15px;
+	color:#999;}.filter-block .text input::-moz-placeholder{
 	color:#999;
 	opacity:1;
 }
@@ -1259,13 +1225,11 @@ a.blueactive,
 	width:870px;
 	margin:0 auto 30px;
 	background:none;
-	border-radius:0;
-	box-shadow:none;
+	border-radius:0;	box-shadow:none;
 }
 .modal-content{
 	background:none;
-	border-radius:0;
-	box-shadow:none;
+	border-radius:0;	box-shadow:none;
 	border:none;
 	color:#333;
 	padding:17px 50px 0 0;
@@ -1297,8 +1261,7 @@ a.blueactive,
 .modal-form .label-holder label,
 .modal-form .label-holder strong{
 	float:none;
-	display:inline-block;
-	vertical-align:top;
+	display:inline-block;	vertical-align:top;
 	font-size:14px;
 	line-height:18px;
 	font-weight:bold;
@@ -1317,15 +1280,7 @@ a.blueactive,
 	position:relative;
 	width:100%;
 }
-.modal-form .text input[type="text"]{
-	background:#eee;
-	border:1px solid #aaa;
-	width:100%;
-	height:38px;
-	padding:5px 10px;
-	margin:0;
-	float:left;
-	font-size:18px;
+.modal-form .text input[type="text"]{	background:#eee;	border:1px solid #aaa;	width:100%;	height:38px;	padding:5px 10px;	margin:0;	float:left;	font-size:18px;
 	line-height:24px;
 	color:#333;
 	box-shadow:none;
@@ -1337,8 +1292,7 @@ a.blueactive,
 }
 .modal-form .text input[type="text"]:-ms-input-placeholder{color:#333;}
 .modal-form .text input[type="text"]::-webkit-input-placeholder{color:#333;}
-.modal-form .text input[type="text"]:-moz-placeholder{color:#333;}
-.modal-form .text input[type="text"]:focus{border-color:#01b1ec;}
+.modal-form .text input[type="text"]:-moz-placeholder{color:#333;}.modal-form .text input[type="text"]:focus{border-color:#01b1ec;}
 .modal-form .check-block{
 	float:left;
 	position:relative;
@@ -1434,8 +1388,7 @@ a.blueactive,
 }
 .modal-form .color-choice{float:left;}
 .color-choice{
-	display:inline-block;
-	vertical-align:top;
+	display:inline-block;	vertical-align:top;
 	width:62px;
 	height:28px;
 	padding:3px;
@@ -1454,17 +1407,13 @@ a.blueactive,
 	border-color:#019edc;
 }
 .color-choice:after{
-	content:'';
-	display:block;
-	clear:both;
+	content:'';	display:block;	clear:both;
 }
 .color-choice .ico{
 	float:left;
 	width:30px;
 	height:20px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:#000;
+	text-indent:-9999px;	overflow:hidden;	background:#000;
 }
 .color-choice .arrow{
 	position:absolute;
@@ -1475,8 +1424,7 @@ a.blueactive,
 	border:solid transparent;
 	border-width:8px 6px 0;
 	border-top-color:#999;
-	text-indent:-9999px;
-	overflow:hidden;
+	text-indent:-9999px;	overflow:hidden;
 }
 .modal-form .box{
 	float:left;
@@ -1531,9 +1479,7 @@ a.blueactive,
 .modal-form .label-holder.style02{padding-top:12px;}
 .modal-form .label-holder.style03{padding-top:9px;}
 .nav-tabs.type-tabs{
-	padding:0;
-	margin:0;
-	list-style:none;
+	padding:0;	margin:0;	list-style:none;
 	border:none;
 	box-shadow:none;
 	border-radius:0;
@@ -1561,13 +1507,7 @@ a.blueactive,
 	display:block;
 }
 .nav-tabs.type-tabs li label:after{
-	content:'';
-	position:absolute;
-	left:0;
-	bottom:0;
-	width:20px;
-	height:20px;
-	background:url(../images/sprite.png) no-repeat -363px 0;
+	content:'';	position:absolute;	left:0;	bottom:0;	width:20px;	height:20px;	background:url(../images/sprite.png) no-repeat -363px 0;
 	z-index:20;
 }
 .nav-tabs.type-tabs li label:after{
@@ -1726,9 +1666,7 @@ a.blueactive,
 	padding:0 14px 0 0;
 }
 .modal-form .color-section .heading-list:after{
-	content:'';
-	display:block;
-	clear:both;
+	content:'';	display:block;	clear:both;
 }
 .modal-form .color-section .heading-list span{float:right;}
 .modal-form .color-section .heading-list span:first-child{float:left;}
@@ -1736,8 +1674,7 @@ a.blueactive,
 	position:relative;
 	background:none;
 	box-shadow:none;
-	border-radius:0;
-	border:none;
+	border-radius:0;	border:none;
 	padding:1px 0 0;
 	width:292px;
 	margin:0;
@@ -1756,8 +1693,7 @@ a.blueactive,
 .panel-group.choice-color .opener{
 	display:block;
 	background:none;
-	border-radius:0;
-	border:none;
+	border-radius:0;	border:none;
 	padding:5px 30px 5px 0;
 	font-size:13px;
 	line-height:16px;
@@ -1775,8 +1711,7 @@ a.blueactive,
 	width:20px;
 	height:20px;
 	background:#a6e53b;
-	text-indent:-9999px;
-	overflow:hidden;
+	text-indent:-9999px;	overflow:hidden;
 }
 .panel-group.choice-color .panel-collapse{
 	background:none;
@@ -1785,9 +1720,7 @@ a.blueactive,
 	border:none;
 }
 .color-list{
-	padding:4px 0 6px;
-	margin:0;
-	list-style:none;
+	padding:4px 0 6px;	margin:0;	list-style:none;
 	font-size:12px;
 	line-height:15px;
 }
@@ -1904,7 +1837,5 @@ a.blueactive,
 	padding:0 14px 0 0;
 }
 .reporticng-container .box img{
-	display:block;
-	width:100%;
-	height:auto;
+	display:block;	width:100%;	height:auto;
 }

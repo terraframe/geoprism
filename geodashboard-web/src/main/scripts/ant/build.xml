@@ -22,12 +22,15 @@
 	<!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 	
 	<property name="projectName" value="geodashboard"></property>
+	<property name="copyOrigin" value="${basedir}/src/main/webapp"></property>
 	
 	<target name="deploy_presentation_files">
 		
-		<delete dir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk" />
-    <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
-      <fileset dir="src/main/webapp" includes="**/*" />
+		<delete dir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk/geodashboard" />
+    
+		<echo message="Copying from ${copyOrigin}"/>
+		<copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
+      <fileset dir="${copyOrigin}" includes="**/*" />
     </copy>
 		
   </target>

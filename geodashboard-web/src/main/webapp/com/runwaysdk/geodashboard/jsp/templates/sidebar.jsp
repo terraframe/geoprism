@@ -47,7 +47,7 @@
 	  <ul class="links-list">
 	    <% writer.writeLiA("Log out", "session/logout"); %>
 	    <% writer.writeLiA("Account", "#"); %>
-	    <li><a href="#" class="link-viewer">Dashboard Viewer</a></li>
+	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer"); %>
 	  </ul>
 	</div>
 	<!-- Dashboards -->
@@ -108,6 +108,7 @@
       %>
     </ul>
   </nav>
+  
   <!-- element with tooltip -->
   <a class="btn-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="New map layer" href="#">tooltip</a>
 </aside>

@@ -120,7 +120,7 @@ table {
  * http://www.opensource.org/licenses/mit-license.php
  */
 body, .login-submit, .login-submit:before, .login-submit:after {
-  background: #373737 url("../img/bg.png") 0 0 repeat;
+  background: #373737 url("img/bg.png") 0 0 repeat;
 }
 
 body {
@@ -279,7 +279,7 @@ label {
   left: 12px;
   width: 25px;
   height: 19px;
-  background: url("../img/arrow.png") 0 0 no-repeat;
+  background: url("img/arrow.png") 0 0 no-repeat;
 }
 
 ::-moz-focus-inner {
