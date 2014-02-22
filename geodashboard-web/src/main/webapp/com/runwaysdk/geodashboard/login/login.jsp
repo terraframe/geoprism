@@ -27,7 +27,9 @@
     <h1>GeoDashboard</h1>
   </header>
 
+  <!-- TODO : registering of users
   <a class="register" href="index.html">Not a member? Register now</a>
+  -->
 
   <form method="post" action="session/login" class="login">
     
@@ -62,10 +64,12 @@
       <button type="submit" class="login-button">Login</button>
     </p>
 
+    <!-- TODO: Forgot password and remember me functionality.
     <div>
       <a class="forgot-password" href="index.html">Forgot your password?</a>
       <label class="remember-me">&nbsp;Remember me<input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever"/></label>
     </div>
+    -->
   </form>
 </body>
 </html>
