@@ -11,15 +11,14 @@
   <mjl:dt attribute="displayLabel">
     <mjl:input param="displayLabel" type="text" />
   </mjl:dt>
-  <mjl:dt attribute="entityName">
-    <mjl:input param="entityName" type="text" />
-  </mjl:dt>
+  <!--
   <mjl:dt attribute="geoMultiPolygon">
     <mjl:input param="geoMultiPolygon" type="text" />
   </mjl:dt>
   <mjl:dt attribute="geoPoint">
     <mjl:input param="geoPoint" type="text" />
   </mjl:dt>
+  -->
   <mjl:dt attribute="wkt">
     <mjl:input param="wkt" type="text" />
   </mjl:dt>
