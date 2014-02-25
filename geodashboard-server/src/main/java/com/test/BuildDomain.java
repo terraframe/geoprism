@@ -20,6 +20,7 @@ package com.test;
 
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.scheduler.ExecutableJob;
 import com.runwaysdk.system.scheduler.QualifiedTypeJob;
@@ -36,6 +37,8 @@ public class BuildDomain
   
   @Transaction
   public static void doIt() {
+    StrategyInitializer.startUp();
+    
     QualifiedTypeJob job = new QualifiedTypeJob();
     job.setClassName(WaitSecondJob.class.getName());
     job.setJobId("Play With Fido");
