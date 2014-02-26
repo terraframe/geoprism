@@ -91,24 +91,23 @@ input[type="button"]:active {
 <div class="pageTitle"><mdss:localize key="login" /></div>
 
 
-<form method="post" action="session/login" name="mform" id="mform"><c:if test="${bad_password}">
-  <div class="alert alertbox">
-  <p>${exception.localizedMessage}</p>
-  </div>
-</c:if>
-
-<dl>
-  <dt><label> <mdss:localize key="username" />: </label></dt>
-  <dd><mjl:input param="username" type="text" /></dd>
-  <dt><label> <mdss:localize key="password" />: </label></dt>
-  <dd><mjl:input param="password" type="password" value="" /></dd>
-</dl>
-
-<div class="submitButton_bl"></div>
-<input type="submit" value="<mdss:localize key="Login" />" name="LoginController" id="submitLogin" class="submitButton" />
+<form method="post" action="session/login" name="mform" id="mform">
+	<c:if test="${errorMessage}">
+	  <div class="alert alertbox">
+	  <p>${errorMessage}</p>
+	  </div>
+	</c:if>
+	
+	<dl>
+	  <dt><label> <mdss:localize key="username" />: </label></dt>
+	  <dd><mjl:input param="username" type="text" /></dd>
+	  <dt><label> <mdss:localize key="password" />: </label></dt>
+	  <dd><mjl:input param="password" type="password" value="" /></dd>
+	</dl>
+	
+	<div class="submitButton_bl"></div>
+  <input type="submit" value="<mdss:localize key="Login" />" name="LoginController" id="submitLogin" class="submitButton" />
 </form>
-
-
 
 <script type="text/javascript">
 

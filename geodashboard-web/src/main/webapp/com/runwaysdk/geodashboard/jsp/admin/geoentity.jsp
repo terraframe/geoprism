@@ -21,6 +21,8 @@
 <jsp:include page="../templates/header.jsp"></jsp:include>
 
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
@@ -99,7 +101,7 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }

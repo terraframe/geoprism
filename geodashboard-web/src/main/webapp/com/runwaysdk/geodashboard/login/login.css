@@ -19,6 +19,18 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
+.error-message {
+  padding:6px 0 0;
+  width: 240px;
+  margin: auto;
+  font-size:18px;
+  line-height:18px;
+  font-weight: 300;
+  /* color: #a8a7a8; */
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+  color:#C13333;
+}
+
 h1 {
   font-size: 2em;
   font-weight: bold;

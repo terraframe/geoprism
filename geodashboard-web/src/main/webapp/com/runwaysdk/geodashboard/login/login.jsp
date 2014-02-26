@@ -30,15 +30,14 @@
   <!-- TODO : registering of users
   <a class="register" href="index.html">Not a member? Register now</a>
   -->
+  
+  <c:if test="${not empty param.errorMessage}">
+    <div class="error-message">
+      <p>${param.errorMessage}</p>
+    </div>
+  </c:if>
 
   <form method="post" action="session/login" class="login">
-    
-    <c:if test="${bad_password}">
-      <div class="alert alertbox">
-		    <p>${exception.localizedMessage}</p>
-		  </div>
-		</c:if>
-		
 		<p>
 		  <label> <mdss:localize key="username" />: </label>
 		  <mjl:input param="username" type="text" id="login" />
