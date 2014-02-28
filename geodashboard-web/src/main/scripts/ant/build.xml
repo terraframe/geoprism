@@ -23,7 +23,7 @@
   
   <property name="projectName" value="geodashboard"></property>
   <property name="copyOrigin" value="${basedir}/src/main/webapp"></property>
-  <property name="runwayWeb" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web/src/main/webapp/com/runwaysdk"></property>
+  <property name="runwayWeb" value="/Users/justin/Documents/workspace/runway-sdk/runwaysdk-web/src/main/webapp/com/runwaysdk"></property>
   
   <target name="deploy_presentation_files">
     
