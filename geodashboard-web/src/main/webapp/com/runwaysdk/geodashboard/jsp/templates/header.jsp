@@ -46,8 +46,8 @@
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>openlayers/OpenLayers.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/Geodashboard.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/DynamicMap.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script>
   
   <!-- set the encoding of your site -->
   <meta charset="utf-8">
