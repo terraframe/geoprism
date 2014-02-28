@@ -19,7 +19,7 @@
 
 --%>
 
-<jsp:include page="./templates/header.jsp"></jsp:include>
+<jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 <header id="header">
   <h1>Q4 Sales Engagement</h1>
@@ -130,4 +130,4 @@
         </fieldset>
       </form>
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>

@@ -188,11 +188,22 @@
 						WEB-INF/lib/servlet-api*.jar,
 						WEB-INF/lib/annotations-api*.jar
 					</packagingExcludes>
+<!-- 
 					<webResources>
 						<resource>
 							<directory>src/main/resources</directory>
 						</resource>
 					</webResources>
+ -->					
+					<overlays>
+						<overlay>
+							<!-- empty groupId/artifactId represents the current build -->
+						</overlay>
+						<overlay>
+							<groupId>com.runwaysdk</groupId>
+							<artifactId>runwaysdk-web</artifactId>
+						</overlay>
+					</overlays>										
 				</configuration>
 			</plugin>
 			<plugin>

@@ -1,36 +1,14 @@
-<%--
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
-
-    This file is part of Runway SDK(tm).
-
-    Runway SDK(tm) is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    Runway SDK(tm) is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
-
---%>
-<jsp:include page="../templates/header.jsp"></jsp:include>
-
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
+<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
-<header id="header">
-  <h1>Manage Universals</h1>
-</header>
+<c:set var="page_title" scope="request" value="Manage Geoentities"/>
+
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -56,7 +34,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/GeoEntityTree.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -95,22 +73,22 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 
 <script type="text/javascript">
 <%
-	// use a try catch before printing out the definitions, otherwise, if an
-	// error occurs here, javascript spills onto the actual page (ugly!)
-	try
-	{
-	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS
-	    }, true);
-	  out.print(js);
-	}
-	catch(Exception e)
-	{
-	  // perform cleanup
-	  throw e;
-	}
+  // use a try catch before printing out the definitions, otherwise, if an
+  // error occurs here, javascript spills onto the actual page (ugly!)
+  try
+  {
+    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS
+      }, true);
+    out.print(js);
+  }
+  catch(Exception e)
+  {
+    // perform cleanup
+    throw e;
+  }
 
-	/* doIt(request, out); */
+  /* doIt(request, out); */
 %>
 </script>
 
@@ -119,13 +97,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.UniversalTree({
-    termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-    relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+  var tree = new com.runwaysdk.ui.ontology.GeoEntityTree({
+    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
+    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
+    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
   });
   tree.render("#tree");
 </script>
-
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>
