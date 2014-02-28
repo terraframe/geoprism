@@ -1,16 +1,7 @@
 <?xml version="1.0"?>
 <sidebar>
-  <item name="Admin">
-    <item name="Manage Users" uri="admin/users"/>
-    <item name="Roles" uri="admin/roles"/>
-    <item name="Job Scheduler" uri="admin/scheduler"/>
-  </item>
-  <!--
-  <item name="Datatype Management">
-    <item name="Term Ontology Administration" uri="admin/ontology"/>
-    <item name="Data Browser" uri="admin/dataBrowser"/>
-  </item>
-  -->
+  <item name="Account Management" uri="admin/users"/>
+  <item name="Job Scheduler" uri="admin/scheduler"/>
   <item name="GIS Management">
     <item name="Manage Universals" uri="admin/universal"/>
     <item name="Manage Geoentities" uri="admin/geoentity"/>

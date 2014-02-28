@@ -31,7 +31,7 @@
 		</dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
-      <artifactId>runwaysdk-web</artifactId>
+      <artifactId>runwaysdk-gis-web</artifactId>
       <version>1.8.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>

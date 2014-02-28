@@ -1,25 +1,26 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<mjl:component param="dto" item="${item}">
-  <mjl:dt attribute="universal">
-    <mjl:select param="universal" items="${_universal}" var="current" valueAttribute="id">
-      <mjl:option>
-        ${current.keyName}
-      </mjl:option>
-    </mjl:select>
-  </mjl:dt>
-  <mjl:dt attribute="displayLabel">
-    <mjl:input param="displayLabel" type="text" />
-  </mjl:dt>
-  <!--
-  <mjl:dt attribute="geoMultiPolygon">
-    <mjl:input param="geoMultiPolygon" type="text" />
-  </mjl:dt>
-  <mjl:dt attribute="geoPoint">
-    <mjl:input param="geoPoint" type="text" />
-  </mjl:dt>
-  -->
-  <mjl:dt attribute="wkt">
-    <mjl:input param="wkt" type="text" />
-  </mjl:dt>
-</mjl:component>
+
+<fieldset>
+	<section class="form-container">
+		<mjl:component param="dto" item="${item}">
+		  <div class="field-row clearfix">
+        <label for="select-field">${item.universalMd.displayLabel}</label>
+		    <mjl:select id="select-field" param="universal" items="${_universal}" var="current" valueAttribute="id">
+		      <mjl:option>
+		        ${current.displayLabel.value}
+		      </mjl:option>
+		    </mjl:select>
+		  </div>
+		  
+		  <div class="field-row clearfix">
+		    <label for="GeoEntityField2">${item.displayLabelMd.displayLabel}</label>
+		    <mjl:input id="GeoEntityField2" param="displayLabel" type="text" />
+		  </div>
+		  <div class="field-row clearfix">
+        <label for="GeoEntityField3">${item.wktMd.displayLabel}</label>
+        <mjl:input id="GeoEntityField3" param="wkt" type="text" />
+      </div>
+		</mjl:component>
+	</section>
+</fieldset>

@@ -55,6 +55,7 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/UniversalTree.js"></script>
 
@@ -123,6 +124,14 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+    crud: {
+      create: {
+        height: 250
+      },
+      update: {
+        height: 250
+      }
+    }
   });
   tree.render("#tree");
 </script>

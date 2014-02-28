@@ -56,6 +56,7 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/GeoEntityTree.js"></script>
 

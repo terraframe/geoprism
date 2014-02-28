@@ -220,9 +220,9 @@
     <listener-class>com.runwaysdk.web.context.SchedulerContextListener</listener-class>
   </listener>
   
-  <!-- <listener>
+  <listener>
     <listener-class>com.runwaysdk.gis.web.context.GISContextListener</listener-class>
-  </listener> -->
+  </listener>
 
 	<!-- End custom web.xml settings -->
 
