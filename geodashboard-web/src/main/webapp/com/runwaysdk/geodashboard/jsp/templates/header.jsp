@@ -57,7 +57,7 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script type="text/javascript">window.jQuery || document.write('<script src=" <% out.print(webappRoot); %> jquery/jquery-1.8.3.min.js"><\/script>')</script>
   <!-- include custom JavaScript -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.main.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
