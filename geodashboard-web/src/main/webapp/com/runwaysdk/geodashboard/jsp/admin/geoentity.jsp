@@ -121,10 +121,22 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.GeoEntityTree({
+  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
     termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+    crud: {
+      create: {
+        buttons: {
+          "class": "button button-primary"
+        }
+      },
+      update: {
+        buttons: {
+          "class": "button button-primary"
+        }
+      }
+    }
   });
   tree.render("#tree");
 </script>

@@ -120,16 +120,22 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.UniversalTree({
+  var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        height: 250
+        height: 250,
+        buttons: {
+          "class": "button button-primary"
+        }
       },
       update: {
-        height: 250
+        height: 250,
+        buttons: {
+          "class": "button button-primary"
+        }
       }
     }
   });
