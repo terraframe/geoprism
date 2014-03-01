@@ -1886,8 +1886,10 @@ a.blueactive,
 
 /* Map styles */
 .dynamicMap {
-  width: 1345px;
-  height: 812px;
+  min-width: 1345px;
+  min-height: 812px;
+  width: 100%;
+  height: 100%;
 }
 
 div.olControlZoom {
