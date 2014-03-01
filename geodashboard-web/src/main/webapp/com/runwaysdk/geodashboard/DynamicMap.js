@@ -19,7 +19,10 @@
         this._map = null;
         
         // The current base map (only one at a time is allowed)
+        this._defaultBase = null;
+        this._defaultBaseId = null;
         this._currentBase = null;
+        this._baseLayers = new com.runwaysdk.structure.HashMap();
       },
       
       /**
@@ -48,32 +51,115 @@
         );
         
         var base = [gsat, gphy, gmap, ghyb];
-        this._currentBase = base[0];
         
         return base;
       },
       
       /**
-       * Renders the 
+       * Renders each base layer as a checkable option in
+       * the layer switcher.
        */
       _renderBaseLayerSwitcher : function(base){
         
+        // Create the HTML for each row (base layer representation).
         var html = '';
+        var ids = [];
         for(var i=0; i<base.length; i++){
           
-          var b = base[i];
+          var id = 'base_layer_'+i;
           
-          var checked = i===0 ? 'checked="checked"' : '';
-          var id = 'f'+i;
+          var b = base[i];
+          b.id = id;
+          
+          var checked = '';
+          if(i === 0){
+            this._currentBase = this._defaultBase = base[0];
+            checked = 'checked="checked"';
+          }
+          
+          ids.push(id);
 
+          
           html += '<div class="row-form">';
           html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+id+'">'+b.name+'</label>';
           html += '</div>';
+          
+          this._baseLayers.put(id, b);
         }
 
+        // combine the rows into new HTML that goes in to the layer switcher
         var rows = $(html);
-        $('#'+DynamicMap.BASE_LAYER_CONTAINER).append(rows);
+        
+        var container = $('#'+DynamicMap.BASE_LAYER_CONTAINER);
+        var el = container[0];
+        
+        container.append(rows);
+        
+        jcf.customForms.replaceAll(el);
+        
+        // add event handlers to manage the actual check/uncheck process
+        for(var i=0; i<ids.length; i++){
+          var id = ids[i];
+          var check = $('#'+id);
+          
+          var handler = Mojo.Util.bind(this, this._selectBaseLayer);
+          check.on('change', this._baseLayers.get(id), handler);
+        }
+        
+      },
+      
+      /**
+       * Changes the base layer of the map.
+       * 
+       * @param e
+       */
+      _selectBaseLayer : function(e){
+
+        var changed = e.currentTarget;
+        var changedId = changed.id;
+        var changedLayer = this._baseLayers.get(changedId);
+        
+        var ids = this._baseLayers.keySet();
+        
+        var newBaseLayer = null;
+        if(changed.checked){
+          // uncheck other base layers without firing the event (to avoid infinte event looping)
+          for(var i=0; i<ids.length; i++){
+            
+            var id = ids[i];
+            if(id === changedId){
+              newBaseLayer = changedLayer;
+            }
+            else{
+              var uncheck = document.getElementById(id);
+              uncheck.checked = false;
+              jcf.customForms.refreshElement(uncheck);
+              
+              var layer = this._baseLayers.get(id);
+              layer.setVisibility(false);
+            }
+          }
+        }
+        else {
+          
+          // because a base is required, make sure to keep the default base checked
+          var base = document.getElementById(this._defaultBase.id);
+          base.checked = true;
+          jcf.customForms.refreshElement(base);
+          
+          // reset to the base layer
+          changedLayer.setVisibility(false);
+          newBaseLayer = this._defaultBase;
+        }
+        
+        
+        // refresh the map with the base layer (unless it's already the base).
+        // Because we're using allOverlays = true, we must set the base layer by 
+        // lowering the index to 0 (instead of setBaseLayer()).
+        newBaseLayer.setVisibility(true);
+        this._map.setBaseLayer(newBaseLayer, false);
+        this._map.setLayerIndex(newBaseLayer, 0);
       },
       
       /**
@@ -83,6 +169,18 @@
         
         this._map = new OpenLayers.Map(this._mapId, {allOverlays: true, theme: null});
 
+        /*  FIXME this isn't working. The map does not resize
+        // Allows auto-resize if the browser changes dimensions
+        this._map.addControl(new OpenLayers.Control.Navigation({
+          dragPanOptions: {
+              enableKinetic: true
+          }
+        }));
+        
+        this._map.addControl(new OpenLayers.Control.PanZoom());
+        this._map.addControl(new OpenLayers.Control.Attribution());
+        */
+        
         // Render the div for base layers (we do this custom because the OpenLayers default 
         // would be painful to implement in our styles)
         var base = this.getBaseLayers();
