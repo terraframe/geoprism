@@ -57,8 +57,8 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/GeoEntityTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -127,14 +127,18 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        buttons: {
-          "class": "button button-primary"
-        }
+        height: 305,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
       },
       update: {
-        buttons: {
-          "class": "button button-primary"
-        }
+        height: 305,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
       }
     }
   });

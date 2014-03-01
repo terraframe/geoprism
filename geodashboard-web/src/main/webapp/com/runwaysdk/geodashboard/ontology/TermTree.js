@@ -75,14 +75,22 @@
             create: {
               width: 550,
               height: 300,
+              buttons: [
+                {"class": "btn btn-primary"},
+                {"class": "btn btn-primary"}
+              ]
             },
             update: {
               width: 550,
-              height: 300
+              height: 300,
+              buttons: [
+                {"class": "btn btn-primary"},
+                {"class": "btn btn-primary"}
+              ]
             }
           }
         };
-        Mojo.Util.merge(defaultConfig, config);
+        Mojo.Util.deepMerge(defaultConfig, config);
         
         this._config = config;
         
