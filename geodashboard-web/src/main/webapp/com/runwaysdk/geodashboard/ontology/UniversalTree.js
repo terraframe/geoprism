@@ -62,6 +62,7 @@
       render : function(parent) {
         
         var createCountry = this.getFactory().newButton(this.localize("newCountry"), Mojo.Util.bind(this, this._onClickNewCountry));
+        createCountry.addClassName("btn btn-primary");
         this.appendChild(createCountry);
         
         this.appendChild(this._termTree);
