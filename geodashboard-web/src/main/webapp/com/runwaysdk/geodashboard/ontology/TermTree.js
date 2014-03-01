@@ -74,19 +74,11 @@
           crud: {
             create: {
               width: 550,
-              height: 300,
-              buttons: [
-                {"class": "btn btn-primary"},
-                {"class": "btn btn-primary"}
-              ]
+              height: 300
             },
             update: {
               width: 550,
-              height: 300,
-              buttons: [
-                {"class": "btn btn-primary"},
-                {"class": "btn btn-primary"}
-              ]
+              height: 300
             }
           }
         };
