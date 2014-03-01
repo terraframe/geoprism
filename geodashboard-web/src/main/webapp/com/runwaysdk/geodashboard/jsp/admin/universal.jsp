@@ -56,8 +56,8 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -120,16 +120,24 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.UniversalTree({
+  var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
     termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        height: 250
+        height: 255,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
       },
       update: {
-        height: 250
+        height: 255,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
       }
     }
   });

@@ -23,7 +23,11 @@
   
   <property name="projectName" value="geodashboard"></property>
   <property name="copyOrigin" value="${basedir}/src/main/webapp"></property>
-  <property name="runwayWeb" value="/Users/justin/Documents/workspace/runway-sdk/runwaysdk-web/src/main/webapp/com/runwaysdk"></property>
+	
+	<!--
+  <property name="runwayWeb" value="/Users/justin/Documents/workspace/runway-sdk/runwaysdk-web"></property>
+  -->
+	<property name="runwayWeb" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web"></property>
   
   <target name="deploy_presentation_files">
     
@@ -34,9 +38,9 @@
       <fileset dir="${copyOrigin}" includes="**/*" />
     </copy>
     
-    <echo message="Copying from ${runwayWeb}"/>
+    <echo message="Copying from ${runwayWeb}/src/main/webapp/com/runwaysdk"/>
     <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk">
-      <fileset dir="${runwayWeb}" includes="**/*" />
+      <fileset dir="${runwayWeb}/src/main/webapp/com/runwaysdk" includes="**/*" />
     </copy>
     
   </target>
