@@ -55,16 +55,25 @@
        */
       // @Override
       __onNodeRightClick : function(e) {
+        var parentId = this.__getRunwayIdFromNode(e.node.parent);
         var term = this.termCache[this.__getRunwayIdFromNode(e.node)];
         
         var cm = this.getFactory().newContextMenu(e.node);
+        
         var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
         if (term.canCreateChildren === false) {
           create.setEnabled(false);
         }
+        
         cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-        cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        
+        var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        if (parentId === this.rootTermId) {
+          del.setEnabled(false);
+        }
+        
         cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        
         cm.render();
       },
       
