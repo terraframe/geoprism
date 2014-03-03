@@ -175,7 +175,6 @@
       render : function(){
         
         var that = this;
-        
         this._autocomplete = $('#'+DynamicMap.GEOCODE).autocomplete({
           minLength: 2,
           select : function(value, data){
