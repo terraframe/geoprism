@@ -29,7 +29,7 @@
 			<artifactId>geodashboard-server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-    <dependency>
+		<dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
       <version>1.8.1-SNAPSHOT</version>

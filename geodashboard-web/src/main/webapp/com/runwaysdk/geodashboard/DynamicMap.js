@@ -3,7 +3,8 @@
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
     
     Constants : {
-      BASE_LAYER_CONTAINER : 'baseLayerContainer'
+      BASE_LAYER_CONTAINER : 'baseLayerContainer',
+      GEOCODE : 'geocode'
     },
     
     Instance : {
@@ -162,27 +163,51 @@
         this._map.setLayerIndex(newBaseLayer, 0);
       },
       
-      _geocode : function(){
+      _convert4326To900913: function(lon, lat){
+        var x = lon * 20037508.34 / 180;
+        var y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+        y = y * 20037508.34 / 180;
+        return [x, y]
+      },
+      
+      /**
+       * Handler invoked when a user 
+       */
+      _geocodeHandler : function(e){
         
-        var geocode_url="http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
+        var input = e.currentTarget;
+        var address = input.value;
         
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({ 'address': address }, function (results, status) {
-
-          if (status == google.maps.GeocoderStatus.OK) {
-                   console.log(results[0].geometry.location);                              
-                }
-                else {
-                     console.log("Geocoding failed: " + status);                            
-                }
-            });
+        if(address.length >= 2){
+          
+          var geocode_url="http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
+          
+          var geocoder = new google.maps.Geocoder();
+  
+          geocoder.geocode({ 'address': address }, function (results, status) {
+            
+            if (status == google.maps.GeocoderStatus.OK) {
+              
+              
+              
+              console.log(results);
+              
+              //console.log(results[0].geometry.location);                              
+            }
+            else {
+              console.log("Geocoding failed: " + status);                            
+            }
+          });
+        }
       },
       
       /**
        * Renders the map using OpenLayers.
        */
       render : function(){
+        
+        // Hook up the event to allow geo searching
+        $('#'+DynamicMap.GEOCODE).on('change', Mojo.Util.bind(this, this._geocodeHandler));
         
         this._map = new OpenLayers.Map(this._mapId, {allOverlays: true, theme: null});
 
@@ -196,7 +221,8 @@
         
         this._map.addControl(new OpenLayers.Control.PanZoom());
         this._map.addControl(new OpenLayers.Control.Attribution());
-        */
+         */
+        this._map.addControl(new OpenLayers.Control.MousePosition());
         
         // Render the div for base layers (we do this custom because the OpenLayers default 
         // would be painful to implement in our styles)
@@ -209,10 +235,10 @@
 
         // Google.v3 uses EPSG:900913 as projection, so we have to
         // transform our coordinates
-        this._map.setCenter(new OpenLayers.LonLat(10.2, 48.9).transform(
+        this._map.setCenter(new OpenLayers.LonLat(104.771874, 12.734708).transform(
             new OpenLayers.Projection("EPSG:4326"),
             this._map.getProjectionObject()
-        ), 5);        
+        ), 7);
         
       }
     }
