@@ -163,29 +163,41 @@
         
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function() {
+            var hasChildren = false;
+            
             // Delete the node and all children
-//            var nodes = that.__getNodesById(termId);
-//            for (var i = 0; i < nodes.length; ++i) {
-//              $thisTree.tree(
-//                'removeNode',
-//                nodes[i]
-//              );
-//            }
-            
-            // Children of universals are appended to the root node, so refresh the root node.
-            that.refreshTerm(that.rootTermId);
-            
-            // Refresh parent nodes
-            var parents = that.parentRelationshipCache.get(termId, that);
-            for (var p = 0; p < parents.length; ++p) {
-              var nodes = that.__getNodesById(parents[p].parentId);
-              for (var i = 0; i < nodes.length; ++i) {
-                that.refreshTerm(that.__getRunwayIdFromNode(nodes[i]));
+            var nodes = that.__getNodesById(termId);
+            for (var i = 0; i < nodes.length; ++i) {
+              if (nodes[i].children.length > 0) {
+                hasChildren = true;
               }
+              
+              $thisTree.tree(
+                'removeNode',
+                nodes[i]
+              );
             }
             
-            that.parentRelationshipCache.removeAll(termId);
-            that.termCache[termId] = null;
+            // Children of universals are appended to the root node, so refresh the root node.
+            if (hasChildren) {
+              // Dump the cache as its now invalid
+              that.termCache = {};
+              that.parentRelationshipCache.dump();
+              that.refreshTerm(that.rootTermId);
+            }
+            else {
+              // Refresh parent nodes
+              var parents = that.parentRelationshipCache.get(termId, that);
+              for (var p = 0; p < parents.length; ++p) {
+                var nodes = that.__getNodesById(parents[p].parentId);
+                for (var i = 0; i < nodes.length; ++i) {
+                  that.refreshTerm(that.__getRunwayIdFromNode(nodes[i]));
+                }
+              }
+              
+              that.parentRelationshipCache.removeAll(termId);
+              delete that.termCache[termId];
+            }
           },
           
           onFailure : function(err) {
@@ -222,8 +234,10 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
+            var $thisTree = $(that.getRawEl());
             for (var i = 0; i < parentNodes.length; ++i) {
-              that.__createTreeNode(term.getId(), parentNodes[i]);
+              var node = that.__createTreeNode(term.getId(), parentNodes[i]);
+              $thisTree.tree("openNode", node);
             }
           },
           onFailure : function(e) {
@@ -449,7 +463,7 @@
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
-              }
+              } 
             },
             onFailure : function(ex) {
               that.handleException(ex);
@@ -583,7 +597,7 @@
           com.runwaysdk.Facade.get(myCallback, termId);
         }
         else {
-          hisCallback.onSuccess(term);
+          return hisCallback.onSuccess(term);
         }
       },
       
@@ -640,7 +654,7 @@
       __createTreeNode : function(childId, parentNode, theirOnSuccess, theirOnFailure) {
         var that = this;
         
-        this.__getTermFromId(childId, {
+        return this.__getTermFromId(childId, {
           onSuccess : function(childTerm) {
             var $thisTree = $(that.getRawEl());
             
@@ -689,11 +703,15 @@
                 node
               );
               node.phantomChild = phantom;
+              
+              $thisTree.tree("openNode", parentNode);
             }
             
             if (Mojo.Util.isFunction(theirOnSuccess)) {
               theirOnSuccess(childTerm);
             }
+            
+            return node;
           },
           onFailure : function(err) {
             if (!Mojo.Util.isFunction(theirOnFailure)) {
@@ -824,11 +842,42 @@
       },
       
       /**
-       * Removes all parents in the cache for the given term id. 
+       * Removes all records from the cache.
        */
-      removeAll : function(childId) {
-        this.cache[childId] = [];
+      dump : function() {
+        this.cache = {};
       },
+      
+      /**
+       * Removes all parents in the cache for the given term id.
+       */
+      removeAll : function(termId) {
+        this.cache[termId] = [];
+        
+        // Remove all children
+//        for (var childId in this.cache) {
+//          if (this.cache.hasOwnProperty(childId)) {
+//            var records = this.cache[childId];
+//            
+//            for (var i = 0; i < records.length; ++i) {
+//              if (records[i].parentId === termId) {
+//                records[i].splice(i, 1);
+//              }
+//            }
+//            
+//            if (records.length === 0) {
+//              delete this.cache[childId];
+//            }
+//          }
+//        }
+      },
+      
+      /**
+       * Removes all records in the cache that reference the termId as a parentId.
+       */
+//      removeAllReferences : function(parentId) {
+//        
+//      },
       
       /**
        * Removes the specified parentRecord from the parentRecord[] matching the term id and the parent id.
