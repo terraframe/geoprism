@@ -366,7 +366,7 @@
               var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
               deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
               
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 600, height: 300});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 650, height: 300, resizable: false});
               dialog.appendContent(deleteMultiParentDescribe);
               dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
@@ -374,7 +374,7 @@
               dialog.render();
             }
             else {
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 450, height: 200});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 485, height: 200, resizable: false});
               dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
               dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});

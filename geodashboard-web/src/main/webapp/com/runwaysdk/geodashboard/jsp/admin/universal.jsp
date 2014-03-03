@@ -126,18 +126,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        height: 255,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+        height: 265
       },
       update: {
-        height: 255,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+        height: 265
       }
     }
   });

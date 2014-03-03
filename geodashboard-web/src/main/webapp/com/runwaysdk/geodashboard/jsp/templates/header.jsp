@@ -58,15 +58,17 @@
   <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
   <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
   <!-- include jQuery library -->
+  <!--
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script type="text/javascript">window.jQuery || document.write('<script src=" <% out.print(webappRoot); %> jquery/jquery-1.8.3.min.js"><\/script>')</script>
+  -->
+  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
+  <!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
+  <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
   <!-- include custom JavaScript -->
   <script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
-  <!-- include bootstrap JavaScript -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
   <!-- include HTML5 IE enabling script for IE -->
   <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
 </head>
