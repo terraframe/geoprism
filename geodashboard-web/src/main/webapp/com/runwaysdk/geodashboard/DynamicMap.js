@@ -162,6 +162,23 @@
         this._map.setLayerIndex(newBaseLayer, 0);
       },
       
+      _geocode : function(){
+        
+        var geocode_url="http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
+        
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ 'address': address }, function (results, status) {
+
+          if (status == google.maps.GeocoderStatus.OK) {
+                   console.log(results[0].geometry.location);                              
+                }
+                else {
+                     console.log("Geocoding failed: " + status);                            
+                }
+            });
+      },
+      
       /**
        * Renders the map using OpenLayers.
        */
@@ -200,6 +217,28 @@
       }
     }
     
+  });
+  
+  var DataType = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DataType', {
+  
+    Instance : {
+      initialize: function(label){
+        this.$initialize();
+        
+        this.label = label;
+      }
+    }
+  });
+  
+  var AbstractAttribute = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'AbstractAttribute', {
+    
+    Instance : {
+      initialize: function(label){
+        this.$initialize();
+        
+        this.label = label;
+      }
+    }
   });
   
 })();
