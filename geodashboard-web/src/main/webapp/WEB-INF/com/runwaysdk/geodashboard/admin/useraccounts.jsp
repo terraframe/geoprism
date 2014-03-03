@@ -68,6 +68,9 @@
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
 
+<!-- Geodashboard form -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/form/form.js"></script>
+
 <!-- Users table -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/userstable/UsersTable.js"></script>
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/userstable/UsersTable.css" />

@@ -167,7 +167,7 @@ form legend{
 	color:#333;
 	border:1px solid #bbb;
 	background:#eee;}
-.submit-form input[type="password"]{	float:left;	width:269px;
+.submit-form input[type="password"]{	float:left;	width:135px;
 	height:32px;
 	margin:0 11px 0 0;
 	padding:6px 10px;
@@ -192,6 +192,10 @@ form legend{
 .submit-form input[type="text"]:focus,
 .submit-form input[type="text"]:active{border-color:#019edc;}
 .submit-form .field-error input[type="text"]{
+	border-color:#e09999;
+	background:#f8f8f8;
+}
+.submit-form .field-error input[type="password"]{
 	border-color:#e09999;
 	background:#f8f8f8;
 }

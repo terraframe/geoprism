@@ -1,0 +1,30 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser" label="User" extends="com.runwaysdk.system.Users" generateController="false" >
+        <attributes>
+          <char name="firstName" label="First name" size="255" required="true"/>
+          <char name="lastName" label="Last name" size="255" required="true"/>
+          <char name="phoneNumber" label="Phone number" size="255" required="false"/>
+          <char name="email" label="Email" size="255" required="true"/>
+        </attributes>
+        <mdMethod name="applyWithRoles" label="Apply with roles" returnType="void" static="false">
+          <mdParameter name="roleIds" label="Role ids" order="0" type="java.lang.String[]" />
+        </mdMethod>
+      </mdBusiness>
+      <mdController name="com.runwaysdk.geodashboard.AdminController" label="User controller" >
+        <mdAction name="users" label="Users" isPost="false" isQuery="false"  />
+        <mdAction name="geoentity" label="Geo entity" isPost="false" isQuery="false"  />
+        <mdAction name="roles" label="Roles" isPost="false" isQuery="false"  />
+        <mdAction name="universal" label="Universal" isPost="false" isQuery="false"  />
+        <mdAction name="scheduler" label="Universal" isPost="false" isQuery="false"  />
+      </mdController>
+    </create>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.AdminController" type="com.runwaysdk.system.metadata.MdController"/>
+      <object key="com.runwaysdk.geodashboard.GeodashboardUser" type="com.runwaysdk.system.metadata.MdBusiness"/>
+    </delete>
+  </undoIt>
+</version>
