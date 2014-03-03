@@ -74,19 +74,11 @@
           crud: {
             create: {
               width: 550,
-              height: 300,
-              buttons: [
-                {"class": "btn btn-primary"},
-                {"class": "btn btn-primary"}
-              ]
+              height: 300
             },
             update: {
               width: 550,
-              height: 300,
-              buttons: [
-                {"class": "btn btn-primary"},
-                {"class": "btn btn-primary"}
-              ]
+              height: 300
             }
           }
         };
@@ -362,16 +354,16 @@
               
               dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 600, height: 300});
               dialog.appendContent(deleteMultiParentDescribe);
-              dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler);
-              dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler);
-              dialog.addButton(that.localize("cancel"), cancelHandler);
+              dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
+              dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
+              dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
               dialog.render();
             }
             else {
               dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 450, height: 200});
               dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
-              dialog.addButton(deleteLabel, deleteHandler);
-              dialog.addButton(that.localize("cancel"), cancelHandler);
+              dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
+              dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
               dialog.render();
             }
           },
