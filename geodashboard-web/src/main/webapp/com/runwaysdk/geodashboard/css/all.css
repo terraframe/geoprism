@@ -371,6 +371,13 @@ form legend{
 	margin:0;
 	padding:5px 26px 5px 6px;
 	font-size:13px;}
+
+.submit-form .data-block input[type="text"].hasDatepicker{	width:106px;
+	height:28px;
+	margin:0;
+	padding:5px 26px 5px 6px;
+	font-size:13px;}
+
 .submit-form .data-block ::-webkit-input-placeholder{color:#333;}
 .submit-form .data-block :-ms-input-placeholder{color:#333;}
 .submit-form .data-block :-moz-placeholder{color:#333;}
@@ -877,7 +884,12 @@ a.blueactive,
 	position:fixed;
 	top:0;
 	bottom:0;
+	overflow: auto;
+	/*
+	Original CSS with navigation aside.
 	right:275px;
+  */
+	right:0px;
 	width:300px;
 	padding:13px 16px 20px 17px;
 	background:rgba(0,0,0,0.8);
@@ -1032,7 +1044,7 @@ a.blueactive,
 	height:28px;
 	margin:0;
 	padding:5px 26px 5px 6px;
-	font-size:13px;
+	font-size:12px;
 	line-height:18px;
 	position:relative;
 }
@@ -1952,3 +1964,9 @@ a.olControlZoomOut {
 .olControlZoom a:focus{background-position:-242px 7px;}
 .olControlZoom .olControlZoomOut:hover,
 .olControlZoom .olControlZoomOut:focus{background-position:-292px 12px;}
+
+/* custom radio styles */
+div.row-holder .chk-area,
+div.row-holder .rad-area{
+  margin:0px 11px 0 0;
+}
