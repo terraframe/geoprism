@@ -20,7 +20,8 @@
 --%>
 
 <%@page import="java.util.List" %>
-<%@page import="com.runwaysdk.session.Session" %>
+<%@page import="com.runwaysdk.web.WebClientSession" %>
+<%@page import="com.runwaysdk.constants.ClientConstants" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter" %>
@@ -38,7 +39,7 @@
 	<div class="widget">
 	  <h3><% 
 	  try {
-	    Session.getCurrentSession().getUser().getUsername();
+	    out.print(((WebClientSession)session.getAttribute(ClientConstants.CLIENTSESSION)).getRequest().getSessionUser().getValue("username"));
 	  }
 	  catch (Throwable t) {
 	    out.print("Anonymous");
