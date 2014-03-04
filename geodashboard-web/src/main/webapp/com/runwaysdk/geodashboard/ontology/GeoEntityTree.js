@@ -51,7 +51,7 @@
       
       /**
        * is binded to tree.contextmenu, called when the user right clicks on a node.
-       * This override will check with the server if the user can create a node. If the user can't, the create is disabled.
+       * This override will disable some context menu options that don't make sense.
        */
       // @Override
       __onNodeRightClick : function(e) {
@@ -93,6 +93,28 @@
         }
         
         return displayLabel;
+      },
+      
+      // @Override
+      refreshTreeAfterDeleteTerm : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        var $thisTree = $(this.getRawEl());
+        
+        // TODO: Remove children from the caches.
+//        var node = nodes[0];
+//        var children = nodes[0].children;
+//        for (var i = 0; i < children.length; ++i) {
+//          
+//        }
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          $thisTree.tree(
+            'removeNode',
+            nodes[i]
+          );
+        }
+        
+        delete this.termCache[termId];
       },
       
       render : function(parent) {
