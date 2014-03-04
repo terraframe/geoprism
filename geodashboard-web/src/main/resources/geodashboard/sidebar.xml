@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <sidebar>
   <item name="Account Management" uri="admin/users"/>
-  <item name="Job Scheduler" uri="admin/scheduler"/>
+  
   <item name="GIS Management">
     <item name="Manage Universals" uri="admin/universal"/>
     <item name="Manage Geoentities" uri="admin/geoentity"/>
   </item>
-  <!-- 
+  <!--
+  <item name="Job Scheduler" uri="admin/scheduler"/> 
   <item name="Sales Force Import Manager" uri="admin/importer"/>
   -->
 </sidebar>

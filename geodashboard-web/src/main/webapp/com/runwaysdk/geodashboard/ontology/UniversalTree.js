@@ -88,17 +88,17 @@
         
         this.__dropAll(termId);
         
-        if (nodes[0].children.length > 0) {
-          // We don't have the relationship id of the new relationship between the children and the root node. 
-          this.refreshTerm(this.rootTermId);
-        } 
-        
         for (var i = 0; i < nodes.length; ++i) {
           $thisTree.tree(
             'removeNode',
             nodes[i]
           );
         }
+        
+        if (nodes[0].children.length > 0) {
+          // We don't have the relationship id of the new relationship between the children and the root node. 
+          this.refreshTerm(this.rootTermId);
+        } 
       },
       
       _onClickNewCountry : function() {
