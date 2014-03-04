@@ -169,7 +169,7 @@
         var $thisTree = $(this.getRawEl());
         
         var deleteCallback = new Mojo.ClientRequest({
-          onSuccess : function() {
+          onSuccess : function(retval) {
             that.refreshTreeAfterDeleteTerm(termId);
             
 //            var nodes = that.__getNodesById(termId);

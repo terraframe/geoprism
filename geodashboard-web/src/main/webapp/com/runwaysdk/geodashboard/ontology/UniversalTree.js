@@ -55,24 +55,43 @@
         
       },
       
-      // @Override
-      refreshTreeAfterDeleteTerm : function(termId) {
+      /**
+       * Recursively removes the term and all children terms from the caches.
+       */
+      __dropAll : function(termId) {
         var nodes = this.__getNodesById(termId);
-        var $thisTree = $(this.getRawEl());
-        var rootNode = $thisTree.tree("getTree");
         
         // Children of universals are appended to the root node
         // The children are repeated under the copies, so we only want to append one set of the children to the root node.
         var node = nodes[0];
         var children = nodes[0].children;
         for (var i = 0; i < children.length; ++i) {
-          // Update the parents in the cache
-          var childId = this.__getRunwayIdFromNode(children[i]);
-          var record = this.parentRelationshipCache.getRecordWithParentId(childId, termId, this);
-          record.parentId = this.rootTermId;
-          
-          $thisTree.tree("moveNode", children[i], rootNode.children[rootNode.children.length-1], "after");
+          if (!children[i].phantom) {
+            var childId = this.__getRunwayIdFromNode(children[i]);
+            
+            this.__dropAll(childId);
+            
+            this.parentRelationshipCache.removeRecordMatchingId(childId, termId, this);
+          }
         }
+        
+        delete this.termCache[termId];
+      },
+      
+      // @Override
+      refreshTreeAfterDeleteTerm : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        var $thisTree = $(this.getRawEl());
+        var rootNode = $thisTree.tree("getTree");
+        
+        this.parentRelationshipCache.removeAll(termId);
+        
+        this.__dropAll(termId);
+        
+        if (nodes[0].children.length > 0) {
+          // We don't have the relationship id of the new relationship between the children and the root node. 
+          this.refreshTerm(this.rootTermId);
+        } 
         
         for (var i = 0; i < nodes.length; ++i) {
           $thisTree.tree(
@@ -80,8 +99,6 @@
             nodes[i]
           );
         }
-        
-        delete this.termCache[termId];
       },
       
       _onClickNewCountry : function() {
