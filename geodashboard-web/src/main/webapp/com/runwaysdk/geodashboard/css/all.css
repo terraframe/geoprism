@@ -67,8 +67,8 @@ button.btn.ui-button.ui-widget[disabled]{
 	border-color:#009edc;
 	background:#00bfff;
 }
-.btn-primary:hover,
-.btn.btn-primary.ui-button.ui-widget:hover{
+button.btn-primary:hover,
+button.btn.btn-primary.ui-button.ui-widget:hover{
 	border-color:#009edc;
 	background:#009edc;
 }

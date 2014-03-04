@@ -100,7 +100,7 @@
         var nodes = this.__getNodesById(termId);
         var $thisTree = $(this.getRawEl());
         
-        // TODO: Remove children from the caches.
+        // TODO: Remove children from the parent relationship cache.
 //        var node = nodes[0];
 //        var children = nodes[0].children;
 //        for (var i = 0; i < children.length; ++i) {
