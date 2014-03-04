@@ -82,11 +82,9 @@
             }
           }
         };
-        Mojo.Util.deepMerge(defaultConfig, config);
+        this._config = Mojo.Util.deepMerge(defaultConfig, config);
         
-        this._config = config;
-        
-        this.$initialize(config.el, config);
+        this.$initialize(this._config.el, this._config);
         
         this.__setRootTerm(config.rootTerm);
         
