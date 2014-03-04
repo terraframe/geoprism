@@ -51,12 +51,12 @@
 	  </ul>
 	</div>
 	<!-- Dashboards -->
+	<!--
 	<div class="widget">
 	  <h3 class="marked">Manage Dashboards</h3>
 	  <ul class="links-list">
 	    <% writer.writeLiA("Annual Imunization Data", "#"); %>
 	    <% writer.writeLiA("Q4 Sales Engagement", "q4sales"); %>
-	    <!-- slide block -->
 	    <li><a data-toggle="collapse" href="#collapse3">New Dashboard <span class="hidden">collapse3</span></a>
 	      <ul id="collapse3" class="panel-collapse collapse">
 	        <% writer.writeLiA("Q4 Sales Leads", "#"); %>
@@ -66,6 +66,7 @@
 	    </li>
 	  </ul>
 	</div>
+	-->
 	<!-- Generated from MenuItems List -->
 	<nav class="aside-nav">
     <ul>
