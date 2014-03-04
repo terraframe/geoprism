@@ -127,10 +127,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        height: 315
+        height: 325
       },
       update: {
-        height: 315
+        height: 325
       }
     }
   });

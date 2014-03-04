@@ -45,27 +45,37 @@
       
       initialize : function(config) {
         
+        this.$initialize("div");
+        
         config = config || {};
         config.language = config.language || {};
         Util.merge(com.runwaysdk.Localize.getLanguage(universalTreeName), config.language); // Override the term tree's language with our language.
         this._config = config;
-        
-        this._termTree = new com.runwaysdk.geodashboard.ontology.TermTree(config);
-        
-        this.$initialize("div");
       },
       
       _onClickNewCountry : function() {
         this._termTree.createTerm(this._termTree.rootTermId);
       },
       
+      createCountryButton : function() {
+        var createCountry = this.getFactory().newButton(this.localize("newCountry"), Mojo.Util.bind(this, this._onClickNewCountry));
+        
+        createCountry.addClassName("btn btn-primary");
+        createCountry.setStyle("margin-bottom", "20px");
+        
+        this.appendChild(createCountry);
+      },
+      
+      createTree : function() {
+        this._termTree = new com.runwaysdk.geodashboard.ontology.TermTree(this._config);
+        this.appendChild(this._termTree);
+      },
+      
       render : function(parent) {
         
-        var createCountry = this.getFactory().newButton(this.localize("newCountry"), Mojo.Util.bind(this, this._onClickNewCountry));
-        createCountry.addClassName("btn btn-primary");
-        this.appendChild(createCountry);
+        this.createCountryButton();
         
-        this.appendChild(this._termTree);
+        this.createTree();
         
         this.$render(parent);
         

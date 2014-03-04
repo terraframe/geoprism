@@ -148,7 +148,7 @@ button.btn.ui-button.ui-widget[disabled]{
 	line-height:27px;
 }
 /* submit form styles */
-.submit-form .form-container{padding:0 0 30px;}
+/* .submit-form .form-container{padding:0 0 30px;} */
 .submit-form h2{
 	margin:0 0 19px;
 	padding:0 0 4px;
