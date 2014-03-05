@@ -41,7 +41,7 @@
         // map.
         var gsat = new OpenLayers.Layer.Google(
             "Google Satellite",
-            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, visibility: false}
         );
         var gphy = new OpenLayers.Layer.Google(
             "Google Physical",
@@ -49,14 +49,14 @@
         );
         var gmap = new OpenLayers.Layer.Google(
             "Google Streets", // the default
-            {numZoomLevels: 20, visibility: false}
+            {numZoomLevels: 20, visibility: true}
         );
         var ghyb = new OpenLayers.Layer.Google(
             "Google Hybrid",
-            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false}
+            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20, visibility: false}
         );
         
-        var base = [gsat, gphy, gmap, ghyb];
+        var base = [gmap, gsat, gphy, ghyb];
         
         return base;
       },
