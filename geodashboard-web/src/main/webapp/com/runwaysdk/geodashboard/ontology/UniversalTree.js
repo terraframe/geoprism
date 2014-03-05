@@ -25,6 +25,7 @@
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   
   var universalTreeName = "com.runwaysdk.geodashboard.ontology.UniversalTree";
+  var TermTree = com.runwaysdk.geodashboard.ontology.TermTree;
   
   /**
    * LANGUAGE
@@ -39,36 +40,95 @@
    */
   var universalTree = ClassFramework.newClass(universalTreeName, {
     
-    Extends : Widget,
+    Extends : TermTree,
     
     Instance : {
       
       initialize : function(config) {
         
         config = config || {};
-        config.language = config.language || {};
-        Util.merge(com.runwaysdk.Localize.getLanguage(universalTreeName), config.language); // Override the term tree's language with our language.
         this._config = config;
         
-        this._termTree = new com.runwaysdk.geodashboard.ontology.TermTree(config);
+        this.$initialize(config);
         
-        this.$initialize("div");
+        this._wrapperDiv = this.getFactory().newElement("div");
+        
+      },
+      
+      /**
+       * Recursively removes the term and all children terms from the caches.
+       */
+      __dropAll : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        
+        // Children of universals are appended to the root node
+        // The children are repeated under the copies, so we only want to append one set of the children to the root node.
+        var node = nodes[0];
+        var children = nodes[0].children;
+        for (var i = 0; i < children.length; ++i) {
+          if (!children[i].phantom) {
+            var childId = this.__getRunwayIdFromNode(children[i]);
+            
+            this.__dropAll(childId);
+            
+            this.parentRelationshipCache.removeRecordMatchingId(childId, termId, this);
+          }
+        }
+        
+        delete this.termCache[termId];
+      },
+      
+      // @Override
+      refreshTreeAfterDeleteTerm : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        var $thisTree = $(this.getRawEl());
+        var rootNode = $thisTree.tree("getTree");
+        
+        this.parentRelationshipCache.removeAll(termId);
+        
+        this.__dropAll(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          $thisTree.tree(
+            'removeNode',
+            nodes[i]
+          );
+        }
+        
+        if (nodes[0].children.length > 0) {
+          // We don't have the relationship id of the new relationship between the children and the root node. 
+          this.refreshTerm(this.rootTermId);
+        } 
       },
       
       _onClickNewCountry : function() {
-        this._termTree.createTerm(this._termTree.rootTermId);
+        this.createTerm(this.rootTermId);
+      },
+      
+      createCountryButton : function() {
+        var but = this.getFactory().newButton(this.localize("newCountry"), Mojo.Util.bind(this, this._onClickNewCountry));
+        
+        but.addClassName("btn btn-primary");
+        but.setStyle("margin-bottom", "20px");
+        
+        this._wrapperDiv.appendChild(but);
+      },
+      
+      destroy : function() {
+        
+        if (!this.isDestroyed()) {
+          this.$destory();
+          this._wrapperDiv.destory();
+        }
+        
       },
       
       render : function(parent) {
+        this.createCountryButton();
         
-        var createCountry = this.getFactory().newButton(this.localize("newCountry"), Mojo.Util.bind(this, this._onClickNewCountry));
-        createCountry.addClassName("btn btn-primary");
-        this.appendChild(createCountry);
+        this._wrapperDiv.render(parent);
         
-        this.appendChild(this._termTree);
-        
-        this.$render(parent);
-        
+        this.$render(this._wrapperDiv);
       }
     }
   });

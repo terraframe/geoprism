@@ -82,11 +82,9 @@
             }
           }
         };
-        Mojo.Util.deepMerge(defaultConfig, config);
+        this._config = Mojo.Util.deepMerge(defaultConfig, config);
         
-        this._config = config;
-        
-        this.$initialize(config.el, config);
+        this.$initialize(this._config.el, this._config);
         
         this.__setRootTerm(config.rootTerm);
         
@@ -147,6 +145,15 @@
       },
       
       /**
+       * GeoEntities and Universals handle this differently.
+       * 
+       * @param termId
+       */
+      refreshTreeAfterDeleteTerm : function(termId) {
+        throw new com.runwaysdk.Exception("Unsupported Operation. Subclasses of TermTree must implement this method.");
+      },
+      
+      /**
        * Notifies the server to delete the term and then updates the tree by removing the node.
        */
       deleteTerm : function(termId, parent) {
@@ -162,42 +169,31 @@
         var $thisTree = $(this.getRawEl());
         
         var deleteCallback = new Mojo.ClientRequest({
-          onSuccess : function() {
-            var hasChildren = false;
+          onSuccess : function(retval) {
+            that.refreshTreeAfterDeleteTerm(termId);
             
-            // Delete the node and all children
-            var nodes = that.__getNodesById(termId);
-            for (var i = 0; i < nodes.length; ++i) {
-              if (nodes[i].children.length > 0) {
-                hasChildren = true;
-              }
-              
-              $thisTree.tree(
-                'removeNode',
-                nodes[i]
-              );
-            }
+//            var nodes = that.__getNodesById(termId);
             
-            // Children of universals are appended to the root node, so refresh the root node.
-            if (hasChildren) {
-              // Dump the cache as its now invalid
-              that.termCache = {};
-              that.parentRelationshipCache.dump();
-              that.refreshTerm(that.rootTermId);
-            }
-            else {
-              // Refresh parent nodes
-              var parents = that.parentRelationshipCache.get(termId, that);
-              for (var p = 0; p < parents.length; ++p) {
-                var nodes = that.__getNodesById(parents[p].parentId);
-                for (var i = 0; i < nodes.length; ++i) {
-                  that.refreshTerm(that.__getRunwayIdFromNode(nodes[i]));
-                }
-              }
-              
-              that.parentRelationshipCache.removeAll(termId);
-              delete that.termCache[termId];
-            }
+            // 1) Move the children to 
+            
+            
+//            if (hasChildren) {
+//              // This method will also dump the cache (because we refreshed the root node). We need this to happen, because the cache may be invalid after that delete action.
+//              that.refreshTerm(that.rootTermId);
+//            }
+//            else {
+//              // Refresh parent nodes
+//              var parents = that.parentRelationshipCache.get(termId, that);
+//              for (var p = 0; p < parents.length; ++p) {
+//                var nodes = that.__getNodesById(parents[p].parentId);
+//                for (var i = 0; i < nodes.length; ++i) {
+//                  that.refreshTerm(that.__getRunwayIdFromNode(nodes[i]));
+//                }
+//              }
+//              
+//              that.parentRelationshipCache.removeAll(termId);
+//              delete that.termCache[termId];
+//            }
           },
           
           onFailure : function(err) {
@@ -366,7 +362,7 @@
               var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
               deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
               
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 600, height: 300});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 650, height: 300, resizable: false});
               dialog.appendContent(deleteMultiParentDescribe);
               dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
@@ -374,7 +370,7 @@
               dialog.render();
             }
             else {
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 450, height: 200});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 485, height: 200, resizable: false});
               dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
               dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
@@ -506,7 +502,7 @@
       },
       
       /**
-       * Fetches all the term's children from the server and repopulates the tree.
+       * Fetches all the term's children from the server, drops all children of the node, and then repopulates the child nodes based on the TermAndRel objects receieved from the server.
        */
       refreshTerm : function(termId) {
         var that = this;
@@ -528,6 +524,13 @@
                 $(that.getRawEl()).tree("removeNode", children[i]);
               }
             }
+            
+            // TODO : Because children of deleted universals are appended to the root node 
+//            if (termId === that.rootTermId) {
+//              // Dump the cache, all nodes in the tree have to be refetched.
+//              that.termCache = {};
+//              that.parentRelationshipCache.dump();
+//            }
             
             // Create a node for every term we got from the server.
             for (var i = 0; i < termAndRels.length; ++i) {
@@ -871,13 +874,6 @@
 //          }
 //        }
       },
-      
-      /**
-       * Removes all records in the cache that reference the termId as a parentId.
-       */
-//      removeAllReferences : function(parentId) {
-//        
-//      },
       
       /**
        * Removes the specified parentRecord from the parentRecord[] matching the term id and the parent id.

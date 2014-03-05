@@ -22,7 +22,8 @@ form legend{
 	overflow:hidden;
 }
 /* button styles */
-.btn{
+.btn,
+button.btn.ui-button.ui-widget{
 	display:inline-block;
 	vertical-align:top;
 	padding:4px 18px;
@@ -36,7 +37,8 @@ form legend{
 	border-radius:0;
 	background:#bbb;
 }
-.btn:hover{
+.btn:hover,
+button.btn.ui-button.ui-widget:hover{
 	color:#f8f8f8;
 	border-color:#979796;
 	box-shadow:none;
@@ -44,29 +46,36 @@ form legend{
 	background:#979796;
 }
 .btn:focus,
-.btn:active{
+.btn:active,
+button.btn.ui-button.ui-widget:focus,
+button.btn.ui-button.ui-widget:active{
 	padding:3px 17px;
 	border:2px solid #019edc;
 	box-shadow:none;	-webkit-box-shadow:none;
 	background:#bbb;
 }
-.btn[disabled]{
+.btn[disabled],
+button.btn.ui-button.ui-widget[disabled]{
 	padding:4px 18px;
 	color:#fcfcfc;
 	border:1px solid #d5d5d5;
 	background:#e4e4e4;
 }
-.btn-primary{
+.btn-primary,
+.btn.btn-primary.ui-button.ui-widget{
 	color:#fff;
 	border-color:#009edc;
 	background:#00bfff;
 }
-.btn-primary:hover{
+button.btn-primary:hover,
+button.btn.btn-primary.ui-button.ui-widget:hover{
 	border-color:#009edc;
 	background:#009edc;
 }
 .btn-primary:focus,
-.btn-primary:active{
+.btn-primary:active,
+.btn.btn-primary.ui-button.ui-widget:focus,
+.btn.btn-primary.ui-button.ui-widget:active{
 	border:2px solid #009edc;
 	background:#00bfff;
 }
@@ -139,7 +148,7 @@ form legend{
 	line-height:27px;
 }
 /* submit form styles */
-.submit-form .form-container{padding:0 0 30px;}
+/* .submit-form .form-container{padding:0 0 30px;} */
 .submit-form h2{
 	margin:0 0 19px;
 	padding:0 0 4px;
@@ -438,11 +447,12 @@ form legend{
 	height:11px;
 	margin:0;
 }
-.ui-widget-header .ui-icon{
+/* This CSS screws up the x button on dialogs */
+/* .ui-widget-header .ui-icon{
 	width:7px;
 	height:11px;
 	background:url(../images/sprite.png) no-repeat -87px 0;
-}
+} */
 .ui-widget-header .ui-datepicker-next .ui-icon{background-position:-87px -27px;}
 .ui-datepicker table{
 	margin:0;
