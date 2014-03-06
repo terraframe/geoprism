@@ -19,4 +19,5 @@
   <map uri="admin/universal" forward="/com/runwaysdk/geodashboard/jsp/admin/universal.jsp"/>
   <map uri="admin/geoentity" forward="/com/runwaysdk/geodashboard/jsp/admin/geoentity.jsp"/>
   <map uri="admin/scheduler" forward="/com/runwaysdk/geodashboard/jsp/admin/scheduler.jsp"/>
+  <map uri="admin/databrowser" forward="/com/runwaysdk/geodashboard/jsp/admin/databrowser.jsp"/>
 </mappings>
