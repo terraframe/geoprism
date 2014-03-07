@@ -508,12 +508,11 @@
         var that = this;
         var id = termId;
         
-        var callback = {
+        var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
             var termAndRels = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
             
-            termId = id; // termId is being set to undefined somewhere/somehow and I don't know where/when.
             var nodes = that.__getNodesById(termId);
             
             // Remove existing children
@@ -524,13 +523,6 @@
                 $(that.getRawEl()).tree("removeNode", children[i]);
               }
             }
-            
-            // TODO : Because children of deleted universals are appended to the root node 
-//            if (termId === that.rootTermId) {
-//              // Dump the cache, all nodes in the tree have to be refetched.
-//              that.termCache = {};
-//              that.parentRelationshipCache.dump();
-//            }
             
             // Create a node for every term we got from the server.
             for (var i = 0; i < termAndRels.length; ++i) {
@@ -548,21 +540,13 @@
                 node.hasFetched = true;
               }
             }
-            
-  //          var nodes = that.__getNodesById(nodeId);
-  //          for (var i = 0; i < nodes.length; ++i) {
-  //            if (nodes[i].phantomChild != null) {
-  //              $(that.getRawEl()).tree("removeNode", nodes[i].phantomChild);
-  //            }
-  //          }
           },
           
           onFailure : function(err) {
             that.handleException(err);
             return;
           }
-        };
-        Mojo.Util.copy(new Mojo.ClientRequest(callback), callback);
+        });
         
         Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
       },
@@ -888,9 +872,7 @@
           }
         }
         
-        var ex = new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
-        treeInst.handleException(ex);
-        return;
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
       },
       
       /**
@@ -899,16 +881,8 @@
       get : function(childId, treeInst) {
         var got = this.cache[childId];
         
-        if (treeInst != null && childId === treeInst.rootTermId) {
-          var ex = new com.runwaysdk.Exception("That operation is invalid on the root node.");
-          treeInst.handleException(ex);
-          return;
-        }
-        
         if (treeInst != null && (got == null || got == undefined)) {
-          var ex = new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
-          treeInst.handleException(ex);
-          return;
+          throw new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
         }
         
         return this.cache[childId] ? this.cache[childId] : [];
@@ -926,9 +900,7 @@
           }
         }
         
-        var ex = new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
-        treeInst.handleException(ex);
-        return;
+        throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
       }
     }
   });

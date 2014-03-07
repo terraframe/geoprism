@@ -81,18 +81,66 @@
       _getTermDisplayLabel : function(term) {
         var displayLabel = this.$_getTermDisplayLabel(term);
         
-        var cr = new Mojo.ClientRequest({
-          onSuccess:function(){},
-          onFailure:function(){}
-        });
-        
-        // FIXME : This should be read from a view.
-        var universal = term.getUniversal(cr);
-        if (universal != null) {
-          displayLabel = "[" + universal.getDisplayLabel().getLocalizedValue() + "] " + displayLabel;
+        if (term.universalDisplayLabel != null && term.universalDisplayLabel !== displayLabel) {
+          displayLabel = "[" + term.universalDisplayLabel + "] " + displayLabel;
         }
         
         return displayLabel;
+      },
+      
+      // @Override
+      refreshTerm : function(termId) {
+        var that = this;
+        var id = termId;
+        
+        var callback = new Mojo.ClientRequest({
+          onSuccess : function(responseText) {
+            var json = Mojo.Util.getObject(responseText);
+            var geoEntityViews = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            
+            var nodes = that.__getNodesById(termId);
+            
+            // Remove existing children
+            for (var iNode = 0; iNode < nodes.length; ++iNode) {
+              var node = nodes[iNode];
+              var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
+              for (var i=0; i < children.length; i++) {
+                $(that.getRawEl()).tree("removeNode", children[i]);
+              }
+            }
+            
+            // Create a node for every term we got from the server.
+            for (var i = 0; i < geoEntityViews.length; ++i) {
+              var $tree = $(that.getRawEl());
+              var view = geoEntityViews[i];
+              var childId = view.getGeoEntityId();
+              
+              var parentRecord = {parentId: termId, relId: view.getRelationshipId(), relType: view.getRelationshipType()};
+              that.parentRelationshipCache.put(childId, parentRecord);
+               
+              var term = new com.runwaysdk.system.gis.geo.GeoEntity();
+              term.getDisplayLabel().setLocalizedValue(view.getGeoEntityDisplayLabel());
+              term.id = view.getGeoEntityId();
+              term.universalDisplayLabel = view.getUniversalDisplayLabel();
+              term.canCreateChildren = view.getCanCreateChildren();
+              
+              that.termCache[childId] = term;
+              
+              for (var iNode = 0; iNode < nodes.length; ++iNode) {
+                var node = nodes[iNode];
+                that.__createTreeNode(childId, node);
+                node.hasFetched = true;
+              }
+            }
+          },
+          
+          onFailure : function(err) {
+            that.handleException(err);
+            return;
+          }
+        });
+        
+        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
       },
       
       // @Override
