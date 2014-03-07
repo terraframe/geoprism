@@ -20,7 +20,8 @@
 --%>
 
 <%@page import="java.util.List" %>
-<%@page import="com.runwaysdk.session.Session" %>
+<%@page import="com.runwaysdk.web.WebClientSession" %>
+<%@page import="com.runwaysdk.constants.ClientConstants" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem" %>
 <%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter" %>
@@ -38,7 +39,7 @@
 	<div class="widget">
 	  <h3><% 
 	  try {
-	    Session.getCurrentSession().getUser().getUsername();
+	    out.print(((WebClientSession)session.getAttribute(ClientConstants.CLIENTSESSION)).getRequest().getSessionUser().getValue("username"));
 	  }
 	  catch (Throwable t) {
 	    out.print("Anonymous");
@@ -51,12 +52,12 @@
 	  </ul>
 	</div>
 	<!-- Dashboards -->
+	<!--
 	<div class="widget">
 	  <h3 class="marked">Manage Dashboards</h3>
 	  <ul class="links-list">
 	    <% writer.writeLiA("Annual Imunization Data", "#"); %>
-	    <% writer.writeLiA("Q4 Sales Engagement", ""); %>
-	    <!-- slide block -->
+	    <% writer.writeLiA("Q4 Sales Engagement", "q4sales"); %>
 	    <li><a data-toggle="collapse" href="#collapse3">New Dashboard <span class="hidden">collapse3</span></a>
 	      <ul id="collapse3" class="panel-collapse collapse">
 	        <% writer.writeLiA("Q4 Sales Leads", "#"); %>
@@ -66,6 +67,7 @@
 	    </li>
 	  </ul>
 	</div>
+	-->
 	<!-- Generated from MenuItems List -->
 	<nav class="aside-nav">
     <ul>

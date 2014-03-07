@@ -21,6 +21,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
@@ -100,7 +101,8 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS,
+      GeoEntityViewDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -124,19 +126,11 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
-      create: {
-        height: 305,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+      create: { // This configuration gets merged into the jquery create dialog.
+        height: 325
       },
       update: {
-        height: 305,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+        height: 325
       }
     }
   });

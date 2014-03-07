@@ -1,6 +1,6 @@
 // page init
 jQuery(function(){
-	jQuery('div.datepicker').datepicker();
+	jQuery('div.datepicker').datepicker({ dateFormat: 'dd/mm/yy' });
 	jQuery('.data-block').each(function(){
 		var set = jQuery(this);
 		var checkin =set.find('.checkin');
@@ -13,6 +13,7 @@ jQuery(function(){
 			jQuery(this).prev().datepicker('show');
 		});
 		checkin.datepicker({
+		  dateFormat: 'dd/mm/yy' ,
 			showOtherMonths: true,
 			selectOtherMonths: true,
 			onSelect: function(dateText, inst){
@@ -26,6 +27,7 @@ jQuery(function(){
 			}
 		});
 		checkout.datepicker({
+		  dateFormat: 'dd/mm/yy' ,
 			showOtherMonths: true,
 			selectOtherMonths: true,
 			onSelect: function(dateText, inst){

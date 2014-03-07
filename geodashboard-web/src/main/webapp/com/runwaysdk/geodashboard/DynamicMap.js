@@ -4,7 +4,8 @@
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
-      GEOCODE : 'geocode'
+      GEOCODE : 'geocode',
+      GEOCODE_LABEL : 'geocodeLabel'
     },
     
     Instance : {
@@ -24,6 +25,10 @@
         this._defaultBaseId = null;
         this._currentBase = null;
         this._baseLayers = new com.runwaysdk.structure.HashMap();
+        this._suggestionCoords = new com.runwaysdk.structure.HashMap();
+        
+        this._autocomplete = null;
+        this._responseCallback = null;
       },
       
       /**
@@ -36,7 +41,7 @@
         // map.
         var gsat = new OpenLayers.Layer.Google(
             "Google Satellite",
-            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 20, visibility: false}
         );
         var gphy = new OpenLayers.Layer.Google(
             "Google Physical",
@@ -44,14 +49,14 @@
         );
         var gmap = new OpenLayers.Layer.Google(
             "Google Streets", // the default
-            {numZoomLevels: 20, visibility: false}
+            {numZoomLevels: 20, visibility: true}
         );
         var ghyb = new OpenLayers.Layer.Google(
             "Google Hybrid",
-            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false}
+            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20, visibility: false}
         );
         
-        var base = [gsat, gphy, gmap, ghyb];
+        var base = [gmap, gsat, gphy, ghyb];
         
         return base;
       },
@@ -161,44 +166,7 @@
         newBaseLayer.setVisibility(true);
         this._map.setBaseLayer(newBaseLayer, false);
         this._map.setLayerIndex(newBaseLayer, 0);
-      },
-      
-      _convert4326To900913: function(lon, lat){
-        var x = lon * 20037508.34 / 180;
-        var y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
-        y = y * 20037508.34 / 180;
-        return [x, y]
-      },
-      
-      /**
-       * Handler invoked when a user 
-       */
-      _geocodeHandler : function(e){
-        
-        var input = e.currentTarget;
-        var address = input.value;
-        
-        if(address.length >= 2){
-          
-          var geocode_url="http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=";
-          
-          var geocoder = new google.maps.Geocoder();
-  
-          geocoder.geocode({ 'address': address }, function (results, status) {
-            
-            if (status == google.maps.GeocoderStatus.OK) {
-              
-              
-              
-              console.log(results);
-              
-              //console.log(results[0].geometry.location);                              
-            }
-            else {
-              console.log("Geocoding failed: " + status);                            
-            }
-          });
-        }
+
       },
       
       /**
@@ -206,8 +174,55 @@
        */
       render : function(){
         
-        // Hook up the event to allow geo searching
-        $('#'+DynamicMap.GEOCODE).on('change', Mojo.Util.bind(this, this._geocodeHandler));
+        var that = this;
+        this._autocomplete = $('#'+DynamicMap.GEOCODE).autocomplete({
+          minLength: 2,
+          select : function(value, data){
+            
+            var loc = data.item.value;
+            var lonlat = that._suggestionCoords.get(loc);
+            
+            that._map.setCenter(new OpenLayers.LonLat(lonlat[0], lonlat[1]).transform(
+                new OpenLayers.Projection("EPSG:4326"),
+                that._map.getProjectionObject()
+            ), 7);
+            
+            that._suggestionCoords.clear();
+          },
+          source: function(request, response){
+          
+            that._suggestionCoords.clear();
+            
+            var term = request.term;
+            
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': term }, function (results, status) {
+              
+              if (status == google.maps.GeocoderStatus.OK) {
+                
+                var rows = Mojo.Util.isArray(results) ? results : [results];
+                
+                var suggestions = [];
+                for(var i=0; i<rows.length; i++){
+                  
+                  var row = rows[i];
+                  
+                  suggestions.push(row.formatted_address);
+                  
+                  var lon = row.geometry.location.e;
+                  var lat = row.geometry.location.d;
+                  that._suggestionCoords.put(row.formatted_address, [lon, lat]);
+                }
+
+                response(suggestions);
+              }
+            });
+            
+          },
+        });
+        //that._autocomplete.show();
+        
+        //$('#'+DynamicMap.GEOCODE).on('keypress', Mojo.Util.bind(this, this._geocodeHandler));
         
         this._map = new OpenLayers.Map(this._mapId, {allOverlays: true, theme: null});
 

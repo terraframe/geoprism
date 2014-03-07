@@ -9,8 +9,11 @@
   </map>
   
   <!--
+  TODO :
   <map uri="admin/.*" forward="/com/runwaysdk/geodashboard/jsp/admin/.*"/>
   -->
+  
+  <map uri="q4sales" forward="/com/runwaysdk/geodashboard/jsp/q4sales.jsp"/>
   
   <map uri="admin" controller="com.runwaysdk.geodashboard.AdminController">
     <action method=".*" uri="${method}"/>    

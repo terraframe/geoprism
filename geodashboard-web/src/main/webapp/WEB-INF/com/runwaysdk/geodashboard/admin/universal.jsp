@@ -18,9 +18,9 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@page import="com.runwaysdk.constants.DeployProperties"%>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
@@ -28,9 +28,9 @@
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
 
 <c:set var="page_title" scope="request" value="Manage Universals"/>
+
 
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
@@ -125,18 +125,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
       create: {
-        height: 255,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+        height: 267
       },
       update: {
-        height: 255,
-        buttons: [
-          {"class": "btn btn-primary"}, // Submit
-          {"class": "btn"} // Cancel
-        ]
+        height: 267
       }
     }
   });
