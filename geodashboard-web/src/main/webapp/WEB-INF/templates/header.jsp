@@ -45,11 +45,15 @@
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>openlayers/OpenLayers.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script>
   
   <!-- set the encoding of your site -->
   <meta charset="utf-8">
   <title>Q4SalesEngagement</title>
   <!-- include the site stylesheet -->
+  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>openlayers/style.css">
   <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
   <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
@@ -57,7 +61,7 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script type="text/javascript">window.jQuery || document.write('<script src=" <% out.print(webappRoot); %> jquery/jquery-1.8.3.min.js"><\/script>')</script>
   <!-- include custom JavaScript -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.main.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>

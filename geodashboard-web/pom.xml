@@ -29,124 +29,124 @@
 			<artifactId>geodashboard-server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-    <dependency>
-      <groupId>com.runwaysdk</groupId>
-      <artifactId>runwaysdk-web</artifactId>
-      <version>1.8.1-SNAPSHOT</version>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.1</version>
-      <scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
-    </dependency>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>runwaysdk-gis-web</artifactId>
+			<version>1.8.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
+		</dependency>
 	</dependencies>
 
-  <profiles>
-    <profile>
-      <id>geodash-cargo-run</id>
-      <activation>
-        <property>
-          <name>geodash-cargo-run</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.4.2</version>
-            <executions>
-              <execution>
-                <id>geodash-cargo-run</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <container>
-                <containerId>tomcat6x</containerId>
-                <zipUrlInstaller>
-                  <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.zip</url>
-                </zipUrlInstaller>
-                <dependencies>
-                  <dependency>
-                    <groupId>com.runwaysdk</groupId>
-                    <artifactId>runwaysdk-tomcat6cl</artifactId>
-                  </dependency>
-                </dependencies>
-              </container>
-              <configuration>
-                <properties>
-                  <cargo.servlet.port>8080</cargo.servlet.port>
-                  <cargo.jvmargs>
-                    -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
-                    -Xnoagent
-                    -Djava.compiler=NONE
-                  </cargo.jvmargs>
-                </properties>
-              </configuration>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>geodash-cargo-redeploy</id>
-      <activation>
-        <property>
-          <name>geodash-cargo-redeploy</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.4.2</version>
-            <executions>
-              <execution>
-                <id>geodash-cargo-redeploy</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>redeploy</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <container>
-                <containerId>tomcat6x</containerId>
-                <zipUrlInstaller>
-                  <url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.zip</url>
-                </zipUrlInstaller>
-                <dependencies>
-                  <dependency>
-                    <groupId>com.runwaysdk</groupId>
-                    <artifactId>runwaysdk-tomcat6cl</artifactId>
-                  </dependency>
-                </dependencies>
-              </container>
-              <configuration>
-                <properties>
-                  <cargo.servlet.port>8080</cargo.servlet.port>
-                  <cargo.jvmargs>
-                    -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
-                    -Xnoagent
-                    -Djava.compiler=NONE
-                  </cargo.jvmargs>
-                </properties>
-              </configuration>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+	<profiles>
+		<profile>
+			<id>geodash-cargo-run</id>
+			<activation>
+				<property>
+					<name>geodash-cargo-run</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<version>1.4.2</version>
+						<executions>
+							<execution>
+								<id>geodash-cargo-run</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<zipUrlInstaller>
+									<url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.zip</url>
+								</zipUrlInstaller>
+								<dependencies>
+									<dependency>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>runwaysdk-tomcat6cl</artifactId>
+									</dependency>
+								</dependencies>
+							</container>
+							<configuration>
+								<properties>
+									<cargo.servlet.port>8080</cargo.servlet.port>
+									<cargo.jvmargs>
+										-Xdebug
+										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+										-Xnoagent
+										-Djava.compiler=NONE
+									</cargo.jvmargs>
+								</properties>
+							</configuration>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>geodash-cargo-redeploy</id>
+			<activation>
+				<property>
+					<name>geodash-cargo-redeploy</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<version>1.4.2</version>
+						<executions>
+							<execution>
+								<id>geodash-cargo-redeploy</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>redeploy</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<zipUrlInstaller>
+									<url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.zip</url>
+								</zipUrlInstaller>
+								<dependencies>
+									<dependency>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>runwaysdk-tomcat6cl</artifactId>
+									</dependency>
+								</dependencies>
+							</container>
+							<configuration>
+								<properties>
+									<cargo.servlet.port>8080</cargo.servlet.port>
+									<cargo.jvmargs>
+										-Xdebug
+										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+										-Xnoagent
+										-Djava.compiler=NONE
+									</cargo.jvmargs>
+								</properties>
+							</configuration>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<!-- Just for convenience, this stops us from having to add the version 
@@ -188,22 +188,20 @@
 						WEB-INF/lib/servlet-api*.jar,
 						WEB-INF/lib/annotations-api*.jar
 					</packagingExcludes>
-<!-- 
 					<webResources>
 						<resource>
 							<directory>src/main/resources</directory>
 						</resource>
 					</webResources>
- -->					
 					<overlays>
 						<overlay>
 							<!-- empty groupId/artifactId represents the current build -->
 						</overlay>
 						<overlay>
 							<groupId>com.runwaysdk</groupId>
-							<artifactId>runwaysdk-web</artifactId>
+							<artifactId>runwaysdk-gis-web</artifactId>
 						</overlay>
-					</overlays>										
+					</overlays>
 				</configuration>
 			</plugin>
 			<plugin>

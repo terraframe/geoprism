@@ -50,7 +50,25 @@
     "confirmRequired" : "Password confirmation is required",
     "passwordMismatch" : "Passwords do not match",
     "invalidEmail" : "Invalid email address format",
-    "admin" : "Admin"
+    "admin" : "Admin",
+    "adminRoleHeader" : "System roles",
+    "dashboardRoleHeader" : "Dashbaord roles",
+    "allow" : "allow",
+    "sSortAscending" : "Sort column ascending",
+    "sSortDescending" : "Sort column descending",
+    "sFirst" : "First",
+    "sLast" : "Last",
+    "sNext" : "Next",
+    "sPrevious" : "Previous",
+    "sEmptyTable" : "No data in table",
+    "sInfo" : "Showing records",
+    "sInfoEmpty" : "Showing zero records",
+    "sInfoFiltered" : "Filtered entries",
+    "sLengthMenu" : "Show menu",
+    "sLoadingRecords" : "Loading",
+    "sProcessing" : "Processing",
+    "sSearch" : "Search",
+    "sZeroRecords" : "No matching records"
   });
   
   var usersTable = ClassFramework.newClass(usersTableName, {
@@ -64,9 +82,18 @@
         cfg = cfg || {};
         cfg.queryType = cfg.queryType || defaultQueryType;
         this._config = cfg;
+        this._adminRoles = [];
+        this._dashboardRoles = [];
         
-        this.$initialize("div");
-        
+        this.$initialize("div");        
+      },
+      
+      addAdminRole : function(role){
+        this._adminRoles.push(role);      
+      },
+      
+      addDashboardRole : function(role){
+        this._dashboardRoles.push(role);            
       },
       
       _makeNewOrEditForm : function(user, metadataDTO) {
@@ -75,28 +102,28 @@
         
         if(user.isFirstNameWritable())
         {
-          var firstNameInput = form.newInput('text', 'firstName', {attributes:{type:'text', id:'firstName'}});
+          var firstNameInput = FormEntry.newInput('text', 'firstName', {attributes:{type:'text', id:'firstName'}});
           firstNameInput.setValue(user ? user.getFirstName() : "");
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("firstName").getAttributeMdDTO().getDisplayLabel(), firstNameInput));          
         }
         
         if(user.isLastNameWritable())
         {
-          var lastNameInput = form.newInput('text', 'lastName', {attributes:{type:'text', id:'lastName'}});
+          var lastNameInput = FormEntry.newInput('text', 'lastName', {attributes:{type:'text', id:'lastName'}});
           lastNameInput.setValue(user ? user.getLastName() : "");
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("lastName").getAttributeMdDTO().getDisplayLabel(), lastNameInput));          
         }
         
         if(user.isPhoneNumberWritable())
         {
-          var phoneNumberInput = form.newInput('text', 'phoneNumber', {attributes:{type:'text', id:'phoneNumber'}});
+          var phoneNumberInput = FormEntry.newInput('text', 'phoneNumber', {attributes:{type:'text', id:'phoneNumber'}});
           phoneNumberInput.setValue(user ? user.getPhoneNumber() : "");
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("phoneNumber").getAttributeMdDTO().getDisplayLabel(), phoneNumberInput));          
         }
         
         if(user.isEmailWritable())
         {
-          var emailInput = form.newInput('text', 'email', {attributes:{type:'text', id:'email'}});
+          var emailInput = FormEntry.newInput('text', 'email', {attributes:{type:'text', id:'email'}});
           emailInput.setValue(user ? user.getEmail() : "");
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("email").getAttributeMdDTO().getDisplayLabel(), emailInput));  
           
@@ -123,17 +150,17 @@
                 
         if(user.isUsernameWritable())
         {          
-          var usernameInput = form.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
+          var usernameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
           usernameInput.setValue(user ? user.getUsername() : "");
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("username").getAttributeMdDTO().getDisplayLabel(), usernameInput));
         }
         
         if(user.isPasswordWritable())
         {         
-          var passwordInput = form.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
+          var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
           form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("password").getAttributeMdDTO().getDisplayLabel(), passwordInput));
           
-          var confirmInput = form.newInput('text', 'confirm', {attributes:{type:'password', id:'confirm'}});
+          var confirmInput = FormEntry.newInput('text', 'confirm', {attributes:{type:'password', id:'confirm'}});
           form.addEntry(new FormEntry(this.localize("confirmPassword"), confirmInput));
           
           var validatePassword = Mojo.Util.bind(this, function()
@@ -167,7 +194,30 @@
           passwordInput.addEventListener('blur', validatePassword);
           confirmInput.addEventListener('blur', validatePassword);
         }
-                        
+        
+        // Build the admin role section
+        form.appendChild(this.getFactory().newElement('h2', this.localize('adminRoleHeader')));
+        
+        for (var i = 0; i < this._adminRoles.length; ++i) {
+          var role = this._adminRoles[i];
+          var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
+          
+          var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry(role.getRoleId(), role.getDisplayLabel(), options);
+          form.addEntry(entry);
+        }  
+        
+        // Build the dashboard role section
+        form.appendChild(this.getFactory().newElement('h2', this.localize('dashboardRoleHeader')));
+
+        for (var i = 0; i < this._dashboardRoles.length; ++i) {
+          var role = this._dashboardRoles[i];
+          var options = [{displayLabel:this.localize('allow'), value:role.getRoleId, checked:role.getAssigned()}]; 
+            
+          var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry(role.getRoleId(), role.getDisplayLabel(), options);
+          form.addEntry(entry);
+        }  
+        
+        
         return form;
       },
       
@@ -269,7 +319,7 @@
             }
           });
           
-          user.apply(applyCallback);            
+          user.applyWithRoles(applyCallback, []);            
         };
         
         
@@ -417,6 +467,29 @@
         
         // Remove the search control from the table
         this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
+
+        // Localize the datatable widget
+        this._config.oLanguage = {
+          oAria: {
+            sSortAscending: this.localize("sSortAscending"),
+            sSortDescending: this.localize("sSortDescending")
+          },
+          oPaginate: {
+            sFirst: this.localize("sFirst"),
+            sLast: this.localize("sLast"),
+            sNext: this.localize("sNext"),
+            sPrevious: this.localize("sPrevious")
+          },
+          sEmptyTable: this.localize("sEmptyTable"),
+          sInfo: this.localize("sInfo"),
+          sInfoEmpty: this.localize("sInfoEmpty"),
+          sInfoFiltered: this.localize("sInfoFiltered"),
+          sLengthMenu: this.localize("sLengthMenu"),
+          sLoadingRecords: this.localize("sLoadingRecords"),
+          sProcessing: this.localize("sProcessing"),
+          sSearch: this.localize("sSearch"),
+          sZeroRecords: this.localize("sZeroRecords")
+        };        
         
         this._table = new GenericDataTable(this._config);
         this._table.addEventListener('click', Mojo.Util.bind(this, this._clickHandler));

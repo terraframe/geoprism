@@ -1,6 +1,28 @@
+<%--
+
+    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
@@ -8,7 +30,6 @@
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
 <c:set var="page_title" scope="request" value="Manage Geoentities"/>
-
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -33,8 +54,9 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/ontology/GeoEntityTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -78,7 +100,7 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -97,10 +119,26 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var tree = new com.runwaysdk.ui.ontology.GeoEntityTree({
+  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
     termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
     relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+    crud: {
+      create: {
+        height: 305,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
+      },
+      update: {
+        height: 305,
+        buttons: [
+          {"class": "btn btn-primary"}, // Submit
+          {"class": "btn"} // Cancel
+        ]
+      }
+    }
   });
   tree.render("#tree");
 </script>

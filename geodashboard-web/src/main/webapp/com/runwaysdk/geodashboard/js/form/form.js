@@ -29,42 +29,24 @@
     "communicating" : "Communicating with server",
     "information" : "Information",
   });  
-  
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
+
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractFormEntry', {
+    IsAbstract : true,
     Instance : {
-      initialize : function(displayLabel, widget)
+      initialize : function()
       {
         this._parent = null;
         this._rendered = false;
         this._isDestroyed = false;
-        
-        this._widget = widget;
-                
-        this._div = this.getFactory().newElement('div');
-        this._div.setAttribute('class', 'field-row clearfix');
-        
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
-        this._label.setAttribute('for', this._widget.getName());
-        
-        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
-        
-        this._div.appendChild(this._label);
-        this._div.appendChild(this._widget);
-        this._div.appendChild(this._error);        
-                
-        this.setId(widget.getId());
+      },  
+      removeInlineError : {
+        IsAbstract : true
+      },    
+      addInlineError : {
+        IsAbstract : true
       },
-      getDiv : function()
-      {
-        return this._div;
-      },
-      getLabel : function()
-      {
-        return this._label;
-      },
-      getWidget : function()
-      {
-        return this._widget;
+      accept : {
+        IsAbstract : true
       },
       getManager: function()
       {
@@ -73,7 +55,7 @@
       getFactory : function()
       {
         return this.getManager().getFactory();
-      },
+      },      
       setParent : function(parent)
       {
         if (Mojo.Util.isUndefined(parent)) {
@@ -102,6 +84,7 @@
       equals : function(obj)
       {
         var eq = this.$equals(obj);
+          
         if(eq)
         {
           return true;
@@ -133,6 +116,58 @@
       _setRendered : function(rendered)
       {
         this._rendered = rendered;
+      }        
+    }
+  }); 
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckboxFormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+    Instance : {
+      initialize : function(id, displayLabel, options)
+      {
+        this.$initialize();
+      
+        this._options = options;
+      
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix');
+                
+        var _span = this.getFactory().newElement('span');
+        _span.setAttribute('class', 'label-text');
+        _span.setInnerHTML(displayLabel);
+        
+        var _innerDiv = this.getFactory().newElement('div');
+        _innerDiv.setAttribute('class', 'checks-frame');
+        
+        for (var i = 0; i < this._options.length; ++i) {
+          var option = this._options[i];
+          
+          var input = this.getFactory().newElement('input', {id:option.value, type:'checkbox'});
+          input.setAttribute('value', option.value);
+          
+          if(option.checked)
+          {
+            input.setAttribute('checked', true);          
+          }
+          
+          var label = new com.runwaysdk.ui.factory.runway.Label(option.displayLabel);
+          label.setAttribute('for', option.value);
+
+          _innerDiv.appendChild(input);   
+          _innerDiv.appendChild(label);   
+        }  
+      
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
+       
+        this._div.appendChild(_span);
+        this._div.appendChild(_innerDiv);
+        this._div.appendChild(this._error);   
+        
+        this.setId(id);
+      },
+      getDiv : function()
+      {
+        return this._div;
       },
       removeInlineError : function ()
       {
@@ -143,6 +178,82 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      accept : function(visitor) {
+      }           
+    }
+  });  
+
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Instance : {
+      initialize : function(displayLabel, widget)
+      {
+        this.$initialize();
+      
+        this._widget = widget;
+                
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix');
+        
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        this._label.setAttribute('for', this._widget.getName());
+        
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
+        
+        this._div.appendChild(this._label);
+        this._div.appendChild(this._widget);
+        this._div.appendChild(this._error);        
+                
+        this.setId(widget.getId());
+      },
+      getDiv : function()
+      {
+        return this._div;
+      },
+      getLabel : function()
+      {
+        return this._label;
+      },
+      getWidget : function()
+      {
+        return this._widget;
+      },
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      accept : function(visitor) {
+        this._widget.accept(visitor);
+      }     
+    },
+    Static : {
+      newInput : function(type, name, config) {
+        if (type === "text")
+        {
+          return new com.runwaysdk.ui.factory.runway.TextInput(name, config);
+        }
+        else if (type === "textarea")
+        {
+          return new com.runwaysdk.ui.factory.runway.TextArea(name, config);
+        }
+        else if (type === "hidden")
+        {
+          return new com.runwaysdk.ui.factory.runway.HiddenInput(name, config);
+        }
+        else if (type === "select")
+        {
+          return new com.runwaysdk.ui.factory.runway.Select(name, config);
+        }
+        else
+        {
+          throw new com.runwaysdk.Exception("Input type ["+type+"] not implemented");
+        }
+      },     
     }
   });  
   
@@ -174,9 +285,13 @@
       addEntry : function(formEntry)
       {
         formEntry.setParent(this);
-        this._entries.put(formEntry.getLabel().getText(), formEntry);
+        this._entries.put(formEntry.getId(), formEntry);
       
         this._section.appendChild(formEntry.getDiv());
+      },
+      appendChild : function(child)
+      {
+        this._section.appendChild(child);        
       },
       getEntries : function()
       {
@@ -207,43 +322,12 @@
         this.appendChild(this._formList);
       },
       /**
-       * Convenience method:
-       * Creates a new input of type, sets optional name & defaultValue, calls add entry.
-       */
-      addInput : function(type, name, defalutValue) {
-        var input = this.newInput(type, name);
-        input.setValue(defaultValue);
-        this.addEntry(name, input);
-      },
-      /**
        * Convenience method, invokes accept with the default visitor.
        * 
        * @returns map
        */
       getValues : function() {
         return this.accept(new com.runwaysdk.ui.factory.runway.FormVisitor());
-      },
-      newInput : function(type, name, config) {
-        if (type === "text")
-        {
-          return new com.runwaysdk.ui.factory.runway.TextInput(name, config);
-        }
-        else if (type === "textarea")
-        {
-          return new com.runwaysdk.ui.factory.runway.TextArea(name, config);
-        }
-        else if (type === "hidden")
-        {
-          return new com.runwaysdk.ui.factory.runway.HiddenInput(name, config);
-        }
-        else if (type === "select")
-        {
-          return new com.runwaysdk.ui.factory.runway.Select(name, config);
-        }
-        else
-        {
-          throw new com.runwaysdk.Exception("Input type ["+type+"] not implemented");
-        }
       },
       getAction : function() {
         return this.getRawEl().action;
@@ -283,6 +367,10 @@
       {
         return this._formList.getEntries();
       },
+      appendChild : function(child)
+      {
+        this._formList.appendChild(child);
+      },
       _generateFormId : function() {
         return this.getId()+'_RW_Form';
       },
@@ -300,7 +388,7 @@
         var entries = this.getEntries().values();
         
         for (var i = 0; i < entries.length; ++i) {
-          entries[i].getWidget().accept(visitor);
+          entries[i].accept(visitor);
         }  
         
         return visitor.finishAndReturn();
