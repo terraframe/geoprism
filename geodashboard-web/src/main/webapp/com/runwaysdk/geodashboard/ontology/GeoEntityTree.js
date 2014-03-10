@@ -77,7 +77,43 @@
         cm.render();
       },
       
+      /**
+       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a term.
+       */
+      __onContextEditClick : function(contextMenu, contextMenuItem, mouseEvent) {
+        var node = contextMenu.getTarget();
+        var termId = this.__getRunwayIdFromNode(node);
+        var that = this;
+        var parentId = this.__getRunwayIdFromNode(node.parent);
+        
+        var config = {
+          type: this._config.termType,
+          viewParams: {parentId: parentId},
+          action: "update",
+          id: termId,
+          onSuccess : function(view) {
+            var term = that._makeGeoEntityFromView(view);
+            
+            that.termCache[term.getId()] = term;
+            
+            var nodes = that.__getNodesById(term.getId());
+            for (var i = 0; i < nodes.length; ++i) {
+              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
+            }
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+        Mojo.Util.merge(this._config.crud.update, config);
+        
+        new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+      },
+      
       // @Override
+      /**
+       * This override prints the universal display label along with the geo entity display label.
+       */
       _getTermDisplayLabel : function(term) {
         var displayLabel = this.$_getTermDisplayLabel(term);
         
@@ -88,7 +124,62 @@
         return displayLabel;
       },
       
+      _makeGeoEntityFromView : function(view) {
+        var term = new com.runwaysdk.system.gis.geo.GeoEntity();
+        term.getDisplayLabel().setLocalizedValue(view.getGeoEntityDisplayLabel());
+        term.id = view.getGeoEntityId();
+        term.universalDisplayLabel = view.getUniversalDisplayLabel();
+        term.canCreateChildren = view.getCanCreateChildren();
+        term.newInstance = false;
+        return term;
+      },
+      
+      /**
+       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a TermAndRel.
+       */
+      createTerm : function(parentId) {
+        this.requireParameter("parentId", parentId, "string");
+        var that = this;
+        
+        var parentNodes = this.__getNodesById(parentId);
+        if (parentNodes == null || parentNodes == undefined) {
+          var ex = new com.runwaysdk.Exception("The provided parent [" + parentId + "] does not exist in this tree.");
+          this.handleException(ex);
+          return;
+        }
+        
+        var config = {
+          type: this._config.termType,
+          viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          action: "create",
+          actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          onSuccess : function(view) {
+            var term = that._makeGeoEntityFromView(view);
+            var relId = view.getRelationshipId();
+            var relType = view.getRelationshipType();
+            
+            that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
+            that.termCache[term.getId()] = term;
+            
+            var $thisTree = $(that.getRawEl());
+            for (var i = 0; i < parentNodes.length; ++i) {
+              var node = that.__createTreeNode(term.getId(), parentNodes[i]);
+              $thisTree.tree("openNode", node);
+            }
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+        Mojo.Util.merge(this._config.crud.create, config);
+        
+        new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+      },
+      
       // @Override
+      /**
+       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a TermAndRel.
+       */
       refreshTerm : function(termId) {
         var that = this;
         var id = termId;
@@ -118,11 +209,7 @@
               var parentRecord = {parentId: termId, relId: view.getRelationshipId(), relType: view.getRelationshipType()};
               that.parentRelationshipCache.put(childId, parentRecord);
                
-              var term = new com.runwaysdk.system.gis.geo.GeoEntity();
-              term.getDisplayLabel().setLocalizedValue(view.getGeoEntityDisplayLabel());
-              term.id = view.getGeoEntityId();
-              term.universalDisplayLabel = view.getUniversalDisplayLabel();
-              term.canCreateChildren = view.getCanCreateChildren();
+              var term = that._makeGeoEntityFromView(view);
               
               that.termCache[childId] = term;
               
