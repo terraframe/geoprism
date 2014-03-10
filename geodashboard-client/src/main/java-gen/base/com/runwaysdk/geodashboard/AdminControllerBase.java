@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 164438994)
+@com.runwaysdk.business.ClassSignature(hash = -1306430826)
 public class AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.AdminController";
@@ -63,6 +63,20 @@ public class AdminControllerBase implements com.runwaysdk.generation.loader.Relo
   public com.runwaysdk.ClientSession getClientSession()
   {
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void databrowser() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.databrowser");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void failDatabrowser() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failDatabrowser");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)

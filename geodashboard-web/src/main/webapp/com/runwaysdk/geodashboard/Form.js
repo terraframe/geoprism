@@ -441,7 +441,7 @@
         var label = attributeMdDTO.getDisplayLabel();
          
         if(attributeMdDTO.isRequired()) {
-          label += "*";
+          label += " *";
         }
          
         this.addEntry(new com.runwaysdk.geodashboard.FormEntry(label, input));        

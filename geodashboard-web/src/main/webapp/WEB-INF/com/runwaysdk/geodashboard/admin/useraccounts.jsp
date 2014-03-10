@@ -71,11 +71,11 @@
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
 
 <!-- Geodashboard form -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/form/form.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
 
 <!-- Users table -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/userstable/UsersTable.js"></script>
-<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/js/userstable/UsersTable.css" />
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/userstable/UsersTable.js"></script>
+<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/userstable/UsersTable.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>

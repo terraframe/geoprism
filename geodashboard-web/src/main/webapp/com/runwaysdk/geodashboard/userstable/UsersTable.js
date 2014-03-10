@@ -59,21 +59,21 @@
     "userInfo" : "User information",
     "allow" : "allow",
     "notAllowed" : "Not allowed to create a new user",
-    "sSortAscending" : "Sort column ascending",
-    "sSortDescending" : "Sort column descending",
+    "sSortAscending" : ": activate to sort column ascending",
+    "sSortDescending" : ": activate to sort column descending",
     "sFirst" : "First",
     "sLast" : "Last",
     "sNext" : "Next",
     "sPrevious" : "Previous",
-    "sEmptyTable" : "No data in table",
-    "sInfo" : "Showing records",
-    "sInfoEmpty" : "Showing zero records",
-    "sInfoFiltered" : "Filtered entries",
-    "sLengthMenu" : "Show menu",
-    "sLoadingRecords" : "Loading",
-    "sProcessing" : "Processing",
-    "sSearch" : "Search",
-    "sZeroRecords" : "No matching records"
+    "sEmptyTable" : "No data available in table",
+    "sInfo" : "Showing _START_ to _END_ of _TOTAL_ entries",
+    "sInfoEmpty" : "Showing 0 to 0 of 0 entries",
+    "sInfoFiltered" : "(filtered from _MAX_ total entries)",
+    "sLengthMenu" : "Show _MENU_ entries",
+    "sLoadingRecords" : "Loading...",
+    "sProcessing" : "Processing...",
+    "sSearch" : "Search:",
+    "sZeroRecords" : "No matching records found"
   });
   
   var usersTable = ClassFramework.newClass(usersTableName, {

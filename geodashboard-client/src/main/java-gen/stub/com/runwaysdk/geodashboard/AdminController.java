@@ -76,5 +76,17 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
+  
+  @Override
+  public void databrowser() throws IOException, ServletException
+  {
+    render("databrowser.jsp");
+  }
+  
+  @Override
+  public void failDatabrowser() throws IOException, ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
 
 }
