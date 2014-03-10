@@ -285,7 +285,7 @@
             
             var nodes = that.__getNodesById(term.getId());
             for (var i = 0; i < nodes.length; ++i) {
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: term.getDisplayLabel().getLocalizedValue()});
+              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
             }
           },
           onFailure : function(e) {
