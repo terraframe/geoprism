@@ -19,11 +19,17 @@
 
 --%>
 
-<jsp:include page="../templates/header.jsp"></jsp:include>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<header id="header">
-  <h1>Data Browser</h1>
-</header>
+<%@page import="com.runwaysdk.system.scheduler.ExecutableJobDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.QualifiedTypeJobDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.JobHistoryDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.JobSnapshotDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.JobHistoryViewDTO" %>
+<%@page import="com.runwaysdk.system.scheduler.JobHistoryHistoryInformationDTO" %>
+
+<c:set var="page_title" scope="request" value="Job Scheduler"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -55,6 +61,7 @@
 
 <!-- JQuery -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/TabPanel.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/ServerDataSource.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/DataSourceFactory.js"></script>
@@ -62,7 +69,10 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DataBrowser.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/PollingRequest.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/Cron.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/scheduler/Scheduler.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
@@ -87,8 +97,9 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      UsersDTO.CLASS
-    }, true);
+      ExecutableJobDTO.CLASS, ExecutableJobDescriptionDTO.CLASS, QualifiedTypeJobDTO.CLASS, JobHistoryDTO.CLASS, JobSnapshotDTO.CLASS,
+      JobHistoryViewDTO.CLASS, JobHistoryHistoryInformationDTO.CLASS
+      }, true);
     out.print(js);
     
   }
@@ -100,16 +111,12 @@
 %>
 </script>
 
-<div id="databrowser"></div>
+<div id="scheduler"></div>
 
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var db = new com.runwaysdk.geodashboard.DataBrowser({
-    types: ["com.runwaysdk.system.Users", "com.runwaysdk.Business"]
-  });
-  db.render("#databrowser");
+  var ut = new com.runwaysdk.ui.scheduler.Scheduler();
+  ut.render("#scheduler");
   
 </script>
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>

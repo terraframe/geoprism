@@ -19,10 +19,6 @@
 
 --%>
 
-<jsp:include page="../templates/header.jsp"></jsp:include>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<header id="header">
-  <h1>Roles</h1>
-</header>
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>
+<c:set var="page_title" scope="request" value="Roles"/>

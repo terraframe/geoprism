@@ -37,11 +37,13 @@
     <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}">
       <fileset dir="${copyOrigin}" includes="**/*" />
     </copy>
-    
+
+<!--
     <echo message="Copying from ${runwayWeb}/src/main/webapp/com/runwaysdk"/>
     <copy todir="target/cargo/configurations/tomcat6x/webapps/${projectName}/com/runwaysdk">
       <fileset dir="${runwayWeb}/src/main/webapp/com/runwaysdk" includes="**/*" />
     </copy>
+-->
     
   </target>
   

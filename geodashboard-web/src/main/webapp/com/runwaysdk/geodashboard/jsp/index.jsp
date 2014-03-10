@@ -19,7 +19,7 @@
 
 --%>
 
-<jsp:include page="./templates/header.jsp"></jsp:include>
+<jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -37,4 +37,4 @@
 
 <p>Powered by Runway SDK™</p>
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>

@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<jsp:include page="../templates/header.jsp"></jsp:include>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %>
@@ -30,9 +30,7 @@
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
-<header id="header">
-  <h1>Manage Geoentities</h1>
-</header>
+<c:set var="page_title" scope="request" value="Manage Geoentities"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -138,6 +136,3 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   });
   tree.render("#tree");
 </script>
-
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>

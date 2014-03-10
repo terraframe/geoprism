@@ -18,11 +18,13 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<jsp:include page="../templates/header.jsp"></jsp:include>
+<%@page import="com.runwaysdk.system.RolesDTO"%>
+<%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<header id="header">
-  <h1>User Accounts</h1>
-</header>
+<%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
+
+<c:set var="page_title" scope="request" value="User Accounts"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -64,10 +66,16 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/PollingRequest.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/userstable/UsersTable.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
+
+<!-- Geodashboard form -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
+
+<!-- Users table -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/userstable/UsersTable.js"></script>
+<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/userstable/UsersTable.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
@@ -89,7 +97,7 @@
 	try
 	{
 	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	      UsersDTO.CLASS
+	      GeodashboardUserDTO.CLASS, RoleViewDTO.CLASS, RolesDTO.CLASS
 	    }, true);
 	  out.print(js);
 	  
@@ -107,10 +115,7 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.ui.userstable.UsersTable();
+  var ut = new com.runwaysdk.ui.userstable.UsersTable();  
   ut.render("#usersTable");
   
 </script>
-
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>
