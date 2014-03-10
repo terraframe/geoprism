@@ -395,6 +395,24 @@
         cm.render();
       },
       
+      setTermBusy : function(termId, bool) {
+        var $tree = $(this.getRawEl());
+        var nodes = this.__getNodesById(termId);
+
+        for (var i = 0; i<nodes.length; ++i) {
+          var node = nodes[i];
+          
+          // I had to change the jqTree source to be able to invoke this private method... (but theres no other way to get at the raw DOM element)
+          var el = $tree.tree("_getNodeElementForNode", node).getLi();
+          if (bool) {
+            el.addClass("jqtree-loading");
+          }
+          else {
+            el.removeClass("jqtree-loading");
+          }
+        }
+      },
+      
       /**
        * is binded to jqtree's node move event.s
        */
@@ -508,6 +526,8 @@
         var that = this;
         var id = termId;
         
+        this.setTermBusy(termId, true);
+        
         var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
@@ -540,6 +560,8 @@
                 node.hasFetched = true;
               }
             }
+            
+            that.setTermBusy(termId, false);
           },
           
           onFailure : function(err) {

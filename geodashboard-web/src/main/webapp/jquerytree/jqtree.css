@@ -2,8 +2,12 @@
 THESE STYLES ARE ADDED CUSTOM TO FIX A BUG I ENCOUNTERED IN JQTREE WHEN USING BOOTSTRAP:
 */
 ul.jqtree-tree ul.jqtree_common {
-    margin-left: 0 !important;
-    padding-left: 16px !important;
+  margin-left: 0 !important;
+  padding-left: 16px !important;
+}
+ul.jqtree_common > li.jqtree-loading > div.jqtree-element > span.jqtree-title:after {
+  content: url(busy.gif);
+  margin-left: 8px;
 }
 /*
 
