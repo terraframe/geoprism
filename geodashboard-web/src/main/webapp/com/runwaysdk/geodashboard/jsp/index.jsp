@@ -31,16 +31,6 @@
 <br/>
 <br/>
 
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
-<%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
-%>
-
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/terraframe_logo.png" alt="Terraframe Logo">
-
-<br/>
-<br/>
-
 <header id="header">
   <h1>Geo Dashboard</h1>
 </header>

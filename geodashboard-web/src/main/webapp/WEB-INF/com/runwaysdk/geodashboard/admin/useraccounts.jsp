@@ -18,6 +18,8 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@page import="com.runwaysdk.system.RolesDTO"%>
+<%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
@@ -95,7 +97,7 @@
 	try
 	{
 	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	      GeodashboardUserDTO.CLASS
+	      GeodashboardUserDTO.CLASS, RoleViewDTO.CLASS, RolesDTO.CLASS
 	    }, true);
 	  out.print(js);
 	  
@@ -113,7 +115,7 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.ui.userstable.UsersTable();
+  var ut = new com.runwaysdk.ui.userstable.UsersTable();  
   ut.render("#usersTable");
   
 </script>

@@ -39,8 +39,10 @@
     "editUser" : "Edit",
     "deleteUser" : "Delete",
     "dialogEditUserTitle" : "Edit User",
+    "dialogViewUserTitle" : "View User",
     "submit" : "Submit",
     "cancel" : "Cancel",
+    "close" : "Close",
     "dialogNewUserTitle" : "New User",
     "dialogDeleteUserTitle" : "Confirm Delete",
     "delete" : "Delete",
@@ -53,7 +55,10 @@
     "admin" : "Admin",
     "adminRoleHeader" : "System roles",
     "dashboardRoleHeader" : "Dashbaord roles",
+    "accountInfo" : "Account information",
+    "userInfo" : "User information",
     "allow" : "allow",
+    "notAllowed" : "Not allowed to create a new user",
     "sSortAscending" : "Sort column ascending",
     "sSortDescending" : "Sort column descending",
     "sFirst" : "First",
@@ -81,51 +86,63 @@
         
         cfg = cfg || {};
         cfg.queryType = cfg.queryType || defaultQueryType;
-        this._config = cfg;
-        this._adminRoles = [];
-        this._dashboardRoles = [];
-        
+        this._config = cfg;        
+        this._roleMd = new com.runwaysdk.system.Roles();
+                
         this.$initialize("div");        
       },
       
-      addAdminRole : function(role){
-        this._adminRoles.push(role);      
-      },
-      
-      addDashboardRole : function(role){
-        this._dashboardRoles.push(role);            
-      },
-      
-      _makeNewOrEditForm : function(user, metadataDTO) {
+      _makeNewOrEditForm : function(user, metadataDTO, adminRoles, dashboardRoles) {
         var form = new Form();
         form.addClassName('submit-form');
+        
+        // Build the admin role section
+        form.appendElement(this._newHeader(this.localize('userInfo')));
         
         if(user.isFirstNameWritable())
         {
           var firstNameInput = FormEntry.newInput('text', 'firstName', {attributes:{type:'text', id:'firstName'}});
           firstNameInput.setValue(user ? user.getFirstName() : "");
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("firstName").getAttributeMdDTO().getDisplayLabel(), firstNameInput));          
+          form.addFormEntry(metadataDTO.getAttributeDTO("firstName").getAttributeMdDTO(), firstNameInput);          
+        }
+        else if(user.isFirstNameReadable())
+        {
+          var label = metadataDTO.getAttributeDTO("firstName").getAttributeMdDTO().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('firstName', label, user ? user.getFirstName() : "");
+          form.addEntry(entry);                  
         }
         
         if(user.isLastNameWritable())
         {
           var lastNameInput = FormEntry.newInput('text', 'lastName', {attributes:{type:'text', id:'lastName'}});
           lastNameInput.setValue(user ? user.getLastName() : "");
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("lastName").getAttributeMdDTO().getDisplayLabel(), lastNameInput));          
+          form.addFormEntry(metadataDTO.getAttributeDTO("lastName").getAttributeMdDTO(), lastNameInput);          
+        }
+        else if(user.isLastNameReadable())
+        {
+          var label = metadataDTO.getAttributeDTO("lastName").getAttributeMdDTO().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('lastName', label, user ? user.getLastName() : "");
+          form.addEntry(entry);                  
         }
         
         if(user.isPhoneNumberWritable())
         {
           var phoneNumberInput = FormEntry.newInput('text', 'phoneNumber', {attributes:{type:'text', id:'phoneNumber'}});
           phoneNumberInput.setValue(user ? user.getPhoneNumber() : "");
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("phoneNumber").getAttributeMdDTO().getDisplayLabel(), phoneNumberInput));          
+          form.addFormEntry(metadataDTO.getAttributeDTO("phoneNumber").getAttributeMdDTO(), phoneNumberInput);
+        }
+        else if(user.isPhoneNumberReadable())
+        {
+          var label = metadataDTO.getAttributeDTO("phoneNumber").getAttributeMdDTO().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('phoneNumber', label, user ? user.getPhoneNumber() : "");
+          form.addEntry(entry);                  
         }
         
         if(user.isEmailWritable())
         {
           var emailInput = FormEntry.newInput('text', 'email', {attributes:{type:'text', id:'email'}});
           emailInput.setValue(user ? user.getEmail() : "");
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("email").getAttributeMdDTO().getDisplayLabel(), emailInput));  
+          form.addFormEntry(metadataDTO.getAttributeDTO("email").getAttributeMdDTO(), emailInput);
           
           var validateEmail = Mojo.Util.bind(this, function()
           {
@@ -147,18 +164,35 @@
           
           emailInput.addEventListener('blur', validateEmail);
         }
+        else if(user.isEmailReadable())
+        {
+          var label = metadataDTO.getAttributeDTO("email").getAttributeMdDTO().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('email', label, user ? user.getEmail() : "");
+          form.addEntry(entry);                  
+        }
+
+        
+        // Build the admin role section
+        form.appendElement(this._newHeader(this.localize('accountInfo')));
                 
         if(user.isUsernameWritable())
         {          
           var usernameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
           usernameInput.setValue(user ? user.getUsername() : "");
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("username").getAttributeMdDTO().getDisplayLabel(), usernameInput));
+          
+          form.addFormEntry(metadataDTO.getAttributeDTO("username").getAttributeMdDTO(), usernameInput);
+        }
+        else if(user.isUsernameReadable())
+        {
+          var label = metadataDTO.getAttributeDTO("username").getAttributeMdDTO().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('username', label, user ? user.getUsername() : "");
+          form.addEntry(entry);                  
         }
         
         if(user.isPasswordWritable())
         {         
           var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
-          form.addEntry(new FormEntry(metadataDTO.getAttributeDTO("password").getAttributeMdDTO().getDisplayLabel(), passwordInput));
+          form.addFormEntry(metadataDTO.getAttributeDTO("password").getAttributeMdDTO(), passwordInput);
           
           var confirmInput = FormEntry.newInput('text', 'confirm', {attributes:{type:'password', id:'confirm'}});
           form.addEntry(new FormEntry(this.localize("confirmPassword"), confirmInput));
@@ -194,31 +228,42 @@
           passwordInput.addEventListener('blur', validatePassword);
           confirmInput.addEventListener('blur', validatePassword);
         }
+                
+        // Check if the user has role permssions
+        if(this._roleMd.isWritable())
+        {
+          // Build the admin role section
+          form.appendElement(this._newHeader(this.localize('adminRoleHeader')));
         
-        // Build the admin role section
-        form.appendChild(this.getFactory().newElement('h2', this.localize('adminRoleHeader')));
-        
-        for (var i = 0; i < this._adminRoles.length; ++i) {
-          var role = this._adminRoles[i];
-          var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
+          for (var i = 0; i < adminRoles.length; ++i) {
+            var role = adminRoles[i];
+            var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
           
-          var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry(role.getRoleId(), role.getDisplayLabel(), options);
-          form.addEntry(entry);
-        }  
+            var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
+            form.addEntry(entry);
+          }  
         
-        // Build the dashboard role section
-        form.appendChild(this.getFactory().newElement('h2', this.localize('dashboardRoleHeader')));
+          // Build the dashboard role section
+          form.appendElement(this._newHeader(this.localize('dashboardRoleHeader')));
 
-        for (var i = 0; i < this._dashboardRoles.length; ++i) {
-          var role = this._dashboardRoles[i];
-          var options = [{displayLabel:this.localize('allow'), value:role.getRoleId, checked:role.getAssigned()}]; 
+          for (var i = 0; i < dashboardRoles.length; ++i) {
+            var role = dashboardRoles[i];
+            var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
             
-          var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry(role.getRoleId(), role.getDisplayLabel(), options);
-          form.addEntry(entry);
-        }  
-        
-        
+            var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
+            form.addEntry(entry);
+          }  
+        }
+                
         return form;
+      },
+      
+      _newHeader : function(displayLabel) {
+        // Build the admin role section
+        var header = this.getFactory().newElement('h2');
+        header.setInnerHTML(displayLabel);
+
+        return header;
       },
       
       _isValidEmail : function(email) { 
@@ -258,6 +303,27 @@
         }                   
       },
       
+      _getRoles : function (values)
+      {
+        var roles = [];
+        var keys = values.keySet();
+    
+        for (var i = 0; i < keys.length; i++)
+        {
+          if(keys[i].indexOf('role_') !== -1)
+          {
+            var value = values.get(keys[i]);
+            
+            if(value.length > 0)
+            {
+              roles.push(value[0]);
+            }
+          }
+        }
+        
+        return roles;
+      },
+      
       _onEditUser : function(e) {
         var target = e.getTarget();
         var id = target.id;        
@@ -275,62 +341,163 @@
           } 
         });        
         
-        user.lock(callback);
+        if(user.isWritable())
+        {
+          user.lock(callback);
+        }
+        else if(user.isReadable())
+        {
+          this._buildDialog(this.localize("dialogViewUserTitle"), user);        
+        }
       },
 
       
       _onNewUser : function(e) {        
-        this._buildDialog(this.localize("dialogNewUserTitle"), new com.runwaysdk.geodashboard.GeodashboardUser());      
+        var user = new com.runwaysdk.geodashboard.GeodashboardUser();
+      
+        if(user.isWritable())
+        {
+          this._buildDialog(this.localize("dialogNewUserTitle"), user);
+        }
+        else
+        {
+          var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+          dialog.appendContent(this.localize("notAllowed"));
+          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+          dialog.render();
+        }
       },     
       
       _buildDialog : function(label, user) {
-        var fac = this.getFactory();
-        var table = this._table;
-        var metadataDTO = table.getDataSource().getMetadataQueryDTO();
+      
+        var Structure = com.runwaysdk.structure;
+        var tq = new Structure.TaskQueue();
+        var that = this;
+        var adminRoles = [];
+        var dashboardRoles = [];
+          
+        // First load the users admin role information
+        tq.addTask(new Structure.TaskIF({
+          start : function(){
+          
+            var callback = new Mojo.ClientRequest({
+              onSuccess : function(roles) {
+                for(var i = 0; i < roles.length; i++) {
+                  adminRoles.push(roles[i]);                  
+                }
+                
+                tq.next();
+              },
+              onFailure : function(ex) {
+                tq.stop();
+                that.handleException(ex);               
+              }
+            }); 
+                  
+            com.runwaysdk.geodashboard.RoleView.getAdminRoles(callback, user);
+          }
+        }));
         
-        var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});        
-        var form = this._makeNewOrEditForm(user, metadataDTO);
-        dialog.appendContent(form);
+        // Second load the users dashboard role information
+        tq.addTask(new Structure.TaskIF({
+          start : function(){
+            
+            var callback = new Mojo.ClientRequest({
+              onSuccess : function(roles) {
+                for(var i = 0; i < roles.length; i++) {
+                  dashboardRoles.push(roles[i]);                  
+                }
+                  
+                tq.next();
+              },
+              onFailure : function(ex) {
+                tq.stop();
+                that.handleException(ex);               
+              }
+            }); 
+                    
+            com.runwaysdk.geodashboard.RoleView.getDashboardRoles(callback, user);
+          }
+        }));
+                     
+        // Last build the dialog form
+        tq.addTask(new Structure.TaskIF({
+          start : function(){
+            var fac = that.getFactory();
+            var table = that._table;
+            var metadataDTO = table.getDataSource().getMetadataQueryDTO();
         
-        var that = this;  
+            var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});        
+            var form = that._makeNewOrEditForm(user, metadataDTO, adminRoles, dashboardRoles);
+            dialog.appendContent(form);
         
-        var submitCallback = function() {
-          // Disable the buttons to prevent multiple submits
-          document.getElementById('user-submit').disabled = true;
-          document.getElementById('user-cancel').disabled = true;
+            if(user.isWritable())
+            {
+              var submitCallback = function() {
+                // Disable the buttons to prevent multiple submits
+                document.getElementById('user-submit').disabled = true;
+                document.getElementById('user-cancel').disabled = true;
           
-          // Clear any existing error messages
-          form.removeErrorMessages();
+                // Clear any existing error messages
+                form.removeErrorMessages();
           
-          var values = form.getValues();
+                var values = form.getValues();
           
-          that._populateComponent(user, values);
+                var roles = that._getRoles(values);
+                that._populateComponent(user, values);
           
-          var applyCallback = new Mojo.ClientRequest({
-            onSuccess : function() {
-              dialog.close();                
-              table.refresh();
-            },
-            onFailure : function(ex) {
-              form.handleException(ex);
+                var applyCallback = new Mojo.ClientRequest({
+                  onSuccess : function() {
+                    dialog.close();                
+                    table.refresh();
+                  },
+                  onFailure : function(ex) {
+                    form.handleException(ex);
               
-              document.getElementById('user-submit').disabled = false;
-              document.getElementById('user-cancel').disabled = false;              
-            }
-          });
+                    document.getElementById('user-submit').disabled = false;
+                    document.getElementById('user-cancel').disabled = false;              
+                  }
+                });
           
-          user.applyWithRoles(applyCallback, []);            
-        };
+                if(that._roleMd.isWritable()) {
+                  user.applyWithRoles(applyCallback, roles);            
+                }
+                else {
+                  user.apply(applyCallback);
+                }
+              };
         
         
-        var cancelCallback = function() {
-          dialog.close();
-        };
+              var cancelCallback = function() {
+                var unlockCallback = new Mojo.ClientRequest({
+                  onSuccess : function() {
+                    dialog.close();                
+                  },
+                  onFailure : function(ex) {
+                    form.handleException(ex);
+                  }
+                });
+            
+                user.unlock(unlockCallback);  
+              };
         
-        dialog.addButton(that.localize("submit"), submitCallback, null, {id:'user-submit', class:'btn btn-primary'});
-        dialog.addButton(that.localize("cancel"), cancelCallback, null, {id:'user-cancel', class:'btn'});
+              dialog.addButton(that.localize("submit"), submitCallback, null, {id:'user-submit', class:'btn btn-primary'});
+              dialog.addButton(that.localize("cancel"), cancelCallback, null, {id:'user-cancel', class:'btn'});            
+            }
+            else if(user.isReadable())
+            {
+              dialog.addButton(that.localize("close"), function(){dialog.close()}, null, {id:'user-cancel', class:'btn btn-primary'});            
+            }
         
-        dialog.render();        
+            dialog.render();   
+        
+            if (jcf != null && jcf.customForms != null) {
+              jcf.customForms.replaceAll();
+            }
+          }
+        }));
+        
+        tq.start();
       },     
       
       _onDeleteUser : function(e) {
@@ -396,13 +563,13 @@
         var target = e.getTarget();
         var klass = target.getAttribute('class');
         
-        if(klass.contains('table-edit'))
+        if(klass.indexOf('table-edit') !== -1)
         {
           e.preventDefault();
             
           this._onEditUser(e);
         }
-        else if (klass.contains('table-delete'))
+        else if (klass.indexOf('table-delete') !== -1)
         {
           e.preventDefault();
           

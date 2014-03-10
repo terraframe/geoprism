@@ -127,7 +127,7 @@
       {
         this.$initialize();
       
-        this._options = options;
+        this._inputs = [];
       
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix');
@@ -139,8 +139,8 @@
         var _innerDiv = this.getFactory().newElement('div');
         _innerDiv.setAttribute('class', 'checks-frame');
         
-        for (var i = 0; i < this._options.length; ++i) {
-          var option = this._options[i];
+        for (var i = 0; i < options.length; ++i) {
+          var option = options[i];
           
           var input = this.getFactory().newElement('input', {id:option.value, type:'checkbox'});
           input.setAttribute('value', option.value);
@@ -154,16 +154,22 @@
           label.setAttribute('for', option.value);
 
           _innerDiv.appendChild(input);   
-          _innerDiv.appendChild(label);   
+          _innerDiv.appendChild(label);
+          
+          this._inputs.push(input);
         }  
       
-        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
        
         this._div.appendChild(_span);
         this._div.appendChild(_innerDiv);
         this._div.appendChild(this._error);   
         
         this.setId(id);
+      },
+      getName : function()
+      {
+        return this.getId();
       },
       getDiv : function()
       {
@@ -178,7 +184,20 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      getValues : function() {
+        var selectedOptions = [];
+        
+        for (var i = 0; i < this._inputs.length; i++)
+        {
+          if (this._inputs[i].getRawEl().checked)
+          {
+            selectedOptions.push(this._inputs[i].getValue());
+          }
+        }
+        return selectedOptions;
+      },      
       accept : function(visitor) {
+        visitor.visitSelect(this);      
       }           
     }
   });  
@@ -257,6 +276,61 @@
     }
   });  
   
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ReadEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Instance : {
+      initialize : function(id, displayLabel, value)
+      {
+        this.$initialize();
+        
+        this._value = value;
+        this._name = name;
+        
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix');
+        
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, id);
+        this._label.setAttribute('for', id);
+        
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
+        
+        this._div.appendChild(this._label);
+        this._div.appendChild(new com.runwaysdk.ui.factory.runway.Label(value, id));
+        this._div.appendChild(this._error);        
+        
+        this.setId(id);
+      },
+      getName : function()
+      {
+        return this._name;  
+      },
+      getValue : function()
+      {
+        return this._value;  
+      },
+      getLabel : function()
+      {
+        return this._label;
+      },      
+      getDiv : function()
+      {
+        return this._div;
+      },
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      accept : function(visitor) {
+        visitor.visitDefaultInput(this);
+      }     
+    }
+  });  
+  
   var FormList = Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormList', {
     Extends : Widget,
     Instance : {
@@ -289,7 +363,7 @@
       
         this._section.appendChild(formEntry.getDiv());
       },
-      appendChild : function(child)
+      appendElement : function(child)
       {
         this._section.appendChild(child);        
       },
@@ -363,13 +437,22 @@
       {
         this._formList.addEntry(entry);
       },
+      addFormEntry : function(attributeMdDTO, input) {
+        var label = attributeMdDTO.getDisplayLabel();
+         
+        if(attributeMdDTO.isRequired()) {
+          label += "*";
+        }
+         
+        this.addEntry(new com.runwaysdk.geodashboard.FormEntry(label, input));        
+      },      
       getEntries : function()
       {
         return this._formList.getEntries();
       },
-      appendChild : function(child)
+      appendElement : function(child)
       {
-        this._formList.appendChild(child);
+        this._formList.appendElement(child);
       },
       _generateFormId : function() {
         return this.getId()+'_RW_Form';

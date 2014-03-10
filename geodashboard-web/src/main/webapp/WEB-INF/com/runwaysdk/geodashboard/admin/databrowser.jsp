@@ -18,17 +18,14 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
-<jsp:include page="../templates/header.jsp"></jsp:include>
-
-<header id="header">
-  <h1>Data Browser</h1>
-</header>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
+
+<c:set var="page_title" scope="request" value="Data Browser"/>
 
 <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>
@@ -111,5 +108,3 @@
   db.render("#databrowser");
   
 </script>
-
-<jsp:include page="../templates/footer.jsp"></jsp:include>

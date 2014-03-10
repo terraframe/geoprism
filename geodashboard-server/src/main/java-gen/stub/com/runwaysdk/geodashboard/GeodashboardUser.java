@@ -1,9 +1,13 @@
 package com.runwaysdk.geodashboard;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.runwaysdk.business.rbac.RoleDAO;
-import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
+import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
 
 public class GeodashboardUser extends GeodashboardUserBase implements com.runwaysdk.generation.loader.Reloadable
@@ -26,27 +30,45 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   }
 
   @Override
-  @Transaction
-  public void applyWithRoles(String[] roleIds)
+  public void apply()
   {
     boolean firstApply = this.isNew() && !this.isAppliedToDB();
 
-    this.apply();
+    super.apply();
 
     if (firstApply)
     {
       this.setOwner(this);
-
-      this.apply();
+      super.apply();
     }
+  }
+
+  @Override
+  @Transaction
+  public void applyWithRoles(String[] roleIds)
+  {
+    this.apply();
+    
+    Roles[] roles = RoleView.getGeodashboardRoles();
+    List<String> list = Arrays.asList(roleIds);
+
+    UserDAOIF user = UserDAO.get(this.getId());
 
     /*
      * Assign roles
      */
-    for (String roleId : roleIds)
+    for (Roles role : roles)
     {
-      RoleDAOIF role = RoleDAO.get(roleId);
-      role.assignMember(UserDAO.get(this.getId()));
+      RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
+
+      if (list.contains(role.getId()))
+      {
+        roleDAO.assignMember(user);
+      }
+      else
+      {
+        roleDAO.deassignMember(user);
+      }
     }
   }
 

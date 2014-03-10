@@ -19,10 +19,24 @@
         <mdAction name="universal" label="Universal" isPost="false" isQuery="false"  />
         <mdAction name="scheduler" label="Universal" isPost="false" isQuery="false"  />
       </mdController>
+      <mdView name="com.runwaysdk.geodashboard.RoleView" label="Role view" >
+        <attributes>
+          <char name="roleId" label="Role id" size="64" required="true"/>
+          <text name="displayLabel" label="Display label" />
+          <boolean name="assigned" label="Is assigned" description="Flag denoting if the current user is assigned to the role"/>
+        </attributes>
+        <mdMethod name="getAdminRoles" label="Get admin roles" static="true" returnType="com.runwaysdk.geodashboard.RoleView[]" >
+          <mdParameter name="user" label="User" order="0" type="com.runwaysdk.geodashboard.GeodashboardUser"/>
+        </mdMethod>        
+        <mdMethod name="getDashboardRoles" label="Get dashboard roles" static="true" returnType="com.runwaysdk.geodashboard.RoleView[]" >
+          <mdParameter name="user" label="User" order="0" type="com.runwaysdk.geodashboard.GeodashboardUser"/>        
+        </mdMethod>        
+      </mdView>
     </create>
   </doIt>
   <undoIt>
     <delete>
+      <object key="com.runwaysdk.geodashboard.RoleView" type="com.runwaysdk.system.metadata.MdView"/>
       <object key="com.runwaysdk.geodashboard.AdminController" type="com.runwaysdk.system.metadata.MdController"/>
       <object key="com.runwaysdk.geodashboard.GeodashboardUser" type="com.runwaysdk.system.metadata.MdBusiness"/>
     </delete>
