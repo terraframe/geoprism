@@ -469,16 +469,23 @@
         
         
               var cancelCallback = function() {
-                var unlockCallback = new Mojo.ClientRequest({
-                  onSuccess : function() {
-                    dialog.close();                
-                  },
-                  onFailure : function(ex) {
-                    form.handleException(ex);
-                  }
-                });
+                if(!user.isNewInstance())
+                {                
+                  var unlockCallback = new Mojo.ClientRequest({
+                    onSuccess : function() {
+                      dialog.close();                
+                    },
+                    onFailure : function(ex) {
+                      form.handleException(ex);
+                    }
+                  });
             
-                user.unlock(unlockCallback);  
+                  user.unlock(unlockCallback);  
+                }
+                else
+                {
+                  dialog.close();
+                }
               };
         
               dialog.addButton(that.localize("submit"), submitCallback, null, {id:'user-submit', class:'btn btn-primary'});
