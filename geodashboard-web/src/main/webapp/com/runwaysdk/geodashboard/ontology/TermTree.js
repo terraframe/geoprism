@@ -395,6 +395,12 @@
         cm.render();
       },
       
+      /**
+       * Invokes a private method on jqTree to get the underlying DOM element, and then applies/removes "jqtree-loading" classname to the element.
+       * 
+       * @param termId
+       * @param bool
+       */
       setTermBusy : function(termId, bool) {
         var $tree = $(this.getRawEl());
         var nodes = this.__getNodesById(termId);
