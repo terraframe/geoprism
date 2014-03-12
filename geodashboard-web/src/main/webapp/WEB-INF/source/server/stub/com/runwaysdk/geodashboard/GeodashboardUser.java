@@ -7,6 +7,7 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
 
@@ -48,7 +49,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   public void applyWithRoles(String[] roleIds)
   {
     this.apply();
-    
+
     Roles[] roles = RoleView.getGeodashboardRoles();
     List<String> list = Arrays.asList(roleIds);
 
@@ -70,6 +71,11 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
         roleDAO.deassignMember(user);
       }
     }
+  }
+
+  public static GeodashboardUser getCurrentUser()
+  {
+    return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
   }
 
 }
