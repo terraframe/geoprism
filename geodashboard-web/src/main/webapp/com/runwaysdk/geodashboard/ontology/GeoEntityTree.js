@@ -58,6 +58,9 @@
         var parentId = this.__getRunwayIdFromNode(e.node.parent);
         var term = this.termCache[this.__getRunwayIdFromNode(e.node)];
         
+        var $tree = $(this.getRawEl());
+        $tree.tree('selectNode', e.node);
+        
         var cm = this.getFactory().newContextMenu(e.node);
         
         var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
@@ -65,16 +68,27 @@
           create.setEnabled(false);
         }
         
-        cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
+        var update = cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
         
         var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         if (parentId === this.rootTermId) {
           del.setEnabled(false);
         }
         
-        cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        
+        if (e.node.termBusy) {
+          create.setEnabled(false);
+          update.setEnabled(false);
+          del.setEnabled(false);
+          refresh.setEnabled(false);
+        }
         
         cm.render();
+        
+        cm.addDestroyEventListener(function() {
+          $tree.tree("selectNode", null);
+        });
       },
       
       /**
@@ -100,9 +114,14 @@
             for (var i = 0; i < nodes.length; ++i) {
               $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
             }
+            
+            that.setTermBusy(termId, false);
           },
           onFailure : function(e) {
             that.handleException(e);
+          },
+          onClickSubmit : function() {
+            that.setTermBusy(termId, true);
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -184,6 +203,8 @@
         var that = this;
         var id = termId;
         
+        this.setTermBusy(termId, true);
+        
         var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
@@ -219,6 +240,8 @@
                 node.hasFetched = true;
               }
             }
+            
+            that.setTermBusy(termId, false);
           },
           
           onFailure : function(err) {
@@ -228,28 +251,6 @@
         });
         
         Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
-      },
-      
-      // @Override
-      refreshTreeAfterDeleteTerm : function(termId) {
-        var nodes = this.__getNodesById(termId);
-        var $thisTree = $(this.getRawEl());
-        
-        // TODO: Remove children from the parent relationship cache.
-//        var node = nodes[0];
-//        var children = nodes[0].children;
-//        for (var i = 0; i < children.length; ++i) {
-//          
-//        }
-        
-        for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree(
-            'removeNode',
-            nodes[i]
-          );
-        }
-        
-        delete this.termCache[termId];
       },
       
       render : function(parent) {

@@ -4,6 +4,7 @@ THESE STYLES ARE ADDED CUSTOM TO FIX A BUG I ENCOUNTERED IN JQTREE WHEN USING BO
 ul.jqtree-tree ul.jqtree_common {
   margin-left: 0 !important;
   padding-left: 16px !important;
+  font-size: 14px;
 }
 ul.jqtree_common > li.jqtree-loading > div.jqtree-element > span.jqtree-title:after {
   content: url(busy.gif);
