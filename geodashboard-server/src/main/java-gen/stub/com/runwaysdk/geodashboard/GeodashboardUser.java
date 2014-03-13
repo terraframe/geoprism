@@ -34,6 +34,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   public void apply()
   {
     boolean firstApply = this.isNew() && !this.isAppliedToDB();
+    this.setSessionLimit(40);
 
     super.apply();
 

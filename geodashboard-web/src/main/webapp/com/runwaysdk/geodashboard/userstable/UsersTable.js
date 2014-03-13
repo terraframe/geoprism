@@ -111,6 +111,7 @@
         this._adminRoles = adminRoles;
         this._dashboardRoles = dashboardRoles;
         this._listeners = [];
+        this._hasRoles = (this._roleMd.isWritable() && adminRoles.length > 0 && dashboardRoles.length > 0 );
       },
       
       addListener : function (listener)
@@ -179,7 +180,7 @@
                 }
               });
 
-              if(that._roleMd.isWritable()) {
+              if(that._hasRoles) {
                 that._user.applyWithRoles(applyCallback, roles);            
               }
               else {
@@ -225,7 +226,7 @@
         }
         else if(this._user.isReadable())
         {
-          container.addButton(that.localize("close"), function(){dialog.close();}, null, {id:'user-cancel', class:'btn btn-primary'});            
+          container.addButton(that.localize("close"), function(){container.close();}, null, {id:'user-cancel', class:'btn btn-primary'});            
         }
       },
       
@@ -366,7 +367,7 @@
         }
                   
         // Check if the this._user has role permssions
-        if(!readOnly && this._roleMd.isWritable())
+        if(!readOnly && this._hasRoles)
         {
           // Build the admin role section
           form.appendElement(this._newHeader(this.localize('adminRoleHeader')));
@@ -856,8 +857,8 @@
         
         // Overwrite the column definitions for the edit and delete columns
         this._config.aoColumnDefs = [
-          { "bSortable": false, "aTargets": [ 0 ], "sClass": "center", "sTitle":"" },
-          { "bSortable": false, "aTargets": [ 1 ], "sClass": "center", "sTitle":"" }
+          { "bSortable": false, "aTargets": [ 0 ], "sClass": "center", "sTitle":"", "sWidth":"25px" },
+          { "bSortable": false, "aTargets": [ 1 ], "sClass": "center", "sTitle":"", "sWidth":"25px" }
         ];
         
         // Remove the search control from the table

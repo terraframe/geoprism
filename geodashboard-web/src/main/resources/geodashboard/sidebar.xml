@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <sidebar>
-  <item name="User account" uri="admin/account"/>
   <item name="Account Management" uri="admin/users"/>
   
   <item name="GIS Management">

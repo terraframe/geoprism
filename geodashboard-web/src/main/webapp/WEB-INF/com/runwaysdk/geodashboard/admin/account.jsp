@@ -24,7 +24,7 @@
 
 <%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
 
-<c:set var="page_title" scope="request" value="Account Management"/>
+<c:set var="page_title" scope="request" value="Account"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
@@ -110,12 +110,12 @@
 %>
 </script>
 
-<div id="usersTable"></div>
+<div id="userForm"></div>
 
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.ui.userstable.UsersTable();  
-  ut.render("#usersTable");
+  var ut = new com.runwaysdk.ui.userstable.UserForm();  
+  ut.render("#userForm");
   
 </script>
