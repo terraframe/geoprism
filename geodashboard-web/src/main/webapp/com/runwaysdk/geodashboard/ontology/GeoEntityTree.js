@@ -137,7 +137,7 @@
         var displayLabel = this.$_getTermDisplayLabel(term);
         
         if (term.universalDisplayLabel != null && term.universalDisplayLabel !== displayLabel) {
-          displayLabel = "[" + term.universalDisplayLabel + "] " + displayLabel;
+          displayLabel = displayLabel + " [" + term.universalDisplayLabel + "]";
         }
         
         return displayLabel;

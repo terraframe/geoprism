@@ -430,22 +430,28 @@
       },
       
       setNodeBusy : function(node, bool) {
-//        var $tree = $(this.getRawEl());
-//        var el = $tree.tree("_getNodeElementForNode", node).getLi();
         if (node.parent == null) {
-          // FIXME : have a spinner for the root node.
-          return;
-        }
-        
-        var el = $(node.element);
-        
-        if (bool) {
-          node.termBusy = true;
-          el.addClass("jqtree-loading");
+          if (bool) {
+            this._busydiv = this.getFactory().newElement("div");
+            this._busydiv.addClassName("jqtree-node-busy");
+            this.appendChild(this._busydiv);
+            return;
+          }
+          else {
+//            this._busydiv.destroy();
+          }
         }
         else {
-          node.termBusy = false;
-          el.removeClass("jqtree-loading");
+          var el = $(node.element);
+          
+          if (bool) {
+            node.termBusy = true;
+            el.addClass("jqtree-loading");
+          }
+          else {
+            node.termBusy = false;
+            el.removeClass("jqtree-loading");
+          }
         }
       },
       
