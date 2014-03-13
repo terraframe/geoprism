@@ -40,7 +40,9 @@
 <jsp:include page="${header_jsp}"  flush="false"  />
 
 <div class="pageContent">
-  <div class="pageTitle">${page_title}</div>
+  <header id="header">
+    <h1>${page_title}</h1>
+  </header>
   <%= innerHTML %>
 </div>
 
