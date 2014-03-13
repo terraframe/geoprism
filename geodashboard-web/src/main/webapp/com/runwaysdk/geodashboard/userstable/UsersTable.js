@@ -857,8 +857,8 @@
         
         // Overwrite the column definitions for the edit and delete columns
         this._config.aoColumnDefs = [
-          { "bSortable": false, "aTargets": [ 0 ], "sClass": "center", "sTitle":"" },
-          { "bSortable": false, "aTargets": [ 1 ], "sClass": "center", "sTitle":"" }
+          { "bSortable": false, "aTargets": [ 0 ], "sClass": "center", "sTitle":"", "sWidth":"25px" },
+          { "bSortable": false, "aTargets": [ 1 ], "sClass": "center", "sTitle":"", "sWidth":"25px" }
         ];
         
         // Remove the search control from the table

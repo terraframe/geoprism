@@ -165,7 +165,7 @@
 	<build>
 		<!-- Just for convenience, this stops us from having to add the version 
 			when we hit our webapp. -->
-		<finalName>geodashboard</finalName>
+		<finalName>ideiq</finalName>
 
 		<!-- This tells maven to resolve variables in our properties files. -->
 		<resources>
