@@ -57,7 +57,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     RolesQuery query = new RolesQuery(new QueryFactory());
     query.WHERE(query.getRoleName().LIKE(namespace + "%"));
-    query.ORDER_BY_DESC(query.getRoleName());
+    query.ORDER_BY_ASC(query.getRoleName());
 
     OIterator<? extends Roles> it = query.getIterator();
 
@@ -102,7 +102,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     RolesQuery query = new RolesQuery(new QueryFactory());
     query.WHERE(query.getRoleName().LIKE(GEODASHBOARD_NAMESPACE + "%"));
-    query.ORDER_BY_DESC(query.getRoleName());
+    query.ORDER_BY_ASC(query.getRoleName());
 
     OIterator<? extends Roles> it = query.getIterator();
 

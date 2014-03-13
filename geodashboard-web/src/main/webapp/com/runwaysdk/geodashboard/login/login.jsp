@@ -18,13 +18,13 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>GeoDashboard Login</title>
+  <title><mdss:localize key="GeoDashboard Login" /></title>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/login/login.css">
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
   <header id="header">
-    <h1>GeoDashboard</h1>
+    <h1><mdss:localize key="GeoDashboard" /></h1>
   </header>
 
   <!-- TODO : registering of users
