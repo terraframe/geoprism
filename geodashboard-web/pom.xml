@@ -81,14 +81,7 @@
 							</container>
 							<configuration>
 								<properties>
-									<cargo.servlet.port>8443</cargo.servlet.port>
-									<cargo.protocol>https</cargo.protocol>
-									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
-									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
-									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
-									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
-									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
-									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
+									<cargo.servlet.port>8080</cargo.servlet.port>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
@@ -139,14 +132,7 @@
 							</container>
 							<configuration>
 								<properties>
-									<cargo.servlet.port>8443</cargo.servlet.port>
-									<cargo.protocol>https</cargo.protocol>
-									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
-									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
-									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
-									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
-									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
-									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
+									<cargo.servlet.port>8080</cargo.servlet.port>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
@@ -165,7 +151,7 @@
 	<build>
 		<!-- Just for convenience, this stops us from having to add the version 
 			when we hit our webapp. -->
-		<finalName>ideiq</finalName>
+		<finalName>geodashboard</finalName>
 
 		<!-- This tells maven to resolve variables in our properties files. -->
 		<resources>
