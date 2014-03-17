@@ -81,7 +81,14 @@
 							</container>
 							<configuration>
 								<properties>
-									<cargo.servlet.port>8080</cargo.servlet.port>
+									<cargo.servlet.port>8443</cargo.servlet.port>
+									<cargo.protocol>https</cargo.protocol>
+									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
+									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
+									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
+									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
+									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
+									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
@@ -132,7 +139,14 @@
 							</container>
 							<configuration>
 								<properties>
-									<cargo.servlet.port>8080</cargo.servlet.port>
+									<cargo.servlet.port>8443</cargo.servlet.port>
+									<cargo.protocol>https</cargo.protocol>
+									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
+									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
+									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
+									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
+									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
+									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
@@ -181,12 +195,18 @@
 				<version>2.4</version>
 				<configuration>
 					<packagingExcludes>
-						WEB-INF/lib/geodashboard-common*.jar,
-						WEB-INF/lib/geodashboard-client*.jar,
-						WEB-INF/lib/geodashboard-server*.jar,
-						WEB-INF/lib/catalina*.jar,
-						WEB-INF/lib/servlet-api*.jar,
-						WEB-INF/lib/annotations-api*.jar
+					    <!--
+					      Source/class project jars must be excluded for reloaded to work
+					    -->
+						**/*geodashboard-common*.jar,
+						**/*geodashboard-client*.jar,
+						**/*geodashboard-server*.jar,						
+					    <!--
+					      Exclude all jars provided by tomcat
+					    -->						
+						**/*catalina*.jar,
+						**/*servlet-api*.jar,
+						**/*annotations-api*.jar
 					</packagingExcludes>
 					<webResources>
 						<resource>
@@ -262,6 +282,13 @@
 									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
 									<includes>**/*.java</includes>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-server</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<includes>**/localize*.properties</includes>
+								</artifactItem>								
 							</artifactItems>
 							<includes>**/*</includes>
 							<excludes></excludes>

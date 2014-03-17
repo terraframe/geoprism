@@ -18,13 +18,15 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
 <%@page import="com.runwaysdk.system.RolesDTO"%>
 <%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
 
-<c:set var="page_title" scope="request" value="Account"/>
+<gdb:localize var="page_title" key="account.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%

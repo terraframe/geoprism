@@ -19,6 +19,6 @@
 
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<c:set var="page_title" scope="request" value="Roles"/>
+<gdb:localize var="page_title" key="roles.title"/>

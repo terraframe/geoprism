@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<taglib xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd" version="2.1">
+  <tlib-version>
+    1.0
+  </tlib-version>
+  <short-name>
+    Geodashboard
+  </short-name>
+  <tag>
+    <description>
+      Localizes the given key, respecting bundle precedence
+    </description>
+    <name>
+      localize
+    </name>
+    <tag-class>
+      com.runwaysdk.geodashboard.LocalizedTagSupport
+    </tag-class>
+    <body-content>
+      empty
+    </body-content>
+    <attribute>
+      <description>
+        The key for the localized value
+      </description>
+      <name>
+        key
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        The variable to store the localized key in
+      </description>
+      <name>
+        var
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        false
+      </rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>

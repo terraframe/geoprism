@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/tlds/mdssLib.tld" prefix="mdss"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
@@ -18,13 +18,13 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title><mdss:localize key="mi.Q Login" /></title>
+  <title><gdb:localize key="login.title" /></title>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/login/login.css">
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
   <header id="header">
-    <h1><mdss:localize key="mi.Q" /></h1>
+    <h1><gdb:localize key="login.header" /></h1>
   </header>
 
   <!-- TODO : registering of users
@@ -39,11 +39,11 @@
 
   <form method="post" action="session/login" class="login">
 		<p>
-		  <label> <mdss:localize key="username" />: </label>
+		  <label> <gdb:localize key="login.username" />: </label>
 		  <mjl:input param="username" type="text" id="login" />
 		</p>
 		<p>
-		  <label> <mdss:localize key="password" />: </label>
+		  <label> <gdb:localize key="login.password" />: </label>
 		  <mjl:input param="password" type="password" id="password" value="" />
 		</p>
   
@@ -60,7 +60,7 @@
     -->
 
     <p class="login-submit">
-      <button type="submit" class="login-button">Login</button>
+      <button type="submit" class="login-button"><gdb:localize key="login.button" /></button>
     </p>
 
     <!-- TODO: Forgot password and remember me functionality.

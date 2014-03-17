@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="page_title" scope="request" value="Create a new Report item"/>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
+<gdb:localize var="page_title" key="report.createTitle"/>
 <dl>
   <mjl:form id="com.runwaysdk.geodashboard.report.ReportItem.form.id" name="com.runwaysdk.geodashboard.report.ReportItem.form.name" method="POST">
     <%@include file="form.jsp" %>
