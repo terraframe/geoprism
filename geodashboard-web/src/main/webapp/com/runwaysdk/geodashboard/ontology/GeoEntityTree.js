@@ -122,6 +122,9 @@
           },
           onClickSubmit : function() {
             that.setTermBusy(termId, true);
+          },
+          onViewSuccess : function(html) {
+           that.setTermBusy(termId, false);
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -245,6 +248,7 @@
           },
           
           onFailure : function(err) {
+            that.setTermBusy(termId, false);
             that.handleException(err);
             return;
           }

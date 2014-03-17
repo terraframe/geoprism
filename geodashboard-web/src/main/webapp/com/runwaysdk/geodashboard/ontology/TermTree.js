@@ -289,10 +289,14 @@
             that.setTermBusy(termId, false);
           },
           onFailure : function(e) {
+            that.setTermBusy(termId, false);
             that.handleException(e);
           },
           onClickSubmit : function() {
             that.setTermBusy(termId, true);
+          },
+          onViewSuccess : function(html) {
+            that.setTermBusy(termId, false);
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -434,11 +438,13 @@
           if (bool) {
             this._busydiv = this.getFactory().newElement("div");
             this._busydiv.addClassName("jqtree-node-busy");
-            this.appendChild(this._busydiv);
+            this.insertBefore(this._busydiv, this.getChildren()[0]);
             return;
           }
           else {
-//            this._busydiv.destroy();
+            if (this._busydiv.getParent() != null) {
+              this._busydiv.destroy();
+            }
           }
         }
         else {
@@ -531,6 +537,7 @@
               }
             },
             onFailure : function(ex) {
+              that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
               that.handleException(ex);
             }
           };
@@ -557,6 +564,7 @@
               } 
             },
             onFailure : function(ex) {
+              that.setNodeBusy(movedNode, false);
               that.handleException(ex);
             }
           };
@@ -643,6 +651,7 @@
           },
           
           onFailure : function(err) {
+            that.setTermBusy(termId, false);
             that.handleException(err);
             return;
           }
