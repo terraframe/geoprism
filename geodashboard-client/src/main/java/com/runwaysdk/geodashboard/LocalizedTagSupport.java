@@ -12,10 +12,10 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
-import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.tag.develop.AttributeAnnotation;
 import com.runwaysdk.controller.tag.develop.TagAnnotation;
 import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
+import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.session.Request;
 
 @TagAnnotation(bodyContent = "empty", name = "localize", description = "Localizes the given key, respecting bundle precedence")
@@ -49,37 +49,71 @@ public class LocalizedTagSupport extends SimpleTagSupport
 
   @Override
   @Request
-  @SuppressWarnings("unchecked")
   public void doTag() throws JspException, IOException
   {
     PageContext pageContext = (PageContext) this.getJspContext();
-    JspWriter out = pageContext.getOut();
+
     ClientSession clientSession = (ClientSession) pageContext.findAttribute(ClientConstants.CLIENTSESSION);
 
     if (clientSession == null)
     {
-      ArrayList<Locale> arrayList = new ArrayList<Locale>();
-      Enumeration<Locale> locales = pageContext.getRequest().getLocales();
-      while (locales.hasMoreElements())
-      {
-        arrayList.add(locales.nextElement());
-      }
-      Locale[] array = arrayList.toArray(new Locale[arrayList.size()]);
-
-      clientSession = ClientSession.createAnonymousSession(array);
+      clientSession = this.createAnonymousSession(pageContext);
     }
 
-    ClientRequestIF request = clientSession.getRequest();
+    try
+    {
+      this.write(pageContext, clientSession);
+    }
+    catch (InvalidSessionExceptionDTO e1)
+    {
+      try
+      {
+        clientSession = this.createAnonymousSession(pageContext);
 
-    String localizedValue = LocalizationFacadeDTO.getFromBundles(request, getKey());
+        this.write(pageContext, clientSession);
+      }
+      catch (Exception e2)
+      {
+        this.write(pageContext, this.getKey());
+      }
+    }
 
+  }
+
+  private void write(PageContext pageContext, ClientSession clientSession) throws IOException
+  {
+    String localizedValue = LocalizationFacadeDTO.getFromBundles(clientSession.getRequest(), getKey());
+
+    this.write(pageContext, localizedValue);
+  }
+
+  private void write(PageContext pageContext, String localizedValue) throws IOException
+  {
     if (var == null)
     {
+      JspWriter out = pageContext.getOut();
+
       out.write(localizedValue);
     }
     else
     {
       pageContext.getRequest().setAttribute(var, localizedValue);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private ClientSession createAnonymousSession(PageContext pageContext)
+  {
+    ArrayList<Locale> arrayList = new ArrayList<Locale>();
+    Enumeration<Locale> locales = pageContext.getRequest().getLocales();
+
+    while (locales.hasMoreElements())
+    {
+      arrayList.add(locales.nextElement());
+    }
+
+    Locale[] array = arrayList.toArray(new Locale[arrayList.size()]);
+    
+    return ClientSession.createAnonymousSession(array);
   }
 }

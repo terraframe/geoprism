@@ -32,7 +32,8 @@
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
 
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/iDE_logo.gif" alt="iDE Logo">
+<gdb:localize var="logoalt" key="splash.logoalt" />
+<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">
 
 <br/>
 <br/>
