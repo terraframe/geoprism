@@ -118,6 +118,7 @@
             that.setTermBusy(termId, false);
           },
           onFailure : function(e) {
+            that.setTermBusy(termId, false);
             that.handleException(e);
           },
           onClickSubmit : function() {

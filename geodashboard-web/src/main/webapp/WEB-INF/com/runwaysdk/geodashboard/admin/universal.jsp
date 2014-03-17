@@ -46,6 +46,8 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/list/List.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
 
 
 <!-- JQuery -->
@@ -57,6 +59,7 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
@@ -124,11 +127,12 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
     rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
     crud: {
-      create: {
-        height: 267
+      create: { // This configuration gets merged into the jquery create dialog.
+                // The height of an attribute is about 50
+        height: 317
       },
       update: {
-        height: 267
+        height: 317
       }
     }
   });
