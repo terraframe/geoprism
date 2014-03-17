@@ -18,6 +18,8 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.constants.DeployProperties"%>
@@ -29,7 +31,7 @@
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
-<c:set var="page_title" scope="request" value="Manage Universals"/>
+<gdb:localize var="page_title" key="universal.title"/>
 
 
 <%
@@ -57,6 +59,9 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+
+<!-- Localization -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 

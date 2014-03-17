@@ -1,6 +1,9 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="page_title" scope="request" value="View all Report item"/>
+
+<gdb:localize var="page_title" key="report.viewAllTitle"/>
+
 <mjl:table var="item" query="${query}">
   <mjl:context action="com.runwaysdk.geodashboard.report.ReportItemController.viewPage.mojo" />
   <mjl:columns>
@@ -33,7 +36,7 @@
       </mjl:header>
       <mjl:row>
         <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.report.ReportItemController.view.mojo">
-          View
+          <gdb:localize key="view"/>
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
       </mjl:row>
@@ -48,5 +51,5 @@
 </mjl:table>
 <br />
 <mjl:commandLink name="ReportItemController.newInstance" action="com.runwaysdk.geodashboard.report.ReportItemController.newInstance.mojo">
-  Create a new Report item
+  <gdb:localize key="report.createLink"/>
 </mjl:commandLink>

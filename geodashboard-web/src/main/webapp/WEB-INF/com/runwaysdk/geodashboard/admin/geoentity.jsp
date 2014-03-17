@@ -18,6 +18,8 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
@@ -30,7 +32,7 @@
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
-<c:set var="page_title" scope="request" value="Manage Geoentities"/>
+<gdb:localize var="page_title" key="geoEntity.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%

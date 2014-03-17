@@ -276,6 +276,13 @@
 									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
 									<includes>**/*.java</includes>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-server</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<includes>**/localize*.properties</includes>
+								</artifactItem>								
 							</artifactItems>
 							<includes>**/*</includes>
 							<excludes></excludes>

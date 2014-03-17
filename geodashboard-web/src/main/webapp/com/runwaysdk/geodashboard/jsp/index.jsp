@@ -19,10 +19,11 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/tlds/mdssLib.tld" prefix="mdss"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 
-<c:set var="page_title" scope="request" value="mi.Q"/>
+
+<gdb:localize var="page_title" key="splash.pagetitle" />
 
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
@@ -37,9 +38,9 @@
 <br/>
 
 <header id="header">
-  <h1><mdss:localize key="mi.Q Dashboard" /></h1>
+  <h1><gdb:localize key="splash.header" /></h1>
 </header>
 
-<p><mdss:localize key="Powered by Runway SDK™" /></p>
+<p><gdb:localize key="splash.powered" /></p>
 
 <jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>
