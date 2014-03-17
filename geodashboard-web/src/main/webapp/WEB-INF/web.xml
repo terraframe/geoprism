@@ -197,15 +197,6 @@
 
 
 	<!-- Begin custom web.xml settings -->
-
-	<filter>
-	  <filter-name>SessionFilter</filter-name>
-	  <filter-class>com.runwaysdk.web.filter.SessionFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	  <filter-name>SessionFilter</filter-name>
-	  <url-pattern>*</url-pattern>
-	</filter-mapping>
 	
 	<filter>
 	  <filter-name>EncodingFilter</filter-name>
@@ -214,8 +205,17 @@
 	<filter-mapping>
 	  <filter-name>EncodingFilter</filter-name>
 	  <url-pattern>*</url-pattern>
+	</filter-mapping>	
+
+	<filter>
+	  <filter-name>SessionFilter</filter-name>
+	  <filter-class>com.runwaysdk.geodashboard.SessionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>SessionFilter</filter-name>
+	  <url-pattern>*</url-pattern>
 	</filter-mapping>
-  
+	  
 	<filter>
 	  <filter-name>NoExtensionFilter</filter-name>
 	  <filter-class>com.runwaysdk.web.filter.NoExtensionDispatchFilter</filter-class>

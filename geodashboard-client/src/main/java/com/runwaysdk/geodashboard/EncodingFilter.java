@@ -23,9 +23,9 @@ public class EncodingFilter implements Filter
   {
     try
     {
-      request.setCharacterEncoding("UTF-8");
-      response.setCharacterEncoding("UTF-8");
-      
+      request.setCharacterEncoding(EncodingConstants.ENCODING);
+      response.setCharacterEncoding(EncodingConstants.ENCODING);
+
       chain.doFilter(request, response);
     }
     catch (UnsupportedEncodingException e)
