@@ -1,5 +1,8 @@
 (function(){
   
+  // jQuery is the default factory for geodashboard
+  com.runwaysdk.ui.Manager.setFactory("JQuery");
+  
   var ROOT_PACKAGE = Mojo.ROOT_PACKAGE + 'geodashboard.';
   var ALIAS = 'GDB';
   

@@ -44,4 +44,35 @@
 
 <p><gdb:localize key="splash.powered" /></p>
 
+<script type="text/javascript">
+com.runwaysdk.ui.Manager.setFactory("JQuery");
+$(document).ready(function(){
+  
+  $('#blockMe').on('click', function(e){
+    
+    var el = e.target;
+    
+    
+
+    
+    var request = new GDB.BlockingClientRequest({
+      onSuccess : function(){
+        
+      }
+    });
+    request.onSend();
+    
+    setTimeout(function(){
+      request.onComplete();
+      el.innerHTML += "\n<br />CLICKED";
+    }, 5000);
+  });
+  
+});
+</script>
+
+<div id="blockMe" style="width:400px; height:350px; border:1px solid black; background-color:ccc">
+  <b>BLOCK ME</b>
+</div>
+
 <jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>
