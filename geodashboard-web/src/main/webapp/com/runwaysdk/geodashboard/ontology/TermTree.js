@@ -71,6 +71,7 @@
           el: "div",
           data: {}, // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
+          selectable: true,
           crud: {
             create: {
               width: 550,
@@ -193,6 +194,7 @@
           },
           
           onFailure : function(err) {
+            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false)});
             that.handleException(err);
             return;
           }
@@ -289,10 +291,14 @@
             that.setTermBusy(termId, false);
           },
           onFailure : function(e) {
+            that.setTermBusy(termId, false);
             that.handleException(e);
           },
           onClickSubmit : function() {
             that.setTermBusy(termId, true);
+          },
+          onViewSuccess : function(html) {
+            that.setTermBusy(termId, false);
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -434,11 +440,13 @@
           if (bool) {
             this._busydiv = this.getFactory().newElement("div");
             this._busydiv.addClassName("jqtree-node-busy");
-            this.appendChild(this._busydiv);
+            this.insertBefore(this._busydiv, this.getChildren()[0]);
             return;
           }
           else {
-//            this._busydiv.destroy();
+            if (this._busydiv.getParent() != null) {
+              this._busydiv.destroy();
+            }
           }
         }
         else {
@@ -531,6 +539,7 @@
               }
             },
             onFailure : function(ex) {
+              that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
               that.handleException(ex);
             }
           };
@@ -557,6 +566,7 @@
               } 
             },
             onFailure : function(ex) {
+              that.setNodeBusy(movedNode, false);
               that.handleException(ex);
             }
           };
@@ -643,6 +653,7 @@
           },
           
           onFailure : function(err) {
+            that.setTermBusy(termId, false);
             that.handleException(err);
             return;
           }
@@ -820,10 +831,14 @@
       
       render : function(parent) {
         
+        var that = this;
+        
         this.$render(parent);
         
         // Create the jqTree
         var $tree = $(this.getRawEl()).tree(this._config);
+        
+        this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick)
         
         $tree.bind(
             'tree.open',
@@ -835,7 +850,17 @@
         );
         $tree.bind(
             'tree.contextmenu',
-            Mojo.Util.bind(this, this.__onNodeRightClick)
+            function(event) {
+              that._boundedRightClick(event);
+              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+            }
+        );
+        $tree.bind(
+          'tree.click',
+          function(event) {
+            that._boundedRightClick(event);
+            event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+          }
         );
         
         this.refreshTerm(this.rootTermId);

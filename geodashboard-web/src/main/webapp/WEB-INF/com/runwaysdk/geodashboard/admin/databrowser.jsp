@@ -19,13 +19,16 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
+
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
 
-<c:set var="page_title" scope="request" value="Data Browser"/>
+<gdb:localize var="page_title" key="databrowser.title"/>
 
 <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>

@@ -264,6 +264,12 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 
 		<plugins>
 			<!-- Weave Aspects -->

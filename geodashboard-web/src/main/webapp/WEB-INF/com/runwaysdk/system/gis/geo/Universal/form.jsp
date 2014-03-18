@@ -10,6 +10,11 @@
 		    <mjl:messages attribute="displayLabel" classes="error-message" />
 		  </div>
 		  <div class="field-row clearfix">
+        <label for="name">${item.nameMd.displayLabel} <!--<c:if test="${item.nameMd.required}">*</c:if>--></label>
+        <mjl:input id="name" param="name" type="text" />
+        <mjl:messages attribute="name" classes="error-message" />
+      </div>
+		  <div class="field-row clearfix">
 		    <label for="description">${item.descriptionMd.description} <c:if test="${item.descriptionMd.required}">*</c:if></label>
 		    <mjl:input id="description" param="description" type="text" />
 		    <mjl:messages attribute="description" classes="error-message" />

@@ -165,7 +165,7 @@
 	<build>
 		<!-- Just for convenience, this stops us from having to add the version 
 			when we hit our webapp. -->
-		<finalName>ideiq</finalName>
+		<finalName>geodashboard</finalName>
 
 		<!-- This tells maven to resolve variables in our properties files. -->
 		<resources>
@@ -195,12 +195,18 @@
 				<version>2.4</version>
 				<configuration>
 					<packagingExcludes>
-						WEB-INF/lib/geodashboard-common*.jar,
-						WEB-INF/lib/geodashboard-client*.jar,
-						WEB-INF/lib/geodashboard-server*.jar,
-						WEB-INF/lib/catalina*.jar,
-						WEB-INF/lib/servlet-api*.jar,
-						WEB-INF/lib/annotations-api*.jar
+					    <!--
+					      Source/class project jars must be excluded for reloaded to work
+					    -->
+						**/*geodashboard-common*.jar,
+						**/*geodashboard-client*.jar,
+						**/*geodashboard-server*.jar,						
+					    <!--
+					      Exclude all jars provided by tomcat
+					    -->						
+						**/*catalina*.jar,
+						**/*servlet-api*.jar,
+						**/*annotations-api*.jar
 					</packagingExcludes>
 					<webResources>
 						<resource>
@@ -276,6 +282,13 @@
 									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
 									<includes>**/*.java</includes>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard-server</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<includes>**/localize*.properties</includes>
+								</artifactItem>								
 							</artifactItems>
 							<includes>**/*</includes>
 							<excludes></excludes>

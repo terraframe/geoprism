@@ -50,8 +50,6 @@
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script>
   
   <!-- set the encoding of your site -->
-  <meta charset="utf-8">
-  <title>Q4SalesEngagement</title>
   <!-- include the site stylesheet -->
   <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>openlayers/style.css">
   <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">

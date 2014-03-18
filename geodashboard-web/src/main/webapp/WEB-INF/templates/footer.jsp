@@ -18,11 +18,22 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
+
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
+
+<!--
+ Localization : Important this must be loaded after every other
+                javascript file because it overwrites the localized
+                text defined in the other files. 
+ -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
 <!-- Begin footer -->
     </section> 
@@ -32,7 +43,7 @@
   </div> <!-- end wrapper -->
   <!-- allow a user to go to the top of the page -->
   <div class="skip">
-    <a href="#wrapper">Back to top</a>
+    <a href="#wrapper"><gdb:localize key="footer.back"/></a>
   </div>
 </body>
 </html>

@@ -138,7 +138,7 @@
       
       localize : function (key)
       {
-        return com.runwaysdk.Localize.getLanguage(usersTableName)[key];      
+        return com.runwaysdk.Localize.getLanguage(usersTableName).get(key);      
       },
       
       render : function(container, readOnly) {      

@@ -12,12 +12,16 @@
 		      </mjl:option>
 		    </mjl:select>
 		  </div>
-		  
 		  <div class="field-row clearfix">
-		    <label for="GeoEntityField2">${item.displayLabelMd.displayLabel} <c:if test="${item.displayLabelMd.required}">*</c:if></label>
-		    <mjl:input id="GeoEntityField2" param="displayLabel" type="text" />
+		    <label for="displayLabel">${item.displayLabelMd.displayLabel} <c:if test="${item.displayLabelMd.required}">*</c:if></label>
+		    <mjl:input id="displayLabel" param="displayLabel" type="text" />
 		    <mjl:messages attribute="displayLabel" classes="error-message" />
 		  </div>
+      <div class="field-row clearfix">
+        <label for="geoId">${item.geoIdMd.displayLabel} <!--<c:if test="${item.geoIdMd.required}">*</c:if>--></label>
+        <mjl:input id="geoId" param="geoId" type="text" />
+        <mjl:messages attribute="geoId" classes="error-message" />
+      </div>
 		  <div class="field-row clearfix">
         <label for="GeoEntityField3">${item.wktMd.displayLabel} <c:if test="${item.wktMd.required}">*</c:if></label>
         <mjl:input id="GeoEntityField3" param="wkt" type="text" />
