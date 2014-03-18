@@ -1,3 +1,22 @@
+/*
+THESE STYLES ARE ADDED CUSTOM TO FIX A BUG I ENCOUNTERED IN JQTREE WHEN USING BOOTSTRAP:
+*/
+ul.jqtree-tree.jqtree_common,
+ul.jqtree_common {
+  margin-left: 0 !important;
+  padding-left: 16px !important;
+  font-size: 14px; /* This font size was added to stop jumpiness when setting a term to busy. */
+}
+ul.jqtree_common > li.jqtree-loading > div.jqtree-element > span.jqtree-title:after,
+.jqtree-node-busy {
+  content: url(busy.gif);
+  margin-left: 8px;
+}
+/*
+END CUSTOM STYLES
+*/
+
+
 ul.jqtree-tree {
     margin-left: 12px;
 }

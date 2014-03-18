@@ -18,23 +18,28 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
-<jsp:include page="./templates/header.jsp"></jsp:include>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/mdssLib.tld" prefix="mdss"%>
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
+
+<c:set var="page_title" scope="request" value="mi.Q"/>
+
+<jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
+
+
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
 %>
 
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/terraframe_logo.png" alt="Terraframe Logo">
+<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/iDE_logo.gif" alt="iDE Logo">
 
 <br/>
 <br/>
 
 <header id="header">
-  <h1>Geo Dashboard</h1>
+  <h1><mdss:localize key="mi.Q Dashboard" /></h1>
 </header>
 
-<p>Powered by Runway SDK™</p>
+<p><mdss:localize key="Powered by Runway SDK™" /></p>
 
-<jsp:include page="./templates/footer.jsp"></jsp:include>
+<jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>

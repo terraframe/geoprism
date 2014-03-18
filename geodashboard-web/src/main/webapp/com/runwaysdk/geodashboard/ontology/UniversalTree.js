@@ -83,6 +83,7 @@
         var nodes = this.__getNodesById(termId);
         var $thisTree = $(this.getRawEl());
         var rootNode = $thisTree.tree("getTree");
+        var shouldRefresh = nodes[0].children.length > 0;
         
         this.parentRelationshipCache.removeAll(termId);
         
@@ -95,10 +96,10 @@
           );
         }
         
-        if (nodes[0].children.length > 0) {
+        if (shouldRefresh) {
           // We don't have the relationship id of the new relationship between the children and the root node. 
           this.refreshTerm(this.rootTermId);
-        } 
+        }
       },
       
       _onClickNewCountry : function() {

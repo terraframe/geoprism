@@ -176,6 +176,15 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 	color:#333;
 	border:1px solid #bbb;
 	background:#eee;}
+.submit-form input[type="password"]{	float:left;	width:135px;
+	height:32px;
+	margin:0 11px 0 0;
+	padding:6px 10px;
+	font-size:14px;
+	line-height:18px;
+	color:#333;
+	border:1px solid #bbb;
+	background:#eee;}
 .submit-form ::-webkit-input-placeholder{color:#999;}
 .submit-form :-ms-input-placeholder{color:#999;}
 .submit-form :-moz-placeholder{color:#999;}
@@ -195,6 +204,10 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 	border-color:#e09999;
 	background:#f8f8f8;
 }
+.submit-form .field-error input[type="password"]{
+	border-color:#e09999;
+	background:#f8f8f8;
+}
 .submit-form input[type="text"][disabled]{
 	border-color:#e4e4e4;
 	background:#f8f8f8;
@@ -209,6 +222,8 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 	font-size:13px;
 	line-height:18px;
 	color:#8c0000;
+	width:150px;
+	word-wrap: break-word;
 }
 .submit-form select{
 	float:left;

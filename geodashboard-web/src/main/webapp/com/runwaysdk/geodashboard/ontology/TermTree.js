@@ -150,7 +150,26 @@
        * @param termId
        */
       refreshTreeAfterDeleteTerm : function(termId) {
-        throw new com.runwaysdk.Exception("Unsupported Operation. Subclasses of TermTree must implement this method.");
+        // This method is overridden in UniversalTree, so this logic here is for GeoEntityTree and assumes that all children are also deleted.
+        
+        var nodes = this.__getNodesById(termId);
+        var $thisTree = $(this.getRawEl());
+        
+        // TODO: Remove children from the parent relationship cache.
+//        var node = nodes[0];
+//        var children = nodes[0].children;
+//        for (var i = 0; i < children.length; ++i) {
+//          
+//        }
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          $thisTree.tree(
+            'removeNode',
+            nodes[i]
+          );
+        }
+        
+        delete this.termCache[termId];
       },
       
       /**
@@ -171,29 +190,6 @@
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function(retval) {
             that.refreshTreeAfterDeleteTerm(termId);
-            
-//            var nodes = that.__getNodesById(termId);
-            
-            // 1) Move the children to 
-            
-            
-//            if (hasChildren) {
-//              // This method will also dump the cache (because we refreshed the root node). We need this to happen, because the cache may be invalid after that delete action.
-//              that.refreshTerm(that.rootTermId);
-//            }
-//            else {
-//              // Refresh parent nodes
-//              var parents = that.parentRelationshipCache.get(termId, that);
-//              for (var p = 0; p < parents.length; ++p) {
-//                var nodes = that.__getNodesById(parents[p].parentId);
-//                for (var i = 0; i < nodes.length; ++i) {
-//                  that.refreshTerm(that.__getRunwayIdFromNode(nodes[i]));
-//                }
-//              }
-//              
-//              that.parentRelationshipCache.removeAll(termId);
-//              delete that.termCache[termId];
-//            }
           },
           
           onFailure : function(err) {
@@ -202,7 +198,8 @@
           }
         });
         
-//        term.remove(deleteCallback);
+        this.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, true)});
+        
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
       
@@ -232,7 +229,8 @@
             
             var $thisTree = $(that.getRawEl());
             for (var i = 0; i < parentNodes.length; ++i) {
-              var node = that.__createTreeNode(term.getId(), parentNodes[i]);
+              var node = that.__createTreeNode(term.getId(), parentNodes[i], true);
+              
               $thisTree.tree("openNode", node);
             }
           },
@@ -285,11 +283,16 @@
             
             var nodes = that.__getNodesById(term.getId());
             for (var i = 0; i < nodes.length; ++i) {
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: term.getDisplayLabel().getLocalizedValue()});
+              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
             }
+            
+            that.setTermBusy(termId, false);
           },
           onFailure : function(e) {
             that.handleException(e);
+          },
+          onClickSubmit : function() {
+            that.setTermBusy(termId, true);
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -387,12 +390,100 @@
        * is binded to tree.contextmenu, called when the user right clicks on a node.
        */
       __onNodeRightClick : function(e) {
+        var $tree = $(this.getRawEl());
+        $tree.tree('selectNode', e.node);
+        
         var cm = this.getFactory().newContextMenu(e.node);
-        cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
-        cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-        cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
-        cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
+        var update = cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
+        var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        
+        if (e.node.termBusy) {
+          create.setEnabled(false);
+          update.setEnabled(false);
+          del.setEnabled(false);
+          refresh.setEnabled(false);
+        }
+        
         cm.render();
+        
+        cm.addDestroyEventListener(function() {
+          $tree.tree("selectNode", null);
+        });
+      },
+      
+      /**
+       * Finds all nodes associated with the given term id and sets them to busy, adding a busy indicator.
+       * 
+       * @param termId
+       * @param bool
+       */
+      setTermBusy : function(termId, bool) {
+        var nodes = this.__getNodesById(termId);
+
+        for (var i = 0; i<nodes.length; ++i) {
+          var node = nodes[i];
+          
+          this.setNodeBusy(node, bool);
+        }
+      },
+      
+      setNodeBusy : function(node, bool) {
+        if (node.parent == null) {
+          if (bool) {
+            this._busydiv = this.getFactory().newElement("div");
+            this._busydiv.addClassName("jqtree-node-busy");
+            this.appendChild(this._busydiv);
+            return;
+          }
+          else {
+//            this._busydiv.destroy();
+          }
+        }
+        else {
+          var el = $(node.element);
+          
+          if (bool) {
+            node.termBusy = true;
+            el.addClass("jqtree-loading");
+          }
+          else {
+            node.termBusy = false;
+            el.removeClass("jqtree-loading");
+          }
+        }
+      },
+      
+      /**
+       * Invokes the function fnDo for the provided node, and recursively all children of that node.
+       * 
+       * @param node
+       * @param fnDo
+       */
+      doForNodeAndAllChildren : function(node, fnDo) {
+        fnDo(node);
+        
+        for (var i = 0; i < node.children.length; ++i) {
+          var child = node.children[i];
+          
+          if (!child.phantom) {
+            if (child.children.length > 0) {
+              this.doForNodeAndAllChildren(child, fnDo);
+            }
+            else {
+              fnDo(child);
+            }
+          }
+        }
+      },
+      
+      doForTermAndAllChildren : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          this.doForNodeAndAllChildren(nodes[i], fnDo);
+        }
       },
       
       /**
@@ -445,6 +536,8 @@
           };
           Mojo.Util.copy(new Mojo.ClientRequest(moveBizCallback), moveBizCallback);
           
+          this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
+          
           var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, previousParentId, that);
           com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, parentRecord.relType);
         };
@@ -454,6 +547,8 @@
           
           var addChildCallback = {
             onSuccess : function(relDTO) {
+              that.setNodeBusy(movedNode, false);
+              
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
               var nodes = that.__getNodesById(targetNodeId);
@@ -466,6 +561,8 @@
             }
           };
           Mojo.Util.copy(new Mojo.ClientRequest(addChildCallback), addChildCallback);
+          
+          that.setNodeBusy(movedNode, true);
           
           var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.__getRunwayIdFromNode(movedNode.parent), that);
           
@@ -508,12 +605,13 @@
         var that = this;
         var id = termId;
         
-        var callback = {
+        this.setTermBusy(termId, true);
+        
+        var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
             var termAndRels = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
             
-            termId = id; // termId is being set to undefined somewhere/somehow and I don't know where/when.
             var nodes = that.__getNodesById(termId);
             
             // Remove existing children
@@ -524,13 +622,6 @@
                 $(that.getRawEl()).tree("removeNode", children[i]);
               }
             }
-            
-            // TODO : Because children of deleted universals are appended to the root node 
-//            if (termId === that.rootTermId) {
-//              // Dump the cache, all nodes in the tree have to be refetched.
-//              that.termCache = {};
-//              that.parentRelationshipCache.dump();
-//            }
             
             // Create a node for every term we got from the server.
             for (var i = 0; i < termAndRels.length; ++i) {
@@ -545,24 +636,17 @@
               for (var iNode = 0; iNode < nodes.length; ++iNode) {
                 var node = nodes[iNode];
                 that.__createTreeNode(childId, node);
-                node.hasFetched = true;
               }
             }
             
-  //          var nodes = that.__getNodesById(nodeId);
-  //          for (var i = 0; i < nodes.length; ++i) {
-  //            if (nodes[i].phantomChild != null) {
-  //              $(that.getRawEl()).tree("removeNode", nodes[i].phantomChild);
-  //            }
-  //          }
+            that.setTermBusy(termId, false);
           },
           
           onFailure : function(err) {
             that.handleException(err);
             return;
           }
-        };
-        Mojo.Util.copy(new Mojo.ClientRequest(callback), callback);
+        });
         
         Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
       },
@@ -654,7 +738,7 @@
       /**
        * creates a new jqTree node and appends it to the tree. This method will request the term from the server, to get the display label, if the term is not in the cache.
        */
-      __createTreeNode : function(childId, parentNode, theirOnSuccess, theirOnFailure) {
+      __createTreeNode : function(childId, parentNode, hasFetched) {
         var that = this;
         
         return this.__getTermFromId(childId, {
@@ -695,35 +779,32 @@
                 },
                 parentNode
               );
-              var phantom = $thisTree.tree(
-                'appendNode',
-                {
-                    label: "",
-                    id: idStr + "_PHANTOM",
-                    phantom: true,
-                    runwayId: childId
-                },
-                node
-              );
-              node.phantomChild = phantom;
+              
+              if (!hasFetched) {
+                var phantom = $thisTree.tree(
+                  'appendNode',
+                  {
+                      label: "",
+                      id: idStr + "_PHANTOM",
+                      phantom: true,
+                      runwayId: childId
+                  },
+                  node
+                );
+                node.phantomChild = phantom;
+              }
+              else {
+                node.hasFetched = true;
+              }
               
               $thisTree.tree("openNode", parentNode);
-            }
-            
-            if (Mojo.Util.isFunction(theirOnSuccess)) {
-              theirOnSuccess(childTerm);
             }
             
             return node;
           },
           onFailure : function(err) {
-            if (!Mojo.Util.isFunction(theirOnFailure)) {
-              that.handleException(err);
-              return;
-            }
-            else {
-              theirOnFailure(err);
-            }
+            that.handleException(err);
+            return;
           }
         });
       },
@@ -888,9 +969,7 @@
           }
         }
         
-        var ex = new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
-        treeInst.handleException(ex);
-        return;
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
       },
       
       /**
@@ -899,16 +978,8 @@
       get : function(childId, treeInst) {
         var got = this.cache[childId];
         
-        if (treeInst != null && childId === treeInst.rootTermId) {
-          var ex = new com.runwaysdk.Exception("That operation is invalid on the root node.");
-          treeInst.handleException(ex);
-          return;
-        }
-        
         if (treeInst != null && (got == null || got == undefined)) {
-          var ex = new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
-          treeInst.handleException(ex);
-          return;
+          throw new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
         }
         
         return this.cache[childId] ? this.cache[childId] : [];
@@ -926,9 +997,7 @@
           }
         }
         
-        var ex = new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
-        treeInst.handleException(ex);
-        return;
+        throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
       }
     }
   });

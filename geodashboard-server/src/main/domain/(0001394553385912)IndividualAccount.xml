@@ -1,0 +1,22 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser">
+        <create>
+          <mdMethod name="getCurrentUser" label="Get current user" returnType="com.runwaysdk.geodashboard.GeodashboardUser" static="true" />
+        </create>
+      </mdBusiness>
+      <mdController name="com.runwaysdk.geodashboard.AdminController" >
+        <create>
+          <mdAction name="account" label="account" isPost="false" isQuery="false"  />
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.AdminController.account" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="com.runwaysdk.geodashboard.GeodashboardUser.getCurrentUser" type="com.runwaysdk.system.metadata.MdMethod"/>
+    </delete>
+  </undoIt>
+</version>
