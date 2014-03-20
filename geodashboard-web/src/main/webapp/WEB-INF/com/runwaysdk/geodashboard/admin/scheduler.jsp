@@ -77,6 +77,11 @@
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
 
+<!-- Geodashboard form -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
+
+<!-- Scheduler -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Cron.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/scheduler/Scheduler.js"></script>
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/scheduler/Scheduler.css" />

@@ -24,6 +24,8 @@
   var Util = Mojo.Util;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var InstanceQueryDataSource = com.runwaysdk.ui.datatable.datasource.InstanceQueryDataSource;
+  var FormEntry = com.runwaysdk.geodashboard.FormEntry;
+  var Form = com.runwaysdk.geodashboard.Form;
   
   // In miliseconds
   var JOBS_POLLING_INTERVAL = 1000;
@@ -178,13 +180,12 @@
       },
       
       _openContextMenu : function(mouseEvent) {
-        var fac = this.getFactory();
         var row = mouseEvent.getTarget().getParent();
         var jobMetadata = row.getParentTable().getDataSource().getMetadataQueryDTO();
         var statusRowNum = 3;
         
         // Create Runway's Context Menu
-        var cm = fac.newContextMenu(row);
+        var cm = this.getFactory().newContextMenu(row);
         var start = cm.addItem(this.localize("start"), "add", Mojo.Util.bind(this, this._onClickStartJob));
         var stop = cm.addItem(this.localize("stop"), "delete", Mojo.Util.bind(this, this._onClickStopJob));
         var pause = cm.addItem(this.localize("pause"), "edit", Mojo.Util.bind(this, this._onClickPauseJob));
@@ -221,95 +222,100 @@
         return false; // Prevents default (displaying the browser context menu)
       },
       
-      _openEditMenu : function(mouseEvent) {
-        var fac = this.getFactory();
-        var row = mouseEvent.getTarget().getParent();
-        var table = row.getParentTable();
-        var jobMetadata = table.getDataSource().getMetadataQueryDTO();
-        var jobDTO = table.getDataSource().getResultsQueryDTO().getResultSet()[row.getRowNumber()];
+      _openEditMenu : function(row, job) {
+        var jobMetadata = this._table.getDataSource().getMetadataQueryDTO();
         
-        var dialog = fac.newDialog(this.localize("editJobTitle"), {width: "500px"});
+        var dialog = this.getFactory().newDialog(this.localize("editJobTitle"), {width: "500px"});
         
         row.addClassName("row_selected");
         dialog.addDestroyEventListener(function() {
           row.removeClassName("row_selected");
         });
+
+        var form = new Form();
+                    
+        if(job.isDescriptionWritable())
+        {
+          var descriptionInput = FormEntry.newInput('textarea', 'description', {attributes:{type:'text', id:'description'}});
+          descriptionInput.setValue(job.getDescription().getLocalizedValue());
+          form.addFormEntry(job.getDescriptionMd(), descriptionInput);          
+        }
+        else if(this._user.isFirstNameReadable())
+        {
+          var label = job.getDescriptionMd().getDisplayLabel();        
+          var entry = new com.runwaysdk.geodashboard.ReadEntry('description', label, job ? job.getLocalizedValue() : "");
+          form.addEntry(entry);                  
+        }
         
-        var form = this.getFactory().newForm();
-        
-        var descriptionInput = form.newInput('textarea', 'description');
-        descriptionInput.setValue(jobDTO.getDescription().getLocalizedValue());
-        form.addEntry(jobMetadata.getAttributeDTO("description").getAttributeMdDTO().getDisplayLabel(), descriptionInput);
-        
-        var cronInput = new com.runwaysdk.geodashboard.CronInput("cron");
-        cronInput.setValue(jobDTO.getCronExpression());
-        form.addEntry(this.localize("scheduledRun"), cronInput);
+        if(job.isCronExpressionWritable())
+        {
+          var cronInput = new com.runwaysdk.geodashboard.CronInput("cron");
+          cronInput.setValue(job.getCronExpression());
+          
+          form.addEntry(new com.runwaysdk.geodashboard.FormEntry(this.localize("scheduledRun"), cronInput));
+        }
         
         dialog.appendContent(form);
         
-        var Structure = com.runwaysdk.structure;
-        var tq = new Structure.TaskQueue();
-        
         var that = this;
         
-        tq.addTask(new Structure.TaskIF({
-          start : Mojo.Util.bind(this, function(){
-            dialog.addButton(that.localize("submit"), function() { tq.next(); });
+        var handleSubmit = Mojo.Util.bind(this, function(){
+          var values = form.getValues();
             
-            var cancelCallback = function() {
+          job.getDescription().localizedValue = values.get("description");
+          job.setCronExpression(values.get("cron"));
+            
+          var applyCallback = new Mojo.ClientRequest({
+            onSuccess : function() {
               dialog.close();
-              tq.stop();
-            };
-            dialog.addButton(that.localize("cancel"), cancelCallback);
+            },
+            onFailure : function(ex) {
+              that.handleException(ex);
+            }
+          });
             
-            dialog.render();
-          })
-        }));
+          job.apply(applyCallback);
+        });
         
-        tq.addTask(new Structure.TaskIF({
-          start : Mojo.Util.bind(this, function(){
-            dialog.close();
-            
-            var lockCallback = new Mojo.ClientRequest({
-              onSuccess : function(retJobDTO) {
-                jobDTO = retJobDTO;
-                tq.next();
-              },
-              onFailure : function(ex) {
-                tq.stop();
-                that.handleException(ex);
-              }
-            });
-            
-            com.runwaysdk.Facade.lock(lockCallback, jobDTO.getId());
-          })
-        }));
         
-        tq.addTask(new Structure.TaskIF({
-          start : Mojo.Util.bind(this, function(){
-            var values = form.getValues();
-            
-            jobDTO.getDescription().localizedValue = values.get("description");
-            jobDTO.setCronExpression(values.get("cron"));
-            
-            var applyCallback = new Mojo.ClientRequest({
-              onSuccess : function() {
-                // Intentionally empty
-              },
-              onFailure : function(ex) {
-                tq.stop();
-                that.handleException(ex);
-              }
-            });
-            
-            jobDTO.apply(applyCallback);
-          })
-        }));
+        var handleCancel = Mojo.Util.bind(this, function () {       
+          var unlockCallback = new Mojo.ClientRequest({
+            onSuccess : function(user) {
+              dialog.close();
+            },
+            onFailure : function(ex) {
+              that.handleException(ex);
+            }
+          });
+    
+          job.unlock(unlockCallback);  
+        });
         
-        tq.start();
-        
+                
+        dialog.addButton(that.localize("submit"), handleSubmit, null, {class:'btn btn-primary'});
+        dialog.addButton(that.localize("cancel"), handleCancel, null, {class:'btn'});                        
+        dialog.render();
+            
         return false;
       },
+
+      _lockRow : function (mouseEvent) {
+        var row = mouseEvent.getTarget().getParent();
+        var table = row.getParentTable();
+        var job = table.getDataSource().getResultsQueryDTO().getResultSet()[row.getRowNumber()];        
+      
+        var lockCallback = new Mojo.ClientRequest({
+          that : this,
+          onSuccess : function(ret) {
+            this.that._openEditMenu(row, ret);
+          },
+          onFailure : function(ex) {
+        	this.that.handleException(ex);
+          }
+        });
+        
+        job.lock(lockCallback);
+      },      
       
       _onNewRowEvent : function(newRowEvent) {
         var row = newRowEvent.getRow();
@@ -320,7 +326,7 @@
           // TODO create a progress bar widget
         }
         
-        row.addEventListener("click", Mojo.Util.bind(this, this._openEditMenu));
+        row.addEventListener("click", Mojo.Util.bind(this, this._lockRow));
         row.addEventListener("contextmenu", Mojo.Util.bind(this, this._openContextMenu));
       },
       
