@@ -16,7 +16,15 @@
       initialize : function(obj, node){
         this.$initialize(obj);
         
-        this._node = $(node);
+        this._node = null;
+        
+        if(Mojo.Util.isString(node)) {
+          this._node = $('#'+node);          
+        }
+        else {
+          this._node = $(node);
+        }
+        
         this._div = $('<div></div>');
         
         var offset = this._node.offset();

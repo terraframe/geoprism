@@ -164,7 +164,7 @@
               var roles = that._getRoles(values);
               that._populateComponent(values);
         
-              var applyCallback = new Mojo.ClientRequest({
+              var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
                 onSuccess : function(user) {
                   container.close();
                 
@@ -178,7 +178,7 @@
                  
                   that.fireEvent(UserFormEvent.APPLY_FAILURE);
                 }
-              });
+              }, form.getRawEl());
 
               if(that._hasRoles) {
                 that._user.applyWithRoles(applyCallback, roles);            
@@ -763,7 +763,7 @@
           start : function(){
             dialog.close();
             
-            var removeCallback = new com.runwaysdk.geodashboard.BlockingClientRequest({
+            var removeCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
               onSuccess : function() {
                 table.refresh();
               },
@@ -771,7 +771,7 @@
                 tq.stop();
                 that.handleException(ex);
               }
-            });
+            }, "main");
             
             user.remove(removeCallback);
           }
