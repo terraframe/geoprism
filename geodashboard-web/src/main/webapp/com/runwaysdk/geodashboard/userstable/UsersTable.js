@@ -232,7 +232,6 @@
       
       _build : function(readOnly) {
         var form = new Form();
-        form.addClassName('submit-form');
           
         // Build the admin role section
         form.appendElement(this._newHeader(this.localize('userInfo')));

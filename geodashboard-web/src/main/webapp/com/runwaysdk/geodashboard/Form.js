@@ -22,14 +22,6 @@
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var Visitable = com.runwaysdk.ui.factory.runway.Visitable;
   
-  /**
-   * LANGUAGE
-   */
-  com.runwaysdk.Localize.defineLanguage('com.runwaysdk.geodashboard.BlockingClientRequest', {
-    "communicating" : "Communicating with server",
-    "information" : "Information",
-  });  
-
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractFormEntry', {
     IsAbstract : true,
     Instance : {
@@ -387,6 +379,7 @@
         this._config = config;
         
         this.$initialize("form");
+        this.addClassName('submit-form');
         
         this.setName(this._config.name);
         this.setAction(this._config.action);

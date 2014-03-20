@@ -97,6 +97,16 @@
 									</cargo.jvmargs>
 								</properties>
 							</configuration>
+							<deployables>
+								<deployable>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard</artifactId>
+									<type>war</type>
+									<properties>
+									  <context>geodashboard</context>
+									</properties>
+								</deployable>
+							</deployables>							
 						</configuration>
 					</plugin>
 				</plugins>
@@ -155,6 +165,16 @@
 									</cargo.jvmargs>
 								</properties>
 							</configuration>
+							<deployables>
+								<deployable>
+									<groupId>com.runwaysdk</groupId>
+									<artifactId>geodashboard</artifactId>
+									<type>war</type>
+									<properties>
+									  <context>geodashboard</context>
+									</properties>
+								</deployable>
+							</deployables>							
 						</configuration>
 					</plugin>
 				</plugins>
