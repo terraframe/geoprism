@@ -73,7 +73,7 @@
       
       localize : function(key)
       {
-        return com.runwaysdk.Localize.getLanguage("com.runwaysdk.geodashboard.BlockingClientRequest")[key];
+        return com.runwaysdk.Localize.localize(this.getMetaClass().getQualifiedName(), key);
       },
       
       getFactory : function() {
