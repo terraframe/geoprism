@@ -168,7 +168,7 @@
 							<deployables>
 								<deployable>
 									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard</artifactId>
+									<artifactId>geodashboard-web</artifactId>
 									<type>war</type>
 									<properties>
 									  <context>geodashboard</context>

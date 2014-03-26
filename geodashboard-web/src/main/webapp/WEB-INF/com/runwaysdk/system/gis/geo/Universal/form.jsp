@@ -10,12 +10,12 @@
 		    <mjl:messages attribute="displayLabel" classes="error-message" />
 		  </div>
 		  <div class="field-row clearfix">
-        <label for="name">${item.nameMd.displayLabel} <!--<c:if test="${item.nameMd.required}">*</c:if>--></label>
-        <mjl:input id="name" param="name" type="text" />
-        <mjl:messages attribute="name" classes="error-message" />
+        <label for="universalId">${item.universalIdMd.displayLabel} <c:if test="${item.universalIdMd.required}">*</c:if></label>
+        <mjl:input id="universalId" param="universalId" type="text" />
+        <mjl:messages attribute="universalId" classes="error-message" />
       </div>
 		  <div class="field-row clearfix">
-		    <label for="description">${item.descriptionMd.description} <c:if test="${item.descriptionMd.required}">*</c:if></label>
+		    <label for="description">${item.descriptionMd.displayLabel} <c:if test="${item.descriptionMd.required}">*</c:if></label>
 		    <mjl:input id="description" param="description" type="text" />
 		    <mjl:messages attribute="description" classes="error-message" />
 		  </div>

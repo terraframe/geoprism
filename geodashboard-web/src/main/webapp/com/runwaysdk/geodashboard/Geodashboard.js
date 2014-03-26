@@ -16,7 +16,15 @@
       initialize : function(obj, node){
         this.$initialize(obj);
         
-        this._node = $(node);
+        this._node = null;
+        
+        if(Mojo.Util.isString(node)) {
+          this._node = $('#'+node);          
+        }
+        else {
+          this._node = $(node);
+        }
+        
         this._div = $('<div></div>');
         
         var offset = this._node.offset();
@@ -65,7 +73,7 @@
       
       localize : function(key)
       {
-        return com.runwaysdk.Localize.getLanguage("com.runwaysdk.geodashboard.BlockingClientRequest")[key];
+        return com.runwaysdk.Localize.localize(this.getMetaClass().getQualifiedName(), key);
       },
       
       getFactory : function() {
