@@ -18,9 +18,10 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
+<%@ page import="com.runwaysdk.constants.DeployProperties" %>
 
 
 <gdb:localize var="page_title" key="splash.pagetitle" />
@@ -28,20 +29,30 @@
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 
-<%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
-%>
+<% String webappRoot = "/" + DeployProperties.getAppName() + "/"; %> 
 
-<gdb:localize var="logoalt" key="splash.logoalt" />
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">
+<!-- Main content --> 
+<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>
 
-<br/>
-<br/>
 
-<header id="header">
-  <h1><gdb:localize key="splash.header" /></h1>
-</header>
+<script type="text/javascript" >
 
-<p><gdb:localize key="splash.powered" /></p>
+	////Accounting for browser memory when page is refreshed
+	$(document).ready(function(){		
+		if (window.location.hash !== '') {
+			
+	 		//// Update main content src attribute based on hash change (initiated by click on sidebar <a> tag)
+	  		$("#main-content-frame").attr("src", window.location.hash.substring(1)); 		
+		}
+	
+		$(window).on('hashchange', function(e) {
+			
+	 		//// Update main content src attribute based on hash change (initiated by click on sidebar <a> tag)
+	  		$("#main-content-frame").attr("src", e.target.location.hash.substring(1)); 		
+		});
+	});
+		
+</script>
 
 <jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>
+
