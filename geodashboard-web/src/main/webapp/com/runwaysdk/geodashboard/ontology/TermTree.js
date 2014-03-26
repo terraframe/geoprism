@@ -74,11 +74,11 @@
           selectable: true,
           crud: {
             create: {
-              width: 550,
+              width: 650,
               height: 300
             },
             update: {
-              width: 550,
+              width: 650,
               height: 300
             }
           }

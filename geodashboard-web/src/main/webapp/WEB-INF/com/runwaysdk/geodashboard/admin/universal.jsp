@@ -134,10 +134,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     crud: {
       create: { // This configuration gets merged into the jquery create dialog.
                 // The height of an attribute is about 52
-        height: 319
+        height: 324
       },
       update: {
-        height: 319
+        height: 324
       }
     }
   });
