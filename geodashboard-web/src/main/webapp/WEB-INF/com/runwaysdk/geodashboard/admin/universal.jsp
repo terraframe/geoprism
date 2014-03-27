@@ -125,21 +125,23 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <div id="tree"></div>
 
 <script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-  
-  var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
-    termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-    relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
-    crud: {
-      create: { // This configuration gets merged into the jquery create dialog.
-                // The height of an attribute is about 52
-        height: 328
-      },
-      update: {
-        height: 328
+  com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
+    com.runwaysdk.ui.Manager.setFactory("JQuery");
+    
+    var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+      termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
+      relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
+      rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      crud: {
+        create: { // This configuration gets merged into the jquery create dialog.
+                  // The height of an attribute is about 52
+          height: 328
+        },
+        update: {
+          height: 328
+        }
       }
-    }
+    });
+    tree.render("#tree");
   });
-  tree.render("#tree");
 </script>

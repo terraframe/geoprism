@@ -127,21 +127,23 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 <div id="tree"></div>
 
 <script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-  
-  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
-    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
-    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
-    crud: {
-      create: { // This configuration gets merged into the jquery create dialog.
-                // The height of an attribute is about 45
-        height: 380
-      },
-      update: {
-        height: 380
-      }
-    }
+  com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
+	  com.runwaysdk.ui.Manager.setFactory("JQuery");
+	  
+	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
+	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
+	    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
+	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+	    crud: {
+	      create: { // This configuration gets merged into the jquery create dialog.
+	                // The height of an attribute is about 45
+	        height: 380
+	      },
+	      update: {
+	        height: 380
+	      }
+	    }
+	  });
+	  tree.render("#tree");
   });
-  tree.render("#tree");
 </script>
