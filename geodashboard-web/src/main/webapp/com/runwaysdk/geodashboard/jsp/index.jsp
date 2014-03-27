@@ -31,18 +31,20 @@
 
 <% String webappRoot = "/" + DeployProperties.getAppName() + "/"; %> 
 
-<!-- Main content --> 
-<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>
-
 
 <script type="text/javascript" >
 
 	////Accounting for browser memory when page is refreshed
-	$(document).ready(function(){		
-		if (window.location.hash !== '') {
+	$(document).ready(function(){			
+		if (window.location.hash.length > 0) {
 			
-	 		//// Update main content src attribute based on hash change (initiated by click on sidebar <a> tag)
-	  		$("#main-content-frame").attr("src", window.location.hash.substring(1)); 		
+			//// Add iframe with hash src based on browser memory hash
+			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
+		}
+		else {	
+			
+			//// Add main page if no hash exists
+			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
 		}
 	
 		$(window).on('hashchange', function(e) {
