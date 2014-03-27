@@ -104,6 +104,7 @@
           type: this._config.termType,
           viewParams: {parentId: parentId},
           action: "update",
+          actionParams: {parentId: parentId},
           id: termId,
           onSuccess : function(view) {
             var term = that._makeGeoEntityFromView(view);

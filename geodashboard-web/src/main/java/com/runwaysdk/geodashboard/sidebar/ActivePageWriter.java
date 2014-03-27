@@ -40,7 +40,7 @@ public class ActivePageWriter
       href = "#";
     }
     else {
-      href = context + "/" + url;
+      href = context + "/#" + url;
     }
     
     String clazz = "";

@@ -24,6 +24,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   @Transaction
   public void delete()
   {
+    this.appLock();
     this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
     this.apply();
 
@@ -31,6 +32,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   }
 
   @Override
+  @Transaction
   public void apply()
   {
     boolean firstApply = this.isNew() && !this.isAppliedToDB();
@@ -40,6 +42,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
     if (firstApply)
     {
+      this.appLock();
       this.setOwner(this);
       super.apply();
     }

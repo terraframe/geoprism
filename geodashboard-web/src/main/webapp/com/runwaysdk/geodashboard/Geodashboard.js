@@ -13,37 +13,80 @@
   Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'StandbyClientRequest', {
     Extends : Mojo.ClientRequest,
     Instance : {
-      initialize : function(obj, node){
-        this.$initialize(obj);
+      /**
+       * 
+       * @param config A configuration object with onSuccess and onFailure handlers
+       * @param blockable An element or string to be converted into an element.
+       * @param parent
+       */
+      initialize : function(config, blockable) {
+        this.$initialize(config);
         
-        this._node = $(node);
-        this._div = $('<div></div>');
+        this._node = null;
+        this._blockable = blockable;
         
-        var offset = this._node.offset();
+        if (blockable instanceof com.runwaysdk.ui.factory.runway.Element) {
+          this._node = blockable;
+        }
+        else {
+          this._node = this.getFactory().newElement(blockable);
+        }
+        
+        this._div = this.getFactory().newElement("div");
+        
+        var jqNode = $(this._node.getRawEl());
+        
+        var offset = jqNode.offset();
         var top = offset.top;
         var left = offset.left;
         
-        this._div.height(this._node.outerHeight());
-        this._div.width(this._node.outerWidth());
-        this._div.index(this._node.index()+100);
-        this._div.attr('id', 'standby__'+this._node.attr('id')+'_'+Mojo.Util.generateId(8));
-        this._div.addClass('standby-overlay');
+        var jqDiv = $(this._div.getRawEl());
         
-        this._div.css('min-height',this._div.height());
-        this._div.css('min-width',this._div.width());
-        this._div.css('top',top);
-        this._div.css('left',left);
+        jqDiv.height(jqNode.outerHeight());
+        jqDiv.width(jqNode.outerWidth());
+        jqDiv.zIndex(jqNode.zIndex()+100);
+        
+        jqDiv.attr('id', 'standby__'+ this._node.getId() + '_'+Mojo.Util.generateId(8));
+        
+        jqDiv.addClass('standby-overlay');
+        
+        jqDiv.css('min-height',jqDiv.height());
+        jqDiv.css('min-width',jqDiv.width());
+        jqDiv.css('top',top);
+        jqDiv.css('left',left);
         
         this.addOnSendListener(Mojo.Util.bind(this, this._showStandby));
         this.addOnCompleteListener(Mojo.Util.bind(this, this._hideStandby));
       },
 
-      _showStandby : function(transport){
-        $(document.body).append(this._div);
+      getFactory : function() {
+        return com.runwaysdk.ui.Manager.getFactory();
+      },
+      
+      _showStandby : function(transport) {
+        var override = false;
+        
+        // FIXME : Replace this if check with an interface. F.E. Does blockable impelement BlockableIF?
+        if (Mojo.Util.isFunction(this._blockable.showStandby)) {
+          override = this._blockable.showStandby(this._div);
+        }
+        
+        if (!override) {
+          this._div.render();
+        }
       },
 
-      _hideStandby : function(transport){
-        this._div.remove();
+      _hideStandby : function(transport) {
+        var override = false;
+        
+        // FIXME : Replace this if check with an interface. F.E. Does blockable impelement BlockableIF?
+        if (Mojo.Util.isFunction(this._blockable.hideStandby)) {
+          override = this._blockable.hideStandby(this._div);
+        }
+        
+        if (!override) {
+          this._div.destroy();
+        }
       }
     }
   });
@@ -65,7 +108,7 @@
       
       localize : function(key)
       {
-        return com.runwaysdk.Localize.getLanguage("com.runwaysdk.geodashboard.BlockingClientRequest")[key];
+        return com.runwaysdk.Localize.localize(this.getMetaClass().getQualifiedName(), key);
       },
       
       getFactory : function() {

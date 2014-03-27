@@ -296,6 +296,10 @@
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>com.runwaysdk</groupId>
+							<artifactId>runwaysdk-common</artifactId>
+						</aspectLibrary>
+						<aspectLibrary>
+							<groupId>com.runwaysdk</groupId>
 							<artifactId>runwaysdk-server</artifactId>
 						</aspectLibrary>
 					</aspectLibraries>

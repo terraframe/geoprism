@@ -86,10 +86,10 @@
   // error occurs here, javascript spills onto the actual page (ugly!)
   try
   {
-    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
+    /* String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
       UsersDTO.CLASS
     }, true);
-    out.print(js);
+    out.print(js);*/
     
   }
   catch(Exception e)

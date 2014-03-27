@@ -119,7 +119,9 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.ui.userstable.UsersTable();  
-  ut.render("#usersTable");
+  $(document).ready(function() {
+  		var ut = new com.runwaysdk.ui.userstable.UsersTable({"bAutoWidth":false});  
+  		ut.render("#usersTable");
+  });
   
 </script>
