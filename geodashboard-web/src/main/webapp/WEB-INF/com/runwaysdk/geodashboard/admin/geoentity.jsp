@@ -64,6 +64,9 @@
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
 
+<!-- Localization -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
@@ -133,10 +136,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
     crud: {
       create: { // This configuration gets merged into the jquery create dialog.
                 // The height of an attribute is about 45
-        height: 379
+        height: 380
       },
       update: {
-        height: 379
+        height: 380
       }
     }
   });
