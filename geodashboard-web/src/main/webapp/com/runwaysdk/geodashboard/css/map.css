@@ -1,0 +1,29 @@
+/* ---------------------------------------------------------
+	Map styles
+	---------------------------------------------------------*/
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+	margin-left: 240px;
+	margin-top: 0px;
+	top: 23px;
+	box-shadow: none;
+	border: solid 2px rgba(0,0,0,0.7);;
+}
+
+.leaflet-bar a:first-child {
+	border-top-left-radius: 1px;
+	border-top-right-radius: 1px;
+	color: rgba(0,0,0,0.7);
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+}
+
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 1px;
+	border-bottom-right-radius: 1px;
+	color: rgba(0,0,0,0.7);
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+}

@@ -46,9 +46,9 @@
 	  }
 	  %></h3>
 	  <ul class="links-list">
-	    <% writer.writeLiA("Log out", "session/logout"); %>
-	    <% writer.writeLiA("Account", "admin/account"); %>
-	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer"); %>
+	    <% writer.writeLiA("Log out", "session/logout", false); %>
+	    <% writer.writeLiA("Account", "admin/account", false); %>
+	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer", true); %>
 	  </ul>
 	</div>
 	<!-- Dashboards -->
@@ -56,13 +56,13 @@
 	<div class="widget">
 	  <h3 class="marked">Manage Dashboards</h3>
 	  <ul class="links-list">
-	    <% writer.writeLiA("Annual Imunization Data", "#"); %>
-	    <% writer.writeLiA("Q4 Sales Engagement", "q4sales"); %>
+	    <% writer.writeLiA("Annual Imunization Data", "#", false); %>
+	    <% writer.writeLiA("Q4 Sales Engagement", "q4sales", false); %>
 	    <li><a data-toggle="collapse" href="#collapse3">New Dashboard <span class="hidden">collapse3</span></a>
 	      <ul id="collapse3" class="panel-collapse collapse">
-	        <% writer.writeLiA("Q4 Sales Leads", "#"); %>
-	        <% writer.writeLiA("Regional Marketing Programs", "#"); %>
-	        <% writer.writeLiA("New Dashboard", "#"); %>
+	        <% writer.writeLiA("Q4 Sales Leads", "#", false); %>
+	        <% writer.writeLiA("Regional Marketing Programs", "#", false); %>
+	        <% writer.writeLiA("New Dashboard", "#", false); %>
 	      </ul>
 	    </li>
 	  </ul>
@@ -93,7 +93,7 @@
           
           List<MenuItem> children = item.getChildren();
           for (MenuItem child : children) {
-            writer.writeLiA(child.getName(), child.getURL());
+            writer.writeLiA(child.getName(), child.getURL(), false);
           }
           
           out.print("</ul>");
@@ -102,7 +102,7 @@
           
         }
         else {
-          writer.writeLiA(item.getName(), item.getURL());
+          writer.writeLiA(item.getName(), item.getURL(), false);
         }
         
         num++;

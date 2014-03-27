@@ -19,6 +19,8 @@
 
 --%>
 
+
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ page import="com.runwaysdk.constants.DeployProperties" %>
@@ -26,6 +28,7 @@
 
 <gdb:localize var="page_title" key="splash.pagetitle" />
 
+<jsp:include page="../../../../WEB-INF/templates/headImports.jsp"></jsp:include>
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 
