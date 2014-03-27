@@ -106,7 +106,7 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var db = new com.runwaysdk.geodashboard.DataBrowser({
-    types: ["com.runwaysdk.system.Users", "com.runwaysdk.Business"]
+    types: ["com.runwaysdk.system.Users", "com.runwaysdk.system.gis.geo.GeoEntity", "com.runwaysdk.system.gis.geo.Universal", "com.runwaysdk.geodashboard.GeodashboardUser"]
   });
   db.render("#databrowser");
   

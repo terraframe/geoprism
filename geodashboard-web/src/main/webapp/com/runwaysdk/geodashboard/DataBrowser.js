@@ -132,7 +132,7 @@
           readColumnsFromMetadata: true
         });
         
-        this._config.selectableRows = true;
+        this._config.selectableRows = false;
         
         this._table = new GenericDataTable(this._config);
         this.appendChild(this._table);
