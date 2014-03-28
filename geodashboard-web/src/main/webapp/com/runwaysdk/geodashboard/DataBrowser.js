@@ -41,79 +41,62 @@
     
     Instance : {
       
-      initialize : function(cfg) {
+      initialize : function(config) {
         
-        cfg = cfg || {};
-        this.requireParameter("types", cfg.types, "array");
-        this._config = cfg;
+        config = config || {};
+//        this.requireParameter("types", config.types, "array");
         
-        this.$initialize("div");
+        var defaultConfig = {
+          el: "div",
+          data: [
+                {label: "com.runwaysdk.system.Users"},
+                {label: "com.runwaysdk.system.gis.geo.GeoEntity"},
+                {label: "com.runwaysdk.system.gis.geo.Universal"},
+                {label: "com.runwaysdk.geodashboard.GeodashboardUser"}
+          ],
+          dragAndDrop: true,
+          selectable: true,
+          crud: {
+            create: {
+              width: 650,
+              height: 300
+            },
+            update: {
+              width: 650,
+              height: 300
+            }
+          }
+        };
+        this._config = Mojo.Util.deepMerge(defaultConfig, config);
         
-      },
-      
-      _makeNewOrEditForm : function(usersDTO, metadataDTO) {
-        var form = this.getFactory().newForm();
-        
-        var usernameInput = form.newInput('text', 'username');
-        usernameInput.setValue(usersDTO ? usersDTO.getUsername() : "");
-        form.addEntry(metadataDTO.getAttributeDTO("username").getAttributeMdDTO().getDisplayLabel(), usernameInput);
-        
-        var passwordInput = form.newInput('text', 'password');
-        passwordInput.setValue(usersDTO ? usersDTO.getPassword() : "");
-        form.addEntry(metadataDTO.getAttributeDTO("password").getAttributeMdDTO().getDisplayLabel(), passwordInput);
-        
-        var localeInput = form.newInput('select', 'locale');
-        localeInput.addOption("locale1", "locale1", true);
-        localeInput.addOption("locale2", "locale2", false);
-        localeInput.addOption("locale3", "locale3", false);
-        form.addEntry(metadataDTO.getAttributeDTO("locale").getAttributeMdDTO().getDisplayLabel(), localeInput);
-        
-        var inactiveInput = form.newInput('text', 'inactive');
-        inactiveInput.setValue(usersDTO ? usersDTO.getInactive().toString() : "");
-        form.addEntry(metadataDTO.getAttributeDTO("inactive").getAttributeMdDTO().getDisplayLabel(), inactiveInput);
-        
-        var sessionLimitInput = form.newInput('text', 'sessionLimit');
-        sessionLimitInput.setValue(usersDTO ? usersDTO.getSessionLimit() : "");
-        form.addEntry(metadataDTO.getAttributeDTO("sessionLimit").getAttributeMdDTO().getDisplayLabel(), sessionLimitInput);
-        
-        return form;
-      },
-      
-      _onClickEdit : function(mouseEvent) {
+        this.$initialize(this._config.el);
         
       },
       
-      _onClickNew : function(mouseEvent) {
-        
-      },
-      
-      _onClickDelete : function(mouseEvent) {
-      },
-      
-      _onSelectChange : function(event) {
-        var newType = this._select.getRawEl().options[this._select.getRawEl().selectedIndex].text;
-        
-        this._table.destroy();
-        
-        this._config.dataSource = new InstanceQueryDataSource({
-          className: newType,
-          readColumnsFromMetadata: true
-        });
-        
-        this._table = new GenericDataTable(this._config);
-        this._table.render(this);
-      },
-      
-      _makeButtons : function() {
-        this._select = this.getFactory().newElement("select");
-        var rawIn = this._select.getRawEl();
-        for (var i = 0; i < this._config.types.length; ++i) {
-          this._select.appendChild(this.getFactory().newElement("option", {innerHTML: this._config.types[i], value: this._config.types[i]}));
-        }
-        rawIn.selectedIndex = 0;
-        this._select.addEventListener("change", Mojo.Util.bind(this, this._onSelectChange));
-        this.appendChild(this._select);
-        
+//      _onSelectChange : function(event) {
+//        var newType = this._select.getRawEl().options[this._select.getRawEl().selectedIndex].text;
+//        
+//        this._table.destroy();
+//        
+//        this._config.dataSource = new InstanceQueryDataSource({
+//          className: newType,
+//          readColumnsFromMetadata: true
+//        });
+//        
+//        this._table = new GenericDataTable(this._config);
+//        this._table.render(this);
+//      },
+//      
+//      _makeButtons : function() {
+//        this._select = this.getFactory().newElement("select");
+//        var rawIn = this._select.getRawEl();
+//        for (var i = 0; i < this._config.types.length; ++i) {
+//          this._select.appendChild(this.getFactory().newElement("option", {innerHTML: this._config.types[i], value: this._config.types[i]}));
+//        }
+//        rawIn.selectedIndex = 0;
+//        this._select.addEventListener("change", Mojo.Util.bind(this, this._onSelectChange));
+//        this.appendChild(this._select);
+//        
 //        var newUser = this.getFactory().newButton(this.localize("newUser"), Mojo.Util.bind(this, this._onNewUser));
 //        this.appendChild(newUser);
 //        
@@ -122,10 +105,38 @@
 //        
 //        var deleteUser = this.getFactory().newButton(this.localize("deleteUser"), Mojo.Util.bind(this, this._onDeleteUser));
 //        this.appendChild(deleteUser);
+//      },
+      
+      _onClickTreeNode : function(event) {
+        // The clicked node is 'event.node'
+        var type = event.node.name;
+        
+        this._table.destroy();
+        
+        this._config.dataSource = new InstanceQueryDataSource({
+          className: type,
+          readColumnsFromMetadata: true
+        });
+        
+        this._table = new GenericDataTable(this._config);
+        this._table.render(this);
+      },
+      
+      _makeTree : function() {
+        this._treeEl = this.getFactory().newElement("div");
+        this.appendChild(this._treeEl);
+        this._tree = $(this._treeEl.getRawEl()).tree(this._config);
+        
+        this._tree.bind(
+          'tree.click',
+          Mojo.Util.bind(this, this._onClickTreeNode)
+        );
       },
       
       render : function(parent) {
-        this._makeButtons();
+//        this._makeButtons();
+        
+        this._makeTree();
         
         this._config.dataSource = new InstanceQueryDataSource({
           className: this._config.types[0],
