@@ -31,16 +31,22 @@ public class ActivePageWriter
     }
   }
   
-  public void writeLiA(MenuItem item, String classes) throws IOException {
+  public void writeLiA(MenuItem item, String classes, boolean isSync) throws IOException {
     String href = "";
     String url = item.getURL();
     String title = item.getName();
+    String test = "";
     
     if (url.equals("#")) {
       href = "#";
     }
     else {
-      href = context + "/#" + url;
+    	if (isSync) {
+    		href = context + "/" + url;
+    	}
+    	else {
+    		href = context + "/#" + url;
+    	}
     }
     
     String clazz = "";
@@ -57,11 +63,11 @@ public class ActivePageWriter
     out.print(html);
   }
   
-  public void writeLiA(String title, String url) throws IOException {
-    this.writeLiA(new MenuItem(title, url), null);
+  public void writeLiA(String title, String url, boolean isSync) throws IOException {
+    this.writeLiA(new MenuItem(title, url), null, isSync);
   }
   
-  public void writeLiA(String title, String url, String classes) throws IOException {
-    this.writeLiA(new MenuItem(title, url), classes);
+  public void writeLiA(String title, String url, String classes, boolean isSync) throws IOException {
+    this.writeLiA(new MenuItem(title, url), classes, isSync);
   }
 }

@@ -1,1 +1,7 @@
 /logs
+
+geodashboard-client/bin
+geodashboard-common/bin
+geodashboard-web/bin
+
+
