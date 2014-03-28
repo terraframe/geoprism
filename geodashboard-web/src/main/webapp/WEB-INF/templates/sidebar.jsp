@@ -46,7 +46,7 @@
 	  }
 	  %></h3>
 	  <ul class="links-list">
-	    <% writer.writeLiA("Log out", "session/logout", false); %>
+	    <% writer.writeLiA("Log out", "session/logout", true); %>
 	    <% writer.writeLiA("Account", "admin/account", false); %>
 	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer", true); %>
 	  </ul>
