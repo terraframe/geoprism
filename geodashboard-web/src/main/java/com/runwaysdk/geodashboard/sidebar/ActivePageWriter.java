@@ -35,7 +35,6 @@ public class ActivePageWriter
     String href = "";
     String url = item.getURL();
     String title = item.getName();
-    String test = "";
     
     if (url.equals("#")) {
       href = "#";

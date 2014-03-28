@@ -4,4 +4,5 @@ geodashboard-client/bin
 geodashboard-common/bin
 geodashboard-web/bin
 
+geodashboard-web/src/main/scripts/ant/build.xml
 
