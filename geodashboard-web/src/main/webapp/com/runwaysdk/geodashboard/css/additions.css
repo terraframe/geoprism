@@ -1,0 +1,45 @@
+/****** 
+**** All CSS below are additions 
+*******/
+
+
+/* currently the table width scroll gets cropped which is not ideal. However, we will wait for future delivery of all.js from the ux team for further change */
+
+body{
+	overflow: hidden;
+}
+
+#main-content-frame {
+	position:absolute;
+	border: none;
+    width: 80%;
+    overflow: hidden;
+    min-height: 100%;
+    left: 300px;
+}
+
+#usersTable {	
+	margin-left: 0;
+	width: 90%;
+	overflow-x: auto;
+}
+
+
+table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable {
+	margin-left: 0;
+	width: 100%;
+}	
+
+
+/***** 
+**** UX team delivery overrides 
+******/
+
+.reporticng-container{
+	display:none;
+}
+
+
+
+
+

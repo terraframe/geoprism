@@ -1,18 +1,36 @@
 /* ---------------------------------------------------------
 	Map styles
 	---------------------------------------------------------*/
+	
+.dynamicMap {
+  min-width: 1345px;
+  min-height: 812px;
+  width: 100%;
+  height: 100%;
+}
+
+/* custom radio styles */
+div.row-holder .chk-area,
+div.row-holder .rad-area{
+  margin:0px 11px 0 0;
+}
+
+
+/***** 
+**** Leaflet overrides 
+******/
 
 .leaflet-control-zoom.leaflet-bar.leaflet-control {
-	margin-left: 240px;
+	margin-left: 245px;
 	margin-top: 0px;
 	top: 23px;
 	box-shadow: none;
-	border: solid 2px rgba(0,0,0,0.7);;
+	border: solid 1px #ddd;
 }
 
 .leaflet-bar a:first-child {
-	border-top-left-radius: 1px;
-	border-top-right-radius: 1px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
 	color: rgba(0,0,0,0.7);
 	width: 30px;
 	height: 30px;
@@ -20,10 +38,24 @@
 }
 
 .leaflet-bar a:last-child {
-	border-bottom-left-radius: 1px;
-	border-bottom-right-radius: 1px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
 	color: rgba(0,0,0,0.7);
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
+}
+
+
+/***** 
+**** UX team delivery overrides 
+******/
+
+.control-form h3 {
+	font-size: 15px;
+}
+
+.control-form {
+	width: 235px;
+	padding: 0 0 0 0;
 }
