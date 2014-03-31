@@ -65,7 +65,8 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DataBrowser.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/databrowser/DataBrowser.js"></script>
+<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/databrowser/databrowser.css" />
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
@@ -77,7 +78,8 @@
 <%@page import="com.runwaysdk.business.BusinessDTO"%>
 <%@page import="com.runwaysdk.business.RelationshipDTO"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.system.UsersDTO"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.MetadataType"%>
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
@@ -89,10 +91,10 @@
   // error occurs here, javascript spills onto the actual page (ugly!)
   try
   {
-    /* String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      UsersDTO.CLASS
+    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
+      DataBrowserUtil.CLASS, MetadataType.CLASS
     }, true);
-    out.print(js);*/
+    out.print(js);
     
   }
   catch(Exception e)
@@ -108,7 +110,7 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var db = new com.runwaysdk.geodashboard.DataBrowser({
+  var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
     types: ["com.runwaysdk.system.Users", "com.runwaysdk.system.gis.geo.GeoEntity", "com.runwaysdk.system.gis.geo.Universal", "com.runwaysdk.geodashboard.GeodashboardUser"]
   });
   db.render("#databrowser");

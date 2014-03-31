@@ -22,54 +22,63 @@ form legend{
 	overflow:hidden;
 }
 /* button styles */
-.btn{
-	display:inline-block;
-	vertical-align:top;
-	padding:4px 18px;
-	font-size:14px;
-	line-height:18px;
-	color:#f8f8f8;
-	border:1px solid #979796;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	outline:0;
-	border-radius:0;
-	background:#bbb;
+.btn,
+button.btn.ui-button.ui-widget{
+  display:inline-block;
+  vertical-align:top;
+  padding:4px 18px;
+  font-size:14px;
+  line-height:18px;
+  color:#f8f8f8;
+  border:1px solid #979796;
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  outline:0;
+  border-radius:0;
+  background:#bbb;
 }
-.btn:hover{
-	color:#f8f8f8;
-	border-color:#979796;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	background:#979796;
+.btn:hover,
+button.btn.ui-button.ui-widget:hover{
+  color:#f8f8f8;
+  border-color:#979796;
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  background:#979796;
 }
 .btn:focus,
-.btn:active{
-	padding:3px 17px;
-	border:2px solid #019edc;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	background:#bbb;
+.btn:active,
+button.btn.ui-button.ui-widget:focus,
+button.btn.ui-button.ui-widget:active{
+  padding:3px 17px;
+  border:2px solid #019edc;
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  background:#bbb;
 }
-.btn[disabled]{
-	padding:4px 18px;
-	color:#fcfcfc;
-	border:1px solid #d5d5d5;
-	background:#e4e4e4;
+.btn[disabled],
+button.btn.ui-button.ui-widget[disabled]{
+  padding:4px 18px;
+  color:#fcfcfc;
+  border:1px solid #d5d5d5;
+  background:#e4e4e4;
 }
-.btn-primary{
-	color:#fff;
-	border-color:#009edc;
-	background:#00bfff;
+.btn-primary,
+.btn.btn-primary.ui-button.ui-widget{
+  color:#fff;
+  border-color:#009edc;
+  background:#00bfff;
 }
-.btn-primary:hover{
-	border-color:#009edc;
-	background:#009edc;
+button.btn-primary:hover,
+button.btn.btn-primary.ui-button.ui-widget:hover{
+  border-color:#009edc;
+  background:#009edc;
 }
 .btn-primary:focus,
-.btn-primary:active{
-	border:2px solid #009edc;
-	background:#00bfff;
+.btn-primary:active,
+.btn.btn-primary.ui-button.ui-widget:focus,
+.btn.btn-primary.ui-button.ui-widget:active{
+  border:2px solid #009edc;
+  background:#00bfff;
 }
 .btn-primary[disabled]{
 	border:1px solid #99d8f1;
@@ -143,7 +152,7 @@ form legend{
 	line-height:27px;
 }
 /* submit form styles */
-.submit-form .form-container{padding:0 0 30px;}
+/* .submit-form .form-container{padding:0 0 30px;} */
 .submit-form h2{
 	margin:0 0 19px;
 	padding:0 0 4px;
@@ -175,6 +184,18 @@ form legend{
 	background:#eee;
 	outline:none;
 }
+.submit-form input[type="password"]{
+  float:left;
+  width:135px;
+  height:32px;
+  margin:0 11px 0 0;
+  padding:6px 10px;
+  font-size:14px;
+  line-height:18px;
+  color:#333;
+  border:1px solid #bbb;
+  background:#eee;
+}
 .submit-form ::-webkit-input-placeholder{color:#999;}
 .submit-form :-ms-input-placeholder{color:#999;}
 .submit-form :-moz-placeholder{color:#999;}
@@ -194,6 +215,10 @@ form legend{
 	border-color:#e09999;
 	background:#f8f8f8;
 }
+.submit-form .field-error input[type="password"]{
+  border-color:#e09999;
+  background:#f8f8f8;
+}
 .submit-form input[type="text"][disabled]{
 	border-color:#e4e4e4;
 	background:#f8f8f8;
@@ -208,6 +233,8 @@ form legend{
 	font-size:13px;
 	line-height:18px;
 	color:#8c0000;
+	width:150px;
+  word-wrap: break-word;
 }
 .submit-form select{
 	float:left;
@@ -386,6 +413,13 @@ form legend{
 	padding:5px 26px 5px 6px;
 	font-size:13px;
 }
+.submit-form .data-block input[type="text"].hasDatepicker{
+  width:106px;
+  height:28px;
+  margin:0;
+  padding:5px 26px 5px 6px;
+  font-size:13px;
+}
 .submit-form .data-block ::-webkit-input-placeholder{color:#333;}
 .submit-form .data-block :-ms-input-placeholder{color:#333;}
 .submit-form .data-block :-moz-placeholder{color:#333;}
@@ -405,13 +439,13 @@ form legend{
 	font-size:12px;
 	line-height:18px;
 }
-.ui-widget-content,
+/*.ui-widget-content,
 .ui-datepicker{
 	width:202px;
 	padding:10px 10px 8px;
 	border-color:#bbb;
 	background:#eee;
-}
+}*/
 .ui-corner-all,
 .ui-corner-bottom,
 .ui-corner-right,
@@ -447,11 +481,12 @@ form legend{
 	height:11px;
 	margin:0;
 }
-.ui-widget-header .ui-icon{
-	width:7px;
-	height:11px;
-	background:url(../images/sprite.png) no-repeat -87px 0;
-}
+/* This CSS screws up the x button on dialogs */
+/* .ui-widget-header .ui-icon{
+  width:7px;
+  height:11px;
+  background:url(../images/sprite.png) no-repeat -87px 0;
+} */
 .ui-widget-header .ui-datepicker-next .ui-icon{background-position:-87px -27px;}
 .ui-datepicker table{
 	margin:0;
@@ -587,10 +622,16 @@ form legend{
 	color:#b9b9b9;
 	outline:0;
 }
+
 .links-list .active a,
+div .aside-nav a.blueactive,
+a.blueactive,
 .widget a:hover,
 .widget a:focus,
-.widget a:active{color:#00bfff;}
+.widget a:active{
+  color:#00bfff;
+}
+
 .links-list{
 	padding:0;
 	margin:0;
@@ -754,7 +795,7 @@ form legend{
 .tooltip.bottom .tooltip-inner{border:1px solid #000;}
 .tooltip.bottom .tooltip-inner{
 	background:#00bfff;
-	max-width:200px;
+	max-width:269px;
 	padding:5px 20px;
 }
 .tooltip.bottom{
@@ -795,8 +836,8 @@ form legend{
 	left:0;
 	top:23px;
 	z-index:10;
-	width:276px;
-	padding:0 48px 0 0;
+	width:230px;
+	/*padding:0 48px 0 0;*/
 	margin:0;
 }
 .control-form .info-box{
@@ -1225,13 +1266,7 @@ form legend{
 }
 .sales-accortion .panel-collapse .opener:after,
 .sales-accortion .panel-collapse .opener:before{
-	content:'';
-	position:absolute;
-	left:3px;
-	top:11px;
-	width:2px;
-	height:8px;
-	background:#019edc;
+	content:'';	position:absolute;	left:3px;	top:11px;	width:2px;	height:8px;	background:#019edc;
 }
 .sales-accortion .panel-collapse .opener:before{
 	top:14px;

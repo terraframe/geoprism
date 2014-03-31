@@ -1,0 +1,30 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdView name="com.runwaysdk.geodashboard.databrowser.MetadataType">
+        <attributes>
+          <char name="typeName" size="255"></char>
+          <char name="typeId" size="255"></char>
+          <char name="parentId" size="255"></char>
+          <char name="displayLabel" size="255"></char>
+        </attributes>
+      </mdView>
+      
+      <mdUtil name="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil">
+        <mdMethod
+          name="getTypes"
+          label="getTypes"
+          returnType="com.runwaysdk.geodashboard.databrowser.MetadataType[]"
+          static="true">
+          <!-- 
+            <mdParameter name="package" order="0" type="java.lang.String" />
+           -->
+        </mdMethod>
+      </mdUtil>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

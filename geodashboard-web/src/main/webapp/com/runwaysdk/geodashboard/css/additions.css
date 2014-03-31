@@ -18,7 +18,7 @@ body{
     left: 300px;
 }
 
-#usersTable {	
+#usersTable {
 	margin-left: 0;
 	width: 90%;
 	overflow-x: auto;

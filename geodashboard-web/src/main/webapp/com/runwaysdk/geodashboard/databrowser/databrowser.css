@@ -1,0 +1,17 @@
+
+.geodashboard-databrowser {
+  display: table;	
+}
+
+.geodashboard-databrowser-tree {
+	display: table-cell;
+	padding: 2em;
+}
+
+.geodashboard-databrowser-table {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	padding: 2em;
+	width: 100%;
+}
