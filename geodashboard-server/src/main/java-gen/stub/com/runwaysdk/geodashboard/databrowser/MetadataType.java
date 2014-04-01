@@ -15,7 +15,7 @@ public class MetadataType extends MetadataTypeBase implements com.runwaysdk.gene
   {
     super();
     
-    this.setParentId(parentId);
+    this.setParentTypeId(parentId);
     this.setDisplayLabel(mdType.getDisplayLabel().getValue());
     this.setTypeName(mdType.definesType());
     this.setTypeId(mdType.getId());

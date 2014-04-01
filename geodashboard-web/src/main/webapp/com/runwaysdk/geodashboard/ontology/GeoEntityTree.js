@@ -92,7 +92,7 @@
       },
       
       /**
-       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a term.
+       * Update
        */
       __onContextEditClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var node = contextMenu.getTarget();

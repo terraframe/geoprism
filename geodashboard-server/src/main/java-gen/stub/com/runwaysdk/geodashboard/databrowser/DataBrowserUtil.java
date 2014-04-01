@@ -22,8 +22,8 @@ public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysd
     MetadataType[] types = new MetadataType[]{
         new MetadataType(ROOT_ID, MdBusiness.getMdBusiness(Users.CLASS)),
         new MetadataType(MdBusiness.getMdBusiness(Users.CLASS).getId(), MdBusiness.getMdBusiness(GeodashboardUser.CLASS)),
-        new MetadataType(ROOT_ID, MdBusiness.getMdBusiness(GeoEntity.CLASS)),
-        new MetadataType(ROOT_ID, MdBusiness.getMdBusiness(Universal.CLASS))
+        new MetadataType(MdBusiness.getMdBusiness(GeodashboardUser.CLASS).getId(), MdBusiness.getMdBusiness(Universal.CLASS)),
+        new MetadataType(MdBusiness.getMdBusiness(Universal.CLASS).getId(), MdBusiness.getMdBusiness(GeoEntity.CLASS))
     };
     
     return types;

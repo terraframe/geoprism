@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 773903086)
+@com.runwaysdk.business.ClassSignature(hash = 34111828)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -61,21 +61,21 @@ public  abstract  class MetadataTypeQueryBase extends com.runwaysdk.query.Genera
 
   }
  
-  public com.runwaysdk.query.SelectableChar getParentId()
+  public com.runwaysdk.query.SelectableChar getParentTypeId()
   {
-    return getParentId(null);
+    return getParentTypeId(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getParentId(String alias)
+  public com.runwaysdk.query.SelectableChar getParentTypeId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.PARENTID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.PARENTTYPEID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getParentId(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableChar getParentTypeId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.PARENTID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.PARENTTYPEID, alias, displayLabel);
 
   }
  

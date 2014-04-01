@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = -2034307707)
+@com.runwaysdk.business.ClassSignature(hash = 1381595243)
 public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.MetadataType";
-  private static final long serialVersionUID = -2034307707;
+  private static final long serialVersionUID = 1381595243;
   
   protected MetadataTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -18,7 +18,7 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
   
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
-  public static java.lang.String PARENTID = "parentId";
+  public static java.lang.String PARENTTYPEID = "parentTypeId";
   public static java.lang.String TYPEID = "typeId";
   public static java.lang.String TYPENAME = "typeName";
   public String getDisplayLabel()
@@ -58,41 +58,41 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DISPLAYLABEL).getAttributeMdDTO();
   }
   
-  public String getParentId()
+  public String getParentTypeId()
   {
-    return getValue(PARENTID);
+    return getValue(PARENTTYPEID);
   }
   
-  public void setParentId(String value)
+  public void setParentTypeId(String value)
   {
     if(value == null)
     {
-      setValue(PARENTID, "");
+      setValue(PARENTTYPEID, "");
     }
     else
     {
-      setValue(PARENTID, value);
+      setValue(PARENTTYPEID, value);
     }
   }
   
-  public boolean isParentIdWritable()
+  public boolean isParentTypeIdWritable()
   {
-    return isWritable(PARENTID);
+    return isWritable(PARENTTYPEID);
   }
   
-  public boolean isParentIdReadable()
+  public boolean isParentTypeIdReadable()
   {
-    return isReadable(PARENTID);
+    return isReadable(PARENTTYPEID);
   }
   
-  public boolean isParentIdModified()
+  public boolean isParentTypeIdModified()
   {
-    return isModified(PARENTID);
+    return isModified(PARENTTYPEID);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getParentIdMd()
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getParentTypeIdMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(PARENTID).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(PARENTTYPEID).getAttributeMdDTO();
   }
   
   public String getTypeId()

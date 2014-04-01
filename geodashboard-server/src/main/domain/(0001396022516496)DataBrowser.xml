@@ -5,7 +5,7 @@
         <attributes>
           <char name="typeName" size="255"></char>
           <char name="typeId" size="255"></char>
-          <char name="parentId" size="255"></char>
+          <char name="parentTypeId" size="255"></char>
           <char name="displayLabel" size="255"></char>
         </attributes>
       </mdView>

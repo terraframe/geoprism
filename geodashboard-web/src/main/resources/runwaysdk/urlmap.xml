@@ -9,7 +9,7 @@
   </map>
   
   <map uri="q4sales" forward="/com/runwaysdk/geodashboard/jsp/q4sales.jsp"/>
-  <map uri="inner" forward="/com/runwaysdk/geodashboard/jsp/inner.jsp"/>
+  <map uri="q4sales/inner" forward="/com/runwaysdk/geodashboard/jsp/inner.jsp"/>
   
   <map uri="admin" controller="com.runwaysdk.geodashboard.AdminController">
     <action method=".*" uri="${method}"/>    

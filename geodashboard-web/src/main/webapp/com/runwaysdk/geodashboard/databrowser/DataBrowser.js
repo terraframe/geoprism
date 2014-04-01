@@ -122,8 +122,19 @@
         }
       },
       
-      _getTreeData : function() {
+      __pushTypeAndAllChildren : function(type, typeArray, data) {
+        // 1) Push the type
+        var node = {label: type.getDisplayLabel(), id: type.getTypeId(), type: type.getTypeName(), children:[]};
+        data.push(node);
         
+        // 2) Loop through the typeArray, searching for children and pushing them under this node.
+        for (var i = 0; i < typeArray.length; ++i) {
+          var childType = typeArray[i];
+          
+          if (childType.getParentTypeId() === type.getTypeId()) {
+            this.__pushTypeAndAllChildren(childType, typeArray, node.children);
+          }
+        }
       },
       
       _makeTree : function() {
@@ -135,56 +146,13 @@
         
         var cr = new com.runwaysdk.geodashboard.StandbyClientRequest({onSuccess: function(metadataTypeArray){
           
-          var idHashmap = {};
-          
-          // Loop over it once and put the objects we're creating into the idHashmap.
-          for (var i = 0; i < metadataTypeArray.length; ++i) {
-            var metadataType = metadataTypeArray[i];
-            
-            var node = {label: metadataType.getDisplayLabel(), id: metadataType.getTypeId(), type: metadataType.getTypeName(), children:[]};
-            
-            var parentId = metadataType.getParentId();
-            if (parentId === "ROOT") {
-              if (idHashmap[metadataType.getTypeId()] == null) {
-                idHashmap[metadataType.getTypeId()] = node;
-              }
-            }
-            else {
-              var parentNode = idHashmap[metadataType.getParentId()];
-              if (parentNode != null) {
-                parentNode.children.push(node);
-              }
-              else {
-                var didFind = false;
-                
-                // Dereference parents
-                for (var j = 0; j < metadataTypeArray.length; ++j) {
-                  var parentMdType = metadataTypeArray[j];
-                  
-                  if (parentMdType.getTypeId() === metadataType.getParentId()) {
-                    var parentNode = idHashmap[parentMdType.getTypeId()];
-                    if (parentNode == null) {
-                      idHashmap[parentMdType.getTypeId()] = {label: parentMdType.getDisplayLabel(), id: parentMdType.getTypeId(), type: parentMdType.getTypeName(), children:[]};
-                    }
-                    
-                    parentNode.children.push(node);
-                    
-                    didFind = true;
-                  }
-                }
-                
-                if (!didFind) {
-                  throw new com.runwaysdk.Exception("The node (retrieved from the server) [" + node + "] contains a reference to a parent that does not exist.");
-                }
-              }
-            }
-          }
-          
           that._config.data = [];
           // Loop over it again and transfer the data from the hashmap into an array so that we preserve ordering.
           for (var i = 0; i < metadataTypeArray.length; ++i) {
-            if (metadataTypeArray[i].getParentId() === "ROOT") {
-              that._config.data.push(idHashmap[metadataTypeArray[i].getTypeId()]);
+            var type = metadataTypeArray[i];
+            
+            if (type.getParentTypeId() === "ROOT") {
+              that.__pushTypeAndAllChildren(type, metadataTypeArray, that._config.data);
             }
           }
           
