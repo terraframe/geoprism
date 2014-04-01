@@ -6,7 +6,7 @@
 /* currently the table width scroll gets cropped which is not ideal. However, we will wait for future delivery of all.js from the ux team for further change */
 
 body{
-	overflow: hidden;
+	overflow: none;
 }
 
 #main-content-frame {
