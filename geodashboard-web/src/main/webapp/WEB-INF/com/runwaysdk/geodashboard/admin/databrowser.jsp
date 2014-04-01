@@ -78,8 +78,8 @@
 <%@page import="com.runwaysdk.business.BusinessDTO"%>
 <%@page import="com.runwaysdk.business.RelationshipDTO"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil"%>
-<%@page import="com.runwaysdk.geodashboard.databrowser.MetadataType"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO"%>
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
@@ -92,7 +92,7 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      DataBrowserUtil.CLASS, MetadataType.CLASS
+      DataBrowserUtilDTO.CLASS, MetadataTypeDTO.CLASS
     }, true);
     out.print(js);
     
@@ -111,7 +111,7 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
-    types: ["com.runwaysdk.system.Users", "com.runwaysdk.system.gis.geo.GeoEntity", "com.runwaysdk.system.gis.geo.Universal", "com.runwaysdk.geodashboard.GeodashboardUser"]
+    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: []}", null, "[]")); %>.returnValue[0])
   });
   db.render("#databrowser");
   

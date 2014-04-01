@@ -32,6 +32,8 @@
    * LANGUAGE
    */
   com.runwaysdk.Localize.defineLanguage(dataBrowserName, {
+    tableTitle : "Records",
+    treeTitle : "System Types",
     noTypeSelected : "No type selected."
   });
   
@@ -44,15 +46,10 @@
       initialize : function(config) {
         
         config = config || {};
-//        this.requireParameter("types", config.types, "array");
+        this.requireParameter("types", config.types, "array");
         
         var defaultConfig = {
           el: "div",
-          data: [
-//                {label: "com.runwaysdk.system.Users", children: [{label: "com.runwaysdk.geodashboard.GeodashboardUser"}]},
-//                {label: "com.runwaysdk.system.gis.geo.GeoEntity"},
-//                {label: "com.runwaysdk.system.gis.geo.Universal"}
-          ],
           dragAndDrop: true,
           selectable: true,
           crud: {
@@ -138,45 +135,56 @@
       },
       
       _makeTree : function() {
+        this._treeSection = this.getFactory().newElement("div");
+        this._treeSection.addClassName("geodashboard-databrowser-treesection");
+        this.appendChild(this._treeSection);
+        
+        this._treeTitle = this.getFactory().newElement("span", {innerHTML : this.localize("treeTitle")});
+        this._treeTitle.addClassName("geodashboard-databrowser-treetitle");
+        this._treeSection.appendChild(this._treeTitle);
+        
         this._treeEl = this.getFactory().newElement("div");
         this._treeEl.addClassName("geodashboard-databrowser-tree");
-        this.appendChild(this._treeEl);
+        this._treeSection.appendChild(this._treeEl);
 
         var that = this;
         
-        var cr = new com.runwaysdk.geodashboard.StandbyClientRequest({onSuccess: function(metadataTypeArray){
-          
-          that._config.data = [];
-          // Loop over it again and transfer the data from the hashmap into an array so that we preserve ordering.
-          for (var i = 0; i < metadataTypeArray.length; ++i) {
-            var type = metadataTypeArray[i];
-            
-            if (type.getParentTypeId() === "ROOT") {
-              that.__pushTypeAndAllChildren(type, metadataTypeArray, that._config.data);
-            }
-          }
-          
-          // Instantiate JQTree
-          that._tree = $(that._treeEl.getRawEl()).tree(that._config);
-          that._tree.bind(
-            'tree.select',
-            Mojo.Util.bind(that, that._onSelectTreeNode)
-          );
-          
-        }, onFailure: Util.bind(that, that.handleException)}, that._treeEl);
+        var metadataTypeArray = this._config.types;
         
-        com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.getTypes(cr);
+        that._config.data = [];
+        for (var i = 0; i < metadataTypeArray.length; ++i) {
+          var type = metadataTypeArray[i];
+          
+          if (type.getParentTypeId() === "ROOT") {
+            that.__pushTypeAndAllChildren(type, metadataTypeArray, that._config.data);
+          }
+        }
+        
+        // Instantiate JQTree
+        that._tree = $(that._treeEl.getRawEl()).tree(that._config);
+        that._tree.bind(
+          'tree.select',
+          Mojo.Util.bind(that, that._onSelectTreeNode)
+        );
       },
       
-      _makeTableHolder : function() {
+      _makeTableSection : function() {
+        this._tableSection = this.getFactory().newElement("div");
+        this._tableSection.addClassName("geodashboard-databrowser-tablesection");
+        this.appendChild(this._tableSection);
+        
+        this._tableTitle = this.getFactory().newElement("span", {innerHTML: this.localize("tableTitle")});
+        this._tableTitle.addClassName("geodashboard-databrowser-tabletitle");
+        this._tableSection.appendChild(this._tableTitle);
+        
         this._tableHolder = this.getFactory().newElement("div", {innerHTML: this.localize("noTypeSelected")});
         this._tableHolder.addClassName("geodashboard-databrowser-table");
-        this.appendChild(this._tableHolder);
+        this._tableSection.appendChild(this._tableHolder);
       },
       
       render : function(parent) {
         this._makeTree();
-        this._makeTableHolder();
+        this._makeTableSection();
         
         this.$render(parent);
       }
