@@ -7,9 +7,31 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
+<<<<<<< HEAD
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <dependent-module deploy-path="/" handle="module:/overlay/prj/runwaysdk-gis-web?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+=======
+        <dependent-module archiveName="runwaysdk-gis-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-common/runwaysdk-gis-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-common/runwaysdk-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-gis-client-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-client/runwaysdk-gis-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-client-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-client/runwaysdk-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-gis-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-server/runwaysdk-gis-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="runwaysdk-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-server/runwaysdk-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/com/runwaysdk/runwaysdk-gis-web/1.8.1-SNAPSHOT/runwaysdk-gis-web-1.8.1-SNAPSHOT.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+>>>>>>> refs/remotes/origin/master
             <dependency-type>consumes</dependency-type>
         </dependent-module>
         <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
@@ -17,6 +39,6 @@
         </dependent-module>
         <property name="context-root" value="geodashboard"/>
         <property name="java-output-path" value="/geodashboard-web/target/classes"/>
-        <property name="component.exclusion.patterns" value="WEB-INF/lib/geodashboard-common*.jar,WEB-INF/lib/geodashboard-client*.jar,WEB-INF/lib/geodashboard-server*.jar,WEB-INF/lib/catalina*.jar,WEB-INF/lib/servlet-api*.jar,WEB-INF/lib/annotations-api*.jar"/>
+        <property name="component.exclusion.patterns" value="**/*geodashboard-common*.jar,**/*geodashboard-client*.jar,**/*geodashboard-server*.jar,**/*catalina*.jar,**/*servlet-api*.jar,**/*annotations-api*.jar"/>
     </wb-module>
 </project-modules>

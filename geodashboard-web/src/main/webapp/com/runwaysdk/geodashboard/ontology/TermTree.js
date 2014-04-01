@@ -74,11 +74,11 @@
           selectable: true,
           crud: {
             create: {
-              width: 650,
+              width: 680,
               height: 300
             },
             update: {
-              width: 650,
+              width: 680,
               height: 300
             }
           }
@@ -277,7 +277,7 @@
         
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId},
+          viewParams: {parentId: parentId, relationshipType: ""},
           action: "update",
           id: termId,
           onSuccess : function(term) {

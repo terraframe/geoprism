@@ -30,6 +30,9 @@
 
 <gdb:localize var="page_title" key="databrowser.title"/>
 
+<script type="text/javascript" src="<% out.print(webappRoot); %>jquerytree/tree.jquery.js"></script>
+<link rel="stylesheet" href="<% out.print(webappRoot); %>jquerytree/jqtree.css" ></link>
+
 <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>
 <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
@@ -62,7 +65,8 @@
 
 <!-- Runway Generic -->
 <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DataBrowser.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/databrowser/DataBrowser.js"></script>
+<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/databrowser/databrowser.css" />
 
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
@@ -74,7 +78,8 @@
 <%@page import="com.runwaysdk.business.BusinessDTO"%>
 <%@page import="com.runwaysdk.business.RelationshipDTO"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.system.UsersDTO"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO"%>
+<%@page import="com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO"%>
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
@@ -86,11 +91,10 @@
   // error occurs here, javascript spills onto the actual page (ugly!)
   try
   {
-    /* String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      UsersDTO.CLASS
+    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
+      DataBrowserUtilDTO.CLASS, MetadataTypeDTO.CLASS
     }, true);
-    out.print(js);*/
-    
+    out.print(js);
   }
   catch(Exception e)
   {
@@ -105,9 +109,8 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var db = new com.runwaysdk.geodashboard.DataBrowser({
-    types: ["com.runwaysdk.system.Users", "com.runwaysdk.Business"]
+  var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
+    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: [\"java.lang.String\"]}", null, "[\"com.runwaysdk.system\"]")); %>.returnValue[0]).getResultSet()
   });
   db.render("#databrowser");
-  
 </script>

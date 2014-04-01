@@ -1,0 +1,129 @@
+/****** 
+**** All CSS below are additions 
+*******/
+
+
+/* currently the table width scroll gets cropped which is not ideal. However, we will wait for future delivery of all.js from the ux team for further change */
+
+body{
+	overflow: hidden;
+}
+
+#main-content-frame {
+	position:absolute;
+	border: none;
+    width: 80%;
+    overflow: hidden;
+    min-height: 100%;
+    left: 300px;
+}
+
+#usersTable {
+	margin-left: 0;
+	width: 90%;
+	overflow-x: auto;
+}
+
+
+table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable {
+	margin-left: 0;
+	width: 100%;
+}	
+
+/* Map styles */
+.dynamicMap {
+  min-width: 1345px;
+  min-height: 812px;
+  width: 100%;
+  height: 100%;
+}
+
+div.olControlZoom {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #DDDDDD;
+  left: 245px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 23px;
+  width: 31px;
+}
+
+div.olControlZoom a {
+  background: url("../images/sprite.png") no-repeat scroll -217px 7px rgba(0, 0, 0, 0);
+  display: block;
+  height: 28px;
+  overflow: hidden;
+  text-indent: -9999px;
+  width: 29px;
+}
+
+a.olControlZoomIn {
+  
+}
+
+a.olControlZoomOut {
+  border-top: 1px solid #DDDDDD;
+  background-position: -267px 12px;
+}
+
+/* Changed selector to match OpenLayers DOM */
+.olControlZoom {
+  position:absolute;
+  top:-1px;
+  right:0;
+  width:31px;
+  border:1px solid #ddd;
+  background:#fff;
+  padding:0;
+  margin:0;
+  list-style:none;
+}
+
+/* Changed selector to match OpenLayers DOM */
+.olControlZoom {border-top:1px solid #ddd;}
+.olControlZoom :first-child{border:none;}
+.olControlZoom a{
+  display:block;
+  width:29px;
+  height:28px;
+  background:url(../images/sprite.png) no-repeat -217px 7px;
+  text-indent:-9999px;
+  overflow:hidden;
+}
+
+/* Changed selector to match OpenLayers DOM */
+.olControlZoom .olControlZoomOut {background-position:-267px 12px;}
+.olControlZoom a:hover,
+.olControlZoom a:focus{background-position:-242px 7px;}
+.olControlZoom .olControlZoomOut:hover,
+.olControlZoom .olControlZoomOut:focus{background-position:-292px 12px;}
+
+/* custom radio styles */
+div.row-holder .chk-area,
+div.row-holder .rad-area{
+  margin:0px 11px 0 0;
+}
+
+div.standby-overlay {
+  background-color: #CCCCCC; 
+  background-image:url('../images/transparent_spinner.gif');
+  background-repeat:no-repeat;
+  background-position:center center;
+  position: absolute; 
+  display: block;
+  opacity: 0.5
+}
+
+/***** 
+**** UX team delivery overrides 
+******/
+
+.reporticng-container{
+	display:none;
+}
+
+
+
+
+

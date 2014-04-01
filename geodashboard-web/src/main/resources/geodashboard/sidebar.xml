@@ -7,10 +7,11 @@
     <item name="Manage Geoentities" uri="admin/geoentity"/>
   </item>
   
-  <item name="Job Scheduler" uri="admin/scheduler"/> 
+  <item name="Job Scheduler" uri="admin/scheduler"/>
+  
+  <item name="Data Browser" uri="admin/databrowser"/> 
   
   <!--
-  <item name="Data Browser" uri="admin/databrowser"/>
   <item name="Sales Force Import Manager" uri="admin/importer"/>
   -->
 </sidebar>
