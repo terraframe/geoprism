@@ -4,6 +4,7 @@
       <mdView name="com.runwaysdk.geodashboard.databrowser.MetadataType">
         <attributes>
           <char name="typeName" size="255"></char>
+          <char name="typePackage" size="255"></char>
           <char name="typeId" size="255"></char>
           <char name="parentTypeId" size="255"></char>
           <char name="displayLabel" size="255"></char>
@@ -14,11 +15,9 @@
         <mdMethod
           name="getTypes"
           label="getTypes"
-          returnType="com.runwaysdk.geodashboard.databrowser.MetadataType[]"
+          returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery"
           static="true">
-          <!-- 
-            <mdParameter name="package" order="0" type="java.lang.String" />
-           -->
+            <mdParameter name="queryPackage" order="0" type="java.lang.String" />
         </mdMethod>
       </mdUtil>
     </create>

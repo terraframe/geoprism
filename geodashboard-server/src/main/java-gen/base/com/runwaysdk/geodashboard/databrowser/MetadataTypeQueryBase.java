@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 34111828)
+@com.runwaysdk.business.ClassSignature(hash = -1407343650)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -112,6 +112,24 @@ public  abstract  class MetadataTypeQueryBase extends com.runwaysdk.query.Genera
   public com.runwaysdk.query.SelectableChar getTypeName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.TYPENAME, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getTypePackage()
+  {
+    return getTypePackage(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getTypePackage(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.TYPEPACKAGE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getTypePackage(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.databrowser.MetadataType.TYPEPACKAGE, alias, displayLabel);
 
   }
  

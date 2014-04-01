@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 1381595243)
+@com.runwaysdk.business.ClassSignature(hash = -1543939659)
 public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.MetadataType";
-  private static final long serialVersionUID = 1381595243;
+  private static final long serialVersionUID = -1543939659;
   
   protected MetadataTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -21,6 +21,7 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
   public static java.lang.String PARENTTYPEID = "parentTypeId";
   public static java.lang.String TYPEID = "typeId";
   public static java.lang.String TYPENAME = "typeName";
+  public static java.lang.String TYPEPACKAGE = "typePackage";
   public String getDisplayLabel()
   {
     return getValue(DISPLAYLABEL);
@@ -167,6 +168,43 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getTypeNameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(TYPENAME).getAttributeMdDTO();
+  }
+  
+  public String getTypePackage()
+  {
+    return getValue(TYPEPACKAGE);
+  }
+  
+  public void setTypePackage(String value)
+  {
+    if(value == null)
+    {
+      setValue(TYPEPACKAGE, "");
+    }
+    else
+    {
+      setValue(TYPEPACKAGE, value);
+    }
+  }
+  
+  public boolean isTypePackageWritable()
+  {
+    return isWritable(TYPEPACKAGE);
+  }
+  
+  public boolean isTypePackageReadable()
+  {
+    return isReadable(TYPEPACKAGE);
+  }
+  
+  public boolean isTypePackageModified()
+  {
+    return isModified(TYPEPACKAGE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getTypePackageMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(TYPEPACKAGE).getAttributeMdDTO();
   }
   
   public static MetadataTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 1351436779)
+@com.runwaysdk.business.ClassSignature(hash = -1611134155)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -16,7 +16,8 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
   public static java.lang.String PARENTTYPEID = "parentTypeId";
   public static java.lang.String TYPEID = "typeId";
   public static java.lang.String TYPENAME = "typeName";
-  private static final long serialVersionUID = 1351436779;
+  public static java.lang.String TYPEPACKAGE = "typePackage";
+  private static final long serialVersionUID = -1611134155;
   
   public MetadataTypeBase()
   {
@@ -148,6 +149,34 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     else
     {
       setValue(TYPENAME, value);
+    }
+  }
+  
+  public String getTypePackage()
+  {
+    return getValue(TYPEPACKAGE);
+  }
+  
+  public void validateTypePackage()
+  {
+    this.validateAttribute(TYPEPACKAGE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypePackageMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.databrowser.MetadataType.CLASS);
+    return mdClassIF.definesAttribute(TYPEPACKAGE);
+  }
+  
+  public void setTypePackage(String value)
+  {
+    if(value == null)
+    {
+      setValue(TYPEPACKAGE, "");
+    }
+    else
+    {
+      setValue(TYPEPACKAGE, value);
     }
   }
   

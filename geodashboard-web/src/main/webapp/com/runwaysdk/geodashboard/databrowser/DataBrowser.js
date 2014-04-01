@@ -69,6 +69,8 @@
         
         this.addClassName("geodashboard-databrowser");
         
+        this._pushedTypes = {};
+        
       },
       
 //      _makeButtons : function() {
@@ -101,12 +103,14 @@
         
         if (selectedNode == null) {
           this._tableHolder.setInnerHTML(this.localize("noTypeSelected"));
+          this._tableHolder.setStyle("text-align", "center");
         }
         else {
           var type = selectedNode.type;
           var tableCfg = Mojo.Util.clone(this._config);
           var tableEl = this.getFactory().newElement("table");
           this._tableHolder.setInnerHTML("");
+          this._tableHolder.setStyle("text-align", "left");
           
           tableCfg.el = tableEl;
           tableCfg.dataSource = new InstanceQueryDataSource({
@@ -124,8 +128,9 @@
       
       __pushTypeAndAllChildren : function(type, typeArray, data) {
         // 1) Push the type
-        var node = {label: type.getDisplayLabel(), id: type.getTypeId(), type: type.getTypeName(), children:[]};
+        var node = {label: type.getDisplayLabel(), id: type.getTypeId(), type: type.getTypePackage() + "." + type.getTypeName(), children:[]};
         data.push(node);
+        this._pushedTypes[type.getTypeId()] = node;
         
         // 2) Loop through the typeArray, searching for children and pushing them under this node.
         for (var i = 0; i < typeArray.length; ++i) {
@@ -154,13 +159,27 @@
         
         var metadataTypeArray = this._config.types;
         
-        that._config.data = [];
+        var rootTypes = [];
         for (var i = 0; i < metadataTypeArray.length; ++i) {
           var type = metadataTypeArray[i];
           
-          if (type.getParentTypeId() === "ROOT") {
-            that.__pushTypeAndAllChildren(type, metadataTypeArray, that._config.data);
+          var isRootType = true;
+          for (var j = 0; j < metadataTypeArray.length; ++j) {
+            var parentType = metadataTypeArray[j];
+            
+            if (type.getParentTypeId() === parentType.getTypeId()) {
+              isRootType = false;
+            }
           }
+          
+          if (isRootType) {
+            rootTypes.push(type);
+          }
+        }
+        
+        that._config.data = [];
+        for (var i = 0; i < rootTypes.length; ++i) {
+          that.__pushTypeAndAllChildren(rootTypes[i], metadataTypeArray, that._config.data);
         }
         
         // Instantiate JQTree
@@ -182,6 +201,7 @@
         
         this._tableHolder = this.getFactory().newElement("div", {innerHTML: this.localize("noTypeSelected")});
         this._tableHolder.addClassName("geodashboard-databrowser-table");
+        this._tableHolder.setStyle("text-align", "center");
         this._tableSection.appendChild(this._tableHolder);
       },
       

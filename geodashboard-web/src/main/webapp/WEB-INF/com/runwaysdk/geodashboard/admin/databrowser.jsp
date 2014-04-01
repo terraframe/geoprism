@@ -95,7 +95,6 @@
       DataBrowserUtilDTO.CLASS, MetadataTypeDTO.CLASS
     }, true);
     out.print(js);
-    
   }
   catch(Exception e)
   {
@@ -111,8 +110,7 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
-    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: []}", null, "[]")); %>.returnValue[0])
+    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: [\"java.lang.String\"]}", null, "[\"com.runwaysdk.system\"]")); %>.returnValue[0]).getResultSet()
   });
   db.render("#databrowser");
-  
 </script>
