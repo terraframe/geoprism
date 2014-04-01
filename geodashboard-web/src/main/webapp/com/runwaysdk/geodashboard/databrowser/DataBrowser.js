@@ -111,7 +111,10 @@
           tableCfg.el = tableEl;
           tableCfg.dataSource = new InstanceQueryDataSource({
             className: type,
-            readColumnsFromMetadata: true
+            readColumnsFromMetadata: true,
+            columns: [
+//                      { queryAttr : "locale", customFormatter :  }
+                      ]
           });
           
           this._table = new GenericDataTable(tableCfg);
