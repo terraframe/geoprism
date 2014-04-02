@@ -22,6 +22,11 @@ body.iFrameBody {
   overflow: auto;
 }
 
+div.jcf-class-jqtree-checkbox {
+	margin: 1px;
+	margin-right: 8px;
+}
+
 #usersTable {
 	margin-left: 0;
 	width: 90%;
