@@ -65,13 +65,14 @@
         config = config || {};
         this.requireParameter("termType", config.termType, "string");
         this.requireParameter("relationshipType", config.relationshipType, "string");
-        this.requireParameter("rootTerm", config.rootTerm);
+        this.requireParameter("rootTerm", config.rootTerm, "string");
         
         var defaultConfig = {
           el: "div",
-          data: {}, // This parameter is required for jqTree, otherwise it tries to load data from a url.
+          data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
           selectable: true,
+          checkable: true,
           crud: {
             create: {
               width: 680,
@@ -84,6 +85,16 @@
           }
         };
         this._config = Mojo.Util.deepMerge(defaultConfig, config);
+        
+        // Add checkboxes
+        if (this._config.checkable && this._config.onCreateLi == null) {
+           this._config.onCreateLi = function(node, $li) {
+            if (!node.phantom) {
+              $li.find('.jqtree-title').before('<input class="jqtree-checkbox" id="check" type="checkbox">');
+              jcf.customForms.replaceAll();
+            }
+          };
+        }
         
         this.$initialize(this._config.el, this._config);
         
@@ -171,6 +182,10 @@
         }
         
         delete this.termCache[termId];
+        
+        if (this._config.checkable) {
+          jcf.customForms.replaceAll();
+        }
       },
       
       /**
@@ -235,6 +250,10 @@
               
               $thisTree.tree("openNode", node);
             }
+            
+//            if (that._config.checkable) {
+//              jcf.customForms.replaceAll();
+//            }
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -289,6 +308,10 @@
             }
             
             that.setTermBusy(termId, false);
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
+            }
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
@@ -537,6 +560,10 @@
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
               }
+              
+//              if (that._config.checkable) {
+//                jcf.customForms.replaceAll();
+//              }
             },
             onFailure : function(ex) {
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -563,7 +590,11 @@
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
-              } 
+              }
+              
+//              if (that._config.checkable) {
+//                jcf.customForms.replaceAll();
+//              }
             },
             onFailure : function(ex) {
               that.setNodeBusy(movedNode, false);
@@ -650,6 +681,10 @@
             }
             
             that.setTermBusy(termId, false);
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
+            }
           },
           
           onFailure : function(err) {
@@ -809,6 +844,10 @@
               }
               
               $thisTree.tree("openNode", parentNode);
+            }
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
             }
             
             return node;
