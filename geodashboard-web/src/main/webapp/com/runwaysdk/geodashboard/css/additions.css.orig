@@ -6,7 +6,11 @@
 /* currently the table width scroll gets cropped which is not ideal. However, we will wait for future delivery of all.js from the ux team for further change */
 
 body{
-	overflow: hidden;
+<<<<<<< HEAD
+	overflow: none;
+=======
+  overflow: hidden;
+>>>>>>> c947da9107918dc7c448129ab841ca09c69fab6b
 }
 
 #main-content-frame {
@@ -22,16 +26,17 @@ body.iFrameBody {
   overflow: auto;
 }
 
-div.jcf-class-jqtree-checkbox {
-	margin: 1px;
-	margin-right: 8px;
-}
-
 #usersTable {
+<<<<<<< HEAD
 	margin-left: 0;
-	width: 90%;
+	width: 100%;
 	overflow-x: auto;
 /* 	display: table-row; */
+=======
+  margin-left: 0;
+  width: 90%;
+  overflow-x: auto;
+>>>>>>> c947da9107918dc7c448129ab841ca09c69fab6b
 }
 
 
