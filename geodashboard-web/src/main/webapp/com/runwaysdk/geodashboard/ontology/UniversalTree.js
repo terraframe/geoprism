@@ -100,6 +100,10 @@
           // We don't have the relationship id of the new relationship between the children and the root node. 
           this.refreshTerm(this.rootTermId);
         }
+        
+        if (this._config.checkable) {
+          jcf.customForms.replaceAll();
+        }
       },
       
       _onClickNewCountry : function() {

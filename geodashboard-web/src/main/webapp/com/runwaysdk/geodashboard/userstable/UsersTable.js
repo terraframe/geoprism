@@ -54,7 +54,7 @@
     "invalidEmail" : "Invalid email address format",
     "admin" : "Admin",
     "adminRoleHeader" : "System roles",
-    "dashboardRoleHeader" : "Dashbaord roles",
+    "dashboardRoleHeader" : "Dashboard roles",
     "accountInfo" : "Account information",
     "userInfo" : "User information",
     "allow" : "allow",
