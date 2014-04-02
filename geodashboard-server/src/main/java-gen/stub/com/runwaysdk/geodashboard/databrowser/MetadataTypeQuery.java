@@ -80,8 +80,6 @@ public class MetadataTypeQuery extends com.runwaysdk.geodashboard.databrowser.Me
       }
       
       this.getViewQuery().WHERE(conditions);
-      
-      System.out.println(this.getViewQuery().getSQL());
     }
 
   }

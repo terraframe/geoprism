@@ -86,7 +86,7 @@
 </head>
 
 
-<body>
+<body class="iFrameBody">
 
 <div class="pageContent">
   <header id="header">
