@@ -28,7 +28,11 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
+<<<<<<< HEAD
+  // String webappRoot = "/" + DeployProperties.getAppName() + "/";
+=======
 //   String webappRoot = request.getContextPath() + "/";
+>>>>>>> c947da9107918dc7c448129ab841ca09c69fab6b
 
   ActivePageWriter writer = new ActivePageWriter(request, out);
 %>

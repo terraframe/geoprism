@@ -42,12 +42,20 @@
 		if (window.location.hash.length > 0) {
 			
 			//// Add iframe with hash src based on browser memory hash
+<<<<<<< HEAD
 			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
+=======
+			$("#main").html('<iframe id="main-content-frame" scrolling="yes" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
+>>>>>>> c947da9107918dc7c448129ab841ca09c69fab6b
 		}
 		else {	
 			
 			//// Add main page if no hash exists
+<<<<<<< HEAD
 			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
+=======
+			$("#main").html('<iframe id="main-content-frame" scrolling="yes" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
+>>>>>>> c947da9107918dc7c448129ab841ca09c69fab6b
 		}
 	
 		$(window).on('hashchange', function(e) {
