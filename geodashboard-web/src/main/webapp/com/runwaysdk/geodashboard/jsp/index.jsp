@@ -32,7 +32,7 @@
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 
-<% String webappRoot = "/" + DeployProperties.getAppName() + "/"; %> 
+<% String webappRoot = request.getContextPath() + "/"; %> 
 
 
 <script type="text/javascript" >
