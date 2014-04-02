@@ -17,7 +17,8 @@
           label="getTypes"
           returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery"
           static="true">
-            <mdParameter name="queryPackage" order="0" type="java.lang.String" />
+            <mdParameter name="packages" order="0" type="java.lang.String[]" />
+            <mdParameter name="types" order="1" type="java.lang.String[]" />
         </mdMethod>
       </mdUtil>
     </create>

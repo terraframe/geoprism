@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.databrowser;
 
+import com.runwaysdk.query.Condition;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 
 /**
@@ -9,14 +10,16 @@ import com.runwaysdk.system.metadata.MdBusinessQuery;
 public class MetadataTypeQuery extends com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryBase  implements com.runwaysdk.generation.loader.Reloadable
 {
   protected MdBusinessQuery mdBizQ;
-  protected String packag;
+  protected String[] packages;
+  protected String[] types;
   
-  public MetadataTypeQuery(com.runwaysdk.query.QueryFactory queryFactory, String packag)
+  public MetadataTypeQuery(com.runwaysdk.query.QueryFactory queryFactory, String[] packages, String[] types)
   {
     super(queryFactory);
     
     this.mdBizQ = new MdBusinessQuery(queryFactory);
-    this.packag = packag;
+    this.packages = packages;
+    this.types = types;
     
     this.buildQuery(new DefaultMetadataTypeBuilder(queryFactory));
   }
@@ -52,7 +55,33 @@ public class MetadataTypeQuery extends com.runwaysdk.geodashboard.databrowser.Me
      */
     protected void buildWhereClause()
     {
-      this.getViewQuery().WHERE(mdBizQ.getPackageName().EQ(MetadataTypeQuery.this.packag));
+      Condition conditions = null;
+      
+      for (int i = 0; i < packages.length; ++i) {
+        if (conditions == null) {
+          conditions = mdBizQ.getPackageName().EQ(packages[i]);
+        }
+        else {
+          conditions = conditions.OR(mdBizQ.getPackageName().EQ(packages[i]));
+        }
+      }
+      
+      for (int i = 0; i < types.length; ++i) {
+        int lastPeriod = types[i].lastIndexOf('.');
+        String pack = types[i].substring(0, lastPeriod);
+        String type = types[i].substring(lastPeriod+1);
+        
+        if (conditions == null) {
+          conditions = mdBizQ.getPackageName().EQ(pack).AND(mdBizQ.getTypeName().EQ(type));
+        }
+        else {
+          conditions = conditions.OR(mdBizQ.getPackageName().EQ(pack).AND(mdBizQ.getTypeName().EQ(type)));
+        }
+      }
+      
+      this.getViewQuery().WHERE(conditions);
+      
+      System.out.println(this.getViewQuery().getSQL());
     }
 
   }
