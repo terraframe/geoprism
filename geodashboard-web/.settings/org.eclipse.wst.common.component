@@ -7,6 +7,11 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
+<<<<<<< HEAD
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module deploy-path="/" handle="module:/overlay/prj/runwaysdk-gis-web?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+=======
         <dependent-module archiveName="runwaysdk-gis-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-common/runwaysdk-gis-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -26,6 +31,7 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/com/runwaysdk/runwaysdk-gis-web/1.8.1-SNAPSHOT/runwaysdk-gis-web-1.8.1-SNAPSHOT.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+>>>>>>> refs/remotes/origin/master
             <dependency-type>consumes</dependency-type>
         </dependent-module>
         <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
