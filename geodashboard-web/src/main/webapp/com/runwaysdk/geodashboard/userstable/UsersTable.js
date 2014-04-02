@@ -852,7 +852,7 @@
           columns: columns
         });
         
-        this._config.selectableRows = true;
+        this._config.selectableRows = false;
         
         // Overwrite the column definitions for the edit and delete columns
         this._config.aoColumnDefs = [
