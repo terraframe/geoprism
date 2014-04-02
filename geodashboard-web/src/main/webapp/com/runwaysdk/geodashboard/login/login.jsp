@@ -21,28 +21,6 @@
   <title><gdb:localize key="login.title" /></title>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/login/login.css">
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
-      <script type="text/javascript" >	
-   
-      		//// Test if the login page was loaded in an iframe and if so forward to a sychronouse logout action.
-      		//// This is not ideal but is in place to handle session timout while iframes are being used for main content.
-			if (window!=window.top) {
-				window.parent.parent.window.location = '/geodashboard/session/logout';
-			};
-
-			////  Some scratchy code to try and figure out iframe content loading timing
-//       	$(window).load(function(){
-//       	$(document.body).ready(function(){
-      	    
-//       	  if (window!=window.top) {
-//       		console.log(" this ", $("#main-content-frame").contents().find('html'));
-// //       	  	$('body', window.parent.parent.document).html($("#main-content-frame").contents().find('html'));
-//       	  }
-
-//       	});
-//       	});
-
-	</script>
 </head>
 <body>
   <header id="header">

@@ -62,7 +62,7 @@ public class SessionFilter implements Filter, Reloadable
       }
       catch (InvalidSessionExceptionDTO e)
       {
-        httpRes.sendRedirect(httpReq.getContextPath() + "/login");
+        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
       }
 
       return;
@@ -84,6 +84,12 @@ public class SessionFilter implements Filter, Reloadable
 
     // They're allowed to hit the login view page, otherwise its a redirect loop
     if (uri.equals(req.getContextPath() + "/login"))
+    {
+      return true;
+    }
+    
+    // They're allowed to hit the login view page, otherwise its a redirect loop
+    if (uri.equals(req.getContextPath() + "/loginRedirect"))
     {
       return true;
     }

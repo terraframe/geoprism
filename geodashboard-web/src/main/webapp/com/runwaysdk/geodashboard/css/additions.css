@@ -20,8 +20,9 @@ body{
 
 #usersTable {
 	margin-left: 0;
-	width: 90%;
+	width: 100%;
 	overflow-x: auto;
+/* 	display: table-row; */
 }
 
 
