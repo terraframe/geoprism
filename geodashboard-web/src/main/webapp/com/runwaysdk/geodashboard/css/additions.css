@@ -48,66 +48,6 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
   height: 100%;
 }
 
-div.olControlZoom {
-  background: none repeat scroll 0 0 #FFFFFF;
-  border: 1px solid #DDDDDD;
-  left: 245px;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 23px;
-  width: 31px;
-}
-
-div.olControlZoom a {
-  background: url("../images/sprite.png") no-repeat scroll -217px 7px rgba(0, 0, 0, 0);
-  display: block;
-  height: 28px;
-  overflow: hidden;
-  text-indent: -9999px;
-  width: 29px;
-}
-
-a.olControlZoomIn {
-  
-}
-
-a.olControlZoomOut {
-  border-top: 1px solid #DDDDDD;
-  background-position: -267px 12px;
-}
-
-/* Changed selector to match OpenLayers DOM */
-.olControlZoom {
-  position:absolute;
-  top:-1px;
-  right:0;
-  width:31px;
-  border:1px solid #ddd;
-  background:#fff;
-  padding:0;
-  margin:0;
-  list-style:none;
-}
-
-/* Changed selector to match OpenLayers DOM */
-.olControlZoom {border-top:1px solid #ddd;}
-.olControlZoom :first-child{border:none;}
-.olControlZoom a{
-  display:block;
-  width:29px;
-  height:28px;
-  background:url(../images/sprite.png) no-repeat -217px 7px;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-
-/* Changed selector to match OpenLayers DOM */
-.olControlZoom .olControlZoomOut {background-position:-267px 12px;}
-.olControlZoom a:hover,
-.olControlZoom a:focus{background-position:-242px 7px;}
-.olControlZoom .olControlZoomOut:hover,
-.olControlZoom .olControlZoomOut:focus{background-position:-292px 12px;}
 
 /* custom radio styles */
 div.row-holder .chk-area,
@@ -132,6 +72,7 @@ div.standby-overlay {
 .reporticng-container{
   display:none;
 }
+
 
 
 
