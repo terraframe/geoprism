@@ -93,12 +93,12 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 	z-index:2;
 }
 /* main informative part styles */
-#main{
+/* #main{
 	float:right;
 	width:100%;
 	margin-bottom:-34px;
 	padding:13px 25px 0 38px;
-}
+} */
 /* header styles */
 #header{
 	overflow:hidden;
