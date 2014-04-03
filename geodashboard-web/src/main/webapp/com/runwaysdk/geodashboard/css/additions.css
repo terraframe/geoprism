@@ -10,16 +10,19 @@ body{
 }
 
 #main-content-frame {
-  position:absolute;
+	float:right;
+	position:relative;
+	width:100%;
+	height:100%;
   border: none;
-  width: 79%;
-  overflow: hidden;
-  min-height: 100%;
-  left: 300px;
 }
 
 body.iFrameBody {
   overflow: auto;
+}
+
+div.pageContent {
+	padding:13px 25px 0 25px;
 }
 
 div.jcf-class-jqtree-checkbox {
