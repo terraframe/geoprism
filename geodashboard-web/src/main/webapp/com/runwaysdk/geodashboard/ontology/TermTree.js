@@ -91,7 +91,7 @@
            this._config.onCreateLi = function(node, $li) {
             if (!node.phantom) {
               $li.find('.jqtree-title').before('<input class="jqtree-checkbox" id="check" type="checkbox">');
-              jcf.customForms.replaceAll();
+              jcf.customForms.replaceAll($("input.jqtree-checkbox")[0]);
             }
           };
         }
