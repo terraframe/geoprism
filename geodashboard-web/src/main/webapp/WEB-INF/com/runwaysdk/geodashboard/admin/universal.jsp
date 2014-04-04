@@ -49,7 +49,6 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 
@@ -125,20 +124,20 @@
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
-    var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      checkable: true,
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
-                  // The height of an attribute is about 52
-          height: 328
+          height: 290
         },
         update: {
-          height: 328
+          height: 290
         }
       }
     });
-    tree.render("#tree");
+    document.universaltree.render("#tree");
   });
 </script>

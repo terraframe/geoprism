@@ -50,8 +50,6 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
-
 
 <!-- JQuery -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
@@ -132,11 +130,10 @@
 	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.
-	                // The height of an attribute is about 45
-	        height: 380
+	        height: 320
 	      },
 	      update: {
-	        height: 380
+	        height: 320
 	      }
 	    }
 	  });

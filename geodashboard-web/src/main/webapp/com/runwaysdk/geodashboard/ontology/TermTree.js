@@ -75,15 +75,15 @@
           data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
           selectable: true,
-          checkable: true,
+          checkable: false,
           crud: {
             create: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             },
             update: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             }
           }
         };
@@ -110,14 +110,32 @@
         this.deselectCallbacks = [];
       },
       
-      
+      getCheckedTerms : function(rootNode, appendArray) {
+        appendArray = appendArray || [];
+        rootNode = rootNode || $(this.getRawEl()).tree("getTree");
+        
+        for (var i = 0; i < rootNode.children.length; ++i) {
+          var child = rootNode.children[i];
+          
+          if (!child.phantom && child.checkBox != null) {
+            if (child.checkBox.isChecked()) {
+              appendArray.push(this.__getRunwayIdFromNode(child));
+            }
+            
+            this.getCheckedTerms(child, appendArray);
+          }
+        }
+        
+        return appendArray;
+      },
       
       __onCheck : function(event) {
         var checkBox = event.getCheckBox();
         var node = checkBox.node;
+        var termId = this.__getRunwayIdFromNode(node);
         
         if (!node.skipCheckChildren) {
-          this.doForNodeAndAllChildren(node, function(childNode){
+          this.doForNodeAndAllChildren(node, function(childNode) {
             if (childNode != node) {
               childNode.skipCheckParent = true;
               childNode.checkBox.setChecked(checkBox.isChecked());
@@ -128,11 +146,15 @@
         
         if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
           var checkedCount = 0;
+          var partialChecked = 0;
           
           var siblings = node.parent.children;
           for (var i = 0; i < siblings.length; ++i) {
             if (siblings[i].checkBox.isChecked()) {
               checkedCount++;
+            }
+            else if (siblings[i].checkBox.isPartialChecked()) {
+              partialChecked++;
             }
           }
           
@@ -140,16 +162,15 @@
             node.parent.checkBox.setChecked(true);
           }
           else {
-            if (checkedCount > 0) {
-              node.parent.checkBox.addClassName("partialcheck");
-              
+            if ((checkedCount + partialChecked) > 0) {
               node.parent.skipCheckChildren = true;
-              node.parent.checkBox.setChecked(false);
+              node.parent.checkBox.setChecked("partial");
               node.parent.skipCheckChildren = false;
             }
             else {
-              node.parent.checkBox.removeClassName("partialcheck");
+              node.parent.skipCheckChildren = true;
               node.parent.checkBox.setChecked(false);
+              node.parent.skipCheckChildren = false;
             }
           }
         }
@@ -158,7 +179,7 @@
           var checkedCount = 0;
           
           for (var i = 0; i < node.children.length; ++i) {
-            if (node.children[i].checkBox.isChecked()) {
+            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
               checkedCount++;
             }
           }
@@ -595,6 +616,31 @@
         
         for (var i = 0; i < nodes.length; ++i) {
           this.doForNodeAndAllChildren(nodes[i], fnDo);
+        }
+      },
+      
+      doForTerm : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          fnDo(nodes[i]);
+        }
+      },
+      
+      doForTermAndImmediateChildren : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          var node = nodes[i];
+          fnDo(node);
+          
+          for (var i = 0; i < node.children.length; ++i) {
+            var child = node.children[i];
+            
+            if (!child.phantom) {
+              fnDo(child);
+            }
+          }
         }
       },
       
