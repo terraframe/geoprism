@@ -49,7 +49,6 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 
@@ -129,13 +128,13 @@
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      checkable: true,
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
-                  // The height of an attribute is about 52
-          height: 328
+          height: 290
         },
         update: {
-          height: 328
+          height: 290
         }
       }
     });

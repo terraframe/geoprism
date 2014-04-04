@@ -75,15 +75,15 @@
           data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
           selectable: true,
-          checkable: true,
+          checkable: false,
           crud: {
             create: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             },
             update: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             }
           }
         };
