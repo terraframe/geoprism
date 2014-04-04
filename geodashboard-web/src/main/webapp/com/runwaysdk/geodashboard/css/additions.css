@@ -92,5 +92,14 @@ div.standby-overlay {
   margin-top: 10px;
 }
 
+a.custom-expanded {
+	color: #00bfff;	
+}
+
+
+/* .aside-nav a:hover, */
+/* .aside-nav a:focus, */
+/* .aside-nav a:active{color:red;} */
+
 
 

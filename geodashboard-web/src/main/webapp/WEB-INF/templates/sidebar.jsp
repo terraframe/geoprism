@@ -116,3 +116,14 @@
 </aside>
 <!-- END Generated Bootstrap Sidebar Menu END -->
 
+
+<script type="text/javascript">
+
+  // Keep the element styled like the hover when dropdown is expanded
+  $(".aside-nav a").click(function(e){ 		  
+    $(this).toggleClass("custom-expanded");	  
+  });
+  
+</script>
+
+
