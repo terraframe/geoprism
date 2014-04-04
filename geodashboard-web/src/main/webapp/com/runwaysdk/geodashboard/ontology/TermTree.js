@@ -110,8 +110,6 @@
         this.deselectCallbacks = [];
       },
       
-      
-      
       __onCheck : function(event) {
         var checkBox = event.getCheckBox();
         var node = checkBox.node;
@@ -128,11 +126,15 @@
         
         if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
           var checkedCount = 0;
+          var partialChecked = 0;
           
           var siblings = node.parent.children;
           for (var i = 0; i < siblings.length; ++i) {
             if (siblings[i].checkBox.isChecked()) {
               checkedCount++;
+            }
+            else if (siblings[i].checkBox.isPartialChecked()) {
+              partialChecked++;
             }
           }
           
@@ -140,16 +142,15 @@
             node.parent.checkBox.setChecked(true);
           }
           else {
-            if (checkedCount > 0) {
-              node.parent.checkBox.addClassName("partialcheck");
-              
+            if ((checkedCount + partialChecked) > 0) {
               node.parent.skipCheckChildren = true;
-              node.parent.checkBox.setChecked(false);
+              node.parent.checkBox.setChecked("partial");
               node.parent.skipCheckChildren = false;
             }
             else {
-              node.parent.checkBox.removeClassName("partialcheck");
+              node.parent.skipCheckChildren = true;
               node.parent.checkBox.setChecked(false);
+              node.parent.skipCheckChildren = false;
             }
           }
         }
@@ -158,7 +159,7 @@
           var checkedCount = 0;
           
           for (var i = 0; i < node.children.length; ++i) {
-            if (node.children[i].checkBox.isChecked()) {
+            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
               checkedCount++;
             }
           }
