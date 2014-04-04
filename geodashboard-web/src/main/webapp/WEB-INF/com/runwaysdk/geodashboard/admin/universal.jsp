@@ -124,7 +124,7 @@
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
-    var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
@@ -138,6 +138,6 @@
         }
       }
     });
-    tree.render("#tree");
+    document.universaltree.render("#tree");
   });
 </script>

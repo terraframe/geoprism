@@ -110,12 +110,32 @@
         this.deselectCallbacks = [];
       },
       
+      getCheckedTerms : function(rootNode, appendArray) {
+        appendArray = appendArray || [];
+        rootNode = rootNode || $(this.getRawEl()).tree("getTree");
+        
+        for (var i = 0; i < rootNode.children.length; ++i) {
+          var child = rootNode.children[i];
+          
+          if (!child.phantom && child.checkBox != null) {
+            if (child.checkBox.isChecked()) {
+              appendArray.push(this.__getRunwayIdFromNode(child));
+            }
+            
+            this.getCheckedTerms(child, appendArray);
+          }
+        }
+        
+        return appendArray;
+      },
+      
       __onCheck : function(event) {
         var checkBox = event.getCheckBox();
         var node = checkBox.node;
+        var termId = this.__getRunwayIdFromNode(node);
         
         if (!node.skipCheckChildren) {
-          this.doForNodeAndAllChildren(node, function(childNode){
+          this.doForNodeAndAllChildren(node, function(childNode) {
             if (childNode != node) {
               childNode.skipCheckParent = true;
               childNode.checkBox.setChecked(checkBox.isChecked());
@@ -596,6 +616,31 @@
         
         for (var i = 0; i < nodes.length; ++i) {
           this.doForNodeAndAllChildren(nodes[i], fnDo);
+        }
+      },
+      
+      doForTerm : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          fnDo(nodes[i]);
+        }
+      },
+      
+      doForTermAndImmediateChildren : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          var node = nodes[i];
+          fnDo(node);
+          
+          for (var i = 0; i < node.children.length; ++i) {
+            var child = node.children[i];
+            
+            if (!child.phantom) {
+              fnDo(child);
+            }
+          }
         }
       },
       
