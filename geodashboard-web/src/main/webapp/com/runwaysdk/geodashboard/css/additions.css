@@ -25,10 +25,29 @@ div.pageContent {
 	padding:13px 25px 0 25px;
 }
 
-div.jcf-class-jqtree-checkbox {
+/**
+ * Checkbox Styles
+ */
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
 	margin: 1px;
 	margin-right: 8px;
+	float: left;
 }
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
+  border-color:#02789e;
+  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
+  border:1px solid #dbdbdb;
+  background:#f8f8f8;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
+  border:1px solid #b3b3b3;
+  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
+}
+/* End Checkbox */
 
 #usersTable {
 	margin-left: 0;
