@@ -121,6 +121,9 @@
                       ]
           });
           
+          // This config removes the search box.
+          tableCfg.sDom = '<"top"i>rt<"bottom"lp><"clear">';
+          
           this._table = new GenericDataTable(tableCfg);
           this._table.render(this._tableHolder);
         }
@@ -142,6 +145,18 @@
         }
       },
       
+      __recursiveSort : function(dataArray) {
+        dataArray.sort(function(a,b){
+          return a.label.localeCompare(b.label);
+        });
+        
+        for (var i = 0; i < dataArray.length; ++i) {
+          if (Mojo.Util.isArray(dataArray[i].children)) {
+            this.__recursiveSort(dataArray[i].children);
+          }
+        }
+      },
+      
       _makeTree : function() {
         this._treeSection = this.getFactory().newElement("div");
         this._treeSection.addClassName("geodashboard-databrowser-treesection");
@@ -159,6 +174,7 @@
         
         var metadataTypeArray = this._config.types;
         
+        // Build an array of all the root types
         var rootTypes = [];
         for (var i = 0; i < metadataTypeArray.length; ++i) {
           var type = metadataTypeArray[i];
@@ -177,12 +193,16 @@
           }
         }
         
+        // Push the root types, and all their children into the data array
         that._config.data = [];
         for (var i = 0; i < rootTypes.length; ++i) {
           that.__pushTypeAndAllChildren(rootTypes[i], metadataTypeArray, that._config.data);
         }
         
-        // Instantiate JQTree
+        // Sort it, baby
+        that.__recursiveSort(that._config.data);
+        
+        // Instantiate JQTree with our data array
         that._tree = $(that._treeEl.getRawEl()).tree(that._config);
         that._tree.bind(
           'tree.select',
