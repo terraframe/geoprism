@@ -1,6 +1,6 @@
 
 div#databrowser {
-	overflow: auto;
+	
 }
 
 .geodashboard-databrowser {
@@ -27,6 +27,8 @@ div#databrowser {
 .geodashboard-databrowser-tree {
   text-align: left;
   margin-top: 13px;
+  height: 500px;
+  overflow: auto;
 }
 
 .geodashboard-databrowser-tablesection {
@@ -36,6 +38,7 @@ div#databrowser {
 	width: 100%;
 	border:1px solid;
   border-radius:6px;
+  overflow: auto;
 }
 
 .geodashboard-databrowser-tabletitle {
@@ -46,4 +49,5 @@ div#databrowser {
 
 .geodashboard-databrowser-table {
 	margin-top: 13px;
+	width: 770px;
 }
