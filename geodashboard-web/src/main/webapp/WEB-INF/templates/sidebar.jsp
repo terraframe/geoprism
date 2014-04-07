@@ -78,8 +78,8 @@
       
       for (MenuItem item : items) {
         if (item.hasChildren()) {
-          out.print("<li><a data-toggle=\"collapse\" href=\"#collapse" + num + "\">" + item.getName() + "</a>");
-          out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse ");
+          out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + item.getName() + "</a>");
+          out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
           
           if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
             out.print("in");
@@ -115,4 +115,63 @@
   <a class="btn-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="New map layer" href="#">tooltip</a>
 </aside>
 <!-- END Generated Bootstrap Sidebar Menu END -->
+
+
+<script type="text/javascript">
+
+function activateLinks(clickedLink){
+	
+  // deactivate any active links to start fresh	
+  clearLinks();
+  
+  if(!clickedLink.hasClass("gdb-links-expander")){	
+    clickedLink.addClass("link-active");
+  }
+
+  var thisParentContainer = clickedLink.parents(".gdb-link-container");
+  
+  if(thisParentContainer.prev("a").hasClass("gdb-links-expander")){
+    var thisParentContainerExpander = thisParentContainer.prev("a");
+  }
+
+  if(thisParentContainer){    	
+    // expand the dropdown if not expanded already
+    if(!thisParentContainer.hasClass("in")){			      
+      thisParentContainer.addClass("in");
+    }
+	  
+	// make the parent link that expands/collapses the dropdown active
+	if(thisParentContainerExpander && !thisParentContainerExpander.hasClass("link-active")){
+	  thisParentContainerExpander.addClass("link-active");
+    }
+  }
+}
+
+function clearLinks(){
+  $("a.link-active").each(function(){
+    $(this).removeClass("link-active");	
+  });  
+}
+
+function activateLinksOnLoad(){
+  // check for hash because only the home page has no hash
+  // if hash exists set the active link relative to the current
+  if(window.location.hash){
+    $("a").each(function(){
+  	  if($(this).attr("href") === window.location.pathname + window.location.hash){
+  	    activateLinks($(this));
+  	  }
+    });
+  }
+}
+
+activateLinksOnLoad();
+
+// Keep the element styled like the hover when dropdown is expanded
+$("a").click(function(){ 
+  activateLinks($(this));	  
+});
+  
+</script>
+
 
