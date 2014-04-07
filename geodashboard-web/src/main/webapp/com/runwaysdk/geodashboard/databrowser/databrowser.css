@@ -1,4 +1,8 @@
 
+div#databrowser {
+	overflow: auto;
+}
+
 .geodashboard-databrowser {
   display: table;
   min-height:500px;
@@ -9,8 +13,8 @@
 	padding: 2em;
 	min-width: 300px;
 	vertical-align:top;
-	border:2px solid;
-  border-radius:25px;
+	border:1px solid;
+  border-radius:6px;
   text-align:center;
 }
 
@@ -30,8 +34,8 @@
 	text-align: center;
 	padding: 2em;
 	width: 100%;
-	border:2px solid;
-  border-radius:25px;
+	border:1px solid;
+  border-radius:6px;
 }
 
 .geodashboard-databrowser-tabletitle {
