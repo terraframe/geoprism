@@ -92,7 +92,11 @@ div.standby-overlay {
   margin-top: 10px;
 }
 
-a.custom-expanded {
+.aside-nav .panel-collapse a.link-active {
+	color: #00bfff;	
+}
+	
+a.link-active {
 	color: #00bfff;	
 }
 
