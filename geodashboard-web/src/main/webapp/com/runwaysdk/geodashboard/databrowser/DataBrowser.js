@@ -151,8 +151,8 @@
         });
         
         for (var i = 0; i < dataArray.length; ++i) {
-          if (Mojo.Util.isArray(dataArray.children)) {
-            this.__recursiveSort(dataArray.children);
+          if (Mojo.Util.isArray(dataArray[i].children)) {
+            this.__recursiveSort(dataArray[i].children);
           }
         }
       },
