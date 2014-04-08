@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <sidebar>
-  <item name="Account Management" uri="admin/users"/>
+  <item name="Account_Management" uri="admin/users"/>
   
-  <item name="GIS Management">
-    <item name="Manage Universals" uri="admin/universal"/>
-    <item name="Manage Geoentities" uri="admin/geoentity"/>
+  <item name="GIS_Management">
+    <item name="Manage_Universals" uri="admin/universal"/>
+    <item name="Manage_Geoentities" uri="admin/geoentity"/>
   </item>
   
-  <item name="Job Scheduler" uri="admin/scheduler"/> 
+  <item name="Job_Scheduler" uri="admin/scheduler"/> 
   
   <!--
   <item name="Data Browser" uri="admin/databrowser"/>

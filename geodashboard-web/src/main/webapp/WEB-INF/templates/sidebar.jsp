@@ -19,6 +19,9 @@
 
 --%>
 
+<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+<%@page import="com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO"%>
+<%@page import="com.runwaysdk.geodashboard.localization.LocalizationFacade"%>
 <%@page import="java.util.List" %>
 <%@page import="com.runwaysdk.web.WebClientSession" %>
 <%@page import="com.runwaysdk.constants.ClientConstants" %>
@@ -29,6 +32,8 @@
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
   String webappRoot = "/" + DeployProperties.getAppName() + "/";
+
+  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 
   ActivePageWriter writer = new ActivePageWriter(request, out);
 %>
@@ -46,9 +51,9 @@
 	  }
 	  %></h3>
 	  <ul class="links-list">
-	    <% writer.writeLiA("Log out", "session/logout"); %>
-	    <% writer.writeLiA("Account", "admin/account"); %>
-	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer"); %>
+	    <% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Log_out"), "session/logout"); %>
+	    <% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Account"), "admin/account"); %>
+	    <% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Dashboard_Viewer"), "DashboardViewer", "link-viewer"); %>
 	  </ul>
 	</div>
 	<!-- Dashboards -->
@@ -78,7 +83,8 @@
       
       for (MenuItem item : items) {
         if (item.hasChildren()) {
-          out.print("<li><a data-toggle=\"collapse\" href=\"#collapse" + num + "\">" + item.getName() + "</a>");
+          String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
+          out.print("<li><a data-toggle=\"collapse\" href=\"#collapse" + num + "\">" + rootName + "</a>");
           out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse ");
           
           if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
@@ -93,7 +99,8 @@
           
           List<MenuItem> children = item.getChildren();
           for (MenuItem child : children) {
-            writer.writeLiA(child.getName(), child.getURL());
+            String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
+            writer.writeLiA(childName, child.getURL());
           }
           
           out.print("</ul>");
@@ -102,7 +109,8 @@
           
         }
         else {
-          writer.writeLiA(item.getName(), item.getURL());
+          String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+          writer.writeLiA(menuName, item.getURL());
         }
         
         num++;
