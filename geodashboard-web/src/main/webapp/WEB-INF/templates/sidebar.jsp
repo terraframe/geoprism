@@ -124,7 +124,16 @@ function activateLinks(clickedLink){
   // deactivate any active links to start fresh	
   clearLinks();
   
-  if(!clickedLink.hasClass("gdb-links-expander")){	
+  if(clickedLink.hasClass("gdb-links-expander")){	
+    if(clickedLink.next(".gdb-link-container") && window.location.hash){
+      $(".gdb-link-container a").each(function(){
+    	if($(this).attr("href") === window.location.pathname + window.location.hash){
+    	  $(this).addClass("link-active");
+    	}
+      });
+    }
+  }
+  else{
     clickedLink.addClass("link-active");
   }
 
@@ -138,11 +147,6 @@ function activateLinks(clickedLink){
     // expand the dropdown if not expanded already
     if(!thisParentContainer.hasClass("in")){			      
       thisParentContainer.addClass("in");
-    }
-	  
-	// make the parent link that expands/collapses the dropdown active
-	if(thisParentContainerExpander && !thisParentContainerExpander.hasClass("link-active")){
-	  thisParentContainerExpander.addClass("link-active");
     }
   }
 }
