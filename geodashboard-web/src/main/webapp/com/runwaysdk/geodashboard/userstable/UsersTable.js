@@ -297,7 +297,7 @@
         form.appendElement(this._newHeader(this.localize('accountInfo')));
                   
         if(!readOnly && this._user.isUsernameWritable())
-        {          
+        {
           var usernameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
           usernameInput.setValue(this._user ? this._user.getUsername() : "");
             

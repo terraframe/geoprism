@@ -12,6 +12,34 @@ ul.jqtree_common > li.jqtree-loading > div.jqtree-element > span.jqtree-title:af
   content: url(busy.gif);
   margin-left: 8px;
 }
+
+/* These styles add support for grid lines */
+div.jqtree-element.jqtree_common {
+	display: table;
+}
+div.jqtree-element > a.jqtree_common.jqtree-toggler {
+	position: relative;
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	padding-right: 5px;
+	left: 0px;
+	/*
+	background-image: url(32px.png);
+	background-color: transparent;
+	background-position: -68px -4px;
+	background-repeat: no-repeat;
+	*/
+}
+span.jqtree_common.jqtree-title {
+	display: table-cell;
+	padding-left: 5px;
+}
+
 /*
 END CUSTOM STYLES
 */

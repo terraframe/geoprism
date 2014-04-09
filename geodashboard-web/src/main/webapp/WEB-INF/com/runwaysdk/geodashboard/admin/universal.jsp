@@ -38,8 +38,8 @@
   String webappRoot = request.getContextPath() + "/";
 %>
 
-<script type="text/javascript" src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css" ></link>
+<script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
 
 <!-- Runway Factory -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
@@ -121,6 +121,8 @@
 <div id="tree"></div>
 
 <script type="text/javascript">
+// var $tree = document.getElementById('main-content-frame').contentWindow.document.universaltree.getImpl();
+
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
@@ -139,5 +141,12 @@
       }
     });
     document.universaltree.render("#tree");
+    /* 
+    var fac = com.runwaysdk.ui.Manager.getFactory();
+    var fac.newButton("CreateNode");
+    setTimeout(function() {
+      var $tree = document.universaltree.getImpl();
+      $tree.jstree("create_node", "#", "after", { "data": "Hello World" });
+  }, 4000); */
   });
 </script>
