@@ -1,0 +1,109 @@
+/****** 
+**** All CSS below are additions 
+*******/
+
+body{
+	overflow: hidden;
+}
+
+#main-content-frame {
+	float:right;
+	position:relative;
+	width:100%;
+	height:100%;
+  	border: none;
+}
+
+body.iFrameBody {
+  overflow: auto;
+}
+
+div.pageContent {
+	padding:13px 25px 0 25px;
+}
+
+/**
+ * Checkbox Styles
+ */
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
+	margin: 1px;
+	margin-right: 8px;
+	float: left;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
+  border-color:#02789e;
+  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
+  border:1px solid #dbdbdb;
+  background:#f8f8f8;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
+  border:1px solid #b3b3b3;
+  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
+}
+/* End Checkbox */
+
+#usersTable {
+	margin-left: 0;
+	width: 100%;
+	overflow-x: auto;
+}
+
+
+table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable {
+  margin-left: 0;
+  width: 100%;
+}  
+
+
+/* custom radio styles */
+div.row-holder .chk-area,
+div.row-holder .rad-area{
+  margin:0px 11px 0 0;
+}
+
+div.standby-overlay {
+  background-color: #CCCCCC; 
+  background-image:url('../images/transparent_spinner.gif');
+  background-repeat:no-repeat;
+  background-position:center center;
+  position: absolute; 
+  display: block;
+  opacity: 0.5
+}
+
+
+.reporticng-container{
+  display:none;
+}
+
+.submit-form .field-row {
+  padding: 0 0 5px 20px;
+}
+
+.submit-form .label-text, .submit-form label {
+  width: 225px;
+}
+
+.submit-form h2 {
+  margin-top: 10px;
+}
+
+.aside-nav .panel-collapse a.link-active {
+	color: #00bfff;	
+}
+	
+a.link-active {
+	color: #00bfff;	
+}
+
+
+/* .aside-nav a:hover, */
+/* .aside-nav a:focus, */
+/* .aside-nav a:active{color:red;} */
+
+
+

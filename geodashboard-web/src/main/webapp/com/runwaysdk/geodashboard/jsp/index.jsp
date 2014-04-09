@@ -18,30 +18,46 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+
+
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
+<%@ page import="com.runwaysdk.constants.DeployProperties" %>
 
 
 <gdb:localize var="page_title" key="splash.pagetitle" />
 
+<jsp:include page="../../../../WEB-INF/templates/headImports.jsp"></jsp:include>
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 
-<%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
-%>
+<% String webappRoot = request.getContextPath() + "/"; %> 
 
-<gdb:localize var="logoalt" key="splash.logoalt" />
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">
 
-<br/>
-<br/>
+<script type="text/javascript" >
 
-<header id="header">
-  <h1><gdb:localize key="splash.header" /></h1>
-</header>
-
-<p><gdb:localize key="splash.powered" /></p>
+	////Accounting for browser memory when page is refreshed
+	$(document).ready(function(){			
+		if (window.location.hash.length > 0) {
+			
+			//// Add iframe with hash src based on browser memory hash
+			$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
+		}
+		else {	
+			
+			//// Add main page if no hash exists
+			$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
+		}
+	
+		$(window).on('hashchange', function(e) {
+			
+	 		//// Update main content src attribute based on hash change (initiated by click on sidebar <a> tag)
+	  		$("#main-content-frame").attr("src", e.target.location.hash.substring(1)); 		
+		});
+	});
+		
+</script>
 
 <jsp:include page="../../../../WEB-INF/templates/footer.jsp"></jsp:include>
+

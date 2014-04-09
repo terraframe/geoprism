@@ -23,8 +23,8 @@
         <mjl:messages attribute="geoId" classes="error-message" />
       </div>
 		  <div class="field-row clearfix">
-        <label for="GeoEntityField3">${item.wktMd.displayLabel} <c:if test="${item.wktMd.required}">*</c:if></label>
-        <mjl:input id="GeoEntityField3" param="wkt" type="text" />
+        <label for="wkt">${item.wktMd.displayLabel} <c:if test="${item.wktMd.required}">*</c:if></label>
+        <mjl:input id="wkt" param="wkt" type="text" />
         <mjl:messages attribute="wkt" classes="error-message" />
       </div>
 		</mjl:component>

@@ -112,7 +112,7 @@
     }
   }); 
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckboxFormEntry', {
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractGroupFormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
@@ -134,8 +134,7 @@
         for (var i = 0; i < options.length; ++i) {
           var option = options[i];
           
-          var input = this.getFactory().newElement('input', {id:option.value, type:'checkbox'});
-          input.setAttribute('value', option.value);
+          var input = this._buildOptionInput(option);
           
           if(option.checked)
           {
@@ -159,6 +158,7 @@
         
         this.setId(id);
       },
+      _buildOptionInput : function (option) { IsAbstract : true;},      
       getName : function()
       {
         return this.getId();
@@ -194,6 +194,40 @@
     }
   });  
 
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckboxFormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractGroupFormEntry,
+    Instance : {
+      initialize : function(id, displayLabel, options)
+      {
+        this.$initialize(id, displayLabel, options);
+      },
+      _buildOptionInput : function (option)
+      {
+        var input = this.getFactory().newElement('input', {id:option.value, type:'checkbox'});
+        input.setAttribute('value', option.value);
+
+        return input;        
+      },
+    }
+  });  
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.RadioFormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractGroupFormEntry,
+    Instance : {
+      initialize : function(id, displayLabel, options)
+      {
+        this.$initialize(id, displayLabel, options);
+      },
+      _buildOptionInput : function (option)
+      {
+        var input = this.getFactory().newElement('input', {id:option.value, type:'radio', name:this.getId()});
+        input.setAttribute('value', option.value);
+        
+        return input;        
+      },
+    }
+  });  
+  
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
     Instance : {

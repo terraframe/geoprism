@@ -21,11 +21,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.io.*" %>
-<%@page import="com.runwaysdk.controller.JSPFetcher"%>
+<%@ page import="com.runwaysdk.controller.JSPFetcher"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!-- Set the defualt header and footer, this can be overidden in the component jsp  -->
-<c:set var="header_jsp" value="/WEB-INF/templates/header.jsp"  scope="request"/>
-<c:set var="footer_jsp" value="/WEB-INF/templates/footer.jsp"  scope="request"/>
 
 <%
   // This code must execute before the header is included because the inner HTML may overwrite 
@@ -36,8 +36,58 @@
   String innerHTML = fetcher.getString();
 %>
 
-<!-- Render the component inside a pageContent div -->
-<jsp:include page="${header_jsp}"  flush="false"  />
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>${page_title}</title>
+ 
+<%@page import="com.runwaysdk.constants.ClientConstants"%>
+<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+<%@page import="com.runwaysdk.web.json.JSONController"%>
+
+<%@page import="com.runwaysdk.constants.DeployProperties" %>
+<%
+  String webappRoot = request.getContextPath() + "/";
+%>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Structure.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Core.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_DTO.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+  
+  <!-- set the encoding of your site -->
+  <!-- include the site stylesheet -->
+  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
+  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
+  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
+  <!-- include jQuery library -->
+  <!--
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  -->
+  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
+  <!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
+  <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
+  <!-- include custom JavaScript -->
+  <script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
+  <!-- include HTML5 IE enabling script for IE -->
+  <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
+	
+</head>
+
+
+<body class="iFrameBody">
 
 <div class="pageContent">
   <header id="header">
@@ -46,4 +96,6 @@
   <%= innerHTML %>
 </div>
 
-<jsp:include page="${footer_jsp}"  flush="false" />
+</body>
+
+

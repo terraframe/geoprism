@@ -1,0 +1,53 @@
+
+div#databrowser {
+	
+}
+
+.geodashboard-databrowser {
+  display: table;
+  min-height:500px;
+}
+
+.geodashboard-databrowser-treesection {
+	display: table-cell;
+	padding: 2em;
+	min-width: 300px;
+	vertical-align:top;
+	border:1px solid;
+  border-radius:6px;
+  text-align:center;
+}
+
+.geodashboard-databrowser-treetitle {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.geodashboard-databrowser-tree {
+  text-align: left;
+  margin-top: 13px;
+  height: 500px;
+  overflow: auto;
+}
+
+.geodashboard-databrowser-tablesection {
+	display: table-cell;
+	text-align: center;
+	padding: 2em;
+	width: 100%;
+	border:1px solid;
+  border-radius:6px;
+  overflow: auto;
+}
+
+.geodashboard-databrowser-tabletitle {
+	text-align: center;
+	font-size: 20px;
+  font-weight: bold;
+}
+
+.geodashboard-databrowser-table {
+	margin-top: 13px;
+	width: 770px;
+}

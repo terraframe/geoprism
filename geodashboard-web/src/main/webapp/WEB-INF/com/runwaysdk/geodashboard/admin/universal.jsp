@@ -35,38 +35,38 @@
 
 
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
-<script type="text/javascript" src="<% out.print(webappRoot); %>jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="<% out.print(webappRoot); %>jquerytree/jqtree.css" ></link>
+<script type="text/javascript" src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css" ></link>
 
 <!-- Runway Factory -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/form/Form.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/list/List.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/form/Form.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/list/List.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 
 <!-- JQuery -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
 
 <!-- Runway Generic -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerForm.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
 
 <!-- Localization -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
-<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
+<link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/default.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
@@ -81,8 +81,7 @@
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 %>
 
-<%!
-public void doIt(ServletRequest request, JspWriter out) throws Exception {
+<%!public void doIt(ServletRequest request, JspWriter out) throws Exception {
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
   
   /* OntologyStrategyIF strategy = Universal.getStrategy();
@@ -98,12 +97,10 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
   catch (RunwayExceptionDTO e) {
     System.out.println(e.getDeveloperMessage());
   } */
-}
-%>
+}%>
 
 <script type="text/javascript">
-<%
-	// use a try catch before printing out the definitions, otherwise, if an
+<%// use a try catch before printing out the definitions, otherwise, if an
 	// error occurs here, javascript spills onto the actual page (ugly!)
 	try
 	{
@@ -118,28 +115,29 @@ public void doIt(ServletRequest request, JspWriter out) throws Exception {
 	  throw e;
 	}
 
-	/* doIt(request, out); */
-%>
+	/* doIt(request, out); */%>
 </script>
 
 <div id="tree"></div>
 
 <script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-  
-  var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
-    termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-    relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
-    rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
-    crud: {
-      create: { // This configuration gets merged into the jquery create dialog.
-                // The height of an attribute is about 52
-        height: 319
-      },
-      update: {
-        height: 319
+  com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
+    com.runwaysdk.ui.Manager.setFactory("JQuery");
+    
+    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+      termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
+      relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
+      rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      checkable: true,
+      crud: {
+        create: { // This configuration gets merged into the jquery create dialog.
+          height: 290
+        },
+        update: {
+          height: 290
+        }
       }
-    }
+    });
+    document.universaltree.render("#tree");
   });
-  tree.render("#tree");
 </script>

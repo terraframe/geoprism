@@ -17,7 +17,6 @@ import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.web.WebClientSession;
-import com.runwaysdk.web.controller.SessionController;
 
 public class SessionFilter implements Filter, Reloadable
 {
@@ -63,7 +62,7 @@ public class SessionFilter implements Filter, Reloadable
       }
       catch (InvalidSessionExceptionDTO e)
       {
-        httpRes.sendRedirect(httpReq.getContextPath() + "/login");
+        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
       }
 
       return;
@@ -85,6 +84,12 @@ public class SessionFilter implements Filter, Reloadable
 
     // They're allowed to hit the login view page, otherwise its a redirect loop
     if (uri.equals(req.getContextPath() + "/login"))
+    {
+      return true;
+    }
+    
+    // They're allowed to hit the login view page, otherwise its a redirect loop
+    if (uri.equals(req.getContextPath() + "/loginRedirect"))
     {
       return true;
     }

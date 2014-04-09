@@ -62,28 +62,37 @@
       
       initialize : function(config) {
         
+        var that = this;
+        var fac = this.getFactory();
+        
         config = config || {};
         this.requireParameter("termType", config.termType, "string");
         this.requireParameter("relationshipType", config.relationshipType, "string");
-        this.requireParameter("rootTerm", config.rootTerm);
+        this.requireParameter("rootTerm", config.rootTerm, "string");
         
         var defaultConfig = {
           el: "div",
-          data: {}, // This parameter is required for jqTree, otherwise it tries to load data from a url.
+          data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
           selectable: true,
+          checkable: false,
           crud: {
             create: {
-              width: 550,
-              height: 300
+              width: 730,
+              height: 320
             },
             update: {
-              width: 550,
-              height: 300
+              width: 730,
+              height: 320
             }
           }
         };
         this._config = Mojo.Util.deepMerge(defaultConfig, config);
+        
+        // Add checkboxes
+        if (this._config.checkable && this._config.onCreateLi == null) {
+           this._config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);
+        }
         
         this.$initialize(this._config.el, this._config);
         
@@ -99,6 +108,110 @@
         
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
+      },
+      
+      getCheckedTerms : function(rootNode, appendArray) {
+        appendArray = appendArray || [];
+        rootNode = rootNode || $(this.getRawEl()).tree("getTree");
+        
+        for (var i = 0; i < rootNode.children.length; ++i) {
+          var child = rootNode.children[i];
+          
+          if (!child.phantom && child.checkBox != null) {
+            if (child.checkBox.isChecked()) {
+              appendArray.push(this.__getRunwayIdFromNode(child));
+            }
+            
+            this.getCheckedTerms(child, appendArray);
+          }
+        }
+        
+        return appendArray;
+      },
+      
+      __onCheck : function(event) {
+        var checkBox = event.getCheckBox();
+        var node = checkBox.node;
+        var termId = this.__getRunwayIdFromNode(node);
+        
+        if (!node.skipCheckChildren) {
+          this.doForNodeAndAllChildren(node, function(childNode) {
+            if (childNode != node) {
+              childNode.skipCheckParent = true;
+              childNode.checkBox.setChecked(checkBox.isChecked());
+              childNode.skipCheckParent = false;
+            }
+          });
+        }
+        
+        if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
+          var checkedCount = 0;
+          var partialChecked = 0;
+          
+          var siblings = node.parent.children;
+          for (var i = 0; i < siblings.length; ++i) {
+            if (siblings[i].checkBox.isChecked()) {
+              checkedCount++;
+            }
+            else if (siblings[i].checkBox.isPartialChecked()) {
+              partialChecked++;
+            }
+          }
+          
+          if (node.parent.children.length === checkedCount) {
+            node.parent.checkBox.setChecked(true);
+          }
+          else {
+            if ((checkedCount + partialChecked) > 0) {
+              node.parent.skipCheckChildren = true;
+              node.parent.checkBox.setChecked("partial");
+              node.parent.skipCheckChildren = false;
+            }
+            else {
+              node.parent.skipCheckChildren = true;
+              node.parent.checkBox.setChecked(false);
+              node.parent.skipCheckChildren = false;
+            }
+          }
+        }
+        
+        if (node.checkBox.hasClassName("partialcheck")) {
+          var checkedCount = 0;
+          
+          for (var i = 0; i < node.children.length; ++i) {
+            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
+              checkedCount++;
+            }
+          }
+          
+          if (checkedCount == 0) {
+            node.checkBox.removeClassName("partialcheck");
+          }
+        }
+      },
+      
+      __onCreateLi : function(node, $li) {
+        if (!node.phantom) {
+          var fac = this.getFactory();
+          
+          var title = fac.newElement($li.find('.jqtree-title')[0]).getParent();
+          var checkBox = node.checkBox;
+          if (checkBox == null) {
+            checkBox = fac.newCheckBox({classes: ["jqtree-checkbox"]});
+            
+            if (node.parent != null && node.parent.checkBox != null && node.parent.checkBox.isChecked()) {
+              checkBox.setChecked(true);
+            }
+            
+            checkBox.addOnCheckListener(Mojo.Util.bind(this, this.__onCheck));
+            checkBox.render();
+            
+            node.checkBox = checkBox;
+            checkBox.node = node;
+          }
+          
+          title.insertBefore(checkBox, title.getChildren()[0]);
+        }
       },
       
       /**
@@ -171,6 +284,10 @@
         }
         
         delete this.termCache[termId];
+        
+        if (this._config.checkable) {
+          jcf.customForms.replaceAll();
+        }
       },
       
       /**
@@ -235,6 +352,10 @@
               
               $thisTree.tree("openNode", node);
             }
+            
+//            if (that._config.checkable) {
+//              jcf.customForms.replaceAll();
+//            }
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -277,7 +398,7 @@
         
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId},
+          viewParams: {parentId: parentId, relationshipType: ""},
           action: "update",
           id: termId,
           onSuccess : function(term) {
@@ -289,6 +410,10 @@
             }
             
             that.setTermBusy(termId, false);
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
+            }
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
@@ -371,7 +496,7 @@
               var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
               deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
               
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 650, height: 300, resizable: false});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 650, height: 300, resizable: false});
               dialog.appendContent(deleteMultiParentDescribe);
               dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
@@ -379,7 +504,7 @@
               dialog.render();
             }
             else {
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 485, height: 200, resizable: false});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 485, height: 200, resizable: false});
               dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
               dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
@@ -494,6 +619,31 @@
         }
       },
       
+      doForTerm : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          fnDo(nodes[i]);
+        }
+      },
+      
+      doForTermAndImmediateChildren : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          var node = nodes[i];
+          fnDo(node);
+          
+          for (var i = 0; i < node.children.length; ++i) {
+            var child = node.children[i];
+            
+            if (!child.phantom) {
+              fnDo(child);
+            }
+          }
+        }
+      },
+      
       /**
        * is binded to jqtree's node move event.s
        */
@@ -537,6 +687,10 @@
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
               }
+              
+//              if (that._config.checkable) {
+//                jcf.customForms.replaceAll();
+//              }
             },
             onFailure : function(ex) {
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -563,7 +717,11 @@
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
-              } 
+              }
+              
+//              if (that._config.checkable) {
+//                jcf.customForms.replaceAll();
+//              }
             },
             onFailure : function(ex) {
               that.setNodeBusy(movedNode, false);
@@ -650,6 +808,10 @@
             }
             
             that.setTermBusy(termId, false);
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
+            }
           },
           
           onFailure : function(err) {
@@ -809,6 +971,10 @@
               }
               
               $thisTree.tree("openNode", parentNode);
+            }
+            
+            if (that._config.checkable) {
+              jcf.customForms.replaceAll();
             }
             
             return node;

@@ -31,7 +31,7 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
 <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
@@ -119,7 +119,9 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.ui.userstable.UsersTable();  
-  ut.render("#usersTable");
+  $(document).ready(function() {
+  		var ut = new com.runwaysdk.ui.userstable.UsersTable({"bAutoWidth":false});  
+  		ut.render("#usersTable");
+  });
   
 </script>

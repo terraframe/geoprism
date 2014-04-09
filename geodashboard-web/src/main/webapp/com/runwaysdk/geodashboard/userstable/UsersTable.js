@@ -54,26 +54,11 @@
     "invalidEmail" : "Invalid email address format",
     "admin" : "Admin",
     "adminRoleHeader" : "System roles",
-    "dashboardRoleHeader" : "Dashbaord roles",
+    "dashboardRoleHeader" : "Dashboard roles",
     "accountInfo" : "Account information",
     "userInfo" : "User information",
     "allow" : "allow",
     "notAllowed" : "Not allowed to create a new user",
-    "sSortAscending" : ": activate to sort column ascending",
-    "sSortDescending" : ": activate to sort column descending",
-    "sFirst" : "First",
-    "sLast" : "Last",
-    "sNext" : "Next",
-    "sPrevious" : "Previous",
-    "sEmptyTable" : "No data available in table",
-    "sInfo" : "Showing _START_ to _END_ of _TOTAL_ entries",
-    "sInfoEmpty" : "Showing 0 to 0 of 0 entries",
-    "sInfoFiltered" : "(filtered from _MAX_ total entries)",
-    "sLengthMenu" : "Show _MENU_ entries",
-    "sLoadingRecords" : "Loading...",
-    "sProcessing" : "Processing...",
-    "sSearch" : "Search:",
-    "sZeroRecords" : "No matching records found"
   });
   
   var UserFormEvent = ClassFramework.newClass('com.runwaysdk.ui.userstable.UserFormBuilderEvent', {
@@ -324,7 +309,7 @@
           var entry = new com.runwaysdk.geodashboard.ReadEntry('username', label, this._user ? this._user.getUsername() : "");
           form.addEntry(entry);                  
         }
-          
+        
         if(!readOnly && this._user.isPasswordWritable())
         {         
           var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
@@ -846,13 +831,13 @@
         {
           columns.push({queryAttr: "email"});        
         }                   
-                
+        
         this._config.dataSource = new InstanceQueryDataSource({
           className: this._config.queryType,
           columns: columns
         });
         
-        this._config.selectableRows = true;
+        this._config.selectableRows = false;
         
         // Overwrite the column definitions for the edit and delete columns
         this._config.aoColumnDefs = [
@@ -862,29 +847,6 @@
         
         // Remove the search control from the table
         this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
-
-        // Localize the datatable widget
-        this._config.oLanguage = {
-          oAria: {
-            sSortAscending: this.localize("sSortAscending"),
-            sSortDescending: this.localize("sSortDescending")
-          },
-          oPaginate: {
-            sFirst: this.localize("sFirst"),
-            sLast: this.localize("sLast"),
-            sNext: this.localize("sNext"),
-            sPrevious: this.localize("sPrevious")
-          },
-          sEmptyTable: this.localize("sEmptyTable"),
-          sInfo: this.localize("sInfo"),
-          sInfoEmpty: this.localize("sInfoEmpty"),
-          sInfoFiltered: this.localize("sInfoFiltered"),
-          sLengthMenu: this.localize("sLengthMenu"),
-          sLoadingRecords: this.localize("sLoadingRecords"),
-          sProcessing: this.localize("sProcessing"),
-          sSearch: this.localize("sSearch"),
-          sZeroRecords: this.localize("sZeroRecords")
-        };        
         
         this._table = new GenericDataTable(this._config);
         this._table.addEventListener('click', Mojo.Util.bind(this, this._clickHandler));

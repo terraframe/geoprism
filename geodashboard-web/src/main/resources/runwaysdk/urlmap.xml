@@ -4,11 +4,13 @@
   <map uri="DashboardViewer" forward="/com/runwaysdk/geodashboard/jsp/dashboardViewer.jsp"/>
 
   <map uri="login" forward="/com/runwaysdk/geodashboard/login/login.jsp"/>
+  <map uri="loginRedirect" forward="/com/runwaysdk/geodashboard/login/loginRedirect.jsp"/>
   <map uri="session" controller="com.runwaysdk.geodashboard.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
   
   <map uri="q4sales" forward="/com/runwaysdk/geodashboard/jsp/q4sales.jsp"/>
+  <map uri="q4sales/inner" forward="/com/runwaysdk/geodashboard/jsp/inner.jsp"/>
   
   <map uri="admin" controller="com.runwaysdk.geodashboard.AdminController">
     <action method=".*" uri="${method}"/>    
