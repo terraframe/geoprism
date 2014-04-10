@@ -457,8 +457,8 @@
               
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
-                if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId) {
-                  that.getImpl().tree("removeNode", nodes[i]);
+                if (that.getParentRunwayId(nodes[i]) == parentId) {
+                  that.getImpl().jstree("delete_node", nodes[i]);
                 }
               }
               that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
@@ -564,8 +564,8 @@
       getParentId : function(node) {
         var parent = this.getImpl().jstree("get_parent", node);
         
-        if (parent === "#" || parent === node.id) {
-          return this.rootTermId;
+        if (parent === node.id) {
+          return "#";
         }
         
         return parent;
@@ -824,6 +824,8 @@
             for (var j = 0; j < newChildren.length; ++j) {
               that.__createTreeNode(that.__getRunwayIdFromNode(newChildren[j]), nodeArray[i], true);
             }
+            
+            console.log($tree.jstree("get_node", nodeArray[i]));
           }
         });
       },
@@ -988,10 +990,7 @@
       __treeWantsData : function(parent, jsTreeCallback) {
         var that = this;
         
-        var parentTermId = parent.id;
-        if (parentTermId == "#") {
-          parentTermId = this.rootTermId;
-        }
+        var parentTermId = this.__getRunwayIdFromNode(parent);
         var parentTerm = this.termCache[parentTermId];
         
         var callback = new Mojo.ClientRequest({
@@ -1028,7 +1027,7 @@
             
             // This code is to fix a bug in jstree.
             var parentId = null;
-            if (json.length == 0) {
+            if (json.length == 0 && parentTermId != this.rootTermId) {
               parentId = that.getParentId(that.getImpl().jstree("get_node", parentTermId));
               json = {id: parentTermId, data: parentTermId, text: that._getTermDisplayLabel(parentTerm), state:{opened: true}, children: false};
             }
@@ -1036,8 +1035,7 @@
             jsTreeCallback.call(this, json);
             
             // This code is to fix a bug in jstree.
-            if (parentId != null) {
-              parentId = parentId == that.rootTermId ? "#" : parentId;
+            if (parentId != null && parentTermId != this.rootTermId) {
               var node = $tree.jstree("get_node", parentTermId);
               node.parent = parentId;
               node.parents = [parentId];
