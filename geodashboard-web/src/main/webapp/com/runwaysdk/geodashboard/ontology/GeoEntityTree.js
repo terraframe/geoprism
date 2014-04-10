@@ -54,14 +54,12 @@
        * This override will disable some context menu options that don't make sense.
        */
       // @Override
-      __onNodeRightClick : function(e) {
-        var parentId = this.__getRunwayIdFromNode(e.node.parent);
-        var term = this.termCache[this.__getRunwayIdFromNode(e.node)];
+      __onNodeRightClick : function(event, object) {
+        var node = object.node;
+        var parentId = this.getParentRunwayId(node);
+        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
-        var $tree = $(this.getRawEl());
-        $tree.tree('selectNode', e.node);
-        
-        var cm = this.getFactory().newContextMenu(e.node);
+        var cm = this.getFactory().newContextMenu(node);
         
         var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
         if (term.canCreateChildren === false) {
@@ -77,7 +75,7 @@
         
         var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
         
-        if (e.node.termBusy) {
+        if (term.isBusy) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
@@ -85,53 +83,6 @@
         }
         
         cm.render();
-        
-        cm.addDestroyEventListener(function() {
-          $tree.tree("selectNode", null);
-        });
-      },
-      
-      /**
-       * Update
-       */
-      __onContextEditClick : function(contextMenu, contextMenuItem, mouseEvent) {
-        var node = contextMenu.getTarget();
-        var termId = this.__getRunwayIdFromNode(node);
-        var that = this;
-        var parentId = this.__getRunwayIdFromNode(node.parent);
-        
-        var config = {
-          type: this._config.termType,
-          viewParams: {parentId: parentId},
-          action: "update",
-          actionParams: {parentId: parentId},
-          id: termId,
-          onSuccess : function(view) {
-            var term = that._makeGeoEntityFromView(view);
-            
-            that.termCache[term.getId()] = term;
-            
-            var nodes = that.__getNodesById(term.getId());
-            for (var i = 0; i < nodes.length; ++i) {
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
-            }
-            
-            that.setTermBusy(termId, false);
-          },
-          onFailure : function(e) {
-            that.setTermBusy(termId, false);
-            that.handleException(e);
-          },
-          onClickSubmit : function() {
-            that.setTermBusy(termId, true);
-          },
-          onViewSuccess : function(html) {
-           that.setTermBusy(termId, false);
-          }
-        };
-        Mojo.Util.merge(this._config.crud.update, config);
-        
-        new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
       },
       
       // @Override
@@ -158,105 +109,21 @@
         return term;
       },
       
-      /**
-       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a TermAndRel.
-       */
-      createTerm : function(parentId) {
-        this.requireParameter("parentId", parentId, "string");
-        var that = this;
-        
-        var parentNodes = this.__getNodesById(parentId);
-        if (parentNodes == null || parentNodes == undefined) {
-          var ex = new com.runwaysdk.Exception("The provided parent [" + parentId + "] does not exist in this tree.");
-          this.handleException(ex);
-          return;
-        }
-        
-        var config = {
-          type: this._config.termType,
-          viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
-          action: "create",
-          actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
-          onSuccess : function(view) {
-            var term = that._makeGeoEntityFromView(view);
-            var relId = view.getRelationshipId();
-            var relType = view.getRelationshipType();
-            
-            that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
-            that.termCache[term.getId()] = term;
-            
-            var $thisTree = $(that.getRawEl());
-            for (var i = 0; i < parentNodes.length; ++i) {
-              var node = that.__createTreeNode(term.getId(), parentNodes[i]);
-              $thisTree.tree("openNode", node);
-            }
-          },
-          onFailure : function(e) {
-            that.handleException(e);
-          }
-        };
-        Mojo.Util.merge(this._config.crud.create, config);
-        
-        new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+      __responseToTerm : function(view) {
+        return this._makeGeoEntityFromView(view);
       },
       
-      // @Override
-      /**
-       * We're overriding this method because the GeoEntityController returns a GeoEntityView, but the TermTree is coded to accept a TermAndRel.
-       */
-      refreshTerm : function(termId) {
-        var that = this;
-        var id = termId;
+      __responseToTNR : function(geoEntView) {
+        var term = this._makeGeoEntityFromView(geoEntView);
+        var relId = geoEntView.getRelationshipId();
+        var relType = geoEntView.getRelationshipType();
         
-        this.setTermBusy(termId, true);
-        
-        var callback = new Mojo.ClientRequest({
-          onSuccess : function(responseText) {
-            var json = Mojo.Util.getObject(responseText);
-            var geoEntityViews = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
-            
-            var nodes = that.__getNodesById(termId);
-            
-            // Remove existing children
-            for (var iNode = 0; iNode < nodes.length; ++iNode) {
-              var node = nodes[iNode];
-              var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
-              for (var i=0; i < children.length; i++) {
-                $(that.getRawEl()).tree("removeNode", children[i]);
-              }
-            }
-            
-            // Create a node for every term we got from the server.
-            for (var i = 0; i < geoEntityViews.length; ++i) {
-              var $tree = $(that.getRawEl());
-              var view = geoEntityViews[i];
-              var childId = view.getGeoEntityId();
-              
-              var parentRecord = {parentId: termId, relId: view.getRelationshipId(), relType: view.getRelationshipType()};
-              that.parentRelationshipCache.put(childId, parentRecord);
-               
-              var term = that._makeGeoEntityFromView(view);
-              
-              that.termCache[childId] = term;
-              
-              for (var iNode = 0; iNode < nodes.length; ++iNode) {
-                var node = nodes[iNode];
-                that.__createTreeNode(childId, node);
-                node.hasFetched = true;
-              }
-            }
-            
-            that.setTermBusy(termId, false);
-          },
-          
-          onFailure : function(err) {
-            that.setTermBusy(termId, false);
-            that.handleException(err);
-            return;
-          }
+        return new com.runwaysdk.business.ontology.TermAndRel({
+          term: term,
+          relType: relType,
+          relId: relId,
+          dto_type: "com.runwaysdk.business.ontology.TermAndRel"
         });
-        
-        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
       },
       
       render : function(parent) {
