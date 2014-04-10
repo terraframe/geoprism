@@ -30,17 +30,3 @@
   <!-- main container of all the page elements -->
   <div id="wrapper">
     <section id="main">
-        <!-- main navigation of the page -->
-        <!--
-        <nav id="nav">
-          <ul>
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Action</a></li>
-          </ul>
-        </nav>
-        <h1>Q4 Sales Engagement</h1>
-      </header>
-      -->
-      

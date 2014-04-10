@@ -103,10 +103,10 @@
 									<artifactId>geodashboard-web</artifactId>
 									<type>war</type>
 									<properties>
-									  <context>geodashboard</context>
+										<context>geodashboard</context>
 									</properties>
 								</deployable>
-							</deployables>							
+							</deployables>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -171,10 +171,10 @@
 									<artifactId>geodashboard-web</artifactId>
 									<type>war</type>
 									<properties>
-									  <context>geodashboard</context>
+										<context>geodashboard</context>
 									</properties>
 								</deployable>
-							</deployables>							
+							</deployables>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -195,146 +195,144 @@
 			</resource>
 		</resources>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<packagingExcludes>
-					    <!--
-					      Source/class project jars must be excluded for reloaded to work
-					    -->
-						**/*geodashboard-common*.jar,
-						**/*geodashboard-client*.jar,
-						**/*geodashboard-server*.jar,						
-					    <!--
-					      Exclude all jars provided by tomcat
-					    -->						
-						**/*catalina*.jar,
-						**/*servlet-api*.jar,
-						**/*annotations-api*.jar
-					</packagingExcludes>
-					<webResources>
-						<resource>
-							<directory>src/main/resources</directory>
-						</resource>
-					</webResources>
-					<overlays>
-						<overlay>
-							<!-- empty groupId/artifactId represents the current build -->
-						</overlay>
-						<overlay>
-							<groupId>com.runwaysdk</groupId>
-							<artifactId>runwaysdk-gis-web</artifactId>
-						</overlay>
-					</overlays>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-common</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<excludes>**/*.java,**/*.properties</excludes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-client</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<excludes>**/*.java,**/*.properties</excludes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-server</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<excludes>**/*.java,**/*.properties</excludes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-common</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-									<includes>**/*.java</includes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-client</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-									<includes>**/*.java</includes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-server</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-									<includes>**/*.java</includes>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.runwaysdk</groupId>
-									<artifactId>geodashboard-server</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<includes>**/localize*.properties</includes>
-								</artifactItem>								
-							</artifactItems>
-							<includes>**/*</includes>
-							<excludes></excludes>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>src/main/webapp/WEB-INF/source</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<packagingExcludes>
+							<!-- Source/class project jars must be excluded for reloaded to work -->
+							**/*geodashboard-common*.jar,
+							**/*geodashboard-client*.jar,
+							**/*geodashboard-server*.jar,
+							<!-- Exclude all jars provided by tomcat -->
+							**/*catalina*.jar,
+							**/*servlet-api*.jar,
+							**/*annotations-api*.jar
+						</packagingExcludes>
+						<webResources>
+							<resource>
+								<directory>src/main/resources</directory>
+							</resource>
+						</webResources>
+						<overlays>
+							<overlay>
+								<!-- empty groupId/artifactId represents the current build -->
+							</overlay>
+							<overlay>
+								<groupId>com.runwaysdk</groupId>
+								<artifactId>runwaysdk-gis-web</artifactId>
+							</overlay>
+						</overlays>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+					<executions>
+						<execution>
+							<id>unpack</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>unpack</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-common</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<excludes>**/*.java,**/*.properties</excludes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-client</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<excludes>**/*.java,**/*.properties</excludes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-server</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<excludes>**/*.java,**/*.properties</excludes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-common</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+										<includes>**/*.java</includes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-client</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+										<includes>**/*.java</includes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-server</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+										<includes>**/*.java</includes>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.runwaysdk</groupId>
+										<artifactId>geodashboard-server</artifactId>
+										<version>0.0.1-SNAPSHOT</version>
+										<type>jar</type>
+										<includes>**/localize*.properties</includes>
+									</artifactItem>
+								</artifactItems>
+								<includes>**/*</includes>
+								<excludes></excludes>
+								<outputDirectory>${project.build.directory}/classes</outputDirectory>
+								<overWriteReleases>true</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<filesets>
+							<fileset>
+								<directory>src/main/webapp/WEB-INF/source</directory>
+								<includes>
+									<include>**/*</include>
+								</includes>
+								<followSymlinks>false</followSymlinks>
+							</fileset>
+						</filesets>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>

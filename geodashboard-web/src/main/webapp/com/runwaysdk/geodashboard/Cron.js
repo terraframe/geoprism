@@ -22,7 +22,6 @@
 
   var ClassFramework = Mojo.Meta;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
-  var Forms = Mojo.Meta.alias(Mojo.RW_PACKAGE+"*");
   
   var pack = "com.runwaysdk.geodashboard.";
   var widgetName = pack+'CronPicker';
@@ -52,7 +51,9 @@
     "wednesday" : "Wednesday",
     "thursday" : "Thursday",
     "friday" : "Friday",
-    "saturday" : "Saturday"    
+    "saturday" : "Saturday",
+    
+    "scheduledRun" : "Scheduled Run"
   });
 
   var regexMapper = [
@@ -168,30 +169,8 @@
     
     Instance : {
       
-      initialize : function(cronStr, config) {
+      initialize : function(id) {
         
-        this.$initialize("div");
-        
-        this._cronStr = cronStr || null;
-        this._enabled = false;
-        this._config = config || {};
-        
-        var fac = this.getFactory();
-        
-        this._rangePicker = fac.newElement("select");
-        this._rangePicker.appendChild(fac.newElement("option", {value: "everyMinute", innerHTML: this.localize("minute")}));
-        this._rangePicker.appendChild(fac.newElement("option", {value: "everyHour", innerHTML: this.localize("hour")}));
-        this._rangePicker.appendChild(fac.newElement("option", {value: "everyDay", innerHTML: this.localize("day")}));
-        this._rangePicker.appendChild(fac.newElement("option", {value: "everyWeek", innerHTML: this.localize("week")}));
-        this._rangePicker.appendChild(fac.newElement("option", {value: "everyMonth", innerHTML: this.localize("month")}));
-        this._rangePicker.setValue(com.runwaysdk.geodashboard.CronUtil.getEveryStrFromCron(this.getCronString() || "* * * * *"));
-        
-        this._minutePicker = this._generateNumberPicker(0, 59, function(index){if (index < 10) {return "0"+index;} return index; });
-        this._hourPicker = this._generateNumberPicker(0, 23);
-        this._dayOfWeekPicker = this._generateNumberPicker(0, 6, function(index){return com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
-        this._dayOfWeekPicker.setValue(0);
-        this._dayPicker = this._generateNumberPicker(1, 31, com.runwaysdk.geodashboard.CronUtil.formatDayValue);
-        this._dayPicker.setValue(1);
       },
       
       _generateNumberPicker : function(startNum, endNum, formatter) {
@@ -258,42 +237,6 @@
           
           this._writeCronHtml();
         }
-      },
-      
-      _writeHtml : function() {
-        // Write Enable Radio Button
-        var enableDiv = this.getFactory().newElement("div", null, {display: "inline"});
-        enableDiv.addEventListener("click", {handleEvent: Mojo.Util.bind(this, this._onClickEnable)});
-        this.appendChild(enableDiv);
-        var enableLabel = this.getFactory().newElement("label", {innerHTML: this.localize("enabled")});
-        enableDiv.appendChild(enableLabel);
-        this._enableRadio = this.getFactory().newElement("input", {type: "radio", name: "enabled", value: "enabled"});
-        this._enableRadio.addEventListener("click", {handleEvent: Mojo.Util.bind(this, this._onClickEnable)});
-        enableDiv.appendChild(this._enableRadio);
-        
-        // Write Disable Radio Button
-        var disableDiv = this.getFactory().newElement("div", null, {display: "inline"});
-        disableDiv.addEventListener("click", {handleEvent: Mojo.Util.bind(this, this._onClickDisable)});
-        this.appendChild(disableDiv);
-        var disableLabel = this.getFactory().newElement("label", {innerHTML: this.localize("disabled")}, {"padding-left": "30px"});
-        disableDiv.appendChild(disableLabel);
-        this._disableRadio = this.getFactory().newElement("input", {type: "radio", name: "enabled", value: "disabled"});
-        disableDiv.appendChild(this._disableRadio);
-        
-        this.appendChild(this.getFactory().newElement("br"));
-        
-        // Create the div that holds the cron picker html and either show or hide it based on if we're enabled or diasbled.
-        this._cron = this.getFactory().newElement("div");
-        this.appendChild(this._cron);
-        
-        if (this._cronStr == null) {
-          this._onClickDisable();
-        }
-        else {
-          this._onClickEnable();
-        }
-        
-        this._writeCronHtml();
       },
       
       _calcCronStr : function(minute, hour, dayNum, month, dayOfTheWeek) {
@@ -454,6 +397,10 @@
         }
       },
       
+      getDiv : function() {
+        return this._div;
+      },
+      
       render : function(p) {
         this._writeHtml();
         
@@ -464,16 +411,116 @@
     }
   });
   
-  Mojo.Meta.newClass(pack+'CronInput', {
-    Extends : Forms.FormInput,
+  Mojo.Meta.newClass(pack+'CronEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
     Instance : {
-      initialize : function(name, config)
+      initialize : function(id)
       {
-        config = config || {};
+        this.$initialize();
         
-        this._impl = new CronPicker(config.cronStr);
+        this._enabled = false;
         
-        this.$initialize(this._impl, null, name, config);
+        this._section = this.getFactory().newElement('section');
+        this._section.setAttribute('class', 'form-container');
+        
+        var scheduledRunDiv = this.getFactory().newElement('div');
+        scheduledRunDiv.setAttribute('class', 'field-row clearfix');
+                  
+        var scheduledRunSpan = this.getFactory().newElement('span');
+        scheduledRunSpan.setAttribute('class', 'label-text');
+        scheduledRunSpan.setInnerHTML(this.localize('scheduledRun'));
+          
+        var scheduledRunInnerDiv = this.getFactory().newElement('div');
+        scheduledRunInnerDiv.setAttribute('class', 'checks-frame');
+        
+        this.scheduledRunenableRadio = this.getFactory().newElement("input", {type: "radio", name: "scheduledRun", value: "enabled"});
+//        this.scheduledRunenableRadio.addEventListener("click", {handleEvent: Mojo.Util.bind(this, this.scheduledRunonClickEnable)});
+
+        var enableLabel = new com.runwaysdk.ui.factory.runway.Label(this.localize('enabled'));
+        enableLabel.setAttribute('for', "enabled");
+
+        this.scheduledRundisableRadio = this.getFactory().newElement("input", {type: "radio", name: "scheduledRun", value: "disabled"});
+//        this.scheduledRundisableRadio.addEventListener("click", {handleEvent: Mojo.Util.bind(this, this.scheduledRunonClickEnable)});
+        
+        var disableLabel = new com.runwaysdk.ui.factory.runway.Label(this.localize('disabled'));
+        disableLabel.setAttribute('for', "disabled");
+        
+        scheduledRunInnerDiv.appendChild(this.scheduledRunenableRadio);   
+        scheduledRunInnerDiv.appendChild(enableLabel);
+        scheduledRunInnerDiv.appendChild(this.scheduledRundisableRadio);   
+        scheduledRunInnerDiv.appendChild(disableLabel);
+
+        this.scheduledRunError = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
+        
+        scheduledRunDiv.appendChild(scheduledRunSpan);
+        scheduledRunDiv.appendChild(scheduledRunInnerDiv);
+        scheduledRunDiv.appendChild(this.scheduledRunError);
+        
+        
+//        <div class="field-row clearfix">
+//        <label for="select-field">Select List</label>
+//        <select id="select-field">
+//          <option>Item one</option>
+//          <option>Item two</option>
+//          <option>Item three</option>
+//          <option>Item Four</option>
+//          <option>Item Five</option>
+//        </select>
+//      </div>
+        
+        
+        var periodDiv = this.getFactory().newElement('div');
+        periodDiv.setAttribute('class', 'field-row clearfix');
+                  
+        var periodSpan = this.getFactory().newElement('span');
+        periodSpan.setAttribute('class', 'label-text');
+        periodSpan.setInnerHTML(this.localize('period'));
+          
+        var periodInnerDiv = this.getFactory().newElement('div');
+        periodInnerDiv.setAttribute('class', 'checks-frame');
+        
+        var periodOptions = [
+          {value: "everyMinute", label: this.localize("minute")},
+          {value: "everyHour", innerHTML: this.localize("hour")},
+          {value: "everyDay", innerHTML: this.localize("day")},
+          {value: "everyWeek", innerHTML: this.localize("week")},
+          
+        ];
+        
+//      this._rangePicker.appendChild(fac.newElement("option", {value: "everyDay", innerHTML: this.localize("day")}));
+//      this._rangePicker.appendChild(fac.newElement("option", ));
+//      this._rangePicker.appendChild(fac.newElement("option", {value: "everyMonth", innerHTML: this.localize("month")}));
+//      this._rangePicker.setValue(com.runwaysdk.geodashboard.CronUtil.getEveryStrFromCron(this.getCronString() || "* * * * *"));
+        
+        
+        timeRangeInnerDiv.appendChild(this.timeRangeenableRadio);   
+        timeRangeInnerDiv.appendChild(enableLabel);
+        timeRangeInnerDiv.appendChild(this.timeRangedisableRadio);   
+        timeRangeInnerDiv.appendChild(disableLabel);
+
+        this.timeRangeError = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
+        
+        timeRangeDiv.appendChild(timeRangeSpan);
+        timeRangeDiv.appendChild(timeRangeInnerDiv);
+        
+//        
+//        this._minutePicker = this._generateNumberPicker(0, 59, function(index){if (index < 10) {return "0"+index;} return index; });
+//        this._hourPicker = this._generateNumberPicker(0, 23);
+//        this._dayOfWeekPicker = this._generateNumberPicker(0, 6, function(index){return com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
+//        this._dayOfWeekPicker.setValue(0);
+//        this._dayPicker = this._generateNumberPicker(1, 31, com.runwaysdk.geodashboard.CronUtil.formatDayValue);
+//        this._dayPicker.setValue(1);
+        
+        this._section.appendChild(scheduledRunDiv);
+        this.setId(id);
+      },
+      localize : function (key)
+      {
+        return com.runwaysdk.Localize.localize(widgetName, key);
+      },
+      getDiv : function()
+      {
+        return this._section;
       },
       accept : function(visitor)
       {
@@ -483,11 +530,17 @@
       {
         return this._impl.getCronString();
       },
-      setValue : function(val) {
+      setValue : function(val)
+      {
         this._impl.setCronString(val);
       },
-      render: function(p) {
-        this._impl.render(p);
+      removeInlineError : function ()
+      {
+      },    
+      addInlineError : function (msg) {
+      },      
+      render: function(p)
+      {
       }
     }
   });
