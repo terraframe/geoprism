@@ -389,7 +389,6 @@
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
         var that = this;
-//        var parentId = this.__getRunwayIdFromNode(node.parent);
         var parentId = this.getParentRunwayId(node);
         var $tree = this.getImpl();
         
@@ -519,7 +518,7 @@
         var $tree = this.getImpl();
         
         var node = object.node;
-        var term = this.termCache[this.getRunwayIdFromNode(node)];
+        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -1042,7 +1041,8 @@
             var parentId = null;
             if (json.length == 0 && parentTermId != this.rootTermId) {
               parentId = that.getParentId(that.getImpl().jstree("get_node", parentTermId));
-              json = {id: parentTermId, data: parentTermId, text: that._getTermDisplayLabel(parentTerm), state:{opened: true}, children: false};
+//              json = {id: parentTermId, data: parentTermId, text: that._getTermDisplayLabel(parentTerm), state:{opened: true}, children: false};
+              json = [];
             }
             
             jsTreeCallback.call(this, json);
@@ -1054,6 +1054,7 @@
               node.parents = [parentId];
               node.children = [];
               node.children_d = [];
+              $tree.jstree("redraw_node", parentTermId, false);
             }
           },
           
