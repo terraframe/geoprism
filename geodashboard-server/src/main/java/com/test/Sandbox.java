@@ -21,7 +21,6 @@ public class Sandbox
 {
   public static void main(String[] args)
   {
-    
     Map map = new MapImpl("My Map");
     
     Layer layer1 = new LayerImpl("Layer 1");
