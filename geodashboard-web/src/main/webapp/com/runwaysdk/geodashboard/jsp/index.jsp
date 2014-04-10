@@ -32,7 +32,7 @@
 <jsp:include page="../../../../WEB-INF/templates/header.jsp"></jsp:include>
 
 
-<% String webappRoot = "/" + DeployProperties.getAppName() + "/"; %> 
+<% String webappRoot = request.getContextPath() + "/"; %> 
 
 
 <script type="text/javascript" >
@@ -42,12 +42,12 @@
 		if (window.location.hash.length > 0) {
 			
 			//// Add iframe with hash src based on browser memory hash
-			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
+			$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
 		}
 		else {	
 			
 			//// Add main page if no hash exists
-			$("#main").html('<iframe id="main-content-frame" scrolling="no" seamless sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
+			$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/jsp/mainContent.jsp"></iframe>');			
 		}
 	
 		$(window).on('hashchange', function(e) {
