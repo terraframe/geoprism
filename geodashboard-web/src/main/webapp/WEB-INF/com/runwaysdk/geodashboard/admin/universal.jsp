@@ -35,11 +35,11 @@
 
 
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
-<script type="text/javascript" src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css" ></link>
+<script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
 
 <!-- Runway Factory -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
@@ -49,7 +49,7 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 
 <!-- JQuery -->
@@ -121,23 +121,32 @@
 <div id="tree"></div>
 
 <script type="text/javascript">
+// var $tree = document.getElementById('main-content-frame').contentWindow.document.universaltree.getImpl();
+
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
-    var tree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      checkable: true,
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
-                  // The height of an attribute is about 52
-          height: 328
+          height: 290
         },
         update: {
-          height: 328
+          height: 290
         }
       }
     });
-    tree.render("#tree");
+    document.universaltree.render("#tree");
+    /* 
+    var fac = com.runwaysdk.ui.Manager.getFactory();
+    var fac.newButton("CreateNode");
+    setTimeout(function() {
+      var $tree = document.universaltree.getImpl();
+      $tree.jstree("create_node", "#", "after", { "data": "Hello World" });
+  }, 4000); */
   });
 </script>

@@ -18,7 +18,7 @@
 		    <mjl:messages attribute="displayLabel" classes="error-message" />
 		  </div>
       <div class="field-row clearfix">
-        <label for="geoId">${item.geoIdMd.displayLabel} <c:if test="${item.geoIdMd.required}">*</c:if></label>
+        <label for="geoId">${item.geoIdMd.displayLabel} <!--<c:if test="${item.geoIdMd.required}">*</c:if>--></label>
         <mjl:input id="geoId" param="geoId" type="text" />
         <mjl:messages attribute="geoId" classes="error-message" />
       </div>

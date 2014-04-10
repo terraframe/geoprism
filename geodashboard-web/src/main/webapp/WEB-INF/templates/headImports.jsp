@@ -31,7 +31,7 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
@@ -77,6 +77,25 @@
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
   <!-- include HTML5 IE enabling script for IE -->
   <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
+  
+  
+  <script type="text/javascript">
+	
+    // Added to handle forwarding of login page to parent from iframe after timeout
+	window.addEventListener('message', function(e){
+		
+		// handling IE
+		if (!window.location.origin) {
+			  window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+		}
+		
+  		if(e.origin === window.location.origin)
+  		{
+    		window.location = e.data;
+  		}
+	}, false);
+ </script>
+	
 </head>
 
 

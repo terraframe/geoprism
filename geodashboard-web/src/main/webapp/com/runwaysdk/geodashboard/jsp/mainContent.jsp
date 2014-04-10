@@ -27,7 +27,7 @@
 
 <gdb:localize var="page_title" key="splash.pagetitle" />
 
-<% String webappRoot = "/" + DeployProperties.getAppName() + "/"; %> 
+<% String webappRoot = request.getContextPath() + "/"; %> 
 
 <gdb:localize var="logoalt" key="splash.logoalt" />
 <img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">

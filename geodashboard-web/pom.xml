@@ -12,7 +12,11 @@
 
 	<name>Geo dashboard Web</name>
 	<description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
-
+	
+	<properties>
+    	<geoserver.version>2.1.0</geoserver.version>
+  	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.runwaysdk</groupId>

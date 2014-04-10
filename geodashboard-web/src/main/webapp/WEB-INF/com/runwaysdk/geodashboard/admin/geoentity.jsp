@@ -36,11 +36,11 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
-<script type="text/javascript" src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css" ></link>
+<script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
 
 <!-- Runway Factory -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
@@ -50,8 +50,6 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/busymodal/BusyModal.js"></script>
-
 
 <!-- JQuery -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
@@ -132,11 +130,10 @@
 	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.
-	                // The height of an attribute is about 45
-	        height: 380
+	        height: 320
 	      },
 	      update: {
-	        height: 380
+	        height: 320
 	      }
 	    }
 	  });

@@ -56,24 +56,23 @@
       },
       
       /**
-       * Recursively removes the term and all children terms from the caches.
+       * Removes the term and all children terms from the caches.
        */
       __dropAll : function(termId) {
+        var $tree = this.getImpl();
+        var that = this;
         var nodes = this.__getNodesById(termId);
         
         // Children of universals are appended to the root node
         // The children are repeated under the copies, so we only want to append one set of the children to the root node.
         var node = nodes[0];
-        var children = nodes[0].children;
-        for (var i = 0; i < children.length; ++i) {
-          if (!children[i].phantom) {
-            var childId = this.__getRunwayIdFromNode(children[i]);
-            
-            this.__dropAll(childId);
-            
-            this.parentRelationshipCache.removeRecordMatchingId(childId, termId, this);
+        this.doForNodeAndAllChildren(node, function(node){
+          var childId = that.__getRunwayIdFromNode(node);
+          
+          if (childId != termId) {
+            that.parentRelationshipCache.removeRecordMatchingId(childId, termId, that);
           }
-        }
+        });
         
         delete this.termCache[termId];
       },
@@ -81,17 +80,17 @@
       // @Override
       refreshTreeAfterDeleteTerm : function(termId) {
         var nodes = this.__getNodesById(termId);
-        var $thisTree = $(this.getRawEl());
-        var rootNode = $thisTree.tree("getTree");
-        var shouldRefresh = nodes[0].children.length > 0;
+        var $tree = this.getImpl();
+        var children = $tree.jstree("get_children_dom", nodes[0]);
+        var shouldRefresh = children.length > 0;
         
         this.parentRelationshipCache.removeAll(termId);
         
         this.__dropAll(termId);
         
         for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree(
-            'removeNode',
+          $tree.jstree(
+            'delete_node',
             nodes[i]
           );
         }

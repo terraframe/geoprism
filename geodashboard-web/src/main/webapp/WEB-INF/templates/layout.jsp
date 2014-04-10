@@ -49,7 +49,7 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
@@ -83,10 +83,11 @@
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
   <!-- include HTML5 IE enabling script for IE -->
   <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
+	
 </head>
 
 
-<body>
+<body class="iFrameBody">
 
 <div class="pageContent">
   <header id="header">

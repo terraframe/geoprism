@@ -25,7 +25,7 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
 <gdb:localize var="page_title" key="databrowser.title"/>
@@ -83,6 +83,10 @@
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
+
+  String packages = "['com.runwaysdk.system','com.runwaysdk.geodashboard', 'com.runwaysdk.geodashboard.report', 'com.runwaysdk.system.metadata']";
+  String types = "['com.runwaysdk.system.gis.geo.Universal', 'com.runwaysdk.system.gis.geo.GeoEntity']";
+  String args = "[" + packages + "," + types + "]";
 %>
 
 <script type="text/javascript">
@@ -110,7 +114,7 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
-    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: [\"java.lang.String\"]}", null, "[\"com.runwaysdk.system\"]")); %>.returnValue[0]).getResultSet()
+    types: com.runwaysdk.DTOUtil.convertToType(<% out.print(JSONController.invokeMethod(clientRequest.getSessionId(), "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getTypes', declaredTypes: [\"[Ljava.lang.String;\", \"[Ljava.lang.String;\"]}", null, args)); %>.returnValue[0]).getResultSet()
   });
   db.render("#databrowser");
 </script>

@@ -25,7 +25,7 @@
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
 <!--
@@ -33,7 +33,7 @@
                 javascript file because it overwrites the localized
                 text defined in the other files. 
  -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+<%-- <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script> --%>
 
 <!-- Begin footer -->
     </section> 

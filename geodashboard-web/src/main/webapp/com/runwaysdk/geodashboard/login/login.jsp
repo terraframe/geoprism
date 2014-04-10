@@ -6,7 +6,7 @@
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
-  String webappRoot = "/" + DeployProperties.getAppName() + "/";
+  String webappRoot = request.getContextPath() + "/";
 %>
 
 
@@ -70,5 +70,7 @@
     </div>
     -->
   </form>
+  
 </body>
 </html>
+

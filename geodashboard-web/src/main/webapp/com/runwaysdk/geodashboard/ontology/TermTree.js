@@ -65,25 +65,31 @@
         config = config || {};
         this.requireParameter("termType", config.termType, "string");
         this.requireParameter("relationshipType", config.relationshipType, "string");
-        this.requireParameter("rootTerm", config.rootTerm);
+        this.requireParameter("rootTerm", config.rootTerm, "string");
         
         var defaultConfig = {
           el: "div",
-          data: {}, // This parameter is required for jqTree, otherwise it tries to load data from a url.
+          data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
           dragAndDrop: true,
           selectable: true,
+          checkable: false,
           crud: {
             create: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             },
             update: {
-              width: 680,
-              height: 300
+              width: 730,
+              height: 320
             }
           }
         };
         this._config = Mojo.Util.deepMerge(defaultConfig, config);
+        
+        // Add checkboxes
+        if (this._config.checkable && this._config.onCreateLi == null) {
+           this._config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);
+        }
         
         this.$initialize(this._config.el, this._config);
         
@@ -94,11 +100,114 @@
         // jqtree assumes that id's are unique. For our purposes the id may map to multiple nodes.
         // This map maps the runwayId = [ generatedId's ]
         this.duplicateMap = {};
+        this.genToRunway = {}; // Maps key = generatedId, value = runwayId
         
         this.parentRelationshipCache = new ParentRelationshipCache();
         
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
+      },
+      
+      getCheckedTerms : function(rootNode, appendArray) {
+        appendArray = appendArray || [];
+        rootNode = rootNode || this.getImpl().tree("getTree");
+        
+        for (var i = 0; i < rootNode.children.length; ++i) {
+          var child = rootNode.children[i];
+          
+          if (child.checkBox != null) {
+            if (child.checkBox.isChecked()) {
+              appendArray.push(this.__getRunwayIdFromNode(child));
+            }
+            
+            this.getCheckedTerms(child, appendArray);
+          }
+        }
+        
+        return appendArray;
+      },
+      
+      __onCheck : function(event) {
+        var checkBox = event.getCheckBox();
+        var node = checkBox.node;
+        var termId = this.__getRunwayIdFromNode(node);
+        
+        if (!node.skipCheckChildren) {
+          this.doForNodeAndAllChildren(node, function(childNode) {
+            if (childNode != node) {
+              childNode.skipCheckParent = true;
+              childNode.checkBox.setChecked(checkBox.isChecked());
+              childNode.skipCheckParent = false;
+            }
+          });
+        }
+        
+        if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
+          var checkedCount = 0;
+          var partialChecked = 0;
+          
+          var siblings = node.parent.children;
+          for (var i = 0; i < siblings.length; ++i) {
+            if (siblings[i].checkBox.isChecked()) {
+              checkedCount++;
+            }
+            else if (siblings[i].checkBox.isPartialChecked()) {
+              partialChecked++;
+            }
+          }
+          
+          if (node.parent.children.length === checkedCount) {
+            node.parent.checkBox.setChecked(true);
+          }
+          else {
+            if ((checkedCount + partialChecked) > 0) {
+              node.parent.skipCheckChildren = true;
+              node.parent.checkBox.setChecked("partial");
+              node.parent.skipCheckChildren = false;
+            }
+            else {
+              node.parent.skipCheckChildren = true;
+              node.parent.checkBox.setChecked(false);
+              node.parent.skipCheckChildren = false;
+            }
+          }
+        }
+        
+        if (node.checkBox.hasClassName("partialcheck")) {
+          var checkedCount = 0;
+          
+          for (var i = 0; i < node.children.length; ++i) {
+            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
+              checkedCount++;
+            }
+          }
+          
+          if (checkedCount == 0) {
+            node.checkBox.removeClassName("partialcheck");
+          }
+        }
+      },
+      
+      __onCreateLi : function(node, $li) {
+        var fac = this.getFactory();
+        
+        var title = fac.newElement($li.find('.jqtree-title')[0]).getParent();
+        var checkBox = node.checkBox;
+        if (checkBox == null) {
+          checkBox = fac.newCheckBox({classes: ["jqtree-checkbox"]});
+          
+          if (node.parent != null && node.parent.checkBox != null && node.parent.checkBox.isChecked()) {
+            checkBox.setChecked(true);
+          }
+          
+          checkBox.addOnCheckListener(Mojo.Util.bind(this, this.__onCheck));
+          checkBox.render();
+          
+          node.checkBox = checkBox;
+          checkBox.node = node;
+        }
+        
+        title.insertBefore(checkBox, title.getChildren()[0]);
       },
       
       /**
@@ -154,7 +263,7 @@
         // This method is overridden in UniversalTree, so this logic here is for GeoEntityTree and assumes that all children are also deleted.
         
         var nodes = this.__getNodesById(termId);
-        var $thisTree = $(this.getRawEl());
+        var $thisTree = this.getImpl();
         
         // TODO: Remove children from the parent relationship cache.
 //        var node = nodes[0];
@@ -163,12 +272,10 @@
 //          
 //        }
         
-        for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree(
-            'removeNode',
-            nodes[i]
-          );
-        }
+        $thisTree.jstree(
+          'delete_node',
+          nodes
+        );
         
         delete this.termCache[termId];
       },
@@ -180,13 +287,13 @@
         this.requireParameter("termId", termId, "string");
         this.requireParameter("parent", parent);
         
-        var term = this.termCache[termId]; 
+        var term = this.termCache[termId];
         var parentId = (parent instanceof Object) ? parent.getId() : parent;
         
         var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
         
         var that = this;
-        var $thisTree = $(this.getRawEl());
+        var $thisTree = this.getImpl();
         
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function(retval) {
@@ -221,7 +328,8 @@
           viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
           action: "create",
           actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
-          onSuccess : function(termAndRel) {
+          onSuccess : function(responseObj) {
+            var termAndRel = that.__responseToTNR(responseObj);
             var term = termAndRel.getTerm();
             var relId = termAndRel.getRelationshipId();
             var relType = termAndRel.getRelationshipType();
@@ -229,11 +337,14 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
-            var $thisTree = $(that.getRawEl());
+            var $tree = that.getImpl();
             for (var i = 0; i < parentNodes.length; ++i) {
-              var node = that.__createTreeNode(term.getId(), parentNodes[i], true);
-              
-              $thisTree.tree("openNode", node);
+              if ($tree.jstree("is_loaded", parentNodes[0])) {
+                that.__createTreeNode(term.getId(), parentNodes[i], true);
+              }
+              else {
+                $tree.jstree("open_node", parentNodes[0]);
+              }
             }
           },
           onFailure : function(e) {
@@ -251,10 +362,15 @@
       __onContextRefreshClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
-        targetNode.hasFetched = null;
+//        var $tree = this.getImpl();
+//        
+//        $tree.jstree("load_node", targetNode, function(){
+//          if (!$tree.jstree("is_open", targetNode)) {
+//            $tree.jstree("open_node", targetNode);
+//          }
+//        });
         
-        // Node open will refresh.
-        this.__onNodeOpen({node: targetNode});
+        this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
       },
       
       /**
@@ -273,19 +389,22 @@
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
         var that = this;
-        var parentId = this.__getRunwayIdFromNode(node.parent);
+//        var parentId = this.__getRunwayIdFromNode(node.parent);
+        var parentId = this.getParentRunwayId(node);
+        var $tree = this.getImpl();
         
         var config = {
           type: this._config.termType,
           viewParams: {parentId: parentId, relationshipType: ""},
           action: "update",
           id: termId,
-          onSuccess : function(term) {
+          onSuccess : function(responseObj) {
+            var term = that.__responseToTerm(responseObj);
             that.termCache[term.getId()] = term;
             
             var nodes = that.__getNodesById(term.getId());
             for (var i = 0; i < nodes.length; ++i) {
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term)});
+              $tree.jstree("rename_node", nodes[i], that._getTermDisplayLabel(term));
             }
             
             that.setTermBusy(termId, false);
@@ -312,7 +431,8 @@
       __onContextDeleteClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
-        var parentId = this.__getRunwayIdFromNode(node.parent);
+//        var parentId = this.__getRunwayIdFromNode(node.parent);
+        var parentId = this.getParentRunwayId(node);
         var that = this;
         var dialog = null;
         
@@ -336,8 +456,8 @@
               
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
-                if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId) {
-                  $(that.getRawEl()).tree("removeNode", nodes[i]);
+                if (that.getParentRunwayId(nodes[i]) == parentId) {
+                  that.getImpl().jstree("delete_node", nodes[i]);
                 }
               }
               that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
@@ -346,7 +466,7 @@
               that.handleException(err);
               return;
             }
-          }
+          };
           Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
           
           var parentRecord = that.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
@@ -363,15 +483,15 @@
           onSuccess: function(term) {
             var newType = eval("new " + that._config.termType + "()");
             var termMdLabel = newType.getMd().getDisplayLabel();
-            var termLabel = term.getDisplayLabel().getLocalizedValue();
+            var termLabel = that._getTermDisplayLabel(term);
             
             var deleteLabel = that.localize("delete") + " " + termMdLabel;
             
             if (parentRecords.length > 1) {
               var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
-              deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
+              deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that._getTermDisplayLabel(that.termCache[parentId]));
               
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 650, height: 300, resizable: false});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 650, height: 300, resizable: false});
               dialog.appendContent(deleteMultiParentDescribe);
               dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
@@ -379,7 +499,7 @@
               dialog.render();
             }
             else {
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: true, width: 485, height: 200, resizable: false});
+              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 485, height: 200, resizable: false});
               dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
               dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
               dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
@@ -395,27 +515,33 @@
       /**
        * is binded to tree.contextmenu, called when the user right clicks on a node.
        */
-      __onNodeRightClick : function(e) {
-        var $tree = $(this.getRawEl());
-        $tree.tree('selectNode', e.node);
+      __onNodeRightClick : function(event, object) {
+        var $tree = this.getImpl();
         
-        var cm = this.getFactory().newContextMenu(e.node);
-        var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
-        var update = cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-        var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
-        var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var node = object.node;
+        var term = this.termCache[this.getRunwayIdFromNode(node)];
         
-        if (e.node.termBusy) {
+        if (this._cm != null && !this._cm.isDestroyed()) {
+          this._cm.destroy();
+        }
+        
+        this._cm = this.getFactory().newContextMenu(node);
+        var create = this._cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
+        var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
+        var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        
+        if (term.isBusy) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
           refresh.setEnabled(false);
         }
         
-        cm.render();
+        this._cm.render();
         
-        cm.addDestroyEventListener(function() {
-          $tree.tree("selectNode", null);
+        this._cm.addDestroyEventListener(function() {
+          $tree.jstree("deselect_node", node);
         });
       },
       
@@ -435,32 +561,48 @@
         }
       },
       
+      getParentId : function(node) {
+        var parent = this.getImpl().jstree("get_parent", node);
+        
+        if (parent === node.id) {
+          return "#";
+        }
+        
+        return parent;
+      },
+      
+      getParentRunwayId : function(node) {
+        var id = this.getParentId(node);
+        var node = this.getImpl().jstree("get_node", id);
+        return this.__getRunwayIdFromNode(node);
+      },
+      
       setNodeBusy : function(node, bool) {
-        if (node.parent == null) {
-          if (bool) {
-            this._busydiv = this.getFactory().newElement("div");
-            this._busydiv.addClassName("jqtree-node-busy");
-            this.insertBefore(this._busydiv, this.getChildren()[0]);
-            return;
-          }
-          else {
-            if (this._busydiv.getParent() != null) {
-              this._busydiv.destroy();
-            }
-          }
-        }
-        else {
-          var el = $(node.element);
-          
-          if (bool) {
-            node.termBusy = true;
-            el.addClass("jqtree-loading");
-          }
-          else {
-            node.termBusy = false;
-            el.removeClass("jqtree-loading");
-          }
-        }
+//        if (node.parent == null) {
+//          if (bool) {
+//            this._busydiv = this.getFactory().newElement("div");
+//            this._busydiv.addClassName("jqtree-node-busy");
+//            this.insertBefore(this._busydiv, this.getChildren()[0]);
+//            return;
+//          }
+//          else {
+//            if (this._busydiv.getParent() != null) {
+//              this._busydiv.destroy();
+//            }
+//          }
+//        }
+//        else {
+//          var el = $(node.element);
+//          
+//          if (bool) {
+//            node.termBusy = true;
+//            el.addClass("jqtree-loading");
+//          }
+//          else {
+//            node.termBusy = false;
+//            el.removeClass("jqtree-loading");
+//          }
+//        }
       },
       
       /**
@@ -470,19 +612,13 @@
        * @param fnDo
        */
       doForNodeAndAllChildren : function(node, fnDo) {
-        fnDo(node);
+        fnDo.call(this, node);
         
-        for (var i = 0; i < node.children.length; ++i) {
-          var child = node.children[i];
+        var children = this.getImpl().jstree("get_children_dom", node);
+        for (var i = 0; i < children.length; ++i) {
+          var child = this.getImpl().jstree("get_node", node.children[i], false);
           
-          if (!child.phantom) {
-            if (child.children.length > 0) {
-              this.doForNodeAndAllChildren(child, fnDo);
-            }
-            else {
-              fnDo(child);
-            }
-          }
+          this.doForNodeAndAllChildren(child, fnDo);
         }
       },
       
@@ -494,26 +630,75 @@
         }
       },
       
+      doForTerm : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          fnDo.call(this, nodes[i]);
+        }
+      },
+      
+      doForTermAndImmediateChildren : function(termId, fnDo) {
+        var nodes = this.__getNodesById(termId);
+        var $tree = this.getImpl();
+        
+        for (var i = 0; i < nodes.length; ++i) {
+          var node = nodes[i];
+          fnDo.call(this, node);
+          
+          var children = $tree.jstree("get_children_dom", node);
+          for (var i = 0; i < children.length; ++i) {
+            var child = children[i];
+            
+            fnDo.call(this, child);
+          }
+        }
+      },
+      
+      __findInsertIndex : function(label, newParent) {
+        var index = 0;
+        var $tree = this.getImpl();
+        
+        var children = this.getChildren(newParent).sort(function(a,b){
+          var nodeA = $tree.jstree("get_node", a);
+          var nodeB = $tree.jstree("get_node", b);
+          return nodeA.text.localeCompare(nodeB.text);
+        });
+        for (var i = 0; i < children.length; ++i) {
+          if (children[i].text.localeCompare(label) > 0) {
+            break;
+          }
+          else {
+            index++;
+          }
+        }
+        
+        return index;
+      },
+      
       /**
        * is binded to jqtree's node move event.s
        */
-      __onNodeMove : function(event) {
-        var $thisTree = $(this.getRawEl());
-        var movedNode = event.move_info.moved_node;
-        var targetNode = event.move_info.target_node;
-        var previousParent = event.move_info.previous_parent;
+      __onNodeMove : function(jqEvent, treeEvent) {
+        if (this._isMoving) { return; }
+        
+        var $thisTree = this.getImpl();
+        var movedNode = treeEvent.node;
+        var targetNode = $thisTree.jstree("get_node", treeEvent.parent);
+        var previousParent = $thisTree.jstree("get_node", treeEvent.old_parent);
         var previousParentId = this.__getRunwayIdFromNode(previousParent);
         
         var movedNodeId = this.__getRunwayIdFromNode(movedNode);
         var targetNodeId = this.__getRunwayIdFromNode(targetNode);
         
-        if (movedNodeId == this.rootTermId) {
-          event.preventDefault();
-          var ex = new com.runwaysdk.Exception("You cannot move the root node.");
-          return;
-        }
-        
         var that = this;
+        
+        // Really lame jsTree.. the move has already happend and there's no way to prevent it, so we're going to roll it back right here and then perform it later manually.
+        var index = this.__findInsertIndex(movedNode.text, previousParent);
+        this._isMoving = true;
+        $thisTree.jstree("move_node", movedNode, previousParent, index, false, true);
+        this._isMoving = false;
+        
         
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
@@ -525,12 +710,10 @@
               
               // Remove nodes from old relationship.
               var nodes = that.__getNodesById(movedNodeId);
-              for (var i = 0; i<nodes.length; ++i) {
-                $thisTree.tree(
-                  'removeNode',
-                  nodes[i]
-                );
-              }
+              $thisTree.jstree(
+                'delete_node',
+                nodes
+              );
               
               // Create nodes that represent the new relationship
               nodes = that.__getNodesById(targetNodeId);
@@ -563,7 +746,7 @@
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
-              } 
+              }
             },
             onFailure : function(ex) {
               that.setNodeBusy(movedNode, false);
@@ -574,7 +757,7 @@
           
           that.setNodeBusy(movedNode, true);
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.__getRunwayIdFromNode(movedNode.parent), that);
+          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
           
           // The oldRelId is null which means that this actually does a copy.
           com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
@@ -585,7 +768,8 @@
         cm.addItem(this.localize("copy"), "paste", Mojo.Util.bind(this, copyHandler));
         cm.render();
         
-        event.preventDefault()
+//        jqEvent.preventDefault();
+        return false;
       },
       
       /**
@@ -617,50 +801,35 @@
         
         this.setTermBusy(termId, true);
         
-        var callback = new Mojo.ClientRequest({
-          onSuccess : function(responseText) {
-            var json = Mojo.Util.getObject(responseText);
-            var termAndRels = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
-            
-            var nodes = that.__getNodesById(termId);
-            
-            // Remove existing children
-            for (var iNode = 0; iNode < nodes.length; ++iNode) {
-              var node = nodes[iNode];
-              var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
-              for (var i=0; i < children.length; i++) {
-                $(that.getRawEl()).tree("removeNode", children[i]);
-              }
-            }
-            
-            // Create a node for every term we got from the server.
-            for (var i = 0; i < termAndRels.length; ++i) {
-              var $tree = $(that.getRawEl());
-              var childId = termAndRels[i].getTerm().getId();
-              
-              var parentRecord = {parentId: termId, relId: termAndRels[i].getRelationshipId(), relType: termAndRels[i].getRelationshipType()};
-              that.parentRelationshipCache.put(childId, parentRecord);
-               
-              that.termCache[childId] = termAndRels[i].getTerm();
-              
-              for (var iNode = 0; iNode < nodes.length; ++iNode) {
-                var node = nodes[iNode];
-                that.__createTreeNode(childId, node);
-              }
-            }
-            
-            that.setTermBusy(termId, false);
-          },
+        var $tree = this.getImpl();
+        
+        var nodeArray = this.__getNodesById(termId);
+        
+        $tree.jstree("load_node", nodeArray[0], function(){
+          if (!$tree.jstree("is_open", nodeArray[0])) {
+            $tree.jstree("open_node", nodeArray[0]);
+          }
           
-          onFailure : function(err) {
-            that.setTermBusy(termId, false);
-            that.handleException(err);
-            return;
+          // Refresh copies
+          for (var i = 1; i < nodeArray.length; ++i) {
+            // Drop all old children
+            var children = that.getChildren(nodeArray[i]);
+            $tree.jstree(
+              'delete_node',
+              children
+            );
+            
+            // Add the ones we just loaded
+            var newChildren = that.getChildren(nodeArray[0]);
+            for (var j = 0; j < newChildren.length; ++j) {
+              that.__createTreeNode(that.__getRunwayIdFromNode(newChildren[j]), nodeArray[i], true);
+            }
+            
+            console.log($tree.jstree("get_node", nodeArray[i]));
           }
         });
-        
-        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
       },
+      
       
       /**
        * attempts to find the node in the cache, if the node does not exist in the cache it will request it from the server.
@@ -704,35 +873,40 @@
        * 
        * @returns jqtreeNode[] or null
        */
-      __getNodesById : function(nodeId) {
-        if (nodeId === this.rootTermId) {
-          return [$(this.getRawEl()).tree("getTree")];
-        } 
+      __getNodesById : function(runwayId) {
+        if (runwayId === this.rootTermId) {
+          return [null];
+        }
         
-        if (this.duplicateMap[nodeId] != null) {
-          $thisTree = $(this.getRawEl());
-          
-          var duplicates = this.duplicateMap[nodeId];
+        var $tree = this.getImpl();
+        
+        if (this.duplicateMap[runwayId] != null) {
+          var duplicates = this.duplicateMap[runwayId];
           var nodes = [];
           
           for (var i = 0; i < duplicates.length; ++i) {
-            var node = $thisTree.tree("getNodeById", duplicates[i]);
+            var node = $tree.jstree("get_node", duplicates[i], false);
             
-//            if (node == null) {
-//              var ex = new com.runwaysdk.Exception("Expected duplicate node of index " + i + ".");
-//              this.handleException(ex, true);
-//              return;
-//            }
-            
-            if (node != null) {
-              nodes.push(node);
+            if (node == null) {
+              var ex = new com.runwaysdk.Exception("Expected duplicate node of index " + i + ".");
+              this.handleException(ex, true);
+              return;
             }
+            
+//            if (node != null) {
+              nodes.push(node);
+//            }
           }
           
           return nodes;
         }
         else {
-          var retVal = $(this.getRawEl()).tree("getNodeById", nodeId);
+          var retVal = $tree.jstree("get_node", runwayId, false);
+          
+          if (retVal == false) {
+            throw new com.runwaysdk.Exception("A node with id '" + runwayId + "' does not exist in this tree.");
+          }
+          
           return retVal == null ? null : [retVal];
         }
       },
@@ -746,87 +920,156 @@
         return displayLabel;
       },
       
+      
       /**
-       * creates a new jqTree node and appends it to the tree. This method will request the term from the server, to get the display label, if the term is not in the cache.
+       * Retrieves the term with id termId from the termCache and then creates its representation in the tree.
        */
-      __createTreeNode : function(childId, parentNode, hasFetched) {
+      __createTreeNode : function(termId, parentNode, hasFetched) {
         var that = this;
         
-        return this.__getTermFromId(childId, {
-          onSuccess : function(childTerm) {
-            var $thisTree = $(that.getRawEl());
-            
-            var duplicateTerm = $thisTree.tree("getNodeById", childId);
-            
-            var idStr = childId;
-            if (duplicateTerm != null) {
-              if (that.duplicateMap[childId] == null) {
-                that.duplicateMap[childId] = [childId];
-              }
-              idStr = Mojo.Util.generateId();
-              that.duplicateMap[childId].push(idStr);
+        var term = this.termCache[termId];
+        if (term == null) {
+          throw new com.runwaysdk.Exception("Term with id '" + termId + "' not found.");
+        }
+        
+        var $thisTree = that.getImpl();
+          
+        var duplicateTerm = $thisTree.jstree("get_node", termId, false);
+        
+        var idStr = termId;
+        if (duplicateTerm != null && duplicateTerm != false) {
+          if (that.duplicateMap[termId] == null) {
+            that.duplicateMap[termId] = [termId];
+          }
+          idStr = Mojo.Util.generateId();
+          that.duplicateMap[termId].push(idStr);
+        }
+        this.genToRunway[idStr] = termId;
+        
+        var displayLabel = that._getTermDisplayLabel(term);
+        
+        if (parentNode == null || parentNode == "#") {
+          parentNode = $thisTree.jstree("get_node", "#");
+        }
+        
+        var node = null;
+        node = $thisTree.jstree(
+          'create_node',
+          parentNode,
+          { state: "open", children: false, text: displayLabel, id: idStr, data: termId },
+          this.__findInsertIndex(displayLabel, parentNode),
+          false, false
+        );
+        
+        return node;
+      },
+      
+      getChildren : function(nodeId) {
+        var $tree = this.getImpl();
+        var nodeChildren = [];
+        var domChildren = $tree.jstree("get_children_dom", nodeId);
+        var len = domChildren.length;
+        for (var i = 0; i < len; ++i) {
+          nodeChildren.push($tree.jstree("get_node", domChildren[i]));
+        }
+        return nodeChildren;
+      },
+      
+      __getRunwayIdFromNode : function(node) {
+        if (node === "#" || node.id === "#") {
+          return this.rootTermId;
+        }
+        
+        if (node.data != null) {
+          return node.data;
+        }
+        
+        throw new com.runwaysdk.Exception();
+      },
+      
+      // Subclasses of TermTree can override this if they're returning a view. (Like GeoEntity). Just convert the view to a TNR.
+      __responseToTNR : function(responseObj) {
+        return responseObj;
+      },
+      
+      __responseToTerm : function(responseObj) {
+        return responseObj;
+      },
+      
+      __treeWantsData : function(parent, jsTreeCallback) {
+        var that = this;
+        
+        var parentTermId = this.__getRunwayIdFromNode(parent);
+        var parentTerm = this.termCache[parentTermId];
+        
+        var callback = new Mojo.ClientRequest({
+          onSuccess : function(responseText) {
+            var json = Mojo.Util.getObject(responseText);
+            var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            var termAndRels = [];
+            for (var i = 0; i < objArray.length; ++i) {
+              termAndRels.push(that.__responseToTNR(objArray[i]));
             }
+            var $tree = that.getImpl();
             
-            var displayLabel = that._getTermDisplayLabel(childTerm);
-            
-            var node = null;
-            if (parentNode == null || parentNode == undefined) {
-              node = $thisTree.tree(
-                'appendNode',
-                {
-                    label: displayLabel,
-                    id: idStr,
-                    runwayId: childId
+            // Create a json object representing our TermAndRel to pass to jstree.
+            var json = [];
+            for (var i = 0; i < termAndRels.length; ++i) {
+              var termId = termAndRels[i].getTerm().getId();
+              
+              var parentRecord = {parentId: parentTermId, relId: termAndRels[i].getRelationshipId(), relType: termAndRels[i].getRelationshipType()};
+              that.parentRelationshipCache.put(termId, parentRecord);
+              
+              var term = termAndRels[i].getTerm();
+              that.termCache[termId] = term;
+              
+              // Generate a unique id for the node.
+              var duplicateTerm = $tree.jstree("get_node", termId, false);
+              var idStr = termId;
+              if (duplicateTerm != null && duplicateTerm != false) {
+                if (that.duplicateMap[termId] == null) {
+                  that.duplicateMap[termId] = [termId];
                 }
-              );
-            }
-            else {
-              node = $thisTree.tree(
-                'appendNode',
-                {
-                    label: displayLabel,
-                    id: idStr,
-                    runwayId: childId
-                },
-                parentNode
-              );
-              
-              if (!hasFetched) {
-                var phantom = $thisTree.tree(
-                  'appendNode',
-                  {
-                      label: "",
-                      id: idStr + "_PHANTOM",
-                      phantom: true,
-                      runwayId: childId
-                  },
-                  node
-                );
-                node.phantomChild = phantom;
-              }
-              else {
-                node.hasFetched = true;
+                idStr = Mojo.Util.generateId();
+                that.duplicateMap[termId].push(idStr);
               }
               
-              $thisTree.tree("openNode", parentNode);
+              var treeNode = {text: that._getTermDisplayLabel(term), id: idStr, data: termId, state: {opened: false}, children: true};
+              json.push(treeNode);
             }
             
-            return node;
+            // This code is to fix a bug in jstree.
+            var parentId = null;
+            if (json.length == 0 && parentTermId != this.rootTermId) {
+              parentId = that.getParentId(that.getImpl().jstree("get_node", parentTermId));
+              json = {id: parentTermId, data: parentTermId, text: that._getTermDisplayLabel(parentTerm), state:{opened: true}, children: false};
+            }
+            
+            jsTreeCallback.call(this, json);
+            
+            // This code is to fix a bug in jstree.
+            if (parentId != null && parentTermId != this.rootTermId) {
+              var node = $tree.jstree("get_node", parentTermId);
+              node.parent = parentId;
+              node.parents = [parentId];
+              node.children = [];
+              node.children_d = [];
+            }
           },
+          
           onFailure : function(err) {
+            // TODO : Exception handling
             that.handleException(err);
             return;
           }
         });
+        
+        
+        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: parentTermId, pageNum: 0, pageSize: 0}, callback);
       },
       
-      __getRunwayIdFromNode : function(node) {
-        if (node.parent == null) {
-          // We were passed the root node. Since we didn't create the root node (jqtree did) we can't set an id on it.
-          return this.rootTermId;
-        }
-        
-        return node.runwayId;
+      getImpl : function() {
+        return this._impl;
       },
       
       render : function(parent) {
@@ -835,74 +1078,49 @@
         
         this.$render(parent);
         
-        // Create the jqTree
-        var $tree = $(this.getRawEl()).tree(this._config);
+        // Create jsTree
+        this._impl = $(this.getRawEl()).jstree({
+          "plugins" : ["dnd", "crrm", "ui" ],
+          "core" : {
+            data : Mojo.Util.bind(this, this.__treeWantsData),
+            check_callback: true,
+            "load_open" : true,
+            "themes" : { "icons": false }
+          }
+        });
         
-        this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick)
+        this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
         
-        $tree.bind(
-            'tree.open',
-            Mojo.Util.bind(this, this.__onNodeOpen)
-        );
-        $tree.bind(
-            'tree.move',
-            Mojo.Util.bind(this, this.__onNodeMove)
-        );
-        $tree.bind(
-            'tree.contextmenu',
-            function(event) {
-              that._boundedRightClick(event);
-              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+        this._impl.on(
+            'select_node.jstree',
+            function(event, object) {
+//              alert("it worked");
+              that._boundedRightClick(event, object);
+              
+//              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
             }
         );
-        $tree.bind(
-          'tree.click',
-          function(event) {
-            that._boundedRightClick(event);
-            event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
-          }
+        this._impl.on(
+            'move_node.jstree',
+            Mojo.Util.bind(this, this.__onNodeMove)
         );
+//        $tree.bind(
+//            'tree.contextmenu',
+//            function(event) {
+//              that._boundedRightClick(event);
+//              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+//            }
+//        );
+//        $tree.bind(
+//          'tree.click',
+//          function(event) {
+//            that._boundedRightClick(event);
+//            event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+//          }
+//        );
         
-        this.refreshTerm(this.rootTermId);
-      },
-      
-      /**
-       * Returns the relationships that the term has with its parent. The relationships may be cached and the method may return
-       * synchronously. The cache may or may not contain all relationships the term has with its parent.
-       * 
-       * @param com.runwaysdk.business.TermDTO or String (Id) term The term to remove from the tree.
-       * @param Object callback A callback object with onSuccess and onFailure methods.
-       * @returns com.runwaysdk.business.TermRelationship[] The relationships.
-       */
-  //    getRelationshipsWithParent : function(term, callback) {
-  //      this.__assertPrereqs();
-  //      this.requireParameter("term", term);
-  //      this.requireParameter("callback", callback);
-  //      
-  //      var termId = (term instanceof Object) ? term.getId() : term;
-  //      
-  //      var that = this;
-  //      
-  //      var hisCallback = callback;
-  //      var myCallback = {
-  //        onSuccess : function(relationships) {
-  //          hisCallback(relationships);
-  //        },
-  //        
-  //        onFailure : function(err) {
-  //          hisCallback.onFailure(err);
-  //          return;
-  //        }
-  //      };
-  //      Mojo.Util.copy(new Mojo.ClientRequest(myCallback), myCallback);
-  //      
-  //      if (this.parentRelationshipCache[termId] != null && this.parentRelationshipCache != undefined) {
-  //        myCallback.onSuccess([this.parentRelationshipCache[termId]]);
-  //      }
-  //      else {
-  //        com.runwaysdk.Facade.getParentRelationships(myCallback, termId, relationshipType);
-  //      }
-  //    },
+//        this.refreshTerm(this.rootTermId);
+      }
     }
   });
   

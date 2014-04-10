@@ -61,22 +61,7 @@
     
     // When we refactor the Job metadata from flags into a status enum these will be removed.
     "stopped" : "Stopped",
-    "status" : "Status",
-    "sSortAscending" : ": activate to sort column ascending",
-    "sSortDescending" : ": activate to sort column descending",
-    "sFirst" : "First",
-    "sLast" : "Last",
-    "sNext" : "Next",
-    "sPrevious" : "Previous",
-    "sEmptyTable" : "No data available in table",
-    "sInfo" : "Showing _START_ to _END_ of _TOTAL_ entries",
-    "sInfoEmpty" : "Showing 0 to 0 of 0 entries",
-    "sInfoFiltered" : "(filtered from _MAX_ total entries)",
-    "sLengthMenu" : "Show _MENU_ entries",
-    "sLoadingRecords" : "Loading...",
-    "sProcessing" : "Processing...",
-    "sSearch" : "Search:",
-    "sZeroRecords" : "No matching records found"    
+    "status" : "Status"
   });
   
   com.runwaysdk.Localize.defineLanguage(jobHistoryTableName, {
@@ -223,9 +208,7 @@
       },
       
       _openEditMenu : function(row, job) {
-        var jobMetadata = this._table.getDataSource().getMetadataQueryDTO();
-        
-        var dialog = this.getFactory().newDialog(this.localize("editJobTitle"), {width: "500px"});
+        var dialog = this.getFactory().newDialog(this.localize("editJobTitle"), {minWidth:730});
         
         row.addClassName("row_selected");
         dialog.addDestroyEventListener(function() {
@@ -240,7 +223,7 @@
           descriptionInput.setValue(job.getDescription().getLocalizedValue());
           form.addFormEntry(job.getDescriptionMd(), descriptionInput);          
         }
-        else if(this._user.isFirstNameReadable())
+        else if(job.isDescriptionReadable())
         {
           var label = job.getDescriptionMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('description', label, job ? job.getLocalizedValue() : "");
@@ -249,10 +232,10 @@
         
         if(job.isCronExpressionWritable())
         {
-          var cronInput = new com.runwaysdk.geodashboard.CronInput("cron");
-          cronInput.setValue(job.getCronExpression());
+//          var cronInput = new com.runwaysdk.geodashboard.CronInput("cron");
+//          cronInput.setValue(job.getCronExpression());
           
-          form.addEntry(new com.runwaysdk.geodashboard.FormEntry(this.localize("scheduledRun"), cronInput));
+          form.addEntry(new com.runwaysdk.geodashboard.CronEntry("cron"));
         }
         
         dialog.appendContent(form);
@@ -295,6 +278,10 @@
         dialog.addButton(that.localize("submit"), handleSubmit, null, {class:'btn btn-primary'});
         dialog.addButton(that.localize("cancel"), handleCancel, null, {class:'btn'});                        
         dialog.render();
+        
+        if (jcf != null && jcf.customForms != null) {
+          jcf.customForms.replaceAll();
+        }
             
         return false;
       },
@@ -491,27 +478,6 @@
         this._config.dataSource = ds;
         this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
         // Localize the datatable widget
-        this._config.oLanguage = {
-          oAria: {
-            sSortAscending: this.localize("sSortAscending"),
-            sSortDescending: this.localize("sSortDescending")
-          },
-          oPaginate: {
-            sFirst: this.localize("sFirst"),
-            sLast: this.localize("sLast"),
-            sNext: this.localize("sNext"),
-            sPrevious: this.localize("sPrevious")
-          },
-          sEmptyTable: this.localize("sEmptyTable"),
-          sInfo: this.localize("sInfo"),
-          sInfoEmpty: this.localize("sInfoEmpty"),
-          sInfoFiltered: this.localize("sInfoFiltered"),
-          sLengthMenu: this.localize("sLengthMenu"),
-          sLoadingRecords: this.localize("sLoadingRecords"),
-          sProcessing: this.localize("sProcessing"),
-          sSearch: this.localize("sSearch"),
-          sZeroRecords: this.localize("sZeroRecords")
-        };        
         
         this._table = this.getFactory().newDataTable(this._config);
         this._table.render(parent);

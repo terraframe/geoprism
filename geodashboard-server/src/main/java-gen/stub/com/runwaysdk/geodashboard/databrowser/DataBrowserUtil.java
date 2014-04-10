@@ -11,11 +11,11 @@ public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysd
     super();
   }
   
-  public static com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery getTypes(String queryPackage)
+  public static com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery getTypes(String[] packages, String[] types)
   {
     QueryFactory f = new QueryFactory();
     
-    MetadataTypeQuery query = new MetadataTypeQuery(f, queryPackage);
+    MetadataTypeQuery query = new MetadataTypeQuery(f, packages, types);
     
     return query;
   }
