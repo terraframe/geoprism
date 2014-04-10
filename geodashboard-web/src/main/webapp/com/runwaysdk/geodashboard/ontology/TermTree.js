@@ -272,18 +272,12 @@
 //          
 //        }
         
-        for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree(
-            'removeNode',
-            nodes[i]
-          );
-        }
+        $thisTree.jstree(
+          'delete_node',
+          nodes
+        );
         
         delete this.termCache[termId];
-        
-        if (this._config.checkable) {
-          jcf.customForms.replaceAll();
-        }
       },
       
       /**
@@ -334,7 +328,8 @@
           viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
           action: "create",
           actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
-          onSuccess : function(termAndRel) {
+          onSuccess : function(responseObj) {
+            var termAndRel = that.__responseToTNR(responseObj);
             var term = termAndRel.getTerm();
             var relId = termAndRel.getRelationshipId();
             var relType = termAndRel.getRelationshipType();
@@ -342,11 +337,14 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
-            var $thisTree = that.getImpl();
+            var $tree = that.getImpl();
             for (var i = 0; i < parentNodes.length; ++i) {
-              var node = that.__createTreeNode(term.getId(), parentNodes[i], true);
-              
-//              $thisTree.tree("openNode", node);
+              if ($tree.jstree("is_loaded", parentNodes[0])) {
+                that.__createTreeNode(term.getId(), parentNodes[i], true);
+              }
+              else {
+                $tree.jstree("open_node", parentNodes[0]);
+              }
             }
           },
           onFailure : function(e) {
@@ -400,7 +398,8 @@
           viewParams: {parentId: parentId, relationshipType: ""},
           action: "update",
           id: termId,
-          onSuccess : function(term) {
+          onSuccess : function(responseObj) {
+            var term = that.__responseToTerm(responseObj);
             that.termCache[term.getId()] = term;
             
             var nodes = that.__getNodesById(term.getId());
@@ -520,6 +519,7 @@
         var $tree = this.getImpl();
         
         var node = object.node;
+        var term = this.termCache[this.getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -531,12 +531,12 @@
         var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
         
-//        if (e.node.termBusy) {
-//          create.setEnabled(false);
-//          update.setEnabled(false);
-//          del.setEnabled(false);
-//          refresh.setEnabled(false);
-//        }
+        if (term.isBusy) {
+          create.setEnabled(false);
+          update.setEnabled(false);
+          del.setEnabled(false);
+          refresh.setEnabled(false);
+        }
         
         this._cm.render();
         
@@ -662,7 +662,7 @@
         var children = this.getChildren(newParent).sort(function(a,b){
           var nodeA = $tree.jstree("get_node", a);
           var nodeB = $tree.jstree("get_node", b);
-          return nodeA.text.localeCompare(nodeB);
+          return nodeA.text.localeCompare(nodeB.text);
         });
         for (var i = 0; i < children.length; ++i) {
           if (children[i].text.localeCompare(label) > 0) {
@@ -987,6 +987,15 @@
         throw new com.runwaysdk.Exception();
       },
       
+      // Subclasses of TermTree can override this if they're returning a view. (Like GeoEntity). Just convert the view to a TNR.
+      __responseToTNR : function(responseObj) {
+        return responseObj;
+      },
+      
+      __responseToTerm : function(responseObj) {
+        return responseObj;
+      },
+      
       __treeWantsData : function(parent, jsTreeCallback) {
         var that = this;
         
@@ -996,7 +1005,11 @@
         var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
-            var termAndRels = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            var termAndRels = [];
+            for (var i = 0; i < objArray.length; ++i) {
+              termAndRels.push(that.__responseToTNR(objArray[i]));
+            }
             var $tree = that.getImpl();
             
             // Create a json object representing our TermAndRel to pass to jstree.
