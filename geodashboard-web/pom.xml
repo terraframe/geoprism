@@ -45,13 +45,6 @@
 			<version>2.1</version>
 			<scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
 		</dependency>
-		<dependency>
-      		<groupId>org.geoserver</groupId>
-      		<artifactId>geoserver</artifactId>
-      		<version>${geoserver.version}</version>
-      		<type>war</type>
-      		<scope>provided</scope>
-    	</dependency>
 	</dependencies>
 
 	<profiles>
@@ -93,13 +86,13 @@
 							<configuration>
 								<properties>
 									<cargo.servlet.port>8443</cargo.servlet.port>
-									<cargo.protocol>http</cargo.protocol>
+									<cargo.protocol>https</cargo.protocol>
 									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
 									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
 									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
 									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
 									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
-									<cargo.tomcat.httpSecure>false</cargo.tomcat.httpSecure>
+									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
@@ -117,14 +110,6 @@
 									  <context>geodashboard</context>
 									</properties>
 								</deployable>
-								<deployable>
-									<groupId>org.geoserver</groupId>
-									<artifactId>geoserver</artifactId>
-									<type>war</type>
-									<properties>
-									  <context>geoserver</context>
-									</properties>
-								</deployable>								
 							</deployables>							
 						</configuration>
 					</plugin>

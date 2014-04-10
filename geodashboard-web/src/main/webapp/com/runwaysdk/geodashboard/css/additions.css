@@ -28,7 +28,8 @@ div.pageContent {
 div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
 	margin: 1px;
 	margin-right: 8px;
-	float: left;
+	display: table-cell;
+	padding-right: 5px;
 }
 div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
   border-color:#02789e;

@@ -19,16 +19,23 @@
 
 --%>
 
-<%@page import="java.util.List" %>
-<%@page import="com.runwaysdk.web.WebClientSession" %>
-<%@page import="com.runwaysdk.constants.ClientConstants" %>
-<%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider" %>
-<%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem" %>
-<%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter" %>
+<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+<%@page
+	import="com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO"%>
+<%@page
+	import="com.runwaysdk.geodashboard.localization.LocalizationFacade"%>
+<%@page import="java.util.List"%>
+<%@page import="com.runwaysdk.web.WebClientSession"%>
+<%@page import="com.runwaysdk.constants.ClientConstants"%>
+<%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider"%>
+<%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem"%>
+<%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter"%>
 
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
+<%@page import="com.runwaysdk.constants.DeployProperties"%>
 <%
 //   String webappRoot = request.getContextPath() + "/";
+
+  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 
   ActivePageWriter writer = new ActivePageWriter(request, out);
 %>
@@ -37,48 +44,34 @@
 <aside id="sidebar">
 	<!-- Account Info -->
 	<div class="widget">
-	  <h3><% 
+		<h3>
+			<% 
 	  try {
 	    out.print(((WebClientSession)session.getAttribute(ClientConstants.CLIENTSESSION)).getRequest().getSessionUser().getValue("username"));
 	  }
 	  catch (Throwable t) {
 	    out.print("Anonymous");
 	  }
-	  %></h3>
-	  <ul class="links-list">
-	    <% writer.writeLiA("Log out", "session/logout", true); %>
-	    <% writer.writeLiA("Account", "admin/account", false); %>
-	    <% writer.writeLiA("Dashboard Viewer", "DashboardViewer", "link-viewer", true); %>
-	  </ul>
+	  %>
+		</h3>
+		<ul class="links-list">
+			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Log_out"), "session/logout", true); %>
+			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Account"), "admin/account", false); %>
+			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Dashboard_Viewer"), "DashboardViewer", "link-viewer", true); %>
+		</ul>
 	</div>
-	<!-- Dashboards -->
-	<!--
-	<div class="widget">
-	  <h3 class="marked">Manage Dashboards</h3>
-	  <ul class="links-list">
-	    <% writer.writeLiA("Annual Imunization Data", "#", false); %>
-	    <% writer.writeLiA("Q4 Sales Engagement", "q4sales", false); %>
-	    <li><a data-toggle="collapse" href="#collapse3">New Dashboard <span class="hidden">collapse3</span></a>
-	      <ul id="collapse3" class="panel-collapse collapse">
-	        <% writer.writeLiA("Q4 Sales Leads", "#", false); %>
-	        <% writer.writeLiA("Regional Marketing Programs", "#", false); %>
-	        <% writer.writeLiA("New Dashboard", "#", false); %>
-	      </ul>
-	    </li>
-	  </ul>
-	</div>
-	-->
 	<!-- Generated from MenuItems List -->
 	<nav class="aside-nav">
-    <ul>
-      <% 
+		<ul>
+			<% 
       List<MenuItem> items = new XMLMenuProvider().getMenu();
       
       int num = 100;
       
       for (MenuItem item : items) {
         if (item.hasChildren()) {
-          out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + item.getName() + "</a>");
+          String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
+          out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
           out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
           
           if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
@@ -93,7 +86,8 @@
           
           List<MenuItem> children = item.getChildren();
           for (MenuItem child : children) {
-            writer.writeLiA(child.getName(), child.getURL(), false);
+            String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
+            writer.writeLiA(childName, child.getURL(), false);
           }
           
           out.print("</ul>");
@@ -102,80 +96,84 @@
           
         }
         else {
-          writer.writeLiA(item.getName(), item.getURL(), false);
+          String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+          writer.writeLiA(menuName, item.getURL(), false);
         }
         
         num++;
       }
       %>
-    </ul>
-  </nav>
-  
-  <!-- element with tooltip -->
-  <a class="btn-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="New map layer" href="#">tooltip</a>
+		</ul>
+	</nav>
+
+	<!-- element with tooltip -->
+	<a class="btn-tooltip" data-placement="top" data-toggle="tooltip"
+		data-original-title="New map layer" href="#">tooltip</a>
 </aside>
 <!-- END Generated Bootstrap Sidebar Menu END -->
 
 
 <script type="text/javascript">
+	function activateLinks(clickedLink) {
 
-function activateLinks(clickedLink){
-	
-  // deactivate any active links to start fresh	
-  clearLinks();
-  
-  if(clickedLink.hasClass("gdb-links-expander")){	
-    if(clickedLink.next(".gdb-link-container") && window.location.hash){
-      $(".gdb-link-container a").each(function(){
-    	if($(this).attr("href") === window.location.pathname + window.location.hash){
-    	  $(this).addClass("link-active");
-    	}
-      });
-    }
-  }
-  else{
-    clickedLink.addClass("link-active");
-  }
+		// deactivate any active links to start fresh	
+		clearLinks();
 
-  var thisParentContainer = clickedLink.parents(".gdb-link-container");
-  
-  if(thisParentContainer.prev("a").hasClass("gdb-links-expander")){
-    var thisParentContainerExpander = thisParentContainer.prev("a");
-  }
+		if (clickedLink.hasClass("gdb-links-expander")) {
+			if (clickedLink.next(".gdb-link-container") && window.location.hash) {
+				$(".gdb-link-container a")
+						.each(
+								function() {
+									if ($(this).attr("href") === window.location.pathname
+											+ window.location.hash) {
+										$(this).addClass("link-active");
+									}
+								});
+			}
+		} else {
+			clickedLink.addClass("link-active");
+		}
 
-  if(thisParentContainer){    	
-    // expand the dropdown if not expanded already
-    if(!thisParentContainer.hasClass("in")){			      
-      thisParentContainer.addClass("in");
-    }
-  }
-}
+		var thisParentContainer = clickedLink.parents(".gdb-link-container");
 
-function clearLinks(){
-  $("a.link-active").each(function(){
-    $(this).removeClass("link-active");	
-  });  
-}
+		if (thisParentContainer.prev("a").hasClass("gdb-links-expander")) {
+			var thisParentContainerExpander = thisParentContainer.prev("a");
+		}
 
-function activateLinksOnLoad(){
-  // check for hash because only the home page has no hash
-  // if hash exists set the active link relative to the current
-  if(window.location.hash){
-    $("a").each(function(){
-  	  if($(this).attr("href") === window.location.pathname + window.location.hash){
-  	    activateLinks($(this));
-  	  }
-    });
-  }
-}
+		if (thisParentContainer) {
+			// expand the dropdown if not expanded already
+			if (!thisParentContainer.hasClass("in")) {
+				thisParentContainer.addClass("in");
+			}
+		}
+	}
 
-activateLinksOnLoad();
+	function clearLinks() {
+		$("a.link-active").each(function() {
+			$(this).removeClass("link-active");
+		});
+	}
 
-// Keep the element styled like the hover when dropdown is expanded
-$("a").click(function(){ 
-  activateLinks($(this));	  
-});
-  
+	function activateLinksOnLoad() {
+		// check for hash because only the home page has no hash
+		// if hash exists set the active link relative to the current
+		if (window.location.hash) {
+			$("a").each(
+					function() {
+						if ($(this).attr("href") === window.location.pathname
+								+ window.location.hash) {
+							activateLinks($(this));
+						}
+					});
+		}
+	}
+
+	activateLinksOnLoad();
+
+	// Keep the element styled like the hover when dropdown is expanded
+	$("a").click(function() {
+		activateLinks($(this));
+	});
 </script>
 
 
