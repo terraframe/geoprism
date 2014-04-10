@@ -23,11 +23,11 @@
 
 	<property name="projectName" value="geodashboard" />	
 	<property name="project.webapp.root" value="${basedir}/src/main/webapp" />
-	<property name="runway.webapp.root" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web"></property>
 
+      <property name="runway.webapp.root" value="/Users/justin/Documents/workspace/runway-sdk/runwaysdk-web"></property>
 	<!--
+	<property name="runway.webapp.root" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web"></property>
 	  richard <property name="runway.webapp.root" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web"></property>
-    naifeh  <property name="runway.webapp.root" value="/Users/justin/Documents/workspace/runway-sdk/runwaysdk-web"></property>
     smethie <property name="runway.webapp.root" value="/home/jsmethie/git/Runway-SDK/runwaysdk-web"></property>
 	-->
 
