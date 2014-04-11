@@ -99,7 +99,7 @@
         
         // jqtree assumes that id's are unique. For our purposes the id may map to multiple nodes.
         // This map maps the runwayId = [ generatedId's ]
-        this.duplicateMap = {};
+        this.duplicateMap = new com.runwaysdk.structure.HashMap();
         this.genToRunway = {}; // Maps key = generatedId, value = runwayId
         
         this.parentRelationshipCache = new ParentRelationshipCache();
@@ -337,15 +337,18 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
-            var $tree = that.getImpl();
-            for (var i = 0; i < parentNodes.length; ++i) {
-              if ($tree.jstree("is_loaded", parentNodes[0])) {
-                that.__createTreeNode(term.getId(), parentNodes[i], true);
-              }
-              else {
-                $tree.jstree("open_node", parentNodes[0]);
-              }
-            }
+//            var $tree = that.getImpl();
+//            for (var i = 0; i < parentNodes.length; ++i) {
+//              var node = parentNodes[i];
+//              if ($tree.jstree("is_loaded", node)) {
+//                that.__createTreeNode(term.getId(), node, true);
+//              }
+//              else {
+//                $tree.jstree("load_node", node);
+//                $tree.jstree("open_node", node);
+//              }
+//            }
+            that.refreshTerm(parentId);
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -389,7 +392,6 @@
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
         var that = this;
-//        var parentId = this.__getRunwayIdFromNode(node.parent);
         var parentId = this.getParentRunwayId(node);
         var $tree = this.getImpl();
         
@@ -519,7 +521,7 @@
         var $tree = this.getImpl();
         
         var node = object.node;
-        var term = this.termCache[this.getRunwayIdFromNode(node)];
+        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -659,11 +661,15 @@
         var index = 0;
         var $tree = this.getImpl();
         
-        var children = this.getChildren(newParent).sort(function(a,b){
-          var nodeA = $tree.jstree("get_node", a);
-          var nodeB = $tree.jstree("get_node", b);
-          return nodeA.text.localeCompare(nodeB.text);
-        });
+        var children = this.getChildren(newParent);
+        
+//        children.sort(function(a,b){
+//          var nodeA = $tree.jstree("get_node", a);
+//          var nodeB = $tree.jstree("get_node", b);
+//          return nodeA.text.localeCompare(nodeB.text);
+//        });
+        
+        
         for (var i = 0; i < children.length; ++i) {
           if (children[i].text.localeCompare(label) > 0) {
             break;
@@ -709,10 +715,11 @@
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
               // Remove nodes from old relationship.
-              var nodes = that.__getNodesById(movedNodeId);
+//              var nodes = that.__getNodesById(movedNodeId); // We actually don't want to delete copies here, only move the node we've selected.
               $thisTree.jstree(
                 'delete_node',
-                nodes
+//                nodes
+                movedNode
               );
               
               // Create nodes that represent the new relationship
@@ -809,24 +816,6 @@
           if (!$tree.jstree("is_open", nodeArray[0])) {
             $tree.jstree("open_node", nodeArray[0]);
           }
-          
-          // Refresh copies
-          for (var i = 1; i < nodeArray.length; ++i) {
-            // Drop all old children
-            var children = that.getChildren(nodeArray[i]);
-            $tree.jstree(
-              'delete_node',
-              children
-            );
-            
-            // Add the ones we just loaded
-            var newChildren = that.getChildren(nodeArray[0]);
-            for (var j = 0; j < newChildren.length; ++j) {
-              that.__createTreeNode(that.__getRunwayIdFromNode(newChildren[j]), nodeArray[i], true);
-            }
-            
-            console.log($tree.jstree("get_node", nodeArray[i]));
-          }
         });
       },
       
@@ -875,13 +864,13 @@
        */
       __getNodesById : function(runwayId) {
         if (runwayId === this.rootTermId) {
-          return [null];
+          return ["#"];
         }
         
         var $tree = this.getImpl();
         
-        if (this.duplicateMap[runwayId] != null) {
-          var duplicates = this.duplicateMap[runwayId];
+        if (this.duplicateMap.get(runwayId) != null) {
+          var duplicates = this.duplicateMap.get(runwayId);
           var nodes = [];
           
           for (var i = 0; i < duplicates.length; ++i) {
@@ -924,7 +913,7 @@
       /**
        * Retrieves the term with id termId from the termCache and then creates its representation in the tree.
        */
-      __createTreeNode : function(termId, parentNode, hasFetched) {
+      __createTreeNode : function(termId, parentNode, isNodeClosed) {
         var that = this;
         
         var term = this.termCache[termId];
@@ -933,16 +922,16 @@
         }
         
         var $thisTree = that.getImpl();
-          
+        
         var duplicateTerm = $thisTree.jstree("get_node", termId, false);
         
         var idStr = termId;
         if (duplicateTerm != null && duplicateTerm != false) {
-          if (that.duplicateMap[termId] == null) {
-            that.duplicateMap[termId] = [termId];
+          if (that.duplicateMap.get(termId) == null) {
+            that.duplicateMap.put(termId, [termId]);
           }
           idStr = Mojo.Util.generateId();
-          that.duplicateMap[termId].push(idStr);
+          that.duplicateMap.get(termId).push(idStr);
         }
         this.genToRunway[idStr] = termId;
         
@@ -952,11 +941,15 @@
           parentNode = $thisTree.jstree("get_node", "#");
         }
         
+        var nodeState = "open";
+        var nodeChildren = false;
+        if (isNodeClosed) { state = "closed"; nodeChildren = true; }
+        
         var node = null;
         node = $thisTree.jstree(
           'create_node',
           parentNode,
-          { state: "open", children: false, text: displayLabel, id: idStr, data: termId },
+          { state: nodeState, children: nodeChildren, text: displayLabel, id: idStr, data: termId },
           this.__findInsertIndex(displayLabel, parentNode),
           false, false
         );
@@ -970,7 +963,11 @@
         var domChildren = $tree.jstree("get_children_dom", nodeId);
         var len = domChildren.length;
         for (var i = 0; i < len; ++i) {
-          nodeChildren.push($tree.jstree("get_node", domChildren[i]));
+          var node = $tree.jstree("get_node", domChildren[i]);
+          
+          if (node != null && node != false) {
+            nodeChildren.push(node);
+          }
         }
         return nodeChildren;
       },
@@ -997,10 +994,17 @@
       },
       
       __treeWantsData : function(parent, jsTreeCallback) {
+        if (this.ignoreDuplicateRequest) { jsTreeCallback.call(this, []); }
+        
         var that = this;
         
+        var parentNodeId = parent.id;
         var parentTermId = this.__getRunwayIdFromNode(parent);
         var parentTerm = this.termCache[parentTermId];
+        
+        if (parentNodeId != "#") {
+          console.log(this.duplicateMap.values());
+        }
         
         var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
@@ -1027,33 +1031,67 @@
               var duplicateTerm = $tree.jstree("get_node", termId, false);
               var idStr = termId;
               if (duplicateTerm != null && duplicateTerm != false) {
-                if (that.duplicateMap[termId] == null) {
-                  that.duplicateMap[termId] = [termId];
+                if (that.duplicateMap.get(termId) == null) {
+                  that.duplicateMap.put(termId, [termId]);
                 }
                 idStr = Mojo.Util.generateId();
-                that.duplicateMap[termId].push(idStr);
+                that.duplicateMap.get(termId).push(idStr);
               }
               
               var treeNode = {text: that._getTermDisplayLabel(term), id: idStr, data: termId, state: {opened: false}, children: true};
               json.push(treeNode);
             }
             
-            // This code is to fix a bug in jstree.
-            var parentId = null;
-            if (json.length == 0 && parentTermId != this.rootTermId) {
-              parentId = that.getParentId(that.getImpl().jstree("get_node", parentTermId));
-              json = {id: parentTermId, data: parentTermId, text: that._getTermDisplayLabel(parentTerm), state:{opened: true}, children: false};
-            }
-            
             jsTreeCallback.call(this, json);
             
+            // If there is a copy of this term on the tree repopulate the copy with its latest children.
+            if (parentTermId !== that.rootTermId) {
+              that.ignoreDuplicateRequest = true;
+              var nodeArray = that.__getNodesById(parentTermId);
+              for (var i = 0; i < nodeArray.length; ++i) {
+                if (nodeArray[i].id != parent.id) {
+                  if (!$tree.jstree("is_open", nodeArray[i])) {
+                    $tree.jstree("open_node", nodeArray[i]);
+                  }
+                  
+                  var children = that.getChildren(nodeArray[i]);
+                  for (var chili = 0; chili < children.length; chili++) {
+                    var duplicates = that.duplicateMap.get(that.__getRunwayIdFromNode(children[chili]));
+                    for (var dupi = 0; dupi < duplicates.length; ++dupi) {
+                      if (duplicates[dupi] === children[chili].id) {
+                        delete duplicates[dupi];
+                      }
+                    }
+                  }
+                  $tree.jstree(
+                    'delete_node',
+                    children
+                  );
+                  
+                  // Add the ones we just loaded
+                  var newChildren = that.getChildren(parent);
+                  for (var j = 0; j < newChildren.length; ++j) {
+                    that.__createTreeNode(that.__getRunwayIdFromNode(newChildren[j]), nodeArray[i], true);
+                  }
+                  
+                  if (!$tree.jstree("is_open", nodeArray[i])) {
+                    $tree.jstree("open_node", nodeArray[i]);
+                  }
+                }
+              }
+              that.ignoreDuplicateRequest = false;
+            }
+            
             // This code is to fix a bug in jstree.
-            if (parentId != null && parentTermId != this.rootTermId) {
-              var node = $tree.jstree("get_node", parentTermId);
+            if (json.length === 0) {
+              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
+              
+              var node = $tree.jstree("get_node", parentNodeId);
               node.parent = parentId;
               node.parents = [parentId];
               node.children = [];
               node.children_d = [];
+              $tree.jstree("redraw_node", parentNodeId, false);
             }
           },
           
@@ -1094,32 +1132,13 @@
         this._impl.on(
             'select_node.jstree',
             function(event, object) {
-//              alert("it worked");
               that._boundedRightClick(event, object);
-              
-//              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
             }
         );
         this._impl.on(
             'move_node.jstree',
             Mojo.Util.bind(this, this.__onNodeMove)
         );
-//        $tree.bind(
-//            'tree.contextmenu',
-//            function(event) {
-//              that._boundedRightClick(event);
-//              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
-//            }
-//        );
-//        $tree.bind(
-//          'tree.click',
-//          function(event) {
-//            that._boundedRightClick(event);
-//            event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
-//          }
-//        );
-        
-//        this.refreshTerm(this.rootTermId);
       }
     }
   });
@@ -1173,30 +1192,6 @@
        */
       dump : function() {
         this.cache = {};
-      },
-      
-      /**
-       * Removes all parents in the cache for the given term id.
-       */
-      removeAll : function(termId) {
-        this.cache[termId] = [];
-        
-        // Remove all children
-//        for (var childId in this.cache) {
-//          if (this.cache.hasOwnProperty(childId)) {
-//            var records = this.cache[childId];
-//            
-//            for (var i = 0; i < records.length; ++i) {
-//              if (records[i].parentId === termId) {
-//                records[i].splice(i, 1);
-//              }
-//            }
-//            
-//            if (records.length === 0) {
-//              delete this.cache[childId];
-//            }
-//          }
-//        }
       },
       
       /**
