@@ -7,6 +7,7 @@ import com.runwaysdk.session.Request;
 
 public class BundleTest
 {
+ 
   @Test
   @Request
   public void testGetFromDefault()
