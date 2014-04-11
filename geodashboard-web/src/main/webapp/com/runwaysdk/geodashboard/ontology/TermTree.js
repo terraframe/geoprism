@@ -812,6 +812,20 @@
         
         var nodeArray = this.__getNodesById(termId);
         
+        // Sigh... this code is another example of me fixing shitty bugs in jstree
+        var children = this.getChildren(nodeArray[0]);
+//        var childIds = [];
+//        for (var i = 0; i < children.length; ++i) {
+//          childIds.push(children[i].id);
+//        }
+//        nodeArray[0].children = childIds;
+//        nodeArray[0].children_d = childIds;
+//        console.log(childIds);
+        
+        console.log("refresh " + nodeArray[0].id);
+        console.log(nodeArray[0].children);
+        console.log(nodeArray[0].children_d);
+        
         $tree.jstree("load_node", nodeArray[0], function(){
           if (!$tree.jstree("is_open", nodeArray[0])) {
             $tree.jstree("open_node", nodeArray[0]);
@@ -923,17 +937,7 @@
         
         var $thisTree = that.getImpl();
         
-        var duplicateTerm = $thisTree.jstree("get_node", termId, false);
-        
-        var idStr = termId;
-        if (duplicateTerm != null && duplicateTerm != false) {
-          if (that.duplicateMap.get(termId) == null) {
-            that.duplicateMap.put(termId, [termId]);
-          }
-          idStr = Mojo.Util.generateId();
-          that.duplicateMap.get(termId).push(idStr);
-        }
-        this.genToRunway[idStr] = termId;
+        var idStr = that.__getUniqueIdForTerm(termId);
         
         var displayLabel = that._getTermDisplayLabel(term);
         
@@ -993,18 +997,53 @@
         return responseObj;
       },
       
-      __treeWantsData : function(parent, jsTreeCallback) {
-        if (this.ignoreDuplicateRequest) { jsTreeCallback.call(this, []); }
+      __getUniqueIdForTerm : function(termId) {
+        var $tree = this.getImpl();
+        var duplicateTerm = $tree.jstree("get_node", termId, false);
+        var duplicates = this.duplicateMap.get(termId);
+        var idStr = termId;
+        if ( (duplicateTerm != null && duplicateTerm != false) || duplicates != null ) {
+          if (duplicates == null) {
+            this.duplicateMap.put(termId, [termId]);
+          }
+          idStr = Mojo.Util.generateId();
+          this.duplicateMap.get(termId).push(idStr);
+        }
+        this.genToRunway[idStr] = termId;
         
+        return idStr;
+      },
+      
+      /**
+       * Fixes jsTree's broken/buggy recursive children structure which exists on all nodes and doesn't get updated properly.
+       * 
+       * @param node Must be the root tree node.
+       * @param children_deep Do not provide this internal parameter used only for recursive calls.
+       */
+//      __fixNodeChildren : function(node, children_deep) {
+//        children_deep = children_deep || [];
+//        var $tree = this.getImpl();
+//        
+//        var children_shallow = [];
+//        var children = this.getChildren(node);
+//        for (var i = 0; i < children.length; ++i) {
+//          children_deep.push(children[i].id);
+//          var childDeep = [];
+//          this.__fixNodeChildren($tree.jstree("get_node", children[i]), childDeep);
+//          children_deep = children_deep.concat(childDeep);
+//          children_shallow.push(children[i].id);
+//        }
+//        
+//        node.children = children_shallow;
+//        node.children_d = children_deep;
+//      },
+      
+      __treeWantsData : function(parent, jsTreeCallback) {
         var that = this;
         
         var parentNodeId = parent.id;
         var parentTermId = this.__getRunwayIdFromNode(parent);
         var parentTerm = this.termCache[parentTermId];
-        
-        if (parentNodeId != "#") {
-          console.log(this.duplicateMap.values());
-        }
         
         var callback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
@@ -1016,8 +1055,27 @@
             }
             var $tree = that.getImpl();
             
+            // Delete all existing children
+            var children = $tree.jstree("get_children_dom", parent);
+            for (var i = 0; i < children.length; ++i) {
+              var child = children[i];
+              if (child.id != "") {
+                var runwayId = that.genToRunway[child.id];
+                
+                var duplicates = that.duplicateMap.get(runwayId);
+                if (duplicates != null) {
+                  var indexOf = duplicates.indexOf(child.id);
+                  if (indexOf > -1) {
+                    duplicates.splice(indexOf, 1);
+                    delete that.genToRunway[child.id];
+                  }
+                }
+              }
+            }
+            
             // Create a json object representing our TermAndRel to pass to jstree.
             var json = [];
+            var childNodeIds = [];
             for (var i = 0; i < termAndRels.length; ++i) {
               var termId = termAndRels[i].getTerm().getId();
               
@@ -1028,65 +1086,26 @@
               that.termCache[termId] = term;
               
               // Generate a unique id for the node.
-              var duplicateTerm = $tree.jstree("get_node", termId, false);
-              var idStr = termId;
-              if (duplicateTerm != null && duplicateTerm != false) {
-                if (that.duplicateMap.get(termId) == null) {
-                  that.duplicateMap.put(termId, [termId]);
-                }
-                idStr = Mojo.Util.generateId();
-                that.duplicateMap.get(termId).push(idStr);
-              }
+              var idStr = that.__getUniqueIdForTerm(termId);
               
-              var treeNode = {text: that._getTermDisplayLabel(term), id: idStr, data: termId, state: {opened: false}, children: true};
+              var treeNode = {
+                  text: that._getTermDisplayLabel(term),
+                  id: idStr, data: termId, state: {opened: false}, children: true
+              };
               json.push(treeNode);
+              childNodeIds.push(idStr);
             }
             
             jsTreeCallback.call(this, json);
             
-            // If there is a copy of this term on the tree repopulate the copy with its latest children.
-            if (parentTermId !== that.rootTermId) {
-              that.ignoreDuplicateRequest = true;
-              var nodeArray = that.__getNodesById(parentTermId);
-              for (var i = 0; i < nodeArray.length; ++i) {
-                if (nodeArray[i].id != parent.id) {
-                  if (!$tree.jstree("is_open", nodeArray[i])) {
-                    $tree.jstree("open_node", nodeArray[i]);
-                  }
-                  
-                  var children = that.getChildren(nodeArray[i]);
-                  for (var chili = 0; chili < children.length; chili++) {
-                    var duplicates = that.duplicateMap.get(that.__getRunwayIdFromNode(children[chili]));
-                    for (var dupi = 0; dupi < duplicates.length; ++dupi) {
-                      if (duplicates[dupi] === children[chili].id) {
-                        delete duplicates[dupi];
-                      }
-                    }
-                  }
-                  $tree.jstree(
-                    'delete_node',
-                    children
-                  );
-                  
-                  // Add the ones we just loaded
-                  var newChildren = that.getChildren(parent);
-                  for (var j = 0; j < newChildren.length; ++j) {
-                    that.__createTreeNode(that.__getRunwayIdFromNode(newChildren[j]), nodeArray[i], true);
-                  }
-                  
-                  if (!$tree.jstree("is_open", nodeArray[i])) {
-                    $tree.jstree("open_node", nodeArray[i]);
-                  }
-                }
-              }
-              that.ignoreDuplicateRequest = false;
+            var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
+            if (parentId != false) {
+              var node = $tree.jstree("get_node", parentNodeId);
+              $("#"+node.id).children("i").addClass("runway-rel");
             }
             
             // This code is to fix a bug in jstree.
             if (json.length === 0) {
-              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
-              
-              var node = $tree.jstree("get_node", parentNodeId);
               node.parent = parentId;
               node.parents = [parentId];
               node.children = [];
@@ -1096,12 +1115,11 @@
           },
           
           onFailure : function(err) {
-            // TODO : Exception handling
+            jsTreeCallback.call(this, []);
             that.handleException(err);
             return;
           }
         });
-        
         
         Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: parentTermId, pageNum: 0, pageSize: 0}, callback);
       },
@@ -1123,7 +1141,10 @@
             data : Mojo.Util.bind(this, this.__treeWantsData),
             check_callback: true,
             "load_open" : true,
-            "themes" : { "icons": false }
+            "themes" : {
+              "icons": false,
+              "variant": "large"
+            }
           }
         });
         
@@ -1135,6 +1156,7 @@
               that._boundedRightClick(event, object);
             }
         );
+        
         this._impl.on(
             'move_node.jstree',
             Mojo.Util.bind(this, this.__onNodeMove)
@@ -1236,6 +1258,27 @@
         }
         
         throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      removeAll : function(termId) {
+        this.cache[termId] = [];
+        
+        // Remove all children
+//        for (var childId in this.cache) {
+//          if (this.cache.hasOwnProperty(childId)) {
+//            var records = this.cache[childId];
+//            
+//            for (var i = 0; i < records.length; ++i) {
+//              if (records[i].parentId === termId) {
+//                records[i].splice(i, 1);
+//              }
+//            }
+//            
+//            if (records.length === 0) {
+//              delete this.cache[childId];
+//            }
+//          }
+//        }
       }
     }
   });

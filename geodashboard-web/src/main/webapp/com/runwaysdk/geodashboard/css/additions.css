@@ -25,6 +25,9 @@ div.pageContent {
 /**
  * Checkbox Styles
  */
+i.jstree-icon.jstree-ocl.runway-rel.runway-rel {
+	background-color: blue;
+}
 div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
 	margin: 1px;
 	margin-right: 8px;
