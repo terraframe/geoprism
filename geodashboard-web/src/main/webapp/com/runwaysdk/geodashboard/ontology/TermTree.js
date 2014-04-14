@@ -69,10 +69,8 @@
         
         var defaultConfig = {
           el: "div",
-          data: [], // This parameter is required for jqTree, otherwise it tries to load data from a url.
-          dragAndDrop: true,
-          selectable: true,
           checkable: false,
+          
           crud: {
             create: {
               width: 730,
@@ -81,6 +79,19 @@
             update: {
               width: 730,
               height: 320
+            }
+          },
+          
+          jsTree: {
+            "plugins" : ["dnd", "crrm", "ui" ],
+            "core" : {
+              data : Mojo.Util.bind(this, this.__treeWantsData),
+              check_callback: true,
+              "load_open" : true,
+              "themes" : {
+                "icons": false
+//                "variant": "large"
+              }
             }
           }
         };
@@ -953,7 +964,7 @@
         node = $thisTree.jstree(
           'create_node',
           parentNode,
-          { state: nodeState, children: nodeChildren, text: displayLabel, id: idStr, data: termId },
+          { state: nodeState, children: nodeChildren, text: displayLabel, id: idStr, data: {runwayId: termId} },
           this.__findInsertIndex(displayLabel, parentNode),
           false, false
         );
@@ -981,8 +992,8 @@
           return this.rootTermId;
         }
         
-        if (node.data != null) {
-          return node.data;
+        if (node.data.runwayId != null) {
+          return node.data.runwayId;
         }
         
         throw new com.runwaysdk.Exception();
@@ -1075,8 +1086,8 @@
             
             // Create a json object representing our TermAndRel to pass to jstree.
             var json = [];
-            var childNodeIds = [];
             for (var i = 0; i < termAndRels.length; ++i) {
+              var tnr = termAndRels[i];
               var termId = termAndRels[i].getTerm().getId();
               
               var parentRecord = {parentId: parentTermId, relId: termAndRels[i].getRelationshipId(), relType: termAndRels[i].getRelationshipType()};
@@ -1088,24 +1099,34 @@
               // Generate a unique id for the node.
               var idStr = that.__getUniqueIdForTerm(termId);
               
+              var relType = Mojo.Util.replaceAll(tnr.getRelationshipType(), ".", "-");
+              
+              if (i > 3) {
+                relType = "com-runwaysdk-system-gis-geo-IsA";
+              }
+              
               var treeNode = {
                   text: that._getTermDisplayLabel(term),
-                  id: idStr, data: termId, state: {opened: false}, children: true
+                  id: idStr, state: {opened: false}, children: true,
+                  data: { runwayId: termId },
+                  li_attr: {'class' : relType} // Add the relationshipType to the li's class
               };
               json.push(treeNode);
-              childNodeIds.push(idStr);
             }
             
             jsTreeCallback.call(this, json);
             
-            var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
-            if (parentId != false) {
-              var node = $tree.jstree("get_node", parentNodeId);
-              $("#"+node.id).children("i").addClass("runway-rel");
-            }
+//            
+//            if (parentId != false) {
+//              
+//              $("#"+node.id).children("i").addClass("runway-rel");
+//            }
             
             // This code is to fix a bug in jstree.
             if (json.length === 0) {
+              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
+              var node = $tree.jstree("get_node", parentNodeId);
+              
               node.parent = parentId;
               node.parents = [parentId];
               node.children = [];
@@ -1135,18 +1156,7 @@
         this.$render(parent);
         
         // Create jsTree
-        this._impl = $(this.getRawEl()).jstree({
-          "plugins" : ["dnd", "crrm", "ui" ],
-          "core" : {
-            data : Mojo.Util.bind(this, this.__treeWantsData),
-            check_callback: true,
-            "load_open" : true,
-            "themes" : {
-              "icons": false,
-              "variant": "large"
-            }
-          }
-        });
+        this._impl = $(this.getRawEl()).jstree(this._config.jsTree);
         
         this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
         

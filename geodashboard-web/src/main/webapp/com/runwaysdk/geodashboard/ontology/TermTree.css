@@ -1,0 +1,59 @@
+/**
+ * Relationships
+ */
+  /* Allowed In */
+    
+  /* End Allowed In */
+  /* IsA */
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA > i,
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA > i.jstree-icon {
+      background-image: url("32px-solid.png");
+    }
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA,
+    .jstree-default li.jstree-icon.com-runwaysdk-system-gis-geo-IsA {
+      background-image: url("32px-solid.png");
+      background-position: -292px -4px;
+      background-repeat: no-repeat;
+    }
+  /* End IsA */
+  
+  .jstree-default li.jstree-node {
+    background-position: -292px -4px;
+    background-repeat: repeat-y !important;
+  }
+  
+  .jstree-default .jstree-leaf>.jstree-ocl {
+    background-position: -68px -4px !important;
+  }
+  .jstree-default li.jstree-last {
+    background: 0 0 !important;
+  }
+  .jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {
+  background: url("../../../../jstree/throbber.gif") center center no-repeat !important;
+}
+/* End Relationship */
+
+/**
+ * Checkbox
+ */
+ div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
+  margin: 1px;
+  margin-right: 8px;
+  display: table-cell;
+  padding-right: 5px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
+  border-color:#02789e;
+  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
+  border:1px solid #dbdbdb;
+  background:#f8f8f8;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
+  border:1px solid #b3b3b3;
+  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
+}
+/* End Checkbox */
