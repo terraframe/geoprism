@@ -59,20 +59,22 @@
        * Removes the term and all children terms from the caches.
        */
       __dropAll : function(termId) {
-        var $tree = this.getImpl();
         var that = this;
         var nodes = this.__getNodesById(termId);
         
         // Children of universals are appended to the root node
         // The children are repeated under the copies, so we only want to append one set of the children to the root node.
         var node = nodes[0];
-        this.doForNodeAndAllChildren(node, function(node){
-          var childId = that.__getRunwayIdFromNode(node);
+        var children = this.getChildren(node);
+        var len = children.length;
+        for (var i = 0; i < len; ++i) {
+          var child = children[i];
+          var childId = that.__getRunwayIdFromNode(child);
           
-          if (childId != termId) {
-            that.parentRelationshipCache.removeRecordMatchingId(childId, termId, that);
-          }
-        });
+          this.__dropAll(childId);
+          
+          this.parentRelationshipCache.removeRecordMatchingId(childId, termId, that);
+        }
         
         delete this.termCache[termId];
       },

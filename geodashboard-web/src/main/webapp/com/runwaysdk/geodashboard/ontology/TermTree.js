@@ -92,6 +92,14 @@
                 "icons": false
 //                "variant": "large"
               }
+            },
+            "dnd" : {
+              drop_check : function(){alert("drop check");}
+            },
+            "crrm" : {
+              "move" : {
+                "check_move" : function(){alert("drop check");}
+              }
             }
           }
         };
@@ -117,6 +125,7 @@
         
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
+        this.busyNodes = new com.runwaysdk.structure.HashSet();
       },
       
       getCheckedTerms : function(rootNode, appendArray) {
@@ -308,11 +317,12 @@
         
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function(retval) {
+            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false);});
             that.refreshTreeAfterDeleteTerm(termId);
           },
           
           onFailure : function(err) {
-            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false)});
+            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false);});
             that.handleException(err);
             return;
           }
@@ -323,7 +333,7 @@
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
       
-      createTerm : function(parentId) {
+      createTerm : function(parentId, targetNode) {
         this.requireParameter("parentId", parentId, "string");
         var that = this;
         
@@ -348,18 +358,36 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
-//            var $tree = that.getImpl();
-//            for (var i = 0; i < parentNodes.length; ++i) {
-//              var node = parentNodes[i];
-//              if ($tree.jstree("is_loaded", node)) {
-//                that.__createTreeNode(term.getId(), node, true);
-//              }
-//              else {
-//                $tree.jstree("load_node", node);
-//                $tree.jstree("open_node", node);
-//              }
-//            }
-            that.refreshTerm(parentId);
+            if (targetNode != null) {
+              var $tree = that.getImpl();
+              for (var i = 0; i < parentNodes.length; ++i) {
+                var node = parentNodes[i];
+                if ($tree.jstree("is_loaded", node)) {
+                  if (targetNode.id === node.id) {
+                    $tree.jstree("open_node", node, function(node2){
+                      return function(){
+                        that.__createTreeNode(term.getId(), node2, true);
+                        $tree.jstree("open_node", node2, false);
+                      };
+                    }(node));
+                  }
+                  else {
+                    that.__createTreeNode(term.getId(), node, true);
+                  }
+                }
+                else if (targetNode.id === node.id) {
+                  that.setNodeBusy(node, true);
+                  $tree.jstree("load_node", node);
+                  $tree.jstree("open_node", node, function(node2){
+                    return function(){ that.setNodeBusy(node2, false); };
+                  }(node));
+                }
+              }
+            }
+            else {
+              that._impl.jstree("open_node", targetNode);
+              that.refreshTerm(parentId);
+            }
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -375,16 +403,11 @@
        */
       __onContextRefreshClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
+        var that = this;
         
-//        var $tree = this.getImpl();
-//        
-//        $tree.jstree("load_node", targetNode, function(){
-//          if (!$tree.jstree("is_open", targetNode)) {
-//            $tree.jstree("open_node", targetNode);
-//          }
-//        });
-        
-        this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
+        this._impl.jstree("open_node", targetNode, function(){
+          that.refreshTerm(that.__getRunwayIdFromNode(targetNode));
+        });
       },
       
       /**
@@ -393,7 +416,7 @@
       __onContextCreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         var targetId = this.__getRunwayIdFromNode(targetNode);
-        this.createTerm(targetId);
+        this.createTerm(targetId, targetNode);
       },
       
       /**
@@ -464,9 +487,6 @@
         var performDeleteRelHandler = function() {
           var deleteRelCallback = {
             onSuccess : function() {
-              // Children of universals are appended to the root node, so refresh the root node.
-              that.refreshTerm(that.rootTermId);
-              
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
                 if (that.getParentRunwayId(nodes[i]) == parentId) {
@@ -474,6 +494,9 @@
                 }
               }
               that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
+              
+              // Children of universals are appended to the root node, so refresh the root node.
+//              that.refreshTerm(that.rootTermId);
             },
             onFailure : function(err) {
               that.handleException(err);
@@ -532,7 +555,7 @@
         var $tree = this.getImpl();
         
         var node = object.node;
-        var term = this.termCache[this.__getRunwayIdFromNode(node)];
+//        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -544,7 +567,7 @@
         var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
         
-        if (term.isBusy) {
+        if (this.busyNodes.contains(node.id)) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
@@ -591,6 +614,16 @@
       },
       
       setNodeBusy : function(node, bool) {
+        
+        if (node === "#") { return; }
+        
+        if (bool) {
+          this.busyNodes.add(node.id);
+        }
+        else {
+          this.busyNodes.remove(node.id);
+        }
+        
 //        if (node.parent == null) {
 //          if (bool) {
 //            this._busydiv = this.getFactory().newElement("div");
@@ -693,11 +726,25 @@
         return index;
       },
       
+      __copyNodeToParent : function(node, parent) {
+        var that = this;
+        
+        this.__createTreeNode(this.__getRunwayIdFromNode(node), parent, false, function(newCopiedNode){
+          var children = that.getChildren(node);
+          var len = children.length;
+          for (var i = 0; i < len; ++i) {
+            that.__copyNodeToParent(children[i], newCopiedNode);
+          }
+        }, true);
+        
+        this._impl.jstree("open_node", parent);
+      },
+      
       /**
        * is binded to jqtree's node move event.s
        */
       __onNodeMove : function(jqEvent, treeEvent) {
-        if (this._isMoving) { return; }
+        if (this._isMoving || this._isMoving2) { return; }
         
         var $thisTree = this.getImpl();
         var movedNode = treeEvent.node;
@@ -716,6 +763,9 @@
         $thisTree.jstree("move_node", movedNode, previousParent, index, false, true);
         this._isMoving = false;
         
+        if (this.busyNodes.contains(movedNode)) {
+          return false;
+        }
         
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
@@ -725,19 +775,27 @@
               that.parentRelationshipCache.removeRecordMatchingId(movedNodeId, previousParentId, that);
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
+              that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
+              
+              that._isMoving2 = true;
+              var ind = that.__findInsertIndex(movedNode.text, targetNode);
+              $thisTree.jstree("move_node", movedNode, targetNode, ind, function(){
+                $thisTree.jstree("open_node", targetNode, false);
+              }, true);
+              that._isMoving2 = false;
+              
               // Remove nodes from old relationship.
 //              var nodes = that.__getNodesById(movedNodeId); // We actually don't want to delete copies here, only move the node we've selected.
-              $thisTree.jstree(
-                'delete_node',
-//                nodes
-                movedNode
-              );
+//              $thisTree.jstree(
+//                'delete_node',
+//                movedNode
+//              );
               
               // Create nodes that represent the new relationship
-              nodes = that.__getNodesById(targetNodeId);
-              for (var i = 0; i<nodes.length; ++i) {
-                that.__createTreeNode(movedNodeId, nodes[i]);
-              }
+//              nodes = that.__getNodesById(targetNodeId);
+//              for (var i = 0; i<nodes.length; ++i) {
+//                that.__createTreeNode(movedNodeId, nodes[i]);
+//              }
             },
             onFailure : function(ex) {
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -763,8 +821,11 @@
               
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
-                that.__createTreeNode(movedNodeId, nodes[i]);
+                that.__copyNodeToParent(movedNode, nodes[i]);
               }
+//              that._impl.jstree("load_node", targetNode, function(){
+//                that._impl.jstree("open_node", targetNode);
+//              });
             },
             onFailure : function(ex) {
               that.setNodeBusy(movedNode, false);
@@ -791,57 +852,25 @@
       },
       
       /**
-       * Is binded to jqtree's node select (and deselect) event.
-       */
-      __onNodeSelect : function(e) {
-        
-      },
-      
-      /**
-       * Is binded to jqtree's node open event and loads new nodes from the server with a getChildren request, if necessary.
-       */
-      __onNodeOpen : function(e) {
-        var node = e.node;
-        var nodeId = this.__getRunwayIdFromNode(node);
-        var that = this;
-        
-        if (node.hasFetched == null || node.hasFetched == undefined) {
-          this.refreshTerm(nodeId);
-        }
-      },
-      
-      /**
        * Fetches all the term's children from the server, drops all children of the node, and then repopulates the child nodes based on the TermAndRel objects receieved from the server.
        */
       refreshTerm : function(termId) {
         var that = this;
         var id = termId;
         
-        this.setTermBusy(termId, true);
-        
         var $tree = this.getImpl();
         
         var nodeArray = this.__getNodesById(termId);
         
-        // Sigh... this code is another example of me fixing shitty bugs in jstree
-        var children = this.getChildren(nodeArray[0]);
-//        var childIds = [];
-//        for (var i = 0; i < children.length; ++i) {
-//          childIds.push(children[i].id);
-//        }
-//        nodeArray[0].children = childIds;
-//        nodeArray[0].children_d = childIds;
-//        console.log(childIds);
-        
-        console.log("refresh " + nodeArray[0].id);
-        console.log(nodeArray[0].children);
-        console.log(nodeArray[0].children_d);
-        
-        $tree.jstree("load_node", nodeArray[0], function(){
-          if (!$tree.jstree("is_open", nodeArray[0])) {
-            $tree.jstree("open_node", nodeArray[0]);
+        var len = nodeArray.length;
+        for (var i = 0; i < len; ++i) {
+          if ($tree.jstree("is_open", nodeArray[i]) || $("#"+nodeArray[i].id).hasClass("jstree-leaf")) {
+            this.setNodeBusy(nodeArray[i], true);
+            $tree.jstree("load_node", nodeArray[i], function(node){
+              return function(){ that.setNodeBusy(node, false); };
+            }(nodeArray[i]));
           }
-        });
+        }
       },
       
       
@@ -901,15 +930,14 @@
           for (var i = 0; i < duplicates.length; ++i) {
             var node = $tree.jstree("get_node", duplicates[i], false);
             
-            if (node == null) {
-              var ex = new com.runwaysdk.Exception("Expected duplicate node of index " + i + ".");
-              this.handleException(ex, true);
-              return;
-            }
-            
-//            if (node != null) {
-              nodes.push(node);
+//            if (node == null || node === false) {
+//              var ex = new com.runwaysdk.Exception("Expected duplicate node of index " + i + ".");
+//              throw ex;
 //            }
+            
+            if (node != null && node !== false) {
+              nodes.push(node);
+            }
           }
           
           return nodes;
@@ -938,7 +966,7 @@
       /**
        * Retrieves the term with id termId from the termCache and then creates its representation in the tree.
        */
-      __createTreeNode : function(termId, parentNode, isNodeClosed) {
+      __createTreeNode : function(termId, parentNode, isNodeClosed, callback, dontSetNodeChildren) {
         var that = this;
         
         var term = this.termCache[termId];
@@ -956,17 +984,18 @@
           parentNode = $thisTree.jstree("get_node", "#");
         }
         
-        var nodeState = "open";
-        var nodeChildren = false;
-        if (isNodeClosed) { state = "closed"; nodeChildren = true; }
+        var node = { state:{opened: !isNodeClosed}, text: displayLabel, id: idStr, data: {runwayId: termId} };
         
-        var node = null;
+        if (dontSetNodeChildren !== true) {
+          node.children = isNodeClosed;
+        }
+        
         node = $thisTree.jstree(
           'create_node',
           parentNode,
-          { state: nodeState, children: nodeChildren, text: displayLabel, id: idStr, data: {runwayId: termId} },
+          node,
           this.__findInsertIndex(displayLabel, parentNode),
-          false, false
+          callback, false
         );
         
         return node;

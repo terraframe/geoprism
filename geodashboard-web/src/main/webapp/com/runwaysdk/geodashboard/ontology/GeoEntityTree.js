@@ -59,30 +59,34 @@
         var parentId = this.getParentRunwayId(node);
         var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
-        var cm = this.getFactory().newContextMenu(node);
+        if (this._cm != null && !this._cm.isDestroyed()) {
+          this._cm.destroy();
+        }
         
-        var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
+        this._cm = this.getFactory().newContextMenu(node);
+        
+        var create = this._cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
         if (term.canCreateChildren === false) {
           create.setEnabled(false);
         }
         
-        var update = cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
+        var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
         
-        var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         if (parentId === this.rootTermId) {
           del.setEnabled(false);
         }
         
-        var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
         
-        if (term.isBusy) {
+        if (this.busyNodes.contains(node)) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
           refresh.setEnabled(false);
         }
         
-        cm.render();
+        this._cm.render();
       },
       
       // @Override
