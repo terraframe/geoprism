@@ -12,7 +12,7 @@ public class BundleTest
   @Request
   public void testGetFromDefault()
   {
-    Bundle bundle = new Bundle("localize", new LocaleDimension());
+    Bundle bundle = new Bundle("messages", new LocaleDimension());
 
     Assert.assertEquals("New", bundle.getValue("com.runwaysdk.ui.userstable.UsersTable.newUser"));
   }
@@ -21,7 +21,7 @@ public class BundleTest
   @Request
   public void testGetFromLocale()
   {
-    Bundle bundle = new Bundle("localize", new LocaleDimension("en"));
+    Bundle bundle = new Bundle("messages", new LocaleDimension("en"));
 
     Assert.assertEquals("Test", bundle.getValue("com.runwaysdk.ui.userstable.UsersTable.newUser"));
   }

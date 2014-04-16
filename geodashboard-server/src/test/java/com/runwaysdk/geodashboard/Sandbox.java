@@ -1,22 +1,5 @@
-package com.test;
+package com.runwaysdk.geodashboard;
 
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
-import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.geodashboard.constants.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
@@ -33,9 +16,45 @@ import com.runwaysdk.geodashboard.gis.model.impl.StyleImpl;
 import com.runwaysdk.geodashboard.gis.model.impl.ThematicStyleImpl;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
+
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
+import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
+import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.aspectj.org.eclipse.jdt.core.dom.Initializer;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import com.runwaysdk.business.rbac.Authenticate;
+import com.runwaysdk.constants.DatabaseProperties;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.ConfigurationException;
+import com.runwaysdk.util.FileIO;
+
+import java.util.ResourceBundle;
 
 public class Sandbox
 {
@@ -62,7 +81,7 @@ public class Sandbox
 
   private static Log                    log         = LogFactory.getLog(Sandbox.class);
 
-  static class GeoserverProps
+  public static class GeoserverProps
   {
     private static String localPath;
 
@@ -118,8 +137,7 @@ public class Sandbox
   {
     if (publisher == null)
     {
-      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(),
-          GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
+      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
     }
 
     return publisher;
@@ -134,8 +152,7 @@ public class Sandbox
     {
       try
       {
-        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(),
-            GeoserverProps.getAdminPassword());
+        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
       }
       catch (MalformedURLException e)
       {
@@ -143,8 +160,7 @@ public class Sandbox
         // log
         // the error and throw an NPE to the calling code for its error handling
         // mechanism.
-        String msg = "The " + GeoserverProperties.class.getSimpleName() + "."
-            + GeoServerRESTReader.class.getSimpleName() + " is null.";
+        String msg = "The " + GeoserverProperties.class.getSimpleName() + "." + GeoServerRESTReader.class.getSimpleName() + " is null.";
         LogFactory.getLog(GeoserverProperties.class.getClass()).error(msg, e);
 
         throw new NullPointerException(msg);
@@ -348,15 +364,11 @@ public class Sandbox
     }
 
     ValueQuery collected = new ValueQuery(union.getQueryFactory());
-    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")",
-        "collected"));
+    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")", "collected"));
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
-        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
-        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
-        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble("miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
@@ -417,8 +429,7 @@ public class Sandbox
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
 
-      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
-          GeoserverProperties.getStore(), fte, le))
+      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
       {
         // log.info("Created the layer [" + layer + "] in geoserver.");
         System.out.println("Failed to create the layer [" + layer + "] in geoserver.");
@@ -453,168 +464,90 @@ public class Sandbox
     }
   }
 
-  public static void main(String[] args) throws Throwable
+  public static void main(String[] args) throws MalformedURLException
   {
-    mapTest();
-  }
-  
-  private static void geoserverTest() throws Throwable
-  {
-     GeoserverProps props = new GeoserverProps();
-    
-     GeoServerRESTReader reader = new
-     GeoServerRESTReader(props.getLocalPath(), props.getAdminUser(),
-     props.getAdminPassword());
-    
-      System.out.println(reader.getWorkspaceNames());
-     
-      System.out.println(reader.getResource(reader.getLayer("poi")));
-    
-     GeoServerRESTPublisher publisher = new
-     GeoServerRESTPublisher(props.getLocalPath(),
-     props.getAdminUser(), props.getAdminPassword());
-    
-     
-      System.out.println(getReader().getSLD("burg"));
-    
-      System.out.println(Sandbox.getLayers());
-    
-      System.out.println("Layer exists = " + Sandbox.layerExists("poi"));
-    
-     System.out.println("Style exists = " + Sandbox.styleExists("poi"));
-    
-     if (Sandbox.layerExists("poi"))
-     {
-     System.out.println("Layer exists = " + Sandbox.layerExists("poi_test"));
-     System.out.println("Now lets remove it");
-    
-      Sandbox.removeLayer("poi_test");
-     }
 
-     Sandbox.refresh();
-  }
-  
-  private static void mapTest()
-  {
-    Map map = new MapImpl();
-    map.setName("Map 1");
-
-    Layer layer0 = new LayerImpl();
-    layer0.setName("Layer 0");
-    layer0.setVirtual(false);
-    layer0.setFeatureType(FeatureType.POINT);
-    map.addLayer(layer0);
-    
-    Layer layer1 = new LayerImpl();
-    layer1.setName("Layer 1");
-    layer1.setVirtual(false);
-    layer1.setFeatureType(FeatureType.POINT);
-    map.addLayer(layer1);
-
-    Style style1 = new StyleImpl();
-    style1.setName("Style 1.1");
-
-    // point
-    style1.setPointSize(3);
-    style1.setPointStroke("#000000");
-    style1.setPointFill("#fffeee");
-    style1.setPointStrokeWidth(1);
-    style1.setPointOpacity(0.4);
-    style1.setPointRotation(6);
-    style1.setPointStrokeWidth(8);
-    style1.setPointWellKnownName(WellKnownName.STANDARD.CIRCLE.getSymbol());
-    // polygon
-    style1.setPolygonFill("#eeeeee");
-    style1.setPolygonStroke("#000000");
-    style1.setPolygonStrokeWidth(4);
-
-    layer1.addStyle(style1);
-
-    ThematicStyleImpl style2 = new ThematicStyleImpl();
-    style2.setAttribute("testAttribute");
-    // point
-    style2.setName("Style 1.2");
-    style2.setPointFill("#999eee");
-    style2.setPointSize(1);
-    style2.setPointStroke("#008800");
-    style2.setPointStrokeWidth(2);
-    style2.setPointOpacity(1.0);
-    style2.setPointRotation(3);
-    style2.setPointStrokeWidth(2);
-    // polygon
-    style2.setPolygonFill("#efefef");
-    style2.setPolygonStroke("#ff0000");
-    style2.setPolygonStrokeWidth(3);
-    style2.setPointWellKnownName(WellKnownName.STANDARD.SQUARE.getSymbol());
-
-    layer1.addStyle(style2);
-
-    Equal a = new EqualImpl();
-    a.setValue("1");
-
-    Equal b = new EqualImpl();
-    b.setValue("2");
-
-    Or or1 = new OrImpl();
-    or1.setThematicStyle(style2);
-    or1.setLeftCondition(a);
-    or1.setRightCondition(b);
-
-    Equal c = new EqualImpl();
-    c.setValue("8");
-
-    Equal d = new EqualImpl();
-    d.setValue("9");
-
-    Or or2 = new OrImpl();
-    or2.setThematicStyle(style2);
-    or2.setLeftCondition(c);
-    or2.setRightCondition(d);
-
-    And and = new AndImpl();
-    and.setThematicStyle(style2);
-    and.setLeftCondition(or1);
-    and.setRightCondition(or2);
-
-    style2.setCondition(and);
-
-    SLDMapVisitor visitor = new SLDMapVisitor();
-    map.accepts(visitor);
-
-//    String out = StringUtils.join(visitor.getSLDs().values(), "\n");
-    
-    System.out.println(visitor.getSLD(layer1));
-    
-
-
-  }
-  
-  private static void builder()
-  {
-    // Use IoC to swap implementation
-
-    /*
-    Builder b = Builder.newInstance();
-      b.map("Name 1").layers(
-        b.layer("Layer 1").virtual(true).styles(
-            b.style("Style 1.1").point.width(3),
-            b.style("Style 1.2").point.fill("#000000")
-          ),
-        b.layer("Layer 2").virtual(false).styles(
-            b.thematic("Style 2.1").attribute("foo")
-            )
-          );
-    
-    
-    Map map = b.build();
-    
-    // print
-    SLDMapVisitor visitor = new SLDMapVisitor();
-    map.accepts(visitor);
-    for(Layer layer : map.getLayers())
-    {
-      System.out.println(visitor.getSLD(layer));
-    }
-    */
+//    Map map = new MapImpl("My Map");
+//
+//    Layer layer1 = new LayerImpl("Layer 1");
+//    layer1.setVirtual(true);
+//    layer1.setFeatureType(FeatureType.POINT);
+//    map.addLayer(layer1);
+//
+//    Style style1 = new StyleImpl();
+//    style1.setName("Style 1.1");
+//
+//    // point
+//    style1.setPointSize(3);
+//    style1.setPointStroke("#000000");
+//    style1.setPointFill("#fffeee");
+//    style1.setPointStrokeWidth(1);
+//    style1.setPointOpacity(0.4);
+//    style1.setPointRotation(6);
+//    style1.setPointStrokeWidth(8);
+//    style1.setPointWellKnownName(WellKnownName.STANDARD.CIRCLE.getSymbol());
+//    // polygon
+//    style1.setPolygonFill("#eeeeee");
+//    style1.setPolygonStroke("#000000");
+//    style1.setPolygonStrokeWidth(4);
+//
+//    layer1.addStyle(style1);
+//
+//    ThematicStyleImpl style2 = new ThematicStyleImpl();
+//    style2.setAttribute("testAttribute");
+//    // point
+//    style2.setName("Style 1.2");
+//    style2.setPointFill("#999eee");
+//    style2.setPointSize(1);
+//    style2.setPointStroke("#008800");
+//    style2.setPointStrokeWidth(2);
+//    style2.setPointOpacity(1.0);
+//    style2.setPointRotation(3);
+//    style2.setPointStrokeWidth(2);
+//    // polygon
+//    style2.setPolygonFill("#efefef");
+//    style2.setPolygonStroke("#ff0000");
+//    style2.setPolygonStrokeWidth(3);
+//    style2.setPointWellKnownName(WellKnownName.STANDARD.SQUARE.getSymbol());
+//
+//    layer1.addStyle(style2);
+//
+//    Equal a = new EqualImpl();
+//    a.setValue("1");
+//
+//    Equal b = new EqualImpl();
+//    b.setValue("2");
+//
+//    Or or1 = new OrImpl();
+//    or1.setThematicStyle(style2);
+//    or1.setLeftCondition(a);
+//    or1.setRightCondition(b);
+//
+//    Equal c = new EqualImpl();
+//    c.setValue("8");
+//
+//    Equal d = new EqualImpl();
+//    d.setValue("9");
+//
+//    Or or2 = new OrImpl();
+//    or2.setThematicStyle(style2);
+//    or2.setLeftCondition(c);
+//    or2.setRightCondition(d);
+//
+//    And and = new AndImpl();
+//    and.setThematicStyle(style2);
+//    and.setLeftCondition(or1);
+//    and.setRightCondition(or2);
+//
+//    style2.setCondition(and);
+//
+//    SLDMapVisitor visitor = new SLDMapVisitor();
+//    map.accepts(visitor);
+//
+//    System.out.println(visitor.getSLD());
+    //
+    // System.out.println(reader.getResource(reader.getLayer("poi")));
+//
+//    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
   }
 }

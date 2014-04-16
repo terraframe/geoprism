@@ -67,6 +67,7 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
 <link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/default.css" />
+<link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>

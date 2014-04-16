@@ -747,6 +747,7 @@
         tq.addTask(new Structure.TaskIF({
           start : function(){
             dialog.close();
+            var mainDiv = document.getElementById("usersTable");
             
             var removeCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
               onSuccess : function() {
@@ -756,7 +757,7 @@
                 tq.stop();
                 that.handleException(ex);
               }
-            }, "main");
+            }, mainDiv);
             
             user.remove(removeCallback);
           }

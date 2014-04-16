@@ -61,7 +61,22 @@
     
     // When we refactor the Job metadata from flags into a status enum these will be removed.
     "stopped" : "Stopped",
-    "status" : "Status"
+    "status" : "Status",
+    "sSortAscending" : ": activate to sort column ascending",
+    "sSortDescending" : ": activate to sort column descending",
+    "sFirst" : "First",
+    "sLast" : "Last",
+    "sNext" : "Next",
+    "sPrevious" : "Previous",
+    "sEmptyTable" : "No data available in table",
+    "sInfo" : "Showing _START_ to _END_ of _TOTAL_ entries",
+    "sInfoEmpty" : "Showing 0 to 0 of 0 entries",
+    "sInfoFiltered" : "(filtered from _MAX_ total entries)",
+    "sLengthMenu" : "Show _MENU_ entries",
+    "sLoadingRecords" : "Loading...",
+    "sProcessing" : "Processing...",
+    "sSearch" : "Search:",
+    "sZeroRecords" : "No matching records found"    
   });
   
   com.runwaysdk.Localize.defineLanguage(jobHistoryTableName, {
@@ -82,7 +97,7 @@
     "sLoadingRecords" : "Loading...",
     "sProcessing" : "Processing...",
     "sSearch" : "Search:",
-    "sZeroRecords" : "No matching records found"
+    "sZeroRecords" : "No matching records found"    
   });
   
   var JobTable = ClassFramework.newClass(jobTableName, {
@@ -164,9 +179,9 @@
         }));
       },
       
-      _openContextMenu : function(mouseEvent) {
-        var row = mouseEvent.getTarget().getParent();
-        var jobMetadata = row.getParentTable().getDataSource().getMetadataQueryDTO();
+      _openContextMenu : function(row, event) {
+        
+        var jobMetadata = this._table.getDataSource().getMetadataQueryDTO();
         var statusRowNum = 3;
         
         // Create Runway's Context Menu
@@ -232,10 +247,10 @@
         
         if(job.isCronExpressionWritable())
         {
-//          var cronInput = new com.runwaysdk.geodashboard.CronInput("cron");
-//          cronInput.setValue(job.getCronExpression());
+          var entry = new com.runwaysdk.geodashboard.CronEntry("cron");
+          entry.setValue(job.getCronExpression());
           
-          form.addEntry(new com.runwaysdk.geodashboard.CronEntry("cron"));
+          form.addEntry(entry);
         }
         
         dialog.appendContent(form);
@@ -286,8 +301,7 @@
         return false;
       },
 
-      _lockRow : function (mouseEvent) {
-        var row = mouseEvent.getTarget().getParent();
+      _lockRow : function (row, event) {
         var table = row.getParentTable();
         var job = table.getDataSource().getResultsQueryDTO().getResultSet()[row.getRowNumber()];        
       
@@ -297,7 +311,7 @@
             this.that._openEditMenu(row, ret);
           },
           onFailure : function(ex) {
-        	this.that.handleException(ex);
+            this.that.handleException(ex);
           }
         });
         
@@ -307,14 +321,20 @@
       _onNewRowEvent : function(newRowEvent) {
         var row = newRowEvent.getRow();
         
-        var progressRowNum = 2;
-        
-        if (row.getRowNumber() == progressRowNum) {
-          // TODO create a progress bar widget
-        }
-        
-        row.addEventListener("click", Mojo.Util.bind(this, this._lockRow));
-        row.addEventListener("contextmenu", Mojo.Util.bind(this, this._openContextMenu));
+        var onContextMenu =  Mojo.Util.bind(this, function(event) {
+          this._openContextMenu(row, event);
+          
+          return false;
+        });
+
+        var onClick =  Mojo.Util.bind(this, function(event) {
+          this._lockRow(row, event);
+
+          return false;
+        });
+                
+        row.addEventListener("click", onClick);
+        row.addEventListener("contextmenu", onContextMenu);
       },
       
       formatStatus : function(jobDTO) {
@@ -363,6 +383,7 @@
             { queryAttr: "description",  customFormatter: function(jobDTO){ return jobDTO.getDescription().getLocalizedValue(); } },
             { header: this.localize("progress"), customFormatter: Mojo.Util.bind(this, this.formatProgress) },
             { header: this.localize("status"), customFormatter: Mojo.Util.bind(this, this.formatStatus) },
+//            { header: this.localize("scheduledRun"), customFormatter: function(job) {return job.getCronExpression();}}
             { header: this.localize("scheduledRun"), customFormatter: function(job) {
                 return com.runwaysdk.geodashboard.CronUtil.cronToHumanReadable(job.getCronExpression());
               }
@@ -374,6 +395,7 @@
         this._config.el = this;
         this._config.dataSource = ds;
         this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
+        
         // Localize the datatable widget
         this._config.oLanguage = {
           oAria: {
