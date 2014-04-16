@@ -38,6 +38,7 @@
  */
 .jstree-node > .jstree-anchor > .jstree-icon.jstree-checkbox.jstree-undetermined {
 	background-color: #00bfff;
+	border-color: #02789e;
 }
 .jstree-anchor > .jstree-icon.jstree-checkbox {
   border: 1px solid #a6a6a6;
@@ -50,9 +51,12 @@
 	background-image: url(../images/sprite.png);
 	background-position: -43px -20px;
 	background-repeat: no-repeat;
+	border-color: #02789e;
 }
-.jstree-clicked > .jstree-icon.jstree-checkbox:hover {
+/* .jstree-anchor > .jstree-icon.jstree-checkbox:hover, */
+.jstree-anchor.jstree-hovered > .jstree-icon.jstree-checkbox {
 	background-position: -43px -20px;
+	border-color: #019edc;
 }
  
  /*
