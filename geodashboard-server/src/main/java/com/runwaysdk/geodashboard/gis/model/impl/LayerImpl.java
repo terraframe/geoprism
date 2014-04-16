@@ -84,4 +84,18 @@ public class LayerImpl extends ComponentImpl implements Layer
     return this.featureType;
   }
 
+  @Override
+  public Boolean displayInLegend()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDisplayInLegend(Boolean display)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
