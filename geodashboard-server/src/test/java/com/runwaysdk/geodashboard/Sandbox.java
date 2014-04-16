@@ -547,7 +547,7 @@ public class Sandbox
 //    System.out.println(visitor.getSLD());
     //
     // System.out.println(reader.getResource(reader.getLayer("poi")));
-
-    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
+//
+//    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
   }
 }
