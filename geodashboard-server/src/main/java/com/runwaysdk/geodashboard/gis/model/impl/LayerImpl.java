@@ -18,14 +18,21 @@ public class LayerImpl extends ComponentImpl implements Layer
 
   private FeatureType featureType;
   
-  public LayerImpl(String name)
+  public LayerImpl()
   {
-    this.name = name;
+    this.name = null;
     this.styles = new LinkedList<Style>();
     
     this.virtual = false;
   }
   
+  @Override
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+  
+  @Override
   public String getName()
   {
     return name;

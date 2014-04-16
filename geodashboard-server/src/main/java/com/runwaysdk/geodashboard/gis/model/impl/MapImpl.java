@@ -13,10 +13,16 @@ public class MapImpl extends ComponentImpl implements Map
   
   private String name;
   
-  public MapImpl(String name)
+  public MapImpl()
+  {
+    this.name = null;
+    this.layers = new LinkedList<Layer>(); 
+  }
+  
+  @Override
+  public void setName(String name)
   {
     this.name = name;
-    this.layers = new LinkedList<Layer>(); 
   }
   
   public String getName()

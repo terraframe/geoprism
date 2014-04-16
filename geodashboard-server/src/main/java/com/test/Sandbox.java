@@ -1,9 +1,27 @@
 package com.test;
 
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
+import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.geodashboard.constants.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.model.builder.Builder;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
@@ -16,45 +34,9 @@ import com.runwaysdk.geodashboard.gis.model.impl.StyleImpl;
 import com.runwaysdk.geodashboard.gis.model.impl.ThematicStyleImpl;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
-
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.aspectj.org.eclipse.jdt.core.dom.Initializer;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.LinkedList;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.constants.DatabaseProperties;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.constants.GeoserverProperties;
-import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.system.gis.ConfigurationException;
-import com.runwaysdk.util.FileIO;
-
-import java.util.ResourceBundle;
 
 public class Sandbox
 {
@@ -83,8 +65,6 @@ public class Sandbox
 
   static class GeoserverProps
   {
-<<<<<<< HEAD
-=======
     private static String localPath;
 
     private static String adminUser;
@@ -93,7 +73,7 @@ public class Sandbox
 
     public GeoserverProps()
     {
-      this.localPath = "http://127.0.0.1:8443/geoserver";
+      this.localPath = "https://127.0.0.1:8443/geoserver";
       this.adminUser = "admin";
       this.adminPassword = "geoserver";
     }
@@ -474,14 +454,61 @@ public class Sandbox
     }
   }
 
-  public static void main(String[] args) throws MalformedURLException
+  public static void main(String[] args) throws Throwable
   {
+    mapTest();
+  }
+  
+  private static void geoserverTest() throws Throwable
+  {
+     GeoserverProps props = new GeoserverProps();
+    
+     GeoServerRESTReader reader = new
+     GeoServerRESTReader(props.getLocalPath(), props.getAdminUser(),
+     props.getAdminPassword());
+    
+      System.out.println(reader.getWorkspaceNames());
+     
+      System.out.println(reader.getResource(reader.getLayer("poi")));
+    
+     GeoServerRESTPublisher publisher = new
+     GeoServerRESTPublisher(props.getLocalPath(),
+     props.getAdminUser(), props.getAdminPassword());
+    
+     
+      System.out.println(getReader().getSLD("burg"));
+    
+      System.out.println(Sandbox.getLayers());
+    
+      System.out.println("Layer exists = " + Sandbox.layerExists("poi"));
+    
+     System.out.println("Style exists = " + Sandbox.styleExists("poi"));
+    
+     if (Sandbox.layerExists("poi"))
+     {
+     System.out.println("Layer exists = " + Sandbox.layerExists("poi_test"));
+     System.out.println("Now lets remove it");
+    
+      Sandbox.removeLayer("poi_test");
+     }
 
->>>>>>> refs/remotes/origin/master
-    Map map = new MapImpl("My Map");
+     Sandbox.refresh();
+  }
+  
+  private static void mapTest()
+  {
+    Map map = new MapImpl();
+    map.setName("Map 1");
 
-    Layer layer1 = new LayerImpl("Layer 1");
-    layer1.setVirtual(true);
+    Layer layer0 = new LayerImpl();
+    layer0.setName("Layer 0");
+    layer0.setVirtual(false);
+    layer0.setFeatureType(FeatureType.POINT);
+    map.addLayer(layer0);
+    
+    Layer layer1 = new LayerImpl();
+    layer1.setName("Layer 1");
+    layer1.setVirtual(false);
     layer1.setFeatureType(FeatureType.POINT);
     map.addLayer(layer1);
 
@@ -555,58 +582,40 @@ public class Sandbox
     SLDMapVisitor visitor = new SLDMapVisitor();
     map.accepts(visitor);
 
-    System.out.println(visitor.getSLD());
-    //
-    // Map map2 = new MapBuilder("My Map")
-    //
-    // .layer("Layer 1").composite(true).featureType(FeatureType.POINT)
-    // .style("Default Style").pointSize(3).pointStrokeWidth(5).pointRotation(5)
-    // .add()
-    //
-    // .layer("Layer 2").featureType(FeatureType.POLYGON)
-    // .tStyle("Thematic Style").attribute("foo")
-    // .add()
-    //
-    // .build();
-    //
-    // SLDMapVisitor visitor2 = new SLDMapVisitor();
-    // map2.accepts(visitor2);
-    // System.out.println(visitor2.getSLD());
+//    String out = StringUtils.join(visitor.getSLDs().values(), "\n");
+    
+    System.out.println(visitor.getSLD(layer1));
+    
 
-    // ///////////////
 
-    // GeoserverProps props = new GeoserverProps();
-    //
-    // GeoServerRESTReader reader = new
-    // GeoServerRESTReader(props.getLocalPath(), props.getAdminUser(),
-    // props.getAdminPassword());
-    //
-    // // System.out.println(reader.getWorkspaceNames());
-    // //
-    // // System.out.println(reader.getResource(reader.getLayer("poi")));
-    //
-    // GeoServerRESTPublisher publisher = new
-    // GeoServerRESTPublisher(props.getLocalPath(),
-    // props.getAdminUser(), props.getAdminPassword());
-    //
-    // //
-    // // System.out.println(getReader().getSLD("burg"));
-    //
-    // // System.out.println(Sandbox.getLayers());
-    //
-    // // System.out.println("Layer exists = " + Sandbox.layerExists("poi"));
-    //
-    // System.out.println("Style exists = " + Sandbox.styleExists("poi"));
-    //
-    // if (Sandbox.layerExists("poi"))
-    // {
-    // System.out.println("Layer exists = " + Sandbox.layerExists("poi_test"));
-    // System.out.println("Now lets remove it");
-    //
-    // // Sandbox.removeLayer("poi_test");
-    // }
+  }
+  
+  private static void builder()
+  {
+    // Use IoC to swap implementation
 
-    // Sandbox.refresh();
-
+    /*
+    Builder b = Builder.newInstance();
+      b.map("Name 1").layers(
+        b.layer("Layer 1").virtual(true).styles(
+            b.style("Style 1.1").point.width(3),
+            b.style("Style 1.2").point.fill("#000000")
+          ),
+        b.layer("Layer 2").virtual(false).styles(
+            b.thematic("Style 2.1").attribute("foo")
+            )
+          );
+    
+    
+    Map map = b.build();
+    
+    // print
+    SLDMapVisitor visitor = new SLDMapVisitor();
+    map.accepts(visitor);
+    for(Layer layer : map.getLayers())
+    {
+      System.out.println(visitor.getSLD(layer));
+    }
+    */
   }
 }
