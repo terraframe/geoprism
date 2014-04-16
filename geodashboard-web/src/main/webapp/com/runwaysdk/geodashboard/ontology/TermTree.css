@@ -36,8 +36,29 @@
 /**
  * Checkbox
  */
+.jstree-node > .jstree-anchor > .jstree-icon.jstree-checkbox.jstree-undetermined {
+	background-color: #00bfff;
+}
+.jstree-anchor > .jstree-icon.jstree-checkbox {
+  border: 1px solid #a6a6a6;
+  background: #eee;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.jstree-clicked > .jstree-icon.jstree-checkbox {
+	background-image: url(../images/sprite.png);
+	background-position: -43px -20px;
+	background-repeat: no-repeat;
+}
+.jstree-clicked > .jstree-icon.jstree-checkbox:hover {
+	background-position: -43px -20px;
+}
+ 
+ /*
  div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
   margin: 1px;
+  margin-left: 5px;
   margin-right: 8px;
   display: table-cell;
   padding-right: 5px;
@@ -56,4 +77,26 @@ div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
   border:1px solid #b3b3b3;
   background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
 }
+
+.jstree-default .jstree-container-ul .jstree-node {
+	display: table;
+}
+.jstree-default .jstree-container-ul .jstree-node > .jstree-icon {
+  display: table-cell;
+  float: left;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.jstree-default .jstree-container-ul .jstree-node > .jstree-anchor {
+	display: table-cell;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+*/
 /* End Checkbox */
+
+/* Hide jsTrees context menu */
+ul.vakata-context.jstree-contextmenu.jstree-default-contextmenu {
+	visibility: hidden;
+}
+/* Hide jsTrees context menu */

@@ -83,7 +83,7 @@
           },
           
           jsTree: {
-            "plugins" : ["dnd", "crrm", "ui" ],
+            "plugins" : ["dnd", "crrm", "ui", "checkbox", "contextmenu" ],
             "core" : {
               data : Mojo.Util.bind(this, this.__treeWantsData),
               check_callback: true,
@@ -211,7 +211,8 @@
       __onCreateLi : function(node, $li) {
         var fac = this.getFactory();
         
-        var title = fac.newElement($li.find('.jqtree-title')[0]).getParent();
+        var li = fac.newElement($li[0]);
+        var title = li.getChildren()[1];
         var checkBox = node.checkBox;
         if (checkBox == null) {
           checkBox = fac.newCheckBox({classes: ["jqtree-checkbox"]});
@@ -227,7 +228,7 @@
           checkBox.node = node;
         }
         
-        title.insertBefore(checkBox, title.getChildren()[0]);
+        li.insertBefore(checkBox, title);
       },
       
       /**
@@ -1145,10 +1146,13 @@
             
             jsTreeCallback.call(this, json);
             
-//            
-//            if (parentId != false) {
-//              
-//              $("#"+node.id).children("i").addClass("runway-rel");
+            // There's no "onCreateLi" event for jsTree, so invoke our function that creates checkboxes
+//            var children = $tree.jstree("get_children_dom", parent);
+//            for (var i = 0; i < children.length; ++i) {
+//              var child = children[i];
+//              if (child.id != "") {
+//                that.__onCreateLi(child, $("#"+child.id));
+//              }
 //            }
             
             // This code is to fix a bug in jstree.
@@ -1189,11 +1193,16 @@
         
         this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
         
+//        this._impl.on(
+//            'select_node.jstree',
+//            function(event, object) {
+//              that._boundedRightClick(event, object);
+//            }
+//        );
+        
         this._impl.on(
-            'select_node.jstree',
-            function(event, object) {
-              that._boundedRightClick(event, object);
-            }
+            'show_contextmenu.jstree',
+            that._boundedRightClick
         );
         
         this._impl.on(

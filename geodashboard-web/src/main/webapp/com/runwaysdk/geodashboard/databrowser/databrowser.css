@@ -27,7 +27,7 @@ div#databrowser {
 .geodashboard-databrowser-tree {
   text-align: left;
   margin-top: 13px;
-  height: 500px;
+  height: 450px;
   overflow: auto;
 }
 
