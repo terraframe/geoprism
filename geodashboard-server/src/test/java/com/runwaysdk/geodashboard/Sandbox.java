@@ -1,4 +1,4 @@
-package com.test;
+package com.runwaysdk.geodashboard;
 
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
@@ -545,53 +545,9 @@ public class Sandbox
 //    map.accepts(visitor);
 //
 //    System.out.println(visitor.getSLD());
-//    //
-//    // Map map2 = new MapBuilder("My Map")
-//    //
-//    // .layer("Layer 1").composite(true).featureType(FeatureType.POINT)
-//    // .style("Default Style").pointSize(3).pointStrokeWidth(5).pointRotation(5)
-//    // .add()
-//    //
-//    // .layer("Layer 2").featureType(FeatureType.POLYGON)
-//    // .tStyle("Thematic Style").attribute("foo")
-//    // .add()
-//    //
-//    // .build();
-//    //
-//    // SLDMapVisitor visitor2 = new SLDMapVisitor();
-//    // map2.accepts(visitor2);
-//    // System.out.println(visitor2.getSLD());
-//
-//    // ///////////////
-
-    GeoserverProps props = new GeoserverProps();
-
-    GeoServerRESTReader reader = new GeoServerRESTReader(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
-
-    // System.out.println(reader.getWorkspaceNames());
     //
     // System.out.println(reader.getResource(reader.getLayer("poi")));
 
     GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
-
-    //
-    // System.out.println(getReader().getSLD("burg"));
-
-    // System.out.println(Sandbox.getLayers());
-
-    // System.out.println("Layer exists = " + Sandbox.layerExists("poi"));
-
-    System.out.println("Style exists = " + Sandbox.styleExists("poi"));
-
-    if (Sandbox.layerExists("poi"))
-    {
-      System.out.println("Layer exists = " + Sandbox.layerExists("poi_test"));
-      System.out.println("Now lets remove it");
-
-      // Sandbox.removeLayer("poi_test");
-    }
-
-    Sandbox.refresh();
-
   }
 }

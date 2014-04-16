@@ -1,0 +1,106 @@
+/**
+ * Relationships
+ */
+  /* Allowed In */
+    
+  /* End Allowed In */
+  /* IsA */
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA > i,
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA > i.jstree-icon {
+      background-image: url("32px-solid.png");
+    }
+    .jstree-default li.jstree-node.com-runwaysdk-system-gis-geo-IsA,
+    .jstree-default li.jstree-icon.com-runwaysdk-system-gis-geo-IsA {
+      background-image: url("32px-solid.png");
+      background-position: -292px -4px;
+      background-repeat: no-repeat;
+    }
+  /* End IsA */
+  
+  .jstree-default li.jstree-node {
+    background-position: -292px -4px;
+    background-repeat: repeat-y !important;
+  }
+  
+  .jstree-default .jstree-leaf>.jstree-ocl {
+    background-position: -68px -4px !important;
+  }
+  .jstree-default li.jstree-last {
+    background: 0 0 !important;
+  }
+  .jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {
+  background: url("../../../../jstree/throbber.gif") center center no-repeat !important;
+}
+/* End Relationship */
+
+/**
+ * Checkbox
+ */
+.jstree-node > .jstree-anchor > .jstree-icon.jstree-checkbox.jstree-undetermined {
+	background-color: #00bfff;
+	border-color: #02789e;
+}
+.jstree-anchor > .jstree-icon.jstree-checkbox {
+  border: 1px solid #a6a6a6;
+  background: #eee;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.jstree-clicked > .jstree-icon.jstree-checkbox {
+	background-image: url(../images/sprite.png);
+	background-position: -43px -20px;
+	background-repeat: no-repeat;
+	border-color: #02789e;
+}
+/* .jstree-anchor > .jstree-icon.jstree-checkbox:hover, */
+.jstree-anchor.jstree-hovered > .jstree-icon.jstree-checkbox {
+	background-position: -43px -20px;
+	border-color: #019edc;
+}
+ 
+ /*
+ div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
+  margin: 1px;
+  margin-left: 5px;
+  margin-right: 8px;
+  display: table-cell;
+  padding-right: 5px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
+  border-color:#02789e;
+  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
+  border:1px solid #dbdbdb;
+  background:#f8f8f8;
+}
+div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
+  border:1px solid #b3b3b3;
+  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
+}
+
+.jstree-default .jstree-container-ul .jstree-node {
+	display: table;
+}
+.jstree-default .jstree-container-ul .jstree-node > .jstree-icon {
+  display: table-cell;
+  float: left;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.jstree-default .jstree-container-ul .jstree-node > .jstree-anchor {
+	display: table-cell;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+*/
+/* End Checkbox */
+
+/* Hide jsTrees context menu */
+ul.vakata-context.jstree-contextmenu.jstree-default-contextmenu {
+	visibility: hidden;
+}
+/* Hide jsTrees context menu */
