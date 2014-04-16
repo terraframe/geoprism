@@ -14,7 +14,7 @@
 	<description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
 	
 	<properties>
-    	<geoserver.version>2.1.0</geoserver.version>
+    	<geoserver.version>2.5.0</geoserver.version>
   	</properties>
 	
 	<dependencies>
@@ -93,13 +93,13 @@
 							<configuration>
 								<properties>
 									<cargo.servlet.port>8443</cargo.servlet.port>
-									<cargo.protocol>http</cargo.protocol>
+									<cargo.protocol>https</cargo.protocol>
 									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
 									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
 									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
 									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
 									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
-									<cargo.tomcat.httpSecure>false</cargo.tomcat.httpSecure>
+									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
 									<cargo.jvmargs>
 										-Xdebug
 										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000

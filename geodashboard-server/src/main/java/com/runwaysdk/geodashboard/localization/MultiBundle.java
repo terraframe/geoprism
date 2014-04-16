@@ -15,7 +15,7 @@ public class MultiBundle implements Reloadable
 {
   private Map<String, Bundle> bundles;
 
-  public static String        BUNDLE_NAME = "localize";
+  public static String        BUNDLE_NAME = "messages";
 
   private MultiBundle()
   {
