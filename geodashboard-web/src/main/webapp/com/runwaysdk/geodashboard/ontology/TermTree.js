@@ -83,7 +83,7 @@
           },
           
           jsTree: {
-            "plugins" : ["dnd", "crrm", "ui", "checkbox", "contextmenu" ],
+            "plugins" : ["dnd", "crrm", "ui", "contextmenu"],
             "core" : {
               data : Mojo.Util.bind(this, this.__treeWantsData),
               check_callback: true,
@@ -104,6 +104,10 @@
           }
         };
         this._config = Mojo.Util.deepMerge(defaultConfig, config);
+        
+        if (this._config.checkable) {
+          this._config.jsTree.plugins.push("checkbox");
+        }
         
         // Add checkboxes
         if (this._config.checkable && this._config.onCreateLi == null) {
