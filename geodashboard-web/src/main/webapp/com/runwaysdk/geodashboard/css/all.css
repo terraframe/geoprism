@@ -2059,6 +2059,6 @@ a.blueactive,
 	height:auto;
 }
 
-span.jcf-unselectable {
-	width: 269px;
+span.jcf-unselectable .center {
+	width: 233px;
 }
