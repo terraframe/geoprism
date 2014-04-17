@@ -442,7 +442,7 @@
           pollingInterval : JOBS_POLLING_INTERVAL
         });
         
-        this._pollingRequest.enable();
+        //this._pollingRequest.enable();
       },
       
       getPollingRequest : function() {
