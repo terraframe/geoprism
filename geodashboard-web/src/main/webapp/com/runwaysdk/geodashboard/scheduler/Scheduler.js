@@ -295,7 +295,7 @@
         dialog.render();
         
         if (jcf != null && jcf.customForms != null) {
-          jcf.customForms.replaceAll();
+          jcf.customForms.replaceAll(dialog.getRawEl());
         }
             
         return false;

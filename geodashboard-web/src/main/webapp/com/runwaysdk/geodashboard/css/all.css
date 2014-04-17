@@ -2058,3 +2058,7 @@ a.blueactive,
 	width:100%;
 	height:auto;
 }
+
+span.jcf-unselectable {
+	width: 269px;
+}
