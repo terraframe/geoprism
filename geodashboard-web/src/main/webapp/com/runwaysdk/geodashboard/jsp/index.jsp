@@ -54,8 +54,9 @@
 			
 	 		//// Update main content src attribute based on hash change (initiated by click on sidebar <a> tag)
 	  		$("#main-content-frame").attr("src", e.target.location.hash.substring(1)); 		
-		});
+		});		
 	});
+
 		
 </script>
 

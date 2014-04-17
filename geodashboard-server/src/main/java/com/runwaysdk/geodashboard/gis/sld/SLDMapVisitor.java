@@ -316,6 +316,8 @@ public class SLDMapVisitor implements MapVisitor
    * The containing SLD Document.
    */
   private Document    doc;
+  
+  private Map map;
 
   private Stack<Node> parents;
   
@@ -349,6 +351,7 @@ public class SLDMapVisitor implements MapVisitor
       throw new ConversionException(e);
     }
 
+    this.map = null;
     this.doc = builder.newDocument();
     this.doc.setStrictErrorChecking(false);
     this.doc.setXmlStandalone(true);
@@ -382,22 +385,52 @@ public class SLDMapVisitor implements MapVisitor
   {
     return new NodeBuilder(this, null, node);
   }
-
-  public Document getDocument()
+  
+  public java.util.Map<Layer, String> getSLDs()
   {
-    return this.doc;
+    java.util.Map<Layer, String> layerSLDs = new LinkedHashMap<Layer, String>();
+
+    for(Layer layer : this.layerToNodeMap.keySet())
+    {
+      layerSLDs.put(layer, this.getSLD(layer));
+    }
+    
+    return layerSLDs;
+  }
+  
+  public Map getMap()
+  {
+    return map;
   }
   
   public String getSLD(Layer layer)
   {
-    return null;
-  }
+    Node layerNode = this.layerToNodeMap.get(layer);
+    
+    Node sld = this.root.cloneNode(true);
 
-  public String getSLD()
-  {
-    return assembleComponents();
+    List<DocumentFragment> frags = this.layers.get(layerNode);
+    for(DocumentFragment frag : frags)
+    {
+      layerNode.appendChild(frag);
+    }
+    
+    sld.appendChild(layerNode);
+    
+    return printNode(sld);
   }
   
+  public List<String> getSLD()
+  {
+    List<String> slds = new LinkedList<String>();
+    for(Layer layer: this.map.getLayers())
+    {
+      slds.add(this.getSLD(layer)); 
+    }
+    
+    return slds;
+  }
+
   private String printNode(Node node)
   {
     try
@@ -420,29 +453,11 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
-  private String assembleComponents()
-  {
-   
-    Node sld = this.doc.cloneNode(true);
-
-    // Create a new document for each layer if requested
-    for(Node layerNode : this.layers.keySet())
-    {
-      List<DocumentFragment> frags = this.layers.get(layerNode);
-      for(DocumentFragment frag : frags)
-      {
-        layerNode.appendChild(frag);
-      }
-      
-      sld.appendChild(layerNode);
-    }
-    
-    return printNode(sld);
-  }
-
   @Override
   public void visit(Map map)
   {
+    this.map = map;
+    
     this.root = this.node("StyledLayerDescriptioner").attr("xmlns", "http://www.opengis.net/sld")
         .attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc")
         .attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
