@@ -75,6 +75,7 @@ public class GeoserverProperties implements Reloadable
 
   public static String getGeoserverGWCDir()
   {
+    System.out.println(getBundle().getString("geoserver.gwc.dir"));
     return getBundle().getString("geoserver.gwc.dir");
   }
 

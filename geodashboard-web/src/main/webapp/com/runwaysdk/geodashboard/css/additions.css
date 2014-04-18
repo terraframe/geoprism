@@ -23,6 +23,11 @@ div.pageContent {
 }
 
 
+/* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
+textarea#description{float:left;}
+
+
+
 #usersTable {
 	margin-left: 0;
 	width: 100%;
