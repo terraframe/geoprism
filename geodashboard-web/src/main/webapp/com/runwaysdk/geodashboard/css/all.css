@@ -2059,6 +2059,9 @@ a.blueactive,
 	height:auto;
 }
 
-span.jcf-unselectable .center {
-	width: 233px;
+/* This is a hack to force the width of the SELECT input as
+the JCF library doesn't apply a pixel width if the element is hidden,
+which is often the case when showing/hiding based on coditions */
+span.select-area span.center {
+	width: 233px !important;
 }
