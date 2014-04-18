@@ -82,7 +82,8 @@
       },
       cronToHumanReadable : function(cronStr) {
         if (cronStr == null || cronStr == "") {
-          return com.runwaysdk.Localize.localize(widgetName, "never");
+          //return com.runwaysdk.Localize.localize(widgetName, "never");
+          return 'never';
         }
         
         var period = com.runwaysdk.geodashboard.CronUtil.getPeriodFromValue(cronStr);
@@ -334,6 +335,7 @@
             
         var select = this.getFactory().newElement('select');
         select.setAttribute('id', id);
+        select.setStyle('width', '269px');
           
         for(var i = 0; i < options.length; i++)
         {

@@ -295,7 +295,7 @@
         dialog.render();
         
         if (jcf != null && jcf.customForms != null) {
-          jcf.customForms.replaceAll();
+          jcf.customForms.replaceAll(dialog.getRawEl());
         }
             
         return false;
@@ -442,7 +442,7 @@
           pollingInterval : JOBS_POLLING_INTERVAL
         });
         
-        this._pollingRequest.enable();
+        //this._pollingRequest.enable();
       },
       
       getPollingRequest : function() {
