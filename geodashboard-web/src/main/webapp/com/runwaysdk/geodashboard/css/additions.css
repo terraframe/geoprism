@@ -23,6 +23,11 @@ div.pageContent {
 }
 
 
+/* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
+textarea#description{float:left;}
+
+
+
 #usersTable {
 	margin-left: 0;
 	width: 100%;
@@ -59,6 +64,7 @@ div.standby-overlay {
 
 .submit-form .field-row {
   padding: 0 0 5px 20px;
+  float: left;
 }
 
 .submit-form .label-text, .submit-form label {
