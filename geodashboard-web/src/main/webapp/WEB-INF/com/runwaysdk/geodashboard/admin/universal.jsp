@@ -131,7 +131,7 @@
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
-      checkable: true,
+      /* checkable: true, */
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
           height: 290
