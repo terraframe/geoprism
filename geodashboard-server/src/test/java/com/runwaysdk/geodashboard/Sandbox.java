@@ -707,7 +707,6 @@ public class Sandbox
     //
     // System.out.println(visitor.getSLD());
     //
-<<<<<<< HEAD
     // Map map2 = new MapBuilder("My Map")
     //
     // .layer("Layer 1").composite(true).featureType(FeatureType.POINT)
@@ -773,10 +772,8 @@ public class Sandbox
     //
     // // Sandbox.removeLayer("poi_test");
     // }
-=======
     // System.out.println(reader.getResource(reader.getLayer("poi")));
 //
 //    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
->>>>>>> 0568107b966b97da09ab636549ffa237dddfa151
   }
 }
