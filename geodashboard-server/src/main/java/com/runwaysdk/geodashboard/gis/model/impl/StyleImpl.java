@@ -21,6 +21,10 @@ public class StyleImpl extends ComponentImpl implements Style
   private Double pointOpacity;
 
   private Integer pointRotation;
+
+  private String polygonFillOpacity;
+
+  private Integer labelHaloWidth;
   
   
   public StyleImpl()
@@ -157,6 +161,184 @@ public class StyleImpl extends ComponentImpl implements Style
   public Integer getPointRotation()
   {
     return this.pointRotation;
+  }
+
+  @Override
+  public void enableValue(Boolean enable)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public Boolean enabledValue()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setValueFont(String font)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getValueFont()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setValueSize(Integer size)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public Integer getValueSize()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setValueColor(String color)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getValueColor()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setValueHalo(String halo)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getValueHalo()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setValueHaloWidth(Integer width)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public Integer getValueHaloWidth()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void enableLabel(Boolean enable)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public Boolean enabledLabel()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLabelFont(String font)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getLabelFont()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLabelSize(Integer size)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public Integer getLabelSize()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLabelColor(String color)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getLabelColor()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLabelHalo(String halo)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getLabelHalo()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLabelHaloWidth(Integer width)
+  {
+    this.labelHaloWidth = width;    
+  }
+
+  @Override
+  public Integer getLabelHaloWidth()
+  {
+    return this.labelHaloWidth;
+  }
+
+  @Override
+  public String getPolygonFillOpacity()
+  {
+    return this.polygonFillOpacity;
+  }
+
+  @Override
+  public void setPolygonFillOpacity(String opacity)
+  {
+    this.polygonFillOpacity = opacity;
   }
   
 }

@@ -22,30 +22,11 @@ div.pageContent {
 	padding:13px 25px 0 25px;
 }
 
-/**
- * Checkbox Styles
- */
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
-	margin: 1px;
-	margin-right: 8px;
-	display: table-cell;
-	padding-right: 5px;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
-  border-color:#02789e;
-  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
-  border:1px solid #dbdbdb;
-  background:#f8f8f8;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
-  border:1px solid #b3b3b3;
-  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
-}
-/* End Checkbox */
+
+/* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
+textarea#description{float:left;}
+
+
 
 #usersTable {
 	margin-left: 0;
@@ -83,6 +64,7 @@ div.standby-overlay {
 
 .submit-form .field-row {
   padding: 0 0 5px 20px;
+  float: left;
 }
 
 .submit-form .label-text, .submit-form label {

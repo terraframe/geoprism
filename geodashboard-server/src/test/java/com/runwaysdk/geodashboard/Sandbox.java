@@ -84,7 +84,7 @@ public class Sandbox
 
   private static Log                    log         = LogFactory.getLog(Sandbox.class);
 
-  static class GeoserverProps
+  public static class GeoserverProps
   {
     private static String localPath;
 
@@ -140,8 +140,7 @@ public class Sandbox
   {
     if (publisher == null)
     {
-      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(),
-          GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
+      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
     }
 
     return publisher;
@@ -156,8 +155,7 @@ public class Sandbox
     {
       try
       {
-        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(),
-            GeoserverProps.getAdminPassword());
+        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
       }
       catch (MalformedURLException e)
       {
@@ -165,8 +163,7 @@ public class Sandbox
         // log
         // the error and throw an NPE to the calling code for its error handling
         // mechanism.
-        String msg = "The " + GeoserverProperties.class.getSimpleName() + "."
-            + GeoServerRESTReader.class.getSimpleName() + " is null.";
+        String msg = "The " + GeoserverProperties.class.getSimpleName() + "." + GeoServerRESTReader.class.getSimpleName() + " is null.";
         LogFactory.getLog(GeoserverProperties.class.getClass()).error(msg, e);
 
         throw new NullPointerException(msg);
@@ -530,15 +527,11 @@ public class Sandbox
     }
 
     ValueQuery collected = new ValueQuery(union.getQueryFactory());
-    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")",
-        "collected"));
+    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")", "collected"));
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
-        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
-        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
-        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble("miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
@@ -599,8 +592,7 @@ public class Sandbox
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
 
-      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
-          GeoserverProperties.getStore(), fte, le))
+      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
       {
         log.info("Created the layer [" + layer + "] in geoserver.");
         return;
@@ -715,6 +707,7 @@ public class Sandbox
     //
     // System.out.println(visitor.getSLD());
     //
+<<<<<<< HEAD
     // Map map2 = new MapBuilder("My Map")
     //
     // .layer("Layer 1").composite(true).featureType(FeatureType.POINT)
@@ -780,5 +773,10 @@ public class Sandbox
     //
     // // Sandbox.removeLayer("poi_test");
     // }
+=======
+    // System.out.println(reader.getResource(reader.getLayer("poi")));
+//
+//    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
+>>>>>>> 0568107b966b97da09ab636549ffa237dddfa151
   }
 }

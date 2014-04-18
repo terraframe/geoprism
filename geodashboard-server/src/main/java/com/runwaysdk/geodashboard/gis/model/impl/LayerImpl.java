@@ -18,14 +18,21 @@ public class LayerImpl extends ComponentImpl implements Layer
 
   private FeatureType featureType;
   
-  public LayerImpl(String name)
+  public LayerImpl()
   {
-    this.name = name;
+    this.name = null;
     this.styles = new LinkedList<Style>();
     
     this.virtual = false;
   }
   
+  @Override
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+  
+  @Override
   public String getName()
   {
     return name;
@@ -75,6 +82,20 @@ public class LayerImpl extends ComponentImpl implements Layer
   public FeatureType getFeatureType()
   {
     return this.featureType;
+  }
+
+  @Override
+  public Boolean displayInLegend()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setDisplayInLegend(Boolean display)
+  {
+    // TODO Auto-generated method stub
+    
   }
 
 }

@@ -3,6 +3,10 @@ encoding//src/main/java=UTF-8
 encoding//src/main/java-gen/base=UTF-8
 encoding//src/main/java-gen/stub=UTF-8
 encoding//src/main/resources=UTF-8
+<<<<<<< HEAD
+=======
 encoding//src/main/webapp/com/runwaysdk/geodashboard/jsp/index.jsp=UTF-8
+>>>>>>> branch 'master' of https://github.com/terraframe/geodashboard.git
+encoding//src/test/java=UTF-8
 encoding//src/test/resources=UTF-8
 encoding/<project>=UTF-8
