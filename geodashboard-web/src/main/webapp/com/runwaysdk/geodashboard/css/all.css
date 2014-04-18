@@ -2059,9 +2059,22 @@ a.blueactive,
 	height:auto;
 }
 
-/* This is a hack to force the width of the SELECT input as
+/*
+This forces the JCF library to limit the size of its select inputs,
+otherwise they will overrun the page when there's too many options.
+This MUST override the inline styles on the DOM hence !important.
+*/
+div.drop-holder {
+	height: 100px;
+	overflow: auto !important;
+}
+
+/*
+This is a hack to force the width of the SELECT input as
 the JCF library doesn't apply a pixel width if the element is hidden,
-which is often the case when showing/hiding based on coditions */
+which is often the case when showing/hiding based on conditions.
+This MUST override the inline styles on the DOM hence !important.
+*/
 span.select-area span.center {
 	width: 233px !important;
 }
