@@ -144,25 +144,25 @@
       },
       
       convertDayOfWeekNumberToLocalizedWeek : function(weekNum) {
-        if (weekNum == 0) {
+        if (weekNum == com.runwaysdk.geodashboard.CronEntry.SUNDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "sunday");
         }
-        else if (weekNum == 1) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.MONDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "monday");
         }
-        else if (weekNum == 2) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.TUESDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "tuesday");
         }
-        else if (weekNum == 3) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.WEDNESDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "wednesday");
         }
-        else if (weekNum == 4) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.THURSDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "thursday");
         }
-        else if (weekNum == 5) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.FRIDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "friday");
         }
-        else if (weekNum == 6) {
+        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.SATURDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "saturday");
         }
       }
@@ -224,7 +224,8 @@
       EVERY_HOUR : "everyHour",
       EVERY_DAY : "everyDay",
       EVERY_WEEK : "everyWeek",
-      EVERY_MONTH : "everyMonth"
+      EVERY_MONTH : "everyMonth",
+      DEFAULT_VALUE : "0 0 * * * ?",
     },    
     Instance : {
       initialize : function(id)
@@ -278,7 +279,7 @@
         scheduledRunDiv.appendChild(this.scheduledRunError);        
                         
         var periodOptions = [
-          {value: com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE, label: this.localize("minute")},
+          //{value: com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE, label: this.localize("minute")},
           {value: com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR, label: this.localize("hour")},
           {value: com.runwaysdk.geodashboard.CronEntry.EVERY_DAY, label: this.localize("day")},
           {value: com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK, label: this.localize("week")},          
@@ -286,17 +287,17 @@
         ];
         
         this._period = this._generateSelectList('period', periodOptions);        
-        this._minute = this._generateNumberPicker('minute', 0, 59, function(index){if (index < 10) {return "0"+index;} return index; });
-        this._hour = this._generateNumberPicker('hour', 0, 23);
-        this._dow = this._generateNumberPicker('dow', 0, 6, function(index){return com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
         this._day = this._generateNumberPicker('day', 1, 31, com.runwaysdk.geodashboard.CronUtil.formatDayValue);
+        this._dow = this._generateNumberPicker('dow', com.runwaysdk.geodashboard.CronEntry.SUNDAY, com.runwaysdk.geodashboard.CronEntry.SATURDAY, function(index){return com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
+        this._hour = this._generateNumberPicker('hour', 0, 23);
+        this._minute = this._generateNumberPicker('minute', 0, 59, function(index){if (index < 10) {return "0"+index;} return index; });
         
         this._cronDiv = this.getFactory().newElement('div');        
         this._cronDiv.appendChild(this._period.getDiv());
-        this._cronDiv.appendChild(this._minute.getDiv());
-        this._cronDiv.appendChild(this._hour.getDiv());
-        this._cronDiv.appendChild(this._dow.getDiv());
         this._cronDiv.appendChild(this._day.getDiv());
+        this._cronDiv.appendChild(this._dow.getDiv());
+        this._cronDiv.appendChild(this._hour.getDiv());
+        this._cronDiv.appendChild(this._minute.getDiv());
         this._cronDiv.addEventListener("change", Mojo.Util.bind(this, this._calcCronValue));
         
         this._section.appendChild(scheduledRunDiv);
@@ -304,7 +305,7 @@
         this.setId(id);        
       },
       _onClickEnable : function() {
-        this.setValue(com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE);
+        this.setValue(com.runwaysdk.geodashboard.CronEntry.DEFAULT_VALUE);
       },        
       _onClickDisable : function() {
         this.setValue(null);
@@ -494,5 +495,4 @@
   });
   
   return Mojo.Meta.alias(pack+"*");
-})();
-  
+})();  

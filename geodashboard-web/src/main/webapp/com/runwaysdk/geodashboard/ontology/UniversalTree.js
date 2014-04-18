@@ -83,8 +83,7 @@
       refreshTreeAfterDeleteTerm : function(termId) {
         var nodes = this.__getNodesById(termId);
         var $tree = this.getImpl();
-        var children = $tree.jstree("get_children_dom", nodes[0]);
-        var shouldRefresh = children.length > 0;
+        var shouldRefresh = !($tree.jstree("is_loaded", nodes[0]) && ($tree.jstree("get_children_dom", nodes[0]).length <= 0));
         
         this.parentRelationshipCache.removeAll(termId);
         
@@ -104,7 +103,7 @@
       },
       
       _onClickNewCountry : function() {
-        this.createTerm(this.rootTermId);
+        this.createTerm(this.rootTermId, {id:"#"});
       },
       
       createCountryButton : function() {
