@@ -85,7 +85,7 @@
           jsTree: {
             "plugins" : ["dnd", "crrm", "ui", "contextmenu"],
             "core" : {
-              data : Mojo.Util.bind(this, this.__treeWantsData),
+              data : this.__preserveThisBind(this, this.__treeWantsData),
               check_callback: true,
               "load_open" : true,
               "themes" : {
@@ -130,6 +130,17 @@
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
         this.busyNodes = new com.runwaysdk.structure.HashSet();
+      },
+      
+      __preserveThisBind : function(thisRef, func){
+        var args = [].splice.call(arguments, 2, arguments.length);
+        return function(){
+          var callArgs = args.concat([].splice.call(arguments, 0, arguments.length));
+          callArgs.splice(0,0,this);
+          
+          var retval = func.apply(thisRef, callArgs);
+          return retval;
+        };
       },
       
       getCheckedTerms : function(rootNode, appendArray) {
@@ -995,6 +1006,11 @@
           node.children = isNodeClosed;
         }
         
+        // God damn it jsTree you buggy piece of shit
+        if (parentNode.id === "#") {
+          parentNode.parents = [];
+        }
+        
         node = $thisTree.jstree(
           'create_node',
           parentNode,
@@ -1083,7 +1099,7 @@
 //        node.children_d = children_deep;
 //      },
       
-      __treeWantsData : function(parent, jsTreeCallback) {
+      __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
         
         var parentNodeId = parent.id;
@@ -1135,9 +1151,9 @@
               
               var relType = Mojo.Util.replaceAll(tnr.getRelationshipType(), ".", "-");
               
-              if (i > 3) {
-                relType = "com-runwaysdk-system-gis-geo-IsA";
-              }
+//              if (i > 3) {
+//                relType = "com-runwaysdk-system-gis-geo-IsA";
+//              }
               
               var treeNode = {
                   text: that._getTermDisplayLabel(term),
@@ -1148,7 +1164,7 @@
               json.push(treeNode);
             }
             
-            jsTreeCallback.call(this, json);
+            jsTreeCallback.call(treeThisRef, json);
             
             // There's no "onCreateLi" event for jsTree, so invoke our function that creates checkboxes
 //            var children = $tree.jstree("get_children_dom", parent);
