@@ -74,7 +74,7 @@ public class SessionFilter implements Filter, Reloadable
     }
     else
     {
-      httpRes.sendRedirect(httpReq.getContextPath() + "/login");
+      httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
     }
   }
 
