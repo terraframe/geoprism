@@ -70,9 +70,10 @@
       ON_EDIT : 4
     },
     Instance : {
-      initialize : function(eventType, user) {
+      initialize : function(eventType, user, container) {
         this._eventType = eventType;
         this._user = user;
+        this._container = container;
       },
       
       getEventType : function(){
@@ -81,6 +82,10 @@
       
       getUser : function(){
     	return this._user;
+      },
+      
+      getContainer : function(){
+    	return this._container;
       }
     }
   });
@@ -109,10 +114,10 @@
         return this._listeners;  
       },
       
-      fireEvent : function(eventType, user)
+      fireEvent : function(eventType, user, container)
       {
         for(var i = 0; i < this._listeners.length; i++) {
-          this._listeners[i].handleEvent(new UserFormEvent(eventType, user));
+          this._listeners[i].handleEvent(new UserFormEvent(eventType, user, container));
         }  
       },
       
@@ -153,7 +158,7 @@
                 onSuccess : function(user) {
                   container.close();
                 
-                  that.fireEvent(UserFormEvent.APPLY_SUCCESS, user);
+                  that.fireEvent(UserFormEvent.APPLY_SUCCESS, user, container);
                 },
                 onFailure : function(ex) {
                   form.handleException(ex);
@@ -161,9 +166,9 @@
                   document.getElementById('user-submit').disabled = false;
                   document.getElementById('user-cancel').disabled = false;
                  
-                  that.fireEvent(UserFormEvent.APPLY_FAILURE);
+                  that.fireEvent(UserFormEvent.APPLY_FAILURE, null, container);
                 }
-              }, form.getRawEl());
+              }, container.getParentNode());
 
               if(that._hasRoles) {
                 that._user.applyWithRoles(applyCallback, roles);            
@@ -176,18 +181,18 @@
             var cancelCallback = function() {
               if(!that._user.isNewInstance())
               {                
-                var unlockCallback = new Mojo.ClientRequest({
+                var unlockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
                   onSuccess : function(user) {
                     container.close();
                   
-                    that.fireEvent(UserFormEvent.CANCEL_SUCCESS, user);
+                    that.fireEvent(UserFormEvent.CANCEL_SUCCESS, user, container);
                   },
                   onFailure : function(ex) {
                     form.handleException(ex);
                   
-                    that.fireEvent(UserFormEvent.CANCEL_FAILURE);
+                    that.fireEvent(UserFormEvent.CANCEL_FAILURE, null, container);
                   }
-                });
+                }, container.getParentNode());
           
                 that._user.unlock(unlockCallback);  
               }
@@ -203,7 +208,7 @@
           else
           {
             var editCallback = function() {
-              that.fireEvent(UserFormEvent.ON_EDIT, that._user);            	
+              that.fireEvent(UserFormEvent.ON_EDIT, that._user, container);            	
             };
           
             container.addButton(that.localize("edit"), editCallback, null, {id:'user-edit', class:'btn btn-primary'});
@@ -498,6 +503,10 @@
         
         this.appendChild(form);
       },
+      getParentNode : function()
+      {
+    	return this.getRawEl();  
+      },
       reload : function(user, readOnly)
       {
     	this.setInnerHTML('');
@@ -512,14 +521,14 @@
     	var user = e.getUser();
     	  
         if(e.getEventType() === UserFormEvent.ON_EDIT) {
-          var lockCallback = new Mojo.ClientRequest({
+          var lockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function(user) {
               that.reload(user, false);
             },
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          });
+          }, document.getElementById('userForm'));
               
           user.lock(lockCallback);
         }
@@ -592,11 +601,12 @@
       _onEditUser : function(e) {
         var target = e.getTarget();
         var id = target.id;        
+        var mainDiv = document.getElementById("usersTable");
         var rowNumber = id.replace('table-edit-', '');
           
         var user = this._table.getDataSource().getResultsQueryDTO().getResultSet()[rowNumber];
         
-        var callback = new Mojo.ClientRequest({
+        var callback = new com.runwaysdk.geodashboard.StandbyClientRequest({
           that : this,
           onSuccess : function(dto) {
             this.that._buildDialog(this.that.localize("dialogEditUserTitle"), dto);        
@@ -604,7 +614,7 @@
           onFailure : function(ex) {
             this.that.handleException(ex);
           } 
-        });        
+        }, mainDiv);        
         
         if(user.isWritable())
         {

@@ -263,28 +263,28 @@
           job.getDescription().localizedValue = values.get("description");
           job.setCronExpression(values.get("cron"));
             
-          var applyCallback = new Mojo.ClientRequest({
+          var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function() {
               dialog.close();
             },
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          });
+          }, dialog.getParentNode());
             
           job.apply(applyCallback);
         });
         
         
         var handleCancel = Mojo.Util.bind(this, function () {       
-          var unlockCallback = new Mojo.ClientRequest({
+          var unlockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function(user) {
               dialog.close();
             },
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          });
+          }, dialog.getParentNode());
     
           job.unlock(unlockCallback);  
         });
@@ -305,7 +305,7 @@
         var table = row.getParentTable();
         var job = table.getDataSource().getResultsQueryDTO().getResultSet()[row.getRowNumber()];        
       
-        var lockCallback = new Mojo.ClientRequest({
+        var lockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
           that : this,
           onSuccess : function(ret) {
             this.that._openEditMenu(row, ret);
@@ -313,7 +313,7 @@
           onFailure : function(ex) {
             this.that.handleException(ex);
           }
-        });
+        }, document.getElementById('scheduler'));
         
         job.lock(lockCallback);
       },      
