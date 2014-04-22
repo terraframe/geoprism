@@ -186,13 +186,13 @@ public class StyleImpl extends ComponentImpl implements Style
   }
 
   @Override
-  public void enableValue(Boolean enable)
+  public void setEnableValue(Boolean enable)
   {
     this.enableValue = enable;    
   }
 
   @Override
-  public Boolean enabledValue()
+  public Boolean getEnableValue()
   {
     return this.enableValue;
   }
@@ -258,13 +258,13 @@ public class StyleImpl extends ComponentImpl implements Style
   }
 
   @Override
-  public void enableLabel(Boolean enable)
+  public void setEnableLabel(Boolean enable)
   {
     this.enableLabel = enable;    
   }
 
   @Override
-  public Boolean enabledLabel()
+  public Boolean getEnableLabel()
   {
     return this.enableLabel;
   }

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2080915428)
+@com.runwaysdk.business.ClassSignature(hash = 110844048)
 public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
-  private static final long serialVersionUID = -2080915428;
+  private static final long serialVersionUID = 110844048;
   
   protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -37,8 +37,8 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String LABELCOLOR = "labelColor";
   public static java.lang.String LABELFONT = "labelFont";
   public static java.lang.String LABELHALO = "labelHalo";
+  public static java.lang.String LABELHALOWIDTH = "labelHaloWidth";
   public static java.lang.String LABELSIZE = "labelSize";
-  public static java.lang.String LABELWIDTH = "labelWidth";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
@@ -50,20 +50,20 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
+  public static java.lang.String POINTWELLKNOWNNAME = "pointWellKnownName";
   public static java.lang.String POLYGONFILL = "polygonFill";
+  public static java.lang.String POLYGONFILLOPACITY = "polygonFillOpacity";
   public static java.lang.String POLYGONSTROKE = "polygonStroke";
+  public static java.lang.String POLYGONSTROKEOPACITY = "polygonStrokeOpacity";
   public static java.lang.String POLYGONSTROKEWIDTH = "polygonStrokeWidth";
-  public static java.lang.String POLYGONEFILLOPACITY = "polygoneFillOpacity";
-  public static java.lang.String POLYGONESTROKEOPACITY = "polygoneStrokeOpacity";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String VALUECOLOR = "valueColor";
   public static java.lang.String VALUEFONT = "valueFont";
   public static java.lang.String VALUEHALO = "valueHalo";
+  public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  public static java.lang.String VALUEWIDTH = "valueWidth";
-  public static java.lang.String WELLKNOWNNAME = "wellKnownName";
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -397,6 +397,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LABELHALO).getAttributeMdDTO();
   }
   
+  public Integer getLabelHaloWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELHALOWIDTH));
+  }
+  
+  public void setLabelHaloWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LABELHALOWIDTH, "");
+    }
+    else
+    {
+      setValue(LABELHALOWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLabelHaloWidthWritable()
+  {
+    return isWritable(LABELHALOWIDTH);
+  }
+  
+  public boolean isLabelHaloWidthReadable()
+  {
+    return isReadable(LABELHALOWIDTH);
+  }
+  
+  public boolean isLabelHaloWidthModified()
+  {
+    return isModified(LABELHALOWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLabelHaloWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LABELHALOWIDTH).getAttributeMdDTO();
+  }
+  
   public Integer getLabelSize()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELSIZE));
@@ -432,43 +469,6 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLabelSizeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LABELSIZE).getAttributeMdDTO();
-  }
-  
-  public Integer getLabelWidth()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELWIDTH));
-  }
-  
-  public void setLabelWidth(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(LABELWIDTH, "");
-    }
-    else
-    {
-      setValue(LABELWIDTH, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public boolean isLabelWidthWritable()
-  {
-    return isWritable(LABELWIDTH);
-  }
-  
-  public boolean isLabelWidthReadable()
-  {
-    return isReadable(LABELWIDTH);
-  }
-  
-  public boolean isLabelWidthModified()
-  {
-    return isModified(LABELWIDTH);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLabelWidthMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LABELWIDTH).getAttributeMdDTO();
   }
   
   public java.util.Date getLastUpdateDate()
@@ -878,6 +878,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTSTROKEWIDTH).getAttributeMdDTO();
   }
   
+  public String getPointWellKnownName()
+  {
+    return getValue(POINTWELLKNOWNNAME);
+  }
+  
+  public void setPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(POINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(POINTWELLKNOWNNAME, value);
+    }
+  }
+  
+  public boolean isPointWellKnownNameWritable()
+  {
+    return isWritable(POINTWELLKNOWNNAME);
+  }
+  
+  public boolean isPointWellKnownNameReadable()
+  {
+    return isReadable(POINTWELLKNOWNNAME);
+  }
+  
+  public boolean isPointWellKnownNameModified()
+  {
+    return isModified(POINTWELLKNOWNNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPointWellKnownNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POINTWELLKNOWNNAME).getAttributeMdDTO();
+  }
+  
   public String getPolygonFill()
   {
     return getValue(POLYGONFILL);
@@ -913,6 +950,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonFillMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONFILL).getAttributeMdDTO();
+  }
+  
+  public Double getPolygonFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONFILLOPACITY));
+  }
+  
+  public void setPolygonFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONFILLOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPolygonFillOpacityWritable()
+  {
+    return isWritable(POLYGONFILLOPACITY);
+  }
+  
+  public boolean isPolygonFillOpacityReadable()
+  {
+    return isReadable(POLYGONFILLOPACITY);
+  }
+  
+  public boolean isPolygonFillOpacityModified()
+  {
+    return isModified(POLYGONFILLOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygonFillOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONFILLOPACITY).getAttributeMdDTO();
   }
   
   public String getPolygonStroke()
@@ -952,6 +1026,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONSTROKE).getAttributeMdDTO();
   }
   
+  public Double getPolygonStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONSTROKEOPACITY));
+  }
+  
+  public void setPolygonStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPolygonStrokeOpacityWritable()
+  {
+    return isWritable(POLYGONSTROKEOPACITY);
+  }
+  
+  public boolean isPolygonStrokeOpacityReadable()
+  {
+    return isReadable(POLYGONSTROKEOPACITY);
+  }
+  
+  public boolean isPolygonStrokeOpacityModified()
+  {
+    return isModified(POLYGONSTROKEOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygonStrokeOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONSTROKEOPACITY).getAttributeMdDTO();
+  }
+  
   public Integer getPolygonStrokeWidth()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POLYGONSTROKEWIDTH));
@@ -987,80 +1098,6 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPolygonStrokeWidthMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POLYGONSTROKEWIDTH).getAttributeMdDTO();
-  }
-  
-  public Double getPolygoneFillOpacity()
-  {
-    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONEFILLOPACITY));
-  }
-  
-  public void setPolygoneFillOpacity(Double value)
-  {
-    if(value == null)
-    {
-      setValue(POLYGONEFILLOPACITY, "");
-    }
-    else
-    {
-      setValue(POLYGONEFILLOPACITY, java.lang.Double.toString(value));
-    }
-  }
-  
-  public boolean isPolygoneFillOpacityWritable()
-  {
-    return isWritable(POLYGONEFILLOPACITY);
-  }
-  
-  public boolean isPolygoneFillOpacityReadable()
-  {
-    return isReadable(POLYGONEFILLOPACITY);
-  }
-  
-  public boolean isPolygoneFillOpacityModified()
-  {
-    return isModified(POLYGONEFILLOPACITY);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygoneFillOpacityMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONEFILLOPACITY).getAttributeMdDTO();
-  }
-  
-  public Double getPolygoneStrokeOpacity()
-  {
-    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONESTROKEOPACITY));
-  }
-  
-  public void setPolygoneStrokeOpacity(Double value)
-  {
-    if(value == null)
-    {
-      setValue(POLYGONESTROKEOPACITY, "");
-    }
-    else
-    {
-      setValue(POLYGONESTROKEOPACITY, java.lang.Double.toString(value));
-    }
-  }
-  
-  public boolean isPolygoneStrokeOpacityWritable()
-  {
-    return isWritable(POLYGONESTROKEOPACITY);
-  }
-  
-  public boolean isPolygoneStrokeOpacityReadable()
-  {
-    return isReadable(POLYGONESTROKEOPACITY);
-  }
-  
-  public boolean isPolygoneStrokeOpacityModified()
-  {
-    return isModified(POLYGONESTROKEOPACITY);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygoneStrokeOpacityMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONESTROKEOPACITY).getAttributeMdDTO();
   }
   
   public Long getSeq()
@@ -1224,6 +1261,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VALUEHALO).getAttributeMdDTO();
   }
   
+  public Integer getValueHaloWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUEHALOWIDTH));
+  }
+  
+  public void setValueHaloWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(VALUEHALOWIDTH, "");
+    }
+    else
+    {
+      setValue(VALUEHALOWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isValueHaloWidthWritable()
+  {
+    return isWritable(VALUEHALOWIDTH);
+  }
+  
+  public boolean isValueHaloWidthReadable()
+  {
+    return isReadable(VALUEHALOWIDTH);
+  }
+  
+  public boolean isValueHaloWidthModified()
+  {
+    return isModified(VALUEHALOWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getValueHaloWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUEHALOWIDTH).getAttributeMdDTO();
+  }
+  
   public Integer getValueSize()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUESIZE));
@@ -1259,80 +1333,6 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getValueSizeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUESIZE).getAttributeMdDTO();
-  }
-  
-  public Integer getValueWidth()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUEWIDTH));
-  }
-  
-  public void setValueWidth(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(VALUEWIDTH, "");
-    }
-    else
-    {
-      setValue(VALUEWIDTH, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public boolean isValueWidthWritable()
-  {
-    return isWritable(VALUEWIDTH);
-  }
-  
-  public boolean isValueWidthReadable()
-  {
-    return isReadable(VALUEWIDTH);
-  }
-  
-  public boolean isValueWidthModified()
-  {
-    return isModified(VALUEWIDTH);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getValueWidthMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUEWIDTH).getAttributeMdDTO();
-  }
-  
-  public String getWellKnownName()
-  {
-    return getValue(WELLKNOWNNAME);
-  }
-  
-  public void setWellKnownName(String value)
-  {
-    if(value == null)
-    {
-      setValue(WELLKNOWNNAME, "");
-    }
-    else
-    {
-      setValue(WELLKNOWNNAME, value);
-    }
-  }
-  
-  public boolean isWellKnownNameWritable()
-  {
-    return isWritable(WELLKNOWNNAME);
-  }
-  
-  public boolean isWellKnownNameReadable()
-  {
-    return isReadable(WELLKNOWNNAME);
-  }
-  
-  public boolean isWellKnownNameModified()
-  {
-    return isModified(WELLKNOWNNAME);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getWellKnownNameMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(WELLKNOWNNAME).getAttributeMdDTO();
   }
   
   @SuppressWarnings("unchecked")

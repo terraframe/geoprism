@@ -14,9 +14,9 @@ public interface Style extends Component
    * Enable the display of the attribute value.
    * @param enable
    */
-  public void enableValue(Boolean enable);
+  public void setEnableValue(Boolean enable);
 
-  public Boolean enabledValue();
+  public Boolean getEnableValue();
   
   public void setValueFont(String font);
 
@@ -44,9 +44,9 @@ public interface Style extends Component
    * Enable the display of the attribute label.
    * @param enable
    */
-  public void enableLabel(Boolean enable);
+  public void setEnableLabel(Boolean enable);
   
-  public Boolean enabledLabel();
+  public Boolean getEnableLabel();
   
   public void setLabelFont(String font);
 

@@ -30,10 +30,9 @@ public class MapImpl extends ComponentImpl implements Map
     return name;
   }
   
-  @Override
   public void addLayer(Layer layer)
   {
-    this.layers.add(layer);    
+    this.layers.add(layer);
   }
   
   @Override
@@ -46,10 +45,5 @@ public class MapImpl extends ComponentImpl implements Map
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
-    
-    for(Layer layer : this.layers)
-    {
-      layer.accepts(visitor);
-    }
   }
 }

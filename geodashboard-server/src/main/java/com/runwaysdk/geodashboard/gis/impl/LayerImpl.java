@@ -17,6 +17,8 @@ public class LayerImpl extends ComponentImpl implements Layer
   private Boolean virtual;
 
   private FeatureType featureType;
+
+  private Boolean displayInLegend;
   
   public LayerImpl()
   {
@@ -49,7 +51,6 @@ public class LayerImpl extends ComponentImpl implements Layer
     return this.styles;
   }
   
-  @Override
   public void setVirtual(Boolean virtual)
   {
     this.virtual = virtual;
@@ -65,14 +66,8 @@ public class LayerImpl extends ComponentImpl implements Layer
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
-    
-    for(Style style : styles)
-    {
-      style.accepts(visitor);
-    }
   }
 
-  @Override
   public void setFeatureType(FeatureType featureType)
   {
     this.featureType = featureType;    
@@ -85,17 +80,14 @@ public class LayerImpl extends ComponentImpl implements Layer
   }
 
   @Override
-  public Boolean displayInLegend()
+  public Boolean getDisplayInLegend()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return this.displayInLegend;
   }
 
-  @Override
   public void setDisplayInLegend(Boolean display)
   {
-    // TODO Auto-generated method stub
-    
+    this.displayInLegend = display;
   }
 
 }

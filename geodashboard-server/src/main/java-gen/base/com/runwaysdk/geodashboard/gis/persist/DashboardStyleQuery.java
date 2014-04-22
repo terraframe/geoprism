@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -256249019)
+@com.runwaysdk.business.ClassSignature(hash = 201245127)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -220,6 +220,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth()
+  {
+    return getLabelHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getLabelSize()
   {
     return getLabelSize(null);
@@ -235,23 +252,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getLabelSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELSIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getLabelWidth()
-  {
-    return getLabelWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -459,6 +459,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEWIDTH, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName()
+  {
+    return getPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getPolygonFill()
   {
     return getPolygonFill(null);
@@ -474,6 +491,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getPolygonFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity()
+  {
+    return getPolygonFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getPolygonStroke()
@@ -493,6 +527,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity()
+  {
+    return getPolygonStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth()
   {
     return getPolygonStrokeWidth(null);
@@ -508,40 +559,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity()
-  {
-    return getPolygoneFillOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity()
-  {
-    return getPolygoneStrokeOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -646,6 +663,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth()
+  {
+    return getValueHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getValueSize()
   {
     return getValueSize(null);
@@ -661,40 +695,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getValueSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUESIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getValueWidth()
-  {
-    return getValueWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getWellKnownName()
-  {
-    return getWellKnownName(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
@@ -906,12 +906,12 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getLabelHalo();
     public com.runwaysdk.query.SelectableChar getLabelHalo(String alias);
     public com.runwaysdk.query.SelectableChar getLabelHalo(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth();
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getLabelSize();
     public com.runwaysdk.query.SelectableInteger getLabelSize(String alias);
     public com.runwaysdk.query.SelectableInteger getLabelSize(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getLabelWidth();
-    public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias);
-    public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate();
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel);
@@ -945,21 +945,24 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getPolygonFill();
     public com.runwaysdk.query.SelectableChar getPolygonFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity();
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getPolygonStroke();
     public com.runwaysdk.query.SelectableChar getPolygonStroke(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity();
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias);
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity();
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias);
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -978,15 +981,12 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getValueHalo();
     public com.runwaysdk.query.SelectableChar getValueHalo(String alias);
     public com.runwaysdk.query.SelectableChar getValueHalo(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth();
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getValueSize();
     public com.runwaysdk.query.SelectableInteger getValueSize(String alias);
     public com.runwaysdk.query.SelectableInteger getValueSize(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getValueWidth();
-    public com.runwaysdk.query.SelectableInteger getValueWidth(String alias);
-    public com.runwaysdk.query.SelectableInteger getValueWidth(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getWellKnownName();
-    public com.runwaysdk.query.SelectableChar getWellKnownName(String alias);
-    public com.runwaysdk.query.SelectableChar getWellKnownName(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.persist.DashboardStyle dashboardStyle);
 
@@ -1216,6 +1216,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth()
+  {
+    return getLabelHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getLabelSize()
   {
     return getLabelSize(null);
@@ -1231,23 +1248,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getLabelSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELSIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getLabelWidth()
-  {
-    return getLabelWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1437,6 +1437,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEWIDTH, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName()
+  {
+    return getPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getPolygonFill()
   {
     return getPolygonFill(null);
@@ -1452,6 +1469,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getPolygonFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity()
+  {
+    return getPolygonFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getPolygonStroke()
@@ -1471,6 +1505,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity()
+  {
+    return getPolygonStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth()
   {
     return getPolygonStrokeWidth(null);
@@ -1486,40 +1537,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity()
-  {
-    return getPolygoneFillOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity()
-  {
-    return getPolygoneStrokeOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -1624,6 +1641,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth()
+  {
+    return getValueHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getValueSize()
   {
     return getValueSize(null);
@@ -1639,40 +1673,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getValueSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUESIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getValueWidth()
-  {
-    return getValueWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getWellKnownName()
-  {
-    return getWellKnownName(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, displayLabel);
 
   }
 
@@ -1861,12 +1861,12 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getLabelHalo();
     public com.runwaysdk.query.SelectableChar getLabelHalo(String alias);
     public com.runwaysdk.query.SelectableChar getLabelHalo(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth();
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getLabelSize();
     public com.runwaysdk.query.SelectableInteger getLabelSize(String alias);
     public com.runwaysdk.query.SelectableInteger getLabelSize(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getLabelWidth();
-    public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias);
-    public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate();
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel);
@@ -1900,21 +1900,24 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getPolygonFill();
     public com.runwaysdk.query.SelectableChar getPolygonFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity();
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getPolygonStroke();
     public com.runwaysdk.query.SelectableChar getPolygonStroke(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity();
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias);
-    public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity();
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias);
-    public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -1933,15 +1936,12 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getValueHalo();
     public com.runwaysdk.query.SelectableChar getValueHalo(String alias);
     public com.runwaysdk.query.SelectableChar getValueHalo(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth();
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getValueSize();
     public com.runwaysdk.query.SelectableInteger getValueSize(String alias);
     public com.runwaysdk.query.SelectableInteger getValueSize(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getValueWidth();
-    public com.runwaysdk.query.SelectableInteger getValueWidth(String alias);
-    public com.runwaysdk.query.SelectableInteger getValueWidth(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getWellKnownName();
-    public com.runwaysdk.query.SelectableChar getWellKnownName(String alias);
-    public com.runwaysdk.query.SelectableChar getWellKnownName(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.persist.DashboardStyle ... dashboardStyle);
     public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.persist.DashboardStyle ... dashboardStyle);
@@ -2196,6 +2196,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth()
+  {
+    return getLabelHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLabelHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getLabelSize()
   {
     return getLabelSize(null);
@@ -2211,23 +2228,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getLabelSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELSIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getLabelWidth()
-  {
-    return getLabelWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getLabelWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LABELWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -2417,6 +2417,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEWIDTH, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName()
+  {
+    return getPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getPolygonFill()
   {
     return getPolygonFill(null);
@@ -2432,6 +2449,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getPolygonFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity()
+  {
+    return getPolygonFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONFILLOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getPolygonStroke()
@@ -2451,6 +2485,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity()
+  {
+    return getPolygonStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPolygonStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEOPACITY, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth()
   {
     return getPolygonStrokeWidth(null);
@@ -2466,40 +2517,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getPolygonStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONSTROKEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity()
-  {
-    return getPolygoneFillOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneFillOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONEFILLOPACITY, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity()
-  {
-    return getPolygoneStrokeOpacity(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableDouble getPolygoneStrokeOpacity(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POLYGONESTROKEOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -2604,6 +2621,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALO, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth()
+  {
+    return getValueHaloWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getValueHaloWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEHALOWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getValueSize()
   {
     return getValueSize(null);
@@ -2619,40 +2653,6 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableInteger getValueSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUESIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableInteger getValueWidth()
-  {
-    return getValueWidth(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableInteger getValueWidth(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.VALUEWIDTH, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getWellKnownName()
-  {
-    return getWellKnownName(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getWellKnownName(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.WELLKNOWNNAME, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)

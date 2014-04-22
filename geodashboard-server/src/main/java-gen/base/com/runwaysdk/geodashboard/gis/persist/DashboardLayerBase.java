@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1820396349)
+@com.runwaysdk.business.ClassSignature(hash = 157177235)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,18 +13,21 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1820396349;
+  public static java.lang.String VIRTUAL = "virtual";
+  private static final long serialVersionUID = 157177235;
   
   public DashboardLayerBase()
   {
@@ -73,6 +76,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public Boolean getDisplayInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(DISPLAYINLEGEND));
+  }
+  
+  public void validateDisplayInLegend()
+  {
+    this.validateAttribute(DISPLAYINLEGEND);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayInLegendMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(DISPLAYINLEGEND);
+  }
+  
+  public void setDisplayInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(DISPLAYINLEGEND, "");
+    }
+    else
+    {
+      setValue(DISPLAYINLEGEND, java.lang.Boolean.toString(value));
+    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
@@ -201,6 +232,44 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(LASTUPDATEDBY);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllLayerType> getLayerType()
+  {
+    return (java.util.List<com.runwaysdk.geodashboard.gis.persist.AllLayerType>) getEnumValues(LAYERTYPE);
+  }
+  
+  public void addLayerType(com.runwaysdk.geodashboard.gis.persist.AllLayerType value)
+  {
+    if(value != null)
+    {
+      addEnumItem(LAYERTYPE, value.getId());
+    }
+  }
+  
+  public void removeLayerType(com.runwaysdk.geodashboard.gis.persist.AllLayerType value)
+  {
+    if(value != null)
+    {
+      removeEnumItem(LAYERTYPE, value.getId());
+    }
+  }
+  
+  public void clearLayerType()
+  {
+    clearEnum(LAYERTYPE);
+  }
+  
+  public void validateLayerType()
+  {
+    this.validateAttribute(LAYERTYPE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerTypeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(LAYERTYPE);
   }
   
   public com.runwaysdk.system.Users getLockedBy()
@@ -345,6 +414,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(TYPE);
+  }
+  
+  public Boolean getVirtual()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(VIRTUAL));
+  }
+  
+  public void validateVirtual()
+  {
+    this.validateAttribute(VIRTUAL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getVirtualMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(VIRTUAL);
+  }
+  
+  public void setVirtual(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(VIRTUAL, "");
+    }
+    else
+    {
+      setValue(VIRTUAL, java.lang.Boolean.toString(value));
+    }
   }
   
   protected String getDeclaredType()

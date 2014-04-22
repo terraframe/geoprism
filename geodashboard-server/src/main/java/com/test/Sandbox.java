@@ -496,16 +496,16 @@ public class Sandbox
   
   private static void mapTest()
   {
-    Map map = new MapImpl();
+    MapImpl map = new MapImpl();
     map.setName("Map 1");
 
-    Layer layer0 = new LayerImpl();
+    LayerImpl layer0 = new LayerImpl();
     layer0.setName("Layer 0");
     layer0.setVirtual(false);
     layer0.setFeatureType(FeatureType.POINT);
     map.addLayer(layer0);
     
-    Layer layer1 = new LayerImpl();
+    LayerImpl layer1 = new LayerImpl();
     layer1.setName("Layer 1");
     layer1.setVirtual(false);
     layer1.setFeatureType(FeatureType.POINT);

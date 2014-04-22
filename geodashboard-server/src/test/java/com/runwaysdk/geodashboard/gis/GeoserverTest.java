@@ -27,10 +27,10 @@ public class GeoserverTest
   @Request
   public void testCreateStyle()
   {
-     Map map = new MapImpl();
+     MapImpl map = new MapImpl();
      map.setName("Map 1");
      
-     Layer layer1 = new LayerImpl();
+     LayerImpl layer1 = new LayerImpl();
      layer1.setName("Layer 1");
      layer1.setVirtual(true);
      layer1.setFeatureType(FeatureType.POINT);

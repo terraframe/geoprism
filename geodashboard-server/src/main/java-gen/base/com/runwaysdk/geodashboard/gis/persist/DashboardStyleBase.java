@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -146280036)
+@com.runwaysdk.business.ClassSignature(hash = 986003216)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -21,8 +21,8 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String LABELCOLOR = "labelColor";
   public static java.lang.String LABELFONT = "labelFont";
   public static java.lang.String LABELHALO = "labelHalo";
+  public static java.lang.String LABELHALOWIDTH = "labelHaloWidth";
   public static java.lang.String LABELSIZE = "labelSize";
-  public static java.lang.String LABELWIDTH = "labelWidth";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
@@ -34,21 +34,21 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
+  public static java.lang.String POINTWELLKNOWNNAME = "pointWellKnownName";
   public static java.lang.String POLYGONFILL = "polygonFill";
+  public static java.lang.String POLYGONFILLOPACITY = "polygonFillOpacity";
   public static java.lang.String POLYGONSTROKE = "polygonStroke";
+  public static java.lang.String POLYGONSTROKEOPACITY = "polygonStrokeOpacity";
   public static java.lang.String POLYGONSTROKEWIDTH = "polygonStrokeWidth";
-  public static java.lang.String POLYGONEFILLOPACITY = "polygoneFillOpacity";
-  public static java.lang.String POLYGONESTROKEOPACITY = "polygoneStrokeOpacity";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String VALUECOLOR = "valueColor";
   public static java.lang.String VALUEFONT = "valueFont";
   public static java.lang.String VALUEHALO = "valueHalo";
+  public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  public static java.lang.String VALUEWIDTH = "valueWidth";
-  public static java.lang.String WELLKNOWNNAME = "wellKnownName";
-  private static final long serialVersionUID = -146280036;
+  private static final long serialVersionUID = 986003216;
   
   public DashboardStyleBase()
   {
@@ -323,6 +323,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     }
   }
   
+  public Integer getLabelHaloWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELHALOWIDTH));
+  }
+  
+  public void validateLabelHaloWidth()
+  {
+    this.validateAttribute(LABELHALOWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLabelHaloWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(LABELHALOWIDTH);
+  }
+  
+  public void setLabelHaloWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LABELHALOWIDTH, "");
+    }
+    else
+    {
+      setValue(LABELHALOWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
   public Integer getLabelSize()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELSIZE));
@@ -348,34 +376,6 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(LABELSIZE, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public Integer getLabelWidth()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELWIDTH));
-  }
-  
-  public void validateLabelWidth()
-  {
-    this.validateAttribute(LABELWIDTH);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLabelWidthMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return mdClassIF.definesAttribute(LABELWIDTH);
-  }
-  
-  public void setLabelWidth(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(LABELWIDTH, "");
-    }
-    else
-    {
-      setValue(LABELWIDTH, java.lang.Integer.toString(value));
     }
   }
   
@@ -687,6 +687,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     }
   }
   
+  public String getPointWellKnownName()
+  {
+    return getValue(POINTWELLKNOWNNAME);
+  }
+  
+  public void validatePointWellKnownName()
+  {
+    this.validateAttribute(POINTWELLKNOWNNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointWellKnownNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(POINTWELLKNOWNNAME);
+  }
+  
+  public void setPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(POINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(POINTWELLKNOWNNAME, value);
+    }
+  }
+  
   public String getPolygonFill()
   {
     return getValue(POLYGONFILL);
@@ -712,6 +740,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(POLYGONFILL, value);
+    }
+  }
+  
+  public Double getPolygonFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONFILLOPACITY));
+  }
+  
+  public void validatePolygonFillOpacity()
+  {
+    this.validateAttribute(POLYGONFILLOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonFillOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(POLYGONFILLOPACITY);
+  }
+  
+  public void setPolygonFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONFILLOPACITY, java.lang.Double.toString(value));
     }
   }
   
@@ -743,6 +799,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     }
   }
   
+  public Double getPolygonStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONSTROKEOPACITY));
+  }
+  
+  public void validatePolygonStrokeOpacity()
+  {
+    this.validateAttribute(POLYGONSTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(POLYGONSTROKEOPACITY);
+  }
+  
+  public void setPolygonStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
   public Integer getPolygonStrokeWidth()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POLYGONSTROKEWIDTH));
@@ -768,62 +852,6 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(POLYGONSTROKEWIDTH, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public Double getPolygoneFillOpacity()
-  {
-    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONEFILLOPACITY));
-  }
-  
-  public void validatePolygoneFillOpacity()
-  {
-    this.validateAttribute(POLYGONEFILLOPACITY);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygoneFillOpacityMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return mdClassIF.definesAttribute(POLYGONEFILLOPACITY);
-  }
-  
-  public void setPolygoneFillOpacity(Double value)
-  {
-    if(value == null)
-    {
-      setValue(POLYGONEFILLOPACITY, "");
-    }
-    else
-    {
-      setValue(POLYGONEFILLOPACITY, java.lang.Double.toString(value));
-    }
-  }
-  
-  public Double getPolygoneStrokeOpacity()
-  {
-    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONESTROKEOPACITY));
-  }
-  
-  public void validatePolygoneStrokeOpacity()
-  {
-    this.validateAttribute(POLYGONESTROKEOPACITY);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygoneStrokeOpacityMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return mdClassIF.definesAttribute(POLYGONESTROKEOPACITY);
-  }
-  
-  public void setPolygoneStrokeOpacity(Double value)
-  {
-    if(value == null)
-    {
-      setValue(POLYGONESTROKEOPACITY, "");
-    }
-    else
-    {
-      setValue(POLYGONESTROKEOPACITY, java.lang.Double.toString(value));
     }
   }
   
@@ -959,6 +987,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     }
   }
   
+  public Integer getValueHaloWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUEHALOWIDTH));
+  }
+  
+  public void validateValueHaloWidth()
+  {
+    this.validateAttribute(VALUEHALOWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getValueHaloWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(VALUEHALOWIDTH);
+  }
+  
+  public void setValueHaloWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(VALUEHALOWIDTH, "");
+    }
+    else
+    {
+      setValue(VALUEHALOWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
   public Integer getValueSize()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUESIZE));
@@ -984,62 +1040,6 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(VALUESIZE, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public Integer getValueWidth()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUEWIDTH));
-  }
-  
-  public void validateValueWidth()
-  {
-    this.validateAttribute(VALUEWIDTH);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getValueWidthMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return mdClassIF.definesAttribute(VALUEWIDTH);
-  }
-  
-  public void setValueWidth(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(VALUEWIDTH, "");
-    }
-    else
-    {
-      setValue(VALUEWIDTH, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public String getWellKnownName()
-  {
-    return getValue(WELLKNOWNNAME);
-  }
-  
-  public void validateWellKnownName()
-  {
-    this.validateAttribute(WELLKNOWNNAME);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getWellKnownNameMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return mdClassIF.definesAttribute(WELLKNOWNNAME);
-  }
-  
-  public void setWellKnownName(String value)
-  {
-    if(value == null)
-    {
-      setValue(WELLKNOWNNAME, "");
-    }
-    else
-    {
-      setValue(WELLKNOWNNAME, value);
     }
   }
   

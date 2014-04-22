@@ -47,7 +47,5 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
-    
-    this.condition.accepts(visitor);
   }
 }

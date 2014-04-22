@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 327236154)
+@com.runwaysdk.business.ClassSignature(hash = 664636106)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -76,6 +76,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CREATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
+  {
+    return getDisplayInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -173,6 +190,29 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()
+  {
+    return getLayerType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE);
+
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE);
+
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -289,6 +329,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getVirtual()
+  {
+    return getVirtual(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -312,6 +369,21 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -590,6 +662,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend();
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias);
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -605,6 +680,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType();
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias);
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
@@ -623,6 +701,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getVirtual();
+    public com.runwaysdk.query.SelectableBoolean getVirtual(String alias);
+    public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.persist.DashboardLayer dashboardLayer);
 
@@ -744,6 +825,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CREATEDBY,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
+  {
+    return getDisplayInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -827,6 +925,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()
+  {
+    return getLayerType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -929,6 +1044,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getVirtual()
+  {
+    return getVirtual(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, displayLabel);
 
   }
 
@@ -1194,6 +1326,21 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     }
   }
 
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
   }
 
 /**
@@ -1209,6 +1356,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend();
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias);
+    public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1224,6 +1374,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType();
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias);
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
@@ -1242,6 +1395,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getVirtual();
+    public com.runwaysdk.query.SelectableBoolean getVirtual(String alias);
+    public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.persist.DashboardLayer ... dashboardLayer);
     public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.persist.DashboardLayer ... dashboardLayer);
@@ -1360,6 +1516,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CREATEDBY,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
+  {
+    return getDisplayInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DISPLAYINLEGEND, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -1443,6 +1616,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()
+  {
+    return getLayerType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1547,6 +1737,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getVirtual()
+  {
+    return getVirtual(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIRTUAL, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -1570,6 +1777,21 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
