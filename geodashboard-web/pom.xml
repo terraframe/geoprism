@@ -327,7 +327,7 @@
 									<artifactId>geodashboard-server</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
 									<type>jar</type>
-									<includes>**/localize*.properties</includes>
+									<includes>**/messages*.properties</includes>
 								</artifactItem>								
 							</artifactItems>
 							<includes>**/*</includes>
