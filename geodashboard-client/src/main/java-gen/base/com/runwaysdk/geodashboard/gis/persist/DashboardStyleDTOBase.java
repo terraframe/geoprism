@@ -1,0 +1,1446 @@
+package com.runwaysdk.geodashboard.gis.persist;
+
+@com.runwaysdk.business.ClassSignature(hash = -2080915428)
+public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+{
+  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
+  private static final long serialVersionUID = -2080915428;
+  
+  protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    super(clientRequest);
+  }
+  
+  /**
+  * Copy Constructor: Duplicates the values and attributes of the given BusinessDTO into a new DTO.
+  * 
+  * @param businessDTO The BusinessDTO to duplicate
+  * @param clientRequest The clientRequest this DTO should use to communicate with the server.
+  */
+  protected DashboardStyleDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    super(businessDTO, clientRequest);
+  }
+  
+  protected java.lang.String getDeclaredType()
+  {
+    return CLASS;
+  }
+  
+  public static java.lang.String CREATEDATE = "createDate";
+  public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String ENABLELABEL = "enableLabel";
+  public static java.lang.String ENABLEVALUE = "enableValue";
+  public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String ID = "id";
+  public static java.lang.String KEYNAME = "keyName";
+  public static java.lang.String LABELCOLOR = "labelColor";
+  public static java.lang.String LABELFONT = "labelFont";
+  public static java.lang.String LABELHALO = "labelHalo";
+  public static java.lang.String LABELSIZE = "labelSize";
+  public static java.lang.String LABELWIDTH = "labelWidth";
+  public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
+  public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String NAME = "name";
+  public static java.lang.String OWNER = "owner";
+  public static java.lang.String POINTFILL = "pointFill";
+  public static java.lang.String POINTOPACITY = "pointOpacity";
+  public static java.lang.String POINTROTATION = "pointRotation";
+  public static java.lang.String POINTSIZE = "pointSize";
+  public static java.lang.String POINTSTROKE = "pointStroke";
+  public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
+  public static java.lang.String POLYGONFILL = "polygonFill";
+  public static java.lang.String POLYGONSTROKE = "polygonStroke";
+  public static java.lang.String POLYGONSTROKEWIDTH = "polygonStrokeWidth";
+  public static java.lang.String POLYGONEFILLOPACITY = "polygoneFillOpacity";
+  public static java.lang.String POLYGONESTROKEOPACITY = "polygoneStrokeOpacity";
+  public static java.lang.String SEQ = "seq";
+  public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String TYPE = "type";
+  public static java.lang.String VALUECOLOR = "valueColor";
+  public static java.lang.String VALUEFONT = "valueFont";
+  public static java.lang.String VALUEHALO = "valueHalo";
+  public static java.lang.String VALUESIZE = "valueSize";
+  public static java.lang.String VALUEWIDTH = "valueWidth";
+  public static java.lang.String WELLKNOWNNAME = "wellKnownName";
+  public java.util.Date getCreateDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
+  }
+  
+  public boolean isCreateDateWritable()
+  {
+    return isWritable(CREATEDATE);
+  }
+  
+  public boolean isCreateDateReadable()
+  {
+    return isReadable(CREATEDATE);
+  }
+  
+  public boolean isCreateDateModified()
+  {
+    return isModified(CREATEDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO getCreateDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO) getAttributeDTO(CREATEDATE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.SingleActorDTO getCreatedBy()
+  {
+    if(getValue(CREATEDBY) == null || getValue(CREATEDBY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(CREATEDBY));
+    }
+  }
+  
+  public String getCreatedById()
+  {
+    return getValue(CREATEDBY);
+  }
+  
+  public boolean isCreatedByWritable()
+  {
+    return isWritable(CREATEDBY);
+  }
+  
+  public boolean isCreatedByReadable()
+  {
+    return isReadable(CREATEDBY);
+  }
+  
+  public boolean isCreatedByModified()
+  {
+    return isModified(CREATEDBY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public Boolean getEnableLabel()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ENABLELABEL));
+  }
+  
+  public void setEnableLabel(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ENABLELABEL, "");
+    }
+    else
+    {
+      setValue(ENABLELABEL, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isEnableLabelWritable()
+  {
+    return isWritable(ENABLELABEL);
+  }
+  
+  public boolean isEnableLabelReadable()
+  {
+    return isReadable(ENABLELABEL);
+  }
+  
+  public boolean isEnableLabelModified()
+  {
+    return isModified(ENABLELABEL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getEnableLabelMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(ENABLELABEL).getAttributeMdDTO();
+  }
+  
+  public Boolean getEnableValue()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ENABLEVALUE));
+  }
+  
+  public void setEnableValue(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ENABLEVALUE, "");
+    }
+    else
+    {
+      setValue(ENABLEVALUE, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isEnableValueWritable()
+  {
+    return isWritable(ENABLEVALUE);
+  }
+  
+  public boolean isEnableValueReadable()
+  {
+    return isReadable(ENABLEVALUE);
+  }
+  
+  public boolean isEnableValueModified()
+  {
+    return isModified(ENABLEVALUE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getEnableValueMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(ENABLEVALUE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()
+  {
+    if(getValue(ENTITYDOMAIN) == null || getValue(ENTITYDOMAIN).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdDomainDTO.get(getRequest(), getValue(ENTITYDOMAIN));
+    }
+  }
+  
+  public String getEntityDomainId()
+  {
+    return getValue(ENTITYDOMAIN);
+  }
+  
+  public void setEntityDomain(com.runwaysdk.system.metadata.MdDomainDTO value)
+  {
+    if(value == null)
+    {
+      setValue(ENTITYDOMAIN, "");
+    }
+    else
+    {
+      setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public boolean isEntityDomainWritable()
+  {
+    return isWritable(ENTITYDOMAIN);
+  }
+  
+  public boolean isEntityDomainReadable()
+  {
+    return isReadable(ENTITYDOMAIN);
+  }
+  
+  public boolean isEntityDomainModified()
+  {
+    return isModified(ENTITYDOMAIN);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
+  }
+  
+  public String getKeyName()
+  {
+    return getValue(KEYNAME);
+  }
+  
+  public void setKeyName(String value)
+  {
+    if(value == null)
+    {
+      setValue(KEYNAME, "");
+    }
+    else
+    {
+      setValue(KEYNAME, value);
+    }
+  }
+  
+  public boolean isKeyNameWritable()
+  {
+    return isWritable(KEYNAME);
+  }
+  
+  public boolean isKeyNameReadable()
+  {
+    return isReadable(KEYNAME);
+  }
+  
+  public boolean isKeyNameModified()
+  {
+    return isModified(KEYNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getKeyNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(KEYNAME).getAttributeMdDTO();
+  }
+  
+  public String getLabelColor()
+  {
+    return getValue(LABELCOLOR);
+  }
+  
+  public void setLabelColor(String value)
+  {
+    if(value == null)
+    {
+      setValue(LABELCOLOR, "");
+    }
+    else
+    {
+      setValue(LABELCOLOR, value);
+    }
+  }
+  
+  public boolean isLabelColorWritable()
+  {
+    return isWritable(LABELCOLOR);
+  }
+  
+  public boolean isLabelColorReadable()
+  {
+    return isReadable(LABELCOLOR);
+  }
+  
+  public boolean isLabelColorModified()
+  {
+    return isModified(LABELCOLOR);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLabelColorMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LABELCOLOR).getAttributeMdDTO();
+  }
+  
+  public String getLabelFont()
+  {
+    return getValue(LABELFONT);
+  }
+  
+  public void setLabelFont(String value)
+  {
+    if(value == null)
+    {
+      setValue(LABELFONT, "");
+    }
+    else
+    {
+      setValue(LABELFONT, value);
+    }
+  }
+  
+  public boolean isLabelFontWritable()
+  {
+    return isWritable(LABELFONT);
+  }
+  
+  public boolean isLabelFontReadable()
+  {
+    return isReadable(LABELFONT);
+  }
+  
+  public boolean isLabelFontModified()
+  {
+    return isModified(LABELFONT);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLabelFontMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LABELFONT).getAttributeMdDTO();
+  }
+  
+  public String getLabelHalo()
+  {
+    return getValue(LABELHALO);
+  }
+  
+  public void setLabelHalo(String value)
+  {
+    if(value == null)
+    {
+      setValue(LABELHALO, "");
+    }
+    else
+    {
+      setValue(LABELHALO, value);
+    }
+  }
+  
+  public boolean isLabelHaloWritable()
+  {
+    return isWritable(LABELHALO);
+  }
+  
+  public boolean isLabelHaloReadable()
+  {
+    return isReadable(LABELHALO);
+  }
+  
+  public boolean isLabelHaloModified()
+  {
+    return isModified(LABELHALO);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLabelHaloMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LABELHALO).getAttributeMdDTO();
+  }
+  
+  public Integer getLabelSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELSIZE));
+  }
+  
+  public void setLabelSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LABELSIZE, "");
+    }
+    else
+    {
+      setValue(LABELSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLabelSizeWritable()
+  {
+    return isWritable(LABELSIZE);
+  }
+  
+  public boolean isLabelSizeReadable()
+  {
+    return isReadable(LABELSIZE);
+  }
+  
+  public boolean isLabelSizeModified()
+  {
+    return isModified(LABELSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLabelSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LABELSIZE).getAttributeMdDTO();
+  }
+  
+  public Integer getLabelWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LABELWIDTH));
+  }
+  
+  public void setLabelWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LABELWIDTH, "");
+    }
+    else
+    {
+      setValue(LABELWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLabelWidthWritable()
+  {
+    return isWritable(LABELWIDTH);
+  }
+  
+  public boolean isLabelWidthReadable()
+  {
+    return isReadable(LABELWIDTH);
+  }
+  
+  public boolean isLabelWidthModified()
+  {
+    return isModified(LABELWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLabelWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LABELWIDTH).getAttributeMdDTO();
+  }
+  
+  public java.util.Date getLastUpdateDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(LASTUPDATEDATE));
+  }
+  
+  public boolean isLastUpdateDateWritable()
+  {
+    return isWritable(LASTUPDATEDATE);
+  }
+  
+  public boolean isLastUpdateDateReadable()
+  {
+    return isReadable(LASTUPDATEDATE);
+  }
+  
+  public boolean isLastUpdateDateModified()
+  {
+    return isModified(LASTUPDATEDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO getLastUpdateDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO) getAttributeDTO(LASTUPDATEDATE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.SingleActorDTO getLastUpdatedBy()
+  {
+    if(getValue(LASTUPDATEDBY) == null || getValue(LASTUPDATEDBY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LASTUPDATEDBY));
+    }
+  }
+  
+  public String getLastUpdatedById()
+  {
+    return getValue(LASTUPDATEDBY);
+  }
+  
+  public boolean isLastUpdatedByWritable()
+  {
+    return isWritable(LASTUPDATEDBY);
+  }
+  
+  public boolean isLastUpdatedByReadable()
+  {
+    return isReadable(LASTUPDATEDBY);
+  }
+  
+  public boolean isLastUpdatedByModified()
+  {
+    return isModified(LASTUPDATEDBY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLastUpdatedByMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.UsersDTO getLockedBy()
+  {
+    if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+    }
+  }
+  
+  public String getLockedById()
+  {
+    return getValue(LOCKEDBY);
+  }
+  
+  public boolean isLockedByWritable()
+  {
+    return isWritable(LOCKEDBY);
+  }
+  
+  public boolean isLockedByReadable()
+  {
+    return isReadable(LOCKEDBY);
+  }
+  
+  public boolean isLockedByModified()
+  {
+    return isModified(LOCKEDBY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLockedByMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
+  }
+  
+  public String getName()
+  {
+    return getValue(NAME);
+  }
+  
+  public void setName(String value)
+  {
+    if(value == null)
+    {
+      setValue(NAME, "");
+    }
+    else
+    {
+      setValue(NAME, value);
+    }
+  }
+  
+  public boolean isNameWritable()
+  {
+    return isWritable(NAME);
+  }
+  
+  public boolean isNameReadable()
+  {
+    return isReadable(NAME);
+  }
+  
+  public boolean isNameModified()
+  {
+    return isModified(NAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(NAME).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.ActorDTO getOwner()
+  {
+    if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.ActorDTO.get(getRequest(), getValue(OWNER));
+    }
+  }
+  
+  public String getOwnerId()
+  {
+    return getValue(OWNER);
+  }
+  
+  public void setOwner(com.runwaysdk.system.ActorDTO value)
+  {
+    if(value == null)
+    {
+      setValue(OWNER, "");
+    }
+    else
+    {
+      setValue(OWNER, value.getId());
+    }
+  }
+  
+  public boolean isOwnerWritable()
+  {
+    return isWritable(OWNER);
+  }
+  
+  public boolean isOwnerReadable()
+  {
+    return isReadable(OWNER);
+  }
+  
+  public boolean isOwnerModified()
+  {
+    return isModified(OWNER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getOwnerMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(OWNER).getAttributeMdDTO();
+  }
+  
+  public String getPointFill()
+  {
+    return getValue(POINTFILL);
+  }
+  
+  public void setPointFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POINTFILL, "");
+    }
+    else
+    {
+      setValue(POINTFILL, value);
+    }
+  }
+  
+  public boolean isPointFillWritable()
+  {
+    return isWritable(POINTFILL);
+  }
+  
+  public boolean isPointFillReadable()
+  {
+    return isReadable(POINTFILL);
+  }
+  
+  public boolean isPointFillModified()
+  {
+    return isModified(POINTFILL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPointFillMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POINTFILL).getAttributeMdDTO();
+  }
+  
+  public Double getPointOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POINTOPACITY));
+  }
+  
+  public void setPointOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POINTOPACITY, "");
+    }
+    else
+    {
+      setValue(POINTOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPointOpacityWritable()
+  {
+    return isWritable(POINTOPACITY);
+  }
+  
+  public boolean isPointOpacityReadable()
+  {
+    return isReadable(POINTOPACITY);
+  }
+  
+  public boolean isPointOpacityModified()
+  {
+    return isModified(POINTOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPointOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POINTOPACITY).getAttributeMdDTO();
+  }
+  
+  public Integer getPointRotation()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTROTATION));
+  }
+  
+  public void setPointRotation(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTROTATION, "");
+    }
+    else
+    {
+      setValue(POINTROTATION, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointRotationWritable()
+  {
+    return isWritable(POINTROTATION);
+  }
+  
+  public boolean isPointRotationReadable()
+  {
+    return isReadable(POINTROTATION);
+  }
+  
+  public boolean isPointRotationModified()
+  {
+    return isModified(POINTROTATION);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointRotationMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTROTATION).getAttributeMdDTO();
+  }
+  
+  public Integer getPointSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTSIZE));
+  }
+  
+  public void setPointSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTSIZE, "");
+    }
+    else
+    {
+      setValue(POINTSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointSizeWritable()
+  {
+    return isWritable(POINTSIZE);
+  }
+  
+  public boolean isPointSizeReadable()
+  {
+    return isReadable(POINTSIZE);
+  }
+  
+  public boolean isPointSizeModified()
+  {
+    return isModified(POINTSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTSIZE).getAttributeMdDTO();
+  }
+  
+  public String getPointStroke()
+  {
+    return getValue(POINTSTROKE);
+  }
+  
+  public void setPointStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(POINTSTROKE, "");
+    }
+    else
+    {
+      setValue(POINTSTROKE, value);
+    }
+  }
+  
+  public boolean isPointStrokeWritable()
+  {
+    return isWritable(POINTSTROKE);
+  }
+  
+  public boolean isPointStrokeReadable()
+  {
+    return isReadable(POINTSTROKE);
+  }
+  
+  public boolean isPointStrokeModified()
+  {
+    return isModified(POINTSTROKE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPointStrokeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POINTSTROKE).getAttributeMdDTO();
+  }
+  
+  public Integer getPointStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTSTROKEWIDTH));
+  }
+  
+  public void setPointStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTSTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(POINTSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointStrokeWidthWritable()
+  {
+    return isWritable(POINTSTROKEWIDTH);
+  }
+  
+  public boolean isPointStrokeWidthReadable()
+  {
+    return isReadable(POINTSTROKEWIDTH);
+  }
+  
+  public boolean isPointStrokeWidthModified()
+  {
+    return isModified(POINTSTROKEWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointStrokeWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTSTROKEWIDTH).getAttributeMdDTO();
+  }
+  
+  public String getPolygonFill()
+  {
+    return getValue(POLYGONFILL);
+  }
+  
+  public void setPolygonFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONFILL, "");
+    }
+    else
+    {
+      setValue(POLYGONFILL, value);
+    }
+  }
+  
+  public boolean isPolygonFillWritable()
+  {
+    return isWritable(POLYGONFILL);
+  }
+  
+  public boolean isPolygonFillReadable()
+  {
+    return isReadable(POLYGONFILL);
+  }
+  
+  public boolean isPolygonFillModified()
+  {
+    return isModified(POLYGONFILL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonFillMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONFILL).getAttributeMdDTO();
+  }
+  
+  public String getPolygonStroke()
+  {
+    return getValue(POLYGONSTROKE);
+  }
+  
+  public void setPolygonStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONSTROKE, "");
+    }
+    else
+    {
+      setValue(POLYGONSTROKE, value);
+    }
+  }
+  
+  public boolean isPolygonStrokeWritable()
+  {
+    return isWritable(POLYGONSTROKE);
+  }
+  
+  public boolean isPolygonStrokeReadable()
+  {
+    return isReadable(POLYGONSTROKE);
+  }
+  
+  public boolean isPolygonStrokeModified()
+  {
+    return isModified(POLYGONSTROKE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonStrokeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONSTROKE).getAttributeMdDTO();
+  }
+  
+  public Integer getPolygonStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POLYGONSTROKEWIDTH));
+  }
+  
+  public void setPolygonStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONSTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(POLYGONSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPolygonStrokeWidthWritable()
+  {
+    return isWritable(POLYGONSTROKEWIDTH);
+  }
+  
+  public boolean isPolygonStrokeWidthReadable()
+  {
+    return isReadable(POLYGONSTROKEWIDTH);
+  }
+  
+  public boolean isPolygonStrokeWidthModified()
+  {
+    return isModified(POLYGONSTROKEWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPolygonStrokeWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POLYGONSTROKEWIDTH).getAttributeMdDTO();
+  }
+  
+  public Double getPolygoneFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONEFILLOPACITY));
+  }
+  
+  public void setPolygoneFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONEFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONEFILLOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPolygoneFillOpacityWritable()
+  {
+    return isWritable(POLYGONEFILLOPACITY);
+  }
+  
+  public boolean isPolygoneFillOpacityReadable()
+  {
+    return isReadable(POLYGONEFILLOPACITY);
+  }
+  
+  public boolean isPolygoneFillOpacityModified()
+  {
+    return isModified(POLYGONEFILLOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygoneFillOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONEFILLOPACITY).getAttributeMdDTO();
+  }
+  
+  public Double getPolygoneStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POLYGONESTROKEOPACITY));
+  }
+  
+  public void setPolygoneStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONESTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(POLYGONESTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPolygoneStrokeOpacityWritable()
+  {
+    return isWritable(POLYGONESTROKEOPACITY);
+  }
+  
+  public boolean isPolygoneStrokeOpacityReadable()
+  {
+    return isReadable(POLYGONESTROKEOPACITY);
+  }
+  
+  public boolean isPolygoneStrokeOpacityModified()
+  {
+    return isModified(POLYGONESTROKEOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPolygoneStrokeOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POLYGONESTROKEOPACITY).getAttributeMdDTO();
+  }
+  
+  public Long getSeq()
+  {
+    return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQ));
+  }
+  
+  public boolean isSeqWritable()
+  {
+    return isWritable(SEQ);
+  }
+  
+  public boolean isSeqReadable()
+  {
+    return isReadable(SEQ);
+  }
+  
+  public boolean isSeqModified()
+  {
+    return isModified(SEQ);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSeqMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQ).getAttributeMdDTO();
+  }
+  
+  public String getSiteMaster()
+  {
+    return getValue(SITEMASTER);
+  }
+  
+  public boolean isSiteMasterWritable()
+  {
+    return isWritable(SITEMASTER);
+  }
+  
+  public boolean isSiteMasterReadable()
+  {
+    return isReadable(SITEMASTER);
+  }
+  
+  public boolean isSiteMasterModified()
+  {
+    return isModified(SITEMASTER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
+  }
+  
+  public String getValueColor()
+  {
+    return getValue(VALUECOLOR);
+  }
+  
+  public void setValueColor(String value)
+  {
+    if(value == null)
+    {
+      setValue(VALUECOLOR, "");
+    }
+    else
+    {
+      setValue(VALUECOLOR, value);
+    }
+  }
+  
+  public boolean isValueColorWritable()
+  {
+    return isWritable(VALUECOLOR);
+  }
+  
+  public boolean isValueColorReadable()
+  {
+    return isReadable(VALUECOLOR);
+  }
+  
+  public boolean isValueColorModified()
+  {
+    return isModified(VALUECOLOR);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getValueColorMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VALUECOLOR).getAttributeMdDTO();
+  }
+  
+  public String getValueFont()
+  {
+    return getValue(VALUEFONT);
+  }
+  
+  public void setValueFont(String value)
+  {
+    if(value == null)
+    {
+      setValue(VALUEFONT, "");
+    }
+    else
+    {
+      setValue(VALUEFONT, value);
+    }
+  }
+  
+  public boolean isValueFontWritable()
+  {
+    return isWritable(VALUEFONT);
+  }
+  
+  public boolean isValueFontReadable()
+  {
+    return isReadable(VALUEFONT);
+  }
+  
+  public boolean isValueFontModified()
+  {
+    return isModified(VALUEFONT);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getValueFontMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VALUEFONT).getAttributeMdDTO();
+  }
+  
+  public String getValueHalo()
+  {
+    return getValue(VALUEHALO);
+  }
+  
+  public void setValueHalo(String value)
+  {
+    if(value == null)
+    {
+      setValue(VALUEHALO, "");
+    }
+    else
+    {
+      setValue(VALUEHALO, value);
+    }
+  }
+  
+  public boolean isValueHaloWritable()
+  {
+    return isWritable(VALUEHALO);
+  }
+  
+  public boolean isValueHaloReadable()
+  {
+    return isReadable(VALUEHALO);
+  }
+  
+  public boolean isValueHaloModified()
+  {
+    return isModified(VALUEHALO);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getValueHaloMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VALUEHALO).getAttributeMdDTO();
+  }
+  
+  public Integer getValueSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUESIZE));
+  }
+  
+  public void setValueSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(VALUESIZE, "");
+    }
+    else
+    {
+      setValue(VALUESIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isValueSizeWritable()
+  {
+    return isWritable(VALUESIZE);
+  }
+  
+  public boolean isValueSizeReadable()
+  {
+    return isReadable(VALUESIZE);
+  }
+  
+  public boolean isValueSizeModified()
+  {
+    return isModified(VALUESIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getValueSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUESIZE).getAttributeMdDTO();
+  }
+  
+  public Integer getValueWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VALUEWIDTH));
+  }
+  
+  public void setValueWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(VALUEWIDTH, "");
+    }
+    else
+    {
+      setValue(VALUEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isValueWidthWritable()
+  {
+    return isWritable(VALUEWIDTH);
+  }
+  
+  public boolean isValueWidthReadable()
+  {
+    return isReadable(VALUEWIDTH);
+  }
+  
+  public boolean isValueWidthModified()
+  {
+    return isModified(VALUEWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getValueWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUEWIDTH).getAttributeMdDTO();
+  }
+  
+  public String getWellKnownName()
+  {
+    return getValue(WELLKNOWNNAME);
+  }
+  
+  public void setWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(WELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(WELLKNOWNNAME, value);
+    }
+  }
+  
+  public boolean isWellKnownNameWritable()
+  {
+    return isWritable(WELLKNOWNNAME);
+  }
+  
+  public boolean isWellKnownNameReadable()
+  {
+    return isReadable(WELLKNOWNNAME);
+  }
+  
+  public boolean isWellKnownNameModified()
+  {
+    return isModified(WELLKNOWNNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getWellKnownNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(WELLKNOWNNAME).getAttributeMdDTO();
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO> getAllContainingLayer()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO> getAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasStyleDTO> getAllContainingLayerRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasStyleDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasStyleDTO> getAllContainingLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasStyleDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.HasStyleDTO addContainingLayer(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.HasStyleDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.HasStyleDTO addContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.HasStyleDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  public void removeContainingLayer(com.runwaysdk.geodashboard.gis.persist.HasStyleDTO relationship)
+  {
+    getRequest().deleteParent(relationship.getId());
+  }
+  
+  public static void removeContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.gis.persist.HasStyleDTO relationship)
+  {
+    clientRequestIF.deleteParent(relationship.getId());
+  }
+  
+  public void removeAllContainingLayer()
+  {
+    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  public static void removeAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.gis.persist.HasStyleDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  {
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO) dto;
+  }
+  
+  public void apply()
+  {
+    if(isNewInstance())
+    {
+      getRequest().createBusiness(this);
+    }
+    else
+    {
+      getRequest().update(this);
+    }
+  }
+  public void delete()
+  {
+    getRequest().delete(this.getId());
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.DashboardStyleQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardStyleQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+  }
+  
+  public void lock()
+  {
+    getRequest().lock(this);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO.CLASS, "lock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public void unlock()
+  {
+    getRequest().unlock(this);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO.CLASS, "unlock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+}

@@ -104,9 +104,13 @@ public interface Style extends Component
 
   public void setPolygonFill(String fill);
 
-  public String getPolygonFillOpacity();
+  public Double getPolygonFillOpacity();
   
-  public void setPolygonFillOpacity(String opacity);
+  public void setPolygonFillOpacity(Double opacity);
+
+  public Double getPolygonStrokeOpacity();
+  
+  public void setPolygonStrokeOpacity(Double opacity);
   
   public String getPolygonStroke();
 

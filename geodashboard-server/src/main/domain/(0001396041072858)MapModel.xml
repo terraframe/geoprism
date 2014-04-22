@@ -1,0 +1,198 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<create>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap"
+				label="Map" generateController="true">
+				<attributes>
+					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"
+				label="Layer" generateController="true">
+				<attributes>
+					<char name="name" label="Name" size="50" required="true" />
+				</attributes>
+			</mdBusiness>
+
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer"
+				label="Has Layer" composition="true">
+				<attributes>
+					<integer name="layerIndex" required="true" rejectNegative="true" />
+				</attributes>
+				<parent cardinality="1"
+					name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
+				<child cardinality="*"
+					name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
+			</mdRelationship>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle"
+				label="Style" generateController="true">
+				<attributes>
+					<char name="name" label="Name" size="50" required="true" />
+          <!-- value styles -->
+					<boolean name="enableValue" label="enableValue" required="true" default_value="false" />
+          <char name="valueFont" label="Value Font" size="10" required="true" />
+					<integer name="valueSize" label="Value Size" required="true" rejectNegative="true" />
+          <char name="valueColor" label="Value Color" size="10" required="true" />
+          <char name="valueHalo" label="Value Halo" size="10" required="true" />
+					<integer name="valueWidth" label="Value Width" required="true" rejectNegative="true" />
+          <!-- label styles -->
+					<boolean name="enableLabel" label="enableLabel" required="true" default_value="false" />
+          <char name="labelFont" label="Label Font" size="10" required="true" />
+					<integer name="labelSize" label="Label Size" required="true" rejectNegative="true" />
+          <char name="labelColor" label="Label Color" size="10" required="true" />
+          <char name="labelHalo" label="Label Halo" size="10" required="true" />
+					<integer name="labelWidth" label="Label Width" required="true" rejectNegative="true" />
+          <!-- point styles -->
+					<integer name="pointSize" label="Point Size" required="true" rejectNegative="true" />
+          <char name="pointStroke" label="Point Stroke" size="10" required="true" />
+					<integer name="pointStrokeWidth" label="Point Stroke Width" required="true" rejectNegative="true" />
+          <char name="wellKnownName" label="Well Known Name" size="50" required="true" />
+          <char name="pointFill" label="Point Fill" size="10" required="true" />
+					<double name="pointOpacity" label="Point Opacity" required="true" length="2" decimal="2" rejectNegative="true" />
+					<integer name="pointRotation" label="Point Rotation" required="true" />
+          <!-- polygon styles -->
+          <char name="polygonFill" label="Polygon Fill" size="10" required="true" />
+					<double name="polygoneFillOpacity" label="Polygone Fill Opacity" required="true" length="2" decimal="2" rejectNegative="true" />
+          <char name="polygonStroke" label="Polygon Stroke" size="10" required="true" />
+					<integer name="polygonStrokeWidth" label="Polygon Stroke Width" required="true" rejectNegative="true" />
+					<double name="polygoneStrokeOpacity" label="Polygone Stroke Opacity" required="true" length="2" decimal="2" rejectNegative="true" />
+				</attributes>
+			</mdBusiness>
+
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle"
+				label="Thematic Attribute" generateController="true"
+				extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+				<attributes>
+					<reference name="mdAttribute" required="true"
+						type="com.runwaysdk.system.metadata.MdAttribute" />
+					<reference name="styleCondition" required="true"
+						type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+				</attributes>
+			</mdBusiness>
+
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle"
+				label="Has Style" composition="true">
+				<parent cardinality="1"
+					name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
+				<child cardinality="*"
+					name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
+			</mdRelationship>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"
+				label="Condition" isAbstract="true" generateController="true">
+				<attributes>
+					<reference name="styleReference" required="true" label="Style"
+						description="Back-reference to the Style that points to this condition."
+						type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Primitive"
+				isAbstract="true" generateController="true">
+				<attributes>
+					<char name="comparisonValue" size="255" required="true" label="Value" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Equals"
+				generateController="true">
+				<attributes>
+					<char name="attributeValue" size="100" required="true" label="Value" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than"
+				generateController="true">
+				<attributes>
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than"
+				generateController="true">
+				<attributes>
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness
+				name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than Or Equal"
+				generateController="true">
+				<attributes>
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than Or Equal"
+				generateController="true">
+				<attributes>
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite"
+				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Composite"
+				isAbstract="true" generateController="true">
+				<attributes>
+					<reference name="leftCondition" required="true"
+						type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+					<reference name="rightCondition" required="true"
+						type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd"
+				label="And" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite"
+				generateController="true">
+			</mdBusiness>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr"
+				label="Or" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite"
+				generateController="true">
+			</mdBusiness>
+
+		</create>
+		<update></update>
+	</doIt>
+	<undoIt>
+		<delete>
+
+			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
+
+		</delete>
+	</undoIt>
+</version>
