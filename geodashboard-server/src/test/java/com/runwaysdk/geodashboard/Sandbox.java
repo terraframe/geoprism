@@ -1,6 +1,11 @@
 package com.runwaysdk.geodashboard;
 
-<<<<<<< HEAD
+
+import com.runwaysdk.ConfigurationException;
+import com.runwaysdk.constants.DatabaseProperties;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 
 import java.io.BufferedReader;
@@ -15,13 +20,13 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
-import com.runwaysdk.geodashboard.gis.model.impl.AndImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.EqualImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.LayerImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.MapImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.OrImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.StyleImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.ThematicStyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.AndImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.EqualImpl;
+import com.runwaysdk.geodashboard.gis.impl.LayerImpl;
+import com.runwaysdk.geodashboard.gis.impl.MapImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.OrImpl;
+import com.runwaysdk.geodashboard.gis.impl.StyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.ThematicStyleImpl;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
 
@@ -44,20 +49,23 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
-=======
->>>>>>> aa0b4ce3b580b952f8508e4ebfbe4db67154a76e
+import java.util.ResourceBundle;
 import java.net.MalformedURLException;
 import java.util.List;
 
 import com.runwaysdk.geodashboard.constants.GeoserverProperties;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
+import com.runwaysdk.gis.mapping.gwc.SeedRequest;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.util.FileIO;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class Sandbox
 {
 
-<<<<<<< HEAD
   private ResourceBundle                bundle;
 
   private static GeoServerRESTPublisher publisher;
@@ -857,6 +865,4 @@ public class Sandbox
     // GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(),
     // props.getAdminPassword());
   }
-=======
->>>>>>> aa0b4ce3b580b952f8508e4ebfbe4db67154a76e
 }
