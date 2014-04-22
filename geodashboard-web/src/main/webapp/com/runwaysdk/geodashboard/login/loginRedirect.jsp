@@ -10,11 +10,11 @@
   // A standalone window will have the parent set to itself.
   var standalone = (window.parent === window);
 
-  var login = '/geodashboard/login';
-  
+  var loginPath = '${pageContext.request.contextPath}' + '/login';
+
   if(standalone)
   {
-    window.location = login;
+    window.location = loginPath;
   }
   else
   {
@@ -23,7 +23,7 @@
 		window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 	}
 	  
-    window.parent.postMessage(login, window.location.origin);
+    window.parent.postMessage(loginPath, window.location.origin);
   }
   </script>
 
