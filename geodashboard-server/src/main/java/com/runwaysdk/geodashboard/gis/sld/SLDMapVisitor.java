@@ -461,6 +461,12 @@ public class SLDMapVisitor implements MapVisitor
     this.root = this.node("StyledLayerDescriptioner").attr("xmlns", "http://www.opengis.net/sld")
         .attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc")
         .attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
+  
+    
+    for(Layer layer : map.getLayers())
+    {
+      layer.accepts(this);
+    }
   }
 
   @Override
@@ -481,6 +487,12 @@ public class SLDMapVisitor implements MapVisitor
     this.currentLayer = layerNode;
     layerToNodeMap.put(layer, layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
+    
+    
+    for(Style style : layer.getStyles())
+    {
+      style.accepts(this);
+    }
   }
 
   /**
@@ -570,6 +582,8 @@ public class SLDMapVisitor implements MapVisitor
     Node filter = this.node("Filter").build(rule);
     
     this.parents.push(filter);
+    
+    style.getCondition().accepts(this);
   }
 
   @Override

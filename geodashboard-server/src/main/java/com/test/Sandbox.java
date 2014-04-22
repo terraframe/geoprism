@@ -17,6 +17,13 @@ import org.apache.commons.logging.LogFactory;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.impl.LayerImpl;
+import com.runwaysdk.geodashboard.gis.impl.MapImpl;
+import com.runwaysdk.geodashboard.gis.impl.StyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.ThematicStyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.AndImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.EqualImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.OrImpl;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
@@ -24,13 +31,6 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
-import com.runwaysdk.geodashboard.gis.model.impl.AndImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.EqualImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.LayerImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.MapImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.OrImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.StyleImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.ThematicStyleImpl;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
 import com.runwaysdk.query.OIterator;
@@ -496,16 +496,16 @@ public class Sandbox
   
   private static void mapTest()
   {
-    Map map = new MapImpl();
+    MapImpl map = new MapImpl();
     map.setName("Map 1");
 
-    Layer layer0 = new LayerImpl();
+    LayerImpl layer0 = new LayerImpl();
     layer0.setName("Layer 0");
     layer0.setVirtual(false);
     layer0.setFeatureType(FeatureType.POINT);
     map.addLayer(layer0);
     
-    Layer layer1 = new LayerImpl();
+    LayerImpl layer1 = new LayerImpl();
     layer1.setName("Layer 1");
     layer1.setVirtual(false);
     layer1.setFeatureType(FeatureType.POINT);

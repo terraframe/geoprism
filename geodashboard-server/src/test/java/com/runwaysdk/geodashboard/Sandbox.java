@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard;
 
+<<<<<<< HEAD
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 
 import java.io.BufferedReader;
@@ -43,34 +44,20 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
+=======
+>>>>>>> aa0b4ce3b580b952f8508e4ebfbe4db67154a76e
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.constants.DatabaseProperties;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.constants.GeoserverProperties;
-import com.runwaysdk.gis.mapping.gwc.SeedRequest;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.system.gis.ConfigurationException;
-import com.runwaysdk.util.FileIO;
-
-import java.util.ResourceBundle;
+import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class Sandbox
 {
 
+<<<<<<< HEAD
   private ResourceBundle                bundle;
 
   private static GeoServerRESTPublisher publisher;
@@ -870,4 +857,6 @@ public class Sandbox
     // GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(),
     // props.getAdminPassword());
   }
+=======
+>>>>>>> aa0b4ce3b580b952f8508e4ebfbe4db67154a76e
 }
