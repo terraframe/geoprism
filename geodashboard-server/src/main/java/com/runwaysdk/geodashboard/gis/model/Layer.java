@@ -7,19 +7,16 @@ public interface Layer extends Component
 {
   public String getName();
   
-  public Boolean displayInLegend();
+  public Boolean getDisplayInLegend();
   
-  public void setDisplayInLegend(Boolean display);
-  
-  public void addStyle(Style style);
-  
-  public List<Style> getStyles();
+  public List<? extends Style> getStyles();
   
   public Boolean getVirtual();
   
-  public void setVirtual(Boolean virtual);
-  
-  public void setFeatureType(FeatureType featureType);
-  
   public FeatureType getFeatureType();
+
+//  public void setDisplayInLegend(Boolean display);
+//  public void setFeatureType(FeatureType featureType);
+//  public void setVirtual(Boolean virtual);
+//  public void addStyle(Style style);
 }

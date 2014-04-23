@@ -4,8 +4,7 @@ import java.util.List;
 
 public interface Map extends Component
 {
-  public void addLayer(Layer layer);
-  
-  public List<Layer> getLayers();
+
+  public List<? extends Layer> getLayers();
   
 }
