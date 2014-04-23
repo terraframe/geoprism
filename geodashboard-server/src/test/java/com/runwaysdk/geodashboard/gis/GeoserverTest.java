@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.gis;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
@@ -11,8 +13,6 @@ import com.runwaysdk.geodashboard.gis.impl.condition.AndImpl;
 import com.runwaysdk.geodashboard.gis.impl.condition.EqualImpl;
 import com.runwaysdk.geodashboard.gis.impl.condition.OrImpl;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
-import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
@@ -20,9 +20,32 @@ import com.runwaysdk.geodashboard.gis.model.condition.Or;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.gis.geo.Universal;
 
 public class GeoserverTest
 {
+  private static Universal city;
+  
+  @BeforeClass
+  @Request
+  public static void classSetup()
+  {
+    city = new Universal();
+    city.getDisplayLabel().setDefaultValue("State");
+    city.getDescription().setDefaultValue("State");
+    city.setUniversalId("state");
+    city.apply();
+    
+    
+  }
+  
+  @AfterClass
+  @Request
+  public static void classTeardown()
+  {
+    city.delete();
+  }
+  
   @Test
   @Request
   public void testCreateStyle()
