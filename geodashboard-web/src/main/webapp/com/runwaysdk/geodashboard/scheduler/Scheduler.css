@@ -28,3 +28,7 @@ table.com-runwaysdk-ui-scheduler-Scheduler tr.com-runwaysdk-ui-factory-runway-Wi
 .ui-dialog-titlebar-close {
   visibility: hidden;
 }
+
+.submit-form .field-row {
+  float: left;
+}

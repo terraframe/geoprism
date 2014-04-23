@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import com.runwaysdk.dataaccess.io.FileWriteException;
+import com.runwaysdk.util.FileIO;
 
 public class GISImportLogger implements GISImportLoggerIF
 {
@@ -40,6 +41,18 @@ public class GISImportLogger implements GISImportLoggerIF
     catch (IOException e)
     {
       throw new FileWriteException(file, e);
+    }
+
+    if (!this.hasLogged())
+    {
+      try
+      {
+        FileIO.deleteFile(file);
+      }
+      catch (IOException e)
+      {
+        throw new FileWriteException(file, e);
+      }
     }
   }
 
