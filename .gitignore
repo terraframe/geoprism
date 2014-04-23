@@ -5,3 +5,4 @@ geodashboard-common/bin
 geodashboard-web/bin
 
 
+/geodashboard-shapefile-importer
