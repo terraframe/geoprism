@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 201245127)
+@com.runwaysdk.business.ClassSignature(hash = 187557067)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -292,6 +292,74 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LASTUPDATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getLineOpacity()
+  {
+    return getLineOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStroke()
+  {
+    return getLineStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap()
+  {
+    return getLineStrokeCap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth()
+  {
+    return getLineStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -918,6 +986,18 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getLineOpacity();
+    public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLineStroke();
+    public com.runwaysdk.query.SelectableChar getLineStroke(String alias);
+    public com.runwaysdk.query.SelectableChar getLineStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap();
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias);
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth();
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias, String displayLabel);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
@@ -1282,6 +1362,74 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getLineOpacity()
+  {
+    return getLineOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStroke()
+  {
+    return getLineStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap()
+  {
+    return getLineStrokeCap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth()
+  {
+    return getLineStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1873,6 +2021,18 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getLineOpacity();
+    public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLineStroke();
+    public com.runwaysdk.query.SelectableChar getLineStroke(String alias);
+    public com.runwaysdk.query.SelectableChar getLineStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap();
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias);
+    public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth();
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias, String displayLabel);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
@@ -2262,6 +2422,74 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getLineOpacity()
+  {
+    return getLineOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getLineOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStroke()
+  {
+    return getLineStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap()
+  {
+    return getLineStrokeCap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLineStrokeCap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKECAP, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth()
+  {
+    return getLineStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLineStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.LINESTROKEWIDTH, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()

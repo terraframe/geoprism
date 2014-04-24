@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 986003216)
+@com.runwaysdk.business.ClassSignature(hash = 1516412692)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,6 +25,10 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String LABELSIZE = "labelSize";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LINEOPACITY = "lineOpacity";
+  public static java.lang.String LINESTROKE = "lineStroke";
+  public static java.lang.String LINESTROKECAP = "lineStrokeCap";
+  public static java.lang.String LINESTROKEWIDTH = "lineStrokeWidth";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
@@ -48,7 +52,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = 986003216;
+  private static final long serialVersionUID = 1516412692;
   
   public DashboardStyleBase()
   {
@@ -421,6 +425,118 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
     return mdClassIF.definesAttribute(LASTUPDATEDBY);
+  }
+  
+  public Double getLineOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(LINEOPACITY));
+  }
+  
+  public void validateLineOpacity()
+  {
+    this.validateAttribute(LINEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLineOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(LINEOPACITY);
+  }
+  
+  public void setLineOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(LINEOPACITY, "");
+    }
+    else
+    {
+      setValue(LINEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public String getLineStroke()
+  {
+    return getValue(LINESTROKE);
+  }
+  
+  public void validateLineStroke()
+  {
+    this.validateAttribute(LINESTROKE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLineStrokeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(LINESTROKE);
+  }
+  
+  public void setLineStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKE, "");
+    }
+    else
+    {
+      setValue(LINESTROKE, value);
+    }
+  }
+  
+  public String getLineStrokeCap()
+  {
+    return getValue(LINESTROKECAP);
+  }
+  
+  public void validateLineStrokeCap()
+  {
+    this.validateAttribute(LINESTROKECAP);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLineStrokeCapMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(LINESTROKECAP);
+  }
+  
+  public void setLineStrokeCap(String value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKECAP, "");
+    }
+    else
+    {
+      setValue(LINESTROKECAP, value);
+    }
+  }
+  
+  public Integer getLineStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LINESTROKEWIDTH));
+  }
+  
+  public void validateLineStrokeWidth()
+  {
+    this.validateAttribute(LINESTROKEWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLineStrokeWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(LINESTROKEWIDTH);
+  }
+  
+  public void setLineStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(LINESTROKEWIDTH, java.lang.Integer.toString(value));
+    }
   }
   
   public com.runwaysdk.system.Users getLockedBy()

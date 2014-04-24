@@ -75,31 +75,31 @@
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="enableLabel" required="true" defaultValue="false" />
-					<char name="labelFont" label="Label Font" size="10" required="true" defaultValue="helvetica"/>
+					<char name="labelFont" label="Label Font" size="25" required="true" defaultValue="helvetica"/>
 					<integer name="labelSize" label="Label Size" required="true" defaultValue="12" rejectNegative="true" />
-					<char name="labelColor" label="Label Color" size="10" required="true" defaultValue="#000000"/>
-					<char name="labelHalo" label="Label Halo" size="10" required="true" defaultValue="#FFFFFF"/>
-					<integer name="labelHaloWidth" label="Label Halo Width" required="true" defaultValue="3" rejectNegative="true" />
+					<char name="labelColor" label="Label Color" size="7" required="true" defaultValue="#000000"/>
+					<char name="labelHalo" label="Label Halo" size="7" required="false" defaultValue="#FFFFFF"/>
+					<integer name="labelHaloWidth" label="Label Halo Width" required="false" defaultValue="3" rejectNegative="true" />
 					
 					<!-- point styles -->
 					<integer name="pointSize" label="Point Size" required="true" defaultValue="6" rejectNegative="true" />
-					<char name="pointStroke" label="Point Stroke" size="10" required="true" defaultValue="#000000"/>
+					<char name="pointStroke" label="Point Stroke" size="7" required="false" defaultValue="#000000"/>
 					<integer name="pointStrokeWidth" label="Point Stroke Width" required="true" defaultValue="2" rejectNegative="true" />
 					<char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
-					<char name="pointFill" label="Point Fill" size="10" required="true" defaultValue="#00bfff" />
+					<char name="pointFill" label="Point Fill" size="7" required="true" defaultValue="#00bfff" />
 					<double name="pointOpacity" label="Point Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
-					<integer name="pointRotation" label="Point Rotation" required="true" defaultValue="0" />
+					<integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
 					
 					<!-- line styles -->
 					<char name="lineStroke" label="Line Stroke" size="7" required="true" defaultValue="#000000"/>
 					<integer name="lineStrokeWidth" label="Line Stroke Width" required="true" defaultValue="3" rejectNegative="true" />
-					<char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="true" defaultValue="butt" />
+					<char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
 					<double name="lineOpacity" label="Line Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
 					
 					<!-- polygon styles -->
-					<char name="polygonFill" label="Polygon Fill" size="10" required="true" defaultValue="#00bfff" />
+					<char name="polygonFill" label="Polygon Fill" size="7" required="true" defaultValue="#00bfff" />
 					<double name="polygonFillOpacity" label="Polygon Fill Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
-					<char name="polygonStroke" label="Polygon Stroke" size="10" required="true" defaultValue="#000000" />
+					<char name="polygonStroke" label="Polygon Stroke" size="7" required="false" defaultValue="#000000" />
 					<integer name="polygonStrokeWidth" label="Polygon Stroke Width" required="true" defaultValue="2" rejectNegative="true" />
 					<double name="polygonStrokeOpacity" label="Polygon Stroke Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
 				</attributes>
