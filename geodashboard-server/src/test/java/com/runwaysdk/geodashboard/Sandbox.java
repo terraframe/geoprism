@@ -1,19 +1,32 @@
 package com.runwaysdk.geodashboard;
 
+
+import com.runwaysdk.ConfigurationException;
+import com.runwaysdk.constants.DatabaseProperties;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
-import com.runwaysdk.geodashboard.gis.model.impl.AndImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.EqualImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.LayerImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.MapImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.OrImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.StyleImpl;
-import com.runwaysdk.geodashboard.gis.model.impl.ThematicStyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.AndImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.EqualImpl;
+import com.runwaysdk.geodashboard.gis.impl.LayerImpl;
+import com.runwaysdk.geodashboard.gis.impl.MapImpl;
+import com.runwaysdk.geodashboard.gis.impl.condition.OrImpl;
+import com.runwaysdk.geodashboard.gis.impl.StyleImpl;
+import com.runwaysdk.geodashboard.gis.impl.ThematicStyleImpl;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
 
@@ -36,28 +49,19 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.constants.DatabaseProperties;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
-import java.util.ResourceBundle;
+import javax.net.ssl.HttpsURLConnection;
 
 public class Sandbox
 {
@@ -140,7 +144,8 @@ public class Sandbox
   {
     if (publisher == null)
     {
-      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
+      publisher = new GeoServerRESTPublisher(GeoserverProps.getLocalPath(),
+          GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
     }
 
     return publisher;
@@ -155,7 +160,8 @@ public class Sandbox
     {
       try
       {
-        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(), GeoserverProps.getAdminPassword());
+        reader = new GeoServerRESTReader(GeoserverProps.getLocalPath(), GeoserverProps.getAdminUser(),
+            GeoserverProps.getAdminPassword());
       }
       catch (MalformedURLException e)
       {
@@ -163,7 +169,8 @@ public class Sandbox
         // log
         // the error and throw an NPE to the calling code for its error handling
         // mechanism.
-        String msg = "The " + GeoserverProperties.class.getSimpleName() + "." + GeoServerRESTReader.class.getSimpleName() + " is null.";
+        String msg = "The " + GeoserverProperties.class.getSimpleName() + "."
+            + GeoServerRESTReader.class.getSimpleName() + " is null.";
         LogFactory.getLog(GeoserverProperties.class.getClass()).error(msg, e);
 
         throw new NullPointerException(msg);
@@ -527,11 +534,15 @@ public class Sandbox
     }
 
     ValueQuery collected = new ValueQuery(union.getQueryFactory());
-    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")", "collected"));
+    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")",
+        "collected"));
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble("miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
+        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
+        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
+        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
@@ -592,7 +603,8 @@ public class Sandbox
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
 
-      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
+      if (getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
+          GeoserverProperties.getStore(), fte, le))
       {
         log.info("Created the layer [" + layer + "] in geoserver.");
         return;
@@ -625,7 +637,63 @@ public class Sandbox
     }
   }
 
-  public static void main(String[] args) throws MalformedURLException
+  // prevent ssl errors from localhost requests
+  static
+  {
+    //
+    // for localhost testing only
+    //
+    javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier()
+    {
+
+      public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession)
+      {
+        if (hostname.equals("localhost"))
+        {
+          return true;
+        }
+        else if (hostname.equals("127.0.0.1"))
+        {
+          return true;
+        }
+        return false;
+      }
+    });
+  }
+
+  // HTTPS GET request
+  public static void testWMS(String url) throws Exception
+  {
+
+    URL obj = new URL(url);
+    HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+    // optional default is GET
+    con.setRequestMethod("GET");
+    
+    //add request header
+    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+
+    int responseCode = con.getResponseCode();
+    System.out.println("\nSending 'GET' request to URL : " + url);
+    System.out.println("Response Code : " + responseCode);
+
+    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    String inputLine;
+    StringBuffer response = new StringBuffer();
+
+    while ( ( inputLine = in.readLine() ) != null)
+    {
+      response.append(inputLine);
+    }
+    in.close();
+
+    // print result
+    System.out.println(response.toString());
+
+  }
+
+  public static void main(String[] args) throws Exception
   {
 
     // Map map = new MapImpl("My Map");
@@ -727,43 +795,62 @@ public class Sandbox
     // ////////////////
     // ////////////////
 
-    GeoserverProps props = new GeoserverProps();
+    // GeoserverProps props = new GeoserverProps();
+    //
+    // // System.out.println(reader.getResource(reader.getLayer("poi")));
+    // // System.out.println(getReader().getSLD("burg"));
+    // // System.out.println(Sandbox.getLayers());
+    //
+    //
+    // List<String> names = getReader().getWorkspaceNames();
+    //
+    // if (names.contains(GeoserverProperties.getWorkspace()))
+    // {
+    // System.out.println(GeoserverProperties.getWorkspace() +
+    // " already exists... Not gonna do anything.");
+    //
+    // // removeWorkspace();
+    // // publishWorkspace();
+    //
+    // }
+    // else
+    // {
+    // publishWorkspace();
+    // publishStore();
+    //
+    // publishLayer("aa_test_data", "polygon");
+    //
+    // if (cacheExists(GeoserverProperties.getWorkspace() + "_aa_test_data"))
+    // {
+    // System.out.println("cache already exists.");
+    // Sandbox.removeCache(GeoserverProperties.getWorkspace() +
+    // "_aa_test_data");
+    // }
+    // else
+    // {
+    // System.out.println("seeding cache...");
+    // Sandbox.publishCache("aa_test_data");
+    // }
+    //
+    // System.out.println(GeoserverProperties.getWorkspace() + " workspace and "
+    // + GeoserverProperties.getStore() + " store generated.");
+    // }
 
-    // System.out.println(reader.getResource(reader.getLayer("poi")));
-    // System.out.println(getReader().getSLD("burg"));
-    // System.out.println(Sandbox.getLayers());
-
-
-    List<String> names = getReader().getWorkspaceNames();
-
-    if (names.contains(GeoserverProperties.getWorkspace()))
-    {
-      System.out.println(GeoserverProperties.getWorkspace() + " already exists... Not gonna do anything.");
-
-      // removeWorkspace();
-      // publishWorkspace();
-
-    }
-    else
-    {
-      publishWorkspace();
-      publishStore();
-
-      publishLayer("aa_test_data", "polygon");
-
-      if (cacheExists(GeoserverProperties.getWorkspace() + "_aa_test_data"))
-      {
-        System.out.println("cache already exists.");
-        Sandbox.removeCache(GeoserverProperties.getWorkspace() + "_aa_test_data");
-      }
-      else
-      {
-        System.out.println("seeding cache...");
-        Sandbox.publishCache("aa_test_data");
-      }
-
-      System.out.println(GeoserverProperties.getWorkspace() + " workspace and " + GeoserverProperties.getStore() + " store generated.");
-    }
+    // HttpURLConnectionExample http = new HttpURLConnectionExample();
+    
+//    String url = "https://127.0.0.1:8443/geoserver/wms?service=wms&version=1.1.0&request=GetCapabilities";
+   
+    // this requires a cache directory be created
+//    String url = "https://localhost:8443/geoserver/gwc/topp:states_2?gridSet=EPSG:4326&format=image/png&styles=";
+       
+    // this isnt ideal because you need bbox values
+//    String url = "https://127.0.0.1:8443/geoserver/topp/wms?service=WMS&version=1.1.0&request=GetMap&layers=topp:states&styles=&bbox=-124.73142200000001,24.955967,-66.969849,49.371735&width=780&height=330&srs=EPSG:4326&format=image%2Fpng";
+   
+    // better as the reflector takes care of the bounding box
+    String url = "https://localhost:8443/geoserver/wms/reflect?layers=topp:states_2&format=image/png";
+ 
+    
+    Sandbox.testWMS(url);
 
     // if (Sandbox.layerExists("poi"))
     // {
@@ -773,7 +860,9 @@ public class Sandbox
     // // Sandbox.removeLayer("poi_test");
     // }
     // System.out.println(reader.getResource(reader.getLayer("poi")));
-//
-//    GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(), props.getAdminPassword());
+    //
+    // GeoServerRESTPublisher publisher = new
+    // GeoServerRESTPublisher(props.getLocalPath(), props.getAdminUser(),
+    // props.getAdminPassword());
   }
 }

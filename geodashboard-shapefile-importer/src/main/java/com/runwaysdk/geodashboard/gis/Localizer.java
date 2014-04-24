@@ -15,7 +15,7 @@ public class Localizer
 
   private Localizer()
   {
-    this("localization", Locale.US);
+    this("messages", Locale.US);
   }
 
   private Localizer(String name, Locale locale)

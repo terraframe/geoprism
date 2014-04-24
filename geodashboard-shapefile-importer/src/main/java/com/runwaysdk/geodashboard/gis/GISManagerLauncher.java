@@ -63,7 +63,7 @@ public class GISManagerLauncher
   public static void main(String[] args) throws Exception
   {
     Arguments arguments = new Arguments(args);
-    Localizer.setInstance("localization", arguments.getLocale());
+    Localizer.setInstance("messages", arguments.getLocale());
 
     final Display display = Display.getDefault();
 
