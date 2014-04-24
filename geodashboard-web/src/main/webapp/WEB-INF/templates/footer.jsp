@@ -28,13 +28,6 @@
   String webappRoot = request.getContextPath() + "/";
 %>
 
-<!--
- Localization : Important this must be loaded after every other
-                javascript file because it overwrites the localized
-                text defined in the other files. 
- -->
-<%-- <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script> --%>
-
 <!-- Begin footer -->
     </section> 
 

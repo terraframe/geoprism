@@ -23,4 +23,4 @@ ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientCon
 /**
  * Constants used for localization in javascript.
  */
-com.runwaysdk.Localize.addLanguages(<%=LocalizationFacadeDTO.getJSON(clientRequest)%>);
+com.runwaysdk.Localize.addLanguages(<%=LocalizationFacadeDTO.getJSON(clientRequest)%>, true);

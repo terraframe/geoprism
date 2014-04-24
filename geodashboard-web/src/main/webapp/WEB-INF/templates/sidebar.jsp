@@ -136,10 +136,6 @@
 
 		var thisParentContainer = clickedLink.parents(".gdb-link-container");
 
-		if (thisParentContainer.prev("a").hasClass("gdb-links-expander")) {
-			var thisParentContainerExpander = thisParentContainer.prev("a");
-		}
-
 		if (thisParentContainer) {
 			// expand the dropdown if not expanded already
 			if (!thisParentContainer.hasClass("in")) {
