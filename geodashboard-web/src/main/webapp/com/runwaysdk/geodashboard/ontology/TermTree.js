@@ -449,6 +449,7 @@
           type: this._config.termType,
           viewParams: {parentId: parentId, relationshipType: ""},
           action: "update",
+          actionParams: {parentId: parentId, relationshipType: ""},
           id: termId,
           onSuccess : function(responseObj) {
             var term = that.__responseToTerm(responseObj);
@@ -1099,6 +1100,10 @@
 //        node.children_d = children_deep;
 //      },
       
+      getRelationships : function() {
+        
+      },
+      
       __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
         
@@ -1177,14 +1182,17 @@
             
             // This code is to fix a bug in jstree.
             if (json.length === 0) {
-              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
-              var node = $tree.jstree("get_node", parentNodeId);
+//              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
               
-              node.parent = parentId;
-              node.parents = [parentId];
-              node.children = [];
-              node.children_d = [];
-              $tree.jstree("redraw_node", parentNodeId, false);
+//              var node = $tree.jstree("get_node", parentNodeId);
+              
+//              if (!node.dontClobberChildren) {
+//                node.parent = parentId;
+//                node.parents = [parentId];
+//                node.children = [];
+//                node.children_d = [];
+                $tree.jstree("redraw_node", parentNodeId, false);
+//              }
             }
           },
           
@@ -1195,7 +1203,7 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: parentTermId, pageNum: 0, pageSize: 0}, callback);
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: parentTermId, relationshipTypes: [this._config.relationshipType], pageNum: 0, pageSize: 0}, callback);
       },
       
       getImpl : function() {
