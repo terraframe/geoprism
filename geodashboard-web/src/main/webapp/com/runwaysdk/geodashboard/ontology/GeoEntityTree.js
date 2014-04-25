@@ -37,7 +37,7 @@
     "createSynonym" : "Create Synonym",
     "updateSynonym" : "Update Synonym",
     "deleteSynonym" : "Delete Synonym",
-    "refreshSynonym" : "Refresh Synonyms"
+    "refreshSynonyms" : "Refresh Synonyms"
   });
   
   /**
@@ -74,7 +74,7 @@
         if (node.data != null && node.data.isSynonymContainer) {
           // They right clicked on a synonym container node. Display the context menu for synonym containers.
           var create = this._cm.addItem(this.localize("createSynonym"), "add", Mojo.Util.bind(this, this.__onCreateSynonym));
-          var refresh = this._cm.addItem(this.localize("refreshSynonym"), "refresh", Mojo.Util.bind(this, this.__onRefreshSynonym));
+          var refresh = this._cm.addItem(this.localize("refreshSynonyms"), "refresh", Mojo.Util.bind(this, this.__onRefreshSynonym));
         }
         else if (node.data != null && node.data.isSynonym) {
           // Display the synonym node context menu.
