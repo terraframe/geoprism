@@ -114,13 +114,13 @@
         new com.runwaysdk.ui.RunwayControllerFormDialog({
           type: "com.runwaysdk.system.gis.geo.Synonym",
           action: "create",
-          actionParams: {parentId: parentId},
+          actionParams: {geoId: parentId},
           width: 730,
           height: 200,
           onSuccess : function(syn) {
             that.termCache[syn.getId()] = syn;
 //            that.parentRelationshipCache.put(syn.getId(), {parentId: parentId, relId: relId, relType: relType});
-            that.__createTreeNode(syn.getId(), targetNode, true);
+            that.__createTreeNode(syn.getId(), targetNode, false);
             
             that._impl.jstree("open_node", targetNode);
           },
@@ -150,8 +150,12 @@
               that._impl.jstree("open_node", targetNode, false);
               
               // Load the synonyms
-              that._impl.jstree("load_node", justCreated);
+              that._impl.jstree("load_node", justCreated, function(justLoaded){
+                that._impl.jstree("open_node", justLoaded, false);
+              });
             };
+            
+            console.log("Creating a synonym with runwayId: " + that.__getRunwayIdFromNode(targetNode));
             
             // Create a synonyms node under the target node
             var idStr = targetNode.id + "_" + Mojo.Util.generateId();
@@ -178,19 +182,36 @@
       __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
         
+        var parentId = this.__getRunwayIdFromNode(parent);
+        
         if (parent.data != null && parent.data.isSynonym) {
           
           var cr = new Mojo.ClientRequest({
-            onSuccess: function(syns){
-              var retSyn = [];
+            onSuccess: function(response){
+              var tnrs = Mojo.Util.toObject(response).returnValue;
               
-              for (var i = 0; i < syns.length; ++i) {
+              var json = [];
+              for (var i = 0; i < tnrs.length; ++i) {
+                var tnr = com.runwaysdk.DTOUtil.convertToType(tnrs[i]);
+                var term = tnr.getTerm();
+                var termId = term.getId();
                 
+                var parentRecord = {parentId: parentId, relId: tnr.getRelationshipId(), relType: tnr.getRelationshipType()};
+                that.parentRelationshipCache.put(termId, parentRecord);
+                that.termCache[termId] = term;
+                
+                var treeNode = {
+                    text: that._getTermDisplayLabel(term),
+                    id: termId, state: {opened: true}, children: false,
+                    data: { runwayId: termId }
+//                    li_attr: {'class' : relType} // Add the relationshipType to the li's class
+                };
+                json.push(treeNode);
               }
               
-              jsTreeCallback.call(treeThisRef, retSyn);
+              jsTreeCallback.call(treeThisRef, json);
               
-              if (retSyn.length === 0) {
+              if (json.length === 0) {
                 that._impl.jstree("redraw_node", parent, false);
               }
             },
@@ -201,7 +222,7 @@
             }
           });
           
-          com.runwaysdk.system.gis.geo.Synonym.getSynonyms(cr, this.__getRunwayIdFromNode(parent));
+          Mojo.Util.invokeControllerAction("com.runwaysdk.system.gis.geo.Synonym", "getDirectDescendants", {parentId: parentId}, cr);
         }
         else {
           this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
