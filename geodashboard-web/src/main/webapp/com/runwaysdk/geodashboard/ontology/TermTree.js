@@ -447,9 +447,9 @@
         
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId, relationshipType: ""},
+          viewParams: {id: termId, parentId: parentId, relationshipType: ""},
           action: "update",
-          id: termId,
+          actionParams: {parentId: parentId, relationshipType: ""},
           onSuccess : function(responseObj) {
             var term = that.__responseToTerm(responseObj);
             that.termCache[term.getId()] = term;
@@ -881,6 +881,7 @@
         var len = nodeArray.length;
         for (var i = 0; i < len; ++i) {
           if ($tree.jstree("is_open", nodeArray[i]) || $("#"+nodeArray[i].id).hasClass("jstree-leaf")) {
+            nodeArray[i].synonymNode = null;
             this.setNodeBusy(nodeArray[i], true);
             $tree.jstree("load_node", nodeArray[i], function(node){
               return function(){ that.setNodeBusy(node, false); };
@@ -982,7 +983,7 @@
       /**
        * Retrieves the term with id termId from the termCache and then creates its representation in the tree.
        */
-      __createTreeNode : function(termId, parentNode, isNodeClosed, callback, dontSetNodeChildren) {
+      __createTreeNode : function(termId, parentNode, isNodeClosed, callback, dontSetNodeChildren, appendData) {
         var that = this;
         
         var term = this.termCache[termId];
@@ -1000,7 +1001,12 @@
           parentNode = $thisTree.jstree("get_node", "#");
         }
         
-        var node = { state:{opened: !isNodeClosed}, text: displayLabel, id: idStr, data: {runwayId: termId} };
+        var data = {runwayId: termId};
+        if (appendData != null) {
+          Mojo.Util.merge(appendData, data);
+        }
+        
+        var node = { state:{opened: !isNodeClosed}, text: displayLabel, id: idStr, data: data };
         
         if (dontSetNodeChildren !== true) {
           node.children = isNodeClosed;
@@ -1099,6 +1105,10 @@
 //        node.children_d = children_deep;
 //      },
       
+      getRelationships : function() {
+        
+      },
+      
       __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
         
@@ -1123,12 +1133,14 @@
               if (child.id != "") {
                 var runwayId = that.genToRunway[child.id];
                 
-                var duplicates = that.duplicateMap.get(runwayId);
-                if (duplicates != null) {
-                  var indexOf = duplicates.indexOf(child.id);
-                  if (indexOf > -1) {
-                    duplicates.splice(indexOf, 1);
-                    delete that.genToRunway[child.id];
+                if (runwayId != null) {
+                  var duplicates = that.duplicateMap.get(runwayId);
+                  if (duplicates != null) {
+                    var indexOf = duplicates.indexOf(child.id);
+                    if (indexOf > -1) {
+                      duplicates.splice(indexOf, 1);
+                      delete that.genToRunway[child.id];
+                    }
                   }
                 }
               }
@@ -1177,14 +1189,17 @@
             
             // This code is to fix a bug in jstree.
             if (json.length === 0) {
-              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
-              var node = $tree.jstree("get_node", parentNodeId);
+//              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
               
-              node.parent = parentId;
-              node.parents = [parentId];
-              node.children = [];
-              node.children_d = [];
-              $tree.jstree("redraw_node", parentNodeId, false);
+//              var node = $tree.jstree("get_node", parentNodeId);
+              
+//              if (!node.dontClobberChildren) {
+//                node.parent = parentId;
+//                node.parents = [parentId];
+//                node.children = [];
+//                node.children_d = [];
+                $tree.jstree("redraw_node", parentNodeId, false);
+//              }
             }
           },
           
@@ -1195,7 +1210,7 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: parentTermId, pageNum: 0, pageSize: 0}, callback);
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: parentTermId, relationshipTypes: [this._config.relationshipType], pageNum: 0, pageSize: 0}, callback);
       },
       
       getImpl : function() {

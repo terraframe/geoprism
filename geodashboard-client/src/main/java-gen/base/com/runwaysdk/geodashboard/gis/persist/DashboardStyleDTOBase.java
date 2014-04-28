@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 110844048)
+@com.runwaysdk.business.ClassSignature(hash = -2088484716)
 public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
-  private static final long serialVersionUID = 110844048;
+  private static final long serialVersionUID = -2088484716;
   
   protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -41,6 +41,10 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String LABELSIZE = "labelSize";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LINEOPACITY = "lineOpacity";
+  public static java.lang.String LINESTROKE = "lineStroke";
+  public static java.lang.String LINESTROKECAP = "lineStrokeCap";
+  public static java.lang.String LINESTROKEWIDTH = "lineStrokeWidth";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
@@ -531,6 +535,154 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLastUpdatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
+  }
+  
+  public Double getLineOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(LINEOPACITY));
+  }
+  
+  public void setLineOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(LINEOPACITY, "");
+    }
+    else
+    {
+      setValue(LINEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isLineOpacityWritable()
+  {
+    return isWritable(LINEOPACITY);
+  }
+  
+  public boolean isLineOpacityReadable()
+  {
+    return isReadable(LINEOPACITY);
+  }
+  
+  public boolean isLineOpacityModified()
+  {
+    return isModified(LINEOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getLineOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(LINEOPACITY).getAttributeMdDTO();
+  }
+  
+  public String getLineStroke()
+  {
+    return getValue(LINESTROKE);
+  }
+  
+  public void setLineStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKE, "");
+    }
+    else
+    {
+      setValue(LINESTROKE, value);
+    }
+  }
+  
+  public boolean isLineStrokeWritable()
+  {
+    return isWritable(LINESTROKE);
+  }
+  
+  public boolean isLineStrokeReadable()
+  {
+    return isReadable(LINESTROKE);
+  }
+  
+  public boolean isLineStrokeModified()
+  {
+    return isModified(LINESTROKE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLineStrokeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LINESTROKE).getAttributeMdDTO();
+  }
+  
+  public String getLineStrokeCap()
+  {
+    return getValue(LINESTROKECAP);
+  }
+  
+  public void setLineStrokeCap(String value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKECAP, "");
+    }
+    else
+    {
+      setValue(LINESTROKECAP, value);
+    }
+  }
+  
+  public boolean isLineStrokeCapWritable()
+  {
+    return isWritable(LINESTROKECAP);
+  }
+  
+  public boolean isLineStrokeCapReadable()
+  {
+    return isReadable(LINESTROKECAP);
+  }
+  
+  public boolean isLineStrokeCapModified()
+  {
+    return isModified(LINESTROKECAP);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLineStrokeCapMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LINESTROKECAP).getAttributeMdDTO();
+  }
+  
+  public Integer getLineStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LINESTROKEWIDTH));
+  }
+  
+  public void setLineStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LINESTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(LINESTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLineStrokeWidthWritable()
+  {
+    return isWritable(LINESTROKEWIDTH);
+  }
+  
+  public boolean isLineStrokeWidthReadable()
+  {
+    return isReadable(LINESTROKEWIDTH);
+  }
+  
+  public boolean isLineStrokeWidthModified()
+  {
+    return isModified(LINESTROKEWIDTH);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLineStrokeWidthMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LINESTROKEWIDTH).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.UsersDTO getLockedBy()
