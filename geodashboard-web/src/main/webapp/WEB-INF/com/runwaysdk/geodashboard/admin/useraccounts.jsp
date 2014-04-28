@@ -23,9 +23,9 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.geoserver.GeodashboardUserDTO"%>
 <%@page import="com.runwaysdk.system.RolesDTO"%>
-<%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.geoserver.RoleViewDTO"%>
 
 <gdb:localize var="page_title" key="useraccounts.title"/>
 

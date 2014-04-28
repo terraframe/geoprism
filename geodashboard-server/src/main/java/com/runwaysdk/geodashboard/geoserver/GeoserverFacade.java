@@ -1,12 +1,12 @@
 package com.runwaysdk.geodashboard.geoserver;
 
-import static com.runwaysdk.geodashboard.GeoserverProperties.getGeoserverGWCDir;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getGeoserverSLDDir;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getLocalPath;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getPublisher;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getReader;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getStore;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getWorkspace;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverGWCDir;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverSLDDir;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getLocalPath;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getPublisher;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getReader;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getStore;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getWorkspace;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
@@ -28,7 +28,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -37,10 +37,8 @@ import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
 
-@SuppressWarnings("deprecation")
 public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadable
 {
-  private static final long  serialVersionUID = 162768295;
 
   public static final int    SRS_CODE         = 4326;
 
@@ -472,7 +470,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static boolean layerExists(String layer)
   {
-    return getReader().getLayer(layer) != null;
+    return getReader().getLayer(getWorkspace(), layer) != null;
   }
 
   /**
