@@ -26,6 +26,7 @@
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.IsARelationshipDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
@@ -129,7 +130,7 @@
     
     document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-      relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
+      relationshipTypes : [ <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>, <% out.print("\"" + IsARelationshipDTO.CLASS + "\""); %> ],
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
       /* checkable: true, */
       crud: {

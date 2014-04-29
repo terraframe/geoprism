@@ -32,7 +32,10 @@
    */
   com.runwaysdk.Localize.defineLanguage(universalTreeName, {
     "newCountry" : "New Country",
-    "deleteDescribe" : "Are you sure you want to delete '${termLabel}' and all GeoEntities that may reference it?"
+    "deleteDescribe" : "Are you sure you want to delete '${termLabel}' and all GeoEntities that may reference it?",
+    "isANode" : "Subtypes",
+    "createIsA" : "Create Subtype",
+    "refreshIsA" : "Refresh Subtypes"
   });
   
   /**
@@ -101,6 +104,100 @@
           this.refreshTerm(this.rootTermId);
         }
       },
+      
+      // @Override
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't drag isANodeContainers.
+          if (node.data != null && node.data.isIsANode) {
+            return false;
+          }
+        }
+        
+        return true;
+      },
+      
+      // @Override
+      __findInsertIndex : function(label, newParent) {
+        var children = this.getChildren(newParent);
+       
+        var i = 0;
+        if (newParent.data != null && newParent.data.isANode != null) {
+          i = 1;
+        }
+        
+        for (; i < children.length; ++i) {
+          if (children[i].text.localeCompare(label) > 0) {
+            break;
+          }
+        }
+        
+        return i;
+      },
+      
+      appendAdditionalData : function(jsonArray, parentNode, isAChildren) {
+        if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isIsANode)) { return; }
+        
+        var isANode = {
+          text: this.localize("isANode"),
+          id: Mojo.Util.generateId(), state: {opened: false}, children: true,
+          data: { runwayId: this.__getRunwayIdFromNode(parentNode), isIsANode: true },
+          children: isAChildren
+        };
+        
+        parentNode.data.isANode = isANode.id;
+        
+        jsonArray.splice(0, 0, isANode);
+      },
+      
+      /**
+       * is binded to tree.contextmenu, called when the user right clicks on a node.
+       */
+      // @Override
+      __onNodeRightClick : function(event, object) {
+        var node = object.node;
+        var parentId = this.getParentRunwayId(node);
+        var term = this.termCache[this.__getRunwayIdFromNode(node)];
+        
+        if (this._cm != null && !this._cm.isDestroyed()) {
+          this._cm.destroy();
+        }
+        
+        if (node.data != null && node.data.isIsANode) {
+          this._cm = this.getFactory().newContextMenu(node);
+          
+          // They right clicked on an isA container node. Display the context menu for isA containers.
+          var create = this._cm.addItem(this.localize("createIsA"), "add", Mojo.Util.bind(this, this.__onIsACreateClick));
+          var refresh = this._cm.addItem(this.localize("refreshIsA"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+          
+          this._cm.render();
+        }
+        else {
+          this.$__onNodeRightClick(event, object);
+        }
+      },
+      
+      __onIsACreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
+        var targetNode = contextMenu.getTarget();
+        var targetId = this.__getRunwayIdFromNode(targetNode);
+        this.createTerm(targetId, targetNode, "com.runwaysdk.system.gis.geo.IsARelationship");
+      },
+      
+//      __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
+//        var that = this;
+//        
+//        var parentId = this.__getRunwayIdFromNode(parent);
+//        
+//        if (parent.data != null && parent.data.isIsANode) {
+//          var oldRel = this._config.relationshipType;
+//          this._config.relationshipType = "com.runwaysdk.system.gis.geo.IsARelationship";
+//          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
+//          this._config.relationshipType = oldRel;
+//        }
+//        else {
+//          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
+//        }
+//      },
       
       _onClickNewCountry : function() {
         this.createTerm(this.rootTermId, {id:"#"});
