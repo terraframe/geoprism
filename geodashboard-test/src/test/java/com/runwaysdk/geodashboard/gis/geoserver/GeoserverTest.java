@@ -6,6 +6,9 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import junit.framework.Assert;
+
+import org.apache.derby.tools.sysinfo;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,6 +27,9 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
+import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.WellKnownName;
 import com.runwaysdk.session.Request;
@@ -69,11 +75,11 @@ public class GeoserverTest
   @Request
   public static void classSetup()
   {
-    city = new Universal();
-    city.getDisplayLabel().setDefaultValue("State");
-    city.getDescription().setDefaultValue("State");
-    city.setUniversalId("state");
-    city.apply();
+//    city = new Universal();
+//    city.getDisplayLabel().setDefaultValue("State");
+//    city.getDescription().setDefaultValue("State");
+//    city.setUniversalId("state");
+//    city.apply();
     
     
   }
@@ -82,7 +88,7 @@ public class GeoserverTest
   @Request
   public static void classTeardown()
   {
-    city.delete();
+//    city.delete();
   }
   
   /**
@@ -92,7 +98,72 @@ public class GeoserverTest
   @Request
   public void createPointLayer()
   {
-    junit.framework.Assert.fail("Not Implemented");
+    DashboardMap map = null;
+    
+    try
+    {
+      
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+      
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.apply();
+      
+      DashboardStyle style = new DashboardStyle();
+      style.setName("Style 1");
+      style.apply();
+      
+      map.addHasLayer(layer).apply();
+      
+      SLDMapVisitor visitor = new SLDMapVisitor();
+      map.accepts(visitor);
+      String sld = visitor.getSLD(layer);
+    
+      System.out.println(sld);
+    }
+    finally
+    {
+      map.delete();
+    }
+  }
+  
+  @Test
+  @Request
+  public void createManyPointLayers()
+  {
+    Assert.fail("Not implemented");
+  }
+  
+  @Test
+  @Request
+  public void createManyPolygonLayers()
+  {
+    Assert.fail("Not implemented");
+    
+  }
+  
+  @Test
+  @Request
+  public void createManyMixedLayers()
+  {
+    
+    Assert.fail("Not implemented");
+  }
+  
+  @Test
+  @Request
+  public void testRemoveLayer()
+  {
+    Assert.fail("Not implemented");
+  }
+  
+  @Test
+  @Request
+  public void testRemoveStyle()
+  {
+    Assert.fail("Not implemented");
   }
 
   /**

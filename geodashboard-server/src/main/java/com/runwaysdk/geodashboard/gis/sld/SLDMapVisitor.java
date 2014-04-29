@@ -398,11 +398,6 @@ public class SLDMapVisitor implements MapVisitor
     return layerSLDs;
   }
   
-  public Map getMap()
-  {
-    return map;
-  }
-  
   public String getSLD(Layer layer)
   {
     Node layerNode = this.layerToNodeMap.get(layer);

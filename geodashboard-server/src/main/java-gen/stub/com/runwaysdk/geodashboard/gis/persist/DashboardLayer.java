@@ -2,10 +2,12 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.util.List;
 
+import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.util.IdParser;
 
 public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
@@ -14,6 +16,14 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   public DashboardLayer()
   {
     super();
+  }
+  
+  @Override
+  protected String buildKey()
+  {
+    String name = this.getName();
+    String idRoot = IdParser.parseRootFromId(this.getId());    
+    return NameConventionUtil.buildAttribute(name, idRoot+"_");
   }
 
   @Override

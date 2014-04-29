@@ -9,4 +9,15 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
     super();
   }
   
+  @Override
+  public void delete()
+  {
+    DashboardCondition left = this.getLeftCondition();
+    DashboardCondition right = this.getRightCondition();
+    
+    super.delete();
+    
+    left.delete();
+    right.delete();
+  }
 }
