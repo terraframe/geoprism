@@ -66,7 +66,7 @@
         var nodes = this.__getNodesById(termId);
         
         // Children of universals are appended to the root node
-        // The children are repeated under the copies, so we only want to append one set of the children to the root node.
+        // The children are repeated under the copies, so its okay to grab node[0]
         var node = nodes[0];
         var children = this.getChildren(node);
         var len = children.length;
@@ -74,9 +74,26 @@
           var child = children[i];
           var childId = that.__getRunwayIdFromNode(child);
           
-          this.__dropAll(childId);
-          
-          this.parentRelationshipCache.removeRecordMatchingId(childId, termId, that);
+          // This child is an isAContainer. Drop all of its children. 
+          if (childId === termId) {
+            var isAChildren = this.getChildren(child);
+            var isALen = isAChildren.length;
+            for (var isai = 0; isai < isALen; ++isai) {
+              var isAChild = isAChildren[isai];
+              var isAId = that.__getRunwayIdFromNode(isAChild);
+              
+              var relType = this._getRelationshipForNode(isAChild, child);
+              this.parentRelationshipCache.removeRecordMatchingIdAndRelType(isAId, childId, relType);
+              
+              this.__dropAll(isAId);
+            }
+          }
+          else {
+            this.__dropAll(childId);
+            
+            var relType = this._getRelationshipForNode(child, node);
+            this.parentRelationshipCache.removeRecordMatchingIdAndRelType(childId, termId, relType);
+          }
         }
         
         delete this.termCache[termId];

@@ -942,7 +942,11 @@
         var len = nodeArray.length;
         for (var i = 0; i < len; ++i) {
           if ($tree.jstree("is_open", nodeArray[i]) || $("#"+nodeArray[i].id).hasClass("jstree-leaf")) {
-            nodeArray[i].data.synonymNode = null;
+            
+            if (termId != this.rootTermId && nodeArray[i].data != null) {
+              nodeArray[i].data.synonymNode = null;
+            }
+            
             this.setNodeBusy(nodeArray[i], true);
             $tree.jstree("load_node", nodeArray[i], function(node){
               return function(){ that.setNodeBusy(node, false); };
@@ -1373,6 +1377,19 @@
         
         for (var i = 0; i < records.length; ++i) {
           if (records[i].parentId === parentId) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
+      removeRecordMatchingIdAndRelType : function(childId, parentId, relType) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].parentId === parentId && records[i].relType === relType) {
             records.splice(i, 1);
             return;
           }
