@@ -109,7 +109,7 @@
       _check_callback : function(operation, node, node_parent, node_position, more) {
         if (operation === "move_node") {
           // You can't drag isANodeContainers.
-          if (node.data != null && node.data.isIsANode) {
+          if (node.data != null && node.data.isIsANodeContainer) {
             return false;
           }
         }
@@ -120,6 +120,17 @@
       // @Override
       __findInsertIndex : function(label, newParent) {
         var children = this.getChildren(newParent);
+        
+        children.sort(function(nodeA,nodeB){
+          if (nodeA.id === newParent.data.isANode) {
+            return -1;
+          }
+          else if (nodeB.id === newParent.data.isANode) {
+            return 1;
+          }
+          
+          return nodeA.text.localeCompare(nodeB.text);
+        });
        
         var i = 0;
         if (newParent.data != null && newParent.data.isANode != null) {
@@ -127,21 +138,32 @@
         }
         
         for (; i < children.length; ++i) {
-          if (children[i].text.localeCompare(label) > 0) {
+          console.log("comparing " + children[i].text + " with " + label + " results in " + children[i].text.localeCompare(label));
+          if (children[i].text.localeCompare(label) >= 0) {
             break;
           }
         }
         
+        console.log("returning index " + i + " for label " + label);
+        
         return i;
       },
       
+      _getRelationshipForMoveOrCopy : function(movedNode, newParent, oldRel) {
+        if (newParent.data.isIsANodeContainer) {
+          return "com.runwaysdk.system.gis.geo.IsARelationship";
+        }
+        
+        return "com.runwaysdk.system.gis.geo.AllowedIn";
+      },
+      
       appendAdditionalData : function(jsonArray, parentNode, isAChildren) {
-        if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isIsANode)) { return; }
+        if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isIsANodeContainer)) { return; }
         
         var isANode = {
           text: this.localize("isANode"),
-          id: Mojo.Util.generateId(), state: {opened: false}, children: true,
-          data: { runwayId: this.__getRunwayIdFromNode(parentNode), isIsANode: true },
+          id: Mojo.Util.generateId(), state: {opened: false},
+          data: { runwayId: this.__getRunwayIdFromNode(parentNode), isIsANodeContainer: true },
           children: isAChildren
         };
         
@@ -163,7 +185,7 @@
           this._cm.destroy();
         }
         
-        if (node.data != null && node.data.isIsANode) {
+        if (node.data != null && node.data.isIsANodeContainer) {
           this._cm = this.getFactory().newContextMenu(node);
           
           // They right clicked on an isA container node. Display the context menu for isA containers.
@@ -188,7 +210,7 @@
 //        
 //        var parentId = this.__getRunwayIdFromNode(parent);
 //        
-//        if (parent.data != null && parent.data.isIsANode) {
+//        if (parent.data != null && parent.data.isIsANodeContainer) {
 //          var oldRel = this._config.relationshipType;
 //          this._config.relationshipType = "com.runwaysdk.system.gis.geo.IsARelationship";
 //          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);

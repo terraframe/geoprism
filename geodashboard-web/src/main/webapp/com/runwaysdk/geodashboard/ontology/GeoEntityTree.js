@@ -257,20 +257,35 @@
       // @Override
       __findInsertIndex : function(label, newParent) {
         var children = this.getChildren(newParent);
-       
+        
+        children.sort(function(nodeA,nodeB){
+          if (nodeA === newParent.data.synonymNode) {
+            return -1;
+          }
+          else if (nodeB === newParent.data.synonymNode) {
+            return 1;
+          }
+          
+          return nodeA.text.localeCompare(nodeB.text);
+        });
+        
         var i = 0;
         if (newParent.data != null && newParent.data.synonymNode != null) {
           i = 1;
         }
         
         for (; i < children.length; ++i) {
+          console.log("comparing " + children[i].text + " with " + label + " results in " + children[i].text.localeCompare(label));
           if (children[i].text.localeCompare(label) > 0) {
             break;
           }
         }
         
+        console.log("returning index " + i + " for label " + label);
+        
         return i;
       },
+      
       // @Override
       _check_callback : function(operation, node, node_parent, node_position, more) {
         if (operation === "move_node") {

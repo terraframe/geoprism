@@ -739,11 +739,12 @@
       __findInsertIndex : function(label, newParent) {
         var children = this.getChildren(newParent);
         
-//        children.sort(function(a,b){
-//        var nodeA = $tree.jstree("get_node", a);
-//        var nodeB = $tree.jstree("get_node", b);
-//        return nodeA.text.localeCompare(nodeB.text);
-//      });
+//        var $tree = this._impl;
+        children.sort(function(nodeA,nodeB){
+//          var nodeA = $tree.jstree("get_node", a);
+//          var nodeB = $tree.jstree("get_node", b);
+          return nodeA.text.localeCompare(nodeB.text);
+        });
         
         var i = 0;
         for (; i < children.length; ++i) {
@@ -755,18 +756,45 @@
         return i;
       },
       
-      __copyNodeToParent : function(node, parent) {
-        var that = this;
-        
-        this.__createTreeNode(this.__getRunwayIdFromNode(node), parent, false, function(newCopiedNode){
-          var children = that.getChildren(node);
-          var len = children.length;
-          for (var i = 0; i < len; ++i) {
-            that.__copyNodeToParent(children[i], newCopiedNode);
+//      __copyNodeToParent : function(node, parent, relType) {
+//        var that = this;
+//        
+//        this.__createTreeNode(this.__getRunwayIdFromNode(node), parent, false, function(newCopiedNode){
+//          var children = that.getChildren(node);
+//          var len = children.length;
+//          for (var i = 0; i < len; ++i) {
+//            that.__copyNodeToParent(children[i], newCopiedNode);
+//          }
+//        }, true, null, relType);
+//        
+//        this._impl.jstree("open_node", parent);
+//      },
+      
+      _getRelationshipForMoveOrCopy : function(movedNode, newParent, oldRel) {
+        return oldRel;
+      },
+      
+      moveNode : function(movedNode, newParent, isCopy) {
+        // Ok... apparently jsTree is too retarded to know how to move a node, so we can't use their move function because it doesn't work
+        var $thisTree = this._impl;
+        var nodeMetadata = movedNode.original;
+        nodeMetadata.data = movedNode.data;
+        nodeMetadata.state = {opened: false};
+        nodeMetadata.children = true;
+        if (!isCopy) {
+          $thisTree.jstree("delete_node", movedNode);
+        }
+        else {
+          nodeMetadata.id = Mojo.Util.generateId();
+          var duplicates = this.duplicateMap.get(movedNode.data.runwayId);
+          if (duplicates == null) {
+            duplicates = [];
           }
-        }, true);
-        
-        this._impl.jstree("open_node", parent);
+          duplicates.push(nodeMetadata.id);
+          this.duplicateMap.put(movedNode.data.runwayId, duplicates);
+        }
+        var index = this.__findInsertIndex(nodeMetadata.text, newParent);
+        $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
       },
       
       /**
@@ -787,15 +815,15 @@
         var that = this;
         
         // Really lame jsTree.. the move has already happend and there's no way to prevent it, so we're going to roll it back right here and then perform it later manually.
-        var index = this.__findInsertIndex(movedNode.text, previousParent);
         this._isMoving = true;
-        $thisTree.jstree("move_node", movedNode, previousParent, index, false, true);
+        this.moveNode(movedNode, previousParent);
         this._isMoving = false;
+        
         
         if (this.busyNodes.contains(movedNode)) {
           return false;
         }
-        if (previousParentId === targetNodeId) {
+        if (previousParentId === targetNodeId && (targetNode.data.isIsANodeContainer === previousParent.data.isIsANodeContainer)) {
           return false;
         }
         
@@ -810,10 +838,7 @@
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
               
               that._isMoving2 = true;
-              var ind = that.__findInsertIndex(movedNode.text, targetNode);
-              $thisTree.jstree("move_node", movedNode, targetNode, ind, function(){
-                $thisTree.jstree("open_node", targetNode, false);
-              }, true);
+              that.moveNode(movedNode, targetNode);
               that._isMoving2 = false;
               
               // Remove nodes from old relationship.
@@ -839,11 +864,15 @@
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
           
           var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, previousParentId, that);
-          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, parentRecord.relType);
+          var relType = this._getRelationshipForMoveOrCopy(movedNode, targetNode, parentRecord.relType);
+          
+          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, relType);
         };
         
         // User clicks Copy on context menu //
         var copyHandler = function(mouseEvent, contextMenu) {
+          
+          var relType = null;
           
           var addChildCallback = {
             onSuccess : function(relDTO) {
@@ -853,7 +882,10 @@
               
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
-                that.__copyNodeToParent(movedNode, nodes[i]);
+//                that.__copyNodeToParent(movedNode, nodes[i], relType);
+                that._isMoving2 = true;
+                that.moveNode(movedNode, nodes[i], true);
+                that._isMoving2 = false;
               }
 //              that._impl.jstree("load_node", targetNode, function(){
 //                that._impl.jstree("open_node", targetNode);
@@ -869,9 +901,10 @@
           that.setNodeBusy(movedNode, true);
           
           var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
+          relType = this._getRelationshipForMoveOrCopy(movedNode, targetNode, parentRecord.relType);
           
           // The oldRelId is null which means that this actually does a copy.
-          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
+          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, relType);
         };
         
         var cm = this.getFactory().newContextMenu({childId: movedNodeId, parentId: targetNodeId});
@@ -1084,9 +1117,20 @@
         return responseObj;
       },
       
-      __getUniqueIdForTerm : function(termId) {
+      __getUniqueIdForTerm : function(termId, json) {
         var $tree = this.getImpl();
+        
         var duplicateTerm = $tree.jstree("get_node", termId, false);
+        if (duplicateTerm == false) {
+          for (var i = 0; i < json.length; ++i) {
+            var node = json[i];
+            if (node.id === termId) {
+              duplicateTerm = node;
+              break;
+            }
+          }
+        }
+        
         var duplicates = this.duplicateMap.get(termId);
         var idStr = termId;
         if ( (duplicateTerm != null && duplicateTerm != false) || duplicates != null ) {
@@ -1162,7 +1206,7 @@
               that.termCache[termId] = term;
               
               // Generate a unique id for the node.
-              var idStr = that.__getUniqueIdForTerm(termId);
+              var idStr = that.__getUniqueIdForTerm(termId, json);
               
               var relType = Mojo.Util.replaceAll(tnr.getRelationshipType(), ".", "-");
               
