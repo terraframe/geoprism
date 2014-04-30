@@ -22,6 +22,8 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
@@ -106,7 +108,7 @@
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
       GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS,
-      GeoEntityViewDTO.CLASS
+      GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -127,7 +129,7 @@
 	  
 	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
 	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
-	    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
+	    relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
 	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.
