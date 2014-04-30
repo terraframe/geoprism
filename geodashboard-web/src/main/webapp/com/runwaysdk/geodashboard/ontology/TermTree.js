@@ -334,7 +334,7 @@
         var term = this.termCache[termId];
         var parentId = (parent instanceof Object) ? parent.getId() : parent;
         
-        var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
+//        var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
         
         var that = this;
         
@@ -496,14 +496,20 @@
         new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
       },
       
+      getParentNode : function(node) {
+        return this.getImpl().jstree("get_node", this.getParentId(node));
+      },
+      
       /**
        * is binded to context menu option Delete. 
        */
       __onContextDeleteClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
-//        var parentId = this.__getRunwayIdFromNode(node.parent);
-        var parentId = this.getParentRunwayId(node);
+        var parentNodeId = this.getParentId(node);
+        var parentNode = this.getImpl().jstree("get_node", parentNodeId);
+        var parentId = this.__getRunwayIdFromNode(parentNode);
+        var relType = this._getRelationshipForNode(node, parentNode);
         var that = this;
         var dialog = null;
         
@@ -515,20 +521,25 @@
         
         var parentRecords = this.parentRelationshipCache.get(termId, this);
         
+        console.log(parentRecords);
+        console.log("^ parent records of id " + termId);
+        
         var deleteHandler = function() {
           that.deleteTerm(termId, parentId);
           dialog.close();
         };
         var performDeleteRelHandler = function() {
+          var parentRecord = that.parentRelationshipCache.getRecordWithParentIdAndRelType(termId, parentId, relType);
+          
           var deleteRelCallback = {
             onSuccess : function() {
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
-                if (that.getParentRunwayId(nodes[i]) == parentId) {
+                if (that.getParentRunwayId(nodes[i]) == parentId && relType === that._getRelationshipForNode(nodes[i], that.getParentNode(nodes[i]))) {
                   that.getImpl().jstree("delete_node", nodes[i]);
                 }
               }
-              that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
               
               // Children of universals are appended to the root node, so refresh the root node.
 //              that.refreshTerm(that.rootTermId);
@@ -540,7 +551,6 @@
           };
           Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
           
-          var parentRecord = that.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
 //          that.termCache[termId].removeChildTerm(deleteRelCallback, parentRecord.relId);
           com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
           
@@ -633,7 +643,7 @@
       },
       
       getParentId : function(node) {
-        var parent = this.getImpl().jstree("get_parent", node);
+        var parent = this.getImpl().jstree("get_node", node.parent);
         
         if (parent === node.id) {
           return "#";
@@ -770,8 +780,8 @@
 //        this._impl.jstree("open_node", parent);
 //      },
       
-      _getRelationshipForMoveOrCopy : function(movedNode, newParent, oldRel) {
-        return oldRel;
+      _getRelationshipForNode : function(movedNode, newParent) {
+        return this._config.relationshipTypes[0];
       },
       
       moveNode : function(movedNode, newParent, isCopy) {
@@ -830,9 +840,13 @@
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
           
+          var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
+          var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
+          var relType = this._getRelationshipForNode(movedNode, targetNode);
+          
           var moveBizCallback = {
             onSuccess : function(relDTO) {
-              that.parentRelationshipCache.removeRecordMatchingId(movedNodeId, previousParentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -863,9 +877,6 @@
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, previousParentId, that);
-          var relType = this._getRelationshipForMoveOrCopy(movedNode, targetNode, parentRecord.relType);
-          
           com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, relType);
         };
         
@@ -884,7 +895,7 @@
               for (var i = 0; i<nodes.length; ++i) {
 //                that.__copyNodeToParent(movedNode, nodes[i], relType);
                 that._isMoving2 = true;
-                that.moveNode(movedNode, nodes[i], true);
+                that.moveNode(movedNode, that._getContainerNode(nodes[i], relType), true);
                 that._isMoving2 = false;
               }
 //              that._impl.jstree("load_node", targetNode, function(){
@@ -900,8 +911,8 @@
           
           that.setNodeBusy(movedNode, true);
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
-          relType = this._getRelationshipForMoveOrCopy(movedNode, targetNode, parentRecord.relType);
+//          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
+          relType = this._getRelationshipForNode(movedNode, targetNode);
           
           // The oldRelId is null which means that this actually does a copy.
           com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, relType);
@@ -1066,8 +1077,8 @@
           parentNode.parents = [];
         }
         
-        if (relType === "com.runwaysdk.system.gis.geo.IsARelationship") {
-          parentNode = parentNode.data.isANode;
+        if (relType != null) {
+          parentNode = this._getContainerNode(parentNode, relType)
         }
         
         node = $thisTree.jstree(
@@ -1079,6 +1090,10 @@
         );
         
         return node;
+      },
+      
+      _getContainerNode : function(parentNode, relType) {
+        return parentNode;
       },
       
       getChildren : function(nodeId) {
@@ -1365,13 +1380,26 @@
         throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
       },
       
+      removeRecordMatchingRelId : function(childId, relId) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].relId === relId) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
       /**
        * @returns parentRecord[]
        */
-      get : function(childId, treeInst) {
+      get : function(childId) {
         var got = this.cache[childId];
         
-        if (treeInst != null && (got == null || got == undefined)) {
+        if (got == null) {
           throw new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
         }
         
@@ -1391,6 +1419,21 @@
         }
         
         throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      /**
+       * @returns parentRecord
+       */
+      getRecordWithParentIdAndRelType : function(childId, parentId, relType) {
+        var parentRecords = this.get(childId);
+        
+        for (var i = 0; i < parentRecords.length; ++i) {
+          if (parentId === parentRecords[i].parentId && relType === parentRecords[i].relType) {
+            return parentRecords[i];
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] and relType [" + relType + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
       },
       
       removeAll : function(termId) {

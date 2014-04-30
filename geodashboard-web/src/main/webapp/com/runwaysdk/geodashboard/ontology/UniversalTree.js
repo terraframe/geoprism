@@ -149,7 +149,15 @@
         return i;
       },
       
-      _getRelationshipForMoveOrCopy : function(movedNode, newParent, oldRel) {
+      _getContainerNode : function(parentNode, relType) {
+        if (relType === "com.runwaysdk.system.gis.geo.IsARelationship") {
+          return parentNode.data.isANode;
+        }
+        
+        return parentNode;
+      },
+      
+      _getRelationshipForNode : function(movedNode, newParent, oldRel) {
         if (newParent.data.isIsANodeContainer) {
           return "com.runwaysdk.system.gis.geo.IsARelationship";
         }
