@@ -122,10 +122,10 @@
         var children = this.getChildren(newParent);
         
         children.sort(function(nodeA,nodeB){
-          if (nodeA.id === newParent.data.isANode) {
+          if (newParent.data != null && nodeA.id === newParent.data.isANode) {
             return -1;
           }
-          else if (nodeB.id === newParent.data.isANode) {
+          else if (newParent.data != null && nodeB.id === newParent.data.isANode) {
             return 1;
           }
           
@@ -158,7 +158,7 @@
       },
       
       _getRelationshipForNode : function(movedNode, newParent, oldRel) {
-        if (newParent.data.isIsANodeContainer) {
+        if (newParent.data != null && newParent.data.isIsANodeContainer) {
           return "com.runwaysdk.system.gis.geo.IsARelationship";
         }
         

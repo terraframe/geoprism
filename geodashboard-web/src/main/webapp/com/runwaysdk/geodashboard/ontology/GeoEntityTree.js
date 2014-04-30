@@ -259,10 +259,10 @@
         var children = this.getChildren(newParent);
         
         children.sort(function(nodeA,nodeB){
-          if (nodeA === newParent.data.synonymNode) {
+          if (newParent.data != null && nodeA === newParent.data.synonymNode) {
             return -1;
           }
-          else if (nodeB === newParent.data.synonymNode) {
+          else if (newParent.data != null && nodeB === newParent.data.synonymNode) {
             return 1;
           }
           

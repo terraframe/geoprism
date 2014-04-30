@@ -805,6 +805,7 @@
         }
         var index = this.__findInsertIndex(nodeMetadata.text, newParent);
         $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
+        $thisTree.jstree("open_node", newParent);
       },
       
       /**
@@ -1136,7 +1137,7 @@
         var $tree = this.getImpl();
         
         var duplicateTerm = $tree.jstree("get_node", termId, false);
-        if (duplicateTerm == false) {
+        if (duplicateTerm == false && json != null) {
           for (var i = 0; i < json.length; ++i) {
             var node = json[i];
             if (node.id === termId) {
