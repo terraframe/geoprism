@@ -1,12 +1,5 @@
 package com.runwaysdk.geodashboard.geoserver;
 
-import static com.runwaysdk.geodashboard.GeoserverProperties.getGeoserverGWCDir;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getGeoserverSLDDir;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getLocalPath;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getPublisher;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getReader;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getStore;
-import static com.runwaysdk.geodashboard.GeoserverProperties.getWorkspace;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
@@ -66,14 +59,14 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     @Override
     public boolean accept(File file)
     {
-      return file.isDirectory() && file.getName().startsWith(getWorkspace());
+      return file.isDirectory() && file.getName().startsWith(GeoserverProperties.getWorkspace());
     }
   }
 
   
   public static void refresh()
   {
-    if(getPublisher().reload())
+    if(GeoserverProperties.getPublisher().reload())
     {
       log.info("Reloaded geoserver.");
     }
@@ -85,25 +78,25 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
   
   public static void removeStore()
   {
-    if(getPublisher().removeDatastore(getWorkspace(), getStore(), true))
+    if(GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), true))
     {
-      log.info("Removed the datastore ["+getStore()+"].");
+      log.info("Removed the datastore ["+GeoserverProperties.getStore()+"].");
     }
     else
     {
-      log.warn("Failed to remove the datastore ["+getStore()+"].");
+      log.warn("Failed to remove the datastore ["+GeoserverProperties.getStore()+"].");
     }
   }
 
   public static void removeWorkspace()
   {
-    if(getPublisher().removeWorkspace(getWorkspace(), true))
+    if(GeoserverProperties.getPublisher().removeWorkspace(GeoserverProperties.getWorkspace(), true))
     {
-      log.info("Removed the workspace ["+getWorkspace()+"].");
+      log.info("Removed the workspace ["+GeoserverProperties.getWorkspace()+"].");
     }
     else
     {
-      log.warn("Failed to remove the workspace ["+getWorkspace()+"].");
+      log.warn("Failed to remove the workspace ["+GeoserverProperties.getWorkspace()+"].");
     }
   }
   
@@ -111,18 +104,18 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
   {
     try
     {
-      if(getPublisher().createWorkspace(getWorkspace(), new URI(getLocalPath())))
+      if(GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getLocalPath())))
       {
-        log.info("Created the workspace ["+getWorkspace()+"].");
+        log.info("Created the workspace ["+GeoserverProperties.getWorkspace()+"].");
       }
       else
       {
-        log.warn("Failed to create the workspace ["+getWorkspace()+"].");
+        log.warn("Failed to create the workspace ["+GeoserverProperties.getWorkspace()+"].");
       }
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI ["+getLocalPath()+"] is invalid.", e);
+      throw new ConfigurationException("The URI ["+GeoserverProperties.getLocalPath()+"] is invalid.", e);
     }
   }
   
@@ -154,7 +147,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     encoder.setLooseBBox(true);
     encoder.setExposePrimaryKeys(true);
 
-    if (getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(), encoder))
+    if (GeoserverProperties.getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(), encoder))
     {
       log.info("Published the store [" + GeoserverProperties.getStore() + "].");
     }
@@ -172,7 +165,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static boolean styleExists(String styleName)
   {
-    return getReader().getSLD(styleName) != null;
+    return GeoserverProperties.getReader().getSLD(styleName) != null;
   }
 
   /**
@@ -184,7 +177,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static boolean cacheExists(String cacheName)
   {
-    String cacheDir = getGeoserverGWCDir() + cacheName;
+    String cacheDir = GeoserverProperties.getGeoserverGWCDir() + cacheName;
     File cache = new File(cacheDir);
     return cache.exists();
   }
@@ -196,7 +189,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static List<String> getLayers()
   {
-    return getReader().getLayers().getNames();
+    return GeoserverProperties.getReader().getLayers().getNames();
   }
 
   /**
@@ -204,7 +197,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static List<String> getStyles()
   {
-    return getReader().getStyles().getNames();
+    return GeoserverProperties.getReader().getStyles().getNames();
   }
 
   /**
@@ -218,7 +211,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
   {
     if (styleExists(styleName))
     {
-      if (getPublisher().removeStyle(styleName, true))
+      if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
       {
         log.info("Removed the SLD [" + styleName + "].");
       }
@@ -229,7 +222,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
 
       // There are problems with Geoserver not removing the SLD artifacts,
       // so make sure those are gone
-      String stylePath = getGeoserverSLDDir();
+      String stylePath = GeoserverProperties.getGeoserverSLDDir();
 
       // remove the sld
       File sld = new File(stylePath + styleName + ".sld");
@@ -286,7 +279,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     }
     else
     {
-      if (getPublisher().publishStyle(body, styleName))
+      if (GeoserverProperties.getPublisher().publishStyle(body, styleName))
       {
         log.info("Published the SLD [" + styleName + "].");
       }
@@ -333,7 +326,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
 
-      if (getPublisher().publishDBLayer(getWorkspace(), getStore(), fte, le))
+      if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
       {
         log.info("Created the layer [" + layer + "] in geoserver.");
         return true;
@@ -390,8 +383,8 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static void removeLayer(String layer)
   {
-    String workspace = getWorkspace();
-    if (getPublisher().removeLayer(workspace, layer))
+    String workspace = GeoserverProperties.getWorkspace();
+    if (GeoserverProperties.getPublisher().removeLayer(workspace, layer))
     {
       log.info("Removed the layer for [" + layer + "].");
     }
@@ -421,7 +414,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static File[] getCaches()
   {
-    File cacheRoot = new File(getGeoserverGWCDir());
+    File cacheRoot = new File(GeoserverProperties.getGeoserverGWCDir());
     return cacheRoot.listFiles(new CacheFilter());
   }
   
@@ -460,7 +453,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static void removeCache(String cacheName)
   {
-    String cacheDir = getGeoserverGWCDir() + cacheName;
+    String cacheDir = GeoserverProperties.getGeoserverGWCDir() + cacheName;
     removeCache(new File(cacheDir));
   }
 
@@ -472,7 +465,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
    */
   public static boolean layerExists(String layer)
   {
-    return getReader().getLayer(layer) != null;
+    return GeoserverProperties.getReader().getLayer(layer) != null;
   }
 
   /**

@@ -28,4 +28,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return this.getAllHasLayer().getAll();
   }
   
+  @Override
+  public String getMapJSON()
+  {
+    
+    // TODO Auto-generated method stub
+    return super.getMapJSON();
+  }
 }
