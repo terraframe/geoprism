@@ -32,12 +32,14 @@
    */
   com.runwaysdk.Localize.defineLanguage(geoentityTreeName, {
     "deleteDescribe" : "Are you sure you want to delete '${termLabel}' and all of its children?",
+    "synonymsNode" : "Synonyms",
     "viewSynonyms" : "View Synonyms",
     "hideSynonyms" : "Hide Synonyms",
     "createSynonym" : "Create Synonym",
     "updateSynonym" : "Update Synonym",
     "deleteSynonym" : "Delete Synonym",
-    "refreshSynonyms" : "Refresh Synonyms"
+    "refreshSynonyms" : "Refresh Synonyms",
+    "emptyMessage" : "No data to display, create a Universal first."
   });
   
   /**
@@ -99,7 +101,7 @@
           var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
           
           var synonyms = null;
-          if (node.synonymNode != null) {
+          if (node.data.synonymNode != null) {
             synonyms = this._cm.addItem(this.localize("hideSynonyms"), "synonyms", Mojo.Util.bind(this, this.__onHideSynonym));
           }
           else {
@@ -118,6 +120,7 @@
         
         this._cm.render();
       },
+      
       __onCreateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
@@ -145,8 +148,8 @@
       __onHideSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
-        this._impl.jstree("delete_node", targetNode.synonymNode);
-        targetNode.synonymNode = null;
+        this._impl.jstree("delete_node", targetNode.data.synonymNode);
+        targetNode.data.synonymNode = null;
       },
       __onRefreshSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
@@ -215,7 +218,7 @@
             justOpened.dontClobberChildren = true;
             
             var afterCreateNode = function(justCreated) {
-              targetNode.synonymNode = justCreated;
+              targetNode.data.synonymNode = justCreated;
               that.setNodeBusy(targetNode, false);
               
               // Open the target node
@@ -227,14 +230,12 @@
               });
             };
             
-            console.log("Creating a synonym with runwayId: " + that.__getRunwayIdFromNode(targetNode));
-            
             // Create a synonyms node under the target node
             var idStr = targetNode.id + "_" + Mojo.Util.generateId();
             that._impl.jstree(
               'create_node',
               targetNode,
-              { state:{opened: false}, children:false, text: "Synonyms", data: {runwayId: that.__getRunwayIdFromNode(targetNode), isSynonymContainer: true}, id: idStr },
+              { state:{opened: false}, children:false, text: that.localize("synonymsNode"), data: {runwayId: that.__getRunwayIdFromNode(targetNode), isSynonymContainer: true}, id: idStr },
               0,
               afterCreateNode, true
             );
@@ -251,6 +252,58 @@
         else {
           createSynonymNode();
         }
+      },
+      
+      // @Override
+      __findInsertIndex : function(label, newParent) {
+        var children = this.getChildren(newParent);
+        
+        children.sort(function(nodeA,nodeB){
+          if (newParent.data != null && nodeA === newParent.data.synonymNode) {
+            return -1;
+          }
+          else if (newParent.data != null && nodeB === newParent.data.synonymNode) {
+            return 1;
+          }
+          
+          return nodeA.text.localeCompare(nodeB.text);
+        });
+        
+        var i = 0;
+        if (newParent.data != null && newParent.data.synonymNode != null) {
+          i = 1;
+        }
+        
+        for (; i < children.length; ++i) {
+          console.log("comparing " + children[i].text + " with " + label + " results in " + children[i].text.localeCompare(label));
+          if (children[i].text.localeCompare(label) > 0) {
+            break;
+          }
+        }
+        
+        console.log("returning index " + i + " for label " + label);
+        
+        return i;
+      },
+      
+      // @Override
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't drag synonymContainer nodes.
+          if (node.data != null && node.data.isSynonymContainer) {
+            return false;
+          }
+          // You can't drag synonyms, either
+          else if (node.data.isSynonym) {
+            return false;
+          }
+          // And you can't drag GeoEntities into synonyms
+          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
+            return false;
+          }
+        }
+        
+        return true;
       },
       
       __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
@@ -275,10 +328,11 @@
                 that.termCache[termId] = term;
                 
                 var treeNode = {
-                    text: that._getTermDisplayLabel(term),
-                    id: termId, state: {opened: true}, children: false,
-                    data: { runwayId: termId, isSynonym: true }
-//                    li_attr: {'class' : relType} // Add the relationshipType to the li's class
+                  text: that._getTermDisplayLabel(term),
+                  id: termId, state: {opened: true}, children: false,
+                  data: { runwayId: termId, isSynonym: true },
+//                  relType: relType,
+//                  li_attr: {'class' : relType} // Add the relationshipType to the li's class
                 };
                 json.push(treeNode);
               }
