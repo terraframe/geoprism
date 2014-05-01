@@ -521,9 +521,6 @@
         
         var parentRecords = this.parentRelationshipCache.get(termId, this);
         
-        console.log(parentRecords);
-        console.log("^ parent records of id " + termId);
-        
         var deleteHandler = function() {
           that.deleteTerm(termId, parentId);
           dialog.close();
@@ -552,7 +549,8 @@
           Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
           
 //          that.termCache[termId].removeChildTerm(deleteRelCallback, parentRecord.relId);
-          com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
+//          com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
+          com.runwaysdk.system.ontology.TermUtil.removeLink(deleteRelCallback, termId, parentId, relType);
           
           dialog.close();
         };
@@ -878,7 +876,8 @@
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
           
-          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, relType);
+//          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, relType);
+          com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(moveBizCallback, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
         };
         
         // User clicks Copy on context menu //
@@ -916,7 +915,8 @@
           relType = this._getRelationshipForNode(movedNode, targetNode);
           
           // The oldRelId is null which means that this actually does a copy.
-          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, relType);
+//          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, relType);
+          com.runwaysdk.system.ontology.TermUtil.addLink(addChildCallback, movedNodeId, targetNodeId, relType);
         };
         
         var cm = this.getFactory().newContextMenu({childId: movedNodeId, parentId: targetNodeId});
