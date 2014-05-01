@@ -31,6 +31,7 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Category;
+import com.runwaysdk.geodashboard.gis.model.condition.Composite;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Gradient;
@@ -323,7 +324,7 @@ public class SLDMapVisitor implements MapVisitor
   
   private Node currentLayer;
   
-  private java.util.Map<Layer, Node> layerToNodeMap;
+  private java.util.Map<String, Node> layerToNodeMap;
   
   private java.util.Map<Node, LinkedList<DocumentFragment>> layers;
   
@@ -357,7 +358,7 @@ public class SLDMapVisitor implements MapVisitor
     this.doc.setXmlStandalone(true);
 
     this.currentLayer = null;
-    this.layerToNodeMap = new HashMap<Layer, Node>();
+    this.layerToNodeMap = new HashMap<String, Node>();
     this.parents = new Stack<Node>();
     this.layers = new LinkedHashMap<Node, LinkedList<DocumentFragment>>();
     this.root = null;
@@ -386,21 +387,9 @@ public class SLDMapVisitor implements MapVisitor
     return new NodeBuilder(this, null, node);
   }
   
-  public java.util.Map<Layer, String> getSLDs()
-  {
-    java.util.Map<Layer, String> layerSLDs = new LinkedHashMap<Layer, String>();
-
-    for(Layer layer : this.layerToNodeMap.keySet())
-    {
-      layerSLDs.put(layer, this.getSLD(layer));
-    }
-    
-    return layerSLDs;
-  }
-  
   public String getSLD(Layer layer)
   {
-    Node layerNode = this.layerToNodeMap.get(layer);
+    Node layerNode = this.layerToNodeMap.get(layer.getId());
     
     Node sld = this.root.cloneNode(true);
 
@@ -453,7 +442,7 @@ public class SLDMapVisitor implements MapVisitor
   {
     this.map = map;
     
-    this.root = this.node("StyledLayerDescriptioner").attr("xmlns", "http://www.opengis.net/sld")
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld")
         .attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc")
         .attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
   
@@ -475,12 +464,14 @@ public class SLDMapVisitor implements MapVisitor
     this.featureType = layer.getFeatureType();
 
     Node layerNode = this.node("NamedLayer")
-        .child(this.node("Name").text(layer.getName()), this.node("UserStyle")).build();
+        .child(this.node("Name").text(layer.getName())).build();
 
-    parents.push(layerNode);
+    Node userStyle = this.node("UserStyle").build(layerNode);
+    
+    parents.push(userStyle);
 
     this.currentLayer = layerNode;
-    layerToNodeMap.put(layer, layerNode);
+    layerToNodeMap.put(layer.getId(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
     
     
@@ -498,7 +489,7 @@ public class SLDMapVisitor implements MapVisitor
   {
     DocumentFragment rulesFragment = this.doc.createDocumentFragment();
     
-    this.layers.get(this.currentLayer).add(rulesFragment);
+    //this.layers.get(this.currentLayer).add(rulesFragment);
     
     Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
 
@@ -532,6 +523,7 @@ public class SLDMapVisitor implements MapVisitor
     }
     
     rule.appendChild(symbolizer.getSLD());
+    this.parents.pop().appendChild(rulesFragment);
   }
 
   @Override
@@ -578,7 +570,11 @@ public class SLDMapVisitor implements MapVisitor
     
     this.parents.push(filter);
     
-    style.getCondition().accepts(this);
+    Condition cond = style.getCondition();
+    if(cond != null)
+    {
+      cond.accepts(this);
+    }
   }
 
   @Override
@@ -586,15 +582,15 @@ public class SLDMapVisitor implements MapVisitor
   {
     Node or = this.node("Or").build();
 
-    Condition parent = component.getParentCondition();
-    if(conditions.containsKey(parent))
-    {
-      conditions.get(parent).appendChild(or);
-    }
-    else
-    {
-      this.parents.peek().appendChild(or);
-    }
+//    Composite parent = component.getParentCondition();
+//    if(conditions.containsKey(parent))
+//    {
+//      conditions.get(parent).appendChild(or);
+//    }
+//    else
+//    {
+//      this.parents.peek().appendChild(or);
+//    }
 
     this.parents.push(or);
     conditions.put(component, or);
@@ -605,15 +601,15 @@ public class SLDMapVisitor implements MapVisitor
   {
     Node and = this.node("And").build();
 
-    Condition parent = component.getParentCondition();
-    if(conditions.containsKey(parent))
-    {
-      conditions.get(parent).appendChild(and);
-    }
-    else
-    {
-      this.parents.peek().appendChild(and);
-    }
+//    Composite parent = component.getParentCondition();
+//    if(conditions.containsKey(parent))
+//    {
+//      conditions.get(parent).appendChild(and);
+//    }
+//    else
+//    {
+//      this.parents.peek().appendChild(and);
+//    }
     
     this.parents.push(and);
     conditions.put(component, and);

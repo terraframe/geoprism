@@ -36,25 +36,25 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
-
-public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadable
+public class GeoserverFacade // extends GeoserverFacadeBase implements
+                             // Reloadable
 {
 
-  public static final int    SRS_CODE         = 4326;
+  public static final int    SRS_CODE    = 4326;
 
-  public static final String SRS              = "EPSG:" + SRS_CODE;
+  public static final String SRS         = "EPSG:" + SRS_CODE;
 
-  public static final String GEOM_COLUMN      = "geom";
+  public static final String GEOM_COLUMN = "geom";
 
-  public static int          MINX_INDEX       = 0;
+  public static int          MINX_INDEX  = 0;
 
-  public static int          MINY_INDEX       = 1;
+  public static int          MINY_INDEX  = 1;
 
-  public static int          MAXX_INDEX       = 2;
+  public static int          MAXX_INDEX  = 2;
 
-  public static int          MAXY_INDEX       = 3;
+  public static int          MAXY_INDEX  = 3;
 
-  private static Log         log              = LogFactory.getLog(GeoserverFacade.class);
+  private static Log         log         = LogFactory.getLog(GeoserverFacade.class);
 
   /**
    * Checks if a given File is a cache directory for the workspace.
@@ -68,10 +68,9 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     }
   }
 
-  
   public static void refresh()
   {
-    if(getPublisher().reload())
+    if (getPublisher().reload())
     {
       log.info("Reloaded geoserver.");
     }
@@ -80,53 +79,53 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       log.warn("Failed to reload geoserver.");
     }
   }
-  
+
   public static void removeStore()
   {
-    if(getPublisher().removeDatastore(getWorkspace(), getStore(), true))
+    if (getPublisher().removeDatastore(getWorkspace(), getStore(), true))
     {
-      log.info("Removed the datastore ["+getStore()+"].");
+      log.info("Removed the datastore [" + getStore() + "].");
     }
     else
     {
-      log.warn("Failed to remove the datastore ["+getStore()+"].");
+      log.warn("Failed to remove the datastore [" + getStore() + "].");
     }
   }
 
   public static void removeWorkspace()
   {
-    if(getPublisher().removeWorkspace(getWorkspace(), true))
+    if (getPublisher().removeWorkspace(getWorkspace(), true))
     {
-      log.info("Removed the workspace ["+getWorkspace()+"].");
+      log.info("Removed the workspace [" + getWorkspace() + "].");
     }
     else
     {
-      log.warn("Failed to remove the workspace ["+getWorkspace()+"].");
+      log.warn("Failed to remove the workspace [" + getWorkspace() + "].");
     }
   }
-  
+
   public static void publishWorkspace()
   {
     try
     {
-      if(getPublisher().createWorkspace(getWorkspace(), new URI(getLocalPath())))
+      if (getPublisher().createWorkspace(getWorkspace(), new URI(getLocalPath())))
       {
-        log.info("Created the workspace ["+getWorkspace()+"].");
+        log.info("Created the workspace [" + getWorkspace() + "].");
       }
       else
       {
-        log.warn("Failed to create the workspace ["+getWorkspace()+"].");
+        log.warn("Failed to create the workspace [" + getWorkspace() + "].");
       }
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI ["+getLocalPath()+"] is invalid.", e);
+      throw new ConfigurationException("The URI [" + getLocalPath() + "] is invalid.", e);
     }
   }
-  
+
   /**
-   * FIXME could not find another API call to do this, but one must exist
-   * that isn't deprecated. Look again later.
+   * FIXME could not find another API call to do this, but one must exist that
+   * isn't deprecated. Look again later.
    */
   @SuppressWarnings("deprecation")
   public static void publishStore()
@@ -161,7 +160,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       log.warn("Failed to publish the store [" + GeoserverProperties.getStore() + "].");
     }
   }
-  
+
   /**
    * Checks if the given style exists in geoserver.
    * 
@@ -270,17 +269,11 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     }
   }
 
-  /**
-   * Publishes the SQL of the given name with the XML body.
-   * 
-   * @param styleName
-   * @param body
-   */
-  public static void publishStyle(String styleName, String body)
+  public static void publishStyle(String styleName, String body, boolean force)
   {
-    if (styleExists(styleName))
+    if(force && styleExists(styleName))
     {
-      log.info("The style [" + styleName + "] already exists.");
+      getPublisher().removeStyle(styleName, true);
     }
     else
     {
@@ -293,6 +286,17 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
         log.warn("Failed to publish the SLD [" + styleName + "].");
       }
     }
+  }
+  
+  /**
+   * Publishes the SQL of the given name with the XML body.
+   * 
+   * @param styleName
+   * @param body
+   */
+  public static void publishStyle(String styleName, String body)
+  {
+    publishStyle(styleName, body, true);
   }
 
   /**
@@ -422,7 +426,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     File cacheRoot = new File(getGeoserverGWCDir());
     return cacheRoot.listFiles(new CacheFilter());
   }
-  
+
   public static void removeCache(File cache)
   {
     if (cache.exists())
@@ -564,9 +568,10 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble(
-        "miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union
-        .aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
+        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
+        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
+        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
@@ -597,7 +602,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
   @Authenticate
   public static void initializeGeoServer()
   {
-    //Initializer.init();
+    // Initializer.init();
   }
 
 }

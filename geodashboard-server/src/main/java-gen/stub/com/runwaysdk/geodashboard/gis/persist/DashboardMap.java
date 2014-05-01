@@ -18,8 +18,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   @Override
   public void accepts(MapVisitor visitor)
   {
-    // TODO Auto-generated method stub
-    
+    visitor.visit(this);    
   }
 
   @Override

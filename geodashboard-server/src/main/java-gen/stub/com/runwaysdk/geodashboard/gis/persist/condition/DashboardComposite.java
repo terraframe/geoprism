@@ -1,6 +1,8 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-public abstract class DashboardComposite extends DashboardCompositeBase implements com.runwaysdk.generation.loader.Reloadable
+import com.runwaysdk.geodashboard.gis.model.condition.Composite;
+
+public abstract class DashboardComposite extends DashboardCompositeBase implements com.runwaysdk.generation.loader.Reloadable, Composite
 {
   private static final long serialVersionUID = -287417231;
   

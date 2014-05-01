@@ -11,8 +11,8 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" />
-					<boolean name="displayInLegend" label="Display In Legend" required="true" default="true" />
-					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" default="false" />
+					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
+					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
 					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
 				</attributes>
 			</mdBusiness>
@@ -67,11 +67,11 @@
 					
 					<!-- value styles -->
 					<boolean name="enableValue" label="enableValue" required="true" defaultValue="false" />
-					<char name="valueFont" label="Value Font" size="10" required="true" />
-					<integer name="valueSize" label="Value Size" required="true" rejectNegative="true" />
-					<char name="valueColor" label="Value Color" size="10" required="true" />
-					<char name="valueHalo" label="Value Halo" size="10" required="true" />
-					<integer name="valueHaloWidth" label="Value Halo Width" required="true" rejectNegative="true" />
+					<char name="valueFont" label="Value Font" size="10" required="true" defaultValue="helvetica" />
+					<integer name="valueSize" label="Value Size" required="true" defaultValue="12" rejectNegative="true" />
+					<char name="valueColor" label="Value Color" size="10" required="true" defaultValue="#000000" />
+					<char name="valueHalo" label="Value Halo" size="10" required="true" defaultValue="#FFFFFF" />
+					<integer name="valueHaloWidth" label="Value Halo Width" required="true" defaultValue="3" rejectNegative="true" />
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="enableLabel" required="true" defaultValue="false" />
@@ -110,7 +110,7 @@
 				extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
 				<attributes>
 					<reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
-					<reference name="styleCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+					<reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
 				</attributes>
 			</mdBusiness>
 
@@ -123,7 +123,11 @@
 				generateController="true">
 				<attributes>
 					<reference name="styleReference" required="true" label="Style" description="Back-reference to the Style that points to this condition."
-						type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+						type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" />
+					<reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists."
+            type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          <reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists."
+            type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
 				</attributes>
 			</mdBusiness>
 

@@ -1,6 +1,9 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-public class DashboardGreaterThan extends DashboardGreaterThanBase implements com.runwaysdk.generation.loader.Reloadable
+import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.condition.GreaterThan;
+
+public class DashboardGreaterThan extends DashboardGreaterThanBase implements com.runwaysdk.generation.loader.Reloadable, GreaterThan
 {
   private static final long serialVersionUID = 815122248;
   
@@ -9,4 +12,9 @@ public class DashboardGreaterThan extends DashboardGreaterThanBase implements co
     super();
   }
   
+  @Override
+  public void accepts(MapVisitor visitor)
+  {
+    visitor.visit(this);    
+  }
 }

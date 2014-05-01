@@ -5,11 +5,9 @@ import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 
 public interface Condition extends Component
 {
-  public Condition getParentCondition();
-  
   public ThematicStyle getThematicStyle();
   
-  public void setThematicStyle(ThematicStyle thematicStyle);
+  public Condition getRootCondition();
 
-  public void setParentCondition(Condition parentCondition);
+  public Condition getParentCondition();
 }
