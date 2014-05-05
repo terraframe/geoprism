@@ -122,6 +122,24 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
       throw new ConfigurationException("The URI [" + getLocalPath() + "] is invalid.", e);
     }
   }
+  
+  /**
+   * Checks if Geoserver is available.
+   * @return
+   */
+  public static boolean geoserverExists()
+  {
+    if(getReader().existGeoserver())
+    {
+      log.info("A geoserver instance is running at ["+getLocalPath()+"].");
+      return true;
+    }
+    else
+    {
+      log.warn("A geoserver instance is NOT running at ["+getLocalPath()+"].");
+      return false;
+    }
+  }
 
   /**
    * FIXME could not find another API call to do this, but one must exist that
@@ -593,16 +611,6 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
     bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
 
     return bbox;
-  }
-
-  /**
-   * Reapplys all maps and creates database views if they do not exist.
-   * GeoServer is notified of the changes.
-   */
-  @Authenticate
-  public static void initializeGeoServer()
-  {
-    // Initializer.init();
   }
 
 }

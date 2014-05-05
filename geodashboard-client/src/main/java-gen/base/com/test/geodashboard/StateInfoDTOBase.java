@@ -1,10 +1,10 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -560010143)
+@com.runwaysdk.business.ClassSignature(hash = -555912000)
 public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.test.geodashboard.StateInfo";
-  private static final long serialVersionUID = -560010143;
+  private static final long serialVersionUID = -555912000;
   
   protected StateInfoDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -37,7 +37,7 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
-  public static java.lang.String POPULATION = "population";
+  public static java.lang.String RANK = "rank";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
@@ -386,41 +386,41 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(OWNER).getAttributeMdDTO();
   }
   
-  public Integer getPopulation()
+  public Integer getRank()
   {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POPULATION));
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(RANK));
   }
   
-  public void setPopulation(Integer value)
+  public void setRank(Integer value)
   {
     if(value == null)
     {
-      setValue(POPULATION, "");
+      setValue(RANK, "");
     }
     else
     {
-      setValue(POPULATION, java.lang.Integer.toString(value));
+      setValue(RANK, java.lang.Integer.toString(value));
     }
   }
   
-  public boolean isPopulationWritable()
+  public boolean isRankWritable()
   {
-    return isWritable(POPULATION);
+    return isWritable(RANK);
   }
   
-  public boolean isPopulationReadable()
+  public boolean isRankReadable()
   {
-    return isReadable(POPULATION);
+    return isReadable(RANK);
   }
   
-  public boolean isPopulationModified()
+  public boolean isRankModified()
   {
-    return isModified(POPULATION);
+    return isModified(RANK);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPopulationMd()
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getRankMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POPULATION).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(RANK).getAttributeMdDTO();
   }
   
   public Long getSeq()

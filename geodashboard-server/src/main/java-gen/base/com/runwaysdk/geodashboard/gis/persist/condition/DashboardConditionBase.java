@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -544978152)
+@com.runwaysdk.business.ClassSignature(hash = -79570503)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -24,9 +24,8 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   public static java.lang.String ROOTCONDITION = "rootCondition";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String STYLEREFERENCE = "styleReference";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -544978152;
+  private static final long serialVersionUID = -79570503;
   
   public DashboardConditionBase()
   {
@@ -383,46 +382,6 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
     return mdClassIF.definesAttribute(SITEMASTER);
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle getStyleReference()
-  {
-    if (getValue(STYLEREFERENCE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.get(getValue(STYLEREFERENCE));
-    }
-  }
-  
-  public String getStyleReferenceId()
-  {
-    return getValue(STYLEREFERENCE);
-  }
-  
-  public void validateStyleReference()
-  {
-    this.validateAttribute(STYLEREFERENCE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleReferenceMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
-    return mdClassIF.definesAttribute(STYLEREFERENCE);
-  }
-  
-  public void setStyleReference(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle value)
-  {
-    if(value == null)
-    {
-      setValue(STYLEREFERENCE, "");
-    }
-    else
-    {
-      setValue(STYLEREFERENCE, value.getId());
-    }
   }
   
   public String getType()

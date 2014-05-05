@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 569224344)
+@com.runwaysdk.business.ClassSignature(hash = -692524999)
 public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition";
-  private static final long serialVersionUID = 569224344;
+  private static final long serialVersionUID = -692524999;
   
   protected DashboardConditionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -40,7 +40,6 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public static java.lang.String ROOTCONDITION = "rootCondition";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String STYLEREFERENCE = "styleReference";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
   {
@@ -484,55 +483,6 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO getStyleReference()
-  {
-    if(getValue(STYLEREFERENCE) == null || getValue(STYLEREFERENCE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO.get(getRequest(), getValue(STYLEREFERENCE));
-    }
-  }
-  
-  public String getStyleReferenceId()
-  {
-    return getValue(STYLEREFERENCE);
-  }
-  
-  public void setStyleReference(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO value)
-  {
-    if(value == null)
-    {
-      setValue(STYLEREFERENCE, "");
-    }
-    else
-    {
-      setValue(STYLEREFERENCE, value.getId());
-    }
-  }
-  
-  public boolean isStyleReferenceWritable()
-  {
-    return isWritable(STYLEREFERENCE);
-  }
-  
-  public boolean isStyleReferenceReadable()
-  {
-    return isReadable(STYLEREFERENCE);
-  }
-  
-  public boolean isStyleReferenceModified()
-  {
-    return isModified(STYLEREFERENCE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getStyleReferenceMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(STYLEREFERENCE).getAttributeMdDTO();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

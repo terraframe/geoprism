@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 418172810)
+@com.runwaysdk.business.ClassSignature(hash = 1434135209)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -244,21 +244,21 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.test.geodashboard.StateInfo.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableInteger getPopulation()
+  public com.runwaysdk.query.SelectableInteger getRank()
   {
-    return getPopulation(null);
+    return getRank(null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.test.geodashboard.StateInfo.POPULATION, alias, null);
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.test.geodashboard.StateInfo.RANK, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.test.geodashboard.StateInfo.POPULATION, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -409,9 +409,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getPopulation();
-    public com.runwaysdk.query.SelectableInteger getPopulation(String alias);
-    public com.runwaysdk.query.SelectableInteger getPopulation(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getRank();
+    public com.runwaysdk.query.SelectableInteger getRank(String alias);
+    public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -626,21 +626,21 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.test.geodashboard.StateInfo.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableInteger getPopulation()
+  public com.runwaysdk.query.SelectableInteger getRank()
   {
-    return getPopulation(null);
+    return getRank(null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.POPULATION, alias, null);
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.POPULATION, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -768,9 +768,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableInteger getPopulation();
-    public com.runwaysdk.query.SelectableInteger getPopulation(String alias);
-    public com.runwaysdk.query.SelectableInteger getPopulation(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getRank();
+    public com.runwaysdk.query.SelectableInteger getRank(String alias);
+    public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -1034,21 +1034,21 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.test.geodashboard.StateInfo.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableInteger getPopulation()
+  public com.runwaysdk.query.SelectableInteger getRank()
   {
-    return getPopulation(null);
+    return getRank(null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.POPULATION, alias, null);
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableInteger getPopulation(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.POPULATION, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()

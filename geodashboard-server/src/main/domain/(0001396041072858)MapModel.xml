@@ -122,8 +122,10 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true"
 				generateController="true">
 				<attributes>
-					<reference name="styleReference" required="true" label="Style" description="Back-reference to the Style that points to this condition."
-						type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" />
+					
+<!-- 					<reference name="styleReference" required="false" label="Style" description="Back-reference to the Style that points to this condition."
+						type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" /> -->
+						
 					<reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists."
             type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
           <reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists."
@@ -141,7 +143,6 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
 				label="Equals" generateController="true">
 				<attributes>
-					<char name="attributeValue" size="100" required="true" label="Value" />
 				</attributes>
 			</mdBusiness>
 

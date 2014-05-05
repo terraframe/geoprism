@@ -12,7 +12,6 @@ public class Sandbox
   }
   
   @Request
-  @Transaction
   public static void testBuildMap()
   {
     System.out.println("testBuildMap");
