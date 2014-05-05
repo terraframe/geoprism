@@ -120,7 +120,7 @@ public class GeoserverTest
   @Request
   public static void classSetup()
   {
-    LOCAL = GeoserverFacade.geoserverExists();
+    LOCAL = !GeoserverFacade.geoserverExists();
     
     metadataSetup();
     dataSetup();
