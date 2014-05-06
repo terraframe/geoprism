@@ -19,7 +19,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.impl.LayerImpl;
 import com.runwaysdk.geodashboard.gis.impl.MapImpl;

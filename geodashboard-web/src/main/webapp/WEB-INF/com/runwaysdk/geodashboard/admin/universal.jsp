@@ -29,6 +29,7 @@
 <%@page import="com.runwaysdk.system.gis.geo.IsARelationshipDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
+<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
@@ -107,7 +108,7 @@
 	try
 	{
 	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS, IsARelationshipDTO.CLASS
+	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS, IsARelationshipDTO.CLASS, TermUtilDTO.CLASS
 	    }, true);
 	  out.print(js);
 	}

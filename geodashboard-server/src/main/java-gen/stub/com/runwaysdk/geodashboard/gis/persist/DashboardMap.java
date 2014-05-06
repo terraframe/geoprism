@@ -18,8 +18,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   @Override
   public void accepts(MapVisitor visitor)
   {
-    // TODO Auto-generated method stub
-    
+    visitor.visit(this);    
   }
 
   @Override
@@ -35,4 +34,15 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     // TODO Auto-generated method stub
     return super.getMapJSON();
   }
+
+  public void delete()
+  {
+    for(DashboardLayer layer : this.getAllHasLayer())
+    {
+      layer.delete();
+    }
+    
+    super.delete();
+  }
+  
 }

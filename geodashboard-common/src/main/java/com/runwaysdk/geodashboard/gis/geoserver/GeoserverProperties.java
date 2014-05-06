@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.gis.geoserver;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;

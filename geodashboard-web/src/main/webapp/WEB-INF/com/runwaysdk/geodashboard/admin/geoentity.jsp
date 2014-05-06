@@ -31,6 +31,7 @@
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
+<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
@@ -107,7 +108,7 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS,
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS, TermUtilDTO.CLASS,
       GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS
       }, true);
     out.print(js);

@@ -14,20 +14,14 @@ public abstract class CompositeImpl extends ConditionImpl implements Composite
     super();
   }
   
-  @Override
   public void setRightCondition(Condition condition)
   {
-    condition.setParentCondition(this);
     this.rightCondition = condition;    
-    this.rightCondition.setThematicStyle(this.getThematicStyle());    
   }
   
-  @Override
   public void setLeftCondition(Condition condition)
   {
-    condition.setParentCondition(this);
     this.leftCondition = condition;    
-    this.leftCondition.setThematicStyle(this.getThematicStyle());    
   }
   
   @Override

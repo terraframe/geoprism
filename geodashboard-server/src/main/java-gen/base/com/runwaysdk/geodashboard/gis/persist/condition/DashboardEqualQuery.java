@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -349564522)
+@com.runwaysdk.business.ClassSignature(hash = -57968285)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -38,23 +38,6 @@ public  class DashboardEqualQuery extends com.runwaysdk.geodashboard.gis.persist
   {
     return com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.CLASS;
   }
-  public com.runwaysdk.query.SelectableChar getAttributeValue()
-  {
-    return getAttributeValue(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, displayLabel);
-
-  }
   /**  
    * Returns an iterator of Business objects that match the query criteria specified
    * on this query object. 
@@ -87,9 +70,6 @@ public  class DashboardEqualQuery extends com.runwaysdk.geodashboard.gis.persist
   public interface DashboardEqualQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitiveQuery.DashboardPrimitiveQueryReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getAttributeValue();
-    public com.runwaysdk.query.SelectableChar getAttributeValue(String alias);
-    public com.runwaysdk.query.SelectableChar getAttributeValue(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual dashboardEqual);
 
@@ -125,23 +105,6 @@ public  class DashboardEqualQuery extends com.runwaysdk.geodashboard.gis.persist
       return this.NE(dashboardEqual.getId());
     }
 
-  public com.runwaysdk.query.SelectableChar getAttributeValue()
-  {
-    return getAttributeValue(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, displayLabel);
-
-  }
   }
 
 /**
@@ -151,9 +114,6 @@ public  class DashboardEqualQuery extends com.runwaysdk.geodashboard.gis.persist
   public interface DashboardEqualQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitiveQuery.DashboardPrimitiveQueryMultiReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getAttributeValue();
-    public com.runwaysdk.query.SelectableChar getAttributeValue(String alias);
-    public com.runwaysdk.query.SelectableChar getAttributeValue(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual ... dashboardEqual);
     public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual ... dashboardEqual);
@@ -237,23 +197,6 @@ public  class DashboardEqualQuery extends com.runwaysdk.geodashboard.gis.persist
       }
 
       return this.containsExactly(itemIdArray);
-  }
-  public com.runwaysdk.query.SelectableChar getAttributeValue()
-  {
-    return getAttributeValue(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getAttributeValue(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.ATTRIBUTEVALUE, alias, displayLabel);
-
   }
   }
 }

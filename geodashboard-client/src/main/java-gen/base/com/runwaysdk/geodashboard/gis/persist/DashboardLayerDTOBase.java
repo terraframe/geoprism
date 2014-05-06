@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1243789075)
+@com.runwaysdk.business.ClassSignature(hash = 2069124930)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 1243789075;
+  private static final long serialVersionUID = 2069124930;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -31,6 +31,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -42,6 +43,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIRTUAL = "virtual";
   public java.util.Date getCreateDate()
   {
@@ -189,6 +191,55 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeReferenceDTO getGeoEntity()
+  {
+    if(getValue(GEOENTITY) == null || getValue(GEOENTITY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeReferenceDTO.get(getRequest(), getValue(GEOENTITY));
+    }
+  }
+  
+  public String getGeoEntityId()
+  {
+    return getValue(GEOENTITY);
+  }
+  
+  public void setGeoEntity(com.runwaysdk.system.metadata.MdAttributeReferenceDTO value)
+  {
+    if(value == null)
+    {
+      setValue(GEOENTITY, "");
+    }
+    else
+    {
+      setValue(GEOENTITY, value.getId());
+    }
+  }
+  
+  public boolean isGeoEntityWritable()
+  {
+    return isWritable(GEOENTITY);
+  }
+  
+  public boolean isGeoEntityReadable()
+  {
+    return isReadable(GEOENTITY);
+  }
+  
+  public boolean isGeoEntityModified()
+  {
+    return isModified(GEOENTITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoEntityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEOENTITY).getAttributeMdDTO();
   }
   
   public String getKeyName()
@@ -507,6 +558,55 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.gis.geo.UniversalDTO getUniversal()
+  {
+    if(getValue(UNIVERSAL) == null || getValue(UNIVERSAL).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.UniversalDTO.get(getRequest(), getValue(UNIVERSAL));
+    }
+  }
+  
+  public String getUniversalId()
+  {
+    return getValue(UNIVERSAL);
+  }
+  
+  public void setUniversal(com.runwaysdk.system.gis.geo.UniversalDTO value)
+  {
+    if(value == null)
+    {
+      setValue(UNIVERSAL, "");
+    }
+    else
+    {
+      setValue(UNIVERSAL, value.getId());
+    }
+  }
+  
+  public boolean isUniversalWritable()
+  {
+    return isWritable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalReadable()
+  {
+    return isReadable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalModified()
+  {
+    return isModified(UNIVERSAL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
   }
   
   public Boolean getVirtual()

@@ -8,7 +8,6 @@ import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.Localizer;
@@ -23,7 +22,6 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
-import com.runwaysdk.system.metadata.MdBusiness;
 
 public class LocatedInManager extends TaskObservable implements UncaughtExceptionHandler, Reloadable
 {

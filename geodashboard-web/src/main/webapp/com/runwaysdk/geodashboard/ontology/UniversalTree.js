@@ -155,13 +155,10 @@
         }
         
         for (; i < children.length; ++i) {
-          console.log("comparing " + children[i].text + " with " + label + " results in " + children[i].text.localeCompare(label));
           if (children[i].text.localeCompare(label) >= 0) {
             break;
           }
         }
-        
-        console.log("returning index " + i + " for label " + label);
         
         return i;
       },

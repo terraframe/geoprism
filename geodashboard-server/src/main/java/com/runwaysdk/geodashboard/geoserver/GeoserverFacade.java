@@ -1,5 +1,13 @@
 package com.runwaysdk.geodashboard.geoserver;
 
+
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverGWCDir;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverSLDDir;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getLocalPath;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getPublisher;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getReader;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getStore;
+import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getWorkspace;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
@@ -21,7 +29,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.constants.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -29,27 +37,25 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
-
-@SuppressWarnings("deprecation")
-public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadable
+public class GeoserverFacade // extends GeoserverFacadeBase implements
+                             // Reloadable
 {
-  private static final long  serialVersionUID = 162768295;
 
-  public static final int    SRS_CODE         = 4326;
+  public static final int    SRS_CODE    = 4326;
 
-  public static final String SRS              = "EPSG:" + SRS_CODE;
+  public static final String SRS         = "EPSG:" + SRS_CODE;
 
-  public static final String GEOM_COLUMN      = "geom";
+  public static final String GEOM_COLUMN = "geom";
 
-  public static int          MINX_INDEX       = 0;
+  public static int          MINX_INDEX  = 0;
 
-  public static int          MINY_INDEX       = 1;
+  public static int          MINY_INDEX  = 1;
 
-  public static int          MAXX_INDEX       = 2;
+  public static int          MAXX_INDEX  = 2;
 
-  public static int          MAXY_INDEX       = 3;
+  public static int          MAXY_INDEX  = 3;
 
-  private static Log         log              = LogFactory.getLog(GeoserverFacade.class);
+  private static Log         log         = LogFactory.getLog(GeoserverFacade.class);
 
   /**
    * Checks if a given File is a cache directory for the workspace.
@@ -59,11 +65,10 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     @Override
     public boolean accept(File file)
     {
-      return file.isDirectory() && file.getName().startsWith(GeoserverProperties.getWorkspace());
+      return file.isDirectory() && file.getName().startsWith(getWorkspace());
     }
   }
 
-  
   public static void refresh()
   {
     if(GeoserverProperties.getPublisher().reload())
@@ -75,7 +80,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       log.warn("Failed to reload geoserver.");
     }
   }
-  
+
   public static void removeStore()
   {
     if(GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), true))
@@ -99,7 +104,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       log.warn("Failed to remove the workspace ["+GeoserverProperties.getWorkspace()+"].");
     }
   }
-  
+
   public static void publishWorkspace()
   {
     try
@@ -120,8 +125,26 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
   }
   
   /**
-   * FIXME could not find another API call to do this, but one must exist
-   * that isn't deprecated. Look again later.
+   * Checks if Geoserver is available.
+   * @return
+   */
+  public static boolean geoserverExists()
+  {
+    if(getReader().existGeoserver())
+    {
+      log.info("A geoserver instance is running at ["+getLocalPath()+"].");
+      return true;
+    }
+    else
+    {
+      log.warn("A geoserver instance is NOT running at ["+getLocalPath()+"].");
+      return false;
+    }
+  }
+
+  /**
+   * FIXME could not find another API call to do this, but one must exist that
+   * isn't deprecated. Look again later.
    */
   @SuppressWarnings("deprecation")
   public static void publishStore()
@@ -156,7 +179,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
       log.warn("Failed to publish the store [" + GeoserverProperties.getStore() + "].");
     }
   }
-  
+
   /**
    * Checks if the given style exists in geoserver.
    * 
@@ -265,17 +288,11 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     }
   }
 
-  /**
-   * Publishes the SQL of the given name with the XML body.
-   * 
-   * @param styleName
-   * @param body
-   */
-  public static void publishStyle(String styleName, String body)
+  public static void publishStyle(String styleName, String body, boolean force)
   {
-    if (styleExists(styleName))
+    if(force && styleExists(styleName))
     {
-      log.info("The style [" + styleName + "] already exists.");
+      getPublisher().removeStyle(styleName, true);
     }
     else
     {
@@ -288,6 +305,17 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
         log.warn("Failed to publish the SLD [" + styleName + "].");
       }
     }
+  }
+  
+  /**
+   * Publishes the SQL of the given name with the XML body.
+   * 
+   * @param styleName
+   * @param body
+   */
+  public static void publishStyle(String styleName, String body)
+  {
+    publishStyle(styleName, body, true);
   }
 
   /**
@@ -417,7 +445,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     File cacheRoot = new File(GeoserverProperties.getGeoserverGWCDir());
     return cacheRoot.listFiles(new CacheFilter());
   }
-  
+
   public static void removeCache(File cache)
   {
     if (cache.exists())
@@ -559,9 +587,10 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble(
-        "miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union
-        .aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
+        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
+        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
+        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
@@ -583,16 +612,6 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements Reloadabl
     bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
 
     return bbox;
-  }
-
-  /**
-   * Reapplys all maps and creates database views if they do not exist.
-   * GeoServer is notified of the changes.
-   */
-  @Authenticate
-  public static void initializeGeoServer()
-  {
-    //Initializer.init();
   }
 
 }

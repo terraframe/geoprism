@@ -1,6 +1,9 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.generation.loader.Reloadable
+import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.condition.Equal;
+
+public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.generation.loader.Reloadable, Equal
 {
   private static final long serialVersionUID = 1213634698;
   
@@ -9,4 +12,10 @@ public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.
     super();
   }
   
+  @Override
+  public void accepts(MapVisitor visitor)
+  {
+    visitor.visit(this);    
+  }
+
 }
