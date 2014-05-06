@@ -51,7 +51,7 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.core.databinding</groupId>
+			<groupId>org.eclipse</groupId>
 			<artifactId>beans</artifactId>
 			<version>1.2.0</version>
 			<type>jar</type>
