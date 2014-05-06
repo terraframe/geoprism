@@ -14,6 +14,8 @@
 					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
 					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
 					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
+				  <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
+				  <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
 				</attributes>
 			</mdBusiness>
 

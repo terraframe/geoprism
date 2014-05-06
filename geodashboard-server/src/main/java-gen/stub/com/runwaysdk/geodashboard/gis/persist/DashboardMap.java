@@ -27,4 +27,15 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return this.getAllHasLayer().getAll();
   }
   
+  @Override
+  public void delete()
+  {
+    for(DashboardLayer layer : this.getAllHasLayer())
+    {
+      layer.delete();
+    }
+    
+    super.delete();
+  }
+  
 }

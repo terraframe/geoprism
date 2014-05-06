@@ -31,18 +31,18 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
   {
     return this.getStyleCondition();
   }
-  
-  @Override
-  public void delete()
-  {
-    DashboardCondition cond = this.getStyleCondition();
-    
-    super.delete();
-    
-    if(cond != null)
-    {
-      cond.delete();
-    }
-  }
+//  
+//  @Override
+//  public void delete()
+//  {
+//    DashboardCondition cond = this.getStyleCondition();
+//    
+//    super.delete();
+//    
+//    if(cond != null)
+//    {
+//      cond.delete();
+//    }
+//  }
   
 }

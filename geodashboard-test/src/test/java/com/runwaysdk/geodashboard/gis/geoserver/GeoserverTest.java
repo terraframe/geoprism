@@ -17,20 +17,24 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.attributes.InvalidReferenceException;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
+import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -45,15 +49,22 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.gis.StrategyInitializer;
+import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.Metadata;
 
 public class GeoserverTest
 {
@@ -67,33 +78,20 @@ public class GeoserverTest
 
   private static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
 
-  private static boolean        LOCAL;
+  private static boolean              GEOSERVER_RUNNING;
 
   private static final File           xsd            = new File(SLD_SCHEMA);
 
-  // prevent ssl errors from localhost requests
-  static
-  {
-    //
-    // for localhost testing only
-    //
-    javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier()
-    {
-
-      public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession)
-      {
-        if (hostname.equals("localhost"))
-        {
-          return true;
-        }
-        else if (hostname.equals("127.0.0.1"))
-        {
-          return true;
-        }
-        return false;
-      }
-    });
-  }
+  /*
+   * static {
+   * 
+   * javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new
+   * javax.net.ssl.HostnameVerifier() {
+   * 
+   * public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession)
+   * { if (hostname.equals("localhost")) { return true; } else if
+   * (hostname.equals("127.0.0.1")) { return true; } return false; } }); }
+   */
 
   private static Universal            state;
 
@@ -116,12 +114,41 @@ public class GeoserverTest
     testWMS(url);
   }
 
+  public static void testWMS(String url) throws Exception
+  {
+
+    URL obj = new URL(url);
+    HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+    con.setRequestMethod("GET");
+
+    con.setRequestProperty("User-Agent",
+        "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+
+    int responseCode = con.getResponseCode();
+    System.out.println("\nSending 'GET' request to URL : " + url);
+    System.out.println("Response Code : " + responseCode);
+
+    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    String inputLine;
+    StringBuffer response = new StringBuffer();
+
+    while ( ( inputLine = in.readLine() ) != null)
+    {
+      response.append(inputLine);
+    }
+    in.close();
+
+    System.out.println(response.toString());
+
+  }
+
   @BeforeClass
   @Request
   public static void classSetup()
   {
-    LOCAL = !GeoserverFacade.geoserverExists();
-    
+    GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
+
     metadataSetup();
     dataSetup();
   }
@@ -135,6 +162,7 @@ public class GeoserverTest
     stateInfo.setTypeName(TYPE_NAME);
     stateInfo.setPackageName(TEST_PACKAGE);
     stateInfo.apply();
+    stateInfoId = stateInfo.getId();
 
     rank = new MdAttributeInteger();
     rank.setDefiningMdClass(stateInfo);
@@ -187,7 +215,6 @@ public class GeoserverTest
       importer.setId("STATE_NAME");
       importer.run(logger);
 
-      // Create an alphabetic rank for each state
       QueryFactory f = new QueryFactory();
       GeoEntityQuery q = new GeoEntityQuery(f);
 
@@ -221,25 +248,18 @@ public class GeoserverTest
 
   @AfterClass
   @Request
-  @Transaction
   public static void classTeardown()
   {
-    try
-    {
-      MdBusiness.get(stateInfo.getId()).delete();
-      Universal.get(country.getId()).delete();
-      Universal.get(state.getId()).delete();
-    }
-    catch (Throwable t)
-    {
-      t.printStackTrace(System.out);
-      throw new RuntimeException(t);
-    }
-    finally
-    {
-      StrategyInitializer.tearDown();
-    }
+    metadataTeardown();
+    StrategyInitializer.tearDown();
+  }
 
+  @Transaction
+  private static void metadataTeardown()
+  {
+    MdBusiness.get(stateInfo.getId()).delete();
+    Universal.get(country.getId()).delete();
+    Universal.get(state.getId()).delete();
   }
 
   private void validate(String sld) throws SAXException
@@ -284,6 +304,7 @@ public class GeoserverTest
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
+      layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.apply();
@@ -302,21 +323,18 @@ public class GeoserverTest
       SLDMapVisitor visitor = new SLDMapVisitor();
       map.accepts(visitor);
       String sld = visitor.getSLD(layer);
-
       String styleName = layer.getKeyName();
 
-      if (LOCAL)
+      try
       {
-        try
-        {
-          validate(sld);
-        }
-        catch (SAXException e)
-        {
-          Assert.fail(e.getLocalizedMessage());
-        }
+        validate(sld);
       }
-      else
+      catch (SAXException e)
+      {
+        Assert.fail(e.getLocalizedMessage());
+      }
+
+      if (GEOSERVER_RUNNING)
       {
         GeoserverFacade.publishStyle(styleName, sld);
 
@@ -324,6 +342,8 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
+        
+        GeoserverFacade.removeStyle(styleName);
       }
     }
     finally
@@ -351,6 +371,7 @@ public class GeoserverTest
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
+      layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
       layer.apply();
@@ -372,18 +393,16 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      if (LOCAL)
+      try
       {
-        try
-        {
-          validate(sld);
-        }
-        catch (SAXException e)
-        {
-          Assert.fail(e.getLocalizedMessage());
-        }
+        validate(sld);
       }
-      else
+      catch (SAXException e)
+      {
+        Assert.fail(e.getLocalizedMessage());
+      }
+
+      if (GEOSERVER_RUNNING)
       {
         GeoserverFacade.publishStyle(styleName, sld);
 
@@ -391,6 +410,8 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
+        
+        GeoserverFacade.removeStyle(styleName);
       }
     }
     finally
@@ -404,6 +425,7 @@ public class GeoserverTest
    */
   @Test
   @Request
+  @Transaction
   public void createCompositePointSLD()
   {
     DashboardMap map = null;
@@ -417,6 +439,7 @@ public class GeoserverTest
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
+      layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.apply();
@@ -433,15 +456,15 @@ public class GeoserverTest
       lte.setComparisonValue("10");
       lte.apply();
 
-      DashboardOr or = new DashboardOr();
-      or.setLeftCondition(gte);
-      or.setRightCondition(lte);
-      or.apply();
+      DashboardOr and = new DashboardOr();
+      and.setLeftCondition(gte);
+      and.setRightCondition(lte);
+      and.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
       style.setMdAttribute(rank);
       style.setName("Style 1");
-      style.setStyleCondition(or);
+      style.setStyleCondition(and);
       style.apply();
 
       HasStyle hasStyle = layer.addHasStyle(style);
@@ -453,18 +476,16 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      if (LOCAL)
+      try
       {
-        try
-        {
-          validate(sld);
-        }
-        catch (SAXException e)
-        {
-          Assert.fail(e.getLocalizedMessage());
-        }
+        validate(sld);
       }
-      else
+      catch (SAXException e)
+      {
+        Assert.fail(e.getLocalizedMessage());
+      }
+
+      if (GEOSERVER_RUNNING)
       {
         GeoserverFacade.publishStyle(styleName, sld);
 
@@ -472,6 +493,8 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
+        
+        GeoserverFacade.removeStyle(styleName);
       }
     }
     finally
@@ -485,6 +508,7 @@ public class GeoserverTest
    */
   @Test
   @Request
+  @Transaction
   public void createThematicPointSLD()
   {
     DashboardMap map = null;
@@ -498,6 +522,7 @@ public class GeoserverTest
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
+      layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.apply();
@@ -524,21 +549,18 @@ public class GeoserverTest
       SLDMapVisitor visitor = new SLDMapVisitor();
       map.accepts(visitor);
       String sld = visitor.getSLD(layer);
-
       String styleName = layer.getKeyName();
 
-      if (LOCAL)
+      try
       {
-        try
-        {
-          validate(sld);
-        }
-        catch (SAXException e)
-        {
-          Assert.fail(e.getLocalizedMessage());
-        }
+        validate(sld);
       }
-      else
+      catch (SAXException e)
+      {
+        Assert.fail(e.getLocalizedMessage());
+      }
+
+      if (GEOSERVER_RUNNING)
       {
         GeoserverFacade.publishStyle(styleName, sld);
 
@@ -546,6 +568,8 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
+        
+        GeoserverFacade.removeStyle(styleName);
       }
     }
     finally
@@ -559,6 +583,7 @@ public class GeoserverTest
    */
   @Test
   @Request
+  @Transaction
   public void createThematicPolygonSLD()
   {
     DashboardMap map = null;
@@ -571,7 +596,7 @@ public class GeoserverTest
       map.apply();
 
       DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");
+      layer.setName("Layer 1");layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
       layer.apply();
@@ -601,18 +626,16 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      if (LOCAL)
+      try
       {
-        try
-        {
-          validate(sld);
-        }
-        catch (SAXException e)
-        {
-          Assert.fail(e.getLocalizedMessage());
-        }
+        validate(sld);
       }
-      else
+      catch (SAXException e)
+      {
+        Assert.fail(e.getLocalizedMessage());
+      }
+
+      if (GEOSERVER_RUNNING)
       {
         GeoserverFacade.publishStyle(styleName, sld);
 
@@ -620,6 +643,8 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
+        
+        GeoserverFacade.removeStyle(styleName);
       }
     }
     finally
@@ -628,39 +653,44 @@ public class GeoserverTest
     }
   }
 
-  // HTTPS GET request
-  public static void testWMS(String url) throws Exception
+  /**
+   * Tests that a Layer can only reference an MdAttributeReference that points to GeoEntity.
+   */
+  @Test
+  @Request
+  @Transaction
+  public void testInvalidLayerGeoEntityReference()
   {
-
-    URL obj = new URL(url);
-    HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-    // optional default is GET
-    con.setRequestMethod("GET");
-
-    // add request header
-    con.setRequestProperty("User-Agent",
-        "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-
-    int responseCode = con.getResponseCode();
-    System.out.println("\nSending 'GET' request to URL : " + url);
-    System.out.println("Response Code : " + responseCode);
-
-    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-    String inputLine;
-    StringBuffer response = new StringBuffer();
-
-    while ( ( inputLine = in.readLine() ) != null)
+    DashboardLayer layer = null;
+    try
     {
-      response.append(inputLine);
+      MdBusinessDAOIF md = MdBusinessDAO.get(stateInfoId);
+      MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md.definesAttribute(Metadata.CREATEDBY);
+      
+      layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.apply();
+      
+      Assert.fail("A Layer was able to reference a non-GeoEntity attribute.");
     }
-    in.close();
-
-    // print result
-    System.out.println(response.toString());
-
+    catch(InvalidReferenceException e)
+    {
+      System.out.println(e.getLocalizedMessage());
+      // this is expected
+    }
+    finally
+    {
+      if(layer != null && layer.isAppliedToDB())
+      {
+        layer.delete();
+      }
+    }
   }
-
+  
   /**
    * Creates a point layer.
    */
@@ -669,60 +699,138 @@ public class GeoserverTest
   @Transaction
   public void createPointLayer()
   {
+    DashboardMap map = null;
+
+    try
+    {
+
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.setGeoEntity(geoentity);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.apply();
+
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+
+      
+      QueryFactory f= new QueryFactory();
+      ValueQuery v = new ValueQuery(f);
+      
+      MdAttribute mdAttr = style.getMdAttribute();
+      if(mdAttr instanceof MdAttributeConcrete)
+      {
+        MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
+        MdClass mdClass = mdC.getDefiningMdClass();
+        EntityQuery q = f.businessQuery(mdClass.definesType());
+        
+        // thematic attribute
+        Attribute thematic = q.get(mdC.getAttributeName());
+        v.SELECT(thematic);
+        
+        
+        // geoentity label
+        GeoEntityQuery geQ = new GeoEntityQuery(v);
+        v.SELECT(geQ.getDisplayLabel().localize());
+        
+        // geometry
+        if(layer.getFeatureType().equals(FeatureType.POINT))
+        {
+          v.SELECT(geQ.getGeoPoint());
+        }
+        else
+        {
+          v.SELECT(geQ.getGeoMultiPolygon());
+        }
+        
+        
+        System.out.println(v.getSQL());
+      }
+      else
+      {
+        throw new ProgrammingErrorException("Attribute ["+mdAttr.getKey()+"] of type ["+mdAttr.getClass().getName()+"] is not supported .");
+      }
+      
+      
+    }
+    finally
+    {
+      map.delete();
+    }
+  }
+
+  @Test
+  @Request
+  @Transaction
+  public void createManyPointLayers()
+  {
+    Assert.fail("Not implemented");
+  }
+
+  @Test
+  @Request
+  @Transaction
+  public void createManyPolygonLayers()
+  {
+    Assert.fail("Not implemented");
 
   }
 
-  //
-  // @Test
-  // @Request
-  // @Transaction
-  // public void createManyPointLayers()
-  // {
-  // Assert.fail("Not implemented");
-  // }
-  //
-  // @Test
-  // @Request
-  // @Transaction
-  // public void createManyPolygonLayers()
-  // {
-  // Assert.fail("Not implemented");
-  //
-  // }
-  //
-  // @Test
-  // @Request
-  // @Transaction
-  // public void createManyMixedLayers()
-  // {
-  //
-  // Assert.fail("Not implemented");
-  // }
-  //
-  // @Test
-  // @Request
-  // @Transaction
-  // public void testRemoveLayer()
-  // {
-  // Assert.fail("Not implemented");
-  // }
-  //
-  // @Test
-  // @Request
-  // @Transaction
-  // public void testRemoveStyle()
-  // {
-  // Assert.fail("Not implemented");
-  // }
-  //
-  // /**
-  // * Creates a polygon layer.
-  // */
-  // @Test
-  // @Request
-  // @Transaction
-  // public void createPolygonLayer()
-  // {
-  // junit.framework.Assert.fail("Not Implemented");
-  // }
+  @Test
+  @Request
+  @Transaction
+  public void createManyMixedLayers()
+  {
+
+    Assert.fail("Not implemented");
+  }
+
+  @Test
+  @Request
+  @Transaction
+  public void testRemoveLayer()
+  {
+    Assert.fail("Not implemented");
+  }
+
+  @Test
+  @Request
+  @Transaction
+  public void testRemoveStyle()
+  {
+    Assert.fail("Not implemented");
+  }
+
+  /**
+   * Creates a polygon layer.
+   */
+  @Test
+  @Request
+  @Transaction
+  public void createPolygonLayer()
+  {
+    junit.framework.Assert.fail("Not Implemented");
+  }
 }

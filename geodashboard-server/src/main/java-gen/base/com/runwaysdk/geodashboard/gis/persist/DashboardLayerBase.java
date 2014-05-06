@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 157177235)
+@com.runwaysdk.business.ClassSignature(hash = 168875458)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -15,6 +15,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -26,8 +27,9 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 157177235;
+  private static final long serialVersionUID = 168875458;
   
   public DashboardLayerBase()
   {
@@ -143,6 +145,46 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeReference getGeoEntity()
+  {
+    if (getValue(GEOENTITY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeReference.get(getValue(GEOENTITY));
+    }
+  }
+  
+  public String getGeoEntityId()
+  {
+    return getValue(GEOENTITY);
+  }
+  
+  public void validateGeoEntity()
+  {
+    this.validateAttribute(GEOENTITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGeoEntityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(GEOENTITY);
+  }
+  
+  public void setGeoEntity(com.runwaysdk.system.metadata.MdAttributeReference value)
+  {
+    if(value == null)
+    {
+      setValue(GEOENTITY, "");
+    }
+    else
+    {
+      setValue(GEOENTITY, value.getId());
     }
   }
   
@@ -414,6 +456,46 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(TYPE);
+  }
+  
+  public com.runwaysdk.system.gis.geo.Universal getUniversal()
+  {
+    if (getValue(UNIVERSAL).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.Universal.get(getValue(UNIVERSAL));
+    }
+  }
+  
+  public String getUniversalId()
+  {
+    return getValue(UNIVERSAL);
+  }
+  
+  public void validateUniversal()
+  {
+    this.validateAttribute(UNIVERSAL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getUniversalMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(UNIVERSAL);
+  }
+  
+  public void setUniversal(com.runwaysdk.system.gis.geo.Universal value)
+  {
+    if(value == null)
+    {
+      setValue(UNIVERSAL, "");
+    }
+    else
+    {
+      setValue(UNIVERSAL, value.getId());
+    }
   }
   
   public Boolean getVirtual()
