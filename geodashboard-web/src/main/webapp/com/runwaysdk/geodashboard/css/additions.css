@@ -92,7 +92,7 @@ div.gdb-maincontent-busy {
   display: block;
   top:0px;
   left:275px;
-  width: 100%;
+  right:0px;
   height: 100%;
   opacity: 0.5;
 }

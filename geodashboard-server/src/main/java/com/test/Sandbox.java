@@ -553,34 +553,34 @@ public class Sandbox
 
     layer1.addStyle(style2);
 
-    Equal a = new EqualImpl();
-    a.setValue("1");
-
-    Equal b = new EqualImpl();
-    b.setValue("2");
-
-    Or or1 = new OrImpl();
-    or1.setThematicStyle(style2);
-    or1.setLeftCondition(a);
-    or1.setRightCondition(b);
-
-    Equal c = new EqualImpl();
-    c.setValue("8");
-
-    Equal d = new EqualImpl();
-    d.setValue("9");
-
-    Or or2 = new OrImpl();
-    or2.setThematicStyle(style2);
-    or2.setLeftCondition(c);
-    or2.setRightCondition(d);
-
-    And and = new AndImpl();
-    and.setThematicStyle(style2);
-    and.setLeftCondition(or1);
-    and.setRightCondition(or2);
-
-    style2.setCondition(and);
+//    Equal a = new EqualImpl();
+//    a.setValue("1");
+//
+//    Equal b = new EqualImpl();
+//    b.setValue("2");
+//
+//    Or or1 = new OrImpl();
+//    or1.setThematicStyle(style2);
+//    or1.setLeftCondition(a);
+//    or1.setRightCondition(b);
+//
+//    Equal c = new EqualImpl();
+//    c.setValue("8");
+//
+//    Equal d = new EqualImpl();
+//    d.setValue("9");
+//
+//    Or or2 = new OrImpl();
+//    or2.setThematicStyle(style2);
+//    or2.setLeftCondition(c);
+//    or2.setRightCondition(d);
+//
+//    And and = new AndImpl();
+//    and.setThematicStyle(style2);
+//    and.setLeftCondition(or1);
+//    and.setRightCondition(or2);
+//
+//    style2.setCondition(and);
 
     SLDMapVisitor visitor = new SLDMapVisitor();
     map.accepts(visitor);

@@ -6,3 +6,8 @@ geodashboard-web/bin
 
 
 /geodashboard-shapefile-importer
+
+geodashboard-client/.settings
+geodashboard-common/.settings
+geodashboard-web/.settings
+geodashboard-server/.settings
