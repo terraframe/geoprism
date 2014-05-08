@@ -22,6 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.io.*" %>
 <%@ page import="com.runwaysdk.controller.JSPFetcher"%>
+<%@ page import="java.util.regex.Matcher"%>
+<%@ page import="java.util.regex.Pattern" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -34,11 +36,21 @@
   String innerJsp = (String) request.getAttribute(JSPFetcher.INNER_JSP);
   JSPFetcher fetcher = new JSPFetcher(innerJsp, request, response);
   String innerHTML = fetcher.getString();
+  
+  String head = "";
+  
+  // This code extracts the <head> tag from the page we're loading. The contents of the head tag is then written to our head tag.
+  Pattern pattern = Pattern.compile("\\<.*?head.*?\\>(.*)\\<\\/.*?head.*?\\>", Pattern.DOTALL);
+  Matcher matcher = pattern.matcher(innerHTML);
+  if (matcher.find()) {
+    head = matcher.group(1);
+    innerHTML = innerHTML.replace(head, "");
+  }
 %>
 
 
 <!DOCTYPE html>
-<html>
+<html id="innerFrameHtml">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -94,6 +106,21 @@
   
   <!-- include HTML5 IE enabling script for IE -->
   <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
+
+  <% out.print(head); %>
+
+  <script>
+    // Tell our parent to disable busy CSS when we're done loading
+    
+    $(window).load(function() {
+      // executes when complete page is fully loaded, including all frames, objects and images
+      if (!window.location.origin) {
+        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+      }
+      
+      window.parent.postMessage("iFrameLoadCompleted", window.location.origin);
+    });
+  </script>
 
 </head>
 

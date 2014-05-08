@@ -31,6 +31,8 @@
 <%@page import="com.runwaysdk.system.scheduler.JobHistoryViewDTO" %>
 <%@page import="com.runwaysdk.system.scheduler.JobHistoryHistoryInformationDTO" %>
 
+<head>
+
 <gdb:localize var="page_title" key="scheduler.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
@@ -119,6 +121,8 @@
   }
 %>
 </script>
+
+</head>
 
 <div id="scheduler"></div>
 

@@ -27,6 +27,8 @@
 <%@page import="com.runwaysdk.system.RolesDTO"%>
 <%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
 
+<head>
+
 <gdb:localize var="page_title" key="useraccounts.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
@@ -113,6 +115,8 @@
 	}
 %>
 </script>
+
+</head>
 
 <div id="usersTable"></div>
 

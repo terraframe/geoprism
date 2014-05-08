@@ -40,23 +40,23 @@
   String webappRoot = request.getContextPath() + "/";
 %>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Structure.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Core.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_DTO.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
-	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet/leaflet.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>
-	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
-	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/map.js"></script> 
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Structure.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Core.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_DTO.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
+  
+  <script type="text/javascript" src="<% out.print(webappRoot); %>leaflet/leaflet.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
+  <script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>
+  
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+  
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/map.js"></script> 
   
   <!-- set the encoding of your site -->
   <!-- include the site stylesheet -->
@@ -88,22 +88,29 @@
   
   
   <script type="text/javascript">
-	
+  
     // Added to handle forwarding of login page to parent from iframe after timeout
-	window.addEventListener('message', function(e){
-		
-		// handling IE
-		if (!window.location.origin) {
-			  window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
-		}
-		
-  		if(e.origin === window.location.origin)
-  		{
-    		window.location = e.data;
-  		}
-	}, false);
+    window.addEventListener('message', function(e){
+    
+	    // handling IE
+	    if (!window.location.origin) {
+	        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+	    }
+	    
+		  if(e.origin === window.location.origin)
+		  {
+		    if (e.data === "iFrameLoadCompleted") {
+		      $(".gdb-maincontent-busy").each(function() {
+		        $(this).remove();
+		      });
+		    }
+		    else {
+		      window.location = e.data;
+		    }
+		  }
+    }, false);
  </script>
-	
+  
 </head>
 
 

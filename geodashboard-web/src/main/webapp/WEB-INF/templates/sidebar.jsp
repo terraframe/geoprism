@@ -132,6 +132,8 @@
 			}
 		} else {
 			clickedLink.addClass("link-active");
+			
+			$("section#main").append("<div class=\"gdb-maincontent-busy\"></div>");
 		}
 
 		var thisParentContainer = clickedLink.parents(".gdb-link-container");
@@ -147,6 +149,9 @@
 	function clearLinks() {
 		$("a.link-active").each(function() {
 			$(this).removeClass("link-active");
+		});
+		$(".gdb-maincontent-busy").each(function() {
+		  $(this).remove();
 		});
 	}
 
