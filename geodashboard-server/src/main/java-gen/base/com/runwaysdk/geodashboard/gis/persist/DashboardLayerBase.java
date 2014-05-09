@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 168875458)
+@com.runwaysdk.business.ClassSignature(hash = 1066840700)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,8 +28,9 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
+  public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 168875458;
+  private static final long serialVersionUID = 1066840700;
   
   public DashboardLayerBase()
   {
@@ -495,6 +496,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     else
     {
       setValue(UNIVERSAL, value.getId());
+    }
+  }
+  
+  public String getViewName()
+  {
+    return getValue(VIEWNAME);
+  }
+  
+  public void validateViewName()
+  {
+    this.validateAttribute(VIEWNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getViewNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(VIEWNAME);
+  }
+  
+  public void setViewName(String value)
+  {
+    if(value == null)
+    {
+      setValue(VIEWNAME, "");
+    }
+    else
+    {
+      setValue(VIEWNAME, value);
     }
   }
   
