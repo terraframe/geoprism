@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2107157235)
+@com.runwaysdk.business.ClassSignature(hash = 1901393664)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -345,6 +345,122 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   }
 
 
+  public com.runwaysdk.query.Condition sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.getBusinessQuery().isChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.getBusinessQuery().isChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.getBusinessQuery().isChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.getBusinessQuery().isChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.getBusinessQuery().isChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.getBusinessQuery().isChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.getBusinessQuery().isNotChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.getBusinessQuery().isNotChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.getBusinessQuery().isNotChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.getBusinessQuery().isNotChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+
   public com.runwaysdk.query.Condition hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
@@ -539,6 +655,30 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(com.runwaysdk.geodashboard.gis.persist.DashboardLayerQuery dashboardLayerQuery);
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(com.runwaysdk.geodashboard.gis.persist.DashboardLayerQuery dashboardLayerQuery, com.runwaysdk.geodashboard.gis.persist.HasLayerQuery hasLayerQuery);
+
+
+  public com.runwaysdk.query.Condition sessionEntry();
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery);
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry();
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery);
+
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry();
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery);
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry();
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery);
 
   }
 
@@ -905,6 +1045,122 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.isNotParentIn_SUBSELECT(hasLayerQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.isChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.isChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.isChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.isChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.isChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.isChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.isNotChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+
+    return this.isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.isNotChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    return this.isNotChildIn_SUBSELECT(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.isNotChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(sessionEntryQuery));
+
+    return this.isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.isNotChildIn(sessionMapQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_sessionEntry(com.runwaysdk.geodashboard.SessionEntryQuery sessionEntryQuery, com.runwaysdk.geodashboard.gis.persist.SessionMapQuery sessionMapQuery)
+  {
+    sessionMapQuery.AND(sessionMapQuery.hasParent(sessionEntryQuery));
+    return this.isNotChildIn_SUBSELECT(sessionMapQuery);
   }
 
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)

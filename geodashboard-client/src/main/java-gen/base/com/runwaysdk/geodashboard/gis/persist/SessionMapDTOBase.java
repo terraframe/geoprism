@@ -1,25 +1,26 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 569035287)
-public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = 40057436)
+public abstract class SessionMapDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = 569035287;
+  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.SessionMap";
+  private static final long serialVersionUID = 40057436;
   
-  protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public SessionMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {
-    super(clientRequest);
+    super(clientRequest, parentId, childId);
+    
   }
   
   /**
-  * Copy Constructor: Duplicates the values and attributes of the given BusinessDTO into a new DTO.
+  * Copy Constructor: Duplicates the values and attributes of the given RelationshipDTO into a new DTO.
   * 
-  * @param businessDTO The BusinessDTO to duplicate
+  * @param relationshipDTO The RelationshipDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected DashboardMapDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected SessionMapDTOBase(com.runwaysdk.business.RelationshipDTO relationshipDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
-    super(businessDTO, clientRequest);
+    super(relationshipDTO, clientRequest);
   }
   
   protected java.lang.String getDeclaredType()
@@ -35,7 +36,6 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
@@ -287,43 +287,6 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
-  public String getName()
-  {
-    return getValue(NAME);
-  }
-  
-  public void setName(String value)
-  {
-    if(value == null)
-    {
-      setValue(NAME, "");
-    }
-    else
-    {
-      setValue(NAME, value);
-    }
-  }
-  
-  public boolean isNameWritable()
-  {
-    return isWritable(NAME);
-  }
-  
-  public boolean isNameReadable()
-  {
-    return isReadable(NAME);
-  }
-  
-  public boolean isNameModified()
-  {
-    return isModified(NAME);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getNameMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(NAME).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.ActorDTO getOwner()
   {
     if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
@@ -423,126 +386,40 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO> getAllHasLayer()
+  public com.runwaysdk.geodashboard.SessionEntryDTO getParent()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
+    return com.runwaysdk.geodashboard.SessionEntryDTO.get(getRequest(), super.getParentId());
   }
   
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO> getAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO getChild()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
+    return com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.get(getRequest(), super.getChildId());
   }
   
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasLayerDTO> getAllHasLayerRelationships()
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasLayerDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasLayerDTO> getAllHasLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.HasLayerDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.HasLayerDTO addHasLayer(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO child)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.HasLayerDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  public static com.runwaysdk.geodashboard.gis.persist.HasLayerDTO addHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO child)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.HasLayerDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  public void removeHasLayer(com.runwaysdk.geodashboard.gis.persist.HasLayerDTO relationship)
-  {
-    getRequest().deleteChild(relationship.getId());
-  }
-  
-  public static void removeHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.gis.persist.HasLayerDTO relationship)
-  {
-    clientRequestIF.deleteChild(relationship.getId());
-  }
-  
-  public void removeAllHasLayer()
-  {
-    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  public static void removeAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO> getAllSessionEntry()
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO> getAllSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO> getAllSessionEntryRelationships()
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO> getAllSessionEntryRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.SessionMapDTO addSessionEntry(com.runwaysdk.geodashboard.SessionEntryDTO parent)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  public static com.runwaysdk.geodashboard.gis.persist.SessionMapDTO addSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.SessionEntryDTO parent)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  public void removeSessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO relationship)
-  {
-    getRequest().deleteParent(relationship.getId());
-  }
-  
-  public static void removeSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO relationship)
-  {
-    clientRequestIF.deleteParent(relationship.getId());
-  }
-  
-  public void removeAllSessionEntry()
-  {
-    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  public static void removeAllSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
-  }
-  
-  public static com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
-  {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(id);
     
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO) dto;
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) dto;
   }
   
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
+  {
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+    queryDTO.addCondition("parent_id", "EQ", parentId);
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO) clientRequest.queryRelationships(queryDTO);
+  }
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
+  {
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+    queryDTO.addCondition("child_id", "EQ", childId);
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO) clientRequest.queryRelationships(queryDTO);
+  }
   public void apply()
   {
     if(isNewInstance())
     {
-      getRequest().createBusiness(this);
+      getRequest().createRelationship(this);
     }
     else
     {
@@ -554,9 +431,9 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     getRequest().delete(this.getId());
   }
   
-  public static com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -564,12 +441,12 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     getRequest().lock(this);
   }
   
-  public static com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "lock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS, "lock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -577,12 +454,12 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     getRequest().unlock(this);
   }
   
-  public static com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "unlock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS, "unlock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }
