@@ -4,7 +4,7 @@ public interface Component
 {
   public void accepts(MapVisitor visitor);
   
-//  public String getId();
+  public String getId();
   
 //  public void setName(String name);
   
