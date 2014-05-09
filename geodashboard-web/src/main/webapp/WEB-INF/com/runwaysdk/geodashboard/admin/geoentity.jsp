@@ -35,6 +35,8 @@
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
+<head>
+
 <gdb:localize var="page_title" key="geoEntity.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
@@ -121,6 +123,8 @@
 
   /* doIt(request, out); */%>
 </script>
+
+</head>
 
 <div id="tree"></div>
 

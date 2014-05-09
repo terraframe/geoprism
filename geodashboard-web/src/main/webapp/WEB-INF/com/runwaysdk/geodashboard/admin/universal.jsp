@@ -33,8 +33,9 @@
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 
-<gdb:localize var="page_title" key="universal.title"/>
+<head>
 
+<gdb:localize var="page_title" key="universal.title"/>
 
 <%
   String webappRoot = request.getContextPath() + "/";
@@ -120,6 +121,8 @@
 
 	/* doIt(request, out); */%>
 </script>
+
+</head>
 
 <div id="tree"></div>
 
