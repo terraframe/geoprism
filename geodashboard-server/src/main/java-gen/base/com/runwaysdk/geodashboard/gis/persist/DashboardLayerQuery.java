@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1464422343)
+@com.runwaysdk.business.ClassSignature(hash = -2079325019)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -373,6 +373,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL);
 
     return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getViewName()
+  {
+    return getViewName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getVirtual()
@@ -761,6 +778,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal();
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getViewName();
+    public com.runwaysdk.query.SelectableChar getViewName(String alias);
+    public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getVirtual();
     public com.runwaysdk.query.SelectableBoolean getVirtual(String alias);
     public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel);
@@ -1140,6 +1160,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getViewName()
+  {
+    return getViewName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableBoolean getVirtual()
   {
     return getVirtual(null);
@@ -1503,6 +1540,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal();
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getViewName();
+    public com.runwaysdk.query.SelectableChar getViewName(String alias);
+    public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getVirtual();
     public com.runwaysdk.query.SelectableBoolean getVirtual(String alias);
     public com.runwaysdk.query.SelectableBoolean getVirtual(String alias, String displayLabel);
@@ -1877,6 +1917,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getViewName()
+  {
+    return getViewName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.VIEWNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getVirtual()

@@ -1,0 +1,20 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<create></create>
+		<update>
+
+			<mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+				<create>
+					<mdAction name="createMapForSession" label="Create Map For Session" isPost="false">
+					</mdAction>
+				</create>
+			</mdController>
+
+		</update>
+	</doIt>
+	<undoIt>
+		<delete>
+			<object type="com.runwaysdk.system.metadata.MdAction" key="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.createMapForSession" />
+		</delete>
+	</undoIt>
+</version>

@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <mappings>
   <map uri="" forward="/com/runwaysdk/geodashboard/jsp/index.jsp"/>
-  <map uri="DashboardViewer" forward="/com/runwaysdk/geodashboard/jsp/dashboardViewer.jsp"/>
+<!--   <map uri="DashboardViewer" forward="/com/runwaysdk/geodashboard/jsp/dashboardViewer.jsp"/> -->
+  <map uri="DashboardViewer" controller="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+    <action method="createMapForSession" uri=""/>
+  </map>
 
   <map uri="login" forward="/com/runwaysdk/geodashboard/login/login.jsp"/>
   <map uri="loginRedirect" forward="/com/runwaysdk/geodashboard/login/loginRedirect.jsp"/>

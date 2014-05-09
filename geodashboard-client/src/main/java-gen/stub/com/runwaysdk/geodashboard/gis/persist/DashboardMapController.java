@@ -1,5 +1,11 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
+import com.runwaysdk.constants.ClientRequestIF;
+
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/";
@@ -122,5 +128,20 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
+  }
+  
+  @Override
+  public void createMapForSession() throws IOException, ServletException
+  {
+
+    ClientRequestIF clientRequest = this.getClientRequest();
+  
+    // THIS NEEDS TO BE REPLACED WITH NEW SESSION ORIENTED IMPLEMENTATION
+    DashboardMapDTO map = new DashboardMapDTO(clientRequest);
+    map.setName("test_map");
+    map.apply();
+ 
+    req.setAttribute("mapId", map.getId());
+    render("dashboardViewer.jsp");
   }
 }
