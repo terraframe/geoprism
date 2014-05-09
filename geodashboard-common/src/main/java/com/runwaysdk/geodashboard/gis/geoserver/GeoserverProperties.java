@@ -42,6 +42,16 @@ public class GeoserverProperties implements Reloadable
   {
     return getBundle().getString("geoserver.workspace");
   }
+  
+  public static Integer getSessionMapLimit()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.session.map.limit"));
+  }
+
+  public static Integer getSavedMapLimit()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.saved.map.limit"));
+  }
 
   public static String getStore()
   {

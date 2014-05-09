@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1718903845)
+@com.runwaysdk.business.ClassSignature(hash = 2076634162)
 public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = 1718903845;
+  private static final long serialVersionUID = 2076634162;
   
   protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -491,6 +491,60 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   public static void removeAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.gis.persist.HasLayerDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO> getAllSessionEntry()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO> getAllSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.SessionEntryDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO> getAllSessionEntryRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO> getAllSessionEntryRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.gis.persist.SessionMapDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.SessionMapDTO addSessionEntry(com.runwaysdk.geodashboard.SessionEntryDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.SessionMapDTO addSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.SessionEntryDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMapDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  public void removeSessionEntry(com.runwaysdk.geodashboard.gis.persist.SessionMapDTO relationship)
+  {
+    getRequest().deleteParent(relationship.getId());
+  }
+  
+  public static void removeSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO relationship)
+  {
+    clientRequestIF.deleteParent(relationship.getId());
+  }
+  
+  public void removeAllSessionEntry()
+  {
+    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
+  }
+  
+  public static void removeAllSessionEntry(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.gis.persist.SessionMapDTO.CLASS);
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

@@ -1,0 +1,82 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+    
+      <mdBusiness name="com.runwaysdk.geodashboard.SessionEntry" label="Session Entry" generateController="false">
+        <attributes>
+          <reference name="dashboardUser" type="com.runwaysdk.geodashboard.GeodashboardUser" required="true" label="Dashboard User" />
+          <char name="sessionId" required="true" size="255" label="Session Id" />
+        </attributes>
+        <mdMethod name="createMapForSession" label="Create Map for Session" static="true" returnType="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+        </mdMethod>
+        <mdMethod name="deleteMapForSession" label="Delete a Map For Session" static="true" returnType="void">
+          <mdParameter name="mapId" label="Dashboard Map Id" required="true" type="java.lang.String" order="0" />
+        </mdMethod>
+        <mdMethod name="deleteMapsForSession" label="Delete Maps For Session" static="true" returnType="void">
+        </mdMethod>
+        <mdMethod name="deleteByCurrentSession" label="Deletes SessionEntries by session" static="true" returnType="void">
+        </mdMethod>
+        <mdMethod name="deleteBySession" label="Deletes SessionEntries by session" static="true" returnType="void">
+          <mdParameter name="sessionId" label="Session Id" required="true" type="java.lang.String" order="0" />
+        </mdMethod>
+        <mdMethod name="deleteByCurrentUser" label="Deletes SessionEntries by user" static="true" returnType="void">
+        </mdMethod>
+        <mdMethod name="deleteByUser" label="Deletes SessionEntries by user" static="true" returnType="void">
+          <mdParameter name="user" label="DashboardUser" required="true" type="com.runwaysdk.geodashboard.GeodashboardUser" order="0" />
+        </mdMethod>
+        <mdMethod name="deleteAll" label="Delete All" static="true" returnType="void">
+        </mdMethod>
+      </mdBusiness>
+      
+<!--       <mdIndex type="com.runwaysdk.geodashboard.SessionEntry">
+        <attribute name="dashboardUser" indexOrder="0"/>
+        <attribute name="sessionId" indexOrder="1"/>
+      </mdIndex> -->
+    
+      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.SessionMap" label="SessionMap" generateController="false">
+        <parent cardinality="1" name="com.runwaysdk.geodashboard.SessionEntry" method="SessionEntry"/>
+        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="DashboardMap"/>
+      </mdRelationship>
+    
+      <mdException name="com.runwaysdk.geodashboard.gis.SessionMapLimitException"
+        label="Session Map Limit Exception" message="A session cannot have more than [${mapLimit}] open maps.">
+        <attributes>
+          <integer name="mapLimit" label="Map Limit" required="true" />
+        </attributes>
+      </mdException>
+    
+    </create>
+    <update></update>
+<!--     
+    <permissions>
+      <method
+        methodName="deleteForSession"
+        type="com.runwaysdk.geodashboard.SessionEntry">
+        <assignedRole
+          roleName="Administrator" />
+      </method>
+      <method
+        methodName="deleteForUser"
+        type="com.runwaysdk.geodashboard.SessionEntry">
+        <assignedRole
+          roleName="Administrator" />
+      </method>
+      <method
+        methodName="deleteAll"
+        type="com.runwaysdk.geodashboard.SessionEntry">
+        <assignedRole
+          roleName="Administrator" />
+      </method>
+    </permissions>  -->   
+    
+  </doIt>
+  <undoIt>
+    <delete>
+    
+      <object key="com.runwaysdk.geodashboard.SessionEntry" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="com.runwaysdk.geodashboard.gis.SessionMapLimitException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.SessionMap" type="com.runwaysdk.system.metadata.MdRelationship"/>
+    
+    </delete>
+  </undoIt>
+</version>
