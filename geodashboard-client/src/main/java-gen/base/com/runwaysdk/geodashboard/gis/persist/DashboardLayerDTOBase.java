@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2069124930)
+@com.runwaysdk.business.ClassSignature(hash = -1161576196)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 2069124930;
+  private static final long serialVersionUID = -1161576196;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -44,6 +44,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
+  public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
   public java.util.Date getCreateDate()
   {
@@ -607,6 +608,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
+  }
+  
+  public String getViewName()
+  {
+    return getValue(VIEWNAME);
+  }
+  
+  public void setViewName(String value)
+  {
+    if(value == null)
+    {
+      setValue(VIEWNAME, "");
+    }
+    else
+    {
+      setValue(VIEWNAME, value);
+    }
+  }
+  
+  public boolean isViewNameWritable()
+  {
+    return isWritable(VIEWNAME);
+  }
+  
+  public boolean isViewNameReadable()
+  {
+    return isReadable(VIEWNAME);
+  }
+  
+  public boolean isViewNameModified()
+  {
+    return isModified(VIEWNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getViewNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VIEWNAME).getAttributeMdDTO();
   }
   
   public Boolean getVirtual()

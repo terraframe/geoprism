@@ -1,0 +1,21 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<create></create>
+		<update>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+				<create>
+					<attributes>
+						<char name="viewName" size="64" label="View Name" description="The name of the DB view this layer maps to." required="true" />
+					</attributes>
+				</create>
+			</mdBusiness>
+
+		</update>
+	</doIt>
+	<undoIt>
+		<delete>
+			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.viewName" type="com.runwaysdk.system.metadata.MdAttribute" />
+		</delete>
+	</undoIt>
+</version>
