@@ -39,7 +39,7 @@
       </mdRelationship>
     
       <mdException name="com.runwaysdk.geodashboard.gis.SessionMapLimitException"
-        label="Session Map Limit Exception" message="A session cannot have more than [${mapLimit}] open maps.">
+        label="Session Map Limit Exception" message="A session cannot have more than [{mapLimit}] open maps.">
         <attributes>
           <integer name="mapLimit" label="Map Limit" required="true" />
         </attributes>

@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.runwaysdk.business.SmartExceptionDTO;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.GeodashboardUser;
@@ -71,7 +72,7 @@ public class SessionMapTest
     {
       SessionFacade.closeSession(sessionId);
     }
-  }
+  }  
 
   @Request(RequestType.SESSION)
   private void createMapForSessionRequest(String sessionId)
@@ -130,6 +131,10 @@ public class SessionMapTest
     {
       // this is expected
     }
+    finally
+    {
+      this.deleteWithoutSession();
+    }
   }
 
   @Test
@@ -143,6 +148,7 @@ public class SessionMapTest
     finally
     {
       SessionFacade.closeSession(sessionId);
+      this.deleteWithoutSession();
     }
   }
 
@@ -192,17 +198,25 @@ public class SessionMapTest
     try
     {
       Integer max = GeoserverProperties.getSessionMapLimit();
-      createMultipleMapsRequest(sessionId, max);
+      createMultipleMapsRequest(sessionId, max+1);
       
       Assert.fail("A session was able to create more than the maximum number of maps ["+max+"].");
     }
-    catch(SessionMapLimitException ex)
+    catch(Throwable t)
     {
-      // this is expected
+      if(t instanceof SmartExceptionDTO)
+      {
+        Assert.assertEquals(SessionMapLimitException.CLASS, ((SmartExceptionDTO)t).getType());
+      }
+      else
+      {
+        Assert.fail(t.getLocalizedMessage());
+      }
     }
     finally
     {
       SessionFacade.closeSession(sessionId);
+      this.deleteWithoutSession();
     }
   }
 
@@ -272,15 +286,4 @@ public class SessionMapTest
     Assert.assertEquals(dmq.getCount(), 0);
   }
 
-  @Test
-  public void deleteSessionEntryForUser()
-  {
-
-  }
-
-  @Test
-  public void deleteSessionEntryForSession()
-  {
-
-  }
 }

@@ -224,4 +224,5 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     
     return map;
   }
+  
 }
