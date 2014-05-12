@@ -1,12 +1,14 @@
 package com.runwaysdk.geodashboard;
 
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.SessionMapLimitException;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
-import com.runwaysdk.util.IdParser;
 
 /**
  * This class should be treated as a facade and calling code should not directly manipulate or call SessionEntry
@@ -50,6 +52,28 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   }
   
   /**
+   * Deletes all SessionEntry objects and their relationships.
+   */
+  @Transaction
+  public static void deleteAll()
+  {
+    SessionEntryQuery q = new SessionEntryQuery(new QueryFactory());
+    
+    OIterator<? extends SessionEntry> iter = q.getIterator();
+    try
+    {
+      while(iter.hasNext())
+      {
+        iter.next().delete();
+      }
+    }
+    finally
+    {
+      iter.close();
+    }
+  }
+  
+  /**
    * Deletes the given map for this session.
    * 
    * @param mapId
@@ -57,19 +81,58 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   @Transaction
   public static void deleteMapForSession(String mapId)
   {
-    SessionIF session = Session.getCurrentSession();
+//    SessionIF session = Session.getCurrentSession();
     
-    
+    DashboardMap.get(mapId).delete();
   }
   
   /**
-   * Deletes all maps for the current session.
-   * 
+   * Deletes all maps for the current session and the entry itself.
    */
   @Transaction
   public static void deleteAllMapsForSession()
   {
+    SessionEntry entry = get();
+    for(DashboardMap map : entry.getAllDashboardMap())
+    {
+      map.delete();
+    }
+  }
+  
+  /**
+   * Deletes all SessionEntries with the given user.
+   * @param user
+   */
+  @Transaction
+  public static void deleteByUser(GeodashboardUser user)
+  {
+    QueryFactory f = new QueryFactory();
+    SessionEntryQuery q = new SessionEntryQuery(f);
     
+    q.WHERE(q.getDashboardUser().EQ(user));
+    
+    OIterator<? extends SessionEntry> iter = q.getIterator();
+    
+    try
+    {
+      while(iter.hasNext())
+      {
+        iter.next().delete();
+      }
+    }
+    finally
+    {
+      iter.close();
+    }
+  }
+  
+  /**
+   * Returns the SessionEntry based on the current user and session.
+   * @return
+   */
+  public static SessionEntry get()
+  {
+    return get(GeodashboardUser.getCurrentUser(), Session.getCurrentSession().getId());
   }
   
   /**
@@ -127,6 +190,27 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
       entry.setSessionId(sessionId);
       entry.apply();
     }
+    else
+    {
+      // SessionEntry already exists. Make sure the user hasn't exceeded the map limit
+      Integer max = GeoserverProperties.getSessionMapLimit();
+      QueryFactory f = new QueryFactory();
+      SessionEntryQuery seq = new SessionEntryQuery(f);
+      DashboardMapQuery dmq = new DashboardMapQuery(f);
+      
+      seq.WHERE(seq.getDashboardUser().EQ(user));
+      seq.AND(seq.getSessionId().EQ(sessionId));
+      dmq.WHERE(dmq.sessionEntry(seq));
+      
+      if(dmq.getCount() >= max)
+      {
+        String msg = "User ["+user+"] cannot create more than ["+max+"] maps per session.";
+        SessionMapLimitException ex = new SessionMapLimitException(msg);
+        ex.setMapLimit(max);
+        throw ex;
+      }
+    }
+    
     
     // Create the temporary (session-based) map.
     DashboardMap map = new DashboardMap();
@@ -140,4 +224,5 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     
     return map;
   }
+  
 }
