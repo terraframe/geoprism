@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1906535375)
+@com.runwaysdk.business.ClassSignature(hash = -1499308995)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,7 +13,6 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   public final static String CLASS = "com.runwaysdk.geodashboard.SessionEntry";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
-  public static java.lang.String DASHBOARDUSER = "dashboardUser";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -23,9 +22,10 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SESSIONID = "sessionId";
+  public static java.lang.String SESSIONUSER = "sessionUser";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1906535375;
+  private static final long serialVersionUID = -1499308995;
   
   public SessionEntryBase()
   {
@@ -74,46 +74,6 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.SessionEntry.CLASS);
     return mdClassIF.definesAttribute(CREATEDBY);
-  }
-  
-  public com.runwaysdk.geodashboard.GeodashboardUser getDashboardUser()
-  {
-    if (getValue(DASHBOARDUSER).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.GeodashboardUser.get(getValue(DASHBOARDUSER));
-    }
-  }
-  
-  public String getDashboardUserId()
-  {
-    return getValue(DASHBOARDUSER);
-  }
-  
-  public void validateDashboardUser()
-  {
-    this.validateAttribute(DASHBOARDUSER);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardUserMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.SessionEntry.CLASS);
-    return mdClassIF.definesAttribute(DASHBOARDUSER);
-  }
-  
-  public void setDashboardUser(com.runwaysdk.geodashboard.GeodashboardUser value)
-  {
-    if(value == null)
-    {
-      setValue(DASHBOARDUSER, "");
-    }
-    else
-    {
-      setValue(DASHBOARDUSER, value.getId());
-    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
@@ -356,6 +316,46 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
     }
   }
   
+  public com.runwaysdk.system.Users getSessionUser()
+  {
+    if (getValue(SESSIONUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.Users.get(getValue(SESSIONUSER));
+    }
+  }
+  
+  public String getSessionUserId()
+  {
+    return getValue(SESSIONUSER);
+  }
+  
+  public void validateSessionUser()
+  {
+    this.validateAttribute(SESSIONUSER);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSessionUserMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.SessionEntry.CLASS);
+    return mdClassIF.definesAttribute(SESSIONUSER);
+  }
+  
+  public void setSessionUser(com.runwaysdk.system.Users value)
+  {
+    if(value == null)
+    {
+      setValue(SESSIONUSER, "");
+    }
+    else
+    {
+      setValue(SESSIONUSER, value.getId());
+    }
+  }
+  
   public String getSiteMaster()
   {
     return getValue(SITEMASTER);
@@ -468,7 +468,7 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static void deleteByUser(com.runwaysdk.geodashboard.GeodashboardUser user)
+  public static void deleteByUser(com.runwaysdk.system.Users user)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

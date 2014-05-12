@@ -9,6 +9,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
+import com.runwaysdk.system.Users;
 
 /**
  * This class should be treated as a facade and calling code should not directly manipulate or call SessionEntry
@@ -32,7 +33,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   @Override
   protected String buildKey()
   {
-    GeodashboardUser user = this.getDashboardUser();
+    Users user = this.getSessionUser();
     String key = user.getId()+"_"+this.getSessionId();
     return key;
   }
@@ -104,12 +105,12 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
    * @param user
    */
   @Transaction
-  public static void deleteByUser(GeodashboardUser user)
+  public static void deleteByUser(Users user)
   {
     QueryFactory f = new QueryFactory();
     SessionEntryQuery q = new SessionEntryQuery(f);
     
-    q.WHERE(q.getDashboardUser().EQ(user));
+    q.WHERE(q.getSessionUser().EQ(user));
     
     OIterator<? extends SessionEntry> iter = q.getIterator();
     
@@ -142,12 +143,12 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
    * @param sessionId
    * @return
    */
-  public static SessionEntry get(GeodashboardUser user, String sessionId)
+  public static SessionEntry get(Users user, String sessionId)
   {
     QueryFactory f = new QueryFactory();
     SessionEntryQuery q = new SessionEntryQuery(f);
     
-    q.WHERE(q.getDashboardUser().EQ(user));
+    q.WHERE(q.getSessionUser().EQ(user));
     q.WHERE(q.getSessionId().EQ(sessionId));
     
     OIterator<? extends SessionEntry> iter = q.getIterator();
@@ -179,14 +180,14 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     SessionIF session = Session.getCurrentSession();
     String sessionId = session.getId();
     
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    Users user = Users.get(session.getUser().getId());
     
     // Create a SessionEntry and link it to the map.
     SessionEntry entry = get(user, sessionId);
     if(entry == null)
     {
       entry = new SessionEntry();
-      entry.setDashboardUser(user);
+      entry.setSessionUser(user);
       entry.setSessionId(sessionId);
       entry.apply();
     }
@@ -198,7 +199,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
       SessionEntryQuery seq = new SessionEntryQuery(f);
       DashboardMapQuery dmq = new DashboardMapQuery(f);
       
-      seq.WHERE(seq.getDashboardUser().EQ(user));
+      seq.WHERE(seq.getSessionUser().EQ(user));
       seq.AND(seq.getSessionId().EQ(sessionId));
       dmq.WHERE(dmq.sessionEntry(seq));
       

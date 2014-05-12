@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -956082767)
+@com.runwaysdk.business.ClassSignature(hash = 1514921405)
 public abstract class SessionEntryDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.SessionEntry";
-  private static final long serialVersionUID = -956082767;
+  private static final long serialVersionUID = 1514921405;
   
   protected SessionEntryDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,7 +29,6 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
-  public static java.lang.String DASHBOARDUSER = "dashboardUser";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -39,6 +38,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SESSIONID = "sessionId";
+  public static java.lang.String SESSIONUSER = "sessionUser";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
@@ -101,55 +101,6 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.geodashboard.GeodashboardUserDTO getDashboardUser()
-  {
-    if(getValue(DASHBOARDUSER) == null || getValue(DASHBOARDUSER).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.GeodashboardUserDTO.get(getRequest(), getValue(DASHBOARDUSER));
-    }
-  }
-  
-  public String getDashboardUserId()
-  {
-    return getValue(DASHBOARDUSER);
-  }
-  
-  public void setDashboardUser(com.runwaysdk.geodashboard.GeodashboardUserDTO value)
-  {
-    if(value == null)
-    {
-      setValue(DASHBOARDUSER, "");
-    }
-    else
-    {
-      setValue(DASHBOARDUSER, value.getId());
-    }
-  }
-  
-  public boolean isDashboardUserWritable()
-  {
-    return isWritable(DASHBOARDUSER);
-  }
-  
-  public boolean isDashboardUserReadable()
-  {
-    return isReadable(DASHBOARDUSER);
-  }
-  
-  public boolean isDashboardUserModified()
-  {
-    return isModified(DASHBOARDUSER);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardUserMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARDUSER).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()
@@ -448,6 +399,55 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SESSIONID).getAttributeMdDTO();
   }
   
+  public com.runwaysdk.system.UsersDTO getSessionUser()
+  {
+    if(getValue(SESSIONUSER) == null || getValue(SESSIONUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(SESSIONUSER));
+    }
+  }
+  
+  public String getSessionUserId()
+  {
+    return getValue(SESSIONUSER);
+  }
+  
+  public void setSessionUser(com.runwaysdk.system.UsersDTO value)
+  {
+    if(value == null)
+    {
+      setValue(SESSIONUSER, "");
+    }
+    else
+    {
+      setValue(SESSIONUSER, value.getId());
+    }
+  }
+  
+  public boolean isSessionUserWritable()
+  {
+    return isWritable(SESSIONUSER);
+  }
+  
+  public boolean isSessionUserReadable()
+  {
+    return isReadable(SESSIONUSER);
+  }
+  
+  public boolean isSessionUserModified()
+  {
+    return isModified(SESSIONUSER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getSessionUserMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SESSIONUSER).getAttributeMdDTO();
+  }
+  
   public String getSiteMaster()
   {
     return getValue(SITEMASTER);
@@ -513,9 +513,9 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void deleteByUser(com.runwaysdk.constants.ClientRequestIF clientRequest, com.runwaysdk.geodashboard.GeodashboardUserDTO user)
+  public static final void deleteByUser(com.runwaysdk.constants.ClientRequestIF clientRequest, com.runwaysdk.system.UsersDTO user)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.GeodashboardUser"};
+    String[] _declaredTypes = new String[]{"com.runwaysdk.system.Users"};
     Object[] _parameters = new Object[]{user};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.SessionEntryDTO.CLASS, "deleteByUser", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
