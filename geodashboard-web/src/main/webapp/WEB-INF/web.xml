@@ -200,7 +200,7 @@
 	
 	<listener>
     <listener-class>
-    com.runwaysdk.geodashboard.web.GISHttpSessionListener
+    com.runwaysdk.geodashboard.gis.web.session.GISHttpSessionListener
     </listener-class>
   </listener>
 	
@@ -236,7 +236,7 @@
   </listener>
   
   <listener>
-    <listener-class>com.runwaysdk.gis.web.context.GISContextListener</listener-class>
+    <listener-class>com.runwaysdk.geodashboard.gis.web.context.GISContextListener</listener-class>
   </listener>
     
   <error-page>

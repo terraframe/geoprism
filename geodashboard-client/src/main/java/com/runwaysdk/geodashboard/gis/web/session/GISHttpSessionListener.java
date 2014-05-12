@@ -1,4 +1,4 @@
-package com.runwaysdk.gis.web.session;
+package com.runwaysdk.geodashboard.gis.web.session;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;

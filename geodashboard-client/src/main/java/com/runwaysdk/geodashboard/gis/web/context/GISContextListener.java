@@ -1,4 +1,4 @@
-package com.runwaysdk.gis.web.context;
+package com.runwaysdk.geodashboard.gis.web.context;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
