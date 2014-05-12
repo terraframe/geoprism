@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.test;
 
+import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
@@ -17,7 +18,6 @@ public class Sandbox
 {
   public static void main(String[] args)
   {
-    testBuildMap();
   }
   
   @Request

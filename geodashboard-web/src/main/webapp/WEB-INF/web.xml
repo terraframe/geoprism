@@ -198,6 +198,12 @@
 
 	<!-- Begin custom web.xml settings -->
 	
+	<listener>
+    <listener-class>
+    com.runwaysdk.geodashboard.web.GISHttpSessionListener
+    </listener-class>
+  </listener>
+	
 	<filter>
 	  <filter-name>EncodingFilter</filter-name>
 	  <filter-class>com.runwaysdk.geodashboard.EncodingFilter</filter-class>
