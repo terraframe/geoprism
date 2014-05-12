@@ -1,16 +1,24 @@
 package com.runwaysdk.geodashboard.test;
 
+
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
+
+import com.runwaysdk.dataaccess.metadata.ReservedWords;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
+
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+
 import com.runwaysdk.session.Request;
 
 import java.util.LinkedList;
@@ -24,6 +32,7 @@ public class Sandbox
 
     System.out.println("Running main...");
 //    testGetMapJSON();
+
     testBuildMap();
   }
   
@@ -77,6 +86,8 @@ public class Sandbox
      hasStyle.apply();
 
 //     String json = map.getMapJSON();
+
+//     String json = DashboardMap.getMapJSON(map.getId());
 //     System.out.println(json);
      
      map.delete();

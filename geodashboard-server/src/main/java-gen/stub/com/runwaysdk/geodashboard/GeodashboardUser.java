@@ -40,6 +40,8 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     boolean firstApply = this.isNew() && !this.isAppliedToDB();
     this.setSessionLimit(40);
 
+    SessionEntry.deleteByUser(this);
+    
     super.apply();
 
     if (firstApply)

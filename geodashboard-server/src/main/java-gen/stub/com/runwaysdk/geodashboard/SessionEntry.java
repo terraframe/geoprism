@@ -33,9 +33,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   @Override
   protected String buildKey()
   {
-    Users user = this.getSessionUser();
-    String key = user.getId()+"_"+this.getSessionId();
-    return key;
+    return this.getSessionId();
   }
   
   /**
@@ -72,6 +70,12 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     {
       iter.close();
     }
+  }
+  
+  
+  public static void deleteBySession(String sessionId)
+  {
+    SessionEntry.getByKey(sessionId).delete();
   }
   
   /**
