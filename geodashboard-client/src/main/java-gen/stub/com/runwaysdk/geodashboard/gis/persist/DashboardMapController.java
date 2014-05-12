@@ -133,16 +133,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   @Override
   public void createMapForSession() throws IOException, ServletException
   {
-
-    ClientRequestIF clientRequest = this.getClientRequest();
-    
+    ClientRequestIF clientRequest = this.getClientRequest(); 
     DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);
-    
-    // THIS NEEDS TO BE REPLACED WITH NEW SESSION ORIENTED IMPLEMENTATION
-//    DashboardMapDTO map = new DashboardMapDTO(clientRequest);
-//    map.setName("test_map");
-//    map.apply();  //// commented out to prevent frustration with page reloads until cleanup code is in place
- 
     req.setAttribute("mapId", map.getId());
     render("dashboardViewer.jsp");
   }
