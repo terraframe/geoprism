@@ -4,7 +4,7 @@
     
       <mdBusiness name="com.runwaysdk.geodashboard.SessionEntry" label="Session Entry" generateController="false">
         <attributes>
-          <reference name="dashboardUser" type="com.runwaysdk.geodashboard.GeodashboardUser" required="true" label="Dashboard User" />
+          <reference name="sessionUser" column="sessionuser" type="com.runwaysdk.system.Users" required="true" label="User" />
           <char name="sessionId" required="true" size="255" label="Session Id" />
         </attributes>
         <mdMethod name="createMapForSession" label="Create Map for Session" static="true" returnType="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
@@ -22,7 +22,7 @@
         <mdMethod name="deleteByCurrentUser" label="Deletes SessionEntries by user" static="true" returnType="void">
         </mdMethod>
         <mdMethod name="deleteByUser" label="Deletes SessionEntries by user" static="true" returnType="void">
-          <mdParameter name="user" label="DashboardUser" required="true" type="com.runwaysdk.geodashboard.GeodashboardUser" order="0" />
+          <mdParameter name="user" label="User" required="true" type="com.runwaysdk.system.Users" order="0" />
         </mdMethod>
         <mdMethod name="deleteAll" label="Delete All" static="true" returnType="void">
         </mdMethod>

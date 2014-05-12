@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1494375208)
+@com.runwaysdk.business.ClassSignature(hash = 1767363252)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -76,29 +76,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.SessionEntry.CREATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.SessionEntry.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser()
-  {
-    return getDashboardUser(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER);
-
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER);
-
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -278,6 +255,29 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.SessionEntry.SESSIONID, alias, displayLabel);
 
   }
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser()
+  {
+    return getSessionUser(null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER);
+
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER);
+
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER, mdAttributeIF, this, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -320,10 +320,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER)) 
-    {
-       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -339,6 +335,10 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER)) 
+    {
+       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -501,9 +501,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser();
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias);
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -531,6 +528,9 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getSessionId();
     public com.runwaysdk.query.SelectableChar getSessionId(String alias);
     public com.runwaysdk.query.SelectableChar getSessionId(String alias, String displayLabel);
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser();
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias);
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -632,23 +632,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.CREATEDBY,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser()
-  {
-    return getDashboardUser(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias)
-  {
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -802,6 +785,23 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.SelectableChar getSessionId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser()
+  {
+    return getSessionUser(null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias)
+  {
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -962,10 +962,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER)) 
-    {
-       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -981,6 +977,10 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER)) 
+    {
+       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -1004,9 +1004,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser();
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias);
-    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1034,6 +1031,9 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getSessionId();
     public com.runwaysdk.query.SelectableChar getSessionId(String alias);
     public com.runwaysdk.query.SelectableChar getSessionId(String alias, String displayLabel);
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser();
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias);
+    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
@@ -1156,23 +1156,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.CREATEDBY,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser()
-  {
-    return getDashboardUser(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias)
-  {
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getDashboardUser(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1328,6 +1311,23 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONID, alias, displayLabel);
 
   }
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser()
+  {
+    return getSessionUser(null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias)
+  {
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getSessionUser(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER,  alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
   {
     return getSiteMaster(null);
@@ -1370,10 +1370,6 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.DASHBOARDUSER)) 
-    {
-       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -1389,6 +1385,10 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.SessionEntry.SESSIONUSER)) 
+    {
+       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
