@@ -18,6 +18,7 @@ public class Sandbox
   public static void main(String[] args)
   {
     testBuildMap();
+    System.out.println("test");
   }
   
   @Request
@@ -53,8 +54,8 @@ public class Sandbox
      HasStyle hasStyle = layer.addHasStyle(style);
      hasStyle.apply();
 
-//     String json = DashboardMap.getMapJSON(map.getId());
-//     System.out.println(json);
+     String json = DashboardMap.getMapJSON(map.getId());
+     System.out.println(json);
      
      map.delete();
      

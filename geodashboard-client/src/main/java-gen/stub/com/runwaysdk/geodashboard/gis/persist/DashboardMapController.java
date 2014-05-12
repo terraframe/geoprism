@@ -139,7 +139,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     // THIS NEEDS TO BE REPLACED WITH NEW SESSION ORIENTED IMPLEMENTATION
     DashboardMapDTO map = new DashboardMapDTO(clientRequest);
     map.setName("test_map");
-    map.apply();
+//    map.apply();  //// commented out to prevent frustration with page reloads until cleanup code is in place
  
     req.setAttribute("mapId", map.getId());
     render("dashboardViewer.jsp");
