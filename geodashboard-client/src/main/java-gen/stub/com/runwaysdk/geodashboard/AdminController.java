@@ -100,5 +100,17 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
+  
+  @Override
+  public void ontologies() throws java.io.IOException, javax.servlet.ServletException
+  {
+    render("ontologies.jsp");
+  }
+  
+  @Override
+  public void failOntologies() throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
 
 }
