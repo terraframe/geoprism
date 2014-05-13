@@ -719,7 +719,6 @@ public class GeoserverTest
       layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       Assert.fail("A Layer was able to reference a non-GeoEntity attribute.");
@@ -758,7 +757,6 @@ public class GeoserverTest
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
-      layer.setGeoEntity(geoentityRef);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.setGeoEntity(geoentityRef);
@@ -822,7 +820,6 @@ public class GeoserverTest
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
       layer.setUniversal(country);
-      layer.setGeoEntity(geoentityRef);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.setGeoEntity(geoentityRef);
