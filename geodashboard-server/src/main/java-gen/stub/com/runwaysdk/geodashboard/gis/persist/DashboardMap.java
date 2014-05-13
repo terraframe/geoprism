@@ -30,9 +30,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 //  @Override
   public String getMapJSON()
   {
+   
+    String json = "test json";
     
     // TODO Auto-generated method stub
-    return super.getMapJSON();
+    return json;
   }
 
   public void delete()
