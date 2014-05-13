@@ -7,8 +7,12 @@
     <item name="Manage_Geoentities" uri="admin/geoentity"/>
   </item>
   
+  <item name="Datatype_Management">
+    <item name="Term_Ontology_Admin" uri="admin/ontologies"/>
+    <item name="Data_Browser" uri="admin/databrowser"/> 
+  </item>
+  
   <item name="Job_Scheduler" uri="admin/scheduler"/>   
-  <item name="Data_Browser" uri="admin/databrowser"/> 
   
   <!--
   <item name="Sales Force Import Manager" uri="admin/importer"/>

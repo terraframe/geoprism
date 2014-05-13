@@ -1,0 +1,24 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <object key="com.runwaysdk.geodashboard.ontology.Defaults" type="com.runwaysdk.system.ontology.Classifier">
+	      <attribute name="classifierId" value="Defaults" />
+	      <attribute name="classifierPackage" value="com.runwaysdk.geodashboard.ontology" />
+	      <attributeStruct name="displayLabel">
+	        <attribute name="defaultLocale" value="Geodashboard Ontology Defaults" />
+	      </attributeStruct>
+	    </object>
+	    <relationship
+        type="com.runwaysdk.system.ontology.ClassifierIsARelationship"
+        key="DefaultsRel"
+        childKey="com.runwaysdk.geodashboard.ontology.Defaults"
+        parentKey="ROOT.ROOT">
+      </relationship>
+    </create>
+    <update>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
