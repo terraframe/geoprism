@@ -25,6 +25,7 @@ public class SessionEntryManager
     catch(Throwable t)
     {
       log.error("Unable to call SessionEntry.initialize()", t);
+      throw new RuntimeException(t);
     }
   }
   
@@ -42,6 +43,7 @@ public class SessionEntryManager
     catch(Throwable t)
     {
       log.error("Unable to call SessionEntry.destroy()", t);
+      throw new RuntimeException(t);
     }
   }
   

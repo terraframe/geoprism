@@ -106,7 +106,7 @@ public class GeoserverTest
 
   private static MdAttributeInteger   rank;
 
-  private static MdAttributeReference geoentity;
+  private static MdAttributeReference geoentityRef;
 
   public static void main(String[] args) throws Throwable
   {
@@ -173,11 +173,11 @@ public class GeoserverTest
 
     MdBusiness geoentityMd = MdBusiness.getMdBusiness(GeoEntity.CLASS);
 
-    geoentity = new MdAttributeReference();
-    geoentity.setDefiningMdClass(stateInfo);
-    geoentity.setMdBusiness(geoentityMd);
-    geoentity.setAttributeName("geoentity");
-    geoentity.apply();
+    geoentityRef = new MdAttributeReference();
+    geoentityRef.setDefiningMdClass(stateInfo);
+    geoentityRef.setMdBusiness(geoentityMd);
+    geoentityRef.setAttributeName("geoentity");
+    geoentityRef.apply();
 
     country = new Universal();
     country.getDisplayLabel().setDefaultValue("Country");
@@ -232,7 +232,7 @@ public class GeoserverTest
 
           Business si = BusinessFacade.newBusiness(STATE_INFO);
           si.setValue(rank.getAttributeName(), Integer.toString(count++));
-          si.setValue(geoentity.getAttributeName(), ge.getId());
+          si.setValue(geoentityRef.getAttributeName(), ge.getId());
           si.apply();
         }
       }
@@ -289,7 +289,7 @@ public class GeoserverTest
   /**
    * Creates styling for a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -308,7 +308,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -356,7 +356,7 @@ public class GeoserverTest
   /**
    * Creates styling for a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -375,7 +375,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -424,7 +424,7 @@ public class GeoserverTest
   /**
    * Tests creating a composite condition.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createCompositePointSLD()
@@ -443,7 +443,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -507,7 +507,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createThematicPointSLD()
@@ -526,7 +526,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -582,7 +582,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createThematicPolygonSLD()
@@ -600,7 +600,7 @@ public class GeoserverTest
       layer.setName("Layer 1");layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -657,7 +657,7 @@ public class GeoserverTest
   /**
    * Tests that a Layer can only reference an MdAttributeReference that points to GeoEntity.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testInvalidLayerGeoEntityReference()
@@ -674,7 +674,7 @@ public class GeoserverTest
       layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
       
       Assert.fail("A Layer was able to reference a non-GeoEntity attribute.");
     }
@@ -712,10 +712,10 @@ public class GeoserverTest
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
-      layer.setGeoEntity(geoentity);
+      layer.setGeoEntity(geoentityRef);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.apply();
+      layer.setGeoEntity(geoentityRef); layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -782,7 +782,7 @@ public class GeoserverTest
     }
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyPointLayers()
@@ -790,7 +790,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyPolygonLayers()
@@ -799,7 +799,7 @@ public class GeoserverTest
 
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyMixedLayers()
@@ -808,7 +808,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testRemoveLayer()
@@ -816,7 +816,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testRemoveStyle()
@@ -827,7 +827,7 @@ public class GeoserverTest
   /**
    * Creates a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPolygonLayer()

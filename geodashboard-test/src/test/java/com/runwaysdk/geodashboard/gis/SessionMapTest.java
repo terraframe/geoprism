@@ -72,7 +72,7 @@ public class SessionMapTest
     {
       SessionFacade.closeSession(sessionId);
     }
-  }  
+  }
 
   @Request(RequestType.SESSION)
   private void createMapForSessionRequest(String sessionId)
@@ -198,15 +198,15 @@ public class SessionMapTest
     try
     {
       Integer max = GeoserverProperties.getSessionMapLimit();
-      createMultipleMapsRequest(sessionId, max+1);
-      
-      Assert.fail("A session was able to create more than the maximum number of maps ["+max+"].");
+      createMultipleMapsRequest(sessionId, max + 1);
+
+      Assert.fail("A session was able to create more than the maximum number of maps [" + max + "].");
     }
-    catch(Throwable t)
+    catch (Throwable t)
     {
-      if(t instanceof SmartExceptionDTO)
+      if (t instanceof SmartExceptionDTO)
       {
-        Assert.assertEquals(SessionMapLimitException.CLASS, ((SmartExceptionDTO)t).getType());
+        Assert.assertEquals(SessionMapLimitException.CLASS, ( (SmartExceptionDTO) t ).getType());
       }
       else
       {
@@ -220,9 +220,9 @@ public class SessionMapTest
     }
   }
 
-
   /**
-   * Creates several sessions for one user and creates multiple maps for each session.
+   * Creates several sessions for one user and creates multiple maps for each
+   * session.
    */
   @Test
   public void createMultipleSessionsAndMaps()
@@ -239,16 +239,16 @@ public class SessionMapTest
 
         createMultipleMapsRequest(sessionId, numMaps);
       }
-      
+
       // make sure there are numSessions * numMaps DashboardMaps
       QueryFactory f = new QueryFactory();
       SessionEntryQuery seq = new SessionEntryQuery(f);
       DashboardMapQuery dmq = new DashboardMapQuery(f);
-      
+
       seq.WHERE(seq.getSessionUser().EQ(user));
       dmq.WHERE(dmq.sessionEntry(seq));
-      
-      long total = numSessions*numMaps;
+
+      long total = numSessions * numMaps;
       Assert.assertEquals(dmq.getCount(), total);
     }
     finally
@@ -260,94 +260,93 @@ public class SessionMapTest
   @Request(RequestType.SESSION)
   private void createMultipleMapsRequest(String sessionId, int numMaps)
   {
-    for(int i=0; i<numMaps; i++)
+    for (int i = 0; i < numMaps; i++)
     {
       SessionEntry.createMapForSession();
     }
   }
-  
+
   /**
-   * Because the first parameter isn't sessionId this will execute
-   * as system, which is adequate for cleanup.
+   * Because the first parameter isn't sessionId this will execute as system,
+   * which is adequate for cleanup.
    */
   @Request
   private void deleteWithoutSession()
   {
     SessionEntry.deleteByUser(user);
-    
+
     // Make sure there's no more entries or maps
     QueryFactory f = new QueryFactory();
     SessionEntryQuery seq = new SessionEntryQuery(f);
     DashboardMapQuery dmq = new DashboardMapQuery(f);
-    
+
     seq.WHERE(seq.getSessionUser().EQ(user));
     dmq.WHERE(dmq.sessionEntry(seq));
-    
+
     Assert.assertEquals(dmq.getCount(), 0);
   }
-  
-  
+
   /**
-   * Returns the number of maps defined by the user and session.
-   * @param user
-   * @param sessionId
-   * @return
-   */
-  @Request
-  private long getMapCount(GeodashboardUser user, String sessionId)
-  {
-    QueryFactory f = new QueryFactory();
-    SessionEntryQuery seq = new SessionEntryQuery(f);
-    DashboardMapQuery dmq = new DashboardMapQuery(f);
-    
-    dmq.WHERE(dmq.sessionEntry(seq));
-    
-    seq.WHERE(seq.getSessionUser().EQ(user));
-    if(sessionId != null)
-    {
-      seq.AND(seq.getSessionId().EQ(sessionId));
-    }
-    
-    return dmq.getCount();
-  }
-  
-  /**
-   * Creates a few SessionEntry objects for the new user and makes sure
-   * they're cleaned up when the user is deleted.
+   * Creates a few SessionEntry objects for the new user and makes sure they're
+   * cleaned up when the user is deleted.
    */
   @Test
   public void deleteSessionEntriesForUser()
   {
     String user = "user1";
     String pass = "pass1";
-    
+
     GeodashboardUser user1 = this.createDashboardUser(user, pass);
-    String sessionId1 = SessionFacade.logIn(USER, PASS, new Locale[] { Locale.ENGLISH });
-    String sessionId2 = SessionFacade.logIn(USER, PASS, new Locale[] { Locale.ENGLISH });
-    
+    boolean deleted = false;
+    String userId = user1.getId();
     try
     {
-      int numMaps = 5;
-      
-      // create numMaps over two different sessions
-      this.createMultipleMapsRequest(sessionId1, numMaps);
-      this.createMultipleMapsRequest(sessionId2, numMaps);
-      
-      // There should be numMaps * 2 total
 
-      long count = this.getMapCount(user1, null);
-      Assert.assertEquals(count, numMaps*2);
-      
-      user1.delete();
-      
-      count = this.getMapCount(user1, null);
-      Assert.assertEquals(count, 0);
+      int numMaps = 5;
+
+      // create numMaps over two different sessions
+      String sessionId1 = SessionFacade.logIn(user, pass, new Locale[] { Locale.ENGLISH });
+      this.createMultipleMapsRequest(sessionId1, numMaps);
+      SessionFacade.closeSession(sessionId1);
+
+      String sessionId2 = SessionFacade.logIn(user, pass, new Locale[] { Locale.ENGLISH });
+      this.createMultipleMapsRequest(sessionId2, numMaps);
+      SessionFacade.closeSession(sessionId2);
+
+      // There should be numMaps * 2 total
+      QueryFactory f = new QueryFactory();
+      SessionEntryQuery seq = new SessionEntryQuery(f);
+      DashboardMapQuery dmq = new DashboardMapQuery(f);
+
+      dmq.WHERE(dmq.sessionEntry(seq));
+      seq.WHERE(seq.getSessionUser().EQ(user1));
+
+      Assert.assertEquals(numMaps * 2, dmq.getCount());
+
+      this.deleteDashboardUser(userId);
+      deleted = true;
+
+      // With the user deleted there shouldn't be SessionEntry record with that
+      // id
+      f = new QueryFactory();
+      seq = new SessionEntryQuery(f);
+      seq.WHERE(seq.getSessionUser().getId().EQ(userId));
+
+      Assert.assertEquals(0, seq.getCount());
     }
     finally
     {
-      SessionFacade.closeSession(sessionId1);      
-      SessionFacade.closeSession(sessionId2);
+      if (!deleted)
+      {
+        this.deleteDashboardUser(userId);
+      }
     }
+  }
+
+  @Request
+  private void deleteDashboardUser(String id)
+  {
+    GeodashboardUser.get(id).delete();
   }
 
   @Request
@@ -356,11 +355,11 @@ public class SessionMapTest
     GeodashboardUser gdbUser = new GeodashboardUser();
     gdbUser.setUsername(user);
     gdbUser.setPassword(pass);
-    gdbUser.setEmail(user+"@test.com");
+    gdbUser.setEmail(user + "@test.com");
     gdbUser.setFirstName(user);
     gdbUser.setLastName(user);
     gdbUser.apply();
-    
+
     Roles.findRoleByName("Administrator").addSingleActor(gdbUser).apply();
     return gdbUser;
   }

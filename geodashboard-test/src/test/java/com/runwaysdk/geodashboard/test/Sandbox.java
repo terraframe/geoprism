@@ -1,31 +1,24 @@
 package com.runwaysdk.geodashboard.test;
 
-import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
+
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+
 import com.runwaysdk.session.Request;
 
 public class Sandbox
 {
   public static void main(String[] args)
   {
-
-    System.out.println("test");
-    testMap();
     testBuildMap();
-  }
-  
-  @Request
-  @Transaction
-  public static void testMap()
-  {
-    System.out.println("testMap");
   }
   
   @Request
@@ -61,8 +54,8 @@ public class Sandbox
      HasStyle hasStyle = layer.addHasStyle(style);
      hasStyle.apply();
 
-     String json = DashboardMap.getMapJSON(map.getId());
-     System.out.println(json);
+//     String json = DashboardMap.getMapJSON(map.getId());
+//     System.out.println(json);
      
      map.delete();
      

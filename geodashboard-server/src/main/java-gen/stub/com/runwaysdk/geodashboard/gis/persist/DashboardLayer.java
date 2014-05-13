@@ -22,6 +22,19 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   }
   
   @Override
+  public void apply()
+  {
+    // CHANGE THIS: Lewis
+    if(this.isNew())
+    {
+      long vn = System.currentTimeMillis();
+      this.setViewName(Long.toString(vn));
+    }
+    
+    super.apply();
+  }
+  
+  @Override
   protected String buildKey()
   {
     String name = this.getName();
