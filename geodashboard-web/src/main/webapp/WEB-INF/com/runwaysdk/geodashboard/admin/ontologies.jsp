@@ -22,23 +22,13 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@page import="com.runwaysdk.constants.DeployProperties"%>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.IsARelationshipDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
+<%@page import="com.runwaysdk.system.ontology.ClassifierDTO" %>
+<%@page import="com.runwaysdk.system.ontology.ClassifierController" %>
+<%@page import="com.runwaysdk.system.ontology.ClassifierDisplayLabelDTO" %>
+<%@page import="com.runwaysdk.system.ontology.ClassifierIsARelationshipDTO" %>
 <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
-<%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
-<%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-
-<%@page import="com.runwaysdk.business.BusinessDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 
 <%
@@ -48,7 +38,7 @@
 
 <head>
 
-<gdb:localize var="page_title" key="universal.title"/>
+<gdb:localize var="page_title" key="ontologies.title"/>
 
 <script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
 <link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
@@ -72,7 +62,7 @@
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/OntologyTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
 
 <!-- Localization -->
@@ -83,25 +73,25 @@
 
 <script type="text/javascript">
 <%// use a try catch before printing out the definitions, otherwise, if an
-	// error occurs here, javascript spills onto the actual page (ugly!)
-	try
-	{
-	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS, IsARelationshipDTO.CLASS, TermUtilDTO.CLASS
-	    }, true);
-	  out.print(js);
-	}
-	catch(Exception e)
-	{
-	  // perform cleanup
-	  throw e;
-	}
+  // error occurs here, javascript spills onto the actual page (ugly!)
+  try
+  {
+    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
+      ClassifierDTO.CLASS, ClassifierIsARelationshipDTO.CLASS, ClassifierDisplayLabelDTO.CLASS, ClassifierController.CLASS, TermUtilDTO.CLASS
+      }, true);
+    out.print(js);
+  }
+  catch(Exception e)
+  {
+    // perform cleanup
+    throw e;
+  }
 %>
 </script>
 
 </head>
 
-<div id="tree"></div>
+<div id="ontologies"></div>
 
 <script type="text/javascript">
 // var $tree = document.getElementById('main-content-frame').contentWindow.document.universaltree.getImpl();
@@ -109,10 +99,10 @@
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
-    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
-      termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-      relationshipTypes : [ <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>, <% out.print("\"" + IsARelationshipDTO.CLASS + "\""); %> ],
-      rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+    document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+      termType : <% out.print("\"" + ClassifierDTO.CLASS + "\""); %>,
+      relationshipTypes : [ <% out.print("\"" + ClassifierIsARelationshipDTO.CLASS + "\""); %> ],
+      rootTerm : <% out.print("\"" + ClassifierDTO.getRoot(clientRequest).getId() + "\""); %>,
       /* checkable: true, */
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
@@ -123,6 +113,6 @@
         }
       }
     });
-    document.universaltree.render("#tree");
+    document.universaltree.render("#ontologies");
   });
 </script>

@@ -56,6 +56,9 @@ public class Sandbox
     System.out.println(bbox);
 
     // System.out.println(json);
+    
+//    testBuildMap();
+
   }
 
   @Request

@@ -17,7 +17,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -32,6 +31,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.InvalidReferenceException;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
@@ -56,8 +57,10 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
@@ -66,6 +69,7 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.Metadata;
+import com.runwaysdk.util.FileIO;
 
 public class GeoserverTest
 {
@@ -78,6 +82,10 @@ public class GeoserverTest
   private static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
 
   private static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
+
+  private static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
+
+  private static int                  stateCount     = 0;
 
   private static boolean              GEOSERVER_RUNNING;
 
@@ -191,12 +199,23 @@ public class GeoserverTest
     state.setUniversalId("state");
     state.apply();
 
-    state.addAllowedIn(country).apply();
+    state.addLink(country, AllowedIn.CLASS).apply();
 
     usa = new GeoEntity();
     usa.getDisplayLabel().setDefaultValue("USA");
     usa.setGeoId("USA0000");
     usa.setUniversal(country);
+
+    try
+    {
+      String wkt = FileIO.readString(USA_WKT);
+      usa.setWkt(wkt);
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException(e);
+    }
+
     usa.apply();
 
   }
@@ -230,11 +249,29 @@ public class GeoserverTest
         {
           GeoEntity ge = iter.next();
 
+          // Set the state as a child of USA (and remove anything else)
+          OIterator<? extends LocatedIn> liIter = ge.getAllLocatedInRel();
+          try
+          {
+            while (liIter.hasNext())
+            {
+              liIter.next().delete();
+            }
+          }
+          finally
+          {
+            liIter.close();
+          }
+
+          ge.addLink(usa, LocatedIn.CLASS).apply();
+
           Business si = BusinessFacade.newBusiness(STATE_INFO);
           si.setValue(rank.getAttributeName(), Integer.toString(count++));
           si.setValue(geoentityRef.getAttributeName(), ge.getId());
           si.apply();
         }
+
+        stateCount = count;
       }
       finally
       {
@@ -308,7 +345,8 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -343,7 +381,7 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
-        
+
         GeoserverFacade.removeStyle(styleName);
       }
     }
@@ -375,7 +413,8 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -411,7 +450,7 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
-        
+
         GeoserverFacade.removeStyle(styleName);
       }
     }
@@ -443,7 +482,8 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -494,7 +534,7 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
-        
+
         GeoserverFacade.removeStyle(styleName);
       }
     }
@@ -526,7 +566,8 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -569,7 +610,7 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
-        
+
         GeoserverFacade.removeStyle(styleName);
       }
     }
@@ -597,10 +638,12 @@ public class GeoserverTest
       map.apply();
 
       DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");layer.setUniversal(state);
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -644,7 +687,7 @@ public class GeoserverTest
         {
           Assert.fail("The style [" + styleName + "] was not created.");
         }
-        
+
         GeoserverFacade.removeStyle(styleName);
       }
     }
@@ -655,7 +698,8 @@ public class GeoserverTest
   }
 
   /**
-   * Tests that a Layer can only reference an MdAttributeReference that points to GeoEntity.
+   * Tests that a Layer can only reference an MdAttributeReference that points
+   * to GeoEntity.
    */
   @Test
   @Request
@@ -666,36 +710,38 @@ public class GeoserverTest
     try
     {
       MdBusinessDAOIF md = MdBusinessDAO.get(stateInfoId);
-      MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md.definesAttribute(Metadata.CREATEDBY);
-      
+      MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md
+          .definesAttribute(Metadata.CREATEDBY);
+
       layer = new DashboardLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
-      
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
       Assert.fail("A Layer was able to reference a non-GeoEntity attribute.");
     }
-    catch(InvalidReferenceException e)
+    catch (InvalidReferenceException e)
     {
       System.out.println(e.getLocalizedMessage());
       // this is expected
     }
     finally
     {
-      if(layer != null && layer.isAppliedToDB())
+      if (layer != null && layer.isAppliedToDB())
       {
         layer.delete();
       }
     }
   }
-  
+
   /**
    * Creates a point layer.
    */
-//  @Test
+  @Test
   @Request
   @Transaction
   public void createPointLayer()
@@ -715,7 +761,72 @@ public class GeoserverTest
       layer.setGeoEntity(geoentityRef);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef); layer.apply();
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+      
+      ValueQuery v = layer.asValueQuery();
+
+      // This query should have all states in it
+      QueryFactory checkF = new QueryFactory();
+      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
+      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
+
+      Assert.assertEquals(stateCount, checkGE.getCount());
+      Assert.assertEquals(checkGE.getCount(), v.getCount());
+
+      if (GEOSERVER_RUNNING)
+      {
+        Assert.fail("Not implemented.");
+      }
+
+    }
+    finally
+    {
+      map.delete();
+    }
+  }
+
+  @Test
+  @Request
+  @Transaction
+  public void createPointLayerHigherUniversal()
+  {
+    DashboardMap map = null;
+
+    try
+    {
+
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(country);
+      layer.setGeoEntity(geoentityRef);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
@@ -736,45 +847,22 @@ public class GeoserverTest
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
 
-      
-      QueryFactory f= new QueryFactory();
-      ValueQuery v = new ValueQuery(f);
-      
-      MdAttribute mdAttr = style.getMdAttribute();
-      if(mdAttr instanceof MdAttributeConcrete)
+      ValueQuery v = layer.asValueQuery();
+
+      // This query should have all states in it
+      QueryFactory checkF = new QueryFactory();
+      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
+      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
+      System.out.println(v.getSQL());
+
+      Assert.assertEquals(1, checkGE.getCount());
+      Assert.assertEquals(checkGE.getCount(), v.getCount());
+
+      if (GEOSERVER_RUNNING)
       {
-        MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
-        MdClass mdClass = mdC.getDefiningMdClass();
-        EntityQuery q = f.businessQuery(mdClass.definesType());
-        
-        // thematic attribute
-        Attribute thematic = q.get(mdC.getAttributeName());
-        v.SELECT(thematic);
-        
-        
-        // geoentity label
-        GeoEntityQuery geQ = new GeoEntityQuery(v);
-        v.SELECT(geQ.getDisplayLabel().localize());
-        
-        // geometry
-        if(layer.getFeatureType().equals(FeatureType.POINT))
-        {
-          v.SELECT(geQ.getGeoPoint());
-        }
-        else
-        {
-          v.SELECT(geQ.getGeoMultiPolygon());
-        }
-        
-        
-        System.out.println(v.getSQL());
+        Assert.fail("Not implemented.");
       }
-      else
-      {
-        throw new ProgrammingErrorException("Attribute ["+mdAttr.getKey()+"] of type ["+mdAttr.getClass().getName()+"] is not supported .");
-      }
-      
-      
+
     }
     finally
     {
@@ -834,16 +922,16 @@ public class GeoserverTest
   {
     junit.framework.Assert.fail("Not Implemented");
   }
-  
+
   @Test
   @Request
   @Transaction
   public void testMapJSON()
   {
-//    String json = new DashboardMap().getMapJSON();
-//    
-//    JSONObject obj = new JSONObject(json);
-//    
-//    Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
+    // String json = new DashboardMap().getMapJSON();
+    //
+    // JSONObject obj = new JSONObject(json);
+    //
+    // Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
   }
 }
