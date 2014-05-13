@@ -35,13 +35,11 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
-    // CHANGE THIS: Lewis
     if (this.isNew())
     {
-      long vn = System.currentTimeMillis();
-      this.setViewName(Long.toString(vn));
+      String vn = "Layer$" + Long.toString(System.currentTimeMillis());
+      this.setViewName(vn);
     }
-
     super.apply();
   }
 
