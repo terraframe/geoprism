@@ -58,6 +58,43 @@
         
       },
       
+      /**
+       * Called when the user right clicks on a node.
+       * This override will stop the user from deleting root nodes.
+       */
+      // @Override
+      __onNodeRightClick : function(event, object) {
+        var $tree = this.getImpl();
+        var node = object.node;
+        
+        if (this._cm != null && !this._cm.isDestroyed()) {
+          this._cm.destroy();
+        }
+        
+        this._cm = this.getFactory().newContextMenu(node);
+        var create = this._cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
+        var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
+        var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
+        var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        
+        if (this.busyNodes.contains(node.id)) {
+          create.setEnabled(false);
+          update.setEnabled(false);
+          del.setEnabled(false);
+          refresh.setEnabled(false);
+        }
+        
+        if (this.getParentRunwayId(node) === this.rootTermId) {
+          del.setEnabled(false);
+        }
+        
+        this._cm.render();
+        
+        this._cm.addDestroyEventListener(function() {
+          $tree.jstree("deselect_node", node);
+        });
+      },
+      
       destroy : function() {
         
         if (!this.isDestroyed()) {
