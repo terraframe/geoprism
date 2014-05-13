@@ -850,7 +850,6 @@ public class GeoserverTest
       QueryFactory checkF = new QueryFactory();
       GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
-      System.out.println(v.getSQL());
 
       Assert.assertEquals(1, checkGE.getCount());
       Assert.assertEquals(checkGE.getCount(), v.getCount());
