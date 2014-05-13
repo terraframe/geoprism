@@ -18,7 +18,8 @@ public class Sandbox
 {
   public static void main(String[] args)
   {
-    testBuildMap();
+    String s = "<td class=\"cityStyle\" nowrap=\"nowrap\">Alameda</td>";
+//    testBuildMap();
   }
   
   @Request
