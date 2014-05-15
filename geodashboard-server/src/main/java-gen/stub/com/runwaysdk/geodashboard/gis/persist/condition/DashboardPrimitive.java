@@ -17,15 +17,4 @@ public abstract class DashboardPrimitive extends DashboardPrimitiveBase implemen
     return this.getComparisonValue();
   }
   
-  @Override
-  public DashboardComposite getParentCondition()
-  {
-    return this.getParentCondition();
-  }
-  
-  @Override
-  public DashboardComposite getRootCondition()
-  {
-    return this.getRootCondition();
-  }
 }

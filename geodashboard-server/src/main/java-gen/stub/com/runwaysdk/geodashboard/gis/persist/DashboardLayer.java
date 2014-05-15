@@ -1,18 +1,22 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.io.File;
 import java.util.List;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.EntityQuery;
+import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -20,27 +24,52 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
 
 public class DashboardLayer extends DashboardLayerBase implements
     com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long serialVersionUID = 1992575686;
+  
+  public static final String DB_VIEW_PREFIX = "layer$";
 
   public DashboardLayer()
   {
     super();
   }
-
+  
   @Override
   public void apply()
   {
     if (this.isNew())
     {
-      String vn = "Layer$" + Long.toString(System.currentTimeMillis());
+      // generate a db view name unique across space and time
+      String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
       this.setViewName(vn);
     }
     super.apply();
+  }
+  
+  /**
+   * For easy reference, the name of the SLD is the same as the db view name.
+   * The .sld extension is automatically added 
+   * @return
+   */
+  public String getSLDName()
+  {
+    return this.getViewName();
+  }
+  
+  /**
+   * Returns the File object associated with the SLD for this view.
+   * @return
+   */
+  public File getSLDFile()
+  {
+    String path = GeoserverProperties.getGeoserverSLDDir();
+    String sld = path+this.getSLDName()+GeoserverProperties.SLD_EXTENSION;
+    return new File(sld);
   }
 
   public ValueQuery asValueQuery()
@@ -65,8 +94,39 @@ public class DashboardLayer extends DashboardLayerBase implements
           EntityQuery entityQ = f.businessQuery(mdClass.definesType());
 
           // thematic attribute
-          Attribute thematic = entityQ.get(mdC.getAttributeName());
-          v.SELECT(thematic);
+          Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
+          
+          // use the basic Selectable if no aggregate is selected
+          Selectable thematicSel = thematicAttr;
+          List<AllAggregationType> allAgg = tStyle.getAggregationType();
+          if(allAgg.size() == 1)
+          {
+            AllAggregationType agg = allAgg.get(0);
+//            String func = null;
+            if(agg == AllAggregationType.SUM)
+            {
+              //func = "SUM";
+              thematicSel = F.SUM(thematicAttr);
+            }
+            else if(agg == AllAggregationType.MIN)
+            {
+              //func = "MIN";
+              thematicSel = F.MIN(thematicAttr);
+            }
+            else if(agg == AllAggregationType.MAX)
+            {
+              //func = "MAX";
+              thematicSel = F.MAX(thematicAttr);
+            }
+            else if(agg == AllAggregationType.AVG)
+            {
+              //func = "AVG";
+              thematicSel = F.AVG(thematicAttr);
+            }
+            
+          }
+          
+          v.SELECT(thematicSel);
 
           // geoentity label
           GeoEntityQuery geQ = new GeoEntityQuery(v);

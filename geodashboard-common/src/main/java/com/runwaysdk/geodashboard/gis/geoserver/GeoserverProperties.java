@@ -21,6 +21,8 @@ public class GeoserverProperties implements Reloadable
   private static GeoServerRESTPublisher publisher;
 
   private static GeoServerRESTReader    reader;
+  
+  public static final String SLD_EXTENSION = ".sld";
 
   private GeoserverProperties()
   {

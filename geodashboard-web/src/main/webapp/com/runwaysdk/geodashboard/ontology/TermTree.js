@@ -598,7 +598,6 @@
         var $tree = this.getImpl();
         
         var node = object.node;
-//        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -647,7 +646,7 @@
           return "#";
         }
         
-        return parent;
+        return parent.id;
       },
       
       getParentRunwayId : function(node) {

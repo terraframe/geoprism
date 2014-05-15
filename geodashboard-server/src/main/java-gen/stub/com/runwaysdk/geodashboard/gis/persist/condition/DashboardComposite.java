@@ -13,12 +13,34 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
     super();
   }
 
+  /**
+   * Checks if this object is the final root of a Condition tree.
+   * @return
+   */
+  public boolean isRootCondition()
+  {
+    return this.getRootConditionId().equals(this.getId());
+  }
+  
   @Override
   public void apply()
   {
+    // a new instance will have the root and parent set to itself
+    boolean isNew = this.isNew();
+
+    
     super.apply();
     
-    //setConditionReferences();
+    if(isNew)
+    {
+      this.appLock();
+      this.setParentCondition(this);
+      this.setRootCondition(this);
+      super.apply();
+
+      setConditionReferences();
+    }
+    
   }
   
   /**
