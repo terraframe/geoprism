@@ -1,10 +1,12 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.io.File;
 import java.util.List;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -47,6 +49,27 @@ public class DashboardLayer extends DashboardLayerBase implements
       this.setViewName(vn);
     }
     super.apply();
+  }
+  
+  /**
+   * For easy reference, the name of the SLD is the same as the db view name.
+   * The .sld extension is automatically added 
+   * @return
+   */
+  public String getSLDName()
+  {
+    return this.getViewName();
+  }
+  
+  /**
+   * Returns the File object associated with the SLD for this view.
+   * @return
+   */
+  public File getSLDFile()
+  {
+    String path = GeoserverProperties.getGeoserverSLDDir();
+    String sld = path+this.getSLDName()+GeoserverProperties.SLD_EXTENSION;
+    return new File(sld);
   }
 
   public ValueQuery asValueQuery()
