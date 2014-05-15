@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.XMLConstants;
@@ -17,6 +19,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -37,6 +42,7 @@ import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
+import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -922,12 +928,73 @@ public class GeoserverTest
   @Test
   @Request
   @Transaction
-  public void testMapJSON()
+  public void testMapJSON() throws JSONException
   {
-    // String json = new DashboardMap().getMapJSON();
-    //
-    // JSONObject obj = new JSONObject(json);
-    //
-    // Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
+    
+    DashboardMap map = null;
+
+    try
+    {
+
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+      
+      ValueQuery v = layer.asValueQuery();
+
+      // This query should have all states in it
+      QueryFactory checkF = new QueryFactory();
+      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
+      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
+      
+      
+      String json = map.getMapJSON();
+
+      Assert.assertEquals(stateCount, checkGE.getCount());
+      Assert.assertEquals(checkGE.getCount(), v.getCount());
+
+//      if (GEOSERVER_RUNNING)
+//      {
+//        Assert.fail("Not implemented.");
+//      }
+
+    }
+    finally
+    {
+      map.delete();
+    }
+     
+     
+    
+//     JSONObject obj = new JSONObject(json);
+    
+//     Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
   }
 }
