@@ -23,24 +23,13 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
   }
   
   @Override
-  public DashboardCondition getParentCondition()
-  {
-    return this.getParentCondition();
-  }
-
-  @Override
-  public DashboardCondition getRootCondition()
-  {
-    return this.getParentCondition();
-  }
-  
-  @Override
   public ThematicStyle getThematicStyle()
   {
     QueryFactory f = new QueryFactory();
     DashboardThematicStyleQuery q = new DashboardThematicStyleQuery(f);
     
-    q.WHERE(q.getStyleCondition().EQ(this));
+    DashboardCondition root = this.getRootCondition();
+    q.WHERE(q.getStyleCondition().EQ(root));
     
     OIterator<? extends DashboardThematicStyle> iter = q.getIterator();
     

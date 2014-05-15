@@ -28,6 +28,8 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   {
     this.attribute = attribute;    
   }
+  
+  
 
   @Override
   public Condition getCondition()

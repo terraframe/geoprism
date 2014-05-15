@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.XMLConstants;
@@ -29,14 +30,13 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.attributes.InvalidReferenceException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
-import com.runwaysdk.geodashboard.gis.model.FeatureType;
+import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -51,8 +51,6 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.gis.StrategyInitializer;
-import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
@@ -62,12 +60,9 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
@@ -295,6 +290,10 @@ public class GeoserverTest
   @Transaction
   private static void metadataTeardown()
   {
+    // Delete all generated views
+    List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
+    Database.dropViews(viewNames);
+    
     MdBusiness.get(stateInfo.getId()).delete();
     Universal.get(country.getId()).delete();
     Universal.get(state.getId()).delete();
@@ -465,51 +464,13 @@ public class GeoserverTest
    */
   @Test
   @Request
-  @Transaction
   public void createCompositePointSLD()
   {
-    DashboardMap map = null;
+    DashboardMap map = this.createCompositePointSLD_setup();
 
     try
     {
-
-      map = new DashboardMap();
-      map.setName("Test Map");
-      map.apply();
-
-      DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");
-      layer.setUniversal(state);
-      layer.addLayerType(AllLayerType.BUBBLE);
-      layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
-      layer.apply();
-
-      HasLayer hasLayer = map.addHasLayer(layer);
-      hasLayer.setLayerIndex(0);
-      hasLayer.apply();
-
-      DashboardGreaterThanOrEqual gte = new DashboardGreaterThanOrEqual();
-      gte.setComparisonValue("0");
-      gte.apply();
-
-      DashboardLessThanOrEqual lte = new DashboardLessThanOrEqual();
-      lte.setComparisonValue("10");
-      lte.apply();
-
-      DashboardOr and = new DashboardOr();
-      and.setLeftCondition(gte);
-      and.setRightCondition(lte);
-      and.apply();
-
-      DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
-      style.setName("Style 1");
-      style.setStyleCondition(and);
-      style.apply();
-
-      HasStyle hasStyle = layer.addHasStyle(style);
-      hasStyle.apply();
+      DashboardLayer layer = map.getAllHasLayer().getAll().get(0);
 
       SLDMapVisitor visitor = new SLDMapVisitor();
       map.accepts(visitor);
@@ -542,6 +503,50 @@ public class GeoserverTest
     {
       map.delete();
     }
+  }
+  
+  @Transaction
+  private DashboardMap createCompositePointSLD_setup()
+  {
+    DashboardMap map = new DashboardMap();
+    map.setName("Test Map");
+    map.apply();
+
+    DashboardLayer layer = new DashboardLayer();
+    layer.setName("Layer 1");
+    layer.setUniversal(state);
+    layer.addLayerType(AllLayerType.BUBBLE);
+    layer.setVirtual(true);
+    layer.setGeoEntity(geoentityRef);
+    layer.apply();
+
+    HasLayer hasLayer = map.addHasLayer(layer);
+    hasLayer.setLayerIndex(0);
+    hasLayer.apply();
+
+    DashboardGreaterThanOrEqual gte = new DashboardGreaterThanOrEqual();
+    gte.setComparisonValue("0");
+    gte.apply();
+
+    DashboardLessThanOrEqual lte = new DashboardLessThanOrEqual();
+    lte.setComparisonValue("10");
+    lte.apply();
+
+    DashboardOr and = new DashboardOr();
+    and.setLeftCondition(gte);
+    and.setRightCondition(lte);
+    and.apply();
+
+    DashboardThematicStyle style = new DashboardThematicStyle();
+    style.setMdAttribute(rank);
+    style.setName("Style 1");
+    style.setStyleCondition(and);
+    style.apply();
+
+    HasStyle hasStyle = layer.addHasStyle(style);
+    hasStyle.apply();
+    
+    return map;
   }
 
   /**
@@ -725,7 +730,6 @@ public class GeoserverTest
     }
     catch (InvalidReferenceException e)
     {
-      System.out.println(e.getLocalizedMessage());
       // this is expected
     }
     finally
@@ -746,7 +750,8 @@ public class GeoserverTest
   public void createPointLayer()
   {
     DashboardMap map = null;
-
+    String viewName = null;
+    
     try
     {
 
@@ -790,7 +795,11 @@ public class GeoserverTest
 
       Assert.assertEquals(stateCount, checkGE.getCount());
       Assert.assertEquals(checkGE.getCount(), v.getCount());
-
+     
+      viewName = layer.getViewName();
+      Database.createView(viewName, v.getSQL());
+     
+      
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");
@@ -837,6 +846,7 @@ public class GeoserverTest
 
       DashboardThematicStyle style = new DashboardThematicStyle();
       style.setMdAttribute(rank);
+      style.addAggregationType(AllAggregationType.SUM);
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();

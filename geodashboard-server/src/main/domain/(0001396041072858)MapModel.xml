@@ -210,6 +210,7 @@
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
 
 		</delete>
 	</undoIt>
