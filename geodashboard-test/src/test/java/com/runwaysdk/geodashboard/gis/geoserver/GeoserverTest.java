@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -27,14 +27,12 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import org.xml.sax.SAXException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.attributes.InvalidReferenceException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -62,7 +60,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -346,17 +343,8 @@ public class GeoserverTest
     }
     catch (Throwable e)
     {
-      if (consoleDebug)
-      {
-        System.out.println(name.getMethodName());
-        System.out.println(sld);
-        System.out.flush();
-      }
-      else
-      {
-        log.warn(name.getMethodName(), e);
-        log.warn(sld);
-      }
+      log.warn(name.getMethodName(), e);
+      log.warn(sld);
 
       Assert.fail(e.getLocalizedMessage());
     }
@@ -793,13 +781,40 @@ public class GeoserverTest
       Assert.assertEquals(checkGE.getCount(), v.getCount());
 
       viewName = layer.getViewName();
-      Database.createView(viewName, v.getSQL());
-
-      if (GEOSERVER_RUNNING)
+      String sldName = layer.getSLDName();
+      boolean dbViewCreated = false;
+      try
       {
-        Assert.fail("Not implemented.");
-      }
+        Database.createView(viewName, v.getSQL());
+        dbViewCreated = true;
 
+        if (GEOSERVER_RUNNING)
+        {
+          if (GeoserverFacade.publishLayer(viewName, sldName))
+          {
+            // geoserver purportedly added the layer but query it just in case
+            if (!GeoserverFacade.layerExists(viewName)
+                || !GeoserverFacade.getLayers().contains(viewName))
+            {
+              Assert.fail("Published the view [" + viewName + "] with style [" + sldName
+                  + "] but it could not be found.");
+            }
+          }
+          else
+          {
+            Assert.fail("Could not publish view [" + viewName + "] with style [" + sldName + "]");
+          }
+        }
+      }
+      finally
+      {
+        if (dbViewCreated)
+        {
+          List<String> views = new LinkedList<String>();
+          views.add(viewName);
+          Database.dropViews(views);
+        }
+      }
     }
     finally
     {
