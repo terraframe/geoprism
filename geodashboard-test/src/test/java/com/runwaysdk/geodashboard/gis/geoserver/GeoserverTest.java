@@ -299,7 +299,7 @@ public class GeoserverTest
     // Delete all generated views
     List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
     Database.dropViews(viewNames);
-    
+
     MdBusiness.get(stateInfo.getId()).delete();
     Universal.get(country.getId()).delete();
     Universal.get(state.getId()).delete();
@@ -510,7 +510,7 @@ public class GeoserverTest
       map.delete();
     }
   }
-  
+
   @Transaction
   private DashboardMap createCompositePointSLD_setup()
   {
@@ -551,7 +551,7 @@ public class GeoserverTest
 
     HasStyle hasStyle = layer.addHasStyle(style);
     hasStyle.apply();
-    
+
     return map;
   }
 
@@ -757,7 +757,7 @@ public class GeoserverTest
   {
     DashboardMap map = null;
     String viewName = null;
-    
+
     try
     {
 
@@ -791,7 +791,7 @@ public class GeoserverTest
 
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
-      
+
       ValueQuery v = layer.asValueQuery();
 
       // This query should have all states in it
@@ -801,11 +801,10 @@ public class GeoserverTest
 
       Assert.assertEquals(stateCount, checkGE.getCount());
       Assert.assertEquals(checkGE.getCount(), v.getCount());
-     
+
       viewName = layer.getViewName();
       Database.createView(viewName, v.getSQL());
-     
-      
+
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");
@@ -937,10 +936,9 @@ public class GeoserverTest
 
   @Test
   @Request
-  @Transaction
+  // @Transaction
   public void testMapJSON() throws JSONException
   {
-    
     DashboardMap map = null;
 
     try
@@ -953,14 +951,26 @@ public class GeoserverTest
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
-      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
       layer.setGeoEntity(geoentityRef);
       layer.apply();
 
+      DashboardLayer layer2 = new DashboardLayer();
+      layer2.setName("Layer 2");
+      layer2.setUniversal(state);
+      layer2.addLayerType(AllLayerType.BASIC);
+      layer2.setVirtual(true);
+      layer2.setGeoEntity(geoentityRef);
+      layer2.apply();
+
       HasLayer hasLayer = map.addHasLayer(layer);
       hasLayer.setLayerIndex(0);
       hasLayer.apply();
+
+      HasLayer hasLayer2 = map.addHasLayer(layer2);
+      hasLayer2.setLayerIndex(0);
+      hasLayer2.apply();
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
@@ -974,37 +984,44 @@ public class GeoserverTest
       style.setStyleCondition(eq);
       style.apply();
 
+      DashboardThematicStyle style2 = new DashboardThematicStyle();
+      style2.setMdAttribute(rank);
+      style2.setName("Style 2");
+      style2.setStyleCondition(eq);
+      style2.apply();
+
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
-      
+
+      HasStyle hasStyle2 = layer2.addHasStyle(style2);
+      hasStyle2.apply();
+
       ValueQuery v = layer.asValueQuery();
+      ValueQuery v2 = layer2.asValueQuery();
 
       // This query should have all states in it
       QueryFactory checkF = new QueryFactory();
       GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
-      
-      
+
+      Database.createView(layer.getViewName(), v.getSQL());
+      Database.createView(layer2.getViewName(), v2.getSQL());
+
       String json = map.getMapJSON();
+      JSONObject mapJsonObj = new JSONObject(json);
 
-      Assert.assertEquals(stateCount, checkGE.getCount());
-      Assert.assertEquals(checkGE.getCount(), v.getCount());
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
+          .length());
+      Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
-//      if (GEOSERVER_RUNNING)
-//      {
-//        Assert.fail("Not implemented.");
-//      }
-
+      if (GEOSERVER_RUNNING)
+      {
+        Assert.fail("Not implemented.");
+      }
     }
     finally
     {
       map.delete();
     }
-     
-     
-    
-//     JSONObject obj = new JSONObject(json);
-    
-//     Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
   }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
@@ -133,14 +134,20 @@ public class DashboardLayer extends DashboardLayerBase implements
           v.SELECT(geQ.getDisplayLabel().localize());
 
           // geometry
+          Selectable geom;
           if (this.getFeatureType().equals(FeatureType.POINT))
-          {
-            v.SELECT(geQ.get(GeoEntity.GEOPOINT));
+          { 
+            geom = geQ.get(GeoEntity.GEOPOINT);
           }
           else
           {
-            v.SELECT(geQ.get(GeoEntity.GEOMULTIPOLYGON));
+            geom = geQ.get(GeoEntity.GEOMULTIPOLYGON);
           }
+          
+          geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+          geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
+          
+          v.SELECT(geom);
 
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
