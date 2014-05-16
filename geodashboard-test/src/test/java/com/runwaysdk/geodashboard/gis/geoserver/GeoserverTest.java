@@ -21,6 +21,8 @@ import javax.xml.validation.Validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -941,13 +943,92 @@ public class GeoserverTest
 
   @Test
   @Request
-  @Transaction
-  public void testMapJSON()
+  // @Transaction
+  public void testMapJSON() throws JSONException
   {
-    // String json = new DashboardMap().getMapJSON();
-    //
-    // JSONObject obj = new JSONObject(json);
-    //
-    // Assert.assertEquals(obj.getString("mapName"), "Justin's Map");
+    DashboardMap map = null;
+
+    try
+    {
+
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BASIC);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
+      DashboardLayer layer2 = new DashboardLayer();
+      layer2.setName("Layer 2");
+      layer2.setUniversal(state);
+      layer2.addLayerType(AllLayerType.BASIC);
+      layer2.setVirtual(true);
+      layer2.setGeoEntity(geoentityRef);
+      layer2.apply();
+
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      HasLayer hasLayer2 = map.addHasLayer(layer2);
+      hasLayer2.setLayerIndex(0);
+      hasLayer2.apply();
+
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      DashboardThematicStyle style2 = new DashboardThematicStyle();
+      style2.setMdAttribute(rank);
+      style2.setName("Style 2");
+      style2.setStyleCondition(eq);
+      style2.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+
+      HasStyle hasStyle2 = layer2.addHasStyle(style2);
+      hasStyle2.apply();
+
+      ValueQuery v = layer.asValueQuery();
+      ValueQuery v2 = layer2.asValueQuery();
+
+      // This query should have all states in it
+      QueryFactory checkF = new QueryFactory();
+      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
+      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
+
+      Database.createView(layer.getViewName(), v.getSQL());
+      Database.createView(layer2.getViewName(), v2.getSQL());
+
+      String json = map.getMapJSON();
+      JSONObject mapJsonObj = new JSONObject(json);
+
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
+          .length());
+      Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
+
+      if (GEOSERVER_RUNNING)
+      {
+        Assert.fail("Not implemented.");
+      }
+    }
+    finally
+    {
+      map.delete();
+    }
   }
 }
