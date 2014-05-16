@@ -22,10 +22,17 @@ import javax.xml.validation.Validator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.BasicConfigurator;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.xml.sax.SAXException;
 
 import com.runwaysdk.business.Business;
@@ -57,10 +64,13 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.gis.StrategyInitializer;
+import com.runwaysdk.logging.LogLevel;
+import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -91,6 +101,22 @@ public class GeoserverTest
   private static boolean              GEOSERVER_RUNNING;
 
   private static final File           xsd            = new File(SLD_SCHEMA);
+
+  private static final boolean        consoleDebug   = true;
+
+  @Rule
+  public TestName                     name           = new TestName();
+
+  private static final Log            log            = LogFactory.getLog(GeoserverTest.class);
+
+  static
+  {
+    if (consoleDebug)
+    {
+      BasicConfigurator.configure();
+      RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
+    }
+  }
 
   /*
    * static {
@@ -296,35 +322,51 @@ public class GeoserverTest
   @Transaction
   private static void metadataTeardown()
   {
-    // Delete all generated views
-    List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
-    Database.dropViews(viewNames);
-
-    MdBusiness.get(stateInfo.getId()).delete();
-    Universal.get(country.getId()).delete();
-    Universal.get(state.getId()).delete();
-  }
-
-  private void validate(String sld) throws SAXException
-  {
-    SchemaFactory f = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    Schema schema = f.newSchema(xsd);
-    Validator v = schema.newValidator();
-
-    InputStream stream;
     try
     {
+      // Delete all generated views
+      List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
+      Database.dropViews(viewNames);
+
+      MdBusiness.get(stateInfo.getId()).delete();
+      Universal.get(country.getId()).delete();
+      Universal.get(state.getId()).delete();
+    }
+    catch (Throwable t)
+    {
+      log.error("metadataTeardown", t);
+      throw new RuntimeException(t);
+    }
+  }
+
+  private void validate(String sld)
+  {
+    try
+    {
+      SchemaFactory f = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+      Schema schema = f.newSchema(xsd);
+      Validator v = schema.newValidator();
+
+      InputStream stream;
       stream = new ByteArrayInputStream(sld.getBytes("UTF-8"));
       Source s = new StreamSource(stream);
       v.validate(s);
     }
-    catch (UnsupportedEncodingException e)
+    catch (Throwable e)
     {
-      throw new ProgrammingErrorException(e);
-    }
-    catch (IOException e)
-    {
-      throw new ProgrammingErrorException(e);
+      if (consoleDebug)
+      {
+        System.out.println(name.getMethodName());
+        System.out.println(sld);
+        System.out.flush();
+      }
+      else
+      {
+        log.warn(name.getMethodName(), e);
+        log.warn(sld);
+      }
+
+      Assert.fail(e.getLocalizedMessage());
     }
   }
 
@@ -369,14 +411,7 @@ public class GeoserverTest
       String sld = visitor.getSLD(layer);
       String styleName = layer.getKeyName();
 
-      try
-      {
-        validate(sld);
-      }
-      catch (SAXException e)
-      {
-        Assert.fail(e.getLocalizedMessage());
-      }
+      validate(sld);
 
       if (GEOSERVER_RUNNING)
       {
@@ -438,14 +473,7 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      try
-      {
-        validate(sld);
-      }
-      catch (SAXException e)
-      {
-        Assert.fail(e.getLocalizedMessage());
-      }
+      validate(sld);
 
       if (GEOSERVER_RUNNING)
       {
@@ -470,13 +498,48 @@ public class GeoserverTest
    */
   @Test
   @Request
+  @Transaction
   public void createCompositePointSLD()
   {
-    DashboardMap map = this.createCompositePointSLD_setup();
+    DashboardMap map = new DashboardMap();
+    map.setName("Test Map");
+    map.apply();
 
     try
     {
-      DashboardLayer layer = map.getAllHasLayer().getAll().get(0);
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      DashboardGreaterThanOrEqual gte = new DashboardGreaterThanOrEqual();
+      gte.setComparisonValue("0");
+      gte.apply();
+
+      DashboardLessThanOrEqual lte = new DashboardLessThanOrEqual();
+      lte.setComparisonValue("10");
+      lte.apply();
+
+      DashboardOr or = new DashboardOr();
+      or.setLeftCondition(gte);
+      or.setRightCondition(lte);
+      or.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(or);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
 
       SLDMapVisitor visitor = new SLDMapVisitor();
       map.accepts(visitor);
@@ -484,14 +547,7 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      try
-      {
-        validate(sld);
-      }
-      catch (SAXException e)
-      {
-        Assert.fail(e.getLocalizedMessage());
-      }
+      validate(sld);
 
       if (GEOSERVER_RUNNING)
       {
@@ -509,50 +565,6 @@ public class GeoserverTest
     {
       map.delete();
     }
-  }
-
-  @Transaction
-  private DashboardMap createCompositePointSLD_setup()
-  {
-    DashboardMap map = new DashboardMap();
-    map.setName("Test Map");
-    map.apply();
-
-    DashboardLayer layer = new DashboardLayer();
-    layer.setName("Layer 1");
-    layer.setUniversal(state);
-    layer.addLayerType(AllLayerType.BUBBLE);
-    layer.setVirtual(true);
-    layer.setGeoEntity(geoentityRef);
-    layer.apply();
-
-    HasLayer hasLayer = map.addHasLayer(layer);
-    hasLayer.setLayerIndex(0);
-    hasLayer.apply();
-
-    DashboardGreaterThanOrEqual gte = new DashboardGreaterThanOrEqual();
-    gte.setComparisonValue("0");
-    gte.apply();
-
-    DashboardLessThanOrEqual lte = new DashboardLessThanOrEqual();
-    lte.setComparisonValue("10");
-    lte.apply();
-
-    DashboardOr and = new DashboardOr();
-    and.setLeftCondition(gte);
-    and.setRightCondition(lte);
-    and.apply();
-
-    DashboardThematicStyle style = new DashboardThematicStyle();
-    style.setMdAttribute(rank);
-    style.setName("Style 1");
-    style.setStyleCondition(and);
-    style.apply();
-
-    HasStyle hasStyle = layer.addHasStyle(style);
-    hasStyle.apply();
-
-    return map;
   }
 
   /**
@@ -604,14 +616,7 @@ public class GeoserverTest
       String sld = visitor.getSLD(layer);
       String styleName = layer.getKeyName();
 
-      try
-      {
-        validate(sld);
-      }
-      catch (SAXException e)
-      {
-        Assert.fail(e.getLocalizedMessage());
-      }
+      validate(sld);
 
       if (GEOSERVER_RUNNING)
       {
@@ -681,14 +686,7 @@ public class GeoserverTest
 
       String styleName = layer.getKeyName();
 
-      try
-      {
-        validate(sld);
-      }
-      catch (SAXException e)
-      {
-        Assert.fail(e.getLocalizedMessage());
-      }
+      validate(sld);
 
       if (GEOSERVER_RUNNING)
       {
@@ -734,7 +732,7 @@ public class GeoserverTest
 
       Assert.fail("A Layer was able to reference a non-GeoEntity attribute.");
     }
-    catch (InvalidReferenceException e)
+    catch (ProgrammingErrorException e)
     {
       // this is expected
     }

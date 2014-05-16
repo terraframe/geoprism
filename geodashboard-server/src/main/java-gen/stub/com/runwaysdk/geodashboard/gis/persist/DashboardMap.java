@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -78,5 +79,16 @@ public class DashboardMap extends DashboardMapBase implements
     {
       throw new ProgrammingErrorException(ex);
     }
+  }
+
+  @Transaction
+  public void delete()
+  {
+    for(DashboardLayer layer : this.getAllHasLayer())
+    {
+      layer.delete();
+    }
+    
+    super.delete();
   }
 }

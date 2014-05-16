@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-import com.runwaysdk.dataaccess.transaction.SkipIfProblem;
+import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.geodashboard.gis.model.condition.Composite;
 
 public abstract class DashboardComposite extends DashboardCompositeBase implements
@@ -12,15 +12,6 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
   {
     super();
   }
-
-  /**
-   * Checks if this object is the final root of a Condition tree.
-   * @return
-   */
-  public boolean isRootCondition()
-  {
-    return this.getRootConditionId().equals(this.getId());
-  }
   
   @Override
   public void apply()
@@ -28,47 +19,60 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
     // a new instance will have the root and parent set to itself
     boolean isNew = this.isNew();
 
-    
     super.apply();
     
-    if(isNew)
+    if(isNew || isModified(LEFTCONDITION) || isModified(RIGHTCONDITION))
     {
-      this.appLock();
-      this.setParentCondition(this);
-      this.setRootCondition(this);
-      super.apply();
-
       setConditionReferences();
     }
-    
   }
   
   /**
    * Sets the back-references to the conditions.
    */
-  @SkipIfProblem
+  @AbortIfProblem
   private void setConditionReferences()
   {
+    DashboardCondition root = this.getRootCondition();
+    
     DashboardCondition left = this.getLeftCondition();
     left.appLock();
     left.setParentCondition(this);
-    left.setRootCondition(this.getRootCondition());
+    
+    if(root != null)
+    {
+      left.setRootCondition(root);
+    }
+    else
+    {
+      left.setRootCondition(this);
+    }
+    
     left.apply();
 
-    DashboardCondition right = this.getLeftCondition();
+    DashboardCondition right = this.getRightCondition();
     right.appLock();
     right.setParentCondition(this);
-    right.setRootCondition(this.getRootCondition());
+    
+    if(root != null)
+    {
+      right.setRootCondition(root);
+    }
+    else
+    {
+      right.setRootCondition(this);
+    }
+    
     right.apply();
   }
 
   @Override
   public void delete()
   {
+    super.delete();
+
     DashboardCondition left = this.getLeftCondition();
     DashboardCondition right = this.getRightCondition();
-
-    super.delete();
 
     left.delete();
     right.delete();
