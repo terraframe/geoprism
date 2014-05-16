@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
@@ -31,18 +32,19 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
   {
     return this.getStyleCondition();
   }
-//  
-//  @Override
-//  public void delete()
-//  {
-//    DashboardCondition cond = this.getStyleCondition();
-//    
-//    super.delete();
-//    
-//    if(cond != null)
-//    {
-//      cond.delete();
-//    }
-//  }
+  
+  @Override
+  @Transaction
+  public void delete()
+  {
+    super.delete();
+
+    DashboardCondition cond = this.getStyleCondition();
+
+    if(cond != null)
+    {
+      cond.delete();
+    }
+  }
   
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
@@ -196,6 +197,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
 
   @Override
+  @Transaction
   public void delete()
   {
     for (DashboardStyle style : this.getAllHasStyle())

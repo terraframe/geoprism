@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.util.List;
 
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -37,6 +38,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return json;
   }
 
+  @Transaction
   public void delete()
   {
     for(DashboardLayer layer : this.getAllHasLayer())

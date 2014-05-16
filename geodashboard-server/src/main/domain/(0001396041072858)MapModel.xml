@@ -20,7 +20,7 @@
 				</attributes>
 			</mdBusiness>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="true">
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false">
 				<attributes>
 					<integer name="layerIndex" required="true" rejectNegative="true" />
 				</attributes>
@@ -117,7 +117,7 @@
 				</attributes>
 			</mdBusiness>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="true">
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="false">
 				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
 				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
 			</mdRelationship>

@@ -31,7 +31,6 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Category;
-import com.runwaysdk.geodashboard.gis.model.condition.Composite;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.gis.model.condition.Gradient;
@@ -483,98 +482,78 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
+
+  
+  private void style(Style style, Condition cond)
+  {
+  DocumentFragment rulesFragment = this.doc.createDocumentFragment();
+    
+    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
+
+    if (this.virtual)
+    {
+      Node fts = this.node("FeatureTypeStyle").child(rule).build();
+      rulesFragment.appendChild(fts);
+    }
+    else
+    {
+      rulesFragment.appendChild(rule);
+    }
+    
+    Symbolizer symbolizer;
+    if(this.featureType == FeatureType.POINT)
+    {
+      symbolizer = new PointSymbolizer(this, style);
+    }
+    else if(this.featureType == FeatureType.POLYGON)
+    {
+      symbolizer = new PolygonSymbolizer(this, style);
+    }
+    else if(this.featureType == FeatureType.LINE)
+    {
+      symbolizer = new LineSymbolizer(this, style);
+    }
+    // TODO text symbolizer
+    else
+    {
+      throw new ProgrammingErrorException("Geometry type ["+this.featureType+"] is not supported for SLD generation.");
+    }
+    
+    
+    // START - Thematic filter
+    if(cond != null)
+    {
+      Node filter = this.node(OGC, "Filter").build(rule);
+      
+      this.parents.push(filter);
+      
+      cond.accepts(this);
+
+      // pop the filter as the conditions tree has been added by now
+      this.parents.pop();
+    }
+    // END - Thematic filter
+    
+    
+    rule.appendChild(symbolizer.getSLD());
+
+    // append the rule to user styles
+    this.parents.pop().appendChild(rulesFragment);
+  }
+  
   /**
    * Each Style is translated into a custom SLD Rule.
    */
   @Override
   public void visit(Style style)
   {
-    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
-    
-    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
-
-    if (this.virtual)
-    {
-      Node fts = this.node("FeatureTypeStyle").child(rule).build();
-      rulesFragment.appendChild(fts);
-    }
-    else
-    {
-      rulesFragment.appendChild(rule);
-    }
-    
-    Symbolizer symbolizer;
-    if(this.featureType == FeatureType.POINT)
-    {
-      symbolizer = new PointSymbolizer(this, style);
-    }
-    else if(this.featureType == FeatureType.POLYGON)
-    {
-      symbolizer = new PolygonSymbolizer(this, style);
-    }
-    else if(this.featureType == FeatureType.LINE)
-    {
-      symbolizer = new LineSymbolizer(this, style);
-    }
-    // TODO text symbolizer
-    else
-    {
-      throw new ProgrammingErrorException("Geometry type ["+this.featureType+"] is not supported for SLD generation.");
-    }
-    rule.appendChild(symbolizer.getSLD());
-    
-    this.parents.pop().appendChild(rulesFragment);
+    this.style(style, null);
   }
 
   @Override
   public void visit(ThematicStyle style)
   {
-   DocumentFragment rulesFragment = this.doc.createDocumentFragment();
-    
-    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
-
-    if (this.virtual)
-    {
-      Node fts = this.node("FeatureTypeStyle").child(rule).build();
-      rulesFragment.appendChild(fts);
-    }
-    else
-    {
-      rulesFragment.appendChild(rule);
-    }
-    
-    Symbolizer symbolizer;
-    if(this.featureType == FeatureType.POINT)
-    {
-      symbolizer = new PointSymbolizer(this, style);
-    }
-    else if(this.featureType == FeatureType.POLYGON)
-    {
-      symbolizer = new PolygonSymbolizer(this, style);
-    }
-    else if(this.featureType == FeatureType.LINE)
-    {
-      symbolizer = new LineSymbolizer(this, style);
-    }
-    // TODO text symbolizer
-    else
-    {
-      throw new ProgrammingErrorException("Geometry type ["+this.featureType+"] is not supported for SLD generation.");
-    }
-    
-    Node filter = this.node(OGC, "Filter").build(rule);
-    
-    this.parents.push(filter);
-    
-    Condition cond = style.getCondition();
-    if(cond != null)
-    {
-      cond.accepts(this);
-    }
-
-    rule.appendChild(symbolizer.getSLD());
-
-    this.parents.pop().appendChild(rulesFragment);
+    this.style(style, style.getCondition());
   }
 
   @Override
@@ -586,6 +565,8 @@ public class SLDMapVisitor implements MapVisitor
     
     component.getLeftCondition().accepts(this);
     component.getRightCondition().accepts(this);
+    
+    this.parents.pop();
   }
 
   @Override
@@ -597,6 +578,8 @@ public class SLDMapVisitor implements MapVisitor
     
     component.getLeftCondition().accepts(this);
     component.getRightCondition().accepts(this);
+    
+    this.parents.pop();
   }
   
   /**
@@ -607,9 +590,13 @@ public class SLDMapVisitor implements MapVisitor
    */
   private void primitive(String name, Primitive cond)
   {
+    //Condition parentCond = cond.getParentCondition();
+    //Node parent = parentCond != null ? this.parents.peek() : this.parents.pop();
+    Node parent = this.parents.peek();
+    
     node(OGC, name).child(
         node(OGC, "PropertyName").text(cond.getThematicStyle().getAttribute()),
-        node(OGC, "Literal").text(cond.getValue())).build(this.parents.pop());
+        node(OGC, "Literal").text(cond.getValue())).build(parent);
   }
 
   @Override
@@ -627,7 +614,7 @@ public class SLDMapVisitor implements MapVisitor
   @Override
   public void visit(GreaterThanOrEqual component)
   {
-    primitive("PropertyIsGreaterThanOrEqual", component);
+    primitive("PropertyIsGreaterThanOrEqualTo", component);
   }
 
   @Override
