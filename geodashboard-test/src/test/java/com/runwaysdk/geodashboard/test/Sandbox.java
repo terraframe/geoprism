@@ -4,7 +4,7 @@ import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.dataaccess.metadata.ReservedWords;
 

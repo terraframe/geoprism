@@ -38,9 +38,9 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
@@ -943,7 +943,7 @@ public class GeoserverTest
 
   @Test
   @Request
-  // @Transaction
+  @Transaction
   public void testMapJSON() throws JSONException
   {
     DashboardMap map = null;

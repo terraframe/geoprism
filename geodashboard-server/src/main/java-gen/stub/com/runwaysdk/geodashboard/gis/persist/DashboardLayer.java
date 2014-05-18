@@ -7,7 +7,7 @@ import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;

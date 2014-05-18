@@ -1,12 +1,9 @@
-package com.runwaysdk.geodashboard.geoserver;
+package com.runwaysdk.geodashboard.gis.geoserver;
 
 
-import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverGWCDir;
-import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getGeoserverSLDDir;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getLocalPath;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getPublisher;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getReader;
-import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getStore;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getWorkspace;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
@@ -23,11 +20,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
@@ -46,7 +41,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   public static final String SRS         = "EPSG:" + SRS_CODE;
 
   public static final String GEOM_COLUMN = "geom";
-
+  
   public static int          MINX_INDEX  = 0;
 
   public static int          MINY_INDEX  = 1;

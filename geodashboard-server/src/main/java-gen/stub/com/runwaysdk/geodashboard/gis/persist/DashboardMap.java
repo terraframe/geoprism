@@ -14,8 +14,8 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -55,12 +55,14 @@ public class DashboardMap extends DashboardMapBase implements
       JSONArray layers = new JSONArray();
       mapJSON.put("layers", layers);
 
+      List<DashboardLayer> layerList = new LinkedList<DashboardLayer>();
       OIterator<? extends DashboardLayer> iter = this.getAllHasLayer();
       try
       {
         while (iter.hasNext())
         {
           DashboardLayer layer = iter.next();
+          layerList.add(layer);
 
           JSONObject layerObj = new JSONObject();
           layerObj.put("viewName", layer.getViewName());
@@ -74,6 +76,9 @@ public class DashboardMap extends DashboardMapBase implements
       {
         iter.close();
       }
+      
+      // calculate the BBOX of all layers involved
+      
     }
     catch (JSONException ex)
     {
