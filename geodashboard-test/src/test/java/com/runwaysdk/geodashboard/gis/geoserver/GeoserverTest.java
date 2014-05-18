@@ -355,7 +355,7 @@ public class GeoserverTest
   /**
    * Creates styling for a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -416,7 +416,7 @@ public class GeoserverTest
   /**
    * Creates styling for a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -478,7 +478,7 @@ public class GeoserverTest
   /**
    * Tests creating a composite condition.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createCompositePointSLD()
@@ -552,7 +552,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createThematicPointSLD()
@@ -621,7 +621,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createThematicPolygonSLD()
@@ -692,7 +692,7 @@ public class GeoserverTest
    * Tests that a Layer can only reference an MdAttributeReference that points
    * to GeoEntity.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testInvalidLayerGeoEntityReference()
@@ -730,7 +730,7 @@ public class GeoserverTest
   /**
    * Creates a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPointLayer()
@@ -824,7 +824,7 @@ public class GeoserverTest
     }
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPointLayerHigherUniversal()
@@ -888,7 +888,7 @@ public class GeoserverTest
     }
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyPointLayers()
@@ -896,7 +896,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyPolygonLayers()
@@ -905,7 +905,7 @@ public class GeoserverTest
 
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createManyMixedLayers()
@@ -914,7 +914,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testRemoveLayer()
@@ -922,7 +922,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  @Test
   @Request
   @Transaction
   public void testRemoveStyle()
@@ -933,14 +933,14 @@ public class GeoserverTest
   /**
    * Creates a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPolygonLayer()
   {
     junit.framework.Assert.fail("Not Implemented");
   }
-
+  
   @Test
   @Request
   // @Transaction

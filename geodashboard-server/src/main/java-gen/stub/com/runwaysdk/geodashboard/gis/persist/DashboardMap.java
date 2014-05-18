@@ -50,8 +50,6 @@ public class DashboardMap extends DashboardMapBase implements
   {
     try
     {
-//      List<DashboardLayer> layerList = new ArrayList<DashboardLayer>();
-      
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
       
@@ -62,16 +60,11 @@ public class DashboardMap extends DashboardMapBase implements
       mapJSON.put("layers", layers);
 
       OIterator<? extends DashboardLayer> iter = this.getAllHasLayer();
-//      List<? extends DashboardLayer> layerList = iter.getAll();
-//      JSONArray mapBBox = getMapLayersBBox(layerList);       
-//      mapJSON.put("bbox", mapBBox);
       try
       {
         while (iter.hasNext())
         {
           DashboardLayer layer = iter.next();
-                  
-//          layerList.add(layer);
 
           JSONObject layerObj = new JSONObject();
           layerObj.put("viewName", layer.getViewName());
@@ -80,10 +73,6 @@ public class DashboardMap extends DashboardMapBase implements
           layers.put(layerObj);
         }
         
-//        JSONArray mapBBox = getMapLayersBBox(layerList);       
-//        mapJSON.put("bbox", mapBBox);
-        
-        System.out.println(mapJSON.toString(4));
         return mapJSON.toString();
       }
       finally
