@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2079325019)
+@com.runwaysdk.business.ClassSignature(hash = 2069841552)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -213,6 +213,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled()
+  {
+    return getLayerEnabled(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()
@@ -754,6 +771,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled();
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias);
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias, String displayLabel);
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType();
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel);
@@ -1022,6 +1042,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled()
+  {
+    return getLayerEnabled(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()
@@ -1516,6 +1553,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled();
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias);
+    public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias, String displayLabel);
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType();
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType(String alias, String displayLabel);
@@ -1781,6 +1821,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTUPDATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled()
+  {
+    return getLayerEnabled(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerEnabled(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERENABLED, alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.gis.persist.LayerTypeQuery.AllLayerTypeQueryIF getLayerType()

@@ -2,7 +2,6 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,12 +14,13 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -45,32 +45,83 @@ public class DashboardMap extends DashboardMapBase implements
   {
     return this.getAllHasLayer().getAll();
   }
+  
+  /**
+   * Returns the layers this map defines in the proper order.
+   * @return
+   */
+  public DashboardLayer[] getOrderedLayers()
+  {
+    QueryFactory f = new QueryFactory();
+
+    HasLayerQuery hsQ = new HasLayerQuery(f);
+    DashboardLayerQuery layerQ = new DashboardLayerQuery(f);
+
+    hsQ.WHERE(hsQ.parentId().EQ(this.getId()));
+    layerQ.WHERE(layerQ.containingMap(hsQ));
+    layerQ.WHERE(layerQ.getLayerEnabled().EQ(true));
+    hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
+    
+    OIterator<? extends DashboardLayer> iter = layerQ.getIterator();
+    
+    try
+    {
+      List<DashboardLayer> layers = new LinkedList<DashboardLayer>();
+      while(iter.hasNext())
+      {
+        layers.add(iter.next());
+      }
+      
+      return layers.toArray(new DashboardLayer[layers.size()]);
+    }
+    finally
+    {
+      iter.close();
+    }
+  }
 
   public String getMapJSON()
   {
     try
     {
+      /**
+       * All layers returned in order and if they're enabled
+       */
+      DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
       
-      JSONArray mapBBox = getMapLayersBBox();       
+      JSONArray mapBBox = getMapLayersBBox(orderedLayers);       
       mapJSON.put("bbox", mapBBox);
       
       JSONArray layers = new JSONArray();
       mapJSON.put("layers", layers);
 
+      
+      List<DashboardLayer> addedLayers = new LinkedList<DashboardLayer>();
       OIterator<? extends DashboardLayer> iter = this.getAllHasLayer();
-      try
-      {
-        while (iter.hasNext())
-        {
-          DashboardLayer layer = iter.next();
 
+      for(int i=0; i<orderedLayers.length; i++)
+      {
+        DashboardLayer layer = orderedLayers[i];
+        if(true /* test if layer is valid--1+ rows and valid geoms */)
+        {
           JSONObject layerObj = new JSONObject();
           layerObj.put("viewName", layer.getViewName());
           layerObj.put("sldName", layer.getSLDName());
           layerObj.put("layerName", layer.getName());
           layers.put(layerObj);
+          
+          addedLayers.add(layer);
+        }
+      }
+      
+      try
+      {
+        while (iter.hasNext())
+        {
+          DashboardLayer layer = iter.next();
         }
         
         return mapJSON.toString();
@@ -79,6 +130,9 @@ public class DashboardMap extends DashboardMapBase implements
       {
         iter.close();
       }
+      
+      // calculate the BBOX of all layers involved
+      
     }
     catch (JSONException ex)
     {
@@ -88,26 +142,27 @@ public class DashboardMap extends DashboardMapBase implements
   
   public JSONArray getMapLayersBBox()
   {
-    
-    OIterator<? extends DashboardLayer> iter = this.getAllHasLayer();
-    List<? extends DashboardLayer> layerList = iter.getAll();
-    
-    System.out.println(layerList.size() + "layers.size()");
+    return this.getMapLayersBBox(this.getOrderedLayers());
+  }
+  
+  public JSONArray getMapLayersBBox(DashboardLayer[] layers)
+  {
+    System.out.println(layers.length + "layers.size()");
     
     JSONArray bboxArr = new JSONArray();
     ResultSet resultSet = null;
     String[] layerNames = null;
 
-    if (layerList.size() > 0)
+    if (layers.length > 0)
     {
-      layerNames = new String[layerList.size()];
+      layerNames = new String[layers.length];
       String sql;
 
-      if (layerList.size() == 1)
+      if (layers.length == 1)
       {
 
         // This needs to get the 1st (only) layer in the list and that layers viewname and layername
-         DashboardLayer layer = layerList.get(0);
+         DashboardLayer layer = layers[0];
          String viewName = layer.getViewName(); 
          layerNames[0] = layer.getName();
 
@@ -118,15 +173,15 @@ public class DashboardMap extends DashboardMapBase implements
         // More than one layer so union the geometry columns
         sql = "SELECT ST_AsText(ST_Extent(geo_v)) AS bbox FROM (\n";
 
-        for (int i = 0; i < layerList.size(); i++)
+        for (int i = 0; i < layers.length; i++)
         {
-          DashboardLayer layer = layerList.get(i);
+          DashboardLayer layer = layers[i];
           String viewName = layer.getViewName(); 
           layerNames[i] = layer.getName();
 
           sql += "(SELECT " + GeoserverFacade.GEOM_COLUMN + " AS geo_v FROM " + viewName + ") \n";
 
-          if (i != layerList.size() - 1)
+          if (i != layers.length - 1)
           {
             sql += "Union \n";
           }

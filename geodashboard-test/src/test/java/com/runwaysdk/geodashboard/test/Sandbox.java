@@ -1,44 +1,44 @@
 package com.runwaysdk.geodashboard.test;
 
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
-import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.dataaccess.metadata.ReservedWords;
-
-import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
-import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
-import com.runwaysdk.geodashboard.gis.persist.HasLayer;
-import com.runwaysdk.geodashboard.gis.persist.HasStyle;
-
-import com.runwaysdk.session.Request;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
+import com.runwaysdk.geodashboard.gis.model.Layer;
+import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
+import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
+import com.runwaysdk.geodashboard.gis.persist.HasLayer;
+import com.runwaysdk.geodashboard.gis.persist.HasStyle;
+import com.runwaysdk.session.Request;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 
 public class Sandbox
 {
-  public static void main(String[] args)
+  @Request
+  public static void main(String[] args) throws Throwable
   {
 
-    System.out.println("Running main...");
-    testGetMapJSON();
-
+    String mapId = "rb4e7aqgra5oqa3r6wye771ahqrmlzqhqp6s5fwgbz7t76s9v0cobogv3urvlfhv";
+    for(DashboardLayer l : DashboardMap.get(mapId).getOrderedLayers())
+    {
+      System.out.println(l);
+    }
+    
     // testBuildMap();
   }
 
@@ -56,8 +56,8 @@ public class Sandbox
     System.out.println(bbox);
 
     // System.out.println(json);
-    
-//    testBuildMap();
+
+    // testBuildMap();
 
   }
 

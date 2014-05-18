@@ -38,7 +38,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -785,6 +784,7 @@ public class GeoserverTest
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
+      
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -943,7 +943,7 @@ public class GeoserverTest
   
   @Test
   @Request
-  // @Transaction
+//  @Transaction
   public void testMapJSON() throws JSONException
   {
     DashboardMap map = null;
@@ -1020,6 +1020,9 @@ public class GeoserverTest
       Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
+      DashboardLayer[] fetched = map.getOrderedLayers();
+      System.out.println(fetched.length);
+      
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");
