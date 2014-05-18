@@ -40,7 +40,6 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
@@ -355,7 +354,7 @@ public class GeoserverTest
   /**
    * Creates styling for a point layer.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -416,7 +415,7 @@ public class GeoserverTest
   /**
    * Creates styling for a polygon layer.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -478,7 +477,7 @@ public class GeoserverTest
   /**
    * Tests creating a composite condition.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createCompositePointSLD()
@@ -552,7 +551,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a point layer.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createThematicPointSLD()
@@ -621,7 +620,7 @@ public class GeoserverTest
   /**
    * Creates thematic styling for a polygon layer.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createThematicPolygonSLD()
@@ -692,7 +691,7 @@ public class GeoserverTest
    * Tests that a Layer can only reference an MdAttributeReference that points
    * to GeoEntity.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void testInvalidLayerGeoEntityReference()
@@ -785,6 +784,7 @@ public class GeoserverTest
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
+      
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -824,7 +824,7 @@ public class GeoserverTest
     }
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createPointLayerHigherUniversal()
@@ -888,7 +888,7 @@ public class GeoserverTest
     }
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createManyPointLayers()
@@ -896,7 +896,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createManyPolygonLayers()
@@ -905,7 +905,7 @@ public class GeoserverTest
 
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createManyMixedLayers()
@@ -914,7 +914,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void testRemoveLayer()
@@ -922,7 +922,7 @@ public class GeoserverTest
     Assert.fail("Not implemented");
   }
 
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void testRemoveStyle()
@@ -933,7 +933,7 @@ public class GeoserverTest
   /**
    * Creates a polygon layer.
    */
-  //@Test
+  ////@Test
   @Request
   @Transaction
   public void createPolygonLayer()
@@ -943,7 +943,7 @@ public class GeoserverTest
 
   @Test
   @Request
-  @Transaction
+//  @Transaction
   public void testMapJSON() throws JSONException
   {
     DashboardMap map = null;
@@ -1020,6 +1020,9 @@ public class GeoserverTest
       Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
+      DashboardLayer[] fetched = map.getOrderedLayers();
+      System.out.println(fetched.length);
+      
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");

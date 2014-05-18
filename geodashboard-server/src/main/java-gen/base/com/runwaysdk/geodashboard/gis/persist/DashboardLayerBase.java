@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1066840700)
+@com.runwaysdk.business.ClassSignature(hash = -1318487271)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -20,6 +20,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LAYERENABLED = "layerEnabled";
   public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
@@ -30,7 +31,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1066840700;
+  private static final long serialVersionUID = -1318487271;
   
   public DashboardLayerBase()
   {
@@ -275,6 +276,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(LASTUPDATEDBY);
+  }
+  
+  public Boolean getLayerEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERENABLED));
+  }
+  
+  public void validateLayerEnabled()
+  {
+    this.validateAttribute(LAYERENABLED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerEnabledMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(LAYERENABLED);
+  }
+  
+  public void setLayerEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERENABLED, "");
+    }
+    else
+    {
+      setValue(LAYERENABLED, java.lang.Boolean.toString(value));
+    }
   }
   
   @SuppressWarnings("unchecked")

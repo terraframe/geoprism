@@ -17,9 +17,11 @@
 			<mdException
 				name="com.runwaysdk.geodashboard.gis.persist.NoLayersException"
 				label="No Layers Exception" message="The map [{mapName}] contains no valid layers.">
+				<attributes>
 				<virtual name="mapName" concrete="name"
 					type="com.runwaysdk.geodashboard.gis.persist.DashboardMap"
 					required="true" />
+				</attributes>
 			</mdException>
 		</create>
 
