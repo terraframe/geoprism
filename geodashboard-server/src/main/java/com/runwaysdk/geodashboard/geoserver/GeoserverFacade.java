@@ -367,41 +367,41 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
     }
   }
 
-  public static void publishSQLView(String viewName, String sql)
-  {
-    if (viewExists(viewName))
-    {
-      log.info("The database view [" + viewName + "] already exists.");
-    }
-    else
-    {
-      Database.createView(viewName, sql);
-      log.info("Created the database view [" + viewName + "].");
-    }
-  }
-
-  /**
-   * Removes the database view that is associated with a layer.
-   * 
-   * @param viewName
-   */
-  public static void removeSQLView(String viewName, String sql)
-  {
-    // Remove the database view
-    if (viewExists(viewName))
-    {
-      try
-      {
-        Database.dropView(viewName, sql, false);
-        log.info("Removed the database view [" + viewName + "].");
-      }
-      catch (Throwable t)
-      {
-        // log the error but continue to allow further processing
-        log.error("Failed to remove the database view [" + viewName + "].");
-      }
-    }
-  }
+//  public static void publishSQLView(String viewName, String sql)
+//  {
+//    if (viewExists(viewName))
+//    {
+//      log.info("The database view [" + viewName + "] already exists.");
+//    }
+//    else
+//    {
+//      Database.createView(viewName, sql);
+//      log.info("Created the database view [" + viewName + "].");
+//    }
+//  }
+//
+//  /**
+//   * Removes the database view that is associated with a layer.
+//   * 
+//   * @param viewName
+//   */
+//  public static void removeSQLView(String viewName, String sql)
+//  {
+//    // Remove the database view
+//    if (viewExists(viewName))
+//    {
+//      try
+//      {
+//        Database.dropView(viewName, sql, false);
+//        log.info("Removed the database view [" + viewName + "].");
+//      }
+//      catch (Throwable t)
+//      {
+//        // log the error but continue to allow further processing
+//        log.error("Failed to remove the database view [" + viewName + "].");
+//      }
+//    }
+//  }
 
   /**
    * Removes the layer from geoserver.
