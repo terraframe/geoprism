@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1161576196)
+@com.runwaysdk.business.ClassSignature(hash = 1908962488)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = -1161576196;
+  private static final long serialVersionUID = 1908962488;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,6 +27,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return CLASS;
   }
   
+  public static java.lang.String BBOXENABLED = "BboxEnabled";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
@@ -36,6 +37,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LAYERENABLED = "layerEnabled";
   public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
@@ -46,6 +48,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
+  public Boolean getBboxEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXENABLED));
+  }
+  
+  public void setBboxEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(BBOXENABLED, "");
+    }
+    else
+    {
+      setValue(BBOXENABLED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isBboxEnabledWritable()
+  {
+    return isWritable(BBOXENABLED);
+  }
+  
+  public boolean isBboxEnabledReadable()
+  {
+    return isReadable(BBOXENABLED);
+  }
+  
+  public boolean isBboxEnabledModified()
+  {
+    return isModified(BBOXENABLED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBboxEnabledMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BBOXENABLED).getAttributeMdDTO();
+  }
+  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -340,6 +379,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLastUpdatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
+  }
+  
+  public Boolean getLayerEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERENABLED));
+  }
+  
+  public void setLayerEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERENABLED, "");
+    }
+    else
+    {
+      setValue(LAYERENABLED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isLayerEnabledWritable()
+  {
+    return isWritable(LAYERENABLED);
+  }
+  
+  public boolean isLayerEnabledReadable()
+  {
+    return isReadable(LAYERENABLED);
+  }
+  
+  public boolean isLayerEnabledModified()
+  {
+    return isModified(LAYERENABLED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getLayerEnabledMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(LAYERENABLED).getAttributeMdDTO();
   }
   
   @SuppressWarnings("unchecked")

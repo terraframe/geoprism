@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1066840700)
+@com.runwaysdk.business.ClassSignature(hash = -237948104)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,6 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLayerBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
+  public static java.lang.String BBOXENABLED = "BboxEnabled";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
@@ -20,6 +21,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LAYERENABLED = "layerEnabled";
   public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
@@ -30,11 +32,39 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1066840700;
+  private static final long serialVersionUID = -237948104;
   
   public DashboardLayerBase()
   {
     super();
+  }
+  
+  public Boolean getBboxEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXENABLED));
+  }
+  
+  public void validateBboxEnabled()
+  {
+    this.validateAttribute(BBOXENABLED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getBboxEnabledMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(BBOXENABLED);
+  }
+  
+  public void setBboxEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(BBOXENABLED, "");
+    }
+    else
+    {
+      setValue(BBOXENABLED, java.lang.Boolean.toString(value));
+    }
   }
   
   public java.util.Date getCreateDate()
@@ -275,6 +305,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(LASTUPDATEDBY);
+  }
+  
+  public Boolean getLayerEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERENABLED));
+  }
+  
+  public void validateLayerEnabled()
+  {
+    this.validateAttribute(LAYERENABLED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerEnabledMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(LAYERENABLED);
+  }
+  
+  public void setLayerEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERENABLED, "");
+    }
+    else
+    {
+      setValue(LAYERENABLED, java.lang.Boolean.toString(value));
+    }
   }
   
   @SuppressWarnings("unchecked")

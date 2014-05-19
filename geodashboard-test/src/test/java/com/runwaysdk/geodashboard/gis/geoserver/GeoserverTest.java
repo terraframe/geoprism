@@ -38,7 +38,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -785,6 +784,7 @@ public class GeoserverTest
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
+      
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -938,15 +938,8 @@ public class GeoserverTest
   @Transaction
   public void createPolygonLayer()
   {
-    junit.framework.Assert.fail("Not Implemented");
-  }
-
-  @Test
-  @Request
-  // @Transaction
-  public void testMapJSON() throws JSONException
-  {
     DashboardMap map = null;
+    String viewName = null;
 
     try
     {
@@ -963,10 +956,109 @@ public class GeoserverTest
       layer.setGeoEntity(geoentityRef);
       layer.apply();
 
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+
+      ValueQuery v = layer.asValueQuery();
+
+      // This query should have all states in it
+      QueryFactory checkF = new QueryFactory();
+      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
+      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
+
+      Assert.assertEquals(stateCount, checkGE.getCount());
+      Assert.assertEquals(checkGE.getCount(), v.getCount());
+
+      viewName = layer.getViewName();
+      String sldName = layer.getSLDName();
+      boolean dbViewCreated = false;
+      
+      try
+      {
+        Database.createView(viewName, v.getSQL());
+        dbViewCreated = true;
+
+        if (GEOSERVER_RUNNING)
+        {
+          if (GeoserverFacade.publishLayer(viewName, sldName))
+          {
+            // geoserver purportedly added the layer but query it just in case
+            if (!GeoserverFacade.layerExists(viewName)
+                || !GeoserverFacade.getLayers().contains(viewName))
+            {
+              Assert.fail("Published the view [" + viewName + "] with style [" + sldName
+                  + "] but it could not be found.");
+            }
+          }
+          else
+          {
+            Assert.fail("Could not publish view [" + viewName + "] with style [" + sldName + "]");
+          }
+        }
+      }
+      finally
+      {
+        if (dbViewCreated)
+        {
+          List<String> views = new LinkedList<String>();
+          views.add(viewName);
+          Database.dropViews(views);
+        }
+      }
+    }
+    finally
+    {
+      map.delete();
+    }  }
+
+  }
+  
+  @Test
+  @Request
+  @Transaction
+  public void testMapJSON() throws JSONException
+  {
+    ////
+    //// This needs a test for point data in addition to the current polygon.  
+    ////
+    
+    DashboardMap map = null;
+
+    try
+    {   
+
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BASIC);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+
       DashboardLayer layer2 = new DashboardLayer();
       layer2.setName("Layer 2");
       layer2.setUniversal(state);
-      layer2.addLayerType(AllLayerType.BASIC);
+      layer2.addLayerType(AllLayerType.BUBBLE);
       layer2.setVirtual(true);
       layer2.setGeoEntity(geoentityRef);
       layer2.apply();
@@ -976,7 +1068,7 @@ public class GeoserverTest
       hasLayer.apply();
 
       HasLayer hasLayer2 = map.addHasLayer(layer2);
-      hasLayer2.setLayerIndex(0);
+      hasLayer2.setLayerIndex(1);
       hasLayer2.apply();
 
       DashboardEqual eq = new DashboardEqual();
@@ -1017,10 +1109,16 @@ public class GeoserverTest
       String json = map.getMapJSON();
       JSONObject mapJsonObj = new JSONObject(json);
 
-      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
-          .length());
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
+<<<<<<< HEAD
+=======
+      DashboardLayer[] fetched = map.getOrderedLayers();
+      
+      System.out.println(fetched.length);
+      
+>>>>>>> refs/remotes/origin/master
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");
