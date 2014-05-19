@@ -1027,11 +1027,17 @@ public class GeoserverTest
       map.delete();
     }  }
 
+  }
+  
   @Test
   @Request
-//  @Transaction
+  @Transaction
   public void testMapJSON() throws JSONException
   {
+    ////
+    //// This needs a test for point data in addition to the current polygon.  
+    ////
+    
     DashboardMap map = null;
 
     try
@@ -1052,7 +1058,7 @@ public class GeoserverTest
       DashboardLayer layer2 = new DashboardLayer();
       layer2.setName("Layer 2");
       layer2.setUniversal(state);
-      layer2.addLayerType(AllLayerType.BASIC);
+      layer2.addLayerType(AllLayerType.BUBBLE);
       layer2.setVirtual(true);
       layer2.setGeoEntity(geoentityRef);
       layer2.apply();
@@ -1106,6 +1112,13 @@ public class GeoserverTest
       Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
+<<<<<<< HEAD
+=======
+      DashboardLayer[] fetched = map.getOrderedLayers();
+      
+      System.out.println(fetched.length);
+      
+>>>>>>> refs/remotes/origin/master
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");

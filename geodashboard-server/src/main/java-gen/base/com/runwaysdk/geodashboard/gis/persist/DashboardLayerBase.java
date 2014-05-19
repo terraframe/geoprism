@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1318487271)
+@com.runwaysdk.business.ClassSignature(hash = -237948104)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,6 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLayerBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
+  public static java.lang.String BBOXENABLED = "BboxEnabled";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
@@ -31,11 +32,39 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1318487271;
+  private static final long serialVersionUID = -237948104;
   
   public DashboardLayerBase()
   {
     super();
+  }
+  
+  public Boolean getBboxEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXENABLED));
+  }
+  
+  public void validateBboxEnabled()
+  {
+    this.validateAttribute(BBOXENABLED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getBboxEnabledMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(BBOXENABLED);
+  }
+  
+  public void setBboxEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(BBOXENABLED, "");
+    }
+    else
+    {
+      setValue(BBOXENABLED, java.lang.Boolean.toString(value));
+    }
   }
   
   public java.util.Date getCreateDate()

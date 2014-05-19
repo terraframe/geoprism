@@ -30,6 +30,8 @@
 					<attributes>
 						<boolean name="layerEnabled" required="true" defaultValue="true"
 							label="Layer Enabled" />
+						<boolean name="BBoxIncluded" required="true" defaultValue="true"
+							label="BBox Inluded" />
 					</attributes>
 				</create>
 			</mdBusiness>
@@ -41,6 +43,10 @@
 
 			<object
 				key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.layerEnabled"
+				type="com.runwaysdk.system.metadata.MdAttribute" />
+
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.BboxEnabled"
 				type="com.runwaysdk.system.metadata.MdAttribute" />
 
 			<object
