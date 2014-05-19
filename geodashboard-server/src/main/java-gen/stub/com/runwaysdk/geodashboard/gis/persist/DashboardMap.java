@@ -160,7 +160,6 @@ public class DashboardMap extends DashboardMapBase implements
 
       if (layers.length == 1)
       {
-
         // This needs to get the 1st (only) layer in the list and that layers viewname and layername
          DashboardLayer layer = layers[0];
          String viewName = layer.getViewName(); 
@@ -183,7 +182,7 @@ public class DashboardMap extends DashboardMapBase implements
 
           if (i != layers.length - 1)
           {
-            sql += "Union \n";
+            sql += "UNION \n";
           }
         }
 
@@ -196,7 +195,6 @@ public class DashboardMap extends DashboardMapBase implements
     {
       if (resultSet.next())
       {
-
         String bbox = resultSet.getString("bbox");
         if (bbox != null)
         {
@@ -260,7 +258,7 @@ public class DashboardMap extends DashboardMapBase implements
             {
               String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
                   + "] could not be used to create a valid bounding box";
-              // throw new GeoServerReloadException(error);
+               throw new ProgrammingErrorException(error);
             }
           }
         }
@@ -287,13 +285,13 @@ public class DashboardMap extends DashboardMapBase implements
     }
 
     // Some problem occured and the bbox couldn't be calculated.
-    // Just return the African defaults
+    // Just return the Cambodian defaults
     try
     {
-      bboxArr.put(36.718452);
-      bboxArr.put(-17.700377000000003);
-      bboxArr.put(36.938452);
-      bboxArr.put(-17.480376999999997);
+      bboxArr.put(15.728813770533966);
+      bboxArr.put(117.39990234375);
+      bboxArr.put(9.210560107629691);
+      bboxArr.put(94.19677734375);
     }
     catch (JSONException ex)
     {
