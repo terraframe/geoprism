@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1640433668)
+@com.runwaysdk.business.ClassSignature(hash = 870738899)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,8 @@ public abstract class NoLayersExceptionBase extends com.runwaysdk.business.Smart
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.NoLayersException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1640433668;
+  public static java.lang.String MAPNAME = "mapName";
+  private static final long serialVersionUID = 870738899;
   
   public NoLayersExceptionBase()
   {
@@ -50,6 +51,34 @@ public abstract class NoLayersExceptionBase extends com.runwaysdk.business.Smart
     return mdClassIF.definesAttribute(ID);
   }
   
+  public String getMapName()
+  {
+    return getValue(MAPNAME);
+  }
+  
+  public void validateMapName()
+  {
+    this.validateAttribute(MAPNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMapNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.NoLayersException.CLASS);
+    return mdClassIF.definesAttribute(MAPNAME);
+  }
+  
+  public void setMapName(String value)
+  {
+    if(value == null)
+    {
+      setValue(MAPNAME, "");
+    }
+    else
+    {
+      setValue(MAPNAME, value);
+    }
+  }
+  
   protected String getDeclaredType()
   {
     return CLASS;
@@ -59,6 +88,7 @@ public abstract class NoLayersExceptionBase extends com.runwaysdk.business.Smart
   {
     java.lang.String message = super.localize(locale);
     message = replace(message, "{id}", this.getId());
+    message = replace(message, "{mapName}", this.getMapName());
     return message;
   }
   

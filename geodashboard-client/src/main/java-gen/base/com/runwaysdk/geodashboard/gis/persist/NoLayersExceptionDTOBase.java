@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1075399044)
+@com.runwaysdk.business.ClassSignature(hash = 318524755)
 public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.NoLayersException";
-  private static final long serialVersionUID = 1075399044;
+  private static final long serialVersionUID = 318524755;
   
   public NoLayersExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {
@@ -52,6 +52,44 @@ public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.Sm
   }
   
   public static java.lang.String ID = "id";
+  public static java.lang.String MAPNAME = "mapName";
+  public String getMapName()
+  {
+    return getValue(MAPNAME);
+  }
+  
+  public void setMapName(String value)
+  {
+    if(value == null)
+    {
+      setValue(MAPNAME, "");
+    }
+    else
+    {
+      setValue(MAPNAME, value);
+    }
+  }
+  
+  public boolean isMapNameWritable()
+  {
+    return isWritable(MAPNAME);
+  }
+  
+  public boolean isMapNameReadable()
+  {
+    return isReadable(MAPNAME);
+  }
+  
+  public boolean isMapNameModified()
+  {
+    return isModified(MAPNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getMapNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(MAPNAME).getAttributeMdDTO();
+  }
+  
   /**
    * Overrides java.lang.Throwable#getMessage() to retrieve the localized
    * message from the exceptionDTO, instead of from a class variable.
@@ -61,6 +99,7 @@ public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.Sm
     java.lang.String template = super.getMessage();
     
     template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{mapName}", this.getMapName().toString());
     
     return template;
   }

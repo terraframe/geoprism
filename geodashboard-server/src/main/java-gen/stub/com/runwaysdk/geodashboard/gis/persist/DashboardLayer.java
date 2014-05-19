@@ -3,6 +3,9 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -32,15 +35,17 @@ import com.runwaysdk.util.IdParser;
 public class DashboardLayer extends DashboardLayerBase implements
     com.runwaysdk.generation.loader.Reloadable, Layer
 {
-  private static final long serialVersionUID = 1992575686;
-  
-  public static final String DB_VIEW_PREFIX = "layer$";
+  private static final long  serialVersionUID = 1992575686;
+
+  public static final String DB_VIEW_PREFIX   = "layer$";
+
+  private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
 
   public DashboardLayer()
   {
     super();
   }
-  
+
   @Override
   public void apply()
   {
@@ -52,25 +57,27 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     super.apply();
   }
-  
+
   /**
    * For easy reference, the name of the SLD is the same as the db view name.
-   * The .sld extension is automatically added 
+   * The .sld extension is automatically added
+   * 
    * @return
    */
   public String getSLDName()
   {
     return this.getViewName();
   }
-  
+
   /**
    * Returns the File object associated with the SLD for this view.
+   * 
    * @return
    */
   public File getSLDFile()
   {
     String path = GeoserverProperties.getGeoserverSLDDir();
-    String sld = path+this.getSLDName()+GeoserverProperties.SLD_EXTENSION;
+    String sld = path + this.getSLDName() + GeoserverProperties.SLD_EXTENSION;
     return new File(sld);
   }
 
@@ -97,37 +104,37 @@ public class DashboardLayer extends DashboardLayerBase implements
 
           // thematic attribute
           Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
-          
+
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
-          if(allAgg.size() == 1)
+          if (allAgg.size() == 1)
           {
             AllAggregationType agg = allAgg.get(0);
-//            String func = null;
-            if(agg == AllAggregationType.SUM)
+            // String func = null;
+            if (agg == AllAggregationType.SUM)
             {
-              //func = "SUM";
+              // func = "SUM";
               thematicSel = F.SUM(thematicAttr);
             }
-            else if(agg == AllAggregationType.MIN)
+            else if (agg == AllAggregationType.MIN)
             {
-              //func = "MIN";
+              // func = "MIN";
               thematicSel = F.MIN(thematicAttr);
             }
-            else if(agg == AllAggregationType.MAX)
+            else if (agg == AllAggregationType.MAX)
             {
-              //func = "MAX";
+              // func = "MAX";
               thematicSel = F.MAX(thematicAttr);
             }
-            else if(agg == AllAggregationType.AVG)
+            else if (agg == AllAggregationType.AVG)
             {
-              //func = "AVG";
+              // func = "AVG";
               thematicSel = F.AVG(thematicAttr);
             }
-            
+
           }
-          
+
           v.SELECT(thematicSel);
 
           // geoentity label
@@ -137,17 +144,17 @@ public class DashboardLayer extends DashboardLayerBase implements
           // geometry
           Selectable geom;
           if (this.getFeatureType().equals(FeatureType.POINT))
-          { 
+          {
             geom = geQ.get(GeoEntity.GEOPOINT);
           }
           else
           {
             geom = geQ.get(GeoEntity.GEOMULTIPOLYGON);
           }
-          
+
           geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
           geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-          
+
           v.SELECT(geom);
 
           // Join the entity's GeoEntity reference with the all paths table
@@ -170,6 +177,12 @@ public class DashboardLayer extends DashboardLayerBase implements
     finally
     {
       iter.close();
+    }
+
+    if (log.isDebugEnabled())
+    {
+      // print the SQL if the generated
+      log.debug("SLD for Layer [%s], this:\n" + v.getSQL());
     }
 
     return v;

@@ -8,8 +8,7 @@
 				label="Layer Excluded from Map"
 				message="The layer [{layerName}] was invalid and excluded from the map.">
 				<attributes>
-					<virtual name="layerName" concrete="name"
-						type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"
+					<char name="layerName" label="Layer Name" size="255"
 						required="true" />
 				</attributes>
 			</mdInformation>
@@ -18,9 +17,8 @@
 				name="com.runwaysdk.geodashboard.gis.persist.NoLayersException"
 				label="No Layers Exception" message="The map [{mapName}] contains no valid layers.">
 				<attributes>
-				<virtual name="mapName" concrete="name"
-					type="com.runwaysdk.geodashboard.gis.persist.DashboardMap"
-					required="true" />
+          <char name="mapName" label="Map Name" size="255"
+            required="true" />
 				</attributes>
 			</mdException>
 		</create>

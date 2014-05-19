@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,8 @@ import com.vividsolutions.jts.geom.Envelope;
 public class DashboardMap extends DashboardMapBase implements
     com.runwaysdk.generation.loader.Reloadable, Map
 {
+  private static Log log = LogFactory.getLog(DashboardMap.class);
+  
   private static final long serialVersionUID = 861649895;
 
   public DashboardMap()
@@ -45,9 +49,10 @@ public class DashboardMap extends DashboardMapBase implements
   {
     return this.getAllHasLayer().getAll();
   }
-  
+
   /**
    * Returns the layers this map defines in the proper order.
+   * 
    * @return
    */
   public DashboardLayer[] getOrderedLayers()
@@ -61,17 +66,17 @@ public class DashboardMap extends DashboardMapBase implements
     layerQ.WHERE(layerQ.containingMap(hsQ));
     layerQ.WHERE(layerQ.getLayerEnabled().EQ(true));
     hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
-    
+
     OIterator<? extends DashboardLayer> iter = layerQ.getIterator();
-    
+
     try
     {
       List<DashboardLayer> layers = new LinkedList<DashboardLayer>();
-      while(iter.hasNext())
+      while (iter.hasNext())
       {
         layers.add(iter.next());
       }
-      
+
       return layers.toArray(new DashboardLayer[layers.size()]);
     }
     finally
@@ -88,81 +93,57 @@ public class DashboardMap extends DashboardMapBase implements
        * All layers returned in order and if they're enabled
        */
       DashboardLayer[] orderedLayers = this.getOrderedLayers();
-      
+
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
-      
-      JSONArray mapBBox = getMapLayersBBox(orderedLayers);       
+
+      JSONArray mapBBox = getMapLayersBBox();
       mapJSON.put("bbox", mapBBox);
-      
-//      JSONArray mapBBox = getMapLayersBBox();       
-//      mapJSON.put("bbox", mapBBox);
-      
+
       JSONArray layers = new JSONArray();
       mapJSON.put("layers", layers);
 
-      
       List<DashboardLayer> addedLayers = new LinkedList<DashboardLayer>();
-      OIterator<? extends DashboardLayer> iter = this.getAllHasLayer();
 
-      for(int i=0; i<orderedLayers.length; i++)
+      for (int i = 0; i < orderedLayers.length; i++)
       {
         DashboardLayer layer = orderedLayers[i];
-        if(true /* test if layer is valid--1+ rows and valid geoms */)
+        if (true /* test if layer is valid--1+ rows and valid geoms */)
         {
           JSONObject layerObj = new JSONObject();
           layerObj.put("viewName", layer.getViewName());
           layerObj.put("sldName", layer.getSLDName());
           layerObj.put("layerName", layer.getName());
           layers.put(layerObj);
-          
+
           addedLayers.add(layer);
         }
       }
-      
 
-      
-//      List<? extends DashboardLayer> layerList = iter.getAll();
-//      JSONArray mapBBox = getMapLayersBBox(layerList);       
-//      mapJSON.put("bbox", mapBBox);
-      try
-      {
-        while (iter.hasNext())
-        {
-          DashboardLayer layer = iter.next();
-
-
-        }
-        
-//        JSONArray mapBBox = getMapLayersBBox(layerList);       
-//        mapJSON.put("bbox", mapBBox);
-        
-        System.out.println(mapJSON.toString(4));
-        return mapJSON.toString();
-      }
-      finally
-      {
-        iter.close();
-      }
-      
-      // calculate the BBOX of all layers involved
-      
+      return mapJSON.toString();
     }
     catch (JSONException ex)
     {
+      log.error("Could not properly form map ["+this+"] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
   }
   
+  @Override
+  public String getName()
+  {
+    return super.getName();
+  }
+
   public JSONArray getMapLayersBBox()
   {
     return this.getMapLayersBBox(this.getOrderedLayers());
   }
-  
+
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
-    System.out.println(layers.length + "layers.size()");
-    
+    System.out.println(layers.length + " length");
+
     JSONArray bboxArr = new JSONArray();
     ResultSet resultSet = null;
     String[] layerNames = null;
@@ -175,12 +156,14 @@ public class DashboardMap extends DashboardMapBase implements
       if (layers.length == 1)
       {
 
-        // This needs to get the 1st (only) layer in the list and that layers viewname and layername
-         DashboardLayer layer = layers[0];
-         String viewName = layer.getViewName(); 
-         layerNames[0] = layer.getName();
+        // This needs to get the 1st (only) layer in the list and that layers
+        // viewname and layername
+        DashboardLayer layer = layers[0];
+        String viewName = layer.getViewName();
+        layerNames[0] = layer.getName();
 
-         sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN + ")) AS bbox FROM " + viewName;
+        sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN
+            + ")) AS bbox FROM " + viewName;
       }
       else
       {
@@ -190,7 +173,7 @@ public class DashboardMap extends DashboardMapBase implements
         for (int i = 0; i < layers.length; i++)
         {
           DashboardLayer layer = layers[i];
-          String viewName = layer.getViewName(); 
+          String viewName = layer.getViewName();
           layerNames[i] = layer.getName();
 
           sql += "(SELECT " + GeoserverFacade.GEOM_COLUMN + " AS geo_v FROM " + viewName + ") \n";
@@ -206,6 +189,12 @@ public class DashboardMap extends DashboardMapBase implements
 
       resultSet = Database.query(sql);
     }
+    else
+    {
+      NoLayersException ex = new NoLayersException("The map " + getName() + " contains no layers.");
+      throw ex;
+    }
+
     try
     {
       if (resultSet.next())
@@ -320,11 +309,11 @@ public class DashboardMap extends DashboardMapBase implements
   @Transaction
   public void delete()
   {
-    for(DashboardLayer layer : this.getAllHasLayer())
+    for (DashboardLayer layer : this.getAllHasLayer())
     {
       layer.delete();
     }
-    
+
     super.delete();
   }
 }

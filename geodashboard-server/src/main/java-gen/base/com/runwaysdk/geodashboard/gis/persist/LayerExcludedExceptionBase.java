@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 238743368)
+@com.runwaysdk.business.ClassSignature(hash = -332136062)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,8 @@ public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerExcludedException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 238743368;
+  public static java.lang.String LAYERNAME = "layerName";
+  private static final long serialVersionUID = -332136062;
   
   public LayerExcludedExceptionBase()
   {
@@ -35,6 +36,34 @@ public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.
     return mdClassIF.definesAttribute(ID);
   }
   
+  public String getLayerName()
+  {
+    return getValue(LAYERNAME);
+  }
+  
+  public void validateLayerName()
+  {
+    this.validateAttribute(LAYERNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.LayerExcludedException.CLASS);
+    return mdClassIF.definesAttribute(LAYERNAME);
+  }
+  
+  public void setLayerName(String value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERNAME, "");
+    }
+    else
+    {
+      setValue(LAYERNAME, value);
+    }
+  }
+  
   protected String getDeclaredType()
   {
     return CLASS;
@@ -44,6 +73,7 @@ public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.
   {
     java.lang.String message = super.localize(locale);
     message = replace(message, "{id}", this.getId());
+    message = replace(message, "{layerName}", this.getLayerName());
     return message;
   }
   
