@@ -4,13 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
@@ -24,6 +24,9 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.UsersDTO;
+import com.runwaysdk.web.WebClientSession;
+import com.runwaysdk.web.json.JSONController;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -32,14 +35,10 @@ public class Sandbox
   @Request
   public static void main(String[] args) throws Throwable
   {
-
-    String mapId = "rb4e7aqgra5oqa3r6wye771ahqrmlzqhqp6s5fwgbz7t76s9v0cobogv3urvlfhv";
-    for(DashboardLayer l : DashboardMap.get(mapId).getOrderedLayers())
-    {
-      System.out.println(l);
-    }
-    
-    // testBuildMap();
+    WebClientSession s = WebClientSession.createUserSession("SYSTEM","SYSTEM", new Locale[]{Locale.ENGLISH});
+    String id = s.getSessionId();
+    String js = JSONController.importTypes(id, new String[]{ UsersDTO.CLASS}, true);
+    System.out.println(js);
   }
 
   @Request
