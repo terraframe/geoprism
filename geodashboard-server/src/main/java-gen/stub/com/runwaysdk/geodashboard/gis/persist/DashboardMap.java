@@ -146,9 +146,7 @@ public class DashboardMap extends DashboardMapBase implements
   }
   
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
-  {
-    System.out.println(layers.length + "layers.size()");
-    
+  {   
     JSONArray bboxArr = new JSONArray();
     ResultSet resultSet = null;
     String[] layerNames = null;
