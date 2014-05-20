@@ -184,7 +184,7 @@ public class DashboardMap extends DashboardMapBase implements
 
           if (i != layers.length - 1)
           {
-            sql += "UNION \n";
+            sql += "UNION ALL\n";
           }
         }
 

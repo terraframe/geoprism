@@ -13,6 +13,7 @@ public class GISContextListener implements ServletContextListener
     {
       LoaderDecorator.load("com.runwaysdk.gis.StrategyInitializer").getMethod("startUp").invoke(null);
       LoaderDecorator.load("com.runwaysdk.system.scheduler.SchedulerManager").getMethod("start").invoke(null);
+      LoaderDecorator.load("com.runwaysdk.geodashboard.SessionEntryManager").getMethod("initialize").invoke(null);
     }
     catch(Throwable t)
     {
@@ -26,6 +27,7 @@ public class GISContextListener implements ServletContextListener
     {
       LoaderDecorator.load("com.runwaysdk.gis.StrategyInitializer").getMethod("tearDown").invoke(null);
       LoaderDecorator.load("com.runwaysdk.system.scheduler.SchedulerManager").getMethod("shutdown").invoke(null);
+      LoaderDecorator.load("com.runwaysdk.geodashboard.SessionEntryManager").getMethod("destroy").invoke(null);
     }
     catch(Throwable t)
     {

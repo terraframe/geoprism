@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1908962488)
+@com.runwaysdk.business.ClassSignature(hash = -890441909)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 1908962488;
+  private static final long serialVersionUID = -890441909;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,7 +27,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return CLASS;
   }
   
-  public static java.lang.String BBOXENABLED = "BboxEnabled";
+  public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
@@ -48,41 +48,41 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  public Boolean getBboxEnabled()
+  public Boolean getBBoxIncluded()
   {
-    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXENABLED));
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXINCLUDED));
   }
   
-  public void setBboxEnabled(Boolean value)
+  public void setBBoxIncluded(Boolean value)
   {
     if(value == null)
     {
-      setValue(BBOXENABLED, "");
+      setValue(BBOXINCLUDED, "");
     }
     else
     {
-      setValue(BBOXENABLED, java.lang.Boolean.toString(value));
+      setValue(BBOXINCLUDED, java.lang.Boolean.toString(value));
     }
   }
   
-  public boolean isBboxEnabledWritable()
+  public boolean isBBoxIncludedWritable()
   {
-    return isWritable(BBOXENABLED);
+    return isWritable(BBOXINCLUDED);
   }
   
-  public boolean isBboxEnabledReadable()
+  public boolean isBBoxIncludedReadable()
   {
-    return isReadable(BBOXENABLED);
+    return isReadable(BBOXINCLUDED);
   }
   
-  public boolean isBboxEnabledModified()
+  public boolean isBBoxIncludedModified()
   {
-    return isModified(BBOXENABLED);
+    return isModified(BBOXINCLUDED);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBboxEnabledMd()
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBBoxIncludedMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BBOXENABLED).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BBOXINCLUDED).getAttributeMdDTO();
   }
   
   public java.util.Date getCreateDate()
