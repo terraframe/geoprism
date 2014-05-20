@@ -788,7 +788,7 @@ public class GeoserverTest
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
-      
+
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -1036,14 +1036,14 @@ public class GeoserverTest
   @Request
   public void testMapJSON() throws JSONException
   {
-    ////
-    //// This needs a test for point data in addition to the current polygon.  
-    ////
-    
+    // //
+    // // This needs a test for point data in addition to the current polygon.
+    // //
+
     DashboardMap map = null;
 
     try
-    {   
+    {
 
       map = new DashboardMap();
       map.setName("Test Map");
@@ -1113,7 +1113,8 @@ public class GeoserverTest
       
       System.out.println(json);
 
-      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
+          .length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
       DashboardLayer[] fetched = map.getOrderedLayers();
@@ -1125,9 +1126,41 @@ public class GeoserverTest
 //        Assert.fail("Not implemented.");
 //      }
     }
+    catch(JSONException ex)
+    {
+      log.error(name.getMethodName(), ex);
+      Assert.fail(ex.getLocalizedMessage());
+    }
     finally
     {
       map.delete();
     }
+  }
+
+  @Test
+  @Request
+  public void testNoLayerException()
+  {
+    DashboardMap map = this.testNoLayerException_trans(); 
+    
+    try
+    {
+      map.getMapJSON();
+      Assert.fail("A JSON was created for a map without layers.");
+    }
+    finally
+    {
+      map.delete();
+    }
+  }
+  
+  @Transaction
+  private DashboardMap testNoLayerException_trans()
+  {
+    DashboardMap map = new DashboardMap();
+    map.setName("broken test");
+    map.apply();
+    
+    return map;
   }
 }

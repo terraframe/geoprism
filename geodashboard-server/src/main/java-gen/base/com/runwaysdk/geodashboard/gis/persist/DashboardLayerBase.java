@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -237948104)
+@com.runwaysdk.business.ClassSignature(hash = 1274806475)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLayerBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  public static java.lang.String BBOXENABLED = "BboxEnabled";
+  public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
@@ -32,38 +32,38 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -237948104;
+  private static final long serialVersionUID = 1274806475;
   
   public DashboardLayerBase()
   {
     super();
   }
   
-  public Boolean getBboxEnabled()
+  public Boolean getBBoxIncluded()
   {
-    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXENABLED));
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXINCLUDED));
   }
   
-  public void validateBboxEnabled()
+  public void validateBBoxIncluded()
   {
-    this.validateAttribute(BBOXENABLED);
+    this.validateAttribute(BBOXINCLUDED);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getBboxEnabledMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getBBoxIncludedMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(BBOXENABLED);
+    return mdClassIF.definesAttribute(BBOXINCLUDED);
   }
   
-  public void setBboxEnabled(Boolean value)
+  public void setBBoxIncluded(Boolean value)
   {
     if(value == null)
     {
-      setValue(BBOXENABLED, "");
+      setValue(BBOXINCLUDED, "");
     }
     else
     {
-      setValue(BBOXENABLED, java.lang.Boolean.toString(value));
+      setValue(BBOXINCLUDED, java.lang.Boolean.toString(value));
     }
   }
   

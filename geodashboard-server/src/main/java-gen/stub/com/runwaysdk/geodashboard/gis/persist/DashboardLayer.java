@@ -49,6 +49,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
+    
     if (this.isNew())
     {
       // generate a db view name unique across space and time

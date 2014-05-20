@@ -3,7 +3,6 @@ package com.runwaysdk.geodashboard.gis.web.context;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.runwaysdk.geodashboard.SessionEntryManager;
 import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.system.scheduler.SchedulerManager;
 
