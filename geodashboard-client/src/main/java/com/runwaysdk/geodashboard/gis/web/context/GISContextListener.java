@@ -14,7 +14,7 @@ public class GISContextListener implements ServletContextListener
     StrategyInitializer.startUp();
     SchedulerManager.start();
     SessionEntryManager.initialize();
-  }
+  } 
   
   @Override
   public void contextDestroyed(ServletContextEvent arg0) {

@@ -784,7 +784,7 @@ public class GeoserverTest
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
-      
+
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -938,95 +938,7 @@ public class GeoserverTest
   @Transaction
   public void createPolygonLayer()
   {
-    DashboardMap map = null;
-    String viewName = null;
-
-    try
-    {
-
-      map = new DashboardMap();
-      map.setName("Test Map");
-      map.apply();
-
-      DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");
-      layer.setUniversal(state);
-      layer.addLayerType(AllLayerType.BASIC);
-      layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
-      layer.apply();
-
-      HasLayer hasLayer = map.addHasLayer(layer);
-      hasLayer.setLayerIndex(0);
-      hasLayer.apply();
-
-      DashboardEqual eq = new DashboardEqual();
-      eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
-      eq.apply();
-
-      DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
-      style.setName("Style 1");
-      style.setStyleCondition(eq);
-      style.apply();
-
-      HasStyle hasStyle = layer.addHasStyle(style);
-      hasStyle.apply();
-
-      ValueQuery v = layer.asValueQuery();
-
-      // This query should have all states in it
-      QueryFactory checkF = new QueryFactory();
-      GeoEntityQuery checkGE = new GeoEntityQuery(checkF);
-      checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
-
-      Assert.assertEquals(stateCount, checkGE.getCount());
-      Assert.assertEquals(checkGE.getCount(), v.getCount());
-
-      viewName = layer.getViewName();
-      String sldName = layer.getSLDName();
-      boolean dbViewCreated = false;
-      
-      try
-      {
-        Database.createView(viewName, v.getSQL());
-        dbViewCreated = true;
-
-        if (GEOSERVER_RUNNING)
-        {
-          if (GeoserverFacade.publishLayer(viewName, sldName))
-          {
-            // geoserver purportedly added the layer but query it just in case
-            if (!GeoserverFacade.layerExists(viewName)
-                || !GeoserverFacade.getLayers().contains(viewName))
-            {
-              Assert.fail("Published the view [" + viewName + "] with style [" + sldName
-                  + "] but it could not be found.");
-            }
-          }
-          else
-          {
-            Assert.fail("Could not publish view [" + viewName + "] with style [" + sldName + "]");
-          }
-        }
-      }
-      finally
-      {
-        if (dbViewCreated)
-        {
-          List<String> views = new LinkedList<String>();
-          views.add(viewName);
-          Database.dropViews(views);
-        }
-      }
-    }
-    finally
-    {
-      map.delete();
-    }  }
-
+  
   }
   
   @Test
@@ -1034,14 +946,14 @@ public class GeoserverTest
   @Transaction
   public void testMapJSON() throws JSONException
   {
-    ////
-    //// This needs a test for point data in addition to the current polygon.  
-    ////
-    
+    // //
+    // // This needs a test for point data in addition to the current polygon.
+    // //
+
     DashboardMap map = null;
 
     try
-    {   
+    {
 
       map = new DashboardMap();
       map.setName("Test Map");
@@ -1109,24 +1021,50 @@ public class GeoserverTest
       String json = map.getMapJSON();
       JSONObject mapJsonObj = new JSONObject(json);
 
-      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
+          .length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
-<<<<<<< HEAD
-=======
-      DashboardLayer[] fetched = map.getOrderedLayers();
-      
-      System.out.println(fetched.length);
-      
->>>>>>> refs/remotes/origin/master
       if (GEOSERVER_RUNNING)
       {
         Assert.fail("Not implemented.");
       }
     }
+    catch(JSONException ex)
+    {
+      log.error(name.getMethodName(), ex);
+      Assert.fail(ex.getLocalizedMessage());
+    }
     finally
     {
       map.delete();
     }
+  }
+
+  @Test
+  @Request
+  public void testNoLayerException()
+  {
+    DashboardMap map = this.testNoLayerException_trans(); 
+    
+    try
+    {
+      map.getMapJSON();
+      Assert.fail("A JSON was created for a map without layers.");
+    }
+    finally
+    {
+      map.delete();
+    }
+  }
+  
+  @Transaction
+  private DashboardMap testNoLayerException_trans()
+  {
+    DashboardMap map = new DashboardMap();
+    map.setName("broken test");
+    map.apply();
+    
+    return map;
   }
 }
