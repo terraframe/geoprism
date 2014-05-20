@@ -52,6 +52,8 @@
         config = config || {};
         this._config = config;
         
+        config.exportMenuType = "com.runwaysdk.geodashboard.gis.ClassifierExportMenu";
+        
         this.$initialize(config);
         
         this._wrapperDiv = this.getFactory().newElement("div");
@@ -76,12 +78,14 @@
         var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
         var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
         
         if (this.busyNodes.contains(node.id)) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
           refresh.setEnabled(false);
+          cmiExport.setEnabled(false);
         }
         
         if (this.getParentRunwayId(node) === this.rootTermId) {

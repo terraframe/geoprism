@@ -19,6 +19,13 @@
     </update>
   </doIt>
   <undoIt>
-    <delete></delete>
+    <delete>
+      <object
+        key="com.runwaysdk.geodashboard.ontology.Defaults"
+        type="com.runwaysdk.system.ontology.Classifier" />
+      <object
+        key="DefaultsRel"
+        type="com.runwaysdk.system.ontology.ClassifierIsARelationship" />
+    </delete>
   </undoIt>
 </version>

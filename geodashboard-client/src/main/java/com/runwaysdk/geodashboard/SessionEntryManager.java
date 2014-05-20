@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.session.Request;
 
 public class SessionEntryManager
 {
@@ -14,7 +13,7 @@ public class SessionEntryManager
   /**
    * Initializes the SessionEntry objects and whatever those components require.
    */
-  @Request
+//  @Request
   public static void initialize()
   {
     // use reflection to avoid Reloadable being infectious
@@ -32,7 +31,7 @@ public class SessionEntryManager
   /**
    * Destroy the SessionEntry objects and whatever those components require.
    */
-  @Request
+//  @Request
   public static void destroy()
   {
     // use reflection to avoid Reloadable being infectious

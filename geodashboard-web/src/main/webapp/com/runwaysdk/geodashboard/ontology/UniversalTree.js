@@ -52,6 +52,8 @@
         config = config || {};
         this._config = config;
         
+        config.exportMenuType = "com.runwaysdk.geodashboard.gis.UniversalExportMenu";
+        
         this.$initialize(config);
         
         this._wrapperDiv = this.getFactory().newElement("div");

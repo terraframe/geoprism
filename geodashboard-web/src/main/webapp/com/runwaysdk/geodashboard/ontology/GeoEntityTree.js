@@ -54,6 +54,8 @@
       initialize : function(config) {
         config = config || {};
         
+        config.exportMenuType = "com.runwaysdk.geodashboard.gis.GeoEntityExportMenu";
+        
         this.$initialize(config);
       },
       
@@ -108,13 +110,15 @@
             synonyms = this._cm.addItem(this.localize("viewSynonyms"), "synonyms", Mojo.Util.bind(this, this.__onContextViewSynonymsClick));
           }
           
+          var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
+          
           if (this.busyNodes.contains(node)) {
             create.setEnabled(false);
             update.setEnabled(false);
             del.setEnabled(false);
             refresh.setEnabled(false);
-            
             synonyms.setEnabled(false);
+            cmiExport.setEnabled(false);
           }
         }
         

@@ -43,7 +43,8 @@
     "deleteRel" : "Delete only this '${termLabel}'",
     "cancel" : "Cancel",
     "deleteDescribe" : "Are you sure you want to delete '${termLabel}'?",
-    "emptyMessage" : "No data to display."
+    "emptyMessage" : "No data to display.",
+    "export" : "Export"
   });
   
   /**
@@ -67,6 +68,7 @@
         this.requireParameter("termType", config.termType, "string");
         this.requireParameter("relationshipTypes", config.relationshipTypes, "array");
         this.requireParameter("rootTerm", config.rootTerm, "string");
+        this.requireParameter("exportMenuType", config.exportMenuType, "string");
         
         var defaultConfig = {
           el: "div",
@@ -446,6 +448,33 @@
       },
       
       /**
+       * is binded to context menu option Export.
+       */
+      __onContextExportClick : function(contextMenu, contextMenuItem, mouseEvent) {
+        var targetNode = contextMenu.getTarget();
+        var that = this;
+        
+        var newType = eval("new " + this._config.exportMenuType + " ()");
+        var title = newType.getMd().getDisplayLabel();
+        
+        var config = {
+          type: this._config.exportMenuType,
+          title: title,
+          viewParams: {},
+          action: "export",
+          actionParams: {parentTerm: this.__getRunwayIdFromNode(targetNode)},
+          width: 560,
+          onSuccess : function(responseObj) {
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+        
+        new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();
+      },
+      
+      /**
        * is binded to context menu option Create. 
        */
       __onContextCreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
@@ -608,12 +637,14 @@
         var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
         var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
         
         if (this.busyNodes.contains(node.id)) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
           refresh.setEnabled(false);
+          cmiExport.setEnabled(false);
         }
         
         this._cm.render();
