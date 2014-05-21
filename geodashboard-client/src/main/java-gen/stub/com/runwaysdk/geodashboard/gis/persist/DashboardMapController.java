@@ -134,7 +134,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void createMapForSession() throws IOException, ServletException
   {
     ClientRequestIF clientRequest = this.getClientRequest(); 
-    DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);
+    DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);  
     req.setAttribute("mapId", map.getId());
     render("dashboardViewer.jsp");
   }
