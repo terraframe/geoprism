@@ -369,6 +369,7 @@
 									<version>0.0.1-SNAPSHOT</version>
 									<type>jar</type>
 									<includes>**/messages*.properties</includes>
+									<includes>**/geoserver*.properties</includes>
 								</artifactItem>								
 							</artifactItems>
 							<includes>**/*</includes>
