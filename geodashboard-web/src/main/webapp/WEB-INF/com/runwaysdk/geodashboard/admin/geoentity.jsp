@@ -22,6 +22,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
@@ -63,6 +64,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
@@ -111,7 +113,7 @@
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
       GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS, TermUtilDTO.CLASS,
-      GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS
+      GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS, GeoEntityExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }

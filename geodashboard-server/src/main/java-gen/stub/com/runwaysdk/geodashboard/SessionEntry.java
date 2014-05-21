@@ -7,6 +7,7 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Request;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.Users;
@@ -53,9 +54,13 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   /**
    * Deletes all SessionEntry objects and their relationships.
    */
-  @Transaction
+  @Request
   public static void deleteAll()
   {
+    deleteAllTrans();
+  }
+  @Transaction
+  private static void deleteAllTrans() {
     SessionEntryQuery q = new SessionEntryQuery(new QueryFactory());
     
     OIterator<? extends SessionEntry> iter = q.getIterator();

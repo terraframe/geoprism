@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.session.Request;
 
 public class GISHttpSessionListener implements HttpSessionListener
 {
@@ -23,7 +22,7 @@ public class GISHttpSessionListener implements HttpSessionListener
   }
 
   @Override
-  @Request
+//  @Request
   public void sessionDestroyed(HttpSessionEvent evt)
   {
     ClientSession session = (ClientSession) evt.getSession().getAttribute(ClientConstants.CLIENTSESSION);

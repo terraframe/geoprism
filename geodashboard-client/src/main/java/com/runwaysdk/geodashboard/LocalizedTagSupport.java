@@ -16,7 +16,6 @@ import com.runwaysdk.controller.tag.develop.AttributeAnnotation;
 import com.runwaysdk.controller.tag.develop.TagAnnotation;
 import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
-import com.runwaysdk.session.Request;
 
 @TagAnnotation(bodyContent = "empty", name = "localize", description = "Localizes the given key, respecting bundle precedence")
 public class LocalizedTagSupport extends SimpleTagSupport
@@ -48,7 +47,7 @@ public class LocalizedTagSupport extends SimpleTagSupport
   }
 
   @Override
-  @Request
+//  @Request
   public void doTag() throws JspException, IOException
   {
     PageContext pageContext = (PageContext) this.getJspContext();

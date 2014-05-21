@@ -23,6 +23,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.system.ontology.ClassifierDTO" %>
+<%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %>
 <%@page import="com.runwaysdk.system.ontology.ClassifierController" %>
 <%@page import="com.runwaysdk.system.ontology.ClassifierDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.ontology.ClassifierIsARelationshipDTO" %>
@@ -61,6 +62,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/OntologyTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
@@ -77,7 +79,7 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      ClassifierDTO.CLASS, ClassifierIsARelationshipDTO.CLASS, ClassifierDisplayLabelDTO.CLASS, ClassifierController.CLASS, TermUtilDTO.CLASS
+      ClassifierDTO.CLASS, ClassifierIsARelationshipDTO.CLASS, ClassifierDisplayLabelDTO.CLASS, ClassifierController.CLASS, TermUtilDTO.CLASS, ClassifierExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }
