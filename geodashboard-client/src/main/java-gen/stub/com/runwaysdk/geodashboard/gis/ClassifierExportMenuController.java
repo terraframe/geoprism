@@ -42,8 +42,10 @@ public class ClassifierExportMenuController extends ClassifierExportMenuControll
       TermUtilDTO.exportTerm(getClientRequest(), out, parentTerm, true, dto.getFileFormat().get(0));
     }
     catch (RuntimeException e) {
-      resp.reset();
-      ErrorUtility.prepareThrowable(e, req, out, resp, true, true);
+      if (!resp.isCommitted()) {
+        resp.reset();
+      }
+      ErrorUtility.prepareThrowable(e, req, out, resp, false, true);
     }
   }
   
