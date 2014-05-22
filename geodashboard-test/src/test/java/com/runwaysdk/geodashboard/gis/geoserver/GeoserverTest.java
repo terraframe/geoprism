@@ -1112,7 +1112,13 @@ public class GeoserverTest
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
 
       Database.createView(layer.getViewName(), v.getSQL());
-      Database.createView(layer2.getViewName(), v2.getSQL());
+      Database.createView(layer2.getViewName(), v2.getSQL());   
+      
+      // just for demo... remove all geoserverfacade code before commit
+      GeoserverFacade.publishWorkspace();
+      GeoserverFacade.publishStore();
+      GeoserverFacade.publishLayer(layer.getViewName(), "polygon");
+      GeoserverFacade.publishLayer(layer2.getViewName(), "polygon");
 
       String json = map.getMapJSON();
       JSONObject mapJsonObj = new JSONObject(json);
@@ -1129,7 +1135,7 @@ public class GeoserverTest
       
 //      if (GEOSERVER_RUNNING)
 //      {
-//        Assert.fail("Not implemented.");
+////        Assert.fail("Not implemented.");
 //      }
     }
     catch(JSONException ex)
