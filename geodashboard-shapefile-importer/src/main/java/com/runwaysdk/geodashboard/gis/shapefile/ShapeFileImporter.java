@@ -31,6 +31,7 @@ import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestState;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
@@ -199,6 +200,11 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         if (!GeoEntity.getStrategy().isInitialized(LocatedIn.CLASS))
         {
           GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
+        }
+        
+        if (!Universal.getStrategy().isInitialized(AllowedIn.CLASS))
+        {
+          Universal.getStrategy().initialize(AllowedIn.CLASS);
         }
 
         this.createEntities(logger);
