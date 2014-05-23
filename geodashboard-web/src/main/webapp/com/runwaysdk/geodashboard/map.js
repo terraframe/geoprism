@@ -310,7 +310,6 @@
         	        
         	        // Add Overlays
         	        //// This needs:
-        	        ////	to dynamically set domain root
         	        ////	to add custom style param
         	        ////	to have more confidence that geoserver services exist
         	        // Create the HTML for each row (base layer representation).
@@ -321,7 +320,7 @@
         	        	var displayName = jsonObj.layers[i].layerName
         	        	var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
         	        	
-        	        	var layer = L.tileLayer.wms("https://localhost:8443/geoserver/wms/", {
+        	        	var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
         	        		layers: geoserverName,
         	        		format: 'image/png',
         	        		transparent: true
