@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1243789075)
+@com.runwaysdk.business.ClassSignature(hash = -890441909)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 1243789075;
+  private static final long serialVersionUID = -890441909;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,14 +27,17 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return CLASS;
   }
   
+  public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LAYERENABLED = "layerEnabled";
   public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String NAME = "name";
@@ -42,7 +45,46 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public static java.lang.String UNIVERSAL = "universal";
+  public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
+  public Boolean getBBoxIncluded()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BBOXINCLUDED));
+  }
+  
+  public void setBBoxIncluded(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(BBOXINCLUDED, "");
+    }
+    else
+    {
+      setValue(BBOXINCLUDED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isBBoxIncludedWritable()
+  {
+    return isWritable(BBOXINCLUDED);
+  }
+  
+  public boolean isBBoxIncludedReadable()
+  {
+    return isReadable(BBOXINCLUDED);
+  }
+  
+  public boolean isBBoxIncludedModified()
+  {
+    return isModified(BBOXINCLUDED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBBoxIncludedMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BBOXINCLUDED).getAttributeMdDTO();
+  }
+  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -191,6 +233,55 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
   }
   
+  public com.runwaysdk.system.metadata.MdAttributeReferenceDTO getGeoEntity()
+  {
+    if(getValue(GEOENTITY) == null || getValue(GEOENTITY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeReferenceDTO.get(getRequest(), getValue(GEOENTITY));
+    }
+  }
+  
+  public String getGeoEntityId()
+  {
+    return getValue(GEOENTITY);
+  }
+  
+  public void setGeoEntity(com.runwaysdk.system.metadata.MdAttributeReferenceDTO value)
+  {
+    if(value == null)
+    {
+      setValue(GEOENTITY, "");
+    }
+    else
+    {
+      setValue(GEOENTITY, value.getId());
+    }
+  }
+  
+  public boolean isGeoEntityWritable()
+  {
+    return isWritable(GEOENTITY);
+  }
+  
+  public boolean isGeoEntityReadable()
+  {
+    return isReadable(GEOENTITY);
+  }
+  
+  public boolean isGeoEntityModified()
+  {
+    return isModified(GEOENTITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoEntityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEOENTITY).getAttributeMdDTO();
+  }
+  
   public String getKeyName()
   {
     return getValue(KEYNAME);
@@ -288,6 +379,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLastUpdatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
+  }
+  
+  public Boolean getLayerEnabled()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERENABLED));
+  }
+  
+  public void setLayerEnabled(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERENABLED, "");
+    }
+    else
+    {
+      setValue(LAYERENABLED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isLayerEnabledWritable()
+  {
+    return isWritable(LAYERENABLED);
+  }
+  
+  public boolean isLayerEnabledReadable()
+  {
+    return isReadable(LAYERENABLED);
+  }
+  
+  public boolean isLayerEnabledModified()
+  {
+    return isModified(LAYERENABLED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getLayerEnabledMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(LAYERENABLED).getAttributeMdDTO();
   }
   
   @SuppressWarnings("unchecked")
@@ -507,6 +635,92 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.gis.geo.UniversalDTO getUniversal()
+  {
+    if(getValue(UNIVERSAL) == null || getValue(UNIVERSAL).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.UniversalDTO.get(getRequest(), getValue(UNIVERSAL));
+    }
+  }
+  
+  public String getUniversalId()
+  {
+    return getValue(UNIVERSAL);
+  }
+  
+  public void setUniversal(com.runwaysdk.system.gis.geo.UniversalDTO value)
+  {
+    if(value == null)
+    {
+      setValue(UNIVERSAL, "");
+    }
+    else
+    {
+      setValue(UNIVERSAL, value.getId());
+    }
+  }
+  
+  public boolean isUniversalWritable()
+  {
+    return isWritable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalReadable()
+  {
+    return isReadable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalModified()
+  {
+    return isModified(UNIVERSAL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
+  }
+  
+  public String getViewName()
+  {
+    return getValue(VIEWNAME);
+  }
+  
+  public void setViewName(String value)
+  {
+    if(value == null)
+    {
+      setValue(VIEWNAME, "");
+    }
+    else
+    {
+      setValue(VIEWNAME, value);
+    }
+  }
+  
+  public boolean isViewNameWritable()
+  {
+    return isWritable(VIEWNAME);
+  }
+  
+  public boolean isViewNameReadable()
+  {
+    return isReadable(VIEWNAME);
+  }
+  
+  public boolean isViewNameModified()
+  {
+    return isModified(VIEWNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getViewNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VIEWNAME).getAttributeMdDTO();
   }
   
   public Boolean getVirtual()

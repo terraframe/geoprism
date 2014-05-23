@@ -18,6 +18,7 @@ import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.MockTaskListener;
 import com.runwaysdk.geodashboard.gis.Task;
 import com.runwaysdk.geodashboard.gis.TransactionExecuter;
+import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -240,8 +241,9 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getDirectAncestors(LocatedIn.CLASS);
-
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
+        
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
         Assert.assertEquals(1, parents.size());
@@ -387,7 +389,8 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
 
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
@@ -437,7 +440,8 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
 
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
@@ -486,7 +490,8 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
 
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
@@ -542,7 +547,8 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
 
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
@@ -597,8 +603,9 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
-
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
+        
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
         Assert.assertEquals(1, parents.size());
@@ -652,8 +659,9 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
-
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
+        
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
         Assert.assertEquals(1, parents.size());
@@ -704,8 +712,9 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
-
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
+        
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());
         Assert.assertEquals(1, parents.size());
@@ -916,8 +925,9 @@ public class ShapeFileImporterTest
 
         Assert.assertNotNull(entity);
 
-        List<Term> parents = entity.getAllAncestors(LocatedIn.CLASS);
-
+        OIterator<Term> parentsIter = entity.getDirectAncestors(LocatedIn.CLASS);
+        List<Term> parents = parentsIter.getAll();
+        
         Assert.assertEquals(facility, entity.getUniversal());
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
         Assert.assertEquals(builder.getGeoId(i), entity.getGeoId());

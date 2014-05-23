@@ -1,0 +1,87 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.UniversalExportMenu" label="Export Universals" generateController="true" >
+        <attributes>
+          <enumeration
+            name="fileFormat"
+            label="Export Format"
+            selectMultiple="false"
+            required="true"
+            type="com.runwaysdk.system.ontology.io.TermFileFormat" />
+        </attributes>
+      </mdBusiness>
+      
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu" label="Export GeoEntities" generateController="true" >
+        <attributes>
+          <enumeration
+            name="fileFormat"
+            label="Export Format"
+            selectMultiple="false"
+            required="true"
+            type="com.runwaysdk.system.ontology.io.TermFileFormat" />
+          <boolean name="includeGIS" label="Include GIS Data" required="true" positiveLabel="Yes" negativeLabel="No" defaultValue="false" />
+        </attributes>
+      </mdBusiness>
+      
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.ClassifierExportMenu" label="Export Classifier" generateController="true" >
+        <attributes>
+          <enumeration
+            name="fileFormat"
+            label="Export Format"
+            selectMultiple="false"
+            required="true"
+            type="com.runwaysdk.system.ontology.io.TermFileFormat" />
+        </attributes>
+      </mdBusiness>
+    </create>
+    <update>
+      <mdController name="com.runwaysdk.geodashboard.gis.UniversalExportMenuController" >
+	      <create>
+	        <mdAction name="viewExport" isPost="true" isQuery="false">
+	        </mdAction>
+	        <mdAction name="export" isPost="true" isQuery="false">
+	          <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.UniversalExportMenu" />
+	          <mdParameter order="1" name="parentTerm" type="java.lang.String" />
+	          <mdParameter order="2" name="downloadToken" type="java.lang.String" />
+	        </mdAction>
+	      </create>
+     </mdController>
+     <mdController name="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuController" >
+        <create>
+          <mdAction name="viewExport" isPost="true" isQuery="false">
+          </mdAction>
+          <mdAction name="export" isPost="true" isQuery="false">
+            <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu" />
+            <mdParameter order="1" name="parentTerm" type="java.lang.String" />
+            <mdParameter order="2" name="downloadToken" type="java.lang.String" />
+          </mdAction>
+        </create>
+     </mdController>
+     <mdController name="com.runwaysdk.geodashboard.gis.ClassifierExportMenuController" >
+        <create>
+          <mdAction name="viewExport" isPost="true" isQuery="false">
+          </mdAction>
+          <mdAction name="export" isPost="true" isQuery="false">
+            <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.ClassifierExportMenu" />
+            <mdParameter order="1" name="parentTerm" type="java.lang.String" />
+            <mdParameter order="2" name="downloadToken" type="java.lang.String" />
+          </mdAction>
+        </create>
+     </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object
+        key="com.runwaysdk.geodashboard.gis.UniversalExportMenu"
+        type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object
+        key="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu"
+        type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object
+        key="com.runwaysdk.geodashboard.gis.ClassifierExportMenu"
+        type="com.runwaysdk.system.metadata.MdBusiness" />
+    </delete>
+  </undoIt>
+</version>

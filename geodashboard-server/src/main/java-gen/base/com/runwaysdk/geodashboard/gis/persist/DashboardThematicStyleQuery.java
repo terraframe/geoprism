@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 904131610)
+@com.runwaysdk.business.ClassSignature(hash = 636173027)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -37,6 +37,29 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public String getClassType()
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS;
+  }
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
+  {
+    return getAggregationType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE);
+
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE);
+
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, mdAttributeIF, this, alias, displayLabel);
+
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
   {
@@ -102,6 +125,20 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     }
   }
 
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.enumerationFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   /**  
    * Returns an iterator of Business objects that match the query criteria specified
    * on this query object. 
@@ -134,6 +171,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public interface DashboardThematicStyleQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.DashboardStyleQuery.DashboardStyleQueryReferenceIF
   {
 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -175,6 +215,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
       return this.NE(dashboardThematicStyle.getId());
     }
 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
+  {
+    return getAggregationType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
   {
     return getMdAttribute(null);
@@ -227,6 +284,20 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     }
   }
 
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.enumerationFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   }
 
 /**
@@ -236,6 +307,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public interface DashboardThematicStyleQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.DashboardStyleQuery.DashboardStyleQueryMultiReferenceIF
   {
 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -326,6 +400,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
 
       return this.containsExactly(itemIdArray);
   }
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
+  {
+    return getAggregationType(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
   {
     return getMdAttribute(null);
@@ -375,6 +466,20 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     else 
     {
       return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
+  protected com.runwaysdk.query.AttributeEnumeration enumerationFactory( com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  String mdEnumerationTableName, com.runwaysdk.dataaccess.MdBusinessDAOIF masterListMdBusinessIF, String masterListTalbeAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.enumerationFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
   }
 

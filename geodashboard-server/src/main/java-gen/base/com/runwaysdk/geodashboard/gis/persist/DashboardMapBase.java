@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1960496522)
+@com.runwaysdk.business.ClassSignature(hash = -1895088718)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -24,7 +24,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1960496522;
+  private static final long serialVersionUID = -1895088718;
   
   public DashboardMapBase()
   {
@@ -387,6 +387,34 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.gis.persist.HasLayer>) getRelationshipsWithChild(dashboardLayer, com.runwaysdk.geodashboard.gis.persist.HasLayer.CLASS);
   }
   
+  public com.runwaysdk.geodashboard.gis.persist.SessionMap addSessionEntry(com.runwaysdk.geodashboard.SessionEntry sessionEntry)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.SessionMap) addParent(sessionEntry, com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+  }
+  
+  public void removeSessionEntry(com.runwaysdk.geodashboard.SessionEntry sessionEntry)
+  {
+    removeAllParents(sessionEntry, com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.SessionEntry> getAllSessionEntry()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.SessionEntry>) getParents(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.gis.persist.SessionMap> getAllSessionEntryRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.gis.persist.SessionMap>) getParentRelationships(com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.gis.persist.SessionMap> getSessionEntryRel(com.runwaysdk.geodashboard.SessionEntry sessionEntry)
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.gis.persist.SessionMap>) getRelationshipsWithParent(sessionEntry, com.runwaysdk.geodashboard.gis.persist.SessionMap.CLASS);
+  }
+  
   public static DashboardMap get(String id)
   {
     return (DashboardMap) com.runwaysdk.business.Business.get(id);
@@ -395,6 +423,18 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static DashboardMap getByKey(String key)
   {
     return (DashboardMap) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public java.lang.String getMapJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getMapJSON(java.lang.String id)
+  {
+    DashboardMap _instance = DashboardMap.get(id);
+    return _instance.getMapJSON();
   }
   
   public static DashboardMap lock(java.lang.String id)

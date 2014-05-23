@@ -6,18 +6,21 @@
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
 				</attributes>
+				<mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
 			</mdBusiness>
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" />
-					<boolean name="displayInLegend" label="Display In Legend" required="true" default="true" />
-					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" default="false" />
+					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
+					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
 					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
+				  <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
+				  <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
 				</attributes>
 			</mdBusiness>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="true">
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false">
 				<attributes>
 					<integer name="layerIndex" required="true" rejectNegative="true" />
 				</attributes>
@@ -67,11 +70,11 @@
 					
 					<!-- value styles -->
 					<boolean name="enableValue" label="enableValue" required="true" defaultValue="false" />
-					<char name="valueFont" label="Value Font" size="10" required="true" />
-					<integer name="valueSize" label="Value Size" required="true" rejectNegative="true" />
-					<char name="valueColor" label="Value Color" size="10" required="true" />
-					<char name="valueHalo" label="Value Halo" size="10" required="true" />
-					<integer name="valueHaloWidth" label="Value Halo Width" required="true" rejectNegative="true" />
+					<char name="valueFont" label="Value Font" size="10" required="true" defaultValue="helvetica" />
+					<integer name="valueSize" label="Value Size" required="true" defaultValue="12" rejectNegative="true" />
+					<char name="valueColor" label="Value Color" size="10" required="true" defaultValue="#000000" />
+					<char name="valueHalo" label="Value Halo" size="10" required="true" defaultValue="#FFFFFF" />
+					<integer name="valueHaloWidth" label="Value Halo Width" required="true" defaultValue="3" rejectNegative="true" />
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="enableLabel" required="true" defaultValue="false" />
@@ -110,11 +113,11 @@
 				extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
 				<attributes>
 					<reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
-					<reference name="styleCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+					<reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
 				</attributes>
 			</mdBusiness>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="true">
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="false">
 				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
 				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
 			</mdRelationship>
@@ -122,8 +125,14 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true"
 				generateController="true">
 				<attributes>
-					<reference name="styleReference" required="true" label="Style" description="Back-reference to the Style that points to this condition."
-						type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+					
+<!-- 					<reference name="styleReference" required="false" label="Style" description="Back-reference to the Style that points to this condition."
+						type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" /> -->
+						
+					<reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists."
+            type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          <reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists."
+            type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
 				</attributes>
 			</mdBusiness>
 
@@ -137,7 +146,6 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
 				label="Equals" generateController="true">
 				<attributes>
-					<char name="attributeValue" size="100" required="true" label="Value" />
 				</attributes>
 			</mdBusiness>
 
@@ -202,6 +210,7 @@
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
 
 		</delete>
 	</undoIt>

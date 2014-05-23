@@ -22,6 +22,9 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
@@ -29,8 +32,11 @@
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
+<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
+
+<head>
 
 <gdb:localize var="page_title" key="geoEntity.title"/>
 
@@ -58,6 +64,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
@@ -105,8 +112,8 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS,
-      GeoEntityViewDTO.CLASS
+      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS, TermUtilDTO.CLASS,
+      GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS, GeoEntityExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -119,6 +126,8 @@
   /* doIt(request, out); */%>
 </script>
 
+</head>
+
 <div id="tree"></div>
 
 <script type="text/javascript">
@@ -127,7 +136,7 @@
 	  
 	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
 	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
-	    relationshipType : <% out.print("\"" + LocatedInDTO.CLASS + "\""); %>,
+	    relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
 	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.

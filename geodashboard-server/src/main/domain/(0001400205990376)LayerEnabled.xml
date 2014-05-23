@@ -1,0 +1,62 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+
+		<create>
+			<mdInformation
+				name="com.runwaysdk.geodashboard.gis.persist.LayerExcludedException"
+				label="Layer Excluded from Map"
+				message="The layer [{layerName}] was invalid and excluded from the map.">
+				<attributes>
+					<char name="layerName" label="Layer Name" size="255"
+						required="true" />
+				</attributes>
+			</mdInformation>
+
+			<mdException
+				name="com.runwaysdk.geodashboard.gis.persist.NoLayersException"
+				label="No Layers Exception" message="The map [{mapName}] contains no valid layers.">
+				<attributes>
+          <char name="mapName" label="Map Name" size="255"
+            required="true" />
+				</attributes>
+			</mdException>
+		</create>
+
+		<update>
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+				<create>
+					<attributes>
+						<boolean name="layerEnabled" required="true" defaultValue="true"
+							label="Layer Enabled" />
+						<boolean name="BBoxIncluded" required="true" defaultValue="true"
+							label="BBox Inluded" />
+					</attributes>
+				</create>
+			</mdBusiness>
+
+		</update>
+	</doIt>
+	<undoIt>
+		<delete>
+
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.layerEnabled"
+				type="com.runwaysdk.system.metadata.MdAttribute" />
+
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.BboxEnabled"
+				type="com.runwaysdk.system.metadata.MdAttribute" />
+
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.LayerExcludedException"
+				type="com.runwaysdk.system.metadata.MdInformation" />
+				
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.NoLayersException"
+				type="com.runwaysdk.system.metadata.MdException" />
+
+		</delete>
+	</undoIt>
+</version>

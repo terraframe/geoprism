@@ -24,11 +24,12 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
     return this.attribute;
   }
   
-  @Override
   public void setAttribute(String attribute)
   {
     this.attribute = attribute;    
   }
+  
+  
 
   @Override
   public Condition getCondition()
@@ -36,10 +37,8 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
     return this.condition;
   }
   
-  @Override
   public void setCondition(Condition condition)
   {
-    condition.setThematicStyle(this);
     this.condition = condition;
   }
   

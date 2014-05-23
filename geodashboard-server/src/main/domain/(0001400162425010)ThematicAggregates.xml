@@ -1,0 +1,84 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<create>
+
+			<enumerationMaster
+				name="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="Aggregation Type">
+			</enumerationMaster>
+
+			<object key="SUM"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="SUM" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Sum" />
+				</attributeStruct>
+			</object>
+
+			<object key="MIN"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="MIN" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Min" />
+				</attributeStruct>
+			</object>
+
+			<object key="MAX"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="MAX" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Max" />
+				</attributeStruct>
+			</object>
+
+			<object key="AVG"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="AVG" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Avg" />
+				</attributeStruct>
+			</object>
+
+			<mdEnumeration
+				name="com.runwaysdk.geodashboard.gis.persist.AllAggregationType"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="All Aggregation Type">
+				<includeAll></includeAll>
+			</mdEnumeration>
+
+		</create>
+		<update>
+
+
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+				<attributes>
+					<enumeration name="layerType" selectMultiple="false" />
+				</attributes>
+			</mdBusiness>
+
+			<mdBusiness
+				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle">
+				<create>
+					<attributes>
+						<enumeration name="aggregationType" selectMultiple="false"
+							label="Aggregation Type" required="false"
+							type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" />
+					</attributes>
+				</create>
+			</mdBusiness>
+
+		</update>
+	</doIt>
+	<undoIt>
+
+		<delete>
+
+			<object key="com.runwaysdk.geodashboard.gis.persist.AggregationType"
+				type="com.runwaysdk.system.metadata.MdBusiness" />
+
+			<object
+				key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.aggregationType"
+				type="com.runwaysdk.system.metadata.MdAttribute" />
+
+		</delete>
+	</undoIt>
+</version>

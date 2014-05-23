@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -409805651)
+@com.runwaysdk.business.ClassSignature(hash = 1768494636)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,40 +11,11 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 public abstract class DashboardEqualBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual";
-  public static java.lang.String ATTRIBUTEVALUE = "attributeValue";
-  private static final long serialVersionUID = -409805651;
+  private static final long serialVersionUID = 1768494636;
   
   public DashboardEqualBase()
   {
     super();
-  }
-  
-  public String getAttributeValue()
-  {
-    return getValue(ATTRIBUTEVALUE);
-  }
-  
-  public void validateAttributeValue()
-  {
-    this.validateAttribute(ATTRIBUTEVALUE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAttributeValueMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.CLASS);
-    return mdClassIF.definesAttribute(ATTRIBUTEVALUE);
-  }
-  
-  public void setAttributeValue(String value)
-  {
-    if(value == null)
-    {
-      setValue(ATTRIBUTEVALUE, "");
-    }
-    else
-    {
-      setValue(ATTRIBUTEVALUE, value);
-    }
   }
   
   protected String getDeclaredType()

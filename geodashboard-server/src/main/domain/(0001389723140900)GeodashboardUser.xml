@@ -17,8 +17,9 @@
         <mdAction name="geoentity" label="Geo entity" isPost="false" isQuery="false"  />
         <mdAction name="roles" label="Roles" isPost="false" isQuery="false"  />
         <mdAction name="universal" label="Universal" isPost="false" isQuery="false"  />
-        <mdAction name="scheduler" label="Universal" isPost="false" isQuery="false"  />
-        <mdAction name="databrowser" label="Universal" isPost="false" isQuery="false"  />
+        <mdAction name="scheduler" label="Scheduler" isPost="false" isQuery="false"  />
+        <mdAction name="databrowser" label="DataBrowser" isPost="false" isQuery="false"  />
+        <mdAction name="ontologies" label="Ontologies" isPost="false" isQuery="false"  />
       </mdController>
       <mdView name="com.runwaysdk.geodashboard.RoleView" label="Role view" >
         <attributes>

@@ -405,13 +405,6 @@ public abstract class UniversalAllPathsTableBase extends com.runwaysdk.business.
     return CLASS;
   }
   
-  public static UniversalAllPathsTableQuery getAllInstances(String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
-  {
-    UniversalAllPathsTableQuery query = new UniversalAllPathsTableQuery(new com.runwaysdk.query.QueryFactory());
-    com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
-    return query;
-  }
-  
   public static UniversalAllPathsTable get(String id)
   {
     return (UniversalAllPathsTable) com.runwaysdk.business.Business.get(id);

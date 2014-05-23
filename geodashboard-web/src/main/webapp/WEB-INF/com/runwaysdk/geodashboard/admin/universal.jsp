@@ -23,20 +23,33 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page import="com.runwaysdk.constants.DeployProperties"%>
+<%@page import="com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
+<%@page import="com.runwaysdk.system.gis.geo.IsARelationshipDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
+<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
 <%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
 <%@page import="com.runwaysdk.RunwayExceptionDTO" %>
+<%@page import="com.runwaysdk.constants.ClientConstants"%>
+<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+<%@page import="com.runwaysdk.web.json.JSONController"%>
 
-<gdb:localize var="page_title" key="universal.title"/>
-
+<%@page import="com.runwaysdk.business.BusinessDTO"%>
+<%@page import="com.runwaysdk.business.RelationshipDTO"%>
+<%@page import="com.runwaysdk.business.RelationshipDTO"%>
+<%@page import="com.runwaysdk.web.json.JSONController"%>
 
 <%
+  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
   String webappRoot = request.getContextPath() + "/";
 %>
+
+<head>
+
+<gdb:localize var="page_title" key="universal.title"/>
 
 <script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
 <link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
@@ -59,6 +72,7 @@
 <!-- Runway Generic -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
@@ -69,44 +83,13 @@
 <link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/default.css" />
 <link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.css" />
 
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-
-<%@page import="com.runwaysdk.business.BusinessDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-%>
-
-<%!public void doIt(ServletRequest request, JspWriter out) throws Exception {
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-  
-  /* OntologyStrategyIF strategy = Universal.getStrategy();
-  strategy.initialize(AllowedInDTO.CLASS); */
-  
-  /* try {
-  UniversalDTO termRoot = new UniversalDTO(clientRequest);
-  termRoot.getDisplayLabel().setValue("defaultLocale", "Earth");
-  termRoot.setName(String.valueOf(Math.random() * 100000));
-  termRoot.apply();
-  out.println("g_idTermRoot = '" + termRoot.getId() + "'");
-  }
-  catch (RunwayExceptionDTO e) {
-    System.out.println(e.getDeveloperMessage());
-  } */
-}%>
-
 <script type="text/javascript">
 <%// use a try catch before printing out the definitions, otherwise, if an
 	// error occurs here, javascript spills onto the actual page (ugly!)
 	try
 	{
 	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS
+	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS, IsARelationshipDTO.CLASS, TermUtilDTO.CLASS, UniversalExportMenuDTO.CLASS
 	    }, true);
 	  out.print(js);
 	}
@@ -115,9 +98,10 @@
 	  // perform cleanup
 	  throw e;
 	}
-
-	/* doIt(request, out); */%>
+%>
 </script>
+
+</head>
 
 <div id="tree"></div>
 
@@ -129,7 +113,7 @@
     
     document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-      relationshipType : <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>,
+      relationshipTypes : [ <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>, <% out.print("\"" + IsARelationshipDTO.CLASS + "\""); %> ],
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
       /* checkable: true, */
       crud: {
@@ -142,12 +126,5 @@
       }
     });
     document.universaltree.render("#tree");
-    /* 
-    var fac = com.runwaysdk.ui.Manager.getFactory();
-    var fac.newButton("CreateNode");
-    setTimeout(function() {
-      var $tree = document.universaltree.getImpl();
-      $tree.jstree("create_node", "#", "after", { "data": "Hello World" });
-  }, 4000); */
   });
 </script>

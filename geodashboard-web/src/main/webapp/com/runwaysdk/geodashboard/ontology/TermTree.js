@@ -42,7 +42,9 @@
     "deleteTermAndRels" : "Delete '${termLabel}' everywhere",
     "deleteRel" : "Delete only this '${termLabel}'",
     "cancel" : "Cancel",
-    "deleteDescribe" : "Are you sure you want to delete '${termLabel}'?"
+    "deleteDescribe" : "Are you sure you want to delete '${termLabel}'?",
+    "emptyMessage" : "No data to display.",
+    "export" : "Export"
   });
   
   /**
@@ -64,8 +66,9 @@
         
         config = config || {};
         this.requireParameter("termType", config.termType, "string");
-        this.requireParameter("relationshipType", config.relationshipType, "string");
+        this.requireParameter("relationshipTypes", config.relationshipTypes, "array");
         this.requireParameter("rootTerm", config.rootTerm, "string");
+        this.requireParameter("exportMenuType", config.exportMenuType, "string");
         
         var defaultConfig = {
           el: "div",
@@ -86,7 +89,8 @@
             "plugins" : ["dnd", "crrm", "ui", "contextmenu"],
             "core" : {
               data : this.__preserveThisBind(this, this.__treeWantsData),
-              check_callback: true,
+//              check_callback: true,
+              'check_callback' : Mojo.Util.bind(this, this._check_callback),
               "load_open" : true,
               "themes" : {
                 "icons": false
@@ -94,12 +98,8 @@
               }
             },
             "dnd" : {
-              drop_check : function(){alert("drop check");}
-            },
-            "crrm" : {
-              "move" : {
-                "check_move" : function(){alert("drop check");}
-              }
+              copy: false,
+              is_draggable : Mojo.Util.bind(this, this._isDraggable),
             }
           }
         };
@@ -132,6 +132,16 @@
         this.busyNodes = new com.runwaysdk.structure.HashSet();
       },
       
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
+        // in case of 'rename_node' node_position is filled with the new node name
+        return true;
+      },
+      
+      _isDraggable : function(nodes) {
+        return true;
+      },
+      
       __preserveThisBind : function(thisRef, func){
         var args = [].splice.call(arguments, 2, arguments.length);
         return function(){
@@ -143,108 +153,108 @@
         };
       },
       
-      getCheckedTerms : function(rootNode, appendArray) {
-        appendArray = appendArray || [];
-        rootNode = rootNode || this.getImpl().tree("getTree");
-        
-        for (var i = 0; i < rootNode.children.length; ++i) {
-          var child = rootNode.children[i];
-          
-          if (child.checkBox != null) {
-            if (child.checkBox.isChecked()) {
-              appendArray.push(this.__getRunwayIdFromNode(child));
-            }
-            
-            this.getCheckedTerms(child, appendArray);
-          }
-        }
-        
-        return appendArray;
-      },
-      
-      __onCheck : function(event) {
-        var checkBox = event.getCheckBox();
-        var node = checkBox.node;
-        var termId = this.__getRunwayIdFromNode(node);
-        
-        if (!node.skipCheckChildren) {
-          this.doForNodeAndAllChildren(node, function(childNode) {
-            if (childNode != node) {
-              childNode.skipCheckParent = true;
-              childNode.checkBox.setChecked(checkBox.isChecked());
-              childNode.skipCheckParent = false;
-            }
-          });
-        }
-        
-        if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
-          var checkedCount = 0;
-          var partialChecked = 0;
-          
-          var siblings = node.parent.children;
-          for (var i = 0; i < siblings.length; ++i) {
-            if (siblings[i].checkBox.isChecked()) {
-              checkedCount++;
-            }
-            else if (siblings[i].checkBox.isPartialChecked()) {
-              partialChecked++;
-            }
-          }
-          
-          if (node.parent.children.length === checkedCount) {
-            node.parent.checkBox.setChecked(true);
-          }
-          else {
-            if ((checkedCount + partialChecked) > 0) {
-              node.parent.skipCheckChildren = true;
-              node.parent.checkBox.setChecked("partial");
-              node.parent.skipCheckChildren = false;
-            }
-            else {
-              node.parent.skipCheckChildren = true;
-              node.parent.checkBox.setChecked(false);
-              node.parent.skipCheckChildren = false;
-            }
-          }
-        }
-        
-        if (node.checkBox.hasClassName("partialcheck")) {
-          var checkedCount = 0;
-          
-          for (var i = 0; i < node.children.length; ++i) {
-            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
-              checkedCount++;
-            }
-          }
-          
-          if (checkedCount == 0) {
-            node.checkBox.removeClassName("partialcheck");
-          }
-        }
-      },
-      
-      __onCreateLi : function(node, $li) {
-        var fac = this.getFactory();
-        
-        var li = fac.newElement($li[0]);
-        var title = li.getChildren()[1];
-        var checkBox = node.checkBox;
-        if (checkBox == null) {
-          checkBox = fac.newCheckBox({classes: ["jqtree-checkbox"]});
-          
-          if (node.parent != null && node.parent.checkBox != null && node.parent.checkBox.isChecked()) {
-            checkBox.setChecked(true);
-          }
-          
-          checkBox.addOnCheckListener(Mojo.Util.bind(this, this.__onCheck));
-          checkBox.render();
-          
-          node.checkBox = checkBox;
-          checkBox.node = node;
-        }
-        
-        li.insertBefore(checkBox, title);
-      },
+//      getCheckedTerms : function(rootNode, appendArray) {
+//        appendArray = appendArray || [];
+//        rootNode = rootNode || this.getImpl().tree("getTree");
+//        
+//        for (var i = 0; i < rootNode.children.length; ++i) {
+//          var child = rootNode.children[i];
+//          
+//          if (child.checkBox != null) {
+//            if (child.checkBox.isChecked()) {
+//              appendArray.push(this.__getRunwayIdFromNode(child));
+//            }
+//            
+//            this.getCheckedTerms(child, appendArray);
+//          }
+//        }
+//        
+//        return appendArray;
+//      },
+//      
+//      __onCheck : function(event) {
+//        var checkBox = event.getCheckBox();
+//        var node = checkBox.node;
+//        var termId = this.__getRunwayIdFromNode(node);
+//        
+//        if (!node.skipCheckChildren) {
+//          this.doForNodeAndAllChildren(node, function(childNode) {
+//            if (childNode != node) {
+//              childNode.skipCheckParent = true;
+//              childNode.checkBox.setChecked(checkBox.isChecked());
+//              childNode.skipCheckParent = false;
+//            }
+//          });
+//        }
+//        
+//        if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
+//          var checkedCount = 0;
+//          var partialChecked = 0;
+//          
+//          var siblings = node.parent.children;
+//          for (var i = 0; i < siblings.length; ++i) {
+//            if (siblings[i].checkBox.isChecked()) {
+//              checkedCount++;
+//            }
+//            else if (siblings[i].checkBox.isPartialChecked()) {
+//              partialChecked++;
+//            }
+//          }
+//          
+//          if (node.parent.children.length === checkedCount) {
+//            node.parent.checkBox.setChecked(true);
+//          }
+//          else {
+//            if ((checkedCount + partialChecked) > 0) {
+//              node.parent.skipCheckChildren = true;
+//              node.parent.checkBox.setChecked("partial");
+//              node.parent.skipCheckChildren = false;
+//            }
+//            else {
+//              node.parent.skipCheckChildren = true;
+//              node.parent.checkBox.setChecked(false);
+//              node.parent.skipCheckChildren = false;
+//            }
+//          }
+//        }
+//        
+//        if (node.checkBox.hasClassName("partialcheck")) {
+//          var checkedCount = 0;
+//          
+//          for (var i = 0; i < node.children.length; ++i) {
+//            if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
+//              checkedCount++;
+//            }
+//          }
+//          
+//          if (checkedCount == 0) {
+//            node.checkBox.removeClassName("partialcheck");
+//          }
+//        }
+//      },
+//      
+//      __onCreateLi : function(node, $li) {
+//        var fac = this.getFactory();
+//        
+//        var li = fac.newElement($li[0]);
+//        var title = li.getChildren()[1];
+//        var checkBox = node.checkBox;
+//        if (checkBox == null) {
+//          checkBox = fac.newCheckBox({classes: ["jqtree-checkbox"]});
+//          
+//          if (node.parent != null && node.parent.checkBox != null && node.parent.checkBox.isChecked()) {
+//            checkBox.setChecked(true);
+//          }
+//          
+//          checkBox.addOnCheckListener(Mojo.Util.bind(this, this.__onCheck));
+//          checkBox.render();
+//          
+//          node.checkBox = checkBox;
+//          checkBox.node = node;
+//        }
+//        
+//        li.insertBefore(checkBox, title);
+//      },
       
       /**
        * Sets the root term for the tree. The root term must be set before the tree can be used.
@@ -326,13 +336,16 @@
         var term = this.termCache[termId];
         var parentId = (parent instanceof Object) ? parent.getId() : parent;
         
-        var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
+//        var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
         
         var that = this;
-        var $thisTree = this.getImpl();
         
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function(retval) {
+            if (parentId === "#" && that._impl.jstree("get_children_dom", parentNodeId).length === 0) {
+              that.onTreeLoadEmpty();
+            }
+            
             that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false);});
             that.refreshTreeAfterDeleteTerm(termId);
           },
@@ -349,7 +362,7 @@
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
       
-      createTerm : function(parentId, targetNode) {
+      createTerm : function(parentId, targetNode, relType) {
         this.requireParameter("parentId", parentId, "string");
         var that = this;
         
@@ -360,16 +373,24 @@
           return;
         }
         
+        if (relType == null) {
+          relType = this._config.relationshipTypes[0];
+        }
+        
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          viewParams: {parentId: parentId, relationshipType: relType},
           action: "create",
-          actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          actionParams: {parentId: parentId, relationshipType: relType},
           onSuccess : function(responseObj) {
             var termAndRel = that.__responseToTNR(responseObj);
             var term = termAndRel.getTerm();
             var relId = termAndRel.getRelationshipId();
             var relType = termAndRel.getRelationshipType();
+            
+            if (that._emptyMsgNode != null && !that._emptyMsgNode.isDestroyed()) {
+              that._emptyMsgNode.destroy();
+            }
             
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
@@ -382,13 +403,13 @@
                   if (targetNode.id === node.id) {
                     $tree.jstree("open_node", node, function(node2){
                       return function(){
-                        that.__createTreeNode(term.getId(), node2, true);
+                        that.__createTreeNode(term.getId(), node2, true, null, null, null, relType);
                         $tree.jstree("open_node", node2, false);
                       };
                     }(node));
                   }
                   else {
-                    that.__createTreeNode(term.getId(), node, true);
+                    that.__createTreeNode(term.getId(), node, true, null, null, null, relType);
                   }
                 }
                 else if (targetNode.id === node.id) {
@@ -427,6 +448,33 @@
       },
       
       /**
+       * is binded to context menu option Export.
+       */
+      __onContextExportClick : function(contextMenu, contextMenuItem, mouseEvent) {
+        var targetNode = contextMenu.getTarget();
+        var that = this;
+        
+        var newType = eval("new " + this._config.exportMenuType + " ()");
+        var title = newType.getMd().getDisplayLabel();
+        
+        var config = {
+          type: this._config.exportMenuType,
+          title: title,
+          viewParams: {},
+          action: "export",
+          actionParams: {parentTerm: this.__getRunwayIdFromNode(targetNode)},
+          width: 560,
+          onSuccess : function(responseObj) {
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+        
+        new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();
+      },
+      
+      /**
        * is binded to context menu option Create. 
        */
       __onContextCreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
@@ -447,9 +495,9 @@
         
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId, relationshipType: ""},
+          viewParams: {id: termId, parentId: parentId, relationshipType: ""},
           action: "update",
-          id: termId,
+          actionParams: {parentId: parentId, relationshipType: ""},
           onSuccess : function(responseObj) {
             var term = that.__responseToTerm(responseObj);
             that.termCache[term.getId()] = term;
@@ -477,14 +525,20 @@
         new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
       },
       
+      getParentNode : function(node) {
+        return this.getImpl().jstree("get_node", this.getParentId(node));
+      },
+      
       /**
        * is binded to context menu option Delete. 
        */
       __onContextDeleteClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
-//        var parentId = this.__getRunwayIdFromNode(node.parent);
-        var parentId = this.getParentRunwayId(node);
+        var parentNodeId = this.getParentId(node);
+        var parentNode = this.getImpl().jstree("get_node", parentNodeId);
+        var parentId = this.__getRunwayIdFromNode(parentNode);
+        var relType = this._getRelationshipForNode(node, parentNode);
         var that = this;
         var dialog = null;
         
@@ -501,15 +555,17 @@
           dialog.close();
         };
         var performDeleteRelHandler = function() {
+          var parentRecord = that.parentRelationshipCache.getRecordWithParentIdAndRelType(termId, parentId, relType);
+          
           var deleteRelCallback = {
             onSuccess : function() {
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
-                if (that.getParentRunwayId(nodes[i]) == parentId) {
+                if (that.getParentRunwayId(nodes[i]) == parentId && relType === that._getRelationshipForNode(nodes[i], that.getParentNode(nodes[i]))) {
                   that.getImpl().jstree("delete_node", nodes[i]);
                 }
               }
-              that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
               
               // Children of universals are appended to the root node, so refresh the root node.
 //              that.refreshTerm(that.rootTermId);
@@ -521,9 +577,9 @@
           };
           Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
           
-          var parentRecord = that.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
 //          that.termCache[termId].removeChildTerm(deleteRelCallback, parentRecord.relId);
-          com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
+//          com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
+          com.runwaysdk.system.ontology.TermUtil.removeLink(deleteRelCallback, termId, parentId, relType);
           
           dialog.close();
         };
@@ -571,7 +627,6 @@
         var $tree = this.getImpl();
         
         var node = object.node;
-//        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -582,12 +637,14 @@
         var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
         var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
         
         if (this.busyNodes.contains(node.id)) {
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
           refresh.setEnabled(false);
+          cmiExport.setEnabled(false);
         }
         
         this._cm.render();
@@ -614,13 +671,13 @@
       },
       
       getParentId : function(node) {
-        var parent = this.getImpl().jstree("get_parent", node);
+        var parent = this.getImpl().jstree("get_node", node.parent);
         
         if (parent === node.id) {
           return "#";
         }
         
-        return parent;
+        return parent.id;
       },
       
       getParentRunwayId : function(node) {
@@ -718,42 +775,65 @@
       },
       
       __findInsertIndex : function(label, newParent) {
-        var index = 0;
-        var $tree = this.getImpl();
-        
         var children = this.getChildren(newParent);
         
-//        children.sort(function(a,b){
+//        var $tree = this._impl;
+        children.sort(function(nodeA,nodeB){
 //          var nodeA = $tree.jstree("get_node", a);
 //          var nodeB = $tree.jstree("get_node", b);
-//          return nodeA.text.localeCompare(nodeB.text);
-//        });
+          return nodeA.text.localeCompare(nodeB.text);
+        });
         
-        
-        for (var i = 0; i < children.length; ++i) {
+        var i = 0;
+        for (; i < children.length; ++i) {
           if (children[i].text.localeCompare(label) > 0) {
             break;
           }
-          else {
-            index++;
-          }
         }
         
-        return index;
+        return i;
       },
       
-      __copyNodeToParent : function(node, parent) {
-        var that = this;
-        
-        this.__createTreeNode(this.__getRunwayIdFromNode(node), parent, false, function(newCopiedNode){
-          var children = that.getChildren(node);
-          var len = children.length;
-          for (var i = 0; i < len; ++i) {
-            that.__copyNodeToParent(children[i], newCopiedNode);
+//      __copyNodeToParent : function(node, parent, relType) {
+//        var that = this;
+//        
+//        this.__createTreeNode(this.__getRunwayIdFromNode(node), parent, false, function(newCopiedNode){
+//          var children = that.getChildren(node);
+//          var len = children.length;
+//          for (var i = 0; i < len; ++i) {
+//            that.__copyNodeToParent(children[i], newCopiedNode);
+//          }
+//        }, true, null, relType);
+//        
+//        this._impl.jstree("open_node", parent);
+//      },
+      
+      _getRelationshipForNode : function(movedNode, newParent) {
+        return this._config.relationshipTypes[0];
+      },
+      
+      moveNode : function(movedNode, newParent, isCopy) {
+        // Ok... apparently jsTree is too retarded to know how to move a node, so we can't use their move function because it doesn't work
+        var $thisTree = this._impl;
+        var nodeMetadata = movedNode.original;
+        nodeMetadata.data = movedNode.data;
+        nodeMetadata.state = {opened: false};
+        nodeMetadata.children = true;
+        if (!isCopy) {
+          $thisTree.jstree("delete_node", movedNode);
+        }
+        else {
+          nodeMetadata.id = Mojo.Util.generateId();
+          var duplicates = this.duplicateMap.get(movedNode.data.runwayId);
+          if (duplicates == null) {
+            duplicates = [];
           }
-        }, true);
-        
-        this._impl.jstree("open_node", parent);
+          duplicates.push(nodeMetadata.id);
+          this.duplicateMap.put(movedNode.data.runwayId, duplicates);
+        }
+        var index = this.__findInsertIndex(nodeMetadata.text, newParent);
+        $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
+        $thisTree.jstree("open_node", newParent);
       },
       
       /**
@@ -774,30 +854,34 @@
         var that = this;
         
         // Really lame jsTree.. the move has already happend and there's no way to prevent it, so we're going to roll it back right here and then perform it later manually.
-        var index = this.__findInsertIndex(movedNode.text, previousParent);
         this._isMoving = true;
-        $thisTree.jstree("move_node", movedNode, previousParent, index, false, true);
+        this.moveNode(movedNode, previousParent);
         this._isMoving = false;
         
+        
         if (this.busyNodes.contains(movedNode)) {
+          return false;
+        }
+        if (previousParentId === targetNodeId && (targetNode.data.isIsANodeContainer === previousParent.data.isIsANodeContainer)) {
           return false;
         }
         
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
           
+          var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
+          var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
+          var relType = this._getRelationshipForNode(movedNode, targetNode);
+          
           var moveBizCallback = {
             onSuccess : function(relDTO) {
-              that.parentRelationshipCache.removeRecordMatchingId(movedNodeId, previousParentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
               
               that._isMoving2 = true;
-              var ind = that.__findInsertIndex(movedNode.text, targetNode);
-              $thisTree.jstree("move_node", movedNode, targetNode, ind, function(){
-                $thisTree.jstree("open_node", targetNode, false);
-              }, true);
+              that.moveNode(movedNode, targetNode);
               that._isMoving2 = false;
               
               // Remove nodes from old relationship.
@@ -822,12 +906,14 @@
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, previousParentId, that);
-          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, parentRecord.relType);
+//          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, relType);
+          com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(moveBizCallback, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
         };
         
         // User clicks Copy on context menu //
         var copyHandler = function(mouseEvent, contextMenu) {
+          
+          var relType = null;
           
           var addChildCallback = {
             onSuccess : function(relDTO) {
@@ -837,7 +923,10 @@
               
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
-                that.__copyNodeToParent(movedNode, nodes[i]);
+//                that.__copyNodeToParent(movedNode, nodes[i], relType);
+                that._isMoving2 = true;
+                that.moveNode(movedNode, that._getContainerNode(nodes[i], relType), true);
+                that._isMoving2 = false;
               }
 //              that._impl.jstree("load_node", targetNode, function(){
 //                that._impl.jstree("open_node", targetNode);
@@ -852,10 +941,12 @@
           
           that.setNodeBusy(movedNode, true);
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
+//          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.getParentRunwayId(movedNode), that);
+          relType = this._getRelationshipForNode(movedNode, targetNode);
           
           // The oldRelId is null which means that this actually does a copy.
-          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
+//          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, relType);
+          com.runwaysdk.system.ontology.TermUtil.addLink(addChildCallback, movedNodeId, targetNodeId, relType);
         };
         
         var cm = this.getFactory().newContextMenu({childId: movedNodeId, parentId: targetNodeId});
@@ -881,6 +972,11 @@
         var len = nodeArray.length;
         for (var i = 0; i < len; ++i) {
           if ($tree.jstree("is_open", nodeArray[i]) || $("#"+nodeArray[i].id).hasClass("jstree-leaf")) {
+            
+            if (termId != this.rootTermId && nodeArray[i].data != null) {
+              nodeArray[i].data.synonymNode = null;
+            }
+            
             this.setNodeBusy(nodeArray[i], true);
             $tree.jstree("load_node", nodeArray[i], function(node){
               return function(){ that.setNodeBusy(node, false); };
@@ -982,7 +1078,7 @@
       /**
        * Retrieves the term with id termId from the termCache and then creates its representation in the tree.
        */
-      __createTreeNode : function(termId, parentNode, isNodeClosed, callback, dontSetNodeChildren) {
+      __createTreeNode : function(termId, parentNode, isNodeClosed, callback, dontSetNodeChildren, appendData, relType) {
         var that = this;
         
         var term = this.termCache[termId];
@@ -1000,7 +1096,12 @@
           parentNode = $thisTree.jstree("get_node", "#");
         }
         
-        var node = { state:{opened: !isNodeClosed}, text: displayLabel, id: idStr, data: {runwayId: termId} };
+        var data = {runwayId: termId};
+        if (appendData != null) {
+          Mojo.Util.merge(appendData, data);
+        }
+        
+        var node = { state:{opened: !isNodeClosed}, text: displayLabel, id: idStr, data: data };
         
         if (dontSetNodeChildren !== true) {
           node.children = isNodeClosed;
@@ -1009,6 +1110,10 @@
         // God damn it jsTree you buggy piece of shit
         if (parentNode.id === "#") {
           parentNode.parents = [];
+        }
+        
+        if (relType != null) {
+          parentNode = this._getContainerNode(parentNode, relType)
         }
         
         node = $thisTree.jstree(
@@ -1020,6 +1125,10 @@
         );
         
         return node;
+      },
+      
+      _getContainerNode : function(parentNode, relType) {
+        return parentNode;
       },
       
       getChildren : function(nodeId) {
@@ -1058,9 +1167,20 @@
         return responseObj;
       },
       
-      __getUniqueIdForTerm : function(termId) {
+      __getUniqueIdForTerm : function(termId, json) {
         var $tree = this.getImpl();
+        
         var duplicateTerm = $tree.jstree("get_node", termId, false);
+        if (duplicateTerm == false && json != null) {
+          for (var i = 0; i < json.length; ++i) {
+            var node = json[i];
+            if (node.id === termId) {
+              duplicateTerm = node;
+              break;
+            }
+          }
+        }
+        
         var duplicates = this.duplicateMap.get(termId);
         var idStr = termId;
         if ( (duplicateTerm != null && duplicateTerm != false) || duplicates != null ) {
@@ -1075,29 +1195,15 @@
         return idStr;
       },
       
-      /**
-       * Fixes jsTree's broken/buggy recursive children structure which exists on all nodes and doesn't get updated properly.
-       * 
-       * @param node Must be the root tree node.
-       * @param children_deep Do not provide this internal parameter used only for recursive calls.
-       */
-//      __fixNodeChildren : function(node, children_deep) {
-//        children_deep = children_deep || [];
-//        var $tree = this.getImpl();
-//        
-//        var children_shallow = [];
-//        var children = this.getChildren(node);
-//        for (var i = 0; i < children.length; ++i) {
-//          children_deep.push(children[i].id);
-//          var childDeep = [];
-//          this.__fixNodeChildren($tree.jstree("get_node", children[i]), childDeep);
-//          children_deep = children_deep.concat(childDeep);
-//          children_shallow.push(children[i].id);
-//        }
-//        
-//        node.children = children_shallow;
-//        node.children_d = children_deep;
-//      },
+      getRelationships : function() {
+        
+      },
+      
+      
+      // Provided for overrides
+      appendAdditionalData : function(jsonArray, parentNode) {
+        
+      },
       
       __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
@@ -1123,12 +1229,14 @@
               if (child.id != "") {
                 var runwayId = that.genToRunway[child.id];
                 
-                var duplicates = that.duplicateMap.get(runwayId);
-                if (duplicates != null) {
-                  var indexOf = duplicates.indexOf(child.id);
-                  if (indexOf > -1) {
-                    duplicates.splice(indexOf, 1);
-                    delete that.genToRunway[child.id];
+                if (runwayId != null) {
+                  var duplicates = that.duplicateMap.get(runwayId);
+                  if (duplicates != null) {
+                    var indexOf = duplicates.indexOf(child.id);
+                    if (indexOf > -1) {
+                      duplicates.splice(indexOf, 1);
+                      delete that.genToRunway[child.id];
+                    }
                   }
                 }
               }
@@ -1136,6 +1244,7 @@
             
             // Create a json object representing our TermAndRel to pass to jstree.
             var json = [];
+            var isAChildren = [];
             for (var i = 0; i < termAndRels.length; ++i) {
               var tnr = termAndRels[i];
               var termId = termAndRels[i].getTerm().getId();
@@ -1147,22 +1256,26 @@
               that.termCache[termId] = term;
               
               // Generate a unique id for the node.
-              var idStr = that.__getUniqueIdForTerm(termId);
+              var idStr = that.__getUniqueIdForTerm(termId, json);
               
               var relType = Mojo.Util.replaceAll(tnr.getRelationshipType(), ".", "-");
               
-//              if (i > 3) {
-//                relType = "com-runwaysdk-system-gis-geo-IsA";
-//              }
-              
               var treeNode = {
-                  text: that._getTermDisplayLabel(term),
-                  id: idStr, state: {opened: false}, children: true,
-                  data: { runwayId: termId },
-                  li_attr: {'class' : relType} // Add the relationshipType to the li's class
+                text: that._getTermDisplayLabel(term),
+                id: idStr, state: {opened: false}, children: true,
+                data: { runwayId: termId },
+                relType: relType,
+                li_attr: {'class' : relType} // Add the relationshipType to the li's class
               };
-              json.push(treeNode);
+              if (tnr.getRelationshipType() === "com.runwaysdk.system.gis.geo.IsARelationship") {
+                isAChildren.push(treeNode);
+              }
+              else {
+                json.push(treeNode);
+              }
             }
+            
+            that.appendAdditionalData(json, parent, isAChildren);
             
             jsTreeCallback.call(treeThisRef, json);
             
@@ -1175,16 +1288,12 @@
 //              }
 //            }
             
-            // This code is to fix a bug in jstree.
             if (json.length === 0) {
-              var parentId = that.getParentId(that.getImpl().jstree("get_node", parentNodeId));
-              var node = $tree.jstree("get_node", parentNodeId);
+              $tree.jstree("redraw_node", parentNodeId, false); // This code is to fix a bug in jstree.
               
-              node.parent = parentId;
-              node.parents = [parentId];
-              node.children = [];
-              node.children_d = [];
-              $tree.jstree("redraw_node", parentNodeId, false);
+              if (parentNodeId === "#" && $tree.jstree("get_children_dom", parentNodeId).length === 0) {
+                that.onTreeLoadEmpty();
+              }
             }
           },
           
@@ -1195,7 +1304,13 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: parentTermId, pageNum: 0, pageSize: 0}, callback);
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: parentTermId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, callback);
+      },
+      
+      onTreeLoadEmpty : function() {
+        this._emptyMsgNode = this.getFactory().newElement("div");
+        this._emptyMsgNode.setInnerHTML(this.localize("emptyMessage"));
+        this._emptyMsgNode.render(this);
       },
       
       getImpl : function() {
@@ -1300,13 +1415,39 @@
         throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
       },
       
+      removeRecordMatchingIdAndRelType : function(childId, parentId, relType) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].parentId === parentId && records[i].relType === relType) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
+      removeRecordMatchingRelId : function(childId, relId) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].relId === relId) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
       /**
        * @returns parentRecord[]
        */
-      get : function(childId, treeInst) {
+      get : function(childId) {
         var got = this.cache[childId];
         
-        if (treeInst != null && (got == null || got == undefined)) {
+        if (got == null) {
           throw new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
         }
         
@@ -1326,6 +1467,21 @@
         }
         
         throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      /**
+       * @returns parentRecord
+       */
+      getRecordWithParentIdAndRelType : function(childId, parentId, relType) {
+        var parentRecords = this.get(childId);
+        
+        for (var i = 0; i < parentRecords.length; ++i) {
+          if (parentId === parentRecords[i].parentId && relType === parentRecords[i].relType) {
+            return parentRecords[i];
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] and relType [" + relType + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
       },
       
       removeAll : function(termId) {

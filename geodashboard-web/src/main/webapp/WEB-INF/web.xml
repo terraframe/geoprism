@@ -198,6 +198,12 @@
 
 	<!-- Begin custom web.xml settings -->
 	
+	<listener>
+    <listener-class>
+    com.runwaysdk.geodashboard.gis.web.session.GISHttpSessionListener
+    </listener-class>
+  </listener>
+	
 	<filter>
 	  <filter-name>EncodingFilter</filter-name>
 	  <filter-class>com.runwaysdk.geodashboard.EncodingFilter</filter-class>
@@ -230,7 +236,7 @@
   </listener>
   
   <listener>
-    <listener-class>com.runwaysdk.gis.web.context.GISContextListener</listener-class>
+    <listener-class>com.runwaysdk.geodashboard.gis.web.context.GISContextListener</listener-class>
   </listener>
     
   <error-page>

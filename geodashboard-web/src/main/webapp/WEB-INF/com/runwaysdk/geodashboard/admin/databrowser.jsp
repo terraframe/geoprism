@@ -21,12 +21,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-
-
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 <%
   String webappRoot = request.getContextPath() + "/";
 %>
+
+<head>
 
 <gdb:localize var="page_title" key="databrowser.title"/>
 
@@ -107,6 +107,8 @@
   }
 %>
 </script>
+
+</head>
 
 <div id="databrowser"></div>
 

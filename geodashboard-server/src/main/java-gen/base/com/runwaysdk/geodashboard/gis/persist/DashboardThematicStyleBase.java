@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 856101489)
+@com.runwaysdk.business.ClassSignature(hash = -435059334)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,13 +11,52 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyle implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
+  public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 856101489;
+  private static final long serialVersionUID = -435059334;
   
   public DashboardThematicStyleBase()
   {
     super();
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationType> getAggregationType()
+  {
+    return (java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationType>) getEnumValues(AGGREGATIONTYPE);
+  }
+  
+  public void addAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationType value)
+  {
+    if(value != null)
+    {
+      addEnumItem(AGGREGATIONTYPE, value.getId());
+    }
+  }
+  
+  public void removeAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationType value)
+  {
+    if(value != null)
+    {
+      removeEnumItem(AGGREGATIONTYPE, value.getId());
+    }
+  }
+  
+  public void clearAggregationType()
+  {
+    clearEnum(AGGREGATIONTYPE);
+  }
+  
+  public void validateAggregationType()
+  {
+    this.validateAttribute(AGGREGATIONTYPE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationTypeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return mdClassIF.definesAttribute(AGGREGATIONTYPE);
   }
   
   public com.runwaysdk.system.metadata.MdAttribute getMdAttribute()

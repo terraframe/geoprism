@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -1932211411)
+@com.runwaysdk.business.ClassSignature(hash = -1362069588)
 public abstract class DashboardEqualDTOBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitiveDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual";
-  private static final long serialVersionUID = -1932211411;
+  private static final long serialVersionUID = -1362069588;
   
   protected DashboardEqualDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -25,44 +25,6 @@ public abstract class DashboardEqualDTOBase extends com.runwaysdk.geodashboard.g
   protected java.lang.String getDeclaredType()
   {
     return CLASS;
-  }
-  
-  public static java.lang.String ATTRIBUTEVALUE = "attributeValue";
-  public String getAttributeValue()
-  {
-    return getValue(ATTRIBUTEVALUE);
-  }
-  
-  public void setAttributeValue(String value)
-  {
-    if(value == null)
-    {
-      setValue(ATTRIBUTEVALUE, "");
-    }
-    else
-    {
-      setValue(ATTRIBUTEVALUE, value);
-    }
-  }
-  
-  public boolean isAttributeValueWritable()
-  {
-    return isWritable(ATTRIBUTEVALUE);
-  }
-  
-  public boolean isAttributeValueReadable()
-  {
-    return isReadable(ATTRIBUTEVALUE);
-  }
-  
-  public boolean isAttributeValueModified()
-  {
-    return isModified(ATTRIBUTEVALUE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAttributeValueMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(ATTRIBUTEVALUE).getAttributeMdDTO();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

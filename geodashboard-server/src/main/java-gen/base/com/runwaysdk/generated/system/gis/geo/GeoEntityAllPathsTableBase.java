@@ -405,13 +405,6 @@ public abstract class GeoEntityAllPathsTableBase extends com.runwaysdk.business.
     return CLASS;
   }
   
-  public static GeoEntityAllPathsTableQuery getAllInstances(String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
-  {
-    GeoEntityAllPathsTableQuery query = new GeoEntityAllPathsTableQuery(new com.runwaysdk.query.QueryFactory());
-    com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
-    return query;
-  }
-  
   public static GeoEntityAllPathsTable get(String id)
   {
     return (GeoEntityAllPathsTable) com.runwaysdk.business.Business.get(id);
