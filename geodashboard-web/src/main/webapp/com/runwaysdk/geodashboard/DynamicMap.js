@@ -98,7 +98,8 @@
           // Assigning better display labels.
           var label = '';
           if(b._type === 'ROADMAP'){
-        	  label = this.localize("googleStreets");
+//        	  label = this.localize("googleStreets");
+        	  label = 'Google Streets';
           }
           else if(b._type === 'SATELLITE'){
         	  label = 'Google Satellite';
