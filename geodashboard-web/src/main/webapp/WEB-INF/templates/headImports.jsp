@@ -56,7 +56,7 @@
   
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
   
-  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/map.js"></script> 
+  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script> 
   
   <!-- set the encoding of your site -->
   <!-- include the site stylesheet -->

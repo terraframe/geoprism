@@ -1,6 +1,17 @@
 (function(){
+	
+  var Component = com.runwaysdk.ui.Component;  // This should be changed to extend Widget
+  var mapLocalization = "com.runwaysdk.geodashboard.mapLocalization";
+  /**
+  * LANGUAGE
+  */
+  com.runwaysdk.Localize.defineLanguage(mapLocalization, {
+	 "googleStreets" : "Google Streets"
+  });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
+	  
+	Extends : Component,
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
@@ -24,17 +35,15 @@
         this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
         
         this._defaultOverlay = null;
-        this._defaultOverlayId = null;
         this._currentOverlay = null;
         this._overlayLayers = new com.runwaysdk.structure.HashMap();     
         
         // The current base map (only one at a time is allowed)
         this._defaultBase = null;
-        this._defaultBaseId = null;
         this._currentBase = null;
         this._baseLayers = new com.runwaysdk.structure.HashMap();
-        this._suggestionCoords = new com.runwaysdk.structure.HashMap();
         
+        this._suggestionCoords = new com.runwaysdk.structure.HashMap();      
         this._autocomplete = null;
         this._responseCallback = null;
       },
@@ -53,7 +62,7 @@
         var ghyb = new L.Google('HYBRID');
         
         // need to set Zindex on this so it remains underneath other layers
-        var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
+        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
         osm._gdbcustomtype = 'OSM';
         
         var base = [gmap, gsat, ghyb, gphy, osm];
@@ -88,7 +97,7 @@
           // Assigning better display labels.
           var label = '';
           if(b._type === 'ROADMAP'){
-        	  label = 'Google Streets';
+        	  label = this.localize("mapLocalization");
           }
           else if(b._type === 'SATELLITE'){
         	  label = 'Google Satellite';
@@ -153,8 +162,10 @@
             var id = ids[i];
             if(id === changedId){
               newBaseLayer = changedLayer;
+              document.getElementById(id).disabled=true;
             }
             else{
+              document.getElementById(id).disabled=false;
               var uncheck = document.getElementById(id);
               uncheck.checked = false;
               jcf.customForms.refreshElement(uncheck);
@@ -164,24 +175,9 @@
             }
           }
         }
-        else {
-          
-          // because a base is required, make sure to keep the default base checked
-          var base = document.getElementById(this._defaultBase.id);
-          base.checked = true;
-          jcf.customForms.refreshElement(base);
-          
-          // reset to the base layer
-          changedLayer.setVisibility(false);
-          newBaseLayer = this._defaultBase;
-        }
-        
-        
-        // refresh the map with the base layer (unless it's already the base).
-        // Because we're using allOverlays = true, we must set the base layer by 
-        // lowering the index to 0 (instead of setBaseLayer()).
-//        newBaseLayer.setVisibility(true);
+        // then add the layer and set it to stack below the overlays
         this._map.addLayer(newBaseLayer);
+        newBaseLayer.bringToBack();
       },
       
       /**
@@ -256,8 +252,8 @@
                   
                   suggestions.push(row.formatted_address);
                   
-                  var lon = row.geometry.location.e;
-                  var lat = row.geometry.location.d;
+                  var lon = row.geometry.location.A;
+                  var lat = row.geometry.location.k;
                   that._suggestionCoords.put(row.formatted_address, [lon, lat]);
                 }
                 response(suggestions);
@@ -265,9 +261,8 @@
             });      
           },
         });
-//        that._autocomplete.show();
-        
-        //$('#'+DynamicMap.GEOCODE).on('keypress', Mojo.Util.bind(this, this._geocodeHandler));
+//        that._autocomplete.show();      
+//        $('#'+DynamicMap.GEOCODE).on('keypress', Mojo.Util.bind(this, this._geocodeHandler));
 
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
     		new Mojo.ClientRequest({
@@ -275,104 +270,87 @@
         			var jsonObj = Mojo.Util.toObject(json);
         			var jsonBbox = jsonObj.bbox; 
         			var jsonLayers = jsonObj.layers;
+
+        			var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
+        			var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);      		  
+        			var bounds = L.latLngBounds(swLatLng, neLatLng);   
         			
-        			if(jsonBbox.length < 4){
-        				// Incomplete BBox array.  Must have 4 coordinate sets.
-        				// Set to a basic default 
-        				that._map.setView(L.LatLng(39.79, -464.97), 9); 
-        			}
-        			else {
-        				var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        				var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);
-        		  
-        				var bounds = L.latLngBounds(swLatLng, neLatLng);
-        		  
-        			//// This is now intantiated in the initialize function
-//        			that._map = new L.Map(that._mapDivId, {
-//        				center: new L.LatLng(39.79, -464.97), 
-//        				zoom: 9,
-//        				zoomAnimation: false,
-//        				zoomControl: true
-//        			});
+        			that._map.fitBounds(bounds);
         	        
-        				that._map.fitBounds(bounds);
-        			}
-        	        
+        			// Add attribution to the map
         	        that._map.attributionControl.setPrefix('');
         	        that._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         	        
         	        L.control.mousePosition().addTo(that._map);
         	        
-        	        // Add Base Layers
+        	        // Add Base Layers to map and layer switcher panel
         	        var base = that.getBaseLayers();       	               	        
         	        that._map.addLayer(base[0]); 
         	        that._renderBaseLayerSwitcher(base);
         	        
-        	        // Add Overlays
-        	        //// This needs:
-        	        ////	to add custom style param
-        	        ////	to have more confidence that geoserver services exist
-        	        // Create the HTML for each row (base layer representation).
+        	        //// Add associated Overlays
+        	        // @viewName
+        	        // @sldName - must be a valid style registered with geoserver (no .sld extension) or the default for that layer will be used.
+        	        // @displayName
+        	        // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).	        
         	        var html = '';
         	        var ids = [];
         	        for(var i = 0; i < jsonLayers.length; i++){
-        	        	var viewName = jsonObj.layers[i].viewName
-        	        	var displayName = jsonObj.layers[i].layerName
+        	        	var viewName = jsonObj.layers[i].viewName;
+//        	        	var sldName = jsonObj.layers[i].sldName || "";  // This should be enabled we wire up the interface or set up a better test process
+        	        	var sldName = "";  
+        	        	var displayName = jsonObj.layers[i].layerName || "N/A";
         	        	var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
         	        	
         	        	var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
         	        		layers: geoserverName,
         	        		format: 'image/png',
-        	        		transparent: true
+        	        		transparent: true,
+        	        		styles: sldName
         				});        			
 
-        	            var id = 'overlay_layer_'+i;
-        	            
+        	        	// Create the HTML for each row (base layer representation).
+        	        	var checked = '';
+        	            var id = 'overlay_layer_'+i;     	            
         	            var b = layer;
-        	            b.id = id;
+        	            b.id = id;  
+        	            ids.push(id);  
+        	            that._overlayLayers.put(id, b);
         	            
-        	            var checked = '';
-        	            
-        	            // This is completely unneeded but makes sure a single layer is rendered on the map.  
+        	            // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
         	            // It often helps new users to see an overlay in action on initial map load.
         	            if(i === 0){
         	              this._currentOverlay = this._defaultOverlay = layer;
         	              checked = 'checked="checked"';
         	              that._map.addLayer(layer);
         	            }
-        	            
-        	            ids.push(id);
-        	            
+        	                   	            
         	            html += '<div class="row-form">';
         	            html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
         	            html += '<label for="'+id+'">'+displayName+'</label>';
         	            html += '<div class="cell"><a href="#" class="ico-remove">remove</a><a href="#" class="ico-edit">edit</a><a href="#" class="ico-control">control</a></div>';
-        	            html += '</div>';
-        	            
-        	            that._overlayLayers.put(id, b);
+        	            html += '</div>';      	            
         	          }
 
         	          // combine the rows into new HTML that goes in to the layer switcher
         	          var rows = $(html);
-
         	          var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
         	          var el = container[0];
         	          
-        	          container.append(rows);
-        	          
+        	          container.append(rows);   	          
         	          jcf.customForms.replaceAll(el);
         	          
         	          // add event handlers to manage the actual check/uncheck process
         	          for(var i=0; i<ids.length; i++){
         	            var id = ids[i];
-        	            var check = $('#'+id);
-        	            
+        	            var check = $('#'+id);       	            
         	            var handler = Mojo.Util.bind(that, that._selectOverlayLayer);
         	            check.on('change', that._overlayLayers.get(id), handler);
         	          }	       
         		}
     		})
-    		,"yynpw8x3rmgs50lfay9s5j3co7ged60szojgdxrfm5h1jt5d5afsrgoboiuxxb5d");   
+//    		, this._mapId);
+    		,"8t7gs1jz2bvm1uhokuuy0rxbywt2s9husw316isodn92ekn3lfumg7lgym3akng9");   
       }
     }
     
