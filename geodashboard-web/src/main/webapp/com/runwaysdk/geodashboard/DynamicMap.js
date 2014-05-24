@@ -1,17 +1,19 @@
 (function(){
 	
-  var Component = com.runwaysdk.ui.Component;  // This should be changed to extend Widget
-  var mapLocalization = "com.runwaysdk.geodashboard.mapLocalization";
+  var Component = com.runwaysdk.ui.Component;  // This should be changed to extend Widget rather than Component
+//  var Widget = com.runwaysdk.ui.factory.runway.Widget;
+  var mapLocalizationName = "com.runwaysdk.geodashboard.mapLocalization";
   /**
   * LANGUAGE
   */
-  com.runwaysdk.Localize.defineLanguage(mapLocalization, {
+  com.runwaysdk.Localize.defineLanguage(mapLocalizationName, {
 	 "googleStreets" : "Google Streets"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
 	  
 	Extends : Component,
+//	Extends : Widget,
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
@@ -61,7 +63,6 @@
         var gmap = new L.Google('ROADMAP');       
         var ghyb = new L.Google('HYBRID');
         
-        // need to set Zindex on this so it remains underneath other layers
         var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
         osm._gdbcustomtype = 'OSM';
         
@@ -97,7 +98,7 @@
           // Assigning better display labels.
           var label = '';
           if(b._type === 'ROADMAP'){
-        	  label = this.localize("mapLocalization");
+        	  label = this.localize("googleStreets");
           }
           else if(b._type === 'SATELLITE'){
         	  label = 'Google Satellite';
@@ -124,7 +125,7 @@
         var rows = $(html);
 
         var container = $('#'+DynamicMap.BASE_LAYER_CONTAINER);
-        var el = container[0];
+        var el = container[0];    
         
         container.append(rows);
         
