@@ -38,6 +38,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.GeodashboardUserDTO;
+import com.runwaysdk.geodashboard.SessionEntry;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -61,6 +63,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.Users;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -1043,11 +1046,14 @@ public class GeoserverTest
     DashboardMap map = null;
 
     try
-    {
+    {     
 
       map = new DashboardMap();
       map.setName("Test Map");
       map.apply();
+      
+//      session.addDashboardMap(map).apply();
+//      map.addSessionEntry(session).apply();
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
@@ -1087,8 +1093,9 @@ public class GeoserverTest
 
       DashboardThematicStyle style2 = new DashboardThematicStyle();
       style2.setMdAttribute(rank);
-      style2.setName("Style 2");
+      style2.setName("demo2");
       style2.setStyleCondition(eq);
+      style2.setPolygonFill("#FF0000");
       style2.apply();
 
       HasStyle hasStyle = layer.addHasStyle(style);
@@ -1106,7 +1113,13 @@ public class GeoserverTest
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
 
       Database.createView(layer.getViewName(), v.getSQL());
-      Database.createView(layer2.getViewName(), v2.getSQL());
+      Database.createView(layer2.getViewName(), v2.getSQL());   
+      
+      // just for demo... remove all geoserverfacade code before commit
+      GeoserverFacade.publishWorkspace();
+      GeoserverFacade.publishStore();
+      GeoserverFacade.publishLayer(layer.getViewName(), "polygon");
+      GeoserverFacade.publishLayer(layer2.getViewName(), "demo");
 
       String json = map.getMapJSON();
       JSONObject mapJsonObj = new JSONObject(json);
@@ -1123,7 +1136,7 @@ public class GeoserverTest
       
 //      if (GEOSERVER_RUNNING)
 //      {
-//        Assert.fail("Not implemented.");
+////        Assert.fail("Not implemented.");
 //      }
     }
     catch(JSONException ex)
@@ -1137,7 +1150,7 @@ public class GeoserverTest
     }
   }
 
-  @Test
+  //@Test
   @Request
   public void testNoLayerException()
   {
