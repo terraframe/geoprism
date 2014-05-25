@@ -40,6 +40,7 @@
     "deleteSynonym" : "Delete Synonym",
     "refreshSynonyms" : "Refresh Synonyms",
     "emptyMessage" : "No data to display, create a Universal first."
+//    "exportAll" : "Export All"
   });
   
   /**
@@ -57,6 +58,8 @@
         config.exportMenuType = "com.runwaysdk.geodashboard.gis.GeoEntityExportMenu";
         
         this.$initialize(config);
+        
+        this._wrapperDiv = this.getFactory().newElement("div");
       },
       
       /**
@@ -399,9 +402,26 @@
         });
       },
       
+      _onClickExportAll : function() {
+        this.exportTerm(this.rootTermId);
+      },
+      
+//      createExportAllButton : function() {
+//        var but = this.getFactory().newButton(this.localize("exportAll"), Mojo.Util.bind(this, this._onClickExportAll));
+//        
+//        but.addClassName("btn btn-primary");
+//        but.setStyle("margin-bottom", "20px");
+//        
+//        this._wrapperDiv.appendChild(but);
+//      },
+      
       render : function(parent) {
         
-        this.$render(parent);
+//        this.createExportAllButton();
+        
+        this._wrapperDiv.render(parent);
+        
+        this.$render(this._wrapperDiv);
         
       }
     }
