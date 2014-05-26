@@ -1093,8 +1093,9 @@ public class GeoserverTest
 
       DashboardThematicStyle style2 = new DashboardThematicStyle();
       style2.setMdAttribute(rank);
-      style2.setName("Style 2");
+      style2.setName("demo2");
       style2.setStyleCondition(eq);
+      style2.setPolygonFill("#FF0000");
       style2.apply();
 
       HasStyle hasStyle = layer.addHasStyle(style);
@@ -1112,7 +1113,13 @@ public class GeoserverTest
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
 
       Database.createView(layer.getViewName(), v.getSQL());
-      Database.createView(layer2.getViewName(), v2.getSQL());
+      Database.createView(layer2.getViewName(), v2.getSQL());   
+      
+      // just for demo... remove all geoserverfacade code before commit
+      GeoserverFacade.publishWorkspace();
+      GeoserverFacade.publishStore();
+      GeoserverFacade.publishLayer(layer.getViewName(), "polygon");
+      GeoserverFacade.publishLayer(layer2.getViewName(), "demo");
 
       String json = map.getMapJSON();
       JSONObject mapJsonObj = new JSONObject(json);
@@ -1129,7 +1136,7 @@ public class GeoserverTest
       
 //      if (GEOSERVER_RUNNING)
 //      {
-//        Assert.fail("Not implemented.");
+////        Assert.fail("Not implemented.");
 //      }
     }
     catch(JSONException ex)

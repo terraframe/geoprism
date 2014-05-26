@@ -452,6 +452,14 @@
        */
       __onContextExportClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
+        
+        this.exportTerm(this.__getRunwayIdFromNode(targetNode));
+      },
+      
+      /**
+       * @param parentTerm String The Runway Id of the term to export.
+       */
+      exportTerm : function(parentTerm) {
         var that = this;
         
         var newType = eval("new " + this._config.exportMenuType + " ()");
@@ -462,7 +470,7 @@
           title: title,
           viewParams: {},
           action: "export",
-          actionParams: {parentTerm: this.__getRunwayIdFromNode(targetNode)},
+          actionParams: {parentTerm: parentTerm},
           width: 560,
           onSuccess : function(responseObj) {
           },
