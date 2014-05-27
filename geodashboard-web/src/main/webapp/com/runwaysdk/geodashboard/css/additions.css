@@ -1,5 +1,5 @@
 /****** 
-**** All CSS below are additions 
+**** All CSS below are additions to all.css
 *******/
 
 body{
@@ -103,4 +103,36 @@ div.gdb-maincontent-busy {
 /* .aside-nav a:active{color:red;} */
 
 
+/*** 
+** Accordion for map layer checkboxes
+***/
+div.accordion-group.sales-accortion {
+	margin-left: 0px;
+}
+
+div#baseLayerContainer.accordion-inner.holder {
+	top: 3px;
+}
+
+a.map-layers-opener.opener {
+	font-size: 15px;
+	line-height: 15px;
+	font-weight: normal;
+	color: #bababa;
+}
+
+#base-map-container .accordion-group {
+    margin-bottom: 0px;
+    border:0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}   
+
+
+/* Color Picker */
+.colpick{
+	position: absolute;
+	z-index: 9999;
+} 
 

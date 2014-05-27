@@ -1,19 +1,22 @@
 (function(){
 	
-  var Component = com.runwaysdk.ui.Component;  // This should be changed to extend Widget rather than Component
-//  var Widget = com.runwaysdk.ui.factory.runway.Widget;
-  var mapLocalizationName = "com.runwaysdk.geodashboard.mapLocalization";
+  var Component = com.runwaysdk.ui.Component;  
+  var DynamicMapName = GDB.Constants.GIS_PACKAGE+'DynamicMap';
+  
   /**
   * LANGUAGE
   */
-  com.runwaysdk.Localize.defineLanguage(mapLocalizationName, {
-	 "googleStreets" : "Google Streets"
+  com.runwaysdk.Localize.defineLanguage(DynamicMapName, {
+	 "googleStreets" : "Google Streets",
+	 "googleSatellite" : "Google Satellite",
+	 "googleHybrid" : "Google Hybrid",
+	 "googleTerrain" : "Google Terrain",
+	 "osmBasic" : "Open Street Map"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
 	  
 	Extends : Component,
-//	Extends : Widget,
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
@@ -48,6 +51,7 @@
         this._suggestionCoords = new com.runwaysdk.structure.HashMap();      
         this._autocomplete = null;
         this._responseCallback = null;
+
       },
       
       /**
@@ -98,20 +102,19 @@
           // Assigning better display labels.
           var label = '';
           if(b._type === 'ROADMAP'){
-//        	  label = this.localize("googleStreets");
-        	  label = 'Google Streets';
+        	  label = this.localize("googleStreets");
           }
           else if(b._type === 'SATELLITE'){
-        	  label = 'Google Satellite';
+        	  label = this.localize("googleSatellite");
           }
           else if(b._type === 'TERRAIN'){
-        	  label = 'Google Terrain';
+        	  label = this.localize("googleTerrain");
           }
           else if(b._type === 'HYBRID'){
-        	  label = 'Google Hybrid';
+        	  label = this.localize("googleHybrid");
           }
           else if(b._gdbcustomtype === 'OSM'){
-        	  label = 'Open Street Map';
+        	  label = this.localize("osmBasic");
           }
 
           html += '<div class="row-form">';
@@ -179,7 +182,9 @@
         }
         // then add the layer and set it to stack below the overlays
         this._map.addLayer(newBaseLayer);
-        newBaseLayer.bringToBack();
+        if(newBaseLayer._gdbcustomtype === 'OSM'){
+        	newBaseLayer.bringToBack();  // this throws an error for non OSM layers 
+        }
       },
       
       /**
@@ -283,7 +288,16 @@
         	        that._map.attributionControl.setPrefix('');
         	        that._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         	        
-        	        L.control.mousePosition().addTo(that._map);
+        	        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(that._map);
+        	        
+        	        // Hide mouse position coordinate display when outside of map
+        	        that._map.on('mouseover', function(e) {
+        	            $(".leaflet-control-mouseposition.leaflet-control").show();
+        	        });
+        	        
+        	        that._map.on('mouseout', function(e) {
+        	            $(".leaflet-control-mouseposition.leaflet-control").hide();
+        	        });
         	        
         	        // Add Base Layers to map and layer switcher panel
         	        var base = that.getBaseLayers();       	               	        
@@ -352,10 +366,30 @@
         		}
     		})
 //    		, this._mapId);
-    		,"8t7gs1jz2bvm1uhokuuy0rxbywt2s9husw316isodn92ekn3lfumg7lgym3akng9");   
+    		,"zh9hfb7jzvd2up3z39x52ef7uveo03ia26elpy75hv99loigp8v7adp6efj4xtow");   
+        
+         this._selectColor();  // test
+      }, 
+      
+      /**
+       * Handles the selection of colors from the color picker 
+       * 
+       * 
+       */
+      _selectColor : function(){
+    	  
+    	  $('.color-holder').colpick({
+    			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+    			onChange:function(hsb,hex,rgb,el,bySetColor) {
+    				$(el).find(".ico").css('background','#'+hex);
+    				
+    				// TODO:  associate the selected color with the relevant style attribute (i.e. border, fill, etc...)  
+    			}
+    		});
+    	  
       }
     }
-    
+   
   });
   
   var DataType = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DataType', {
