@@ -351,8 +351,7 @@
         	          }	       
         		}
     		})
-//    		, this._mapId);
-    		,"8t7gs1jz2bvm1uhokuuy0rxbywt2s9husw316isodn92ekn3lfumg7lgym3akng9");   
+    		, this._mapId);
       }
     }
     

@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.test.geodashboard.StateInfoDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -136,6 +137,12 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     ClientRequestIF clientRequest = this.getClientRequest(); 
     DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);  
     req.setAttribute("mapId", map.getId());
+    
+    StateInfoDTO info = new StateInfoDTO(clientRequest);
+    String rankId = info.getRankMd().getId();
+    req.setAttribute("rankId", rankId);
+    req.setAttribute("info", info);
+    
     render("dashboardViewer.jsp");
   }
 }
