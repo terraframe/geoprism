@@ -366,7 +366,7 @@
         		}
     		})
 //    		, this._mapId);
-    		,"zh9hfb7jzvd2up3z39x52ef7uveo03ia26elpy75hv99loigp8v7adp6efj4xtow");   
+    		,"8e39zpm0w1lt6utvxggi3r54v8mka13e6o96y163dqviia6tnzi6gi5qbiso5pep");   
         
          this._selectColor();  // test
       }, 

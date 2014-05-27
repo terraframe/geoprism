@@ -42,8 +42,8 @@ public class Sandbox
     
     GeoserverFacade.publishWorkspace();
     GeoserverFacade.publishStore();
-    GeoserverFacade.publishLayer("layer$0mbeqsa8hf9frgl0zt6ie5uyp74ppf2e", "polygon");  // hardcoded mapid. must create map with layers first
-    GeoserverFacade.publishLayer("layer$7gp0wwfxivkk8f23r4gdghkwmbjqnize", "polygon");  // hardcoded mapid. must create map with layers first
+    GeoserverFacade.publishLayer("layer$6q5fo1tzyu7kklz9octx4stou4xssnv0", "polygon");  // hardcoded mapid. must create map with layers first
+    GeoserverFacade.publishLayer("layer$z7lb0hwkdi3reiviku84zw9b19oaxrgq", "polygon");  // hardcoded mapid. must create map with layers first
     
   }
 
