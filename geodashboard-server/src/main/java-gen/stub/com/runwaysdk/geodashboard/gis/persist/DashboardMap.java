@@ -29,8 +29,8 @@ import com.vividsolutions.jts.geom.Envelope;
 public class DashboardMap extends DashboardMapBase implements
     com.runwaysdk.generation.loader.Reloadable, Map
 {
-  private static Log log = LogFactory.getLog(DashboardMap.class);
-  
+  private static Log        log              = LogFactory.getLog(DashboardMap.class);
+
   private static final long serialVersionUID = 861649895;
 
   public DashboardMap()
@@ -120,20 +120,20 @@ public class DashboardMap extends DashboardMapBase implements
         }
       }
 
-      if(log.isDebugEnabled())
+      if (log.isDebugEnabled())
       {
-        log.debug("JSON for map ["+this+"]:\n"+ mapJSON.toString(4));
+        log.debug("JSON for map [" + this + "]:\n" + mapJSON.toString(4));
       }
-      
+
       return mapJSON.toString();
     }
     catch (JSONException ex)
     {
-      log.error("Could not properly form map ["+this+"] into valid JSON to send back to the client.");
+      log.error("Could not properly form map [" + this + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
   }
-  
+
   @Override
   public String getName()
   {
@@ -192,70 +192,39 @@ public class DashboardMap extends DashboardMapBase implements
       }
 
       resultSet = Database.query(sql);
-    }
-    else
-    {
-      NoLayersException ex = new NoLayersException("The map " + getName() + " contains no layers.");
-      throw ex;
-    }
 
-    try
-    {
-      if (resultSet.next())
+      try
       {
-        String bbox = resultSet.getString("bbox");
-        if (bbox != null)
+        if (resultSet.next())
         {
-          Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
-          Matcher m = p.matcher(bbox);
-
-          if (m.matches())
+          String bbox = resultSet.getString("bbox");
+          if (bbox != null)
           {
-            String coordinates = m.group(1);
-            List<Coordinate> coords = new LinkedList<Coordinate>();
+            Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
+            Matcher m = p.matcher(bbox);
 
-            for (String c : coordinates.split(","))
-            {
-              String[] xAndY = c.split(" ");
-              double x = Double.valueOf(xAndY[0]);
-              double y = Double.valueOf(xAndY[1]);
-
-              coords.add(new Coordinate(x, y));
-            }
-
-            Envelope e = new Envelope(coords.get(0), coords.get(2));
-
-            try
-            {
-              bboxArr.put(e.getMinX());
-              bboxArr.put(e.getMinY());
-              bboxArr.put(e.getMaxX());
-              bboxArr.put(e.getMaxY());
-            }
-            catch (JSONException ex)
-            {
-              throw new ProgrammingErrorException(ex);
-            }
-          }
-          else
-          {
-            // There will not be a match if there is a single point geo
-            // entity.
-            // In this case, return the x,y coordinates to OpenLayers.
-
-            p = Pattern.compile("POINT\\((.*)\\)");
-            m = p.matcher(bbox);
             if (m.matches())
             {
-              String c = m.group(1);
-              String[] xAndY = c.split(" ");
-              double x = Double.valueOf(xAndY[0]);
-              double y = Double.valueOf(xAndY[1]);
+              String coordinates = m.group(1);
+              List<Coordinate> coords = new LinkedList<Coordinate>();
+
+              for (String c : coordinates.split(","))
+              {
+                String[] xAndY = c.split(" ");
+                double x = Double.valueOf(xAndY[0]);
+                double y = Double.valueOf(xAndY[1]);
+
+                coords.add(new Coordinate(x, y));
+              }
+
+              Envelope e = new Envelope(coords.get(0), coords.get(2));
 
               try
               {
-                bboxArr.put(x);
-                bboxArr.put(y);
+                bboxArr.put(e.getMinX());
+                bboxArr.put(e.getMinY());
+                bboxArr.put(e.getMaxX());
+                bboxArr.put(e.getMaxY());
               }
               catch (JSONException ex)
               {
@@ -264,46 +233,73 @@ public class DashboardMap extends DashboardMapBase implements
             }
             else
             {
-              String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
-                  + "] could not be used to create a valid bounding box";
-               throw new ProgrammingErrorException(error);
+              // There will not be a match if there is a single point geo
+              // entity.
+              // In this case, return the x,y coordinates to OpenLayers.
+
+              p = Pattern.compile("POINT\\((.*)\\)");
+              m = p.matcher(bbox);
+              if (m.matches())
+              {
+                String c = m.group(1);
+                String[] xAndY = c.split(" ");
+                double x = Double.valueOf(xAndY[0]);
+                double y = Double.valueOf(xAndY[1]);
+
+                try
+                {
+                  bboxArr.put(x);
+                  bboxArr.put(y);
+                }
+                catch (JSONException ex)
+                {
+                  throw new ProgrammingErrorException(ex);
+                }
+              }
+              else
+              {
+                String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
+                    + "] could not be used to create a valid bounding box";
+                throw new ProgrammingErrorException(error);
+              }
             }
           }
         }
-      }
 
-      return bboxArr;
+        return bboxArr;
+      }
+      catch (SQLException sqlEx1)
+      {
+        Database.throwDatabaseException(sqlEx1);
+      }
+      finally
+      {
+        try
+        {
+          java.sql.Statement statement = resultSet.getStatement();
+          resultSet.close();
+          statement.close();
+        }
+        catch (SQLException sqlEx2)
+        {
+          Database.throwDatabaseException(sqlEx2);
+        }
+      }
     }
-    catch (SQLException sqlEx1)
+    else
     {
-      Database.throwDatabaseException(sqlEx1);
-    }
-    finally
-    {
+      // There are no layers in the map so return the Cambodian defaults
       try
       {
-        java.sql.Statement statement = resultSet.getStatement();
-        resultSet.close();
-        statement.close();
+        bboxArr.put(99.60205078124999);
+        bboxArr.put(10.28249130152419);
+        bboxArr.put(111.33544921874999);
+        bboxArr.put(14.764259178591587);
       }
-      catch (SQLException sqlEx2)
+      catch (JSONException ex)
       {
-        Database.throwDatabaseException(sqlEx2);
+        throw new ProgrammingErrorException(ex);
       }
-    }
-
-    // Some problem occured and the bbox couldn't be calculated.
-    // Just return the Cambodian defaults
-    try
-    {
-      bboxArr.put(15.728813770533966);
-      bboxArr.put(117.39990234375);
-      bboxArr.put(9.210560107629691);
-      bboxArr.put(94.19677734375);
-    }
-    catch (JSONException ex)
-    {
-      throw new ProgrammingErrorException(ex);
     }
 
     return bboxArr;
