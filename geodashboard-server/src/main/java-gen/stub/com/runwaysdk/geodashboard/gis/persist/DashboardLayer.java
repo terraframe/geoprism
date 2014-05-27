@@ -32,8 +32,7 @@ import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
 
-public class DashboardLayer extends DashboardLayerBase implements
-    com.runwaysdk.generation.loader.Reloadable, Layer
+public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long  serialVersionUID = 1992575686;
 
@@ -49,7 +48,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
-    
+
     if (this.isNew())
     {
       // generate a db view name unique across space and time
@@ -212,8 +211,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     else
     {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY
-          + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
 

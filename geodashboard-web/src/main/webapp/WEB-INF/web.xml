@@ -236,7 +236,7 @@
   </listener>
   
   <listener>
-    <listener-class>com.runwaysdk.geodashboard.gis.web.context.GISContextListener</listener-class>
+    <listener-class>com.runwaysdk.geodashboard.gis.web.context.GeodashboardContextListener</listener-class>
   </listener>
     
   <error-page>
