@@ -36,41 +36,31 @@
   String innerJsp = (String) request.getAttribute(JSPFetcher.INNER_JSP);
   JSPFetcher fetcher = new JSPFetcher(innerJsp, request, response);
   String innerHTML = fetcher.getString();
-  
-  String head = "";
-  
-  // This code extracts the <head> tag from the page we're loading. The contents of the head tag is then written to our head tag.
-  Pattern pattern = Pattern.compile("\\<.*?head.*?\\>(.*)\\<\\/.*?head.*?\\>", Pattern.DOTALL);
-  Matcher matcher = pattern.matcher(innerHTML);
-  if (matcher.find()) {
-    head = matcher.group(1);
-    innerHTML = innerHTML.replace(head, "");
-  }
 %>
-
 
 <!DOCTYPE html>
 <html id="innerFrameHtml">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="cache-control" content="max-age=0" />
-  <meta http-equiv="cache-control" content="no-cache" />
-  <meta http-equiv="expires" content="0" />
-  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-  <meta http-equiv="pragma" content="no-cache" />
-  
-  <title>${page_title}</title>
- 
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
 
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
-<%
-  String webappRoot = request.getContextPath() + "/";
-%>
-  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
+	<title>${page_title}</title>
+	 
+	<%@page import="com.runwaysdk.constants.ClientConstants"%>
+	<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+	<%@page import="com.runwaysdk.web.json.JSONController"%>
+	
+	<%@page import="com.runwaysdk.constants.DeployProperties" %>
+	<%
+	  String webappRoot = request.getContextPath() + "/";
+	%>
+	
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
@@ -80,48 +70,61 @@
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
+	  
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
-  
-  <!-- set the encoding of your site -->
-  <!-- include the site stylesheet -->
-  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
-  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
-  <link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
-  <!-- include jQuery library -->
-  <!--
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
-  <!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
-  <!-- include custom JavaScript -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
-  
-  <!-- Localization -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
-  
-  <!-- include HTML5 IE enabling script for IE -->
-  <!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
-
-  <% out.print(head); %>
-
-  <script>
-    // Tell our parent to disable busy CSS when we're done loading
-    
-    $(window).load(function() {
-      // executes when complete page is fully loaded, including all frames, objects and images
-      if (!window.location.origin) {
-        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
-      }
-      
-      window.parent.postMessage("iFrameLoadCompleted", window.location.origin);
-    });
-  </script>
-
+	  
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
+	   
+	<!-- jQuery  -->
+	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+    <%-- <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script> --%>
+	<script src="https://code.jquery.com/jquery-1.9.0.js"></script>
+	  
+	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
+	  
+	<!-- Custom JavaScript -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
+	
+    <!-- JQuery UI -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
+	  
+	<!-- Localization -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	
+	<!-- Color Picker -->
+	<script src="<% out.print(webappRoot); %>jquery-colorpicker/js/colpick.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery-colorpicker/css/colpick.css" type="text/css"/>
+	
+	<!-- Map Dependencies -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet/leaflet.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>	
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script> 
+	<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+	
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>leaflet/leaflet.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/map.css">
+	  
+	<!-- include HTML5 IE enabling script for IE -->
+	<!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
+	
+	<script>
+	  // Tell our parent to disable busy CSS when we're done loading	  
+	  $(window).load(function() {
+	    // executes when complete page is fully loaded, including all frames, objects and images
+	    if (!window.location.origin) {
+	      window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+	    }
+	    window.parent.postMessage("iFrameLoadCompleted", window.location.origin);
+	  });
+	</script>
 </head>
 
 <body class="iFrameBody">

@@ -201,6 +201,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         {
           GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
         }
+        
         if (!Universal.getStrategy().isInitialized(AllowedIn.CLASS))
         {
           Universal.getStrategy().initialize(AllowedIn.CLASS);

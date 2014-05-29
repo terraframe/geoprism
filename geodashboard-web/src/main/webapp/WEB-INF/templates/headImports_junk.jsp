@@ -39,6 +39,8 @@
 <%
   String webappRoot = request.getContextPath() + "/";
 %>
+
+
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
@@ -74,6 +76,8 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   -->
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
+<!--   <script src="https://code.jquery.com/jquery-1.9.0.js"></script> -->
+  
   <!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
   <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
   <!-- include custom JavaScript -->
@@ -81,6 +85,7 @@
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
+<%--   <script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script> --%>
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
   
   <!-- include HTML5 IE enabling script for IE -->
@@ -110,6 +115,19 @@
 		  }
     }, false);
  </script>
+ 
+   <script>
+    // Tell our parent to disable busy CSS when we're done loading
+    
+    $(window).load(function() {
+      // executes when complete page is fully loaded, including all frames, objects and images
+      if (!window.location.origin) {
+        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+      }
+      
+      window.parent.postMessage("iFrameLoadCompleted", window.location.origin);
+    });
+   </script> 
   
 </head>
 

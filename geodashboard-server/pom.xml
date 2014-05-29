@@ -43,7 +43,7 @@
 			<groupId>org.eclipse.birt.runtime</groupId>
 			<artifactId>org.eclipse.birt.runtime</artifactId>
 			<version>3.7.2.v20120214-1408</version>
-		</dependency>	
+		</dependency>
 	</dependencies>
 
 	<!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, 
@@ -65,7 +65,7 @@
 						<executions>
 							<execution>
 								<id>rebuild-database</id>
-								<phase>process-resources</phase>
+								<phase>install</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
@@ -101,7 +101,7 @@
 						<executions>
 							<execution>
 								<id>import-schema</id>
-								<phase>process-resources</phase>
+								<phase>install</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
@@ -178,6 +178,7 @@
 										<argument>${project.basedir}/src/main/working</argument>
 									</arguments>
 								</configuration>
+
 							</execution>
 						</executions>
 					</plugin>
@@ -200,7 +201,7 @@
 						<executions>
 							<execution>
 								<id>unimport-working</id>
-								<phase>process-resources</phase>
+								<phase>install</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
@@ -235,7 +236,7 @@
 						<executions>
 							<execution>
 								<id>import-working</id>
-								<phase>process-resources</phase>
+								<phase>install</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
