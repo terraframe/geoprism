@@ -51,6 +51,11 @@
         this._suggestionCoords = new com.runwaysdk.structure.HashMap();      
         this._autocomplete = null;
         this._responseCallback = null;
+        
+
+        // Add layer styling event listeners
+        this._selectColor();  	
+        this._selectLayerType();	
 
       },
       
@@ -367,12 +372,6 @@
     		})
 //    		, this._mapId);
     		,"8e39zpm0w1lt6utvxggi3r54v8mka13e6o96y163dqviia6tnzi6gi5qbiso5pep");   
-        
-         ////
-         // Add layer styling event listeners
-         ////
-         this._selectColor();  	// test
-         this._selectLayerType();	// test
       }, 
       
       /**
