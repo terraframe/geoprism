@@ -53,7 +53,6 @@
         this._responseCallback = null;
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
-
       },
       
       /**
