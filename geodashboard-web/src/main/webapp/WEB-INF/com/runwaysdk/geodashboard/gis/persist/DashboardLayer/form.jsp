@@ -178,6 +178,7 @@
                 </div>
               </div>
             </div>
+            
 </mjl:component>
             
             <div class="row-holder">

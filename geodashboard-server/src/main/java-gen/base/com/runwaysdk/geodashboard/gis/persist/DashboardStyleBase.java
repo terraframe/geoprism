@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1516412692)
+@com.runwaysdk.business.ClassSignature(hash = -419845289)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -52,7 +52,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = 1516412692;
+  private static final long serialVersionUID = -419845289;
   
   public DashboardStyleBase()
   {
@@ -1207,6 +1207,12 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static DashboardStyle getByKey(String key)
   {
     return (DashboardStyle) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public static com.runwaysdk.geodashboard.gis.persist.AllAggregationType[] getSortedAggregations()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static DashboardStyle lock(java.lang.String id)

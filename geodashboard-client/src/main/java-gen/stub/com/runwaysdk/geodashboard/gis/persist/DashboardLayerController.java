@@ -3,7 +3,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 
-import com.runwaysdk.gis.constants.GeoserverProperties;
+import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -81,6 +81,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     Font[] fonts = e.getAllFonts(); // Get the fonts
     req.setAttribute("fonts", fonts);
+    
+    // get the universals
+    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
+    req.setAttribute("universals", universals);
+    
+    // aggregations
+    AllAggregationTypeDTO[] types = DashboardStyleDTO.getSortedAggregations(clientRequest);
+    req.setAttribute("aggregations", types);
     
     render("createComponent.jsp");
   }

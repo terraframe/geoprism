@@ -26,6 +26,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
@@ -231,6 +232,16 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   public List<? extends Style> getStyles()
   {
     return this.getAllHasStyle().getAll();
+  }
+  
+  public static UniversalQuery getSortedUniversals()
+  {
+    QueryFactory f = new QueryFactory();
+    UniversalQuery q = new UniversalQuery(f);
+    
+    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+    
+    return q;
   }
 
   @Override
