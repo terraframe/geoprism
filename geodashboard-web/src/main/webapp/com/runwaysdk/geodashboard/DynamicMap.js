@@ -367,7 +367,11 @@
     		})
     		, this._mapId);
         
-         this._selectColor();  // test
+         ////
+         // Add layer styling event listeners
+         ////
+         this._selectColor();  	// test
+         this._selectLayerType();	// test
       }, 
       
       /**
@@ -377,15 +381,59 @@
        */
       _selectColor : function(){
     	  
+    	  // color dropdown buttons
     	  $('.color-holder').colpick({
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
     				
-    				// TODO:  associate the selected color with the relevant style attribute (i.e. border, fill, etc...)  
+    				// TODO:  associate the selected color with the relevant hidden inputs  
     			}
-    		});
+    		}); 
     	  
+    	  // category layer type colors
+    	  $("#category-colors-container").find('.icon-color').colpick({
+  			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+  			onChange:function(hsb,hex,rgb,el,bySetColor) {
+  				$(el).css('background','#'+hex);
+  				
+  				// TODO:  associate the selected color with the relevant hidden inputs 
+  			}
+  		});
+      },
+      
+      /**
+       * Handles the selection of layer type representation  
+       * i.e. basic, bubble, gradient, category
+       * 
+       */
+      _selectLayerType : function(){
+    	  
+    	  $('input:radio[name="radio-group"]').change(function(){ 	
+    		  		
+    		  		var targetRadio = $(this);
+    		  		
+    		  		// hide all the styling options
+	        		$.each($('.tab-pane'), function(){
+	        			if($(this).is(":visible")){
+	        				$(this).hide();	
+	        			}
+	        		});
+	        	
+	        		// add the relevant styling options for the layer type
+			        if (targetRadio.attr("id") === "radio1") {
+			            $("#tab001").show();
+			        }
+			        else if (targetRadio.attr("id") === "radio2") {
+			            $("#tab002").show();
+			        }
+			        else if (targetRadio.attr("id") === "radio3") {
+			            $("#tab003").show();
+			        }
+			        else if (targetRadio.attr("id") === "radio4") {
+			            $("#tab004").show();
+			        }
+    		});
       }
     }
    

@@ -20,6 +20,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.derby.iapi.services.io.NewByteArrayInputStream;
 import org.apache.log4j.BasicConfigurator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,10 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.DashboardQuery;
 import com.runwaysdk.geodashboard.GeodashboardUserDTO;
+import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.SessionEntry;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
@@ -72,6 +76,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
@@ -96,6 +101,8 @@ public class GeoserverTest
   private static final File           xsd            = new File(SLD_SCHEMA);
 
   private static final boolean        consoleDebug   = true;
+  
+  private static final boolean keepForTesting = true;
 
   @Rule
   public TestName                     name           = new TestName();
@@ -190,6 +197,7 @@ public class GeoserverTest
     stateInfo = new MdBusiness();
     stateInfo.setTypeName(TYPE_NAME);
     stateInfo.setPackageName(TEST_PACKAGE);
+    stateInfo.getDisplayLabel().setDefaultValue("State Information");
     stateInfo.apply();
     stateInfoId = stateInfo.getId();
 
@@ -241,6 +249,16 @@ public class GeoserverTest
     usa.apply();
     usa.addLink(GeoEntity.getRoot(), LocatedIn.CLASS);
 
+    // create the link to the dashboard
+    Dashboard dashboard = new Dashboard();
+    dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
+    dashboard.apply();
+    
+    MetadataWrapper wrapper = new MetadataWrapper();
+    wrapper.setWrappedMdClass(stateInfo);
+    wrapper.apply();
+    
+    dashboard.addMetadata(wrapper).apply();
   }
 
   private static void dataSetup()
@@ -311,8 +329,11 @@ public class GeoserverTest
   @Request
   public static void classTeardown()
   {
-    metadataTeardown();
-    StrategyInitializer.tearDown();
+    if(!keepForTesting)
+    {
+      metadataTeardown();
+      StrategyInitializer.tearDown();
+    }
   }
 
   @Transaction
@@ -1035,6 +1056,35 @@ public class GeoserverTest
     }  
   }
   
+  /**
+   * Ensures that a dashboard retrieves the proper metadata
+   */
+  @Test
+  @Request
+  public void testDashboardMetadata()
+  {
+    DashboardQuery q = Dashboard.getSortedDashboards();
+    
+    Assert.assertEquals(1, q.getCount());
+
+    OIterator<? extends Dashboard> iter = q.getIterator();
+    
+    try
+    {
+      Dashboard dashboard = iter.next();
+      
+      MdClass[] mds = dashboard.getSortedTypes();
+      
+      Assert.assertEquals(1, mds.length);
+      
+      Assert.assertEquals(stateInfo, mds[0]);
+    }
+    finally
+    {
+      iter.close();
+    }
+  }
+  
   @Test
   @Request
   public void testMapJSON() throws JSONException
@@ -1150,22 +1200,23 @@ public class GeoserverTest
     }
   }
 
-  //@Test
-  @Request
-  public void testNoLayerException()
-  {
-    DashboardMap map = this.testNoLayerException_trans(); 
-    
-    try
-    {
-      map.getMapJSON();
-      Assert.fail("A JSON was created for a map without layers.");
-    }
-    finally
-    {
-      map.delete();
-    }
-  }
+// Test is no longer valid.
+//  @Test
+//  @Request
+//  public void testNoLayerException()
+//  {
+//    DashboardMap map = this.testNoLayerException_trans(); 
+//    
+//    try
+//    {
+//      map.getMapJSON();
+//      Assert.fail("A JSON was created for a map without layers.");
+//    }
+//    finally
+//    {
+//      map.delete();
+//    }
+//  }
   
   @Transaction
   private DashboardMap testNoLayerException_trans()

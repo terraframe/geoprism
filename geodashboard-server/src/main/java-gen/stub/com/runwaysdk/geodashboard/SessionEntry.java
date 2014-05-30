@@ -26,7 +26,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
 {
   private static final long serialVersionUID = -1326763274;
 
-  private SessionEntry()
+  public SessionEntry()
   {
     super();
   }
