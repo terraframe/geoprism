@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1741352418)
+@com.runwaysdk.business.ClassSignature(hash = -1135819183)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -239,6 +239,23 @@ public  class DashboardMetadataQuery extends com.runwaysdk.query.GeneratedRelati
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.DashboardMetadata.LASTUPDATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.DashboardMetadata.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getListOrder()
+  {
+    return getListOrder(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getListOrder(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.DashboardMetadata.LISTORDER, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getListOrder(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.DashboardMetadata.LISTORDER, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()

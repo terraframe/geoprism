@@ -189,17 +189,11 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     req.setAttribute("dashboards", results);
 
     // load the default type (index of 0)
-    Map<String, MdClassDTO> typeMap = new LinkedHashMap<String, MdClassDTO>();
     if (results.size() > 0)
     {
       DashboardDTO first = results.get(0);
       MdClassDTO[] types = first.getSortedTypes();
       req.setAttribute("types", types);
-      for(MdClassDTO mdDTO : types)
-      {
-        typeMap.put(mdDTO.getId(), mdDTO);
-      }
-      req.setAttribute("typeMap", typeMap);
 
       List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
       Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();

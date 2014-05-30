@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1892830701)
+@com.runwaysdk.business.ClassSignature(hash = -390204496)
 public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
-  private static final long serialVersionUID = -1892830701;
+  private static final long serialVersionUID = -390204496;
   
   protected MetadataWrapperDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -452,55 +452,55 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttribute()
+  public java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttributeWrapper()
   {
     return (java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttribute(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     return (java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeRelationships()
+  public java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships()
   {
     return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public com.runwaysdk.geodashboard.DashboardAttributesDTO addAttribute(com.runwaysdk.geodashboard.AttributeWrapperDTO child)
+  public com.runwaysdk.geodashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperDTO child)
   {
     return (com.runwaysdk.geodashboard.DashboardAttributesDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public static com.runwaysdk.geodashboard.DashboardAttributesDTO addAttribute(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.AttributeWrapperDTO child)
+  public static com.runwaysdk.geodashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.AttributeWrapperDTO child)
   {
     return (com.runwaysdk.geodashboard.DashboardAttributesDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public void removeAttribute(com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
+  public void removeAttributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
   {
     getRequest().deleteChild(relationship.getId());
   }
   
-  public static void removeAttribute(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
+  public static void removeAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
   {
     clientRequestIF.deleteChild(relationship.getId());
   }
   
-  public void removeAllAttribute()
+  public void removeAllAttributeWrapper()
   {
     getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public static void removeAllAttribute(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
   }

@@ -69,20 +69,20 @@
 					<char name="name" label="Name" size="50" required="true" />
 					
 					<!-- value styles -->
-					<boolean name="enableValue" label="enableValue" required="true" defaultValue="false" />
-					<char name="valueFont" label="Value Font" size="10" required="true" defaultValue="helvetica" />
-					<integer name="valueSize" label="Value Size" required="true" defaultValue="12" rejectNegative="true" />
-					<char name="valueColor" label="Value Color" size="10" required="true" defaultValue="#000000" />
-					<char name="valueHalo" label="Value Halo" size="10" required="true" defaultValue="#FFFFFF" />
-					<integer name="valueHaloWidth" label="Value Halo Width" required="true" defaultValue="3" rejectNegative="true" />
+					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
+					<char name="valueFont" label="Font" size="10" required="true" defaultValue="helvetica" />
+					<integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
+					<char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
+					<char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
+					<integer name="valueHaloWidth" label="Halo Width" required="true" defaultValue="3" rejectNegative="true" />
 					
 					<!-- label styles -->
-					<boolean name="enableLabel" label="enableLabel" required="true" defaultValue="false" />
-					<char name="labelFont" label="Label Font" size="25" required="true" defaultValue="helvetica"/>
-					<integer name="labelSize" label="Label Size" required="true" defaultValue="12" rejectNegative="true" />
-					<char name="labelColor" label="Label Color" size="7" required="true" defaultValue="#000000"/>
-					<char name="labelHalo" label="Label Halo" size="7" required="false" defaultValue="#FFFFFF"/>
-					<integer name="labelHaloWidth" label="Label Halo Width" required="false" defaultValue="3" rejectNegative="true" />
+					<boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
+					<char name="labelFont" label="Font" size="25" required="true" defaultValue="helvetica"/>
+					<integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
+					<char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000"/>
+					<char name="labelHalo" label="Halo" size="7" required="false" defaultValue="#FFFFFF"/>
+					<integer name="labelHaloWidth" label="Halo Width" required="false" defaultValue="3" rejectNegative="true" />
 					
 					<!-- point styles -->
 					<integer name="pointSize" label="Point Size" required="true" defaultValue="6" rejectNegative="true" />

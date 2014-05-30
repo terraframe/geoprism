@@ -20,7 +20,6 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.derby.iapi.services.io.NewByteArrayInputStream;
 import org.apache.log4j.BasicConfigurator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,12 +37,14 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.metadata.MdViewDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.AttributeWrapper;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.DashboardAttributes;
+import com.runwaysdk.geodashboard.DashboardMetadata;
 import com.runwaysdk.geodashboard.DashboardQuery;
-import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 import com.runwaysdk.geodashboard.MetadataWrapper;
-import com.runwaysdk.geodashboard.SessionEntry;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -67,7 +68,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Request;
-import com.runwaysdk.system.Users;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -75,8 +75,10 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdView;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
@@ -85,6 +87,8 @@ public class GeoserverTest
   private static final String         TEST_PACKAGE   = "com.test.geodashboard";
 
   private static final String         TYPE_NAME      = "StateInfo";
+
+  private static final String         VIEW_NAME      = "StateInfoView";
 
   private static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
 
@@ -136,6 +140,8 @@ public class GeoserverTest
   private static GeoEntity            usa;
 
   private static MdBusiness           stateInfo;
+  
+  private static MdView stateInfoView;
 
   private static String               stateInfoId;
 
@@ -249,16 +255,39 @@ public class GeoserverTest
     usa.apply();
     usa.addLink(GeoEntity.getRoot(), LocatedIn.CLASS);
 
-    // create the link to the dashboard
+    // create the link to the dashboard with an MdView
+    stateInfoView = new MdView();
+    stateInfoView.setTypeName(VIEW_NAME);
+    stateInfoView.getDisplayLabel().setDefaultValue("State Information");
+    stateInfoView.setPackageName(TEST_PACKAGE);
+    stateInfoView.apply();
+    
+    MdAttributeVirtual virtualRank = new MdAttributeVirtual();
+    virtualRank.setAttributeName("viewRank");
+    virtualRank.setMdAttributeConcrete(rank);
+    virtualRank.setDefiningMdView(stateInfoView);
+    virtualRank.apply();
+    
     Dashboard dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
     dashboard.apply();
     
-    MetadataWrapper wrapper = new MetadataWrapper();
-    wrapper.setWrappedMdClass(stateInfo);
-    wrapper.apply();
     
-    dashboard.addMetadata(wrapper).apply();
+    MetadataWrapper mWrapper = new MetadataWrapper();
+    mWrapper.setWrappedMdClass(stateInfoView);
+    mWrapper.apply();
+    
+    DashboardMetadata dm = dashboard.addMetadata(mWrapper);
+    dm.setListOrder(0);
+    dm.apply();
+    
+    AttributeWrapper aWrapper = new AttributeWrapper();
+    aWrapper.setWrappedMdAttribute(virtualRank);
+    aWrapper.apply();
+    
+    DashboardAttributes da = mWrapper.addAttributeWrapper(aWrapper);
+    da.setListOrder(0);
+    da.apply();
   }
 
   private static void dataSetup()
@@ -1074,10 +1103,12 @@ public class GeoserverTest
       Dashboard dashboard = iter.next();
       
       MdClass[] mds = dashboard.getSortedTypes();
-      
       Assert.assertEquals(1, mds.length);
       
-      Assert.assertEquals(stateInfo, mds[0]);
+      MdView fetched = (MdView) mds[0];
+
+      
+      Assert.assertEquals(stateInfoView.getId(), fetched.getId());
     }
     finally
     {

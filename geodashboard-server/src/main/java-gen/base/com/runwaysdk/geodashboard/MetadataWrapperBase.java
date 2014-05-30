@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 916394131)
+@com.runwaysdk.business.ClassSignature(hash = -818068176)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -24,7 +24,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 916394131;
+  private static final long serialVersionUID = -818068176;
   
   public MetadataWrapperBase()
   {
@@ -371,30 +371,30 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
     return query;
   }
   
-  public com.runwaysdk.geodashboard.DashboardAttributes addattribute(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
+  public com.runwaysdk.geodashboard.DashboardAttributes addAttributeWrapper(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
   {
     return (com.runwaysdk.geodashboard.DashboardAttributes) addChild(attributeWrapper, com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
   }
   
-  public void removeattribute(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
+  public void removeAttributeWrapper(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
   {
     removeAllChildren(attributeWrapper, com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.AttributeWrapper> getAllattribute()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.AttributeWrapper> getAllAttributeWrapper()
   {
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.AttributeWrapper>) getChildren(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getAllattributeRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getAllAttributeWrapperRel()
   {
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes>) getChildRelationships(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getattributeRel(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getAttributeWrapperRel(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
   {
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes>) getRelationshipsWithChild(attributeWrapper, com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
   }

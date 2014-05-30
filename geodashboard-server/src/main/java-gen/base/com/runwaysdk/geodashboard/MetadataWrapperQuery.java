@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 882821194)
+@com.runwaysdk.business.ClassSignature(hash = 493404569)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -471,7 +471,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
-  public com.runwaysdk.query.Condition attribute()
+  public com.runwaysdk.query.Condition attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -480,7 +480,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute()
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -488,17 +488,17 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.getBusinessQuery().isParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.getBusinessQuery().isParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -507,7 +507,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -516,20 +516,20 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.getBusinessQuery().isParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.getBusinessQuery().isParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute()
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -538,7 +538,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute()
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -546,17 +546,17 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.getBusinessQuery().isNotParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -565,7 +565,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -574,13 +574,13 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.getBusinessQuery().isNotParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(dashboardAttributesQuery);
@@ -639,32 +639,32 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.MetadataWrapper metadataWrapper);
 
 
-  public com.runwaysdk.query.Condition attribute();
+  public com.runwaysdk.query.Condition attributeWrapper();
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
-
-
-  public com.runwaysdk.query.Condition SUBSELECT_attribute();
-
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
-
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
 
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute();
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper();
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute();
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper();
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper();
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
 
 
   public com.runwaysdk.query.Condition dashboard();
@@ -942,7 +942,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
 
   }
 
-  public com.runwaysdk.query.Condition attribute()
+  public com.runwaysdk.query.Condition attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -951,7 +951,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute()
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -959,17 +959,17 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.isParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.isParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -978,7 +978,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -987,20 +987,20 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.isParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.isParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute()
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -1009,7 +1009,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute()
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -1017,17 +1017,17 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.isNotParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     return this.isNotParentIn_SUBSELECT(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -1036,7 +1036,7 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isNotParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
@@ -1045,13 +1045,13 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.isNotParentIn(dashboardAttributesQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attribute(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery)
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.isNotParentIn_SUBSELECT(dashboardAttributesQuery);

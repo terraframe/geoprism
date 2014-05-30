@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.test.geodashboard.StateInfo;
 
 public class MetadataWrapper extends MetadataWrapperBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -32,21 +32,19 @@ public class MetadataWrapper extends MetadataWrapperBase implements
     List<MdAttributeView> mdAttr = new LinkedList<MdAttributeView>();
     Locale locale = Session.getCurrentLocale();
 
-    for (MdAttributeDAOIF attr : md.definesAttributesOrdered())
+    for (AttributeWrapper aWrapper : this.getAllAttributeWrapper())
     {
-      if (!attr.isSystem())
-      {
-        MdAttributeView view = new MdAttributeView();
+      MdAttribute attr = aWrapper.getWrappedMdAttribute();
+      MdAttributeView view = new MdAttributeView();
 
-        String id = attr.getId();
-        String label = attr.getDisplayLabel(locale);
+      String id = attr.getId();
+      String label = attr.getDisplayLabel(locale);
 
-        view.setMdClassId(mdId);
-        view.setMdAttributeId(id);
-        view.setDisplayLabel(label);
+      view.setMdClassId(mdId);
+      view.setMdAttributeId(id);
+      view.setDisplayLabel(label);
 
-        mdAttr.add(view);
-      }
+      mdAttr.add(view);
     }
 
     Collections.sort(mdAttr, new MdAttributeViewComparator());
@@ -54,7 +52,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements
     return mdAttr.toArray(new MdAttributeView[mdAttr.size()]);
   }
 
-  public static class MdAttributeViewComparator implements Comparator<MdAttributeView>, Reloadable
+  private static class MdAttributeViewComparator implements Comparator<MdAttributeView>, Reloadable
   {
 
     @Override

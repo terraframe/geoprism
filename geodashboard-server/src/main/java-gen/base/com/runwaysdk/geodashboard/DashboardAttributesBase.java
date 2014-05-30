@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 97195502)
+@com.runwaysdk.business.ClassSignature(hash = -1357840801)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -18,12 +18,13 @@ public abstract class DashboardAttributesBase extends com.runwaysdk.business.Rel
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LISTORDER = "listOrder";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 97195502;
+  private static final long serialVersionUID = -1357840801;
   
   public DashboardAttributesBase(String parentId, String childId)
   {
@@ -200,6 +201,34 @@ public abstract class DashboardAttributesBase extends com.runwaysdk.business.Rel
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
     return mdClassIF.definesAttribute(LASTUPDATEDBY);
+  }
+  
+  public Integer getListOrder()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LISTORDER));
+  }
+  
+  public void validateListOrder()
+  {
+    this.validateAttribute(LISTORDER);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getListOrderMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
+    return mdClassIF.definesAttribute(LISTORDER);
+  }
+  
+  public void setListOrder(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LISTORDER, "");
+    }
+    else
+    {
+      setValue(LISTORDER, java.lang.Integer.toString(value));
+    }
   }
   
   public com.runwaysdk.system.Users getLockedBy()

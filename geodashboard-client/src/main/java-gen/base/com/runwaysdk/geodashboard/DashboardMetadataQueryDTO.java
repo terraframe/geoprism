@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1580001584)
+@com.runwaysdk.business.ClassSignature(hash = -567622721)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard;
 public class DashboardMetadataQueryDTO extends com.runwaysdk.business.RelationshipQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1580001584;
+private static final long serialVersionUID = -567622721;
 
   protected DashboardMetadataQueryDTO(String type)
   {

@@ -54,7 +54,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return mdClasses.toArray(new MdClass[mdClasses.size()]);
   }
   
-  public static class MdClassComparator implements Comparator<MdClass>, Reloadable
+  private static class MdClassComparator implements Comparator<MdClass>, Reloadable
   {
 
     @Override

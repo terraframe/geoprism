@@ -78,40 +78,48 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     }
   }
 
-  private static void userLock()
+  private static void aquireLock(String userId)
   {
-    String userId = Session.getCurrentSession().getUser().getId();
     LockObject.getLockObject().appLock(userId);
   }
 
-  private static void userUnlock()
+  private static void releaseUnlock(String userId)
   {
-    String userId = Session.getCurrentSession().getUser().getId();
     LockObject.getLockObject().releaseAppLock(userId);
   }
 
+  /**
+   * Note the Session.getCurrentUser() is not available at this point.
+   * 
+   * @param sessionId
+   */
   @Request
   @Transaction
   public static void deleteBySession(String sessionId)
   {
+    String userId = null;
+    
     try
     {
-      userLock();
-
-      try
-      {
-        SessionEntry.getByKey(sessionId).delete();
-      }
-      catch (DataNotFoundException ex)
-      {
-        // This is possible if the user has not requested any artifact that
-        // requires
-        // a SessionEntry, such as a DashboardMap.
-      }
+      SessionEntry entry = SessionEntry.getByKey(sessionId);
+      userId = entry.getSessionUserId();
+      
+      aquireLock(userId);
+      
+      entry.delete();
+    }
+    catch (DataNotFoundException ex)
+    {
+      // This is possible if the user has not requested any artifact that
+      // requires
+      // a SessionEntry, such as a DashboardMap.
     }
     finally
     {
-      userUnlock();
+      if(userId != null)
+      {
+        releaseUnlock(userId);
+      }
     }
   }
 
@@ -151,8 +159,8 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   {
     try
     {
-      userLock();
-      
+      aquireLock(user.getId());
+
       QueryFactory f = new QueryFactory();
       SessionEntryQuery q = new SessionEntryQuery(f);
 
@@ -174,7 +182,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     }
     finally
     {
-      userUnlock();
+      releaseUnlock(user.getId());
     }
 
   }

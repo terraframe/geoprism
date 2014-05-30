@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -376560199)
+@com.runwaysdk.business.ClassSignature(hash = 1169100904)
 public abstract class DashboardMetadataDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.DashboardMetadata";
-  private static final long serialVersionUID = -376560199;
+  private static final long serialVersionUID = 1169100904;
   
   public DashboardMetadataDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {
@@ -35,6 +35,7 @@ public abstract class DashboardMetadataDTOBase extends com.runwaysdk.business.Re
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
+  public static java.lang.String LISTORDER = "listOrder";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
@@ -248,6 +249,43 @@ public abstract class DashboardMetadataDTOBase extends com.runwaysdk.business.Re
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLastUpdatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
+  }
+  
+  public Integer getListOrder()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LISTORDER));
+  }
+  
+  public void setListOrder(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LISTORDER, "");
+    }
+    else
+    {
+      setValue(LISTORDER, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isListOrderWritable()
+  {
+    return isWritable(LISTORDER);
+  }
+  
+  public boolean isListOrderReadable()
+  {
+    return isReadable(LISTORDER);
+  }
+  
+  public boolean isListOrderModified()
+  {
+    return isModified(LISTORDER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getListOrderMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LISTORDER).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.UsersDTO getLockedBy()
