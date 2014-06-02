@@ -52,11 +52,7 @@
         this._autocomplete = null;
         this._responseCallback = null;
         
-
-        // Add layer styling event listeners
-        this._selectColor();  	
-        this._selectLayerType();	
-
+        this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
       },
       
       /**
@@ -370,9 +366,41 @@
         	          }	       
         		}
     		})
-//    		, this._mapId);
-    		,"8e39zpm0w1lt6utvxggi3r54v8mka13e6o96y163dqviia6tnzi6gi5qbiso5pep");   
+    		, this._mapId);
+        
+         // Make sure all openers for each attribute have a click event
+         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
       }, 
+      
+      _openLayerForAttribute : function(e){
+        e.preventDefault();
+
+        var el = $(e.currentTarget);
+        var attrId = el.data('id');
+        
+        var that = this;
+        
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){
+            
+            var exec = Mojo.Util.extractScripts(html);
+            
+            var modal = $('#modal01').first();
+            modal.html(html);
+            jcf.customForms.replaceAll(modal[0]);
+            
+            eval(exec);
+            
+            // Add layer styling event listeners
+            ////
+            that._selectColor();   // test
+            that._selectLayerType(); // test
+          }
+        });
+        
+        this._LayerController.newInstance(request);
+        
+      },
       
       /**
        * Handles the selection of colors from the color picker 
@@ -386,7 +414,6 @@
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
-    				
     				// TODO:  associate the selected color with the relevant hidden inputs  
     			}
     		}); 

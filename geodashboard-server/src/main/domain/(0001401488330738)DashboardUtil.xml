@@ -1,0 +1,37 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+        <create>
+          <mdMethod name="getSortedUniversals" static="true" label="Get Sorted Universals" 
+            returnType="com.runwaysdk.system.gis.geo.UniversalQuery">
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+        <create>
+          <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" 
+            returnType="com.runwaysdk.geodashboard.gis.persist.AllAggregationType[]">
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    
+      
+      
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getSortedUniversals"
+        type="com.runwaysdk.system.metadata.MdMethod"/>
+        
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.getSortedAggregations"
+        type="com.runwaysdk.system.metadata.MdMethod"/>
+    
+    </delete>
+  </undoIt>
+</version>

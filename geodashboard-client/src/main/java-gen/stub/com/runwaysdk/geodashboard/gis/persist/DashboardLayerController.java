@@ -1,5 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+
+import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
+
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLayer/";
@@ -56,7 +61,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.lock(super.getClientRequest(), id);
-    req.setAttribute("item", dto);
+    req.setAttribute("layer", dto);
     render("editComponent.jsp");
   }
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
@@ -67,7 +72,24 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
-    req.setAttribute("item", dto);
+    req.setAttribute("layer", dto);
+
+    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+    req.setAttribute("style", style);
+    
+    GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    
+    Font[] fonts = e.getAllFonts(); // Get the fonts
+    req.setAttribute("fonts", fonts);
+    
+    // get the universals
+    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
+    req.setAttribute("universals", universals);
+    
+    // aggregations
+    AllAggregationTypeDTO[] types = DashboardStyleDTO.getSortedAggregations(clientRequest);
+    req.setAttribute("aggregations", types);
+    
     render("createComponent.jsp");
   }
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
@@ -94,7 +116,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.get(clientRequest, id));
+    req.setAttribute("layer", com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
