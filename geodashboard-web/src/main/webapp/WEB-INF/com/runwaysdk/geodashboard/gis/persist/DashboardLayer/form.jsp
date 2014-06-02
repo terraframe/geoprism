@@ -1,7 +1,6 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<mjl:component param="layer" item="${layer}">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
     <div class="modal-dialog">
       <div class="modal-content">
@@ -22,8 +21,6 @@
                 </span>
               </div>
             </div>
-</mjl:component>
-<mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder style02">
                 <strong>Labels and Values</strong>
@@ -112,7 +109,6 @@
                   <div class="cell style02">
                     <label for="f55">${style.labelFontMd.displayLabel}</label>
                     <div class="select-holder">
-                    
                       <select class="font-select" name="style.${style.labelFontMd.name}" id="f55">
                         <c:forEach items="${fonts}" var="font">
                           <c:choose>
@@ -178,9 +174,6 @@
                 </div>
               </div>
             </div>
-            
-</mjl:component>
-            
             <div class="row-holder">
               <div class="label-holder style03">
                 <strong>Define an aggregation method</strong>
@@ -190,21 +183,41 @@
                   <label for="f58">Group by</label>
                   <div class="select-box">
                     <select id="f58" class="method-slect">
-                      <option>District</option>
-                      <option>Lorem ipsum</option>
-                      <option>Lorem ipsum</option>
-                      <option>Lorem ipsum</option>
+                       <c:forEach items="${universals}" var="universal">
+                         <c:choose>
+                           <c:when test="${layer.universalId == universal.id}">
+		                         <option value="${universal.id}" selected="selected">
+		                           ${universal.displayLabel.value}
+		                         </option>
+                           </c:when>
+                           <c:otherwise>
+		                         <option value="${universal.id}">
+		                           ${universal.displayLabel.value}
+		                         </option>
+                           </c:otherwise>
+                         </c:choose>
+                      </c:forEach>
                     </select>
                   </div>
                 </div>
                 <div class="box">
                   <label for="f59">According to</label>
                   <div class="select-box">
-                    <select id="f59" class="method-slect">
-                      <option>Sum</option>
-                      <option>Lorem ipsum</option>
-                      <option>Lorem ipsum</option>
-                      <option>Lorem ipsum</option>
+                    <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
+                      <c:forEach items="${aggregations}" var="aggregation">
+                         <c:choose>
+                           <c:when test="">
+                             <option value="${fn:length(style.aggregationTypeEnumNames) > 0 && style.aggregationTypeEnumNames[0] == aggregation.enumName}" selected="selected">
+                               ${aggregation.displayLabel.value}
+                             </option>
+                           </c:when>
+                           <c:otherwise>
+                             <option value="${aggregation.enumName}">
+                               ${aggregation.displayLabel.value}
+                             </option>
+                           </c:otherwise>
+                         </c:choose>
+                      </c:forEach>
                     </select>
                   </div>
                 </div>
@@ -218,26 +231,26 @@
                 <ul class="nav-tabs type-tabs">
                   <li class="active">
                     <a href="#" data-toggle="tab">
-                      <input checked id="radio1" name="radio-group" type="radio">
-                      <label for="radio1">Basic</label>
+                      <input checked id="radio1" name="layer.${layer.layerTypeMd.name}" value="BASIC" type="radio">
+                      <label for="radio1">${features['BASIC']}</label>
                     </a>
                   </li>
                   <li class="bubble">
                     <a href="#" data-toggle="tab">
-                      <input id="radio2" name="radio-group" type="radio">
-                      <label for="radio2">Bubble</label>
+                      <input id="radio2" name="layer.${layer.layerTypeMd.name}" value="BUBBLE" type="radio">
+                      <label for="radio2">${features['BUBBLE']}</label>
                     </a>
                   </li>
                   <li class="gradient">
                     <a href="#" data-toggle="tab">
-                      <input id="radio3" name="radio-group" type="radio">
-                      <label for="radio3">Gradient</label>
+                      <input id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
+                      <label for="radio3">${features['GRADIENT']}</label>
                     </a>
                   </li>
                   <li class="category">
                     <a href="#" data-toggle="tab">
-                      <input id="radio4" name="radio-group" type="radio">
-                      <label for="radio4">Category</label>
+                      <input id="radio4" name="layer.${layer.layerTypeMd.name}" value="CATEGORY" type="radio">
+                      <label for="radio4">${features['CATEGORY']}</label>
                     </a>
                   </li>
                 </ul>
@@ -592,8 +605,8 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block style02">
-                    <input id="f65" class="check" type="checkbox" checked="checked">
-                    <label for="f65">Display in Legend</label>
+                    <input id="f65" class="check" type="checkbox" <c:if test="${layer.displayInLegend}">checked="checked"</c:if> name="style.${layer.displayInLegendMd.name}">
+                    <label for="f65">${layer.displayInLegendMd.displayLabel}</label>
                   </div>
                 </div>
                 <div class="button-holder">

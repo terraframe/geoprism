@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.util.Map;
 
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
 
@@ -71,8 +72,8 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
-    req.setAttribute("layer", dto);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+    req.setAttribute("layer", layer);
 
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
     req.setAttribute("style", style);
@@ -84,11 +85,17 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     // get the universals
     UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
-    req.setAttribute("universals", universals);
-    
+    req.setAttribute("universals", universals.getResultSet());
+
     // aggregations
-    AllAggregationTypeDTO[] types = DashboardStyleDTO.getSortedAggregations(clientRequest);
-    req.setAttribute("aggregations", types);
+    AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
+    req.setAttribute("aggregations", aggQuery.getResultSet());
+    Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
+    req.setAttribute("aggregationLabels", aggregations);
+
+    // feature types
+    Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
+    req.setAttribute("features", features);
     
     render("createComponent.jsp");
   }

@@ -1,9 +1,8 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.util.Arrays;
-
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.query.QueryFactory;
 
 public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.generation.loader.Reloadable, Style
 {
@@ -20,13 +19,26 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     visitor.visit(this);    
   }
   
-  public static AllAggregationType[] getSortedAggregations()
+  public static AggregationTypeQuery getSortedAggregations()
   {
-    AllAggregationType[] types = AllAggregationType.values();
+    QueryFactory f = new QueryFactory();
+    AggregationTypeQuery q = new AggregationTypeQuery(f);
     
-    Arrays.sort(types);
+    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     
-    return types;
+    return q;
+    
+//    AllAggregationType[] types = AllAggregationType.values();
+//    AggregationType[] aggs = new AggregationType[types.length];
+//    
+//    Arrays.sort(types); // sort alphabetically
+//    
+//    for(int i=0; i<types.length; i++)
+//    {
+//      aggs[i] = AggregationType.get(types[i].getId());
+//    }
+//    
+//    return aggs;
   }
 
 }

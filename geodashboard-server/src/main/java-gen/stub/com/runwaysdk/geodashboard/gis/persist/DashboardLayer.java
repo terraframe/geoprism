@@ -239,6 +239,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     QueryFactory f = new QueryFactory();
     UniversalQuery q = new UniversalQuery(f);
     
+    q.WHERE(q.getUniversalId().NE("ROOT"));
+    
     q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     
     return q;
