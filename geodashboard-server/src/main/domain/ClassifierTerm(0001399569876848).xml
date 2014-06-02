@@ -1,0 +1,67 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdTerm isAbstract="false" description="Classifier" removable="false"
+	      name="com.runwaysdk.geodashboard.ontology.Classifier" label="Classifier"
+	      table="classifier" publish="true" extendable="true"
+	      generateController="true">
+	      <mdMethod static="true" description="Returns the Root Classifier" name="getRoot" label="getRoot" returnType="com.runwaysdk.geodashboard.ontology.Classifier">
+	      </mdMethod>
+	      <mdMethod static="true" name="create" label="create" description="Creates a new Classifier and appends it to a parent." returnType="com.runwaysdk.business.ontology.TermAndRel">
+	        <mdParameter order="0" description="A Classifier to apply and relate." name="dto" label="A Classifier to apply and relate." type="com.runwaysdk.geodashboard.ontology.Classifier" />
+	        <mdParameter order="1" description="parentId" name="parentId" label="The id of the parent." type="java.lang.String" />
+	      </mdMethod>
+	      <attributes>
+	        <char removable="true" label="Unique Id"
+	          description="Classifier id" name="classifierId" size="100" immutable="false"
+	          required="true" />
+	          <char removable="true" label="Package"
+	          description="ClassifierPackage" name="classifierPackage" size="255" immutable="false"
+	          required="true" />
+	      </attributes>
+	    </mdTerm>
+    
+	    <object key="ROOT.ROOT" type="com.runwaysdk.geodashboard.ontology.Classifier">
+	      <attribute name="classifierId" value="ROOT" />
+	      <attribute name="classifierPackage" value="ROOT" />
+	      <attributeStruct name="displayLabel">
+	        <attribute name="defaultLocale" value="ROOT" />
+	      </attributeStruct>
+	    </object>
+	    
+	    <mdTermRelationship name="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship"
+	      isAbstract="false" description="ClassifierIsA Relationship"
+	      label="ClassifierIsA Relationship" generateController="false" associationType="TREE">
+	      <parent cardinality="*"
+	        name="com.runwaysdk.geodashboard.ontology.Classifier" method="IsAParent" />
+	      <child cardinality="*" name="com.runwaysdk.geodashboard.ontology.Classifier"
+	        method="IsAChild" />
+	    </mdTermRelationship>
+    </create>
+    <update>
+      <mdController name="com.runwaysdk.geodashboard.ontology.ClassifierController" >
+        <mdAction name="create" isPost="true" isQuery="false">
+          <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.ontology.Classifier" />
+          <create>
+            <mdParameter order="1" name="parentId" type="java.lang.String" />
+          </create>
+        </mdAction>
+        <create>
+          <mdAction name="viewCreate" isPost="true" isQuery="false">
+          </mdAction>
+          <mdAction name="viewUpdate" isPost="true" isQuery="false">
+            <mdParameter order="0" name="id" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="getDirectDescendants" isPost="true" isQuery="false">
+            <mdParameter order="0" name="parentId" type="java.lang.String" />
+            <mdParameter order="1" name="pageNum" type="java.lang.Integer" />
+            <mdParameter order="2" name="pageSize" type="java.lang.Integer" />
+          </mdAction>
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

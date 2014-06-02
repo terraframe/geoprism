@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+
 public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR   = "/WEB-INF/com/runwaysdk/geodashboard/admin/";
@@ -104,6 +106,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void ontologies() throws java.io.IOException, javax.servlet.ServletException
   {
+    this.req.setAttribute("rootId", ClassifierDTO.getRoot(getClientRequest()).getId());
+    
     render("ontologies.jsp");
   }
   

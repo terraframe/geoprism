@@ -1,9 +1,10 @@
 package com.runwaysdk.geodashboard.gis;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 
 import com.runwaysdk.business.ontology.TermDTO;
@@ -25,7 +26,7 @@ public class ClassifierExportMenuController extends ClassifierExportMenuControll
   @Override
   public void export(ClassifierExportMenuDTO dto, String parentTerm, String downloadToken) throws java.io.IOException, javax.servlet.ServletException
   {
-    ServletOutputStream out = resp.getOutputStream();
+    OutputStream out = new GZIPOutputStream(resp.getOutputStream());
     
     try {
       // The reason we're including a cookie here is because the browser does not give us any indication of when our response from the server is successful and its downloading the file.
@@ -37,8 +38,8 @@ public class ClassifierExportMenuController extends ClassifierExportMenuControll
       
       String parentTermDisplay = ((TermDTO) getClientRequest().get(parentTerm)).getDisplayLabel().getValue();
       
-      resp.addHeader("Content-Disposition", "attachment;filename=\"classifiers-" + parentTermDisplay + ".xml\"");
-      resp.setContentType("application/xml");
+      resp.addHeader("Content-Disposition", "attachment;filename=\"classifiers-" + parentTermDisplay + ".xml.gz\"");
+      resp.setContentType("application/gzip");
       TermUtilDTO.exportTerm(getClientRequest(), out, parentTerm, true, dto.getFileFormat().get(0));
     }
     catch (RuntimeException e) {
@@ -46,6 +47,10 @@ public class ClassifierExportMenuController extends ClassifierExportMenuControll
         resp.reset();
       }
       ErrorUtility.prepareThrowable(e, req, out, resp, false, true);
+    }
+    finally {
+      out.flush();
+      out.close();
     }
   }
   

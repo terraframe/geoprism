@@ -2,8 +2,8 @@ package com.runwaysdk.geodashboard.gis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 
 import com.runwaysdk.business.ontology.TermDTO;
@@ -25,7 +25,7 @@ public class UniversalExportMenuController extends UniversalExportMenuController
   @Override
   public void export(UniversalExportMenuDTO dto, String parentTerm, String downloadToken) throws java.io.IOException, javax.servlet.ServletException
   {
-    ServletOutputStream out = resp.getOutputStream();
+    GZIPOutputStream out = new GZIPOutputStream(resp.getOutputStream());
     
     try {
       // The reason we're including a cookie here is because the browser does not give us any indication of when our response from the server is successful and its downloading the file.
@@ -37,8 +37,10 @@ public class UniversalExportMenuController extends UniversalExportMenuController
       
       String parentTermDisplay = ((TermDTO) getClientRequest().get(parentTerm)).getDisplayLabel().getValue();
       
-      resp.addHeader("Content-Disposition", "attachment;filename=\"universals-" + parentTermDisplay + ".xml\"");
-      resp.setContentType("application/xml");
+      String filename = "universals-" + parentTermDisplay + ".xml.gz";
+      
+      resp.addHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
+      resp.setContentType("application/gzip");
       TermUtilDTO.exportTerm(getClientRequest(), out, parentTerm, true, dto.getFileFormat().get(0));
     }
     catch (RuntimeException e) {
@@ -46,6 +48,10 @@ public class UniversalExportMenuController extends UniversalExportMenuController
         resp.reset();
       }
       ErrorUtility.prepareThrowable(e, req, out, resp, false, true);
+    }
+    finally {
+      out.flush();
+      out.close();
     }
   }
   

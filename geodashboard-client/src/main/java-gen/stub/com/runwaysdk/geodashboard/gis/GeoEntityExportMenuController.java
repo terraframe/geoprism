@@ -1,9 +1,11 @@
 package com.runwaysdk.geodashboard.gis;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 
 import com.runwaysdk.business.ontology.TermDTO;
@@ -25,7 +27,7 @@ public class GeoEntityExportMenuController extends GeoEntityExportMenuController
   @Override
   public void export(GeoEntityExportMenuDTO dto, String parentTerm, String downloadToken) throws java.io.IOException, javax.servlet.ServletException
   {
-    ServletOutputStream out = resp.getOutputStream();
+    GZIPOutputStream out = new GZIPOutputStream(resp.getOutputStream());
     
     try {
       // The reason we're including a cookie here is because the browser does not give us any indication of when our response from the server is successful and its downloading the file.
@@ -37,8 +39,8 @@ public class GeoEntityExportMenuController extends GeoEntityExportMenuController
       
       String parentTermDisplay = ((TermDTO) getClientRequest().get(parentTerm)).getDisplayLabel().getValue();
       
-      resp.addHeader("Content-Disposition", "attachment;filename=\"geoentitys-" + parentTermDisplay + ".xml\"");
-      resp.setContentType("application/xml");
+      resp.addHeader("Content-Disposition", "attachment;filename=\"geoentities-" + parentTermDisplay + ".xml.gz\"");
+      resp.setContentType("application/gzip");
       TermUtilDTO.exportTerm(getClientRequest(), out, parentTerm, true, dto.getFileFormat().get(0));
     }
     catch (RuntimeException e) {
@@ -46,6 +48,10 @@ public class GeoEntityExportMenuController extends GeoEntityExportMenuController
         resp.reset();
       }
       ErrorUtility.prepareThrowable(e, req, out, resp, false, true);
+    }
+    finally {
+      out.flush();
+      out.close();
     }
   }
   
