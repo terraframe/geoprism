@@ -22,15 +22,16 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@page import="com.runwaysdk.system.ontology.ClassifierDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>
 <%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %>
-<%@page import="com.runwaysdk.system.ontology.ClassifierController" %>
-<%@page import="com.runwaysdk.system.ontology.ClassifierDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.ontology.ClassifierIsARelationshipDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierController" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
 <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
+<%@page import="com.runwaysdk.generation.loader.LoaderDecorator"%>
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
@@ -104,7 +105,7 @@
     document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
       termType : <% out.print("\"" + ClassifierDTO.CLASS + "\""); %>,
       relationshipTypes : [ <% out.print("\"" + ClassifierIsARelationshipDTO.CLASS + "\""); %> ],
-      rootTerm : <% out.print("\"" + ClassifierDTO.getRoot(clientRequest).getId() + "\""); %>,
+      rootTerm : "${requestScope.rootId}",
       /* checkable: true, */
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.

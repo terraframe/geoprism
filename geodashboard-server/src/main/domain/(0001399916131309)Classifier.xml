@@ -1,7 +1,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <object key="com.runwaysdk.geodashboard.ontology.Defaults" type="com.runwaysdk.system.ontology.Classifier">
+      <object key="com.runwaysdk.geodashboard.ontology.Defaults" type="com.runwaysdk.geodashboard.ontology.Classifier">
 	      <attribute name="classifierId" value="Defaults" />
 	      <attribute name="classifierPackage" value="com.runwaysdk.geodashboard.ontology" />
 	      <attributeStruct name="displayLabel">
@@ -9,7 +9,7 @@
 	      </attributeStruct>
 	    </object>
 	    <relationship
-        type="com.runwaysdk.system.ontology.ClassifierIsARelationship"
+        type="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship"
         key="DefaultsRel"
         childKey="com.runwaysdk.geodashboard.ontology.Defaults"
         parentKey="ROOT.ROOT">
@@ -22,10 +22,10 @@
     <delete>
       <object
         key="com.runwaysdk.geodashboard.ontology.Defaults"
-        type="com.runwaysdk.system.ontology.Classifier" />
+        type="com.runwaysdk.geodashboard.ontology.Classifier" />
       <object
         key="DefaultsRel"
-        type="com.runwaysdk.system.ontology.ClassifierIsARelationship" />
+        type="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" />
     </delete>
   </undoIt>
 </version>
