@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -372862617)
+@com.runwaysdk.business.ClassSignature(hash = -1724664752)
 public class DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController";
@@ -63,6 +63,20 @@ public class DashboardLayerControllerBase implements com.runwaysdk.generation.lo
   public com.runwaysdk.ClientSession getClientSession()
   {
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO:style, java.lang.String:mapId", post=true)
+  public void applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO:style, java.lang.String:mapId", post=true)
+  public void failApplyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failApplyWithStyle");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:dto", post=true)

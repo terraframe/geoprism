@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1328511447)
+@com.runwaysdk.business.ClassSignature(hash = 1383546039)
 public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
-  private static final long serialVersionUID = 1328511447;
+  private static final long serialVersionUID = 1383546039;
   
   protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -1487,12 +1487,20 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VALUESIZE).getAttributeMdDTO();
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO[] getSortedAggregations(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final com.runwaysdk.geodashboard.gis.persist.AggregationTypeQueryDTO getSortedAggregations(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO.CLASS, "getSortedAggregations", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String[] getSortedFonts(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO.CLASS, "getSortedFonts", _declaredTypes);
+    return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   @SuppressWarnings("unchecked")

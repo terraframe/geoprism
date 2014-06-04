@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1035945612)
+@com.runwaysdk.business.ClassSignature(hash = -480610720)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,7 +32,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1035945612;
+  private static final long serialVersionUID = -480610720;
   
   public DashboardLayerBase()
   {
@@ -689,6 +689,18 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static DashboardLayer getByKey(String key)
   {
     return (DashboardLayer) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public void applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId)
+  {
+    DashboardLayer _instance = DashboardLayer.get(id);
+    _instance.applyWithStyle(style, mapId);
   }
   
   public static com.runwaysdk.system.gis.geo.UniversalQuery getSortedUniversals()

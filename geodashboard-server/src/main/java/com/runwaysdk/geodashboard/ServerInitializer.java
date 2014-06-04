@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard;
 
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer;
 import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.scheduler.SchedulerManager;
@@ -13,6 +14,7 @@ public class ServerInitializer implements Reloadable
     StrategyInitializer.startUp();
     SchedulerManager.start();
     SessionEntry.deleteAll();
+    GeoserverInitializer.setup();
   }
 
   @Request

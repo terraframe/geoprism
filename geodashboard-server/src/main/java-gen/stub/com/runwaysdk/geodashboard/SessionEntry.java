@@ -240,7 +240,6 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   @Transaction
   public static DashboardMap createMapForSession()
   {
-
     SessionIF session = Session.getCurrentSession();
     String sessionId = session.getId();
 
