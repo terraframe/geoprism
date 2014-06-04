@@ -68,7 +68,7 @@
        * 
        */
       _closeLayerModal : function(){
-        $(DynamicMap.LAYER_MODAL).modal('hide');
+        $(DynamicMap.LAYER_MODAL).modal('hide').html('');
       },
       
       /**
@@ -93,6 +93,11 @@
         
         params['mapId'] = this._mapId;
         params['style.mdAttribute'] = this._mdAttribute;
+        
+        // Custom conversion to turn the checkboxes into boolean true/false
+        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
+        params['style.enableValue'] = params['style.enableValue'].length > 0;
+        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         return request;
       },

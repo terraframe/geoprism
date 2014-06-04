@@ -34,7 +34,7 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f51" class="check" value="true" type="checkbox" <c:if test="${style.enableValue}">checked="checked"</c:if> name="style.${style.enableValueMd.name}">
+                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.${style.enableValueMd.name}">
                     <label for="f51">${style.enableValueMd.displayLabel}</label>
                   </div>
                   <div class="cell style02">
@@ -111,7 +111,7 @@
                 </div>
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f94" class="check" value="true" type="checkbox" <c:if test="${style.enableLabel}">checked="checked"</c:if> name="style.${style.enableLabelMd.name}">
+                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
                     <label for="f94">${style.enableLabelMd.displayLabel}</label>
                   </div>
                   <div class="cell style02">
@@ -629,7 +629,7 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block style02">
-                    <input id="f65" class="check" value="true" type="checkbox" <c:if test="${layer.displayInLegend}">checked="checked"</c:if> name="style.${layer.displayInLegendMd.name}">
+                    <input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}">
                     <label for="f65">${layer.displayInLegendMd.displayLabel}</label>
                   </div>
                 </div>
