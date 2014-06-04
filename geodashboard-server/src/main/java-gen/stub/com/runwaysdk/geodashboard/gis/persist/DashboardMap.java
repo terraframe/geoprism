@@ -91,17 +91,6 @@ public class DashboardMap extends DashboardMapBase implements
   {
     try
     {
-      try
-      {
-        GeoserverFacade.publishWorkspace();
-        GeoserverFacade.publishStore();
-      }
-      catch(Throwable t)
-      {
-        log.debug("Creating workspace and store.", t);
-      }
-
-      
       /**
        * All layers returned in order and if they're enabled
        */
