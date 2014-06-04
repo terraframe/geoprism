@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1116558828)
+@com.runwaysdk.business.ClassSignature(hash = 717008995)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.ontology.Classifier";
-  private static final long serialVersionUID = -1116558828;
+  private static final long serialVersionUID = 717008995;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -555,6 +555,60 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   public static void removeAllIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierAttributeRoots()
+  {
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO> getAllClassifierAttributeRootsRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO> getAllClassifierAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO addClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO addClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  public void removeClassifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO relationship)
+  {
+    getRequest().deleteParent(relationship.getId());
+  }
+  
+  public static void removeClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO relationship)
+  {
+    clientRequestIF.deleteParent(relationship.getId());
+  }
+  
+  public void removeAllClassifierAttributeRoots()
+  {
+    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+  }
+  
+  public static void removeAllClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
