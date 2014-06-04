@@ -35,16 +35,8 @@ public class Sandbox
   @Request
   public static void main(String[] args) throws Throwable
   {
-//    WebClientSession s = WebClientSession.createUserSession("SYSTEM","SYSTEM", new Locale[]{Locale.ENGLISH});
-//    String id = s.getSessionId();
-//    String js = JSONController.importTypes(id, new String[]{ UsersDTO.CLASS}, true);
-//    System.out.println(js);
-    
     GeoserverFacade.publishWorkspace();
     GeoserverFacade.publishStore();
-    GeoserverFacade.publishLayer("layer$6q5fo1tzyu7kklz9octx4stou4xssnv0", "polygon");  // hardcoded mapid. must create map with layers first
-    GeoserverFacade.publishLayer("layer$z7lb0hwkdi3reiviku84zw9b19oaxrgq", "polygon");  // hardcoded mapid. must create map with layers first
-    
   }
 
   @Request

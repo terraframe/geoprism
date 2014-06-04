@@ -1,10 +1,15 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+
+import org.json.JSONException;
+
+import com.runwaysdk.ClientException;
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
+import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -18,8 +23,10 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   
   public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    dto.unlock();
-    this.view(dto.getId());
+    if(!dto.isNewInstance())
+    {
+      dto.unlock();
+    }
   }
   public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -78,9 +85,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
     req.setAttribute("style", style);
     
-    GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    
-    Font[] fonts = e.getAllFonts(); // Get the fonts
+    String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
     req.setAttribute("fonts", fonts);
     
     // get the universals
@@ -151,5 +156,24 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
+  }
+  
+  @Override
+  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException,
+      ServletException
+  {
+    layer.applyWithStyle(style, mapId);
+
+    try
+    {
+      String layerJSON = BusinessDTOToJSON.getConverter(layer).populate().toString();
+      resp.setStatus(200);
+      resp.getWriter().write(layerJSON);
+      resp.flushBuffer();
+    }
+    catch(JSONException ex)
+    {
+      throw new ClientException("Error applying map ["+mapId+"] layer ["+layer+"] with style ["+style+"]", ex);
+    }
   }
 }

@@ -19,6 +19,7 @@
 
 --%>
 
+<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -45,7 +46,7 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      DashboardMapDTO.CLASS, DashboardLayerController.CLASS
+      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerController.CLASS
       }, true);
     out.print(js);
   }
@@ -58,9 +59,47 @@
   /* doIt(request, out); */%>
 </script>
 
+<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>
+<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
+
+<!-- Runway Factory -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/list/List.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/form/Form.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
+
+<!-- Generic -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceIF.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/Events.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceFactory.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/BaseServerDataSource.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/ServerDataSource.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Column.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Events.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Row.js"></script>
+
+<!-- JQuery -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/TabPanel.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/ServerDataSource.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/DataSourceFactory.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/DataTable.js"></script>
+
+<!-- Runway Generic -->
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/PollingRequest.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
+<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function(){
+  
+  com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   // Render the map
   var map = new GDB.gis.DynamicMap("mapDivId", '${mapId}');
@@ -110,7 +149,7 @@ $(document).ready(function(){
             <c:choose>
               <c:when test="${status.index == 0}">
               
-                <a href="#" class="link-opener dropdown-toggle" id="sales-dropdown" data-toggle="dropdown" data-id="${dashboard.id}">${dashboard.displayLabel.value}</a>
+                <a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${dashboard.id}">${dashboard.displayLabel.value}</a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
               
               </c:when>
@@ -168,7 +207,7 @@ $(document).ready(function(){
                 <div class="panel">
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
-										  data-original-title="New map layer" data-placement="left" data-id="${attr.id}">
+										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
 										  <span data-toggle="modal" data-target="#modal01">opener</span>
 										</a>
 									</h4>
@@ -214,8 +253,7 @@ $(document).ready(function(){
         
         </div>
     </aside>
-  <!-- contain slide navigation of the page -->
-  <!-- 
+
   <div class="slide-navigation animated slideInRight">
     <aside id="sidebar">
       <div class="widget">
@@ -274,7 +312,7 @@ $(document).ready(function(){
       </nav>
     </aside>
   </div>
-  -->
+  
   <!-- modal -->
   <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <!-- Filled in by ajax call to create/edit layer -->

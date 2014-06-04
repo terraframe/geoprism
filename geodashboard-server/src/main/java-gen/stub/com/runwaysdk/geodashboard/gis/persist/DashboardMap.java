@@ -21,8 +21,10 @@ import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -89,10 +91,67 @@ public class DashboardMap extends DashboardMapBase implements
   {
     try
     {
+      try
+      {
+        GeoserverFacade.publishWorkspace();
+        GeoserverFacade.publishStore();
+      }
+      catch(Throwable t)
+      {
+        log.debug("Creating workspace and store.", t);
+      }
+
+      
       /**
        * All layers returned in order and if they're enabled
        */
       DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      for(DashboardLayer layer : orderedLayers)
+      {
+        String layerName = layer.getViewName();
+        ValueQuery vq = layer.asValueQuery();
+        try
+        {
+          Database.dropView(layerName, vq.getSQL(), false);
+        }
+        catch(Throwable t)
+        {
+          log.debug("Dropping/creating view ["+layerName+"].", t);
+        }
+        finally
+        {
+          Database.createView(layerName, vq.getSQL());
+        }
+        
+        try
+        {
+          GeoserverFacade.removeStyle(layerName);
+        }
+        catch(Throwable t)
+        {
+          log.debug("Publishing style ["+layerName+"].", t);
+        }
+        finally
+        {
+          SLDMapVisitor visitor = new SLDMapVisitor();
+          this.accepts(visitor);
+          String sld = visitor.getSLD(layer);
+          GeoserverFacade.publishStyle(layerName, sld);
+        }
+        
+        try
+        {
+          GeoserverFacade.removeLayer(layerName);
+        }
+        catch(Throwable t)
+        {
+          log.debug("Publishing layer ["+layerName+"].", t);
+        }
+        finally
+        {
+          GeoserverFacade.publishLayer(layerName, layerName);
+        }
+      }
 
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());

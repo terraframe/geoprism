@@ -91,6 +91,25 @@
     }
   });
   
+  Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'StandardRequest', {
+    Extends : Mojo.ClientRequest,
+    Instance : {
+      initialize : function(obj){
+        this.$initialize(obj);
+      },
+      onFailure : function(e){
+        
+        var msg = e.getLocalizedMessage();
+        
+        var factory = com.runwaysdk.ui.Manager.getFactory();
+        var dialog = factory.newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(msg);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.render();
+      }
+    }    
+  });
+  
   Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'BlockingClientRequest', {
     Extends : Mojo.ClientRequest,
     Instance : {

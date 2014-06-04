@@ -23,7 +23,8 @@
       OVERLAY_LAYER_CONTAINER : 'overlayLayerContainer',
       GEOSERVER_WORKSPACE : 'geodashboard',
       GEOCODE : 'geocode',
-      GEOCODE_LABEL : 'geocodeLabel'
+      GEOCODE_LABEL : 'geocodeLabel',
+      LAYER_MODAL : '#modal01'
     },
     
     Instance : {
@@ -37,6 +38,7 @@
         
         this._mapDivId = mapDivId;
         this._mapId = mapId;
+        this._mdAttribute = null;
         this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
         
         this._defaultOverlay = null;
@@ -52,7 +54,74 @@
         this._autocomplete = null;
         this._responseCallback = null;
         
+        this._rendered = false;
+        
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
+        
+        // set controller listeners
+        this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelListener));
+        this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
+      },
+      
+      /**
+       * Closes the overlay with the layer/style CRUD.
+       * 
+       */
+      _closeLayerModal : function(){
+        $(DynamicMap.LAYER_MODAL).modal('hide');
+      },
+      
+      /**
+       * Called when a user submits (creates/updates) a layer with styles.
+       * 
+       * @param params
+       */
+      _applyWithStyleListener : function(params){
+        
+        var that = this;
+        
+        var request = new GDB.StandardRequest({
+          onSuccess : function(json){
+            console.log('done');
+            var obj = Mojo.Util.toObject(json);
+            console.log(obj);
+            
+            that._closeLayerModal();
+            that._refreshMap();
+          }
+        });
+        
+        params['mapId'] = this._mapId;
+        params['style.mdAttribute'] = this._mdAttribute;
+        
+        return request;
+      },
+      
+
+      
+      /**
+       * 
+       * @param params
+       */
+      _cancelListener : function(params){
+        
+        var that = this;
+        
+        if(params['layer.isNew'] === 'true')
+        {
+          this._closeLayerModal();
+        }
+        else
+        {
+          var that = this;
+          var request = new GDB.StandardRequest({
+            onSuccess : function(params){
+              that._closeLayerModal();
+            }
+          });
+          
+          return request;
+        }
       },
       
       /**
@@ -81,6 +150,9 @@
        * the layer switcher.
        */
       _renderBaseLayerSwitcher : function(base){
+        
+        var container = $('#'+DynamicMap.BASE_LAYER_CONTAINER);
+        var el = container[0];
         
         // Create the HTML for each row (base layer representation).
         var html = '';
@@ -272,120 +344,144 @@
 //        that._autocomplete.show();      
 //        $('#'+DynamicMap.GEOCODE).on('keypress', Mojo.Util.bind(this, this._geocodeHandler));
 
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
-    		new Mojo.ClientRequest({
-        		onSuccess : function(json){
-        			var jsonObj = Mojo.Util.toObject(json);
-        			var jsonBbox = jsonObj.bbox; 
-        			var jsonLayers = jsonObj.layers;
-
-        			var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        			var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);      		  
-        			var bounds = L.latLngBounds(swLatLng, neLatLng);   
-        			
-        			that._map.fitBounds(bounds);
-        	        
-        			// Add attribution to the map
-        	        that._map.attributionControl.setPrefix('');
-        	        that._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
-        	        
-        	        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(that._map);
-        	        
-        	        // Hide mouse position coordinate display when outside of map
-        	        that._map.on('mouseover', function(e) {
-        	            $(".leaflet-control-mouseposition.leaflet-control").show();
-        	        });
-        	        
-        	        that._map.on('mouseout', function(e) {
-        	            $(".leaflet-control-mouseposition.leaflet-control").hide();
-        	        });
-        	        
-        	        // Add Base Layers to map and layer switcher panel
-        	        var base = that.getBaseLayers();       	               	        
-        	        that._map.addLayer(base[0]); 
-        	        that._renderBaseLayerSwitcher(base);
-        	        
-        	        //// Add associated Overlays
-        	        // @viewName
-        	        // @sldName - must be a valid style registered with geoserver (no .sld extension) or the default for that layer will be used.
-        	        // @displayName
-        	        // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).	        
-        	        var html = '';
-        	        var ids = [];
-        	        for(var i = 0; i < jsonLayers.length; i++){
-        	        	var viewName = jsonObj.layers[i].viewName;
-//        	        	var sldName = jsonObj.layers[i].sldName || "";  // This should be enabled we wire up the interface or set up a better test process
-        	        	var sldName = "";  
-        	        	var displayName = jsonObj.layers[i].layerName || "N/A";
-        	        	var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
-        	        	
-        	        	var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-        	        		layers: geoserverName,
-        	        		format: 'image/png',
-        	        		transparent: true,
-        	        		styles: sldName
-        				});        			
-
-        	        	// Create the HTML for each row (base layer representation).
-        	        	var checked = '';
-        	            var id = 'overlay_layer_'+i;     	            
-        	            var b = layer;
-        	            b.id = id;  
-        	            ids.push(id);  
-        	            that._overlayLayers.put(id, b);
-        	            
-        	            // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
-        	            // It often helps new users to see an overlay in action on initial map load.
-        	            if(i === 0){
-        	              this._currentOverlay = this._defaultOverlay = layer;
-        	              checked = 'checked="checked"';
-        	              that._map.addLayer(layer);
-        	            }
-        	                   	            
-        	            html += '<div class="row-form">';
-        	            html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
-        	            html += '<label for="'+id+'">'+displayName+'</label>';
-        	            html += '<div class="cell"><a href="#" class="ico-remove">remove</a><a href="#" class="ico-edit">edit</a><a href="#" class="ico-control">control</a></div>';
-        	            html += '</div>';      	            
-        	          }
-
-        	          // combine the rows into new HTML that goes in to the layer switcher
-        	          var rows = $(html);
-        	          var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
-        	          var el = container[0];
-        	          
-        	          container.append(rows);   	          
-        	          jcf.customForms.replaceAll(el);
-        	          
-        	          // add event handlers to manage the actual check/uncheck process
-        	          for(var i=0; i<ids.length; i++){
-        	            var id = ids[i];
-        	            var check = $('#'+id);       	            
-        	            var handler = Mojo.Util.bind(that, that._selectOverlayLayer);
-        	            check.on('change', that._overlayLayers.get(id), handler);
-        	          }	       
-        		}
-    		})
-    		, this._mapId);
+         this._refreshMap();
         
          // Make sure all openers for each attribute have a click event
          $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
-      }, 
+      },
+      
+      _refreshMapInternal : function(jsonObj){
+        
+        // FIXME Lewis
+        if(this._rendered){
+          $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
+          $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).html('');
+          this._baseLayers.clear();
+          this._map.remove();
+          $('#'+this._mapDivId).html('');
+          this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
+        }
+        
+        var jsonBbox = jsonObj.bbox; 
+        var jsonLayers = jsonObj.layers;
+
+        var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
+        var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
+        var bounds = L.latLngBounds(swLatLng, neLatLng);   
+
+        this._map.fitBounds(bounds);
+
+        // Add attribution to the map
+        this._map.attributionControl.setPrefix('');
+        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+
+        // Hide mouse position coordinate display when outside of map
+        this._map.on('mouseover', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").show();
+        });
+
+        this._map.on('mouseout', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").hide();
+        });
+
+        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
+
+        // Add Base Layers to map and layer switcher panel
+        var base = this.getBaseLayers();                                
+        this._map.addLayer(base[0]); 
+        this._renderBaseLayerSwitcher(base);
+
+        var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        
+        //// Add associated Overlays
+        // @viewName
+        // @sldName - must be a valid style registered with geoserver (no .sld extension) or the default for that layer will be used.
+        // @displayName
+        // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).         
+        var html = '';
+        var ids = [];
+        for(var i = 0; i < jsonLayers.length; i++){
+          var viewName = jsonObj.layers[i].viewName;
+          var sldName = jsonObj.layers[i].sldName || "";  // This should be enabled we wire up the interface or set up a better test process
+          var displayName = jsonObj.layers[i].layerName || "N/A";
+          var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
+
+          var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+            layers: geoserverName,
+            format: 'image/png',
+            transparent: true,
+            styles: sldName
+          });             
+
+          // Create the HTML for each row (base layer representation).
+          var checked = '';
+          var id = 'overlay_layer_'+i;                  
+          var b = layer;
+          b.id = id;  
+          ids.push(id);  
+          this._overlayLayers.put(id, b);
+
+          // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
+          // It often helps new users to see an overlay in action on initial map load.
+          if(i === 0){
+            this._currentOverlay = this._defaultOverlay = layer;
+            checked = 'checked="checked"';
+            this._map.addLayer(layer);
+          }
+
+          html += '<div class="row-form">';
+          html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
+          html += '<label for="'+id+'">'+displayName+'</label>';
+          html += '<div class="cell"><a href="#" class="ico-remove">remove</a><a href="#" class="ico-edit">edit</a><a href="#" class="ico-control">control</a></div>';
+          html += '</div>';                   
+        }
+
+        // combine the rows into new HTML that goes in to the layer switcher
+        var rows = $(html);
+        var el = container[0];
+
+        container.append(rows);               
+        jcf.customForms.replaceAll(el);
+
+        // add event handlers to manage the actual check/uncheck process
+        for(var i=0; i<ids.length; i++){
+          var id = ids[i];
+          var check = $('#'+id);                    
+          var handler = Mojo.Util.bind(this, this._selectOverlayLayer);
+          check.on('change', this._overlayLayers.get(id), handler);
+        }
+        
+        this._rendered = true;       
+      },
+      
+      _refreshMap : function(){
+        
+        var that = this;
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
+            new GDB.StandardRequest({
+                onSuccess : function(json){
+                  var jsonObj = Mojo.Util.toObject(json);
+                  that._refreshMapInternal(jsonObj);
+                }
+            })
+            , this._mapId);
+      },
       
       _openLayerForAttribute : function(e){
         e.preventDefault();
 
         var el = $(e.currentTarget);
         var attrId = el.data('id');
+        this._mdAttribute = attrId;
         
         var that = this;
         
-        var request = new Mojo.ClientRequest({
+        var request = new GDB.StandardRequest({
           onSuccess : function(html){
             
             var exec = Mojo.Util.extractScripts(html);
             
-            var modal = $('#modal01').first();
+            var modal = $(DynamicMap.LAYER_MODAL).first();
             modal.html(html);
             jcf.customForms.replaceAll(modal[0]);
             
@@ -414,7 +510,7 @@
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
-    				// TODO:  associate the selected color with the relevant hidden inputs  
+    				$(el).find('.color-input').attr('value', '#'+hex);
     			}
     		}); 
     	  
@@ -423,8 +519,7 @@
   			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
   			onChange:function(hsb,hex,rgb,el,bySetColor) {
   				$(el).css('background','#'+hex);
-  				
-  				// TODO:  associate the selected color with the relevant hidden inputs 
+  				$(el).find('.color-input').attr('value', '#'+hex);
   			}
   		});
       },
@@ -435,8 +530,8 @@
        * 
        */
       _selectLayerType : function(){
-    	  
-    	  $('input:radio[name="radio-group"]').change(function(){ 	
+    	  var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
+    	  $('input:radio[name="layer.'+layerType+'"]').change(function(){ 	
     		  		
     		  		var targetRadio = $(this);
     		  		

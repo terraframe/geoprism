@@ -2,6 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<!-- Include the types of this form to get the default values the MdAction needs -->
+<mjl:component param="layer" item="${layer}">
+</mjl:component>
+<mjl:component param="style" item="${style}">
+</mjl:component>
+
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
@@ -17,7 +23,7 @@
               <div class="holder">
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
-                  <mjl:input  type="text" param="layer.name"></mjl:input>
+                  <input type="text" name="layer.${layer.nameMd.name}" />
                 </span>
               </div>
             </div>
@@ -28,7 +34,7 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f51" class="check" type="checkbox" <c:if test="${style.enableValue}">checked="checked"</c:if> name="style.${style.enableValueMd.name}">
+                    <input id="f51" class="check" value="true" type="checkbox" <c:if test="${style.enableValue}">checked="checked"</c:if> name="style.${style.enableValueMd.name}">
                     <label for="f51">${style.enableValueMd.displayLabel}</label>
                   </div>
                   <div class="cell style02">
@@ -37,11 +43,11 @@
                       <select class="font-select" name="style.${style.valueFontMd.name}" id="f52">
                         <c:forEach items="${fonts}" var="font">
                           <c:choose>
-                            <c:when test="${style.valueFont == font.fontName}">
-                              <option value="${font.fontName}" selected="selected">${font.fontName}</option>
+                            <c:when test="${style.valueFont == font}">
+                              <option value="${font}" selected="selected">${font}</option>
                             </c:when>
                             <c:otherwise>
-                              <option value="${font.fontName}">${font.fontName}</option>
+                              <option value="${font}">${font}</option>
                             </c:otherwise>
                           </c:choose>
                         </c:forEach>
@@ -69,8 +75,9 @@
                     <span>${style.valueColorMd.displayLabel}</span>
                     <div class="color-holder">
                       <a href="#" class="color-choice">
-                        <span class="ico">icon</span>
+                        <span class="ico" style="background:${style.valueColor};">icon</span>
                         <span class="arrow">arrow</span>
+                        <input type="hidden" class="color-input" name="style.${style.valueColorMd.name}" value="${style.valueColor}" />
                       </a>
                     </div>
                   </div>
@@ -78,8 +85,9 @@
                     <span>${style.valueHaloMd.displayLabel}</span>
                     <div class="color-holder">
                       <a href="#" class="color-choice">
-                        <span class="ico" style="background:#fff;">icon</span>
+                        <span class="ico" style="background:${style.valueHalo};">icon</span>
                         <span class="arrow">arrow</span>
+                        <input type="hidden" class="color-input" name="style.${style.valueHaloMd.name}" value="${style.valueHalo}" />
                       </a>
                     </div>
                   </div>
@@ -103,7 +111,7 @@
                 </div>
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f94" class="check" type="checkbox" <c:if test="${style.enableLabel}">checked="checked"</c:if> name="style.${style.enableLabelMd.name}">
+                    <input id="f94" class="check" value="true" type="checkbox" <c:if test="${style.enableLabel}">checked="checked"</c:if> name="style.${style.enableLabelMd.name}">
                     <label for="f94">${style.enableLabelMd.displayLabel}</label>
                   </div>
                   <div class="cell style02">
@@ -112,11 +120,11 @@
                       <select class="font-select" name="style.${style.labelFontMd.name}" id="f55">
                         <c:forEach items="${fonts}" var="font">
                           <c:choose>
-                            <c:when test="${style.labelFont == font.fontName}">
-                              <option value="${font.fontName}" selected="selected">${font.fontName}</option>
+                            <c:when test="${style.labelFont == font}">
+                              <option value="${font}" selected="selected">${font}</option>
                             </c:when>
                             <c:otherwise>
-                              <option value="${font.fontName}">${font.fontName}</option>
+                              <option value="${font}">${font}</option>
                             </c:otherwise>
                           </c:choose>
                         </c:forEach>
@@ -142,32 +150,39 @@
                     </div>
                   </div>
                   <div class="cell">
-                    <span>Color</span>
+                    <span>${style.labelColorMd.displayLabel}</span>
                     <div class="color-holder">
                       <a href="#" class="color-choice">
-                        <span class="ico">icon</span>
+                        <span class="ico" style="background:${style.labelColor};">icon</span>
                         <span class="arrow">arrow</span>
+                        <input type="hidden" class="color-input" name="style.${style.labelColorMd.name}" value="${style.labelColor}" />
                       </a>
                     </div>
                   </div>
                   <div class="cell">
-                    <span>Label Halo</span>
+                    <span>${style.labelHaloMd.displayLabel}</span>
                     <div class="color-holder">
                       <a href="#" class="color-choice">
-                        <span class="ico" style="background:#fff;">icon</span>
+                        <span class="ico" style="background:${style.labelHalo};">icon</span>
                         <span class="arrow">arrow</span>
+                        <input type="hidden" class="color-input" name="style.${style.labelHaloMd.name}" value="${style.labelHalo}" />
                       </a>
                     </div>
                   </div>
                   <div class="cell">
-                    <label for="f57">Halo Width</label>
+                  <label for="f54">${style.labelHaloWidthMd.displayLabel}</label>
                     <div class="select-holder">
-                      <select class="size-select" id="f57">
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
+                      <select class="size-select" name="style.${style.labelHaloWidthMd.name}" id="f54">
+                        <c:forEach begin="0" end="15" var="size">
+                          <c:choose>
+                            <c:when test="${style.labelHaloWidth == size}">
+                              <option selected="selected" value="${size}">${size}</option>
+                            </c:when>
+                            <c:otherwise>
+                              <option value="${size}">${size}</option>
+                            </c:otherwise>
+                          </c:choose>
+                        </c:forEach>
                       </select>
                     </div>
                   </div>
@@ -182,7 +197,7 @@
                 <div class="box">
                   <label for="f58">Group by</label>
                   <div class="select-box">
-                    <select id="f58" class="method-slect">
+                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
                        <c:forEach items="${universals}" var="universal">
                          <c:choose>
                            <c:when test="${layer.universalId == universal.id}">
@@ -204,6 +219,7 @@
                   <label for="f59">According to</label>
                   <div class="select-box">
                     <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
+                      <option></option>
                       <c:forEach items="${aggregations}" var="aggregation">
                          <c:choose>
                            <c:when test="">
@@ -267,18 +283,19 @@
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonFillMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#00a3d9;">icon</span>
+                              <span class="ico" style="background:${style.polygonFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonFillMd.name}" value="${style.polygonFill}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
                           <label for="f210">Opacity</label>
                           <div class="text">
-                          <input id="f210" type="text" placeholder="0 to 100"></div>
+                          <input id="f210" type="text" value="" name="style.${style.polygonFillOpacityMd.name}" placeholder="0 to 100"></div>
                         </div>
                       </div>
                     </div>
@@ -286,28 +303,35 @@
                       <strong class="title">Stroke</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
+                              <span class="ico" style="background:${style.polygonStroke};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f63">Width</label>
+                          <label for="f63">${style.polygonStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
-                            <select id="f63" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                            <select id="f63" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
+			                        <c:forEach begin="0" end="15" var="size">
+			                          <c:choose>
+			                            <c:when test="${style.polygonStrokeWidth == size}">
+			                              <option selected="selected" value="${size}">${size}</option>
+			                            </c:when>
+			                            <c:otherwise>
+			                              <option value="${size}">${size}</option>
+			                            </c:otherwise>
+			                          </c:choose>
+			                        </c:forEach>
                             </select>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f64">Opacity</label>
-                          <div class="text"><input id="f64" type="text" placeholder="0 to 100"></div>
+                          <label for="f64">${style.polygonStrokeOpacityMd.displayLabel}</label>
+                          <div class="text"><input id="f64" type="text" name="style.${style.polygonStrokeOpacityMd.name}" placeholder="0 to 100"></div>
                         </div>
                       </div>
                     </div>
@@ -605,14 +629,14 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block style02">
-                    <input id="f65" class="check" type="checkbox" <c:if test="${layer.displayInLegend}">checked="checked"</c:if> name="style.${layer.displayInLegendMd.name}">
+                    <input id="f65" class="check" value="true" type="checkbox" <c:if test="${layer.displayInLegend}">checked="checked"</c:if> name="style.${layer.displayInLegendMd.name}">
                     <label for="f65">${layer.displayInLegendMd.displayLabel}</label>
                   </div>
                 </div>
                 <div class="button-holder">
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.create.button" 
-							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.create.mojo"
-							      classes="btn btn-primary" />
+							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle.mojo"
+							      classes="btn btn-primary"  />
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.cancel.button"
 							      value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.cancel.mojo"
 							      classes="btn btn-default" />

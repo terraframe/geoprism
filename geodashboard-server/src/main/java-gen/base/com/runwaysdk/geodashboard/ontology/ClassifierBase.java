@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1942242412)
+@com.runwaysdk.business.ClassSignature(hash = 1801650659)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,7 +33,7 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1942242412;
+  private static final long serialVersionUID = 1801650659;
   
   public ClassifierBase()
   {
@@ -454,6 +454,34 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
     {
       iterator.close();
     }
+  }
+  
+  public com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot addClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot) addParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+  }
+  
+  public void removeClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
+  {
+    removeAllParents(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm> getAllClassifierAttributeRoots()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm>) getParents(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot> getAllClassifierAttributeRootsRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot>) getParentRelationships(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot> getClassifierAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot>) getRelationshipsWithParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
   }
   
   public com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship addIsAParent(com.runwaysdk.geodashboard.ontology.Classifier classifier)

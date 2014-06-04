@@ -43,6 +43,7 @@ import com.runwaysdk.geodashboard.gis.model.condition.LessThan;
 import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
 import com.runwaysdk.geodashboard.gis.model.condition.Primitive;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.transport.conversion.ConversionException;
 
 /**
@@ -54,51 +55,52 @@ public class SLDMapVisitor implements MapVisitor
   private static abstract class Symbolizer
   {
     protected SLDMapVisitor visitor;
-    protected Style style;
-    
+
+    protected Style         style;
+
     private Symbolizer(SLDMapVisitor visitor, Style style)
     {
       super();
       this.visitor = visitor;
       this.style = style;
     }
-    
+
     protected NodeBuilder node(String node)
     {
       return this.visitor.node(node);
     }
-    
+
     protected NodeBuilder css(String name, Object value)
     {
       return this.visitor.css(name, value);
     }
-    
+
     protected abstract String getSymbolizerName();
-    
+
     protected Node getSLD()
     {
       return this.visitor.node(this.getSymbolizerName()).build();
     }
   }
-  
+
   private static class PointSymbolizer extends Symbolizer
   {
     private PointSymbolizer(SLDMapVisitor visitor, Style style)
     {
       super(visitor, style);
     }
-    
+
     @Override
     protected String getSymbolizerName()
     {
       return "PointSymbolizer";
     }
-    
+
     @Override
     protected Node getSLD()
     {
       Node root = super.getSLD();
-      
+
       Integer size = this.style.getPointSize();
       String fill = this.style.getPointFill();
       Double opacity = this.style.getPointOpacity();
@@ -106,79 +108,65 @@ public class SLDMapVisitor implements MapVisitor
       Integer width = this.style.getPointStrokeWidth();
       String wkn = this.style.getPointWellKnownName();
       Integer rotation = this.style.getPointRotation();
-      
+
       node("Graphic").child(
-        node("Mark").child(
-          node("WellKnownName").text(wkn),
-          node("Fill").child(
-            css("fill", fill),
-            css("fill-opacity", opacity)
-          ),
-          node("Stroke").child(
-            css("stroke", stroke),
-            css("stroke-width", width)
-          )
-        ), node("Size").text(size),
-        node("Rotation").text(rotation)
-       ).build(root);
-      
+          node("Mark").child(node("WellKnownName").text(wkn),
+              node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
+              node("Stroke").child(css("stroke", stroke), css("stroke-width", width))),
+          node("Size").text(size), node("Rotation").text(rotation)).build(root);
+
       return root;
     }
   }
-  
+
   private static class PolygonSymbolizer extends Symbolizer
   {
     private PolygonSymbolizer(SLDMapVisitor visitor, Style style)
     {
       super(visitor, style);
     }
-    
+
     @Override
     protected String getSymbolizerName()
     {
       return "PolygonSymbolizer";
     }
-    
+
     @Override
     protected Node getSLD()
     {
       Node root = super.getSLD();
-      
+
       Integer width = this.style.getPolygonStrokeWidth();
       String fill = this.style.getPolygonFill();
       String stroke = this.style.getPolygonStroke();
-      
-      node("Fill").child(
-        css("fill", fill)
-      ).build(root);
-      
-      node("Stroke").child(
-        css("stroke", stroke),
-        css("stroke-width", width)
-      ).build(root);
-      
+
+      node("Fill").child(css("fill", fill)).build(root);
+
+      node("Stroke").child(css("stroke", stroke), css("stroke-width", width)).build(root);
+
       return root;
     }
   }
-  
+
   private static class LineSymbolizer extends Symbolizer
   {
     private LineSymbolizer(SLDMapVisitor visitor, Style style)
     {
       super(visitor, style);
     }
-    
+
     @Override
     protected String getSymbolizerName()
     {
       return "LineSymbolizer";
     }
-    
+
     @Override
     protected Node getSLD()
     {
       Node root = super.getSLD();
-      
+
       return root;
     }
   }
@@ -189,22 +177,22 @@ public class SLDMapVisitor implements MapVisitor
     {
       super(visitor, style);
     }
-    
+
     @Override
     protected String getSymbolizerName()
     {
       return "TextSymbolizer";
     }
-    
+
     @Override
     protected Node getSLD()
     {
       Node root = super.getSLD();
-      
+
       return root;
     }
   }
-  
+
   /**
    * Builder class to simplify node creation.
    */
@@ -214,7 +202,7 @@ public class SLDMapVisitor implements MapVisitor
 
     private Document      doc;
 
-    private Node       el;
+    private Node          el;
 
     private NodeBuilder   parentBuilder;
 
@@ -222,7 +210,7 @@ public class SLDMapVisitor implements MapVisitor
     {
       this(null, visitor, ns, node);
     }
-    
+
     private NodeBuilder(NodeBuilder parentBuilder, SLDMapVisitor visitor, String ns, String node)
     {
       this.parentBuilder = parentBuilder;
@@ -232,7 +220,7 @@ public class SLDMapVisitor implements MapVisitor
 
       if (ns != null)
       {
-        this.el = this.doc.createElement(ns+":"+node);
+        this.el = this.doc.createElement(ns + ":" + node);
       }
       else
       {
@@ -249,27 +237,27 @@ public class SLDMapVisitor implements MapVisitor
      */
     private NodeBuilder attr(String name, String value)
     {
-      ((Element)this.el).setAttribute(name, value);
+      ( (Element) this.el ).setAttribute(name, value);
       return this;
     }
 
     private NodeBuilder text(Object o)
     {
-      if(o != null)
+      if (o != null)
       {
         text(o.toString());
       }
-      
+
       return this;
     }
-    
+
     private NodeBuilder text(String text)
     {
-      if(text != null)
+      if (text != null)
       {
         el.appendChild(this.doc.createTextNode(text));
       }
-      
+
       return this;
     }
 
@@ -278,7 +266,7 @@ public class SLDMapVisitor implements MapVisitor
       parent.appendChild(this.el);
       return this.el;
     }
-    
+
     private Node build()
     {
       return this.el;
@@ -315,27 +303,27 @@ public class SLDMapVisitor implements MapVisitor
   /**
    * The containing SLD Document.
    */
-  private Document    doc;
-  
-  private static final String OGC = "ogc";
-  
-  private Map map;
+  private Document                                          doc;
 
-  private Stack<Node> parents;
-  
-  private Node currentLayer;
-  
-  private java.util.Map<String, Node> layerToNodeMap;
-  
+  private static final String                               OGC = "ogc";
+
+  private Map                                               map;
+
+  private Stack<Node>                                       parents;
+
+  private Node                                              currentLayer;
+
+  private java.util.Map<String, Node>                       layerToNodeMap;
+
   private java.util.Map<Node, LinkedList<DocumentFragment>> layers;
-  
-  private Boolean     virtual;
 
-  private FeatureType featureType;
-  
-  private java.util.Map<Condition, Node> conditions;
-  
-  private Node root;
+  private Boolean                                           virtual;
+
+  private FeatureType                                       featureType;
+
+  private java.util.Map<Condition, Node>                    conditions;
+
+  private Node                                              root;
 
   public SLDMapVisitor()
   {
@@ -370,7 +358,7 @@ public class SLDMapVisitor implements MapVisitor
   {
     return new NodeBuilder(this, ns, node);
   }
-  
+
   /**
    * Utility method to create a CSS parameter node.
    * 
@@ -382,37 +370,37 @@ public class SLDMapVisitor implements MapVisitor
   {
     return new NodeBuilder(this, null, "CssParameter").attr("name", name).text(value);
   }
-  
+
   private NodeBuilder node(String node)
   {
     return new NodeBuilder(this, null, node);
   }
-  
+
   public String getSLD(Layer layer)
   {
     Node layerNode = this.layerToNodeMap.get(layer.getId());
-    
+
     Node sld = this.root.cloneNode(true);
 
     List<DocumentFragment> frags = this.layers.get(layerNode);
-    for(DocumentFragment frag : frags)
+    for (DocumentFragment frag : frags)
     {
       layerNode.appendChild(frag);
     }
-    
+
     sld.appendChild(layerNode);
-    
+
     return printNode(sld);
   }
-  
+
   public List<String> getSLD()
   {
     List<String> slds = new LinkedList<String>();
-    for(Layer layer: this.map.getLayers())
+    for (Layer layer : this.map.getLayers())
     {
-      slds.add(this.getSLD(layer)); 
+      slds.add(this.getSLD(layer));
     }
-    
+
     return slds;
   }
 
@@ -442,13 +430,12 @@ public class SLDMapVisitor implements MapVisitor
   public void visit(Map map)
   {
     this.map = map;
-    
+
     this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld")
         .attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc")
         .attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
-  
-    
-    for(Layer layer : map.getLayers())
+
+    for (Layer layer : map.getLayers())
     {
       layer.accepts(this);
     }
@@ -460,34 +447,30 @@ public class SLDMapVisitor implements MapVisitor
     // We're starting a new layer so clear the prior structures
     this.parents.clear();
     this.conditions.clear();
-    
+
     this.virtual = layer.getVirtual();
     this.featureType = layer.getFeatureType();
 
-    Node layerNode = this.node("NamedLayer")
-        .child(this.node("Name").text(layer.getName())).build();
+    Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();
 
     Node userStyle = this.node("UserStyle").build(layerNode);
-    
+
     parents.push(userStyle);
 
     this.currentLayer = layerNode;
     layerToNodeMap.put(layer.getId(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
-    
-    
-    for(Style style : layer.getStyles())
+
+    for (Style style : layer.getStyles())
     {
       style.accepts(this);
     }
   }
 
-
-  
   private void style(Style style, Condition cond)
   {
-  DocumentFragment rulesFragment = this.doc.createDocumentFragment();
-    
+    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
+
     Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
 
     if (this.virtual)
@@ -499,48 +482,73 @@ public class SLDMapVisitor implements MapVisitor
     {
       rulesFragment.appendChild(rule);
     }
-    
+
     Symbolizer symbolizer;
-    if(this.featureType == FeatureType.POINT)
+    if (this.featureType == FeatureType.POINT)
     {
       symbolizer = new PointSymbolizer(this, style);
     }
-    else if(this.featureType == FeatureType.POLYGON)
+    else if (this.featureType == FeatureType.POLYGON)
     {
       symbolizer = new PolygonSymbolizer(this, style);
     }
-    else if(this.featureType == FeatureType.LINE)
+    else if (this.featureType == FeatureType.LINE)
     {
       symbolizer = new LineSymbolizer(this, style);
     }
     // TODO text symbolizer
     else
     {
-      throw new ProgrammingErrorException("Geometry type ["+this.featureType+"] is not supported for SLD generation.");
+      throw new ProgrammingErrorException("Geometry type [" + this.featureType
+          + "] is not supported for SLD generation.");
     }
-    
-    
+
     // START - Thematic filter
-    if(cond != null)
+    if (cond != null)
     {
       Node filter = this.node(OGC, "Filter").build(rule);
-      
+
       this.parents.push(filter);
-      
+
       cond.accepts(this);
 
       // pop the filter as the conditions tree has been added by now
       this.parents.pop();
     }
     // END - Thematic filter
-    
-    
+
     rule.appendChild(symbolizer.getSLD());
+
+    boolean thematic = style instanceof ThematicStyle;
+    
+    if(thematic && style.getEnableLabel() && style.getEnableValue())
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      this.node("TextSymbolizer").child(
+          node("Label").child(
+              node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+              this.doc.createTextNode(" - "),
+              node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build()
+              )).build(rule);
+    }
+    else if (style.getEnableLabel())
+    {
+      this.node("TextSymbolizer").child(
+          node("Label").child(
+              node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()))).build(rule);
+    }
+    else if(thematic && style.getEnableValue())
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+        this.node("TextSymbolizer").child(
+            node("Label").child(node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()))).build(rule);
+    }
+
 
     // append the rule to user styles
     this.parents.pop().appendChild(rulesFragment);
   }
-  
+
   /**
    * Each Style is translated into a custom SLD Rule.
    */
@@ -562,10 +570,10 @@ public class SLDMapVisitor implements MapVisitor
     Node or = this.node(OGC, "Or").build(this.parents.peek());
 
     this.parents.push(or);
-    
+
     component.getLeftCondition().accepts(this);
     component.getRightCondition().accepts(this);
-    
+
     this.parents.pop();
   }
 
@@ -573,15 +581,15 @@ public class SLDMapVisitor implements MapVisitor
   public void visit(And component)
   {
     Node and = this.node(OGC, "And").build(this.parents.peek());
-    
+
     this.parents.push(and);
-    
+
     component.getLeftCondition().accepts(this);
     component.getRightCondition().accepts(this);
-    
+
     this.parents.pop();
   }
-  
+
   /**
    * Utility method that writes a Primitive condition.
    * 
@@ -590,12 +598,12 @@ public class SLDMapVisitor implements MapVisitor
    */
   private void primitive(String name, Primitive cond)
   {
-    //Condition parentCond = cond.getParentCondition();
-    //Node parent = parentCond != null ? this.parents.peek() : this.parents.pop();
+    // Condition parentCond = cond.getParentCondition();
+    // Node parent = parentCond != null ? this.parents.peek() :
+    // this.parents.pop();
     Node parent = this.parents.peek();
-    
-    node(OGC, name).child(
-        node(OGC, "PropertyName").text(cond.getThematicStyle().getAttribute()),
+
+    node(OGC, name).child(node(OGC, "PropertyName").text(cond.getThematicStyle().getAttribute()),
         node(OGC, "Literal").text(cond.getValue())).build(parent);
   }
 
@@ -628,28 +636,26 @@ public class SLDMapVisitor implements MapVisitor
   {
     primitive("PropertyIsLessThanOrEqualTo", component);
   }
-  
+
   @Override
   public void visit(IsBetween cond)
   {
-    node("PropertyIsBetween").child(
-      node("PropertyName").text(cond.getThematicStyle().getAttribute()),
-      node("LowerBoundary").text(cond.getLowerBound()),
-      node("UpperBoundary").text(cond.getUpperBound()))
-    .build(this.parents.peek());
+    node("PropertyIsBetween").child(node("PropertyName").text(cond.getThematicStyle().getAttribute()),
+        node("LowerBoundary").text(cond.getLowerBound()),
+        node("UpperBoundary").text(cond.getUpperBound())).build(this.parents.peek());
   }
-  
+
   @Override
   public void visit(IsLike component)
   {
-    primitive("PropertyIsLike", component);    
+    primitive("PropertyIsLike", component);
   }
-  
+
   @Override
   public void visit(IsNull component)
   {
-    node("PropertyIsNull").child(node("PropertyName")
-        .text(component.getThematicStyle().getAttribute())).build(this.parents.peek());     
+    node("PropertyIsNull").child(node("PropertyName").text(component.getThematicStyle().getAttribute()))
+        .build(this.parents.peek());
   }
 
   @Override

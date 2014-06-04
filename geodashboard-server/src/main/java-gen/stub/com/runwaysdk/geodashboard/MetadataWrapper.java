@@ -11,7 +11,7 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
-import com.test.geodashboard.StateInfo;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
 
 public class MetadataWrapper extends MetadataWrapperBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -35,13 +35,23 @@ public class MetadataWrapper extends MetadataWrapperBase implements
     for (AttributeWrapper aWrapper : this.getAllAttributeWrapper())
     {
       MdAttribute attr = aWrapper.getWrappedMdAttribute();
+      String attrId;
+      if(attr instanceof MdAttributeVirtual)
+      {
+        MdAttributeVirtual vAttr = (MdAttributeVirtual) attr;
+        attrId = vAttr.getMdAttributeConcreteId();
+      }
+      else
+      {
+        attrId = attr.getId();
+      }
+      
       MdAttributeView view = new MdAttributeView();
 
-      String id = attr.getId();
       String label = attr.getDisplayLabel(locale);
 
       view.setMdClassId(mdId);
-      view.setMdAttributeId(id);
+      view.setMdAttributeId(attrId);
       view.setDisplayLabel(label);
 
       mdAttr.add(view);

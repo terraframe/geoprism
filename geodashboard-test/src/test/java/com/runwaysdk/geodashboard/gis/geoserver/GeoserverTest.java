@@ -411,7 +411,7 @@ public class GeoserverTest
   /**
    * Creates styling for a point layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -472,7 +472,7 @@ public class GeoserverTest
   /**
    * Creates styling for a polygon layer.
    */
-  //@Test
+  @Test
   @Request
   @Transaction
   public void createPolygonSLD()

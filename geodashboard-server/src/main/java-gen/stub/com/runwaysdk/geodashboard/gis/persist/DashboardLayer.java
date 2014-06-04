@@ -7,7 +7,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
@@ -55,8 +57,55 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       // generate a db view name unique across space and time
       String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
       this.setViewName(vn);
+      
+      this.setVirtual(true);
     }
     super.apply();
+  }
+  
+  @Override
+  @Transaction
+  public void applyWithStyle(DashboardStyle style, String mapId)
+  {
+    boolean isNew = this.isNew();
+    if(isNew && style instanceof DashboardThematicStyle)
+    {
+      // FIXME UI needs to allow for picking of the geo entity attribute
+      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
+      MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
+      MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
+      MdAttributeDAOIF attr = md.definesAttribute("geoentity");
+      
+      this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+    }
+    
+    this.apply();
+    
+    style.setName("style_"+IDGenerator.nextID());
+    style.apply();
+    
+    if(isNew)
+    {
+      QueryFactory f = new QueryFactory();
+      DashboardLayerQuery q = new DashboardLayerQuery(f);
+      DashboardMapQuery mQ = new DashboardMapQuery(f);
+      
+      mQ.WHERE(mQ.getId().EQ(mapId));
+      q.WHERE(q.containingMap(mQ));
+      
+      int count = (int) q.getCount();
+      count++;
+      
+      DashboardMap map = DashboardMap.get(mapId);
+      HasLayer hasLayer = map.addHasLayer(this);
+      hasLayer.setLayerIndex(count);
+      hasLayer.apply();
+      
+      
+      HasStyle hasStyle = this.addHasStyle(style);
+      hasStyle.apply();
+    }
+    
   }
 
   /**
@@ -135,12 +184,16 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
             }
 
           }
+          
+          thematicSel.setColumnAlias(tStyle.getAttribute());
 
           v.SELECT(thematicSel);
 
           // geoentity label
           GeoEntityQuery geQ = new GeoEntityQuery(v);
-          v.SELECT(geQ.getDisplayLabel().localize());
+          Selectable label = geQ.getDisplayLabel().localize();
+          label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+          v.SELECT(label);
 
           // geometry
           Selectable geom;
@@ -215,6 +268,28 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
+  
+  @Override
+  public void lock()
+  {
+    for (DashboardStyle style : this.getAllHasStyle())
+    {
+      style.lock();
+    }
+    
+    super.lock();
+  }
+  
+  @Override
+  public void unlock()
+  {
+    for (DashboardStyle style : this.getAllHasStyle())
+    {
+      style.unlock();
+    }
+    
+    super.unlock();
+  }
 
   @Override
   @Transaction
@@ -239,7 +314,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     QueryFactory f = new QueryFactory();
     UniversalQuery q = new UniversalQuery(f);
     
-    q.WHERE(q.getUniversalId().NE("ROOT"));
+    Universal root = Universal.getRoot();
+    q.WHERE(q.getId().NE(root.getId()));
     
     q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     
@@ -249,6 +325,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   @Override
   public FeatureType getFeatureType()
   {
+    // LayerType is required so it's safe to assume access to the object
     AllLayerType type = this.getLayerType().get(0);
     if (type == AllLayerType.BUBBLE)
     {

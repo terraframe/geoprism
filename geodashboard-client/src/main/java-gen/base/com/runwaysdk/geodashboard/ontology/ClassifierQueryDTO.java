@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -2015843605)
+@com.runwaysdk.business.ClassSignature(hash = -1226251846)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard.ontology;
 public class ClassifierQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -2015843605;
+private static final long serialVersionUID = -1226251846;
 
   protected ClassifierQueryDTO(String type)
   {

@@ -1,0 +1,34 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      
+      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController">
+        <create>
+          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
+            <mdParameter name="layer" label="Layer" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+            <mdParameter name="style" label="Style" order="1" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
+          </mdAction>
+        </create>
+      </mdController>
+      
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+        <create>
+          <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="void">
+            <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+            <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.applyWithStyle" type="com.runwaysdk.system.metadata.MdMethod"/>
+    
+    </delete>
+  </undoIt>
+</version>
