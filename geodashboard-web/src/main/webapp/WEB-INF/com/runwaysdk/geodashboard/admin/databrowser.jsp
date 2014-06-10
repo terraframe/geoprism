@@ -83,9 +83,16 @@
 
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-  String packages = "['com.runwaysdk.system','com.runwaysdk.geodashboard', 'com.runwaysdk.geodashboard.report', 'com.runwaysdk.system.metadata']";
-  String types = "['com.runwaysdk.system.gis.geo.Universal', 'com.runwaysdk.system.gis.geo.GeoEntity']";
+  
+  String packages = (String) request.getAttribute("packages");
+  String types = (String) request.getAttribute("types");
+  
+  if (packages == null) {
+    packages = "[]";
+  }
+  if (types == null) {
+    types = "[]";
+  }
   String args = "[" + packages + "," + types + "]";
 %>
 

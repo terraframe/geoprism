@@ -201,7 +201,7 @@
 						<executions>
 							<execution>
 								<id>unimport-working</id>
-								<phase>install</phase>
+								<phase>process-resources</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
