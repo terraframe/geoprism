@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -362482709)
+@com.runwaysdk.business.ClassSignature(hash = -1200774170)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,7 +13,8 @@ public abstract class StateInfoViewBase extends com.runwaysdk.business.View impl
   public final static String CLASS = "com.test.geodashboard.StateInfoView";
   public static java.lang.String ID = "id";
   public static java.lang.String VIEWRANK = "viewRank";
-  private static final long serialVersionUID = -362482709;
+  public static java.lang.String VIEWRATIO = "viewRatio";
+  private static final long serialVersionUID = -1200774170;
   
   public StateInfoViewBase()
   {
@@ -61,6 +62,34 @@ public abstract class StateInfoViewBase extends com.runwaysdk.business.View impl
     else
     {
       setValue(VIEWRANK, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Double getViewRatio()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(VIEWRATIO));
+  }
+  
+  public void validateViewRatio()
+  {
+    this.validateAttribute(VIEWRATIO);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getViewRatioMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfoView.CLASS);
+    return mdClassIF.definesAttribute(VIEWRATIO);
+  }
+  
+  public void setViewRatio(Double value)
+  {
+    if(value == null)
+    {
+      setValue(VIEWRATIO, "");
+    }
+    else
+    {
+      setValue(VIEWRATIO, java.lang.Double.toString(value));
     }
   }
   

@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 474442516)
+@com.runwaysdk.business.ClassSignature(hash = 1754242141)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -58,6 +58,24 @@ public  abstract  class StateInfoViewQueryBase extends com.runwaysdk.query.Gener
   public com.runwaysdk.query.SelectableInteger getViewRank(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.getSelectable(com.test.geodashboard.StateInfoView.VIEWRANK, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getViewRatio()
+  {
+    return getViewRatio(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getViewRatio(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getSelectable(com.test.geodashboard.StateInfoView.VIEWRATIO, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getViewRatio(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getSelectable(com.test.geodashboard.StateInfoView.VIEWRATIO, alias, displayLabel);
 
   }
  

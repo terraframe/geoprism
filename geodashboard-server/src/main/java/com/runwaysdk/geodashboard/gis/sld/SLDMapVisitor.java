@@ -139,11 +139,14 @@ public class SLDMapVisitor implements MapVisitor
 
       Integer width = this.style.getPolygonStrokeWidth();
       String fill = this.style.getPolygonFill();
+      Double fillOpacity = this.style.getPolygonFillOpacity();
       String stroke = this.style.getPolygonStroke();
+      Double strokeOpacity = this.style.getPolygonStrokeOpacity();
 
-      node("Fill").child(css("fill", fill)).build(root);
+      node("Fill").child(css("fill", fill), css("fill-opacity", fillOpacity)).build(root);
 
-      node("Stroke").child(css("stroke", stroke), css("stroke-width", width)).build(root);
+      node("Stroke").child(css("stroke", stroke), css("stroke-width", width),
+          css("stroke-opacity", strokeOpacity)).build(root);
 
       return root;
     }
@@ -173,9 +176,12 @@ public class SLDMapVisitor implements MapVisitor
 
   private static class TextSymbolizer extends Symbolizer
   {
-    private TextSymbolizer(SLDMapVisitor visitor, Style style)
+    private Node[] nodes;
+
+    private TextSymbolizer(SLDMapVisitor visitor, Style style, Node... nodes)
     {
       super(visitor, style);
+      this.nodes = nodes;
     }
 
     @Override
@@ -188,6 +194,8 @@ public class SLDMapVisitor implements MapVisitor
     protected Node getSLD()
     {
       Node root = super.getSLD();
+
+      node("Label").child(nodes).build(root);
 
       return root;
     }
@@ -520,30 +528,35 @@ public class SLDMapVisitor implements MapVisitor
     rule.appendChild(symbolizer.getSLD());
 
     boolean thematic = style instanceof ThematicStyle;
-    
-    if(thematic && style.getEnableLabel() && style.getEnableValue())
+
+    if (thematic && style.getEnableLabel() && style.getEnableValue())
     {
       ThematicStyle tStyle = (ThematicStyle) style;
-      this.node("TextSymbolizer").child(
-          node("Label").child(
-              node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-              this.doc.createTextNode(" - "),
-              node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build()
-              )).build(rule);
+      Node[] nodes = new Node[] {
+          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+          this.doc.createTextNode(" - "),
+          node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
     }
     else if (style.getEnableLabel())
     {
-      this.node("TextSymbolizer").child(
-          node("Label").child(
-              node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()))).build(rule);
+      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())
+          .build() };
+
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
     }
-    else if(thematic && style.getEnableValue())
+    else if (thematic && style.getEnableValue())
     {
       ThematicStyle tStyle = (ThematicStyle) style;
-        this.node("TextSymbolizer").child(
-            node("Label").child(node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()))).build(rule);
-    }
+      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
+          .build() };
 
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
+    }
 
     // append the rule to user styles
     this.parents.pop().appendChild(rulesFragment);
@@ -598,9 +611,6 @@ public class SLDMapVisitor implements MapVisitor
    */
   private void primitive(String name, Primitive cond)
   {
-    // Condition parentCond = cond.getParentCondition();
-    // Node parent = parentCond != null ? this.parents.peek() :
-    // this.parents.pop();
     Node parent = this.parents.peek();
 
     node(OGC, name).child(node(OGC, "PropertyName").text(cond.getThematicStyle().getAttribute()),

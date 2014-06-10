@@ -39,6 +39,16 @@ public class GeoserverProperties implements Reloadable
   {
     return Singleton.INSTANCE.bundle;
   }
+  
+  public static Integer getDecimalLength()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.decimal.length"));
+  }
+  
+  public static Integer getDecimalPrecision()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.decimal.precision"));
+  }
 
   public static String getWorkspace()
   {

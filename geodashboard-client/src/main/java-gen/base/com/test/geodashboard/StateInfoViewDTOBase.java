@@ -1,10 +1,10 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -2039053717)
+@com.runwaysdk.business.ClassSignature(hash = 1579951462)
 public abstract class StateInfoViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.test.geodashboard.StateInfoView";
-  private static final long serialVersionUID = -2039053717;
+  private static final long serialVersionUID = 1579951462;
   
   protected StateInfoViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -18,6 +18,7 @@ public abstract class StateInfoViewDTOBase extends com.runwaysdk.business.ViewDT
   
   public static java.lang.String ID = "id";
   public static java.lang.String VIEWRANK = "viewRank";
+  public static java.lang.String VIEWRATIO = "viewRatio";
   public Integer getViewRank()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VIEWRANK));
@@ -53,6 +54,43 @@ public abstract class StateInfoViewDTOBase extends com.runwaysdk.business.ViewDT
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getViewRankMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(VIEWRANK).getAttributeMdDTO();
+  }
+  
+  public Double getViewRatio()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(VIEWRATIO));
+  }
+  
+  public void setViewRatio(Double value)
+  {
+    if(value == null)
+    {
+      setValue(VIEWRATIO, "");
+    }
+    else
+    {
+      setValue(VIEWRATIO, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isViewRatioWritable()
+  {
+    return isWritable(VIEWRATIO);
+  }
+  
+  public boolean isViewRatioReadable()
+  {
+    return isReadable(VIEWRATIO);
+  }
+  
+  public boolean isViewRatioModified()
+  {
+    return isModified(VIEWRATIO);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getViewRatioMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(VIEWRATIO).getAttributeMdDTO();
   }
   
   public static StateInfoViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

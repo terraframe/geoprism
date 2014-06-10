@@ -23,7 +23,7 @@
               <div class="holder">
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
-                  <input type="text" name="layer.${layer.nameMd.name}" />
+                  <input type="text" value="${layer.name}" name="layer.${layer.nameMd.name}" />
                 </span>
               </div>
             </div>
@@ -295,7 +295,8 @@
                         <div class="cell">
                           <label for="f210">Opacity</label>
                           <div class="text">
-                          <input id="f210" type="text" value="" name="style.${style.polygonFillOpacityMd.name}" placeholder="0 to 100"></div>
+                            <input id="f210" type="text" value="${style.polygonFillOpacity}" name="style.${style.polygonFillOpacityMd.name}" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -331,7 +332,9 @@
                         </div>
                         <div class="cell">
                           <label for="f64">${style.polygonStrokeOpacityMd.displayLabel}</label>
-                          <div class="text"><input id="f64" type="text" name="style.${style.polygonStrokeOpacityMd.name}" placeholder="0 to 100"></div>
+                          <div class="text">
+                            <input id="f64" type="text" name="style.${style.polygonStrokeOpacityMd.name}" value="${style.polygonStrokeOpacity}" />
+                          </div>
                         </div>
                       </div>
                     </div>

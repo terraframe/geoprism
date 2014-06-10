@@ -1,10 +1,10 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -555912000)
+@com.runwaysdk.business.ClassSignature(hash = 103123893)
 public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.test.geodashboard.StateInfo";
-  private static final long serialVersionUID = -555912000;
+  private static final long serialVersionUID = 103123893;
   
   protected StateInfoDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -38,6 +38,7 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String RANK = "rank";
+  public static java.lang.String RATIO = "ratio";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
@@ -421,6 +422,43 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getRankMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(RANK).getAttributeMdDTO();
+  }
+  
+  public Double getRatio()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(RATIO));
+  }
+  
+  public void setRatio(Double value)
+  {
+    if(value == null)
+    {
+      setValue(RATIO, "");
+    }
+    else
+    {
+      setValue(RATIO, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isRatioWritable()
+  {
+    return isWritable(RATIO);
+  }
+  
+  public boolean isRatioReadable()
+  {
+    return isReadable(RATIO);
+  }
+  
+  public boolean isRatioModified()
+  {
+    return isModified(RATIO);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getRatioMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(RATIO).getAttributeMdDTO();
   }
   
   public Long getSeq()

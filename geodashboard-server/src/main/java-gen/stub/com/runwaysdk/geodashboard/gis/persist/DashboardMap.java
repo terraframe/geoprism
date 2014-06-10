@@ -105,7 +105,7 @@ public class DashboardMap extends DashboardMapBase implements
         }
         catch(Throwable t)
         {
-          log.debug("Dropping/creating view ["+layerName+"].", t);
+          log.warn("Dropping/creating view ["+layerName+"].", t);
         }
         finally
         {
@@ -118,7 +118,7 @@ public class DashboardMap extends DashboardMapBase implements
         }
         catch(Throwable t)
         {
-          log.debug("Publishing style ["+layerName+"].", t);
+          log.warn("Publishing style ["+layerName+"].", t);
         }
         finally
         {
@@ -134,7 +134,7 @@ public class DashboardMap extends DashboardMapBase implements
         }
         catch(Throwable t)
         {
-          log.debug("Publishing layer ["+layerName+"].", t);
+          log.warn("Publishing layer ["+layerName+"].", t);
         }
         finally
         {
@@ -162,6 +162,7 @@ public class DashboardMap extends DashboardMapBase implements
           layerObj.put("viewName", layer.getViewName());
           layerObj.put("sldName", layer.getSLDName());
           layerObj.put("layerName", layer.getName());
+          layerObj.put("layerId", layer.getId());
           layers.put(layerObj);
 
           addedLayers.add(layer);
@@ -195,8 +196,6 @@ public class DashboardMap extends DashboardMapBase implements
 
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
-    System.out.println(layers.length + " length");
-
     JSONArray bboxArr = new JSONArray();
     ResultSet resultSet = null;
     String[] layerNames = null;

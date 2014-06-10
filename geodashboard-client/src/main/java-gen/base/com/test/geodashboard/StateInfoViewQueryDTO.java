@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1964700418)
+@com.runwaysdk.business.ClassSignature(hash = -1652384465)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.test.geodashboard;
 public class StateInfoViewQueryDTO extends com.runwaysdk.business.ViewQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1964700418;
+private static final long serialVersionUID = -1652384465;
 
   protected StateInfoViewQueryDTO(String type)
   {

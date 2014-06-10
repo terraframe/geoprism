@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1434135209)
+@com.runwaysdk.business.ClassSignature(hash = -216599956)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -261,6 +261,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getRatio()
+  {
+    return getRatio(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.test.geodashboard.StateInfo.RATIO, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.test.geodashboard.StateInfo.RATIO, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -412,6 +429,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableInteger getRank();
     public com.runwaysdk.query.SelectableInteger getRank(String alias);
     public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getRatio();
+    public com.runwaysdk.query.SelectableDouble getRatio(String alias);
+    public com.runwaysdk.query.SelectableDouble getRatio(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -643,6 +663,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getRatio()
+  {
+    return getRatio(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.test.geodashboard.StateInfo.RATIO, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.test.geodashboard.StateInfo.RATIO, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -771,6 +808,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableInteger getRank();
     public com.runwaysdk.query.SelectableInteger getRank(String alias);
     public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getRatio();
+    public com.runwaysdk.query.SelectableDouble getRatio(String alias);
+    public com.runwaysdk.query.SelectableDouble getRatio(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -1049,6 +1089,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.SelectableInteger getRank(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.test.geodashboard.StateInfo.RANK, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getRatio()
+  {
+    return getRatio(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.test.geodashboard.StateInfo.RATIO, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getRatio(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.test.geodashboard.StateInfo.RATIO, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()

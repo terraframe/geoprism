@@ -24,6 +24,9 @@ import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableDecimal;
+import com.runwaysdk.query.SelectableDouble;
+import com.runwaysdk.query.SelectableFloat;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -35,7 +38,8 @@ import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
 
-public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
+public class DashboardLayer extends DashboardLayerBase implements
+    com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long  serialVersionUID = 1992575686;
 
@@ -57,55 +61,54 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       // generate a db view name unique across space and time
       String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
       this.setViewName(vn);
-      
+
       this.setVirtual(true);
     }
     super.apply();
   }
-  
+
   @Override
   @Transaction
   public void applyWithStyle(DashboardStyle style, String mapId)
   {
     boolean isNew = this.isNew();
-    if(isNew && style instanceof DashboardThematicStyle)
+    if (isNew && style instanceof DashboardThematicStyle)
     {
       // FIXME UI needs to allow for picking of the geo entity attribute
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
       MdAttributeDAOIF attr = md.definesAttribute("geoentity");
-      
+
       this.setValue(DashboardLayer.GEOENTITY, attr.getId());
     }
-    
+
     this.apply();
-    
-    style.setName("style_"+IDGenerator.nextID());
+
+    style.setName("style_" + IDGenerator.nextID());
     style.apply();
-    
-    if(isNew)
+
+    if (isNew)
     {
       QueryFactory f = new QueryFactory();
       DashboardLayerQuery q = new DashboardLayerQuery(f);
       DashboardMapQuery mQ = new DashboardMapQuery(f);
-      
+
       mQ.WHERE(mQ.getId().EQ(mapId));
       q.WHERE(q.containingMap(mQ));
-      
+
       int count = (int) q.getCount();
       count++;
-      
+
       DashboardMap map = DashboardMap.get(mapId);
       HasLayer hasLayer = map.addHasLayer(this);
       hasLayer.setLayerIndex(count);
       hasLayer.apply();
-      
-      
+
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
     }
-    
+
   }
 
   /**
@@ -158,6 +161,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
+          boolean isAggregate = false;
           if (allAgg.size() == 1)
           {
             AllAggregationType agg = allAgg.get(0);
@@ -183,8 +187,30 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               thematicSel = F.AVG(thematicAttr);
             }
 
+            isAggregate = true;
           }
-          
+
+          if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal
+              || thematicSel instanceof SelectableFloat)
+          {
+            Integer length = GeoserverProperties.getDecimalLength();
+            Integer precision = GeoserverProperties.getDecimalPrecision();
+            
+            String sql = thematicSel.getSQL()
+                + "::decimal(" + length + "," + precision + ")";
+            
+            if(isAggregate)
+            {
+              thematicSel = v.aSQLAggregateDouble(thematicSel._getAttributeName(), sql,
+                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+            }
+            else
+            {
+              thematicSel = v.aSQLDouble(thematicSel._getAttributeName(), sql,
+                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+            }
+          }
+
           thematicSel.setColumnAlias(tStyle.getAttribute());
 
           v.SELECT(thematicSel);
@@ -193,7 +219,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-          v.SELECT(label);
+          v.SELECT(label);  
 
           // geometry
           Selectable geom;
@@ -265,10 +291,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
     else
     {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY
+          + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
-  
+
   @Override
   public void lock()
   {
@@ -276,10 +303,10 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     {
       style.lock();
     }
-    
+
     super.lock();
   }
-  
+
   @Override
   public void unlock()
   {
@@ -287,7 +314,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     {
       style.unlock();
     }
-    
+
     super.unlock();
   }
 
@@ -308,17 +335,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   {
     return this.getAllHasStyle().getAll();
   }
-  
+
   public static UniversalQuery getSortedUniversals()
   {
     QueryFactory f = new QueryFactory();
     UniversalQuery q = new UniversalQuery(f);
-    
+
     Universal root = Universal.getRoot();
     q.WHERE(q.getId().NE(root.getId()));
-    
+
     q.ORDER_BY_ASC(q.getDisplayLabel().localize());
-    
+
     return q;
   }
 

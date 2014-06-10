@@ -110,7 +110,7 @@ $(document).ready(function(){
 
 </script>
 
-    <form action="#" class="control-form">
+    <form action="#" class="control-form" id="control-form">
       <fieldset>
         <legend class="none">controls form</legend>
         <button class="none">save</button>
@@ -208,7 +208,8 @@ $(document).ready(function(){
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
-										  <span data-toggle="modal" data-target="#modal01">opener</span>
+<!-- 										  <span data-toggle="modal" data-target="#modal01">opener</span>
+ -->										  <span>opener</span>
 										</a>
 									</h4>
                   <!-- slide block -->

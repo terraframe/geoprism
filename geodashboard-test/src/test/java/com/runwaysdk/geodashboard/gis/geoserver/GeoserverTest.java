@@ -37,7 +37,6 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
-import com.runwaysdk.dataaccess.metadata.MdViewDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.AttributeWrapper;
 import com.runwaysdk.geodashboard.Dashboard;
@@ -73,6 +72,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -147,6 +147,8 @@ public class GeoserverTest
 
   private static MdAttributeInteger   rank;
 
+  private static MdAttributeDouble   ratio;
+
   private static MdAttributeReference geoentityRef;
 
   public static void main(String[] args) throws Throwable
@@ -212,6 +214,15 @@ public class GeoserverTest
     rank.setAttributeName("rank");
     rank.getDisplayLabel().setDefaultValue("Alphabetic Rank");
     rank.apply();
+    
+    // ratio = rank/total (linear relationship...higher rank = 
+    ratio = new MdAttributeDouble();
+    ratio.setDefiningMdClass(stateInfo);
+    ratio.setAttributeName("ratio");
+    ratio.setDatabaseLength(4);
+    ratio.setDatabaseDecimal(2);
+    ratio.getDisplayLabel().setDefaultValue("Alphabetic Ratio");
+    ratio.apply();
 
     MdBusiness geoentityMd = MdBusiness.getMdBusiness(GeoEntity.CLASS);
 
@@ -258,7 +269,7 @@ public class GeoserverTest
     // create the link to the dashboard with an MdView
     stateInfoView = new MdView();
     stateInfoView.setTypeName(VIEW_NAME);
-    stateInfoView.getDisplayLabel().setDefaultValue("State Information");
+    stateInfoView.getDisplayLabel().setDefaultValue("State Statistics");
     stateInfoView.setPackageName(TEST_PACKAGE);
     stateInfoView.apply();
     
@@ -266,7 +277,15 @@ public class GeoserverTest
     virtualRank.setAttributeName("viewRank");
     virtualRank.setMdAttributeConcrete(rank);
     virtualRank.setDefiningMdView(stateInfoView);
+    virtualRank.getDisplayLabel().setDefaultValue("Education Rank");
     virtualRank.apply();
+
+    MdAttributeVirtual virtualRatio = new MdAttributeVirtual();
+    virtualRatio.setAttributeName("viewRatio");
+    virtualRatio.setMdAttributeConcrete(ratio);
+    virtualRatio.setDefiningMdView(stateInfoView);
+    virtualRatio.getDisplayLabel().setDefaultValue("Crime Rate");
+    virtualRatio.apply();
     
     Dashboard dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
@@ -281,6 +300,7 @@ public class GeoserverTest
     dm.setListOrder(0);
     dm.apply();
     
+    // rank
     AttributeWrapper aWrapper = new AttributeWrapper();
     aWrapper.setWrappedMdAttribute(virtualRank);
     aWrapper.apply();
@@ -288,6 +308,15 @@ public class GeoserverTest
     DashboardAttributes da = mWrapper.addAttributeWrapper(aWrapper);
     da.setListOrder(0);
     da.apply();
+
+    // ratio
+    AttributeWrapper aWrapper2 = new AttributeWrapper();
+    aWrapper2.setWrappedMdAttribute(virtualRatio);
+    aWrapper2.apply();
+
+    DashboardAttributes da2 = mWrapper.addAttributeWrapper(aWrapper2);
+    da2.setListOrder(1);
+    da2.apply();
   }
 
   private static void dataSetup()
@@ -312,6 +341,9 @@ public class GeoserverTest
       q.ORDER_BY_ASC(q.getDisplayLabel().getDefaultLocale());
 
       OIterator<? extends GeoEntity> iter = q.getIterator();
+      
+      double total = q.getCount();
+      
       try
       {
         int count = 0;
@@ -335,8 +367,12 @@ public class GeoserverTest
 
           ge.addLink(usa, LocatedIn.CLASS).apply();
 
+          Integer rankI = ++count; // 1-based starting index
+          Double ratioD = rankI/total;
+          
           Business si = BusinessFacade.newBusiness(STATE_INFO);
-          si.setValue(rank.getAttributeName(), Integer.toString(count++));
+          si.setValue(rank.getAttributeName(), rankI.toString());
+          si.setValue(ratio.getAttributeName(), ratioD.toString());
           si.setValue(geoentityRef.getAttributeName(), ge.getId());
           si.apply();
         }

@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1977140800)
+@com.runwaysdk.business.ClassSignature(hash = 2105125429)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,10 +22,11 @@ public abstract class StateInfoBase extends com.runwaysdk.business.Business impl
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String RANK = "rank";
+  public static java.lang.String RATIO = "ratio";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1977140800;
+  private static final long serialVersionUID = 2105125429;
   
   public StateInfoBase()
   {
@@ -337,6 +338,34 @@ public abstract class StateInfoBase extends com.runwaysdk.business.Business impl
     else
     {
       setValue(RANK, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Double getRatio()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(RATIO));
+  }
+  
+  public void validateRatio()
+  {
+    this.validateAttribute(RATIO);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getRatioMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfo.CLASS);
+    return mdClassIF.definesAttribute(RATIO);
+  }
+  
+  public void setRatio(Double value)
+  {
+    if(value == null)
+    {
+      setValue(RATIO, "");
+    }
+    else
+    {
+      setValue(RATIO, java.lang.Double.toString(value));
     }
   }
   

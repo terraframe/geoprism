@@ -68,21 +68,31 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   }
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.lock(super.getClientRequest(), id);
-    req.setAttribute("layer", dto);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.lock(super.getClientRequest(), id);
+    
+    // There will be one style only for this layer (for IDE)
+    DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
+
+    this.loadLayerData(layer, style);
+    
     render("editComponent.jsp");
   }
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.view(id);
   }
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+  
+  /**
+   * Loads artifacts for layer/style CRUD.
+   * 
+   * @param layer
+   */
+  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+    
     req.setAttribute("layer", layer);
 
-    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
     req.setAttribute("style", style);
     
     String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
@@ -101,6 +111,15 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     // feature types
     Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
     req.setAttribute("features", features);
+  }
+  
+  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+  {
+    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+    
+    this.loadLayerData(layer, style);
     
     render("createComponent.jsp");
   }
@@ -163,17 +182,17 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       ServletException
   {
     layer.applyWithStyle(style, mapId);
-
-    try
-    {
-      String layerJSON = BusinessDTOToJSON.getConverter(layer).populate().toString();
-      resp.setStatus(200);
-      resp.getWriter().write(layerJSON);
-      resp.flushBuffer();
-    }
-    catch(JSONException ex)
-    {
-      throw new ClientException("Error applying map ["+mapId+"] layer ["+layer+"] with style ["+style+"]", ex);
-    }
+//
+//    try
+//    {
+//      String layerJSON = BusinessDTOToJSON.getConverter(layer).populate().toString();
+//      resp.setStatus(200);
+//      resp.getWriter().write(layerJSON);
+//      resp.flushBuffer();
+//    }
+//    catch(JSONException ex)
+//    {
+//      throw new ClientException("Error applying map ["+mapId+"] layer ["+layer+"] with style ["+style+"]", ex);
+//    }
   }
 }
