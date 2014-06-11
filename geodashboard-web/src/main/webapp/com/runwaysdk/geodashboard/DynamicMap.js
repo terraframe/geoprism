@@ -592,7 +592,7 @@
       _selectColor : function(){
     	  
     	  // color dropdown buttons
-    	  $('.color-holder').colpick({
+    	  var total1 = $('.color-holder').colpick({
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
@@ -601,13 +601,13 @@
     		}); 
     	  
     	  // category layer type colors
-    	  $("#category-colors-container").find('.icon-color').colpick({
+    	  var total2 = $("#category-colors-container").find('.icon-color').colpick({
   			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
   			onChange:function(hsb,hex,rgb,el,bySetColor) {
   				$(el).css('background','#'+hex);
   				$(el).find('.color-input').attr('value', '#'+hex);
   			}
-  		});
+    	  });
       },
       
       /**
