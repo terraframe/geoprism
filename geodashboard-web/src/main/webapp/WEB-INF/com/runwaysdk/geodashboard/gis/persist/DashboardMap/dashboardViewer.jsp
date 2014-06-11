@@ -173,14 +173,14 @@ $(document).ready(function(){
             <div class="col">
               <label for="from-field">From</label>
               <span class="text">
-                <input class="checkin" id="from-field" type="text" placeholder="">
+                <input disabled="disabled" class="checkin" id="from-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
             <div class="col">
               <label for="to-field">To</label>
               <span class="text">
-                <input class="checkout" id="to-field" type="text" placeholder="">
+                <input disabled="disabled" class="checkout" id="to-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
@@ -208,8 +208,7 @@ $(document).ready(function(){
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
-<!-- 										  <span data-toggle="modal" data-target="#modal01">opener</span>
- -->										  <span>opener</span>
+ 										  <span data-toggle="modal" data-target="#modal01">opener</span>
 										</a>
 									</h4>
                   <!-- slide block -->
@@ -223,10 +222,10 @@ $(document).ready(function(){
                           <!-- Number attribute -->
                           <div class="select-holder">
                             <select id="f${attrStatus.index}" class="filter-select">
-                              <option>&gt;</option>
-                              <option>&gt;=</option>
-                              <option>&lt;</option>
-                              <option>&lt;=</option>
+                              <option value="">&gt;</option>
+                              <option value="">&gt;=</option>
+                              <option value="">&lt;</option>
+                              <option value="">&lt;=</option>
                             </select>
                           </div>
                           <div class="text">

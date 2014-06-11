@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import org.json.JSONException;
 
 import com.runwaysdk.ClientException;
+import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
@@ -181,18 +182,27 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException,
       ServletException
   {
-    layer.applyWithStyle(style, mapId);
-//
-//    try
-//    {
-//      String layerJSON = BusinessDTOToJSON.getConverter(layer).populate().toString();
-//      resp.setStatus(200);
-//      resp.getWriter().write(layerJSON);
-//      resp.flushBuffer();
-//    }
-//    catch(JSONException ex)
-//    {
-//      throw new ClientException("Error applying map ["+mapId+"] layer ["+layer+"] with style ["+style+"]", ex);
-//    }
+    try
+    {
+      layer.applyWithStyle(style, mapId);
+    }
+    catch(Throwable t)
+    {
+      boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
+
+      if (needsRedirect)
+      {
+        this.loadLayerData(layer, (DashboardThematicStyleDTO) style);
+        
+        if(layer.isNewInstance())
+        {
+          render("createComponent.jsp");
+        }
+        else
+        {
+          render("editComponent.jsp");
+        }
+      }
+    }
   }
 }

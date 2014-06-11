@@ -3,8 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!-- Include the types of this form to get the default values the MdAction needs -->
-<mjl:component param="layer" item="${layer}">
-</mjl:component>
 <mjl:component param="style" item="${style}">
 </mjl:component>
 
@@ -21,12 +19,18 @@
                 <strong>Name the layer</strong>
               </div>
               <div class="holder">
+<mjl:component param="layer" item="${layer}">
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
-                  <input type="text" value="${layer.name}" name="layer.${layer.nameMd.name}" />
+                  <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
+                      <mjl:messages attribute="name" classes="error-message">
+                        <mjl:message />
+                      </mjl:messages>
                 </span>
+</mjl:component>
               </div>
             </div>
+<mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder style02">
                 <strong>Labels and Values</strong>
@@ -34,8 +38,11 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.${style.enableValueMd.name}">
+                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue">
                     <label for="f51">${style.enableValueMd.displayLabel}</label>
+                    <mjl:messages attribute="enableValue" classes="error-message">
+                      <mjl:message />
+                    </mjl:messages>
                   </div>
                   <div class="cell style02">
                     <label for="f52">${style.valueFontMd.displayLabel}</label>
@@ -189,6 +196,7 @@
                 </div>
               </div>
             </div>
+</mjl:component>
             <div class="row-holder">
               <div class="label-holder style03">
                 <strong>Define an aggregation method</strong>
@@ -197,6 +205,7 @@
                 <div class="box">
                   <label for="f58">Group by</label>
                   <div class="select-box">
+<mjl:component param="layer" item="${layer}">
                     <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
                        <c:forEach items="${universals}" var="universal">
                          <c:choose>
@@ -213,8 +222,10 @@
                          </c:choose>
                       </c:forEach>
                     </select>
+</mjl:component>
                   </div>
                 </div>
+<mjl:component param="style" item="${style}">
                 <div class="box">
                   <label for="f59">According to</label>
                   <div class="select-box">
@@ -237,8 +248,10 @@
                     </select>
                   </div>
                 </div>
+</mjl:component>
               </div>
             </div>
+<mjl:component param="layer" item="${layer}">
             <div class="row-holder">
               <div class="label-holder style04">
                 <strong>Choose a layer type</strong>
@@ -257,6 +270,7 @@
                       <label for="radio2">${features['BUBBLE']}</label>
                     </a>
                   </li>
+                  <!-- Removed for deploy until functionality exists.
                   <li class="gradient">
                     <a href="#" data-toggle="tab">
                       <input id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
@@ -269,9 +283,12 @@
                       <label for="radio4">${features['CATEGORY']}</label>
                     </a>
                   </li>
+                   -->
                 </ul>
               </div>
             </div>
+</mjl:component>
+<mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder">
                 <strong>Style the layer</strong>
@@ -293,7 +310,7 @@
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f210">Opacity</label>
+                          <label for="f210">${style.polygonFillOpacityMd.displayLabel}</label>
                           <div class="text">
                             <input id="f210" type="text" value="${style.polygonFillOpacity}" name="style.${style.polygonFillOpacityMd.name}" />
                           </div>
@@ -344,17 +361,20 @@
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.pointFillMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#00a3d9;">icon</span>
+                              <span class="ico" style="background:${style.pointFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.pointFillMd.name}" value="${style.pointFill}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f71">Opacity</label>
-                          <div class="text"><input id="f71" type="text" placeholder="0 to 100"></div>
+                          <label for="f71">${style.pointOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <input id="f71" type="text" value="${style.pointOpacity}" name="style.${style.pointOpacityMd.name}" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -391,6 +411,18 @@
                       <strong class="title">Radius</strong>
                       <div class="cell-holder">
                         <div class="cell">
+                          <label for="f75">${style.pointSizeMd.displayLabel}</label>
+                          <div class="text">
+                            <input id="f75" name="${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--  Removed for deploy until functionality is added
+                    <div class="fill-block">
+                      <strong class="title">Radius</strong>
+                      <div class="cell-holder">
+                        <div class="cell">
                           <label for="f75">Min</label>
                           <div class="text"><input id="f75" type="text" placeholder="10"></div>
                         </div>
@@ -400,6 +432,7 @@
                         </div>
                       </div>
                     </div>
+                     -->
                   </div>
                   <div class="tab-pane active" id="tab003" style="display: none;">
                     <div class="fill-block">
@@ -627,13 +660,16 @@
                 </div>
               </div>
             </div>
+</mjl:component>
             <div class="row-holder">
               <div class="label-holder"></div>
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block style02">
+<mjl:component param="layer" item="${layer}">
                     <input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}">
                     <label for="f65">${layer.displayInLegendMd.displayLabel}</label>
+</mjl:component>
                   </div>
                 </div>
                 <div class="button-holder">

@@ -131,11 +131,20 @@
         var that = this;
         
         var request = new Mojo.ClientRequest({
-          onSuccess : function(){
-            that._closeLayerModal();
-            that._refreshMap();
+          onSuccess : function(html){
+            if(Mojo.Util.trim(html).length === 0){
+              that._closeLayerModal();
+              that._refreshMap();
+            }
+            else {
+              // we got html back, meaning there was an error
+              that._displayLayerForm(html, false);
+            }
           },
           onFailure : function(e){
+            if(Mojo.Util.isString(e)){
+              console.log('EX: '+e)
+            }
             that.handleException(e);
           }
         });
@@ -147,11 +156,8 @@
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
-        
         return request;
       },
-      
-
       
       /**
        * 
