@@ -44,7 +44,7 @@ public class MetadataTypeQuery extends com.runwaysdk.geodashboard.databrowser.Me
       MetadataTypeQuery q = this.getViewQuery();
       
       q.map(MetadataType.DISPLAYLABEL, mdBizQ.getDisplayLabel().localize());
-      q.map(MetadataType.PARENTTYPEID, mdBizQ.getSuperMdBusiness().getId());
+      q.map(MetadataType.PARENTTYPEID, mdBizQ.getSuperMdBusiness());
       q.map(MetadataType.TYPEID, mdBizQ.getId());
       q.map(MetadataType.TYPENAME, mdBizQ.getTypeName());
       q.map(MetadataType.TYPEPACKAGE, mdBizQ.getPackageName());
