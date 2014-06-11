@@ -52,7 +52,7 @@
                 </goals>
                 <configuration>
                   <executable>java</executable>
-                  <mainClass>com.runwaysdk.geodashboard.gis.geoserver.GeoserverTest</mainClass>
+                  <mainClass>com.runwaysdk.geodashboard.gis.geoserver.GeoserverTestSetup</mainClass>
                   <systemProperties>
                     <systemProperty>
                       <key>server.root</key>

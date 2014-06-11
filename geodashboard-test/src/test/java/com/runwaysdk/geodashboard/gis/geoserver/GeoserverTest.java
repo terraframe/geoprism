@@ -82,45 +82,11 @@ import com.runwaysdk.system.metadata.MdView;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
-public class GeoserverTest
+public class GeoserverTest extends GeoserverTestSetup
 {
-  private static final String         TEST_PACKAGE   = "com.test.geodashboard";
-
-  private static final String         TYPE_NAME      = "StateInfo";
-
-  private static final String         VIEW_NAME      = "StateInfoView";
-
-  private static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
-
-  private static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
-
-  private static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
-
-  private static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
-
-  private static int                  stateCount     = 0;
-
-  private static boolean              GEOSERVER_RUNNING;
-
-  private static final File           xsd            = new File(SLD_SCHEMA);
-
-  private static final boolean        consoleDebug   = true;
-  
-  private static final boolean keepForTesting = true;
 
   @Rule
   public TestName                     name           = new TestName();
-
-  private static final Log            log            = LogFactory.getLog(GeoserverTest.class);
-
-  static
-  {
-    if (consoleDebug)
-    {
-      BasicConfigurator.configure();
-      RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
-    }
-  }
 
   /*
    * static {
@@ -133,39 +99,6 @@ public class GeoserverTest
    * (hostname.equals("127.0.0.1")) { return true; } return false; } }); }
    */
 
-  private static Universal            state;
-
-  private static Universal            country;
-
-  private static GeoEntity            usa;
-
-  private static MdBusiness           stateInfo;
-  
-  private static MdView stateInfoView;
-
-  private static String               stateInfoId;
-
-  private static MdAttributeInteger   rank;
-
-  private static MdAttributeDouble   ratio;
-
-  private static MdAttributeReference geoentityRef;
-
-  public static void main(String[] args) throws Throwable
-  {
-    try
-    {
-      log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
-    
-      classSetup();
-    }
-    catch(Throwable t)
-    {
-      log.error("Unable to invoke classSetup()", t);
-      throw new RuntimeException(t);
-    }
-  }
-  
   @Request
   public static void testWMS(String url) throws Exception
   {
@@ -403,11 +336,8 @@ public class GeoserverTest
   @Request
   public static void classTeardown()
   {
-    if(!keepForTesting)
-    {
-      metadataTeardown();
-      StrategyInitializer.tearDown();
-    }
+    metadataTeardown();
+    StrategyInitializer.tearDown();
   }
 
   @Transaction
