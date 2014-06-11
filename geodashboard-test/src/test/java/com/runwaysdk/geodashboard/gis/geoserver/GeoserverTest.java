@@ -153,11 +153,20 @@ public class GeoserverTest
 
   public static void main(String[] args) throws Throwable
   {
-    String url = "https://localhost:8443/geoserver/wms/reflect?layers=topp:states_2&format=image/png";
-
-    testWMS(url);
+    try
+    {
+      log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
+    
+      classSetup();
+    }
+    catch(Throwable t)
+    {
+      log.error("Unable to invoke classSetup()", t);
+      throw new RuntimeException(t);
+    }
   }
-
+  
+  @Request
   public static void testWMS(String url) throws Exception
   {
 
