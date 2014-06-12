@@ -100,20 +100,22 @@ public class GeoserverTestSetup
 
   public static void main(String[] args) throws Throwable
   {
-//    try
-//    {
-//      log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
-//
-//      GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
-//
-//      metadataSetup();
-//      dataSetup();
-//    }
-//    catch (Throwable t)
-//    {
-//      log.error("Unable to invoke classSetup()", t);
-//      throw new RuntimeException(t);
-//    }
+    try
+    {
+      StrategyInitializer.startUp();
+      
+      log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
+
+      GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
+
+      metadataSetup();
+      dataSetup();
+    }
+    catch (Throwable t)
+    {
+      log.error("Unable to invoke classSetup()", t);
+      throw new RuntimeException(t);
+    }
   }
 
   @Request
