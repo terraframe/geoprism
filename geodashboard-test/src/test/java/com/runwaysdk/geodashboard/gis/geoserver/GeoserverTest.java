@@ -132,6 +132,8 @@ import com.runwaysdk.util.FileIO;
     protected static MdAttributeDouble    ratio;
 
     protected static MdAttributeReference geoentityRef;
+    
+    private static boolean keepData = true;
 
     protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
 
@@ -415,8 +417,10 @@ import com.runwaysdk.util.FileIO;
   @Request
   public static void classTeardown()
   {
-    metadataTeardown();
-    StrategyInitializer.tearDown();
+    if(keepData){
+      metadataTeardown();
+      StrategyInitializer.tearDown();
+    }
   }
 
   @Transaction
