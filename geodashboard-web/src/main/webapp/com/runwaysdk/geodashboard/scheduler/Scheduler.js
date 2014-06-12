@@ -497,7 +497,7 @@
         // Create the DataTable impl
         this._config["iDisplayLength"] = 5;
         if (this._config["oLanguage"] == null) { this._config["oLanguage"] = {}; }
-        this._config["oLanguage"]["sLengthMenu"] = 'Show <select><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option></select> entries';
+        this._config["oLanguage"]["sLengthMenu"] = this.localize("sLengthMenu").replace("_MENU_", '<select><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option></select>');
         this._config.el = this;
         this._config.dataSource = ds;
         this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
