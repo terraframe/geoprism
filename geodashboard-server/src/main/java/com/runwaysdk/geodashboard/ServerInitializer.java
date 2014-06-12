@@ -17,23 +17,23 @@ public class ServerInitializer implements Reloadable
   @Request
   public static void initialize()
   {
-    int tasks = 0;
     try
     {
       StrategyInitializer.startUp();
-
-      tasks++;
+      log.debug("COMLPETE: StrategyInitializer.startUp()");
+      
       SchedulerManager.start();
+      log.debug("COMLPETE: SchedulerManager.start();");
 
-      tasks++;
       SessionEntry.deleteAll();
+      log.debug("COMLPETE: SessionEntry.deleteAll();");
 
-      tasks++;
       GeoserverInitializer.setup();
+      log.debug("COMLPETE: GeoserverInitializer.setup();");
     }
     catch (Throwable t)
     {
-      log.fatal("Cannot start up. Failed on task [" + tasks + "].", t);
+      log.fatal("Could not initialize server.", t);
     }
   }
 
