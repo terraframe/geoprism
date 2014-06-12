@@ -28,7 +28,7 @@
   var Form = com.runwaysdk.geodashboard.Form;
   
   // In miliseconds
-  var JOBS_POLLING_INTERVAL = 1000;
+  var JOBS_POLLING_INTERVAL = 600;
   var HISTORY_POLLING_INTERVAL = 6000;
 
   var JOB_QUERY_TYPE = "com.runwaysdk.system.scheduler.ExecutableJob";
