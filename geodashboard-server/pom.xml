@@ -65,7 +65,7 @@
 						<executions>
 							<execution>
 								<id>rebuild-database</id>
-								<phase>verify</phase>
+								<phase>process-resources</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
@@ -101,7 +101,7 @@
 						<executions>
 							<execution>
 								<id>import-schema</id>
-								<phase>verify</phase>
+								<phase>process-resources</phase>
 								<goals>
 									<goal>java</goal>
 								</goals>
