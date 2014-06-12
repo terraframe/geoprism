@@ -98,6 +98,7 @@ public class GeoserverTestSetup
     }
   }
 
+  @Request
   public static void main(String[] args) throws Throwable
   {
     try
@@ -118,7 +119,6 @@ public class GeoserverTestSetup
     }
   }
 
-  @Request
   @Transaction
   private static void metadataSetup()
   {
@@ -240,7 +240,6 @@ public class GeoserverTestSetup
     da2.apply();
   }
 
-  @Request
   @Transaction
   private static void dataSetup()
   {

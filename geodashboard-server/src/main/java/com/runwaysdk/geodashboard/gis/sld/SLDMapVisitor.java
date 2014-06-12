@@ -106,13 +106,14 @@ public class SLDMapVisitor implements MapVisitor
       Double opacity = this.style.getPointOpacity();
       String stroke = this.style.getPointStroke();
       Integer width = this.style.getPointStrokeWidth();
+      Double strokeOpacity = this.style.getPointStrokeOpacity();
       String wkn = this.style.getPointWellKnownName();
       Integer rotation = this.style.getPointRotation();
 
       node("Graphic").child(
           node("Mark").child(node("WellKnownName").text(wkn),
               node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
-              node("Stroke").child(css("stroke", stroke), css("stroke-width", width))),
+              node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))),
           node("Size").text(size), node("Rotation").text(rotation)).build(root);
 
       return root;

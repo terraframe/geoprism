@@ -32,6 +32,8 @@ public class StyleImpl extends ComponentImpl implements Style
 
   private String valueColor;
 
+  private Double pointStrokeOpacity;
+  
   private Integer valueSize;
 
   private String valueFont;
@@ -63,6 +65,17 @@ public class StyleImpl extends ComponentImpl implements Style
   public void setName(String name)
   {
     this.name = name;
+  }
+  
+  @Override
+  public Double getPointStrokeOpacity()
+  {
+    return this.pointStrokeOpacity;
+  }
+  
+  public void setPointStrokeOpacity(Double pointStrokeOpacity)
+  {
+    this.pointStrokeOpacity = pointStrokeOpacity;
   }
   
   public void setPointSize(Integer pointSize)

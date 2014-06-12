@@ -382,22 +382,29 @@
                       <strong class="title">Stroke</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.pointStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
+                              <span class="ico" style="background:${style.pointFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.pointStrokeMd.name}" value="${style.pointStroke}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f73">Width</label>
+                          <label for="f33">${style.pointStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
                             <select id="f73" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                              <c:forEach begin="0" end="15" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointStrokeWidth == size}">
+                                    <option selected="selected" value="${size}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
                             </select>
                           </div>
                         </div>
