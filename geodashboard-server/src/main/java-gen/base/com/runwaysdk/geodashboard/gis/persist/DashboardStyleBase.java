@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -845161673)
+@com.runwaysdk.business.ClassSignature(hash = -1915241402)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -37,6 +37,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String POINTROTATION = "pointRotation";
   public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
+  public static java.lang.String POINTSTROKEOPACITY = "pointStrokeOpacity";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
   public static java.lang.String POINTWELLKNOWNNAME = "pointWellKnownName";
   public static java.lang.String POLYGONFILL = "polygonFill";
@@ -52,7 +53,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = -845161673;
+  private static final long serialVersionUID = -1915241402;
   
   public DashboardStyleBase()
   {
@@ -772,6 +773,34 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(POINTSTROKE, value);
+    }
+  }
+  
+  public Double getPointStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POINTSTROKEOPACITY));
+  }
+  
+  public void validatePointStrokeOpacity()
+  {
+    this.validateAttribute(POINTSTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return mdClassIF.definesAttribute(POINTSTROKEOPACITY);
+  }
+  
+  public void setPointStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POINTSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(POINTSTROKEOPACITY, java.lang.Double.toString(value));
     }
   }
   

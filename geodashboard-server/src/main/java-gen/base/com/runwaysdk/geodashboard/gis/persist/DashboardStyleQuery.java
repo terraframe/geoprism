@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 24485486)
+@com.runwaysdk.business.ClassSignature(hash = 1986613949)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -508,6 +508,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getPointStroke(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity()
+  {
+    return getPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableInteger getPointStrokeWidth()
@@ -1022,6 +1039,9 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getPointStroke();
     public com.runwaysdk.query.SelectableChar getPointStroke(String alias);
     public com.runwaysdk.query.SelectableChar getPointStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias, String displayLabel);
@@ -1568,6 +1588,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKE, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity()
+  {
+    return getPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableInteger getPointStrokeWidth()
   {
     return getPointStrokeWidth(null);
@@ -2057,6 +2094,9 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getPointStroke();
     public com.runwaysdk.query.SelectableChar getPointStroke(String alias);
     public com.runwaysdk.query.SelectableChar getPointStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getPointStrokeWidth(String alias, String displayLabel);
@@ -2626,6 +2666,23 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getPointStroke(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity()
+  {
+    return getPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.POINTSTROKEOPACITY, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableInteger getPointStrokeWidth()

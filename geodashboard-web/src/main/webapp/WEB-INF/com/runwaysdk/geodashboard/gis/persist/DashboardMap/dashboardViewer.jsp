@@ -142,7 +142,7 @@ $(document).ready(function(){
     <!-- contain aside of the page -->
     <aside class="aside animated slideInRight">
       <div class="nav-bar">
-        <a href="#" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
+        <a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
         <div class="sales-menu dropdown">
           
           <c:forEach items="${dashboards}" var="dashboard" varStatus="status">

@@ -402,8 +402,10 @@
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f74">Opacity</label>
-                          <div class="text"><input id="f74" type="text" placeholder="0 to 100"></div>
+                          <label for="f74">${style.pointStrokeOpacityMd.name}</label>
+                          <div class="text">
+                          <input id="f74" type="text" name="style.${style.pointStrokeOpacityMd.name}" value="${style.pointStrokeOpacity}" />
+                          </div>
                         </div>
                       </div>
                     </div>
