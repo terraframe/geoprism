@@ -178,11 +178,13 @@ public class SLDMapVisitor implements MapVisitor
   private static class TextSymbolizer extends Symbolizer
   {
     private Node[] nodes;
-
-    private TextSymbolizer(SLDMapVisitor visitor, Style style, Node... nodes)
+    private String attr;
+    
+    private TextSymbolizer(SLDMapVisitor visitor, String attr, Style style, Node... nodes)
     {
       super(visitor, style);
       this.nodes = nodes;
+      this.attr = attr;
     }
 
     @Override
@@ -195,9 +197,43 @@ public class SLDMapVisitor implements MapVisitor
     protected Node getSLD()
     {
       Node root = super.getSLD();
+      
+      String color;
+      String font;
+      String halo;
+      Integer haloWidth;
+      Integer size;
+      
+      if(attr.equals("value"))
+      {
+        color = style.getValueColor();
+        font = style.getValueFont();
+        halo = style.getValueHalo();
+        haloWidth = style.getValueHaloWidth();
+        size = style.getValueSize();
+      }
+      else
+      {
+        color = style.getLabelColor();
+        font = style.getLabelFont();
+        halo = style.getLabelHalo();
+        haloWidth = style.getLabelHaloWidth();
+        size = style.getLabelSize();
+      }
 
       node("Label").child(nodes).build(root);
-
+      node("Font").child(
+          css("font-size", size),
+          css("font-family", font)
+          ).build(root);
+      node("Halo").child(
+          node("Radius").text(haloWidth),
+          node("Fill").child(css("fill", halo))
+          ).build(root);
+      node("Fill").child(
+         css("fill", color) 
+          ).build(root);
+      
       return root;
     }
   }
@@ -538,7 +574,7 @@ public class SLDMapVisitor implements MapVisitor
           this.doc.createTextNode(" - "),
           node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
 
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      TextSymbolizer text = new TextSymbolizer(this, "value", style, nodes);
       rule.appendChild(text.getSLD());
     }
     else if (style.getEnableLabel())
@@ -546,7 +582,7 @@ public class SLDMapVisitor implements MapVisitor
       Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())
           .build() };
 
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      TextSymbolizer text = new TextSymbolizer(this, "label", style, nodes);
       rule.appendChild(text.getSLD());
     }
     else if (thematic && style.getEnableValue())
@@ -555,7 +591,8 @@ public class SLDMapVisitor implements MapVisitor
       Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
           .build() };
 
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      
+      TextSymbolizer text = new TextSymbolizer(this, "value", style, nodes);
       rule.appendChild(text.getSLD());
     }
 
