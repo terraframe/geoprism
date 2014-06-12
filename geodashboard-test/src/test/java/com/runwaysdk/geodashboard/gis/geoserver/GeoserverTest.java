@@ -417,7 +417,7 @@ import com.runwaysdk.util.FileIO;
   @Request
   public static void classTeardown()
   {
-    if(keepData){
+    if(!keepData){
       metadataTeardown();
       StrategyInitializer.tearDown();
     }
