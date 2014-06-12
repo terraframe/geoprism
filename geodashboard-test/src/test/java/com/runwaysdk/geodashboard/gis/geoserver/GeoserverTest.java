@@ -82,11 +82,90 @@ import com.runwaysdk.system.metadata.MdView;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
-public class GeoserverTest extends GeoserverTestSetup
-{
 
+
+
+  /**
+   * Simple class to be run as a way to load test data into the system.
+   * 
+   * @author justin
+   * 
+   */
+  public class GeoserverTest
+  {
+    protected static final String         TEST_PACKAGE   = "com.test.geodashboard";
+
+    protected static final String         TYPE_NAME      = "StateInfo";
+
+    protected static final String         VIEW_NAME      = "StateInfoView";
+
+    protected static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
+
+    protected static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
+
+    protected static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
+
+    protected static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
+
+    protected static int                  stateCount     = 0;
+
+    protected static boolean              GEOSERVER_RUNNING;
+
+    protected static final File           xsd            = new File(SLD_SCHEMA);
+
+    protected static final boolean        consoleDebug   = true;
+
+    protected static Universal            state;
+
+    protected static Universal            country;
+
+    protected static GeoEntity            usa;
+
+    protected static MdBusiness           stateInfo;
+
+    protected static MdView               stateInfoView;
+
+    protected static String               stateInfoId;
+
+    protected static MdAttributeInteger   rank;
+
+    protected static MdAttributeDouble    ratio;
+
+    protected static MdAttributeReference geoentityRef;
+
+    protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
+
+    static
+    {
+      if (consoleDebug)
+      {
+        BasicConfigurator.configure();
+        RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
+      }
+    }
+
+    public static void main(String[] args) throws Throwable
+    {
+      try
+      {
+        log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
+
+        GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
+
+        metadataSetup();
+        dataSetup();
+      }
+      catch (Throwable t)
+      {
+        log.error("Unable to invoke classSetup()", t);
+        throw new RuntimeException(t);
+      }
+    }
+
+
+  public
   @Rule
-  public TestName                     name           = new TestName();
+   TestName                     name           = new TestName();
 
   /*
    * static {
