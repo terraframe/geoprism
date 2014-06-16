@@ -2,9 +2,12 @@ package com.runwaysdk.geodashboard.test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,49 +15,133 @@ import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.DashboardDTO;
+import com.runwaysdk.geodashboard.DashboardQueryDTO;
+import com.runwaysdk.geodashboard.MdAttributeViewDTO;
+import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
+import com.runwaysdk.geodashboard.gis.persist.AggregationTypeQueryDTO;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
 import com.runwaysdk.session.Request;
-import com.runwaysdk.system.UsersDTO;
+import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
+import com.runwaysdk.system.metadata.MdClassDTO;
 import com.runwaysdk.web.WebClientSession;
-import com.runwaysdk.web.json.JSONController;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class Sandbox
 {
-  @Request
+
   public static void main(String[] args) throws Throwable
   {
-    GeoserverFacade.publishWorkspace();
-    GeoserverFacade.publishStore();
+    WebClientSession s = WebClientSession.createUserSession("SYSTEM", "SYSTEM",
+        new Locale[] { Locale.ENGLISH });
+    
+    runONE(new HashMap<String, Object>(), s.getRequest());
+    runTWO(new HashMap<String, Object>(), s.getRequest());
+  }
+  
+  private static void runONE(HashMap<String, Object> req, ClientRequestIF clientRequest)
+  {
+    long oneS = System.currentTimeMillis();
+    one(new HashMap<String, Object>(), clientRequest);
+    System.out.println("ONE: "+ Long.toString(System.currentTimeMillis()-oneS));
+    
+    long twoS = System.currentTimeMillis();
+    two(new HashMap<String, Object>(), clientRequest);
+    System.out.println("TWO: "+ Long.toString(System.currentTimeMillis()-twoS));
+    
+  }
+  private static void runTWO(HashMap<String, Object> req, ClientRequestIF clientRequest)
+  {
+    long oneS = System.currentTimeMillis();
+    one(new HashMap<String, Object>(), clientRequest);
+    System.out.println("ONE: "+ Long.toString(System.currentTimeMillis()-oneS));
+    
+    long twoS = System.currentTimeMillis();
+    two(new HashMap<String, Object>(), clientRequest);
+    System.out.println("TWO: "+ Long.toString(System.currentTimeMillis()-twoS));
+    
+  }
+
+  private static void one(HashMap<String, Object> req, ClientRequestIF clientRequest)
+  {
+    DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);
+    req.put("mapId", map.getId());
+
+    // populates the dropdown menu
+    DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
+    List<? extends DashboardDTO> results = dashboardQ.getResultSet();
+    req.put("dashboards", results);
+
+    // load the default type (index of 0)
+    if (results.size() > 0)
+    {
+      DashboardDTO first = results.get(0);
+      MdClassDTO[] types = first.getSortedTypes();
+      req.put("types", types);
+
+      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
+      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+
+      for (MetadataWrapperDTO mdDTO : first.getAllMetadata())
+      {
+        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+        for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
+        {
+          attrs.add(mdAttrView);
+        }
+      }
+
+      req.put("attrMap", attrMap);
+    }
+  }
+
+  private static void two(HashMap<String, Object> req, ClientRequestIF clientRequest)
+  {
+      com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+      DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+      
+      req.put("layer", layer);
+
+      req.put("style", style);
+      
+      String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
+      req.put("fonts", fonts);
+      
+      // get the universals
+      UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
+      req.put("universals", universals.getResultSet());
+
+      // aggregations
+      AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
+      req.put("aggregations", aggQuery.getResultSet());
+      Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
+      req.put("aggregationLabels", aggregations);
+
+      // feature types
+      Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
+      req.put("features", features);
   }
 
   @Request
   @Transaction
   public static void testGetMapJSON()
   {
-    System.out.println("testMap");
-
-    // String json = new DashboardMap().getMapJSON();
-
-    List<Layer> bboxLayers = new LinkedList<Layer>();
-    JSONArray bbox = getMapLayersBBox(bboxLayers);
-
-    System.out.println(bbox);
-
-    // System.out.println(json);
-
-    // testBuildMap();
 
   }
 
