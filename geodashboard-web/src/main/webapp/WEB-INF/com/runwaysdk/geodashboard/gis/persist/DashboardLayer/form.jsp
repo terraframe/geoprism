@@ -102,6 +102,7 @@
                     <label for="f54">${style.valueHaloWidthMd.displayLabel}</label>
                     <div class="select-holder">
                       <select class="size-select" name="style.${style.valueHaloWidthMd.name}" id="f54">
+                        <option value=""></option>
                         <c:forEach begin="0" end="15" var="size">
                           <c:choose>
                             <c:when test="${style.valueHaloWidth == size}">
@@ -270,13 +271,13 @@
                       <label for="radio2">${features['BUBBLE']}</label>
                     </a>
                   </li>
-                  <!-- Removed for deploy until functionality exists.
                   <li class="gradient">
                     <a href="#" data-toggle="tab">
                       <input id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
                       <label for="radio3">${features['GRADIENT']}</label>
                     </a>
                   </li>
+                  <!-- Removed for deploy until functionality exists.
                   <li class="category">
                     <a href="#" data-toggle="tab">
                       <input id="radio4" name="layer.${layer.layerTypeMd.name}" value="CATEGORY" type="radio">
@@ -420,28 +421,17 @@
                       <strong class="title">Radius</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <label for="f75">${style.pointSizeMd.displayLabel}</label>
+                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
+                          <div class="text"><input id="f76" name="${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
+                        </div>
+                        <div class="cell">
+                          <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f75" name="${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+                            <input id="f77" name="${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!--  Removed for deploy until functionality is added
-                    <div class="fill-block">
-                      <strong class="title">Radius</strong>
-                      <div class="cell-holder">
-                        <div class="cell">
-                          <label for="f75">Min</label>
-                          <div class="text"><input id="f75" type="text" placeholder="10"></div>
-                        </div>
-                        <div class="cell">
-                          <label for="f76">Max</label>
-                          <div class="text"><input id="f76" type="text" placeholder="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                     -->
                   </div>
                   <div class="tab-pane active" id="tab003" style="display: none;">
                     <div class="fill-block">

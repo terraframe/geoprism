@@ -60,6 +60,7 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
+import com.runwaysdk.geodashboard.gis.sld.SLDValidator;
 import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
@@ -133,7 +134,9 @@ import com.runwaysdk.util.FileIO;
 
     protected static MdAttributeReference geoentityRef;
     
-    private static boolean keepData = true;
+    protected static Dashboard dashboard;
+    
+    private static boolean keepData = false;
 
     protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
 
@@ -310,7 +313,7 @@ import com.runwaysdk.util.FileIO;
     virtualRatio.getDisplayLabel().setDefaultValue("Crime Rate");
     virtualRatio.apply();
     
-    Dashboard dashboard = new Dashboard();
+    dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
     dashboard.apply();
     
@@ -417,7 +420,12 @@ import com.runwaysdk.util.FileIO;
   @Request
   public static void classTeardown()
   {
-    if(!keepData){
+    if(keepData){
+      log.debug("Skipping teardown process.");      
+    }
+    else
+    {
+      log.debug("Starting teardown process.");      
       metadataTeardown();
       StrategyInitializer.tearDown();
     }
@@ -428,6 +436,10 @@ import com.runwaysdk.util.FileIO;
   {
     try
     {
+      dashboard.delete();
+      
+      stateInfoView.delete();
+      
       // Delete all generated views
       List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
       Database.dropViews(viewNames);
@@ -443,33 +455,24 @@ import com.runwaysdk.util.FileIO;
       throw new RuntimeException(t);
     }
   }
-
+  
   private void validate(String sld)
   {
     try
     {
-      SchemaFactory f = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-      Schema schema = f.newSchema(xsd);
-      Validator v = schema.newValidator();
-
-      InputStream stream;
-      stream = new ByteArrayInputStream(sld.getBytes("UTF-8"));
-      Source s = new StreamSource(stream);
-      v.validate(s);
+      new SLDValidator().validate(sld);
     }
-    catch (Throwable e)
+    catch(Throwable t)
     {
-      log.warn(name.getMethodName(), e);
-      log.warn(sld);
-
-      Assert.fail(e.getLocalizedMessage());
+      log.error(sld);
+      Assert.fail(t.getLocalizedMessage());
     }
   }
 
   /**
    * Creates styling for a point layer.
    */
-  @Test
+  //@Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -530,7 +533,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates styling for a polygon layer.
    */
-  @Test
+  //@Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -1003,46 +1006,117 @@ import com.runwaysdk.util.FileIO;
     }
   }
 
-  //@Test
+ 
+  /**
+   * Tests the interpolate SLD code for a bubble map.
+   */
+  @Test
   @Request
   @Transaction
-  public void createManyPointLayers()
+  public void createGradientSLD()
   {
-    Assert.fail("Not implemented");
+    DashboardMap map = null;
+    
+    try
+    {
+      
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+      
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.GRADIENT);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+      
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+      
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+      
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+      
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+      
+      SLDMapVisitor visitor = new SLDMapVisitor();
+      map.accepts(visitor);
+      String sld = visitor.getSLD(layer);
+      
+      validate(sld);
+    }
+    finally
+    {
+      map.delete();
+    }
   }
-
-  //@Test
+  
+  /**
+   * Tests the interpolate SLD code for a bubble map.
+   */
+  @Test
   @Request
   @Transaction
-  public void createManyPolygonLayers()
+  public void createBubbleSLD()
   {
-    Assert.fail("Not implemented");
+    DashboardMap map = null;
 
-  }
+    try
+    {
 
-  //@Test
-  @Request
-  @Transaction
-  public void createManyMixedLayers()
-  {
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
 
-    Assert.fail("Not implemented");
-  }
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
-  //@Test
-  @Request
-  @Transaction
-  public void testRemoveLayer()
-  {
-    Assert.fail("Not implemented");
-  }
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
 
-  //@Test
-  @Request
-  @Transaction
-  public void testRemoveStyle()
-  {
-    Assert.fail("Not implemented");
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+
+      SLDMapVisitor visitor = new SLDMapVisitor();
+      map.accepts(visitor);
+      String sld = visitor.getSLD(layer);
+
+      validate(sld);
+    }
+    finally
+    {
+      map.delete();
+    }
   }
 
   /**
@@ -1146,7 +1220,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Ensures that a dashboard retrieves the proper metadata
    */
-  @Test
+  //@Test
   @Request
   public void testDashboardMetadata()
   {
@@ -1174,7 +1248,7 @@ import com.runwaysdk.util.FileIO;
     }
   }
   
-  @Test
+  //@Test
   @Request
   public void testMapJSON() throws JSONException
   {
@@ -1288,24 +1362,6 @@ import com.runwaysdk.util.FileIO;
       map.delete();
     }
   }
-
-// Test is no longer valid.
-//  @Test
-//  @Request
-//  public void testNoLayerException()
-//  {
-//    DashboardMap map = this.testNoLayerException_trans(); 
-//    
-//    try
-//    {
-//      map.getMapJSON();
-//      Assert.fail("A JSON was created for a map without layers.");
-//    }
-//    finally
-//    {
-//      map.delete();
-//    }
-//  }
   
   @Transaction
   private DashboardMap testNoLayerException_trans()

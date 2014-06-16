@@ -11,6 +11,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
+import com.runwaysdk.system.metadata.MdClass;
 
 public class MetadataWrapper extends MetadataWrapperBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -20,6 +21,23 @@ public class MetadataWrapper extends MetadataWrapperBase implements
   public MetadataWrapper()
   {
     super();
+  }
+  
+  @Override
+  public void delete()
+  {
+//    MdClass md = this.getWrappedMdClass();
+//    if(md instanceof MdView)
+//    {
+//      md.delete();
+//    }
+    
+    for(AttributeWrapper aw : this.getAllAttributeWrapper())
+    {
+      aw.delete();
+    }
+    
+    super.delete();
   }
 
   public MdAttributeView[] getSortedAttributes()

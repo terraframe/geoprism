@@ -18,6 +18,7 @@ import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
@@ -149,7 +150,8 @@ public class DashboardLayer extends DashboardLayerBase implements
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
+          String attribute = tStyle.getAttribute();
+          
           MdAttributeConcrete mdAttr = (MdAttributeConcrete) tStyle.getMdAttribute();
           MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
           MdClass mdClass = mdC.getDefiningMdClass();
@@ -189,6 +191,23 @@ public class DashboardLayer extends DashboardLayerBase implements
 
             isAggregate = true;
           }
+          
+          // If we doing a bubble/gradient map with a min/max add window aggregations
+          // to provide the min and max of the attribute.
+          AllLayerType layerType = this.getLayerType().get(0);
+          if(layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
+          {
+            String minCol = SLDConstants.getMinProperty(attribute);
+            String maxCol = SLDConstants.getMaxProperty(attribute);
+            
+            Selectable min = v.aSQLDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
+            min.setColumnAlias(minCol);
+            
+            Selectable max = v.aSQLDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
+            max.setColumnAlias(maxCol);
+            
+            v.SELECT(min, max);
+          }
 
           if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal
               || thematicSel instanceof SelectableFloat)
@@ -211,7 +230,7 @@ public class DashboardLayer extends DashboardLayerBase implements
             }
           }
 
-          thematicSel.setColumnAlias(tStyle.getAttribute());
+          thematicSel.setColumnAlias(attribute);
 
           v.SELECT(thematicSel);
 
