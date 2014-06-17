@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 2105125429)
+@com.runwaysdk.business.ClassSignature(hash = -498986201)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,8 +25,9 @@ public abstract class StateInfoBase extends com.runwaysdk.business.Business impl
   public static java.lang.String RATIO = "ratio";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String STUDYDATE = "studyDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 2105125429;
+  private static final long serialVersionUID = -498986201;
   
   public StateInfoBase()
   {
@@ -399,6 +400,34 @@ public abstract class StateInfoBase extends com.runwaysdk.business.Business impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfo.CLASS);
     return mdClassIF.definesAttribute(SITEMASTER);
+  }
+  
+  public java.util.Date getStudyDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(STUDYDATE));
+  }
+  
+  public void validateStudyDate()
+  {
+    this.validateAttribute(STUDYDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStudyDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfo.CLASS);
+    return mdClassIF.definesAttribute(STUDYDATE);
+  }
+  
+  public void setStudyDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(STUDYDATE, "");
+    }
+    else
+    {
+      setValue(STUDYDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
   }
   
   public String getType()

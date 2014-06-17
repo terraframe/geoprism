@@ -44,6 +44,11 @@
                       <mjl:message />
                     </mjl:messages>
                   </div>
+                  <div class="check-block">
+                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
+                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
+                  </div>              
+                  <!-- 
                   <div class="cell style02">
                     <label for="f52">${style.valueFontMd.displayLabel}</label>
                     <div class="select-holder">
@@ -116,12 +121,9 @@
                       </select>
                     </div>
                   </div>
+                  -->
                 </div>
                 <div class="row-holder">
-                  <div class="check-block">
-                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
-                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
-                  </div>
                   <div class="cell style02">
                     <label for="f55">${style.labelFontMd.displayLabel}</label>
                     <div class="select-holder">
@@ -137,7 +139,6 @@
                           </c:choose>
                         </c:forEach>
                       </select>
-                    
                     </div>
                   </div>
                   <div class="cell">
@@ -434,21 +435,34 @@
                     </div>
                   </div>
                   <div class="tab-pane active" id="tab003" style="display: none;">
-                    <div class="fill-block">
+                    <div class="gradient-block">
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonMinFillMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#00a3d9;">icon</span>
+                              <span class="ico" style="background:${style.polygonMinFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonMinFillMd.name}" value="${style.polygonMinFill}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f78">Opacity</label>
-                          <div class="text"><input id="f78" type="text" placeholder="0 to 100"></div>
+                          <span>${style.polygonMaxFillMd.displayLabel}</span>
+                          <div class="color-holder">
+                            <a href="#" class="color-choice">
+                              <span class="ico" style="background:${style.polygonMaxFill};">icon</span>
+                              <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonMaxFillMd.name}" value="${style.polygonMaxFill}" />
+                            </a>
+                          </div>
+                        </div>
+                        <div class="cell">
+                          <label for="f78">${style.polygonFillOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <input id="f78" type="text" name="style.${style.polygonFillOpacityMd.name}" value="${style.polygonFillOpacity}" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -456,28 +470,37 @@
                       <strong class="title">Stroke</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
+                              <span class="ico" style="background:${style.polygonStroke};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
                             </a>
                           </div>
                         </div>
-                        <div class="cell">
-                          <label for="f80">Width</label>
+                       <div class="cell">
+                          <label for="f80">${style.polygonStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
-                            <select id="f80" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                            <select id="f80" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
+                              <c:forEach begin="0" end="15" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeWidth == size}">
+                                    <option selected="selected" value="${size}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
                             </select>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f81">Opacity</label>
-                          <div class="text"><input id="f81" type="text" placeholder="0 to 100"></div>
+                          <label for="f81">${style.polygonStrokeOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <input id="f81" type="text" name="style.${style.polygonStrokeOpacityMd.name}" value="${style.polygonStrokeOpacity}" />
+                          </div>
                         </div>
                       </div>
                     </div>

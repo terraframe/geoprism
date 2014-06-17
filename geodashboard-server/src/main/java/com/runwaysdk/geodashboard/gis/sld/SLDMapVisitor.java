@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
@@ -84,59 +85,6 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
   
-  private static class Interpolate extends Provider
-  {
-    private Style         style;
-    
-    private String attribute;
-    private String min;
-    private String max;
-    private String method;
-    
-    public Interpolate(SLDMapVisitor visitor, Style style, String attribute, Integer min, Integer max)
-    {
-      super(visitor);
-      
-      this.attribute = attribute;
-      this.min = min.toString();
-      this.max = max.toString();
-      this.method = "numeric";
-    }
-    
-    public Interpolate(SLDMapVisitor visitor, Style style, String attribute, String min, String max)
-    {
-      super(visitor);
-      
-      this.attribute = attribute;
-      this.min = min;
-      this.max = max;
-      this.method = "color";
-    }
-    
-    public Node getSLD()
-    {
-      return null;
-    }
-    /*
-    <ogc:Function name="Interpolate">
-    <!-- Property to transform -->
-    <ogc:PropertyName>PERSONS</ogc:PropertyName>
-
-    <!-- Mapping curve definition pairs (input, output) -->
-    <ogc:Literal>0</ogc:Literal>
-    <ogc:Literal>#fefeee</ogc:Literal>
-
-    <ogc:Literal>23000000</ogc:Literal>
-    <ogc:Literal>#ff0000</ogc:Literal>
-
-    <!-- Interpolation method -->
-    <ogc:Literal>color</ogc:Literal>
-
-    <!-- Interpolation mode - defaults to linear -->
-  </ogc:Function>
-  */
-  }
-  
   private static abstract class Symbolizer extends Provider
   {
     protected Style         style;
@@ -194,7 +142,7 @@ public class SLDMapVisitor implements MapVisitor
     
     private NodeBuilder interpolateSize()
     {
-      if(style instanceof ThematicStyle)
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
         String attribute = tStyle.getAttribute();
@@ -261,7 +209,7 @@ public class SLDMapVisitor implements MapVisitor
     
     private NodeBuilder interpolateColor()
     {
-      if(style instanceof ThematicStyle)
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
         String attribute = tStyle.getAttribute();

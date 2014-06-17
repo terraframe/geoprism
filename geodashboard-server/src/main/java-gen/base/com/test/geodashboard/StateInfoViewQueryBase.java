@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1754242141)
+@com.runwaysdk.business.ClassSignature(hash = -844678052)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -40,6 +40,24 @@ public  abstract  class StateInfoViewQueryBase extends com.runwaysdk.query.Gener
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.test.geodashboard.StateInfoView.ID, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate()
+  {
+    return getStudyDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getSelectable(com.test.geodashboard.StateInfoView.STUDYDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getSelectable(com.test.geodashboard.StateInfoView.STUDYDATE, alias, displayLabel);
 
   }
  

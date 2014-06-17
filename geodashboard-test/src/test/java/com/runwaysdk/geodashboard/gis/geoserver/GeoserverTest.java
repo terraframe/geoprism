@@ -1,22 +1,14 @@
 package com.runwaysdk.geodashboard.gis.geoserver;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,6 +65,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
@@ -129,6 +122,8 @@ import com.runwaysdk.util.FileIO;
     protected static String               stateInfoId;
 
     protected static MdAttributeInteger   rank;
+    
+    protected static MdAttributeDate date;
 
     protected static MdAttributeDouble    ratio;
 
@@ -136,7 +131,7 @@ import com.runwaysdk.util.FileIO;
     
     protected static Dashboard dashboard;
     
-    private static boolean keepData = false;
+    private static boolean keepData = true;
 
     protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
 
@@ -241,6 +236,12 @@ import com.runwaysdk.util.FileIO;
     rank.getDisplayLabel().setDefaultValue("Alphabetic Rank");
     rank.apply();
     
+    date = new MdAttributeDate();
+    date.setDefiningMdClass(stateInfo);
+    date.setAttributeName("studyDate");
+    date.getDisplayLabel().setDefaultValue("Study Date");
+    date.apply();
+    
     // ratio = rank/total (linear relationship...higher rank = 
     ratio = new MdAttributeDouble();
     ratio.setDefiningMdClass(stateInfo);
@@ -312,6 +313,13 @@ import com.runwaysdk.util.FileIO;
     virtualRatio.setDefiningMdView(stateInfoView);
     virtualRatio.getDisplayLabel().setDefaultValue("Crime Rate");
     virtualRatio.apply();
+
+    MdAttributeVirtual virtualDate = new MdAttributeVirtual();
+    virtualDate.setAttributeName("studyDate");
+    virtualDate.setMdAttributeConcrete(date);
+    virtualDate.setDefiningMdView(stateInfoView);
+    virtualDate.getDisplayLabel().setDefaultValue("Study Date");
+    virtualDate.apply();
     
     dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
@@ -343,6 +351,16 @@ import com.runwaysdk.util.FileIO;
     DashboardAttributes da2 = mWrapper.addAttributeWrapper(aWrapper2);
     da2.setListOrder(1);
     da2.apply();
+    
+    // date
+    AttributeWrapper aWrapper3 = new AttributeWrapper();
+    aWrapper3.setWrappedMdAttribute(virtualDate);
+    aWrapper3.apply();
+    
+    DashboardAttributes da3 = mWrapper.addAttributeWrapper(aWrapper3);
+    da3.setListOrder(2);
+    da3.apply();
+    
   }
 
   private static void dataSetup()

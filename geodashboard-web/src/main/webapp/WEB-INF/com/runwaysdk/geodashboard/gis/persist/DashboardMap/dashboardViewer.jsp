@@ -140,7 +140,7 @@ $(document).ready(function(){
       </fieldset>
     </form>
     <!-- contain aside of the page -->
-    <aside class="aside animated slideInRight">
+    <aside class="aside animated slideInRight" id="dashboardMetadata">
       <div class="nav-bar">
         <a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
         <div class="sales-menu dropdown">
@@ -165,9 +165,14 @@ $(document).ready(function(){
       </div>
         <button class="none">submit</button>
         <div class="choice-form">
+        
           <div class="row-holder">
-            <input type="text" autocomplete="off" id="geocode" name="geocode" class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;" />
+            <label class="none" for="geocode">choice select</label>
+            <span class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;">
+            <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
+            </span>
           </div>
+
           <!-- datapicker block -->
           <div class="data-block">
             <div class="col">
@@ -208,9 +213,10 @@ $(document).ready(function(){
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
- 										  <span data-toggle="modal" data-target="#modal01">opener</span>
+ 										  <span data-toggle="modal" data-target="#modal01">map it</span>
 										</a>
 									</h4>
+									
                   <!-- slide block -->
                   <div id="collapse00${attrStatus.index}" class="panel-collapse collapse">
                     <div class="panel-body">

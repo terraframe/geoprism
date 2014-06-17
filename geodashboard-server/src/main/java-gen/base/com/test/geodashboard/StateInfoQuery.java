@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -216599956)
+@com.runwaysdk.business.ClassSignature(hash = 488487952)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -312,6 +312,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.test.geodashboard.StateInfo.SITEMASTER, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableMoment getStudyDate()
+  {
+    return getStudyDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.test.geodashboard.StateInfo.STUDYDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.test.geodashboard.StateInfo.STUDYDATE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getType()
   {
     return getType(null);
@@ -438,6 +455,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getStudyDate();
+    public com.runwaysdk.query.SelectableMoment getStudyDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -714,6 +734,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableChar)this.get(com.test.geodashboard.StateInfo.SITEMASTER, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableMoment getStudyDate()
+  {
+    return getStudyDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.test.geodashboard.StateInfo.STUDYDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.test.geodashboard.StateInfo.STUDYDATE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getType()
   {
     return getType(null);
@@ -817,6 +854,9 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getStudyDate();
+    public com.runwaysdk.query.SelectableMoment getStudyDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -1140,6 +1180,23 @@ public  class StateInfoQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.test.geodashboard.StateInfo.SITEMASTER, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getStudyDate()
+  {
+    return getStudyDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.test.geodashboard.StateInfo.STUDYDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getStudyDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.test.geodashboard.StateInfo.STUDYDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()

@@ -14,6 +14,8 @@ public interface Layer extends Component
   public Boolean getVirtual();
   
   public FeatureType getFeatureType();
+  
+  public FeatureStrategy getFeatureStrategy();
 
 //  public void setDisplayInLegend(Boolean display);
 //  public void setFeatureType(FeatureType featureType);

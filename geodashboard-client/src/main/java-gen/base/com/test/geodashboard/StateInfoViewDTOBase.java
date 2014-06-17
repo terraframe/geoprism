@@ -1,10 +1,10 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1579951462)
+@com.runwaysdk.business.ClassSignature(hash = -811907789)
 public abstract class StateInfoViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.test.geodashboard.StateInfoView";
-  private static final long serialVersionUID = 1579951462;
+  private static final long serialVersionUID = -811907789;
   
   protected StateInfoViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -17,8 +17,46 @@ public abstract class StateInfoViewDTOBase extends com.runwaysdk.business.ViewDT
   }
   
   public static java.lang.String ID = "id";
+  public static java.lang.String STUDYDATE = "studyDate";
   public static java.lang.String VIEWRANK = "viewRank";
   public static java.lang.String VIEWRATIO = "viewRatio";
+  public java.util.Date getStudyDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(STUDYDATE));
+  }
+  
+  public void setStudyDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(STUDYDATE, "");
+    }
+    else
+    {
+      setValue(STUDYDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
+  }
+  
+  public boolean isStudyDateWritable()
+  {
+    return isWritable(STUDYDATE);
+  }
+  
+  public boolean isStudyDateReadable()
+  {
+    return isReadable(STUDYDATE);
+  }
+  
+  public boolean isStudyDateModified()
+  {
+    return isModified(STUDYDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateMdDTO getStudyDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(STUDYDATE).getAttributeMdDTO();
+  }
+  
   public Integer getViewRank()
   {
     return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(VIEWRANK));
