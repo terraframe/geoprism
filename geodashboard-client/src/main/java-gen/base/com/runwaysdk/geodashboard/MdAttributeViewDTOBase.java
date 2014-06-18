@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 755524725)
+@com.runwaysdk.business.ClassSignature(hash = 1588843780)
 public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.MdAttributeView";
-  private static final long serialVersionUID = 755524725;
+  private static final long serialVersionUID = 1588843780;
   
   protected MdAttributeViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -16,10 +16,86 @@ public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.View
     return CLASS;
   }
   
+  public static java.lang.String ATTRIBUTENAME = "attributeName";
+  public static java.lang.String ATTRIBUTETYPE = "attributeType";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String MDATTRIBUTEID = "mdAttributeId";
   public static java.lang.String MDCLASSID = "mdClassId";
+  public String getAttributeName()
+  {
+    return getValue(ATTRIBUTENAME);
+  }
+  
+  public void setAttributeName(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTENAME, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTENAME, value);
+    }
+  }
+  
+  public boolean isAttributeNameWritable()
+  {
+    return isWritable(ATTRIBUTENAME);
+  }
+  
+  public boolean isAttributeNameReadable()
+  {
+    return isReadable(ATTRIBUTENAME);
+  }
+  
+  public boolean isAttributeNameModified()
+  {
+    return isModified(ATTRIBUTENAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAttributeNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(ATTRIBUTENAME).getAttributeMdDTO();
+  }
+  
+  public String getAttributeType()
+  {
+    return getValue(ATTRIBUTETYPE);
+  }
+  
+  public void setAttributeType(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTETYPE, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTETYPE, value);
+    }
+  }
+  
+  public boolean isAttributeTypeWritable()
+  {
+    return isWritable(ATTRIBUTETYPE);
+  }
+  
+  public boolean isAttributeTypeReadable()
+  {
+    return isReadable(ATTRIBUTETYPE);
+  }
+  
+  public boolean isAttributeTypeModified()
+  {
+    return isModified(ATTRIBUTETYPE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAttributeTypeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(ATTRIBUTETYPE).getAttributeMdDTO();
+  }
+  
   public String getDisplayLabel()
   {
     return getValue(DISPLAYLABEL);

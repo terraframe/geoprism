@@ -125,7 +125,7 @@ $(document).ready(function(){
         <article class="accordion info-box" id="base-map-container">
             <div class="accordion-group sales-accortion">
               <div class="accordion-heading">
-                <a class="map-layers-opener opener collapsed" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"> Base Maps </a>
+                <a class="map-layers-opener opener" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"> Base Maps </a>
               </div>
               <div id="collapse-base-maps" class="accordion-body" style="height: 0px;">
                 <div class="accordion-inner holder" id="baseLayerContainer"></div>
@@ -178,14 +178,14 @@ $(document).ready(function(){
             <div class="col">
               <label for="from-field">From</label>
               <span class="text">
-                <input disabled="disabled" class="checkin" id="from-field" type="text" placeholder="">
+                <input class="checkin" id="from-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
             <div class="col">
               <label for="to-field">To</label>
               <span class="text">
-                <input disabled="disabled" class="checkout" id="to-field" type="text" placeholder="">
+                <input class="checkout" id="to-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>

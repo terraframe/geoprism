@@ -86,6 +86,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements
         view.setMdClassId(mdId);
         view.setMdAttributeId(attrId);
         view.setDisplayLabel(label);
+        view.setAttributeName(attr.getAttributeName());
 
         mdAttr.add(view);
       }

@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.derby.tools.sysinfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -36,6 +37,7 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
@@ -46,13 +48,25 @@ import com.vividsolutions.jts.geom.Envelope;
 public class Sandbox
 {
 
+  @Request
   public static void main(String[] args) throws Throwable
   {
-    WebClientSession s = WebClientSession.createUserSession("SYSTEM", "SYSTEM",
-        new Locale[] { Locale.ENGLISH });
+    String value = "0.6";
+    DashboardStyle s = new DashboardStyle();
+    s.setName("Test Style");
+    s.setValue(DashboardStyle.POINTOPACITY, value);
+
+    System.out.println("PRE APPLY");    
+    System.out.println(DashboardStyle.getPointOpacityMd().getType());
+    System.out.println(s.getValue(DashboardStyle.POINTOPACITY));
+    System.out.println(s.getPointOpacity());
     
-    runONE(new HashMap<String, Object>(), s.getRequest());
-    runTWO(new HashMap<String, Object>(), s.getRequest());
+    s.apply();
+    System.out.println("POST APPLY");    
+    
+    System.out.println(DashboardStyle.getPointOpacityMd().getType());
+    System.out.println(s.getValue(DashboardStyle.POINTOPACITY));
+    System.out.println(s.getPointOpacity());
   }
   
   private static void runONE(HashMap<String, Object> req, ClientRequestIF clientRequest)
