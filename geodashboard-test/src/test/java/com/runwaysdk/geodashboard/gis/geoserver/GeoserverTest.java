@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.junit.rules.TestName;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.constants.MdAttributeDateUtil;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -388,9 +391,13 @@ import com.runwaysdk.util.FileIO;
       
       double total = q.getCount();
       
+      
       try
       {
         int count = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+
         while (iter.hasNext())
         {
           GeoEntity ge = iter.next();
@@ -411,6 +418,11 @@ import com.runwaysdk.util.FileIO;
 
           ge.addLink(usa, LocatedIn.CLASS).apply();
 
+          // add a day to the date
+          cal.roll(Calendar.DATE, true);
+          Date current = cal.getTime();
+          String dateStr = MdAttributeDateUtil.getTypeUnsafeValue(current);
+          
           Integer rankI = ++count; // 1-based starting index
           Double ratioD = rankI/total;
           
@@ -418,6 +430,7 @@ import com.runwaysdk.util.FileIO;
           si.setValue(rank.getAttributeName(), rankI.toString());
           si.setValue(ratio.getAttributeName(), ratioD.toString());
           si.setValue(geoentityRef.getAttributeName(), ge.getId());
+          si.setValue(date.getAttributeName(), dateStr);
           si.apply();
         }
 
