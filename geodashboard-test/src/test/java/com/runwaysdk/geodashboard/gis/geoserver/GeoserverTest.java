@@ -134,7 +134,7 @@ import com.runwaysdk.util.FileIO;
     
     protected static Dashboard dashboard;
     
-    private static boolean keepData = true;
+    private static boolean keepData = false;
 
     protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
 
