@@ -74,15 +74,15 @@
 					<integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
 					<char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
-					<integer name="valueHaloWidth" label="Halo Width" required="true" defaultValue="3" rejectNegative="true" />
+					<integer name="valueHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
 					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Helvetica"/>
 					<integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000"/>
-					<char name="labelHalo" label="Halo" size="7" required="false" defaultValue="#FFFFFF"/>
-					<integer name="labelHaloWidth" label="Halo Width" required="false" defaultValue="3" rejectNegative="true" />
+					<char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF"/>
+					<integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 					
 					<!-- point styles -->
 					<integer name="pointSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />

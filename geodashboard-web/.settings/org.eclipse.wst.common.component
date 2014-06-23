@@ -7,10 +7,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="runwaysdk-gis-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-common/runwaysdk-gis-common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-gis-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-server/runwaysdk-gis-server">
+        <dependent-module archiveName="runwaysdk-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-common/runwaysdk-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="runwaysdk-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-server/runwaysdk-server">

@@ -15,7 +15,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute"/>
     </delete>
   </undoIt>
 </version>

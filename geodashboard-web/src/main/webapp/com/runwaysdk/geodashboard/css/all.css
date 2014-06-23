@@ -1083,15 +1083,15 @@ a.blueactive,
 }
 .select-choice-select.select-area{
 	margin:0;
-	height:30px;
+	height:25px;
 }
 .select-choice-select.select-area .select-opener{
-	border:none;
-	width:19px;
-	height:19px;
-	background:url(../images/sprite.png) no-repeat 0 -150px;
-	top:5px;
-	right:3px;
+  background: url("../images/sprite.png") no-repeat scroll 0 -150px rgba(0, 0, 0, 0);
+  border: medium none;
+  height: 19px;
+  right: 3px;
+  top: 5px;
+  width: 19px;
 }
 
 
@@ -1773,6 +1773,12 @@ a.blueactive,
 	margin:0 0 0 33px;
 	position:relative;
 }
+.modal-form .gradient-block{
+	float:left;
+	width:204px;
+	margin:0 0 0 0px;
+	position:relative;
+}
 .modal-form .fill-block:first-child{margin:0;}
 .modal-form .cell-holder .cell{
 	float:left;
@@ -2077,4 +2083,8 @@ This MUST override the inline styles on the DOM hence !important.
 */
 span.select-area span.center {
 	width: 233px !important;
+}
+
+#geocode {
+	width: 267px;
 }

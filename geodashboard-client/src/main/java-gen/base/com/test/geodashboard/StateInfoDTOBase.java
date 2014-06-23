@@ -1,10 +1,10 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 103123893)
+@com.runwaysdk.business.ClassSignature(hash = 767951271)
 public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.test.geodashboard.StateInfo";
-  private static final long serialVersionUID = 103123893;
+  private static final long serialVersionUID = 767951271;
   
   protected StateInfoDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -41,6 +41,7 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String RATIO = "ratio";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String STUDYDATE = "studyDate";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
   {
@@ -509,6 +510,43 @@ public abstract class StateInfoDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
+  }
+  
+  public java.util.Date getStudyDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(STUDYDATE));
+  }
+  
+  public void setStudyDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(STUDYDATE, "");
+    }
+    else
+    {
+      setValue(STUDYDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
+  }
+  
+  public boolean isStudyDateWritable()
+  {
+    return isWritable(STUDYDATE);
+  }
+  
+  public boolean isStudyDateReadable()
+  {
+    return isReadable(STUDYDATE);
+  }
+  
+  public boolean isStudyDateModified()
+  {
+    return isModified(STUDYDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateMdDTO getStudyDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(STUDYDATE).getAttributeMdDTO();
   }
   
   public static com.test.geodashboard.StateInfoDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

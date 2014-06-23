@@ -1,0 +1,21 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdView name="com.runwaysdk.geodashboard.MdAttributeView">
+        <create>
+        <attributes>
+          <char name="attributeName" required="true" label="Attribute Name" size="255"/>
+          <char name="attributeType" required="true" label="Attribute Type" size="255"/>
+        </attributes>
+        </create> 
+      </mdView>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.MdAttributeView.attributeName" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="com.runwaysdk.geodashboard.MdAttributeView.attributeType" type="com.runwaysdk.system.metadata.MdAttribute"/>
+    </delete>
+  </undoIt>
+</version>
