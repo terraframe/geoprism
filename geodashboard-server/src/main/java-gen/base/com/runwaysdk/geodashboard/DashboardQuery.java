@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 480528192)
+@com.runwaysdk.business.ClassSignature(hash = -433121381)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -122,6 +122,46 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN);
 
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate()
+  {
+    return getFilterDate(null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.FILTERDATE);
+
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.FILTERDATE, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.FILTERDATE);
+
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.FILTERDATE, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getFromDate()
+  {
+    return getFromDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -278,6 +318,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.SITEMASTER, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableMoment getToDate()
+  {
+    return getToDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getType()
   {
     return getType(null);
@@ -306,6 +363,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.FILTERDATE)) 
+    {
+       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.LASTUPDATEDBY)) 
     {
@@ -501,6 +562,12 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate();
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias);
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getFromDate();
+    public com.runwaysdk.query.SelectableMoment getFromDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getFromDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
@@ -525,6 +592,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getToDate();
+    public com.runwaysdk.query.SelectableMoment getToDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getToDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -657,6 +727,40 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate()
+  {
+    return getFilterDate(null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias)
+  {
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.FILTERDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.FILTERDATE,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getFromDate()
+  {
+    return getFromDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -793,6 +897,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.SITEMASTER, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getToDate()
+  {
+    return getToDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -940,6 +1061,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.FILTERDATE)) 
+    {
+       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -995,6 +1120,12 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate();
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias);
+    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getFromDate();
+    public com.runwaysdk.query.SelectableMoment getFromDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getFromDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
@@ -1019,6 +1150,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.SelectableChar getSiteMaster();
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias);
     public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getToDate();
+    public com.runwaysdk.query.SelectableMoment getToDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getToDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -1174,6 +1308,40 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN,  alias, displayLabel);
 
   }
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate()
+  {
+    return getFilterDate(null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias)
+  {
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.FILTERDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getFilterDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.FILTERDATE,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getFromDate()
+  {
+    return getFromDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getFromDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.FROMDATE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getId()
   {
     return getId(null);
@@ -1310,6 +1478,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.SITEMASTER, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableMoment getToDate()
+  {
+    return getToDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getToDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.Dashboard.TODATE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getType()
   {
     return getType(null);
@@ -1338,6 +1523,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.FILTERDATE)) 
+    {
+       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.LASTUPDATEDBY)) 
     {

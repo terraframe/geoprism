@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -87,9 +88,30 @@ public class DashboardLayer extends DashboardLayerBase implements
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
-      MdAttributeDAOIF attr = md.definesAttribute("geoentity");
+      MdAttributeDAOIF attr = null;
 
-      this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+      
+      for(MdAttributeDAOIF mdAttr : md.definesAttributes())
+      {
+        if(mdAttr instanceof MdAttributeReferenceDAOIF)
+        {
+          MdAttributeReferenceDAOIF mdRef = (MdAttributeReferenceDAOIF) mdAttr;
+          if(mdRef.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
+          {
+            attr = mdRef;
+            break;
+          }
+        }
+      }
+      
+      if(attr != null)
+      {
+        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+      }
+      else
+      {
+        throw new ProgrammingErrorException("Class ["+mdClass.definesType()+"] does not referenced ["+GeoEntity.CLASS+"].");
+      }
     }
 
     this.apply();
@@ -208,10 +230,10 @@ public class DashboardLayer extends DashboardLayerBase implements
             String minCol = SLDConstants.getMinProperty(attribute);
             String maxCol = SLDConstants.getMaxProperty(attribute);
             
-            Selectable min = v.aSQLDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
+            Selectable min = v.aSQLAggregateDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
             min.setColumnAlias(minCol);
             
-            Selectable max = v.aSQLDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
+            Selectable max = v.aSQLAggregateDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
             max.setColumnAlias(maxCol);
             
             v.SELECT(min, max);

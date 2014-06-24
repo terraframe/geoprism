@@ -263,7 +263,7 @@ $(document).ready(function(){
   <div class="slide-navigation animated slideInRight">
     <aside id="sidebar">
       <div class="widget">
-        <h3>Luke Skywalker</h3>
+        <h3>Menu</h3>
         <ul class="links-list">
           <li><a href="#">Log out</a></li>
           <li><a href="#">Account</a></li>
