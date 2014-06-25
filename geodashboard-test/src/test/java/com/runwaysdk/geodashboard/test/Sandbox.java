@@ -6,13 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.derby.tools.sysinfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -37,11 +35,10 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
-import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
-import com.runwaysdk.web.WebClientSession;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -51,22 +48,9 @@ public class Sandbox
   @Request
   public static void main(String[] args) throws Throwable
   {
-    String value = "0.6";
-    DashboardStyle s = new DashboardStyle();
-    s.setName("Test Style");
-    s.setValue(DashboardStyle.POINTOPACITY, value);
-
-    System.out.println("PRE APPLY");    
-    System.out.println(DashboardStyle.getPointOpacityMd().getType());
-    System.out.println(s.getValue(DashboardStyle.POINTOPACITY));
-    System.out.println(s.getPointOpacity());
-    
-    s.apply();
-    System.out.println("POST APPLY");    
-    
-    System.out.println(DashboardStyle.getPointOpacityMd().getType());
-    System.out.println(s.getValue(DashboardStyle.POINTOPACITY));
-    System.out.println(s.getPointOpacity());
+    //StrategyInitializer.tearDown();
+    StrategyInitializer.startUp();
+    System.out.println(DashboardMap.getMapJSON("sxt2uo8qxyil66jmlk6h7l965h38m2da1w3bn55ecea1siqb7qj7vnuivq3gync2"));
   }
   
   private static void runONE(HashMap<String, Object> req, ClientRequestIF clientRequest)

@@ -236,6 +236,15 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 	width:150px;
   word-wrap: break-word;
 }
+.modal-form .error-message{
+	float:left;
+	padding:6px 0 0;
+	font-size:13px;
+	line-height:18px;
+	color:#8c0000;
+	/*width:150px; */
+  word-wrap: break-word;
+}
 .submit-form select{
 	float:left;
 	width:269px;

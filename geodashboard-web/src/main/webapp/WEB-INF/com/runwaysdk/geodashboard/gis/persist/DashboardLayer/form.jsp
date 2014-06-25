@@ -314,7 +314,18 @@
                         <div class="cell">
                           <label for="f210">${style.polygonFillOpacityMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f210" type="text" value="${style.polygonFillOpacity}" name="style.${style.polygonFillOpacityMd.name}" />
+                            <select id="f210" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonFillOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -352,7 +363,18 @@
                         <div class="cell">
                           <label for="f64">${style.polygonStrokeOpacityMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f64" type="text" name="style.${style.polygonStrokeOpacityMd.name}" value="${style.polygonStrokeOpacity}" />
+                            <select id="f64" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -375,7 +397,18 @@
                         <div class="cell">
                           <label for="f71">${style.pointOpacityMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f71" type="text" value="${style.pointOpacity}" name="style.${style.pointOpacityMd.name}" />
+                            <select id="f71" class="tab-select" name="style.${style.pointOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>                          
                           </div>
                         </div>
                       </div>
@@ -413,7 +446,18 @@
                         <div class="cell">
                           <label for="f74">${style.pointStrokeOpacityMd.name}</label>
                           <div class="text">
-                          <input id="f74" type="text" name="style.${style.pointStrokeOpacityMd.name}" value="${style.pointStrokeOpacity}" />
+                             <select id="f74" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>   
                           </div>
                         </div>
                       </div>
@@ -461,7 +505,18 @@
                         <div class="cell">
                           <label for="f78">${style.polygonFillOpacityMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f78" type="text" name="style.${style.polygonFillOpacityMd.name}" value="${style.polygonFillOpacity}" />
+                            <select id="f78" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonFillOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>  
                           </div>
                         </div>
                       </div>
@@ -499,7 +554,18 @@
                         <div class="cell">
                           <label for="f81">${style.polygonStrokeOpacityMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f81" type="text" name="style.${style.polygonStrokeOpacityMd.name}" value="${style.polygonStrokeOpacity}" />
+                            <select id="f81" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
                           </div>
                         </div>
                       </div>
