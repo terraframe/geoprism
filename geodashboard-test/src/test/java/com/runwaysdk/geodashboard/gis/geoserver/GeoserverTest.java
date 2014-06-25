@@ -458,7 +458,7 @@ import com.runwaysdk.util.FileIO;
     {
       log.debug("Starting teardown process.");      
       metadataTeardown();
-      StrategyInitializer.tearDown();
+      StrategyInitializer.shutDown();
     }
   }
 
