@@ -3,7 +3,7 @@
     <create>
       <mdTerm isAbstract="false" description="Classifier" removable="false"
 	      name="com.runwaysdk.geodashboard.ontology.Classifier" label="Classifier"
-	      table="classifier" publish="true" extendable="true"
+	      table="classifier" publish="true" extendable="true" hasDeterministicId="true"
 	      generateController="true">
 	      <mdMethod static="true" description="Returns the Root Classifier" name="getRoot" label="getRoot" returnType="com.runwaysdk.geodashboard.ontology.Classifier">
 	      </mdMethod>

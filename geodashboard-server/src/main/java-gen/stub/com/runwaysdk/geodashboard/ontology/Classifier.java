@@ -1,8 +1,17 @@
 package com.runwaysdk.geodashboard.ontology;
 
+import java.util.Iterator;
+
+import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.logging.LogLevel;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.DeleteRootException;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -51,10 +60,50 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     
     Classifier parent = Classifier.get(parentId);
     
-    ClassifierIsARelationship rel = parent.addIsAChild(dto);
-    rel.apply();
+    Relationship rel = dto.addLink(parent, ClassifierIsARelationship.CLASS);
     
     return new TermAndRel(dto, ClassifierIsARelationship.CLASS, rel.getId());
+  }
+  
+  @Override
+  @Transaction
+  @com.runwaysdk.logging.Log(level = LogLevel.DEBUG)
+  public void delete()
+  {
+    if (this.equals(Classifier.getRoot()))
+    {
+      DeleteRootException exception = new DeleteRootException("Cannot delete the root Classifier");
+      exception.setRootName(Classifier.getRoot().getDisplayLabel().getValue());
+      exception.apply();
+      
+      throw exception;
+    }
+    
+    // 1. Delete this entity from the all paths strategy
+    this.removeTerm(ClassifierIsARelationship.CLASS);
+    
+    // 2. Recursively delete all children.
+    if (!this.isLeaf(ClassifierIsARelationship.CLASS))
+    {
+      @SuppressWarnings("unchecked")
+      Iterator<Term> children = this.getDirectDescendants(ClassifierIsARelationship.CLASS).iterator();
+
+      while (children.hasNext())
+      {
+        Term child = children.next();
+
+        boolean hasSingleParent = child.getDirectAncestors(ClassifierIsARelationship.CLASS).getAll().size() == 1;
+
+        if (hasSingleParent)
+        {
+          children.remove();
+          child.delete();
+        }
+      }
+    }
+    
+    // 3. Delete this.
+    super.delete();
   }
   
   /**
