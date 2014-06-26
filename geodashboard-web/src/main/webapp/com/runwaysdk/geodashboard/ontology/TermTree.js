@@ -508,14 +508,15 @@
           actionParams: {parentId: parentId, relationshipType: ""},
           onSuccess : function(responseObj) {
             var term = that.__responseToTerm(responseObj);
-            that.termCache[term.getId()] = term;
             
-            var nodes = that.__getNodesById(term.getId());
+            var nodes = that.__getNodesById(termId);
             for (var i = 0; i < nodes.length; ++i) {
               $tree.jstree("rename_node", nodes[i], that._getTermDisplayLabel(term));
             }
             
             that.setTermBusy(termId, false);
+            that.termCache[termId] = null;
+            that.termCache[term.getId()] = term;
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
