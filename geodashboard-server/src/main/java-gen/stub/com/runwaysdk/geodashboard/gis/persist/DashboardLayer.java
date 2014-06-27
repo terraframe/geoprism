@@ -30,6 +30,7 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableDecimal;
 import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
+import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -237,6 +238,14 @@ public class DashboardLayer extends DashboardLayerBase implements
             max.setColumnAlias(maxCol);
             
             v.SELECT(min, max);
+            
+            // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
+            SelectableSingle groupBy = v.aSQLDouble(thematicSel._getAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+            groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
+            v.GROUP_BY(groupBy);
+            
+            // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD trick for this)
+            v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
           }
 
           if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal
@@ -322,7 +331,8 @@ public class DashboardLayer extends DashboardLayerBase implements
   {
     String name = this.getName();
     String idRoot = IdParser.parseRootFromId(this.getId());
-    return NameConventionUtil.buildAttribute(name, idRoot + "_");
+    String keyName = NameConventionUtil.buildAttribute(name, idRoot + "_");
+    return keyName;
   }
 
   @Override
