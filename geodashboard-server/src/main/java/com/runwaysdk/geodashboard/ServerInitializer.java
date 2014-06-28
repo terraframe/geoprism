@@ -20,7 +20,7 @@ public class ServerInitializer implements Reloadable
   @Request
   public static void destroy()
   {
-    StrategyInitializer.tearDown();
+//    StrategyInitializer.tearDown();
     SchedulerManager.shutdown();
     SessionEntry.deleteAll();
   }

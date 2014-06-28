@@ -108,8 +108,8 @@
 										-Djava.compiler=NONE
 										-Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat6x
 										-XX:PermSize=128m
-                    -XX:MaxPermSize=256m
-                    -Xmx1024M
+										-XX:MaxPermSize=256m
+										-Xmx1024M
 									</cargo.jvmargs>
 								</properties>
 							</configuration>
@@ -189,8 +189,8 @@
 										-Djava.compiler=NONE
 										-Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat6x
 										-XX:PermSize=128m
-                    -XX:MaxPermSize=256m
-                    -Xmx1024M
+										-XX:MaxPermSize=256m
+										-Xmx1024M
 									</cargo.jvmargs>
 								</properties>
 							</configuration>

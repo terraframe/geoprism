@@ -337,7 +337,7 @@ public class GeoserverTest extends GeoserverTestSetup
   public static void classTeardown()
   {
     metadataTeardown();
-    StrategyInitializer.tearDown();
+//    StrategyInitializer.tearDown();
   }
 
   @Transaction

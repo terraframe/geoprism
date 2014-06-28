@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="geodashboard-web">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
@@ -7,25 +6,8 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="runwaysdk-gis-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-common/runwaysdk-gis-common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-common-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-common/runwaysdk-common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-gis-client-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-client/runwaysdk-gis-client">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-client-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-client/runwaysdk-client">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-gis-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-gis-server/runwaysdk-gis-server">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="runwaysdk-server-1.8.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/runwaysdk-server/runwaysdk-server">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module deploy-path="/" handle="module:/overlay/prj/runwaysdk-gis-web?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/com/runwaysdk/runwaysdk-gis-web/1.8.1-SNAPSHOT/runwaysdk-gis-web-1.8.1-SNAPSHOT.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
             <dependency-type>consumes</dependency-type>
         </dependent-module>
         <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
