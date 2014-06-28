@@ -3,8 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!-- Include the types of this form to get the default values the MdAction needs -->
-<mjl:component param="layer" item="${layer}">
-</mjl:component>
 <mjl:component param="style" item="${style}">
 </mjl:component>
 
@@ -21,12 +19,18 @@
                 <strong>Name the layer</strong>
               </div>
               <div class="holder">
+<mjl:component param="layer" item="${layer}">
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
-                  <input type="text" name="layer.${layer.nameMd.name}" />
+                  <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
+                      <mjl:messages attribute="name" classes="error-message">
+                        <mjl:message />
+                      </mjl:messages>
                 </span>
+</mjl:component>
               </div>
             </div>
+<mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder style02">
                 <strong>Labels and Values</strong>
@@ -34,9 +38,17 @@
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block">
-                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.${style.enableValueMd.name}">
+                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue">
                     <label for="f51">${style.enableValueMd.displayLabel}</label>
+                    <mjl:messages attribute="enableValue" classes="error-message">
+                      <mjl:message />
+                    </mjl:messages>
                   </div>
+                  <div class="check-block">
+                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
+                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
+                  </div>              
+                  <!-- 
                   <div class="cell style02">
                     <label for="f52">${style.valueFontMd.displayLabel}</label>
                     <div class="select-holder">
@@ -95,6 +107,7 @@
                     <label for="f54">${style.valueHaloWidthMd.displayLabel}</label>
                     <div class="select-holder">
                       <select class="size-select" name="style.${style.valueHaloWidthMd.name}" id="f54">
+                        <option value=""></option>
                         <c:forEach begin="0" end="15" var="size">
                           <c:choose>
                             <c:when test="${style.valueHaloWidth == size}">
@@ -108,12 +121,9 @@
                       </select>
                     </div>
                   </div>
+                  -->
                 </div>
                 <div class="row-holder">
-                  <div class="check-block">
-                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
-                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
-                  </div>
                   <div class="cell style02">
                     <label for="f55">${style.labelFontMd.displayLabel}</label>
                     <div class="select-holder">
@@ -129,7 +139,6 @@
                           </c:choose>
                         </c:forEach>
                       </select>
-                    
                     </div>
                   </div>
                   <div class="cell">
@@ -189,6 +198,7 @@
                 </div>
               </div>
             </div>
+</mjl:component>
             <div class="row-holder">
               <div class="label-holder style03">
                 <strong>Define an aggregation method</strong>
@@ -197,6 +207,7 @@
                 <div class="box">
                   <label for="f58">Group by</label>
                   <div class="select-box">
+<mjl:component param="layer" item="${layer}">
                     <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
                        <c:forEach items="${universals}" var="universal">
                          <c:choose>
@@ -213,8 +224,10 @@
                          </c:choose>
                       </c:forEach>
                     </select>
+</mjl:component>
                   </div>
                 </div>
+<mjl:component param="style" item="${style}">
                 <div class="box">
                   <label for="f59">According to</label>
                   <div class="select-box">
@@ -237,8 +250,10 @@
                     </select>
                   </div>
                 </div>
+</mjl:component>
               </div>
             </div>
+<mjl:component param="layer" item="${layer}">
             <div class="row-holder">
               <div class="label-holder style04">
                 <strong>Choose a layer type</strong>
@@ -263,15 +278,19 @@
                       <label for="radio3">${features['GRADIENT']}</label>
                     </a>
                   </li>
+                  <!-- Removed for deploy until functionality exists.
                   <li class="category">
                     <a href="#" data-toggle="tab">
                       <input id="radio4" name="layer.${layer.layerTypeMd.name}" value="CATEGORY" type="radio">
                       <label for="radio4">${features['CATEGORY']}</label>
                     </a>
                   </li>
+                   -->
                 </ul>
               </div>
             </div>
+</mjl:component>
+<mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder">
                 <strong>Style the layer</strong>
@@ -293,9 +312,21 @@
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f210">Opacity</label>
+                          <label for="f210">${style.polygonFillOpacityMd.displayLabel}</label>
                           <div class="text">
-                          <input id="f210" type="text" value="" name="style.${style.polygonFillOpacityMd.name}" placeholder="0 to 100"></div>
+                            <select id="f210" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonFillOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -331,7 +362,20 @@
                         </div>
                         <div class="cell">
                           <label for="f64">${style.polygonStrokeOpacityMd.displayLabel}</label>
-                          <div class="text"><input id="f64" type="text" name="style.${style.polygonStrokeOpacityMd.name}" placeholder="0 to 100"></div>
+                          <div class="text">
+                            <select id="f64" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -341,17 +385,31 @@
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.pointFillMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#00a3d9;">icon</span>
+                              <span class="ico" style="background:${style.pointFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.pointFillMd.name}" value="${style.pointFill}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f71">Opacity</label>
-                          <div class="text"><input id="f71" type="text" placeholder="0 to 100"></div>
+                          <label for="f71">${style.pointOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <select id="f71" class="tab-select" name="style.${style.pointOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>                          
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -359,28 +417,48 @@
                       <strong class="title">Stroke</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.pointStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
+                              <span class="ico" style="background:${style.pointFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.pointStrokeMd.name}" value="${style.pointStroke}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f73">Width</label>
+                          <label for="f33">${style.pointStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
                             <select id="f73" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                              <c:forEach begin="0" end="15" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointStrokeWidth == size}">
+                                    <option selected="selected" value="${size}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
                             </select>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f74">Opacity</label>
-                          <div class="text"><input id="f74" type="text" placeholder="0 to 100"></div>
+                          <label for="f74">${style.pointStrokeOpacityMd.name}</label>
+                          <div class="text">
+                             <select id="f74" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.pointStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>   
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -388,32 +466,58 @@
                       <strong class="title">Radius</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <label for="f75">Min</label>
-                          <div class="text"><input id="f75" type="text" placeholder="10"></div>
+                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
+                          <div class="text"><input id="f76" name="${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
                         </div>
                         <div class="cell">
-                          <label for="f76">Max</label>
-                          <div class="text"><input id="f76" type="text" placeholder="100"></div>
+                          <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
+                          <div class="text">
+                            <input id="f77" name="${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="tab-pane active" id="tab003" style="display: none;">
-                    <div class="fill-block">
+                    <div class="gradient-block">
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonMinFillMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#00a3d9;">icon</span>
+                              <span class="ico" style="background:${style.polygonMinFill};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonMinFillMd.name}" value="${style.polygonMinFill}" />
                             </a>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f78">Opacity</label>
-                          <div class="text"><input id="f78" type="text" placeholder="0 to 100"></div>
+                          <span>${style.polygonMaxFillMd.displayLabel}</span>
+                          <div class="color-holder">
+                            <a href="#" class="color-choice">
+                              <span class="ico" style="background:${style.polygonMaxFill};">icon</span>
+                              <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonMaxFillMd.name}" value="${style.polygonMaxFill}" />
+                            </a>
+                          </div>
+                        </div>
+                        <div class="cell">
+                          <label for="f78">${style.polygonFillOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <select id="f78" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonFillOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>  
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -421,28 +525,48 @@
                       <strong class="title">Stroke</strong>
                       <div class="cell-holder">
                         <div class="cell">
-                          <span>Color</span>
+                          <span>${style.polygonStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
+                              <span class="ico" style="background:${style.polygonStroke};">icon</span>
                               <span class="arrow">arrow</span>
+                              <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
                             </a>
                           </div>
                         </div>
-                        <div class="cell">
-                          <label for="f80">Width</label>
+                       <div class="cell">
+                          <label for="f80">${style.polygonStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
-                            <select id="f80" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                            <select id="f80" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
+                              <c:forEach begin="0" end="15" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeWidth == size}">
+                                    <option selected="selected" value="${size}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
                             </select>
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f81">Opacity</label>
-                          <div class="text"><input id="f81" type="text" placeholder="0 to 100"></div>
+                          <label for="f81">${style.polygonStrokeOpacityMd.displayLabel}</label>
+                          <div class="text">
+                            <select id="f81" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
+                              <c:forEach step="5" begin="0" end="100" var="size">
+                                <c:choose>
+                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
+                                    <option selected="selected" value="${size/100}">${size}</option>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <option value="${size/100}">${size}</option>
+                                  </c:otherwise>
+                                </c:choose>
+                              </c:forEach>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -624,13 +748,16 @@
                 </div>
               </div>
             </div>
+</mjl:component>
             <div class="row-holder">
               <div class="label-holder"></div>
               <div class="holder">
                 <div class="row-holder">
                   <div class="check-block style02">
+<mjl:component param="layer" item="${layer}">
                     <input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}">
                     <label for="f65">${layer.displayInLegendMd.displayLabel}</label>
+</mjl:component>
                   </div>
                 </div>
                 <div class="button-holder">

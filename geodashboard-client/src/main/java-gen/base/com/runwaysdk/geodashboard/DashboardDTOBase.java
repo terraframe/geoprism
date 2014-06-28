@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1074808201)
+@com.runwaysdk.business.ClassSignature(hash = 1542315250)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1074808201;
+  private static final long serialVersionUID = 1542315250;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -31,6 +31,8 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String FILTERDATE = "filterDate";
+  public static java.lang.String FROMDATE = "fromDate";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -39,6 +41,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
   {
@@ -174,6 +177,92 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeDTO getFilterDate()
+  {
+    if(getValue(FILTERDATE) == null || getValue(FILTERDATE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeDTO.get(getRequest(), getValue(FILTERDATE));
+    }
+  }
+  
+  public String getFilterDateId()
+  {
+    return getValue(FILTERDATE);
+  }
+  
+  public void setFilterDate(com.runwaysdk.system.metadata.MdAttributeDTO value)
+  {
+    if(value == null)
+    {
+      setValue(FILTERDATE, "");
+    }
+    else
+    {
+      setValue(FILTERDATE, value.getId());
+    }
+  }
+  
+  public boolean isFilterDateWritable()
+  {
+    return isWritable(FILTERDATE);
+  }
+  
+  public boolean isFilterDateReadable()
+  {
+    return isReadable(FILTERDATE);
+  }
+  
+  public boolean isFilterDateModified()
+  {
+    return isModified(FILTERDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getFilterDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(FILTERDATE).getAttributeMdDTO();
+  }
+  
+  public java.util.Date getFromDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(FROMDATE));
+  }
+  
+  public void setFromDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(FROMDATE, "");
+    }
+    else
+    {
+      setValue(FROMDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
+  }
+  
+  public boolean isFromDateWritable()
+  {
+    return isWritable(FROMDATE);
+  }
+  
+  public boolean isFromDateReadable()
+  {
+    return isReadable(FROMDATE);
+  }
+  
+  public boolean isFromDateModified()
+  {
+    return isModified(FROMDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateMdDTO getFromDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(FROMDATE).getAttributeMdDTO();
   }
   
   public String getKeyName()
@@ -409,6 +498,43 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
+  }
+  
+  public java.util.Date getToDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(TODATE));
+  }
+  
+  public void setToDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(TODATE, "");
+    }
+    else
+    {
+      setValue(TODATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
+  }
+  
+  public boolean isToDateWritable()
+  {
+    return isWritable(TODATE);
+  }
+  
+  public boolean isToDateReadable()
+  {
+    return isReadable(TODATE);
+  }
+  
+  public boolean isToDateModified()
+  {
+    return isModified(TODATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateMdDTO getToDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(TODATE).getAttributeMdDTO();
   }
   
   public static final com.runwaysdk.geodashboard.DashboardQueryDTO getSortedDashboards(com.runwaysdk.constants.ClientRequestIF clientRequest)

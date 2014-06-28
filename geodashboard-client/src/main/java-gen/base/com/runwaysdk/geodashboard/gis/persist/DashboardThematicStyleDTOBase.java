@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -381111302)
+@com.runwaysdk.business.ClassSignature(hash = -2027501386)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = -381111302;
+  private static final long serialVersionUID = -2027501386;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,6 +29,10 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTMAXSIZE = "pointMaxSize";
+  public static java.lang.String POINTMINSIZE = "pointMinSize";
+  public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
+  public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECONDITION = "styleCondition";
   @SuppressWarnings("unchecked")
   public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
@@ -123,6 +127,154 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public Integer getPointMaxSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMAXSIZE));
+  }
+  
+  public void setPointMaxSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTMAXSIZE, "");
+    }
+    else
+    {
+      setValue(POINTMAXSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointMaxSizeWritable()
+  {
+    return isWritable(POINTMAXSIZE);
+  }
+  
+  public boolean isPointMaxSizeReadable()
+  {
+    return isReadable(POINTMAXSIZE);
+  }
+  
+  public boolean isPointMaxSizeModified()
+  {
+    return isModified(POINTMAXSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointMaxSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTMAXSIZE).getAttributeMdDTO();
+  }
+  
+  public Integer getPointMinSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMINSIZE));
+  }
+  
+  public void setPointMinSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTMINSIZE, "");
+    }
+    else
+    {
+      setValue(POINTMINSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointMinSizeWritable()
+  {
+    return isWritable(POINTMINSIZE);
+  }
+  
+  public boolean isPointMinSizeReadable()
+  {
+    return isReadable(POINTMINSIZE);
+  }
+  
+  public boolean isPointMinSizeModified()
+  {
+    return isModified(POINTMINSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointMinSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTMINSIZE).getAttributeMdDTO();
+  }
+  
+  public String getPolygonMaxFill()
+  {
+    return getValue(POLYGONMAXFILL);
+  }
+  
+  public void setPolygonMaxFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONMAXFILL, "");
+    }
+    else
+    {
+      setValue(POLYGONMAXFILL, value);
+    }
+  }
+  
+  public boolean isPolygonMaxFillWritable()
+  {
+    return isWritable(POLYGONMAXFILL);
+  }
+  
+  public boolean isPolygonMaxFillReadable()
+  {
+    return isReadable(POLYGONMAXFILL);
+  }
+  
+  public boolean isPolygonMaxFillModified()
+  {
+    return isModified(POLYGONMAXFILL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonMaxFillMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONMAXFILL).getAttributeMdDTO();
+  }
+  
+  public String getPolygonMinFill()
+  {
+    return getValue(POLYGONMINFILL);
+  }
+  
+  public void setPolygonMinFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONMINFILL, "");
+    }
+    else
+    {
+      setValue(POLYGONMINFILL, value);
+    }
+  }
+  
+  public boolean isPolygonMinFillWritable()
+  {
+    return isWritable(POLYGONMINFILL);
+  }
+  
+  public boolean isPolygonMinFillReadable()
+  {
+    return isReadable(POLYGONMINFILL);
+  }
+  
+  public boolean isPolygonMinFillModified()
+  {
+    return isModified(POLYGONMINFILL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonMinFillMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONMINFILL).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO getStyleCondition()

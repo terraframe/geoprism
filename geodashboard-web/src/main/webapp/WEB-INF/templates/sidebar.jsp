@@ -114,7 +114,13 @@
 
 
 <script type="text/javascript">
+  activeLink = null;
+
 	function activateLinks(clickedLink) {
+	  if (clickedLink != null && activeLink != null && clickedLink[0] === activeLink[0]) {
+	    return;
+	  }
+	  activeLink = clickedLink;
 
 		// deactivate any active links to start fresh	
 		clearLinks();
@@ -170,7 +176,7 @@
 	}
 
 	activateLinksOnLoad();
-
+	
 	// Keep the element styled like the hover when dropdown is expanded
 	$("a").click(function() {
 		activateLinks($(this));

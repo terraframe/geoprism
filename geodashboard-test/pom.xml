@@ -27,8 +27,82 @@
 			<version>4.10</version>
 		</dependency>
 	</dependencies>
+	
+	<profiles>
+	
+	   <profile>
+      <id>import-test-data</id>
+      <activation>
+        <property>
+          <name>import-test-data</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>import-test-data</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <executable>java</executable>
+                  <mainClass>com.runwaysdk.geodashboard.gis.geoserver.GeoserverTestSetup</mainClass>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>server.root</key>
+                      <value>ideiq-server</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>client.root</key>
+                      <value>ideiq-client</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>common.root</key>
+                      <value>ideiq-common</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>jsp.dir</key>
+                      <value>ideiq-web/src/main/webapp/WEB-INF</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>server.classpath.append</key>
+                      <value>../geodashboard/geodashboard-common/target/classes;../geodashboard/geodashboard-server/target/classes</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>client.classpath.append</key>
+                      <value>../geodashboard/geodashboard-common/target/classes;../geodashboard/geodashboard-client/target/classes</value>
+                    </systemProperty>
+                  </systemProperties>                                   
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+	
+	</profiles>
+
 	<build>
+	  <!-- This tells maven to resolve variables in our properties files (like 
+      maven.basedir) -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+	
 		<plugins>
+		
+				
+		
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>

@@ -30,6 +30,7 @@
   
   <profiles>
     <profile>
+      <id>swt-windows-x86</id>
       <activation>
         <os>
           <name>Windows</name>
@@ -46,6 +47,7 @@
       </dependencies>
     </profile>
     <profile>
+      <id>swt-mac-x86</id>
       <activation>
         <os>
           <family>mac</family>
@@ -65,6 +67,7 @@
       </dependencies>
     </profile>
     <profile>
+      <id>swt-mac-64</id>
       <activation>
         <os>
           <family>mac</family>
@@ -83,6 +86,7 @@
       </dependencies>
     </profile>
     <profile>
+      <id>swt-unix-x64</id>
       <activation>
         <os>
           <family>unix</family>

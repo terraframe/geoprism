@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.util.Arrays;
 import java.util.Locale;
 
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -37,6 +38,8 @@ public class DashboardStyle extends DashboardStyleBase implements
     {
       localizedFonts[i] = fonts[i].getFontName(locale);
     }
+    
+    Arrays.sort(localizedFonts);
     
     return localizedFonts;
   }

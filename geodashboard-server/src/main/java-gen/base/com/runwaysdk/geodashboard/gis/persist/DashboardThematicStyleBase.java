@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -435059334)
+@com.runwaysdk.business.ClassSignature(hash = 698767926)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,8 +13,12 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTMAXSIZE = "pointMaxSize";
+  public static java.lang.String POINTMINSIZE = "pointMinSize";
+  public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
+  public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = -435059334;
+  private static final long serialVersionUID = 698767926;
   
   public DashboardThematicStyleBase()
   {
@@ -96,6 +100,118 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(MDATTRIBUTE, value.getId());
+    }
+  }
+  
+  public Integer getPointMaxSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMAXSIZE));
+  }
+  
+  public void validatePointMaxSize()
+  {
+    this.validateAttribute(POINTMAXSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointMaxSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return mdClassIF.definesAttribute(POINTMAXSIZE);
+  }
+  
+  public void setPointMaxSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTMAXSIZE, "");
+    }
+    else
+    {
+      setValue(POINTMAXSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Integer getPointMinSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMINSIZE));
+  }
+  
+  public void validatePointMinSize()
+  {
+    this.validateAttribute(POINTMINSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointMinSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return mdClassIF.definesAttribute(POINTMINSIZE);
+  }
+  
+  public void setPointMinSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTMINSIZE, "");
+    }
+    else
+    {
+      setValue(POINTMINSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getPolygonMaxFill()
+  {
+    return getValue(POLYGONMAXFILL);
+  }
+  
+  public void validatePolygonMaxFill()
+  {
+    this.validateAttribute(POLYGONMAXFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonMaxFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return mdClassIF.definesAttribute(POLYGONMAXFILL);
+  }
+  
+  public void setPolygonMaxFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONMAXFILL, "");
+    }
+    else
+    {
+      setValue(POLYGONMAXFILL, value);
+    }
+  }
+  
+  public String getPolygonMinFill()
+  {
+    return getValue(POLYGONMINFILL);
+  }
+  
+  public void validatePolygonMinFill()
+  {
+    this.validateAttribute(POLYGONMINFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonMinFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return mdClassIF.definesAttribute(POLYGONMINFILL);
+  }
+  
+  public void setPolygonMinFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(POLYGONMINFILL, "");
+    }
+    else
+    {
+      setValue(POLYGONMINFILL, value);
     }
   }
   

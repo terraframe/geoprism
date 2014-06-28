@@ -82,6 +82,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void databrowser() throws IOException, ServletException
   {
+    req.setAttribute("packages", "['com.runwaysdk.system','com.runwaysdk.geodashboard', 'com.runwaysdk.geodashboard.report', 'com.runwaysdk.system.metadata']");
+    req.setAttribute("types", "['com.runwaysdk.system.gis.geo.Universal', 'com.runwaysdk.system.gis.geo.GeoEntity']");
     render("databrowser.jsp");
   }
   

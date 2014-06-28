@@ -8,22 +8,29 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableDecimal;
+import com.runwaysdk.query.SelectableDouble;
+import com.runwaysdk.query.SelectableFloat;
+import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -35,7 +42,8 @@ import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
 
-public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
+public class DashboardLayer extends DashboardLayerBase implements
+    com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long  serialVersionUID = 1992575686;
 
@@ -47,6 +55,13 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   {
     super();
   }
+  
+  @Override
+  public FeatureStrategy getFeatureStrategy()
+  {
+    AllLayerType type = this.getLayerType().get(0);
+    return FeatureStrategy.valueOf(type.name());
+  }
 
   @Override
   public void apply()
@@ -57,55 +72,75 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       // generate a db view name unique across space and time
       String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
       this.setViewName(vn);
-      
+
       this.setVirtual(true);
     }
     super.apply();
   }
-  
+
   @Override
   @Transaction
   public void applyWithStyle(DashboardStyle style, String mapId)
   {
     boolean isNew = this.isNew();
-    if(isNew && style instanceof DashboardThematicStyle)
+    if (isNew && style instanceof DashboardThematicStyle)
     {
       // FIXME UI needs to allow for picking of the geo entity attribute
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
-      MdAttributeDAOIF attr = md.definesAttribute("geoentity");
+      MdAttributeDAOIF attr = null;
+
       
-      this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+      for(MdAttributeDAOIF mdAttr : md.definesAttributes())
+      {
+        if(mdAttr instanceof MdAttributeReferenceDAOIF)
+        {
+          MdAttributeReferenceDAOIF mdRef = (MdAttributeReferenceDAOIF) mdAttr;
+          if(mdRef.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
+          {
+            attr = mdRef;
+            break;
+          }
+        }
+      }
+      
+      if(attr != null)
+      {
+        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+      }
+      else
+      {
+        throw new ProgrammingErrorException("Class ["+mdClass.definesType()+"] does not referenced ["+GeoEntity.CLASS+"].");
+      }
     }
-    
+
     this.apply();
-    
-    style.setName("style_"+IDGenerator.nextID());
+
+    style.setName("style_" + IDGenerator.nextID());
     style.apply();
-    
-    if(isNew)
+
+    if (isNew)
     {
       QueryFactory f = new QueryFactory();
       DashboardLayerQuery q = new DashboardLayerQuery(f);
       DashboardMapQuery mQ = new DashboardMapQuery(f);
-      
+
       mQ.WHERE(mQ.getId().EQ(mapId));
       q.WHERE(q.containingMap(mQ));
-      
+
       int count = (int) q.getCount();
       count++;
-      
+
       DashboardMap map = DashboardMap.get(mapId);
       HasLayer hasLayer = map.addHasLayer(this);
       hasLayer.setLayerIndex(count);
       hasLayer.apply();
-      
-      
+
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
     }
-    
+
   }
 
   /**
@@ -146,7 +181,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
+          String attribute = tStyle.getAttribute();
+          
           MdAttributeConcrete mdAttr = (MdAttributeConcrete) tStyle.getMdAttribute();
           MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
           MdClass mdClass = mdC.getDefiningMdClass();
@@ -158,6 +194,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
+          boolean isAggregate = false;
           if (allAgg.size() == 1)
           {
             AllAggregationType agg = allAgg.get(0);
@@ -183,9 +220,56 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               thematicSel = F.AVG(thematicAttr);
             }
 
+            isAggregate = true;
           }
           
-          thematicSel.setColumnAlias(tStyle.getAttribute());
+          // If we doing a bubble/gradient map with a min/max add window aggregations
+          // to provide the min and max of the attribute.
+          AllLayerType layerType = this.getLayerType().get(0);
+          if(layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
+          {
+            String minCol = SLDConstants.getMinProperty(attribute);
+            String maxCol = SLDConstants.getMaxProperty(attribute);
+            
+            Selectable min = v.aSQLAggregateDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
+            min.setColumnAlias(minCol);
+            
+            Selectable max = v.aSQLAggregateDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
+            max.setColumnAlias(maxCol);
+            
+            v.SELECT(min, max);
+            
+            // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
+            SelectableSingle groupBy = v.aSQLDouble(thematicSel._getAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+            groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
+            v.GROUP_BY(groupBy);
+            
+            // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD trick for this)
+            v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
+          }
+
+          if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal
+              || thematicSel instanceof SelectableFloat)
+          {
+            Integer length = GeoserverProperties.getDecimalLength();
+            Integer precision = GeoserverProperties.getDecimalPrecision();
+            
+            String sql = thematicSel.getSQL()
+                + "::decimal(" + length + "," + precision + ")";
+            
+            if(isAggregate)
+            {
+              thematicSel = v.aSQLAggregateDouble(thematicSel._getAttributeName(), sql,
+                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+            }
+            else
+            {
+              thematicSel = v.aSQLDouble(thematicSel._getAttributeName(), sql,
+                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+            }
+          }
+
+          thematicSel.setColumnAlias(attribute);
 
           v.SELECT(thematicSel);
 
@@ -193,7 +277,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-          v.SELECT(label);
+          v.SELECT(label);  
 
           // geometry
           Selectable geom;
@@ -247,7 +331,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   {
     String name = this.getName();
     String idRoot = IdParser.parseRootFromId(this.getId());
-    return NameConventionUtil.buildAttribute(name, idRoot + "_");
+    String keyName = NameConventionUtil.buildAttribute(name, idRoot + "_");
+    return keyName;
   }
 
   @Override
@@ -265,10 +350,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
     else
     {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY
+          + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
-  
+
   @Override
   public void lock()
   {
@@ -276,10 +362,10 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     {
       style.lock();
     }
-    
+
     super.lock();
   }
-  
+
   @Override
   public void unlock()
   {
@@ -287,7 +373,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     {
       style.unlock();
     }
-    
+
     super.unlock();
   }
 
@@ -308,17 +394,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   {
     return this.getAllHasStyle().getAll();
   }
-  
+
   public static UniversalQuery getSortedUniversals()
   {
     QueryFactory f = new QueryFactory();
     UniversalQuery q = new UniversalQuery(f);
-    
+
     Universal root = Universal.getRoot();
     q.WHERE(q.getId().NE(root.getId()));
-    
+
     q.ORDER_BY_ASC(q.getDisplayLabel().localize());
-    
+
     return q;
   }
 

@@ -1,0 +1,27 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle">
+        <create>
+          <attributes>
+            <integer name="pointMinSize" label="Min" required="true" defaultValue="1" rejectNegative="true" />
+            <integer name="pointMaxSize" label="Max" required="true" defaultValue="10" rejectNegative="true" />
+            <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
+            <char name="polygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
+          </attributes>
+        </create>
+      </mdBusiness>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.pointMinSize" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.pointMaxSize" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.polygonMinFill" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.pointMaxFill" type="com.runwaysdk.system.metadata.MdAttribute"/>
+    </delete>
+  </undoIt>
+</version>

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
@@ -179,37 +180,45 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   @Override
   public void createMapForSession() throws IOException, ServletException
   {
-    ClientRequestIF clientRequest = this.getClientRequest();
-    DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO.createMapForSession(clientRequest);
-    req.setAttribute("mapId", map.getId());
-
-    // populates the dropdown menu
-    DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
-    List<? extends DashboardDTO> results = dashboardQ.getResultSet();
-    req.setAttribute("dashboards", results);
-
-    // load the default type (index of 0)
-    if (results.size() > 0)
+    try
     {
-      DashboardDTO first = results.get(0);
-      MdClassDTO[] types = first.getSortedTypes();
-      req.setAttribute("types", types);
+      ClientRequestIF clientRequest = this.getClientRequest();
+      DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO
+          .createMapForSession(clientRequest);
+      req.setAttribute("mapId", map.getId());
 
-      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
-      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+      // populates the dropdown menu
+      DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
+      List<? extends DashboardDTO> results = dashboardQ.getResultSet();
+      req.setAttribute("dashboards", results);
 
-      for(MetadataWrapperDTO mdDTO : first.getAllMetadata())
+      // load the default type (index of 0)
+      if (results.size() > 0)
       {
-        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
-        for(MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
-        {
-          attrs.add(mdAttrView);
-        }
-      }
-      
-      req.setAttribute("attrMap", attrMap);
-    }
+        DashboardDTO first = results.get(0);
+        MdClassDTO[] types = first.getSortedTypes();
+        req.setAttribute("types", types);
 
-    render("dashboardViewer.jsp");
+        List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
+        Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+
+        for (MetadataWrapperDTO mdDTO : first.getAllMetadata())
+        {
+          attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+          for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
+          {
+            attrs.add(mdAttrView);
+          }
+        }
+
+        req.setAttribute("attrMap", attrMap);
+      }
+
+      render("dashboardViewer.jsp");
+    }
+    catch (Throwable t)
+    {
+      System.out.println(t);
+    }
   }
 }

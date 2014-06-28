@@ -9,27 +9,28 @@ import java.util.ResourceBundle;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.business.BusinessDTO;
+import com.runwaysdk.configuration.ConfigurationReaderIF;
+import com.runwaysdk.configuration.RunwayConfigurationException;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.generation.loader.Reloadable;
 
 public class GeoserverProperties implements Reloadable
 {
   private static final String          GEOSERVER_PROPERTIES = "geoserver";
-
-  private ResourceBundle               bundle;
+  
+  private ResourceBundle bundle;
 
   private static GeoServerRESTPublisher publisher;
 
-  private static GeoServerRESTReader    reader;
+  private static GeoServerRESTReader    restReader;
   
   public static final String SLD_EXTENSION = ".sld";
-
+  
   private GeoserverProperties()
   {
     bundle = ResourceBundle.getBundle(GEOSERVER_PROPERTIES, CommonProperties.getDefaultLocale(),
-        BusinessDTO.class.getClassLoader());
-  }
-
+        BusinessDTO.class.getClassLoader());  }
+  
   private static class Singleton implements Reloadable
   {
     private static GeoserverProperties INSTANCE = new GeoserverProperties();
@@ -38,6 +39,16 @@ public class GeoserverProperties implements Reloadable
   private static ResourceBundle getBundle()
   {
     return Singleton.INSTANCE.bundle;
+  }
+  
+  public static Integer getDecimalLength()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.decimal.length"));
+  }
+  
+  public static Integer getDecimalPrecision()
+  {
+    return Integer.valueOf(getBundle().getString("geoserver.decimal.precision"));
   }
 
   public static String getWorkspace()
@@ -110,23 +121,23 @@ public class GeoserverProperties implements Reloadable
    */
   public static synchronized GeoServerRESTReader getReader()
   {
-    if(reader == null)
+    if(restReader == null)
     {
       try
       {
-        reader = new GeoServerRESTReader(getLocalPath(), getAdminUser(), getAdminPassword());
+        restReader = new GeoServerRESTReader(getLocalPath(), getAdminUser(), getAdminPassword());
       }
       catch (MalformedURLException e)
       {
         // We don't know if this is being called via client or server code, so log
-        // the error and throw an NPE to the calling code for its error handling mechanism.
+        // the error and throw an exception to the calling code for its error handling mechanism.
         String msg = "The "+GeoserverProperties.class.getSimpleName()+"."+GeoServerRESTReader.class.getSimpleName()+" is null.";
         LogFactory.getLog(GeoserverProperties.class.getClass()).error(msg, e);
         
-        throw new NullPointerException(msg);
+        throw new RunwayConfigurationException(msg);
       }
     }
     
-    return reader;
+    return restReader;
   }
 }

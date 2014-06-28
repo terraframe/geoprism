@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1092424286)
+@com.runwaysdk.business.ClassSignature(hash = -286377747)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,6 +25,42 @@ public  abstract  class MdAttributeViewQueryBase extends com.runwaysdk.query.Gen
   {
     return com.runwaysdk.geodashboard.MdAttributeView.CLASS;
   }
+  public com.runwaysdk.query.SelectableChar getAttributeName()
+  {
+    return getAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.MdAttributeView.ATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.MdAttributeView.ATTRIBUTENAME, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAttributeType()
+  {
+    return getAttributeType(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAttributeType(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.MdAttributeView.ATTRIBUTETYPE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAttributeType(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.MdAttributeView.ATTRIBUTETYPE, alias, displayLabel);
+
+  }
+ 
   public com.runwaysdk.query.SelectableChar getDisplayLabel()
   {
     return getDisplayLabel(null);

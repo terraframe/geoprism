@@ -1,0 +1,16 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <object key="Users.SYSTEM" type="com.runwaysdk.system.Users">
+        <attribute name="sessionLimit" value="100"/>
+      </object>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
+</version>

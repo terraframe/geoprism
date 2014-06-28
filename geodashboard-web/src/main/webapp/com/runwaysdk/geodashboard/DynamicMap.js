@@ -36,6 +36,8 @@
       initialize : function(mapDivId, mapId){
         this.$initialize();
         
+        
+        
         this._mapDivId = mapDivId;
         this._mapId = mapId;
         this._mdAttribute = null;
@@ -43,7 +45,12 @@
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
-        this._overlayLayers = new com.runwaysdk.structure.HashMap();     
+        
+        // key => value = dom id => Layer
+        this._overlayLayers = new com.runwaysdk.structure.HashMap();
+        
+        // key -> value = object => Layer
+        this._layerCache = new com.runwaysdk.structure.HashMap();     
         
         // The current base map (only one at a time is allowed)
         this._defaultBase = null;
@@ -56,11 +63,74 @@
         
         this._rendered = false;
         
+        var bound = Mojo.Util.bind(this, this._overlayHandler);
+        $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).on('click', 'a', bound);
+        
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
+      },
+      
+      _overlayHandler : function(e){
+        
+        var that = this;
+        
+        var el = $(e.currentTarget);
+        if(el.hasClass('ico-edit')){
+          
+          // edit the layer
+          var id = el.data('id');
+          this._LayerController.edit(new Mojo.ClientRequest({
+            onSuccess : function(html){
+              that._displayLayerForm(html, true);
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          }), id);
+          
+        }
+        else if(el.hasClass('ico-remove')){
+          
+          // delete the layer
+          var id = el.data('id');
+          com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
+            onSuccess : function(){
+              that._removeLayer(id);
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          }), id);
+        }
+      },
+      
+      /**
+       * Removes the Layer with the given object id (Runway Id)
+       * from all caches and the map itself.
+       * 
+       * @param id
+       */
+      _removeLayer : function(id){
+        
+        var toRemove = this._layerCache.get(id);
+        
+        // remove layer from both caches
+        this._layerCache.remove(id);
+
+        var name = toRemove.id;
+        this._overlayLayers.remove(name);
+        
+        // remove the actual layer from the map        
+        this._map.removeLayer(toRemove);
+        
+        // remove the layer from the map and UI
+        // FIXME use selector
+        el.parent().parent().remove();
+        
+        this._refreshMap();
       },
       
       /**
@@ -80,14 +150,22 @@
         
         var that = this;
         
-        var request = new GDB.StandardRequest({
-          onSuccess : function(json){
-            console.log('done');
-            var obj = Mojo.Util.toObject(json);
-            console.log(obj);
-            
-            that._closeLayerModal();
-            that._refreshMap();
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){
+            if(Mojo.Util.trim(html).length === 0){
+              that._closeLayerModal();
+              that._refreshMap();
+            }
+            else {
+              // we got html back, meaning there was an error
+              that._displayLayerForm(html, false);
+            }
+          },
+          onFailure : function(e){
+            if(Mojo.Util.isString(e)){
+              console.log('EX: '+e)
+            }
+            that.handleException(e);
           }
         });
         
@@ -98,11 +176,8 @@
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
-        
         return request;
       },
-      
-
       
       /**
        * 
@@ -119,13 +194,18 @@
         else
         {
           var that = this;
-          var request = new GDB.StandardRequest({
+          var request = new Mojo.ClientRequest({
             onSuccess : function(params){
               that._closeLayerModal();
+            },
+            onFailure : function(e){
+              that.handleException(e);
             }
           });
           
-          return request;
+          //return request;
+          var id = params['layer.componentId'];
+          com.runwaysdk.geodashboard.gis.persist.DashboardLayer.unlock(request, id);
         }
       },
       
@@ -406,9 +486,13 @@
         var html = '';
         var ids = [];
         for(var i = 0; i < jsonLayers.length; i++){
-          var viewName = jsonObj.layers[i].viewName;
-          var sldName = jsonObj.layers[i].sldName || "";  // This should be enabled we wire up the interface or set up a better test process
-          var displayName = jsonObj.layers[i].layerName || "N/A";
+          
+          var layerObj = jsonObj.layers[i];
+          
+          var layerId = layerObj.layerId;
+          var viewName = layerObj.viewName;
+          var sldName = layerObj.sldName || "";  // This should be enabled we wire up the interface or set up a better test process
+          var displayName = layerObj.layerName || "N/A";
           var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
 
           var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
@@ -425,6 +509,7 @@
           b.id = id;  
           ids.push(id);  
           this._overlayLayers.put(id, b);
+          this._layerCache.put(layerId, b);
 
           // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
           // It often helps new users to see an overlay in action on initial map load.
@@ -435,9 +520,11 @@
           }
 
           html += '<div class="row-form">';
-          html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
+          html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+id+'">'+displayName+'</label>';
-          html += '<div class="cell"><a href="#" class="ico-remove">remove</a><a href="#" class="ico-edit">edit</a><a href="#" class="ico-control">control</a></div>';
+          html += '<div class="cell"><a href="#" data-id="'+layerId+'" class="ico-remove">remove</a>';
+          html += '<a href="#" data-id="'+layerId+'" class="ico-edit">edit</a>';
+          html += '<a href="#" data-id="'+layerId+'" class="ico-control">control</a></div>';
           html += '</div>';                   
         }
 
@@ -459,14 +546,19 @@
         this._rendered = true;       
       },
       
+      
+      
       _refreshMap : function(){
         
         var that = this;
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
-            new GDB.StandardRequest({
+            new Mojo.ClientRequest({
                 onSuccess : function(json){
                   var jsonObj = Mojo.Util.toObject(json);
                   that._refreshMapInternal(jsonObj);
+                },
+                onFailure : function(e){
+                  that.handleException(e);
                 }
             })
             , this._mapId);
@@ -481,26 +573,36 @@
         
         var that = this;
         
-        var request = new GDB.StandardRequest({
+        var request = new Mojo.ClientRequest({
           onSuccess : function(html){
-            
-            var exec = Mojo.Util.extractScripts(html);
-            
-            var modal = $(DynamicMap.LAYER_MODAL).first();
-            modal.html(html);
-            jcf.customForms.replaceAll(modal[0]);
-            
-            eval(exec);
-            
-            // Add layer styling event listeners
-            ////
-            that._selectColor();   // test
-            that._selectLayerType(); // test
+            that._displayLayerForm(html, false);
+          },
+          onFailure : function(e){
+            that.handleException(e);
           }
         });
         
         this._LayerController.newInstance(request);
         
+      },
+      
+      _displayLayerForm : function(html, forceShow){
+        var modal = $(DynamicMap.LAYER_MODAL).first();
+        if(forceShow){
+          modal.modal('show');
+        }
+        
+        var exec = Mojo.Util.extractScripts(html);
+        
+        modal.html(html);
+        jcf.customForms.replaceAll(modal[0]);
+        
+        
+        // Add layer styling event listeners
+        this._selectColor();
+        this._selectLayerType();
+        
+        eval(exec);
       },
       
       /**
@@ -511,7 +613,7 @@
       _selectColor : function(){
     	  
     	  // color dropdown buttons
-    	  $('.color-holder').colpick({
+    	  var total1 = $('.color-holder').colpick({
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
@@ -520,13 +622,13 @@
     		}); 
     	  
     	  // category layer type colors
-    	  $("#category-colors-container").find('.icon-color').colpick({
+    	  var total2 = $("#category-colors-container").find('.icon-color').colpick({
   			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
   			onChange:function(hsb,hex,rgb,el,bySetColor) {
   				$(el).css('background','#'+hex);
   				$(el).find('.color-input').attr('value', '#'+hex);
   			}
-  		});
+    	  });
       },
       
       /**

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1948836873)
+@com.runwaysdk.business.ClassSignature(hash = -1220587918)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -17,6 +17,8 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   private com.runwaysdk.business.Struct displayLabel = null;
   
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String FILTERDATE = "filterDate";
+  public static java.lang.String FROMDATE = "fromDate";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -25,8 +27,9 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
+  public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1948836873;
+  private static final long serialVersionUID = -1220587918;
   
   public DashboardBase()
   {
@@ -131,6 +134,74 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttribute getFilterDate()
+  {
+    if (getValue(FILTERDATE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttribute.get(getValue(FILTERDATE));
+    }
+  }
+  
+  public String getFilterDateId()
+  {
+    return getValue(FILTERDATE);
+  }
+  
+  public void validateFilterDate()
+  {
+    this.validateAttribute(FILTERDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getFilterDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return mdClassIF.definesAttribute(FILTERDATE);
+  }
+  
+  public void setFilterDate(com.runwaysdk.system.metadata.MdAttribute value)
+  {
+    if(value == null)
+    {
+      setValue(FILTERDATE, "");
+    }
+    else
+    {
+      setValue(FILTERDATE, value.getId());
+    }
+  }
+  
+  public java.util.Date getFromDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(FROMDATE));
+  }
+  
+  public void validateFromDate()
+  {
+    this.validateAttribute(FROMDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getFromDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return mdClassIF.definesAttribute(FROMDATE);
+  }
+  
+  public void setFromDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(FROMDATE, "");
+    }
+    else
+    {
+      setValue(FROMDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
     }
   }
   
@@ -320,6 +391,34 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
     return mdClassIF.definesAttribute(SITEMASTER);
+  }
+  
+  public java.util.Date getToDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(TODATE));
+  }
+  
+  public void validateToDate()
+  {
+    this.validateAttribute(TODATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getToDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return mdClassIF.definesAttribute(TODATE);
+  }
+  
+  public void setToDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(TODATE, "");
+    }
+    else
+    {
+      setValue(TODATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
   }
   
   public String getType()
