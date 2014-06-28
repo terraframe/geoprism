@@ -145,7 +145,8 @@ public class SLDMapVisitor implements MapVisitor
       if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
-        String attribute = tStyle.getAttribute();
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
         String minAttr = SLDConstants.getMinProperty(attribute);
         String maxAttr = SLDConstants.getMaxProperty(attribute);
         
@@ -212,7 +213,8 @@ public class SLDMapVisitor implements MapVisitor
       if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
-        String attribute = tStyle.getAttribute();
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
         String minAttr = SLDConstants.getMinProperty(attribute);
         String maxAttr = SLDConstants.getMaxProperty(attribute);
         
