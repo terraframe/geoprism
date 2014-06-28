@@ -362,4 +362,17 @@ public class DashboardMap extends DashboardMapBase implements
 
     super.delete();
   }
+  
+  /**
+   * Cleans old map artifacts.
+   * 
+   * TODO although it's not a problem to blindly remove layers/styles, there might
+   * be a better way to save unchanged resources and avoid costly regeneration. 
+   */
+  public static void cleanup()
+  {
+    // Delete all generated views
+    List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
+    Database.dropViews(viewNames);
+  }
 }

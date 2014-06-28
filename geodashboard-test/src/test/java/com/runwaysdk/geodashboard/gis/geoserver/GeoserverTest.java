@@ -472,8 +472,7 @@ import com.runwaysdk.util.FileIO;
       stateInfoView.delete();
       
       // Delete all generated views
-      List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
-      Database.dropViews(viewNames);
+      DashboardMap.cleanup();
 
       MdBusiness.get(stateInfo.getId()).delete();
       Universal.get(country.getId()).delete();

@@ -178,6 +178,10 @@ public class DashboardLayer extends DashboardLayerBase implements
       {
         DashboardStyle style = iter.next();
 
+        // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
+        // but we need to define a non-thematic's behavior or even finalize
+        // on the semantics of a layer without a thematic attribute...which might
+        // not even exist!
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;

@@ -4,14 +4,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdView;
 
 public class MetadataWrapper extends MetadataWrapperBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -26,25 +29,19 @@ public class MetadataWrapper extends MetadataWrapperBase implements
   @Override
   public void delete()
   {
-//    MdClass md = this.getWrappedMdClass();
-//    if(md instanceof MdView)
-//    {
-//      md.delete();
-//    }
-    
     for(AttributeWrapper aw : this.getAllAttributeWrapper())
     {
       aw.delete();
     }
-    
+
     super.delete();
+    
+    this.getWrappedMdClass().delete();
   }
 
   public MdAttributeView[] getSortedAttributes()
   {
     String mdId = this.getWrappedMdClassId();
-
-    MdClassDAOIF md = (MdClassDAOIF) MdClassDAO.get(mdId);
 
     List<MdAttributeView> mdAttr = new LinkedList<MdAttributeView>();
     Locale locale = Session.getCurrentLocale();
