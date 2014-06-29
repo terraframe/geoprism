@@ -1,88 +1,108 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import org.json.JSONException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.ClientException;
-import com.runwaysdk.controller.ErrorUtility;
+import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
-import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
-public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardLayerController extends DashboardLayerControllerBase implements
+    com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLayer/";
-  public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
+
+  public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
+
+  private static final Log log = LogFactory.getLog(DashboardLayerController.class);
   
-  public DashboardLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  public DashboardLayerController(javax.servlet.http.HttpServletRequest req,
+      javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
-  
-  public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
-    if(!dto.isNewInstance())
+    if (!dto.isNewInstance())
     {
       dto.unlock();
     }
   }
-  public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     this.edit(dto.getId());
   }
-  public void create(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void create(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.apply();
       this.view(dto.getId());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failCreate(dto);
     }
   }
-  public void failCreate(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failCreate(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  public void delete(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void delete(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.delete();
       this.viewAll();
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failDelete(dto);
     }
   }
-  public void failDelete(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failDelete(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
+
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.lock(super.getClientRequest(), id);
-    
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO
+        .lock(super.getClientRequest(), id);
+
     // There will be one style only for this layer (for IDE)
     DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
 
     this.loadLayerData(layer, style);
-    
+
     render("editComponent.jsp");
   }
+
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.view(id);
   }
-  
+
   /**
    * Loads artifacts for layer/style CRUD.
    * 
@@ -91,14 +111,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    
+
     req.setAttribute("layer", layer);
 
     req.setAttribute("style", style);
-    
+
     String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
     req.setAttribute("fonts", fonts);
-    
+
     // get the universals
     UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
     req.setAttribute("universals", universals.getResultSet());
@@ -113,96 +133,121 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
     req.setAttribute("features", features);
   }
-  
+
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(
+        clientRequest);
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
-    
+
     this.loadLayerData(layer, style);
-    
+
     render("createComponent.jsp");
   }
+
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
-  public void update(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void update(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.apply();
       this.view(dto.getId());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failUpdate(dto);
     }
   }
-  public void failUpdate(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failUpdate(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
+      throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
+
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("layer", com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.get(clientRequest, id));
+    req.setAttribute("layer",
+        com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
+
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
+
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.getAllInstances(clientRequest, null, true, 20, 1);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO
+        .getAllInstances(clientRequest, null, true, 20, 1);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
+
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
-  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
+
+  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending,
+      java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException,
+      javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO
+        .getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending,
+      java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException,
+      javax.servlet.ServletException
   {
     resp.sendError(500);
   }
-  
+
   @Override
-  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException,
-      ServletException
+  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId)
+      throws IOException, ServletException
   {
     try
     {
       layer.applyWithStyle(style, mapId);
     }
-    catch(Throwable t)
+    catch (Throwable t)
     {
-      boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
+      this.loadLayerData(layer, (DashboardThematicStyleDTO) style);
 
-      if (needsRedirect)
+      if(t instanceof ProblemExceptionDTO)
       {
-        this.loadLayerData(layer, (DashboardThematicStyleDTO) style);
-        
-        if(layer.isNewInstance())
-        {
-          render("createComponent.jsp");
-        }
-        else
-        {
-          render("editComponent.jsp");
-        }
+        ProblemExceptionDTO ex = (ProblemExceptionDTO) t;
+        GDBErrorUtility.prepareProblems(ex, req, true);
       }
+      else
+      {
+        GDBErrorUtility.prepareThrowable(t, req);
+      }
+ 
+      if (layer.isNewInstance())
+      {
+        render("createComponent.jsp");
+      }
+      else
+      {
+        render("editComponent.jsp");
+      }
+      
     }
   }
 }
