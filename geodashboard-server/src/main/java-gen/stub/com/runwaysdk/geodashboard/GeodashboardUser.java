@@ -2,6 +2,8 @@ package com.runwaysdk.geodashboard;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
@@ -15,100 +17,112 @@ import com.runwaysdk.system.Users;
 
 public class GeodashboardUser extends GeodashboardUserBase implements com.runwaysdk.generation.loader.Reloadable
 {
-    private static final long serialVersionUID = 394889520;
+  private static final long serialVersionUID = 394889520;
 
-    public GeodashboardUser()
+  public GeodashboardUser()
+  {
+    super();
+  }
+
+  @Override
+  @Transaction
+  public void delete()
+  {
+    this.lock();
+    this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
+    this.apply();
+
+    SessionEntry.deleteByUser(this);
+
+    super.delete();
+  }
+
+  @Override
+  @Transaction
+  public void apply()
+  {
+    boolean firstApply = this.isNew() && !this.isAppliedToDB();
+    this.setSessionLimit(40);
+
+    SessionEntry.deleteByUser(this);
+
+    super.apply();
+
+    if (firstApply)
     {
-        super();
+      this.appLock();
+      this.setOwner(this);
+      super.apply();
     }
+  }
 
-    @Override
-    @Transaction
-    public void delete()
+  @Override
+  @Transaction
+  public void applyWithRoles(String[] roleIds)
+  {
+    this.apply();
+
+    Roles[] roles = RoleView.getGeodashboardRoles();
+    List<String> list = Arrays.asList(roleIds);
+
+    UserDAOIF user = UserDAO.get(this.getId());
+
+    /*
+     * Assign roles
+     */
+    for (Roles role : roles)
     {
-        this.appLock();
-        this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
-        this.apply();
+      RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
 
-        SessionEntry.deleteByUser(this);
-
-        super.delete();
+      if (list.contains(role.getId()))
+      {
+        roleDAO.assignMember(user);
+      }
+      else
+      {
+        roleDAO.deassignMember(user);
+      }
     }
+  }
 
-    @Override
-    @Transaction
-    public void apply()
+  public static GeodashboardUser getByUsername(String username)
+  {
+    GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+    query.WHERE(query.getUsername().EQ(username));
+
+    OIterator<? extends GeodashboardUser> it = query.getIterator();
+
+    try
     {
-        boolean firstApply = this.isNew() && !this.isAppliedToDB();
-        this.setSessionLimit(40);
+      if (it.hasNext())
+      {
+        return it.next();
+      }
 
-        SessionEntry.deleteByUser(this);
-
-        super.apply();
-
-        if (firstApply)
-        {
-            this.appLock();
-            this.setOwner(this);
-            super.apply();
-        }
+      // TODO Change exception type
+      throw new RuntimeException("Unknown user [" + username + "]");
     }
-
-    @Override
-    @Transaction
-    public void applyWithRoles(String[] roleIds)
+    finally
     {
-        this.apply();
-
-        Roles[] roles = RoleView.getGeodashboardRoles();
-        List<String> list = Arrays.asList(roleIds);
-
-        UserDAOIF user = UserDAO.get(this.getId());
-
-        /*
-         * Assign roles
-         */
-        for (Roles role : roles)
-        {
-            RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
-
-            if (list.contains(role.getId()))
-            {
-                roleDAO.assignMember(user);
-            }
-            else
-            {
-                roleDAO.deassignMember(user);
-            }
-        }
+      it.close();
     }
+  }
 
-    public static GeodashboardUser getByUsername(String username)
-    {
-        GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
-        query.WHERE(query.getUsername().EQ(username));
+  public static GeodashboardUser getCurrentUser()
+  {
+    return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
+  }
 
-        OIterator<? extends GeodashboardUser> it = query.getIterator();
+  public static Boolean isRoleMemeber(String roles)
+  {
+    // TODO roles should actually be a ',' delimited list of role names
+    // isRoleMember should return true if the user is a member of any of the roles
+    // specified in the role name list.
+    
+    Map<String, String> map = Session.getCurrentSession().getUserRoles();
+    Set<String> keySet = map.keySet();
 
-        try
-        {
-            if (it.hasNext())
-            {
-                return it.next();
-            }
-
-            // TODO Change exception type
-            throw new RuntimeException("Unknown user [" + username + "]");
-        }
-        finally
-        {
-            it.close();
-        }
-    }
-
-    public static GeodashboardUser getCurrentUser()
-    {
-        return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
-    }
+    return keySet.contains(roles);
+  }
 
 }

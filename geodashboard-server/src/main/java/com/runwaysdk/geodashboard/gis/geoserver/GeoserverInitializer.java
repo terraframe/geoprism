@@ -8,7 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class GeoserverInitializer implements UncaughtExceptionHandler
+import com.runwaysdk.generation.loader.Reloadable;
+
+public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadable
 {
   private static boolean             initialized = false;
 
