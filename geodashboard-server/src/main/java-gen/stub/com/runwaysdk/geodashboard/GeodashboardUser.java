@@ -7,83 +7,108 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
 
 public class GeodashboardUser extends GeodashboardUserBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = 394889520;
+    private static final long serialVersionUID = 394889520;
 
-  public GeodashboardUser()
-  {
-    super();
-  }
-
-  @Override
-  @Transaction
-  public void delete()
-  {
-    this.appLock();
-    this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
-    this.apply();
-
-    SessionEntry.deleteByUser(this);
-    
-    super.delete();
-  }
-
-  @Override
-  @Transaction
-  public void apply()
-  {
-    boolean firstApply = this.isNew() && !this.isAppliedToDB();
-    this.setSessionLimit(40);
-
-    SessionEntry.deleteByUser(this);
-    
-    super.apply();
-
-    if (firstApply)
+    public GeodashboardUser()
     {
-      this.appLock();
-      this.setOwner(this);
-      super.apply();
+        super();
     }
-  }
 
-  @Override
-  @Transaction
-  public void applyWithRoles(String[] roleIds)
-  {
-    this.apply();
-
-    Roles[] roles = RoleView.getGeodashboardRoles();
-    List<String> list = Arrays.asList(roleIds);
-
-    UserDAOIF user = UserDAO.get(this.getId());
-
-    /*
-     * Assign roles
-     */
-    for (Roles role : roles)
+    @Override
+    @Transaction
+    public void delete()
     {
-      RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
+        this.appLock();
+        this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
+        this.apply();
 
-      if (list.contains(role.getId()))
-      {
-        roleDAO.assignMember(user);
-      }
-      else
-      {
-        roleDAO.deassignMember(user);
-      }
+        SessionEntry.deleteByUser(this);
+
+        super.delete();
     }
-  }
 
-  public static GeodashboardUser getCurrentUser()
-  {
-    return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
-  }
+    @Override
+    @Transaction
+    public void apply()
+    {
+        boolean firstApply = this.isNew() && !this.isAppliedToDB();
+        this.setSessionLimit(40);
+
+        SessionEntry.deleteByUser(this);
+
+        super.apply();
+
+        if (firstApply)
+        {
+            this.appLock();
+            this.setOwner(this);
+            super.apply();
+        }
+    }
+
+    @Override
+    @Transaction
+    public void applyWithRoles(String[] roleIds)
+    {
+        this.apply();
+
+        Roles[] roles = RoleView.getGeodashboardRoles();
+        List<String> list = Arrays.asList(roleIds);
+
+        UserDAOIF user = UserDAO.get(this.getId());
+
+        /*
+         * Assign roles
+         */
+        for (Roles role : roles)
+        {
+            RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
+
+            if (list.contains(role.getId()))
+            {
+                roleDAO.assignMember(user);
+            }
+            else
+            {
+                roleDAO.deassignMember(user);
+            }
+        }
+    }
+
+    public static GeodashboardUser getByUsername(String username)
+    {
+        GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+        query.WHERE(query.getUsername().EQ(username));
+
+        OIterator<? extends GeodashboardUser> it = query.getIterator();
+
+        try
+        {
+            if (it.hasNext())
+            {
+                return it.next();
+            }
+
+            // TODO Change exception type
+            throw new RuntimeException("Unknown user [" + username + "]");
+        }
+        finally
+        {
+            it.close();
+        }
+    }
+
+    public static GeodashboardUser getCurrentUser()
+    {
+        return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
+    }
 
 }

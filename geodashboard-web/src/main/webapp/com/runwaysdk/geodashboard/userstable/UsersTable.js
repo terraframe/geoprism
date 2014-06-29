@@ -53,8 +53,6 @@
     "passwordMismatch" : "Passwords do not match",
     "invalidEmail" : "Invalid email address format",
     "admin" : "Admin",
-    "adminRoleHeader" : "System roles",
-    "dashboardRoleHeader" : "Dashboard roles",
     "accountInfo" : "Account information",
     "userInfo" : "User information",
     "allow" : "allow",
@@ -94,14 +92,13 @@
       
     Instance : {
        
-      initialize : function(factory, user, adminRoles, dashboardRoles) {
+      initialize : function(factory, user, rolesMap) {
         this._factory = factory;
         this._user = user;
         this._roleMd = new com.runwaysdk.system.Roles();
-        this._adminRoles = adminRoles;
-        this._dashboardRoles = dashboardRoles;
+        this._rolesMap = rolesMap;
         this._listeners = [];
-        this._hasRoles = (this._roleMd.isWritable() && adminRoles.length > 0 && dashboardRoles.length > 0 );
+        this._hasRoles = (this._roleMd.isWritable() && rolesMap != null);
       },
       
       addListener : function (listener)
@@ -358,30 +355,31 @@
         // Check if the this._user has role permssions
         if(!readOnly && this._hasRoles)
         {
-          // Build the admin role section
-          form.appendElement(this._newHeader(this.localize('adminRoleHeader')));
-          
-          for (var i = 0; i < this._adminRoles.length; ++i) {
-            var role = this._adminRoles[i];
-            var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
-            
-            var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
-            form.addEntry(entry);
-          }  
-          
-          // Build the dashboard role section
-          form.appendElement(this._newHeader(this.localize('dashboardRoleHeader')));
-
-          for (var i = 0; i < this._dashboardRoles.length; ++i) {
-            var role = this._dashboardRoles[i];
-            var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
-              
-            var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
-            form.addEntry(entry);
-          }  
+          this.buildRoles(form);	        	
         }
                   
         return form;
+      },
+      
+      buildRoles : function(form) {
+        for (var k in this._rolesMap)
+        {
+          if (this._rolesMap.hasOwnProperty(k))
+          {
+            var roles = this._rolesMap[k];
+              
+            // Build the admin role section
+            form.appendElement(this._newHeader(this.localize(k)));
+                
+            for (var i = 0; i < roles.length; ++i) {
+              var role = roles[i];
+              var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
+                  
+              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
+              form.addEntry(entry);
+            }
+          }
+        }    	  
       },
         
       _newHeader : function(displayLabel) {
@@ -452,6 +450,19 @@
     }
   });
   
+  ClassFramework.newClass('com.runwaysdk.ui.userstable.UserFormConfiguator', {
+	  Instance : {
+		get : function(factory, user, rolesMap) {
+		  return new com.runwaysdk.ui.userstable.UserFormBuilder(factory, user, rolesMap);
+        },
+        
+        getRoles : function(callback, user)
+        {
+          com.runwaysdk.geodashboard.RoleView.getRoles(callback, user);
+        }
+	  }	  
+  });
+  
   ClassFramework.newClass('com.runwaysdk.ui.userstable.UserForm', {
       
     Extends : Widget,
@@ -464,6 +475,8 @@
         this._footer = null;
                   
         this.$initialize("div");
+        
+        this._configuator = (cfg.configuator || new com.runwaysdk.ui.userstable.UserFormConfiguator());
       },
       getFactory : function ()
       {
@@ -512,7 +525,7 @@
     	this.setInnerHTML('');
     	this._footer = null;
     	  
-        var builder = new com.runwaysdk.ui.userstable.UserFormBuilder(this.getFactory(), user, [], []);
+        var builder = this.builder(this.getFactory(), user, null);
         builder.render(this, readOnly);
         builder.addListener(this);            	    	  
       },
@@ -565,7 +578,7 @@
         // Build the form
         tq.addTask(new Structure.TaskIF({
           start : function(){
-            var builder = new com.runwaysdk.ui.userstable.UserFormBuilder(that.getFactory(), user, [], []);
+            var builder = that._configuator.get(that.getFactory(), user, null);
             builder.render(that, true);
             builder.addListener(that);
               
@@ -594,6 +607,7 @@
         cfg.queryType = cfg.queryType || defaultQueryType;
         this._config = cfg;        
         this._roleMd = new com.runwaysdk.system.Roles();
+        this._configuator = (cfg.configuator || new com.runwaysdk.ui.userstable.UserFormConfiguator());
                 
         this.$initialize("div");        
       },
@@ -647,8 +661,7 @@
         var Structure = com.runwaysdk.structure;
         var tq = new Structure.TaskQueue();
         var that = this;
-        var adminRoles = [];
-        var dashboardRoles = [];
+        var rolesMap = {};
           
         // First load the users admin role information
         tq.addTask(new Structure.TaskIF({
@@ -656,8 +669,16 @@
           
             var callback = new Mojo.ClientRequest({
               onSuccess : function(roles) {
-                for(var i = 0; i < roles.length; i++) {
-                  adminRoles.push(roles[i]);                  
+                for(var i = 0; i < roles.length; i++)
+                {
+                  var groupName = roles[i].getGroupName();
+                  
+                  if(rolesMap[groupName] == null)
+                  {
+                    rolesMap[groupName] = [];
+                  }
+                  
+                  rolesMap[groupName].push(roles[i]);                  
                 }
                 
                 tq.next();
@@ -667,30 +688,8 @@
                 that.handleException(ex);               
               }
             }); 
-                  
-            com.runwaysdk.geodashboard.RoleView.getAdminRoles(callback, user);
-          }
-        }));
-        
-        // Second load the users dashboard role information
-        tq.addTask(new Structure.TaskIF({
-          start : function(){
-            
-            var callback = new Mojo.ClientRequest({
-              onSuccess : function(roles) {
-                for(var i = 0; i < roles.length; i++) {
-                  dashboardRoles.push(roles[i]);                  
-                }
-                  
-                tq.next();
-              },
-              onFailure : function(ex) {
-                tq.stop();
-                that.handleException(ex);               
-              }
-            }); 
-                    
-            com.runwaysdk.geodashboard.RoleView.getDashboardRoles(callback, user);
+
+            that._configuator.getRoles(callback, user);
           }
         }));
                      
@@ -702,7 +701,7 @@
         
             var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});        
             
-            var builder = new com.runwaysdk.ui.userstable.UserFormBuilder(fac, user, adminRoles, dashboardRoles);
+            var builder = that._configuator.get(fac, user, rolesMap);
             builder.addListener({
               handleEvent : function(event) {
                 if(event.getEventType() === UserFormEvent.APPLY_SUCCESS) {

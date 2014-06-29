@@ -9,7 +9,6 @@
   String webappRoot = request.getContextPath() + "/";
 %>
 
-
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -46,18 +45,6 @@
 		  <label> <gdb:localize key="login.password" />: </label>
 		  <mjl:input param="password" type="password" id="password" value="" />
 		</p>
-  
-    <!--
-    <p>
-      <label for="login">Email:</label>
-      <input type="text" name="login" id="login">
-    </p>
-
-    <p>
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password">
-    </p>
-    -->
 
     <p class="login-submit">
       <button type="submit" class="login-button"><gdb:localize key="login.button" /></button>
