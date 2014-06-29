@@ -223,7 +223,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     try
     {
-      mapId = mapId.substring(5); // forces an error
       layer.applyWithStyle(style, mapId);
     }
     catch (Throwable t)
