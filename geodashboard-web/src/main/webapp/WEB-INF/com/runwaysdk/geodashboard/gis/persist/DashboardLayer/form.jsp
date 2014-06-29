@@ -12,8 +12,17 @@
           <h1>New map layer for Number of Units</h1>
         </div>
           <fieldset>
-            <legend class="none"> modal form</legend>
-            <button class="button none">sabmit</button>
+
+          <c:if test="${errorMessage != null || errorMessageArray != null}">
+            <div class="row-holder">
+              <div class="label-holder">
+              </div>
+              <div class="holder">
+                <%@include file="../../../../../../templates/inlineError.jsp" %>
+              </div>
+            </div>
+          </c:if>
+
             <div class="row-holder">
               <div class="label-holder">
                 <strong>Name the layer</strong>
