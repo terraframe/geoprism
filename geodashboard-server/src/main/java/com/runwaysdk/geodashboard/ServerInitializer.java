@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.scheduler.SchedulerManager;
@@ -28,6 +29,9 @@ public class ServerInitializer implements Reloadable
 
     GeoserverInitializer.setup();
     log.debug("COMLPETE: GeoserverInitializer.setup();");
+    
+    DashboardMap.cleanup();
+    log.debug("COMLPETE: DashboardMap.cleanup();");
   }
 
   @Request
