@@ -36,6 +36,8 @@
       initialize : function(mapDivId, mapId){
         this.$initialize();
         
+        
+        
         this._mapDivId = mapDivId;
         this._mapId = mapId;
         this._mdAttribute = null;
@@ -43,7 +45,12 @@
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
-        this._overlayLayers = new com.runwaysdk.structure.HashMap();     
+        
+        // key => value = dom id => Layer
+        this._overlayLayers = new com.runwaysdk.structure.HashMap();
+        
+        // key -> value = object => Layer
+        this._layerCache = new com.runwaysdk.structure.HashMap();     
         
         // The current base map (only one at a time is allowed)
         this._defaultBase = null;
@@ -100,11 +107,24 @@
         }
       },
       
+      /**
+       * Removes the Layer with the given object id (Runway Id)
+       * from all caches and the map itself.
+       * 
+       * @param id
+       */
       _removeLayer : function(id){
         
-        var removeLayer = this._overlayLayers.get(id);
-        this._map.removeLayer(removeLayer);
+        var toRemove = this._layerCache.get(id);
+        
+        // remove layer from both caches
+        this._layerCache.remove(id);
 
+        var name = toRemove.id;
+        this._overlayLayers.remove(name);
+        
+        // remove the actual layer from the map        
+        this._map.removeLayer(toRemove);
         
         // remove the layer from the map and UI
         // FIXME use selector
@@ -489,6 +509,7 @@
           b.id = id;  
           ids.push(id);  
           this._overlayLayers.put(id, b);
+          this._layerCache.put(layerId, b);
 
           // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
           // It often helps new users to see an overlay in action on initial map load.
@@ -499,7 +520,7 @@
           }
 
           html += '<div class="row-form">';
-          html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
+          html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+id+'">'+displayName+'</label>';
           html += '<div class="cell"><a href="#" data-id="'+layerId+'" class="ico-remove">remove</a>';
           html += '<a href="#" data-id="'+layerId+'" class="ico-edit">edit</a>';
@@ -592,7 +613,7 @@
       _selectColor : function(){
     	  
     	  // color dropdown buttons
-    	  $('.color-holder').colpick({
+    	  var total1 = $('.color-holder').colpick({
     			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
     			onChange:function(hsb,hex,rgb,el,bySetColor) {
     				$(el).find(".ico").css('background','#'+hex);
@@ -601,13 +622,13 @@
     		}); 
     	  
     	  // category layer type colors
-    	  $("#category-colors-container").find('.icon-color').colpick({
+    	  var total2 = $("#category-colors-container").find('.icon-color').colpick({
   			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
   			onChange:function(hsb,hex,rgb,el,bySetColor) {
   				$(el).css('background','#'+hex);
   				$(el).find('.color-input').attr('value', '#'+hex);
   			}
-  		});
+    	  });
       },
       
       /**

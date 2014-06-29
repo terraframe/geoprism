@@ -98,10 +98,13 @@ public class GeoserverTestSetup
     }
   }
 
+  @Request
   public static void main(String[] args) throws Throwable
   {
     try
     {
+      StrategyInitializer.startUp();
+      
       log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
 
       GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
@@ -116,7 +119,6 @@ public class GeoserverTestSetup
     }
   }
 
-  @Request
   @Transaction
   private static void metadataSetup()
   {
@@ -238,7 +240,6 @@ public class GeoserverTestSetup
     da2.apply();
   }
 
-  @Request
   @Transaction
   private static void dataSetup()
   {

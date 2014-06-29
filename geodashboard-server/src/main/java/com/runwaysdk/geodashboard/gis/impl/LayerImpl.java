@@ -3,6 +3,7 @@ package com.runwaysdk.geodashboard.gis.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -19,6 +20,8 @@ public class LayerImpl extends ComponentImpl implements Layer
   private FeatureType featureType;
 
   private Boolean displayInLegend;
+  
+  private FeatureStrategy featureStrategy;
   
   public LayerImpl()
   {
@@ -88,6 +91,17 @@ public class LayerImpl extends ComponentImpl implements Layer
   public void setDisplayInLegend(Boolean display)
   {
     this.displayInLegend = display;
+  }
+  
+  @Override
+  public FeatureStrategy getFeatureStrategy()
+  {
+    return featureStrategy;
+  }
+  
+  public void setFeatureStrategy(FeatureStrategy featureStrategy)
+  {
+    this.featureStrategy = featureStrategy;
   }
 
 }

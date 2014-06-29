@@ -1,6 +1,6 @@
 package com.test.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1200774170)
+@com.runwaysdk.business.ClassSignature(hash = -1914603853)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,9 +12,10 @@ public abstract class StateInfoViewBase extends com.runwaysdk.business.View impl
 {
   public final static String CLASS = "com.test.geodashboard.StateInfoView";
   public static java.lang.String ID = "id";
+  public static java.lang.String STUDYDATE = "studyDate";
   public static java.lang.String VIEWRANK = "viewRank";
   public static java.lang.String VIEWRATIO = "viewRatio";
-  private static final long serialVersionUID = -1200774170;
+  private static final long serialVersionUID = -1914603853;
   
   public StateInfoViewBase()
   {
@@ -35,6 +36,34 @@ public abstract class StateInfoViewBase extends com.runwaysdk.business.View impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfoView.CLASS);
     return mdClassIF.definesAttribute(ID);
+  }
+  
+  public java.util.Date getStudyDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateUtil.getTypeSafeValue(getValue(STUDYDATE));
+  }
+  
+  public void validateStudyDate()
+  {
+    this.validateAttribute(STUDYDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStudyDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.test.geodashboard.StateInfoView.CLASS);
+    return mdClassIF.definesAttribute(STUDYDATE);
+  }
+  
+  public void setStudyDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(STUDYDATE, "");
+    }
+    else
+    {
+      setValue(STUDYDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATE_FORMAT).format(value));
+    }
   }
   
   public Integer getViewRank()

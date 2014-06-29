@@ -4,20 +4,21 @@ import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
 
 import java.net.MalformedURLException;
+import java.util.ResourceBundle;
 
 import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.business.BusinessDTO;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
 import com.runwaysdk.configuration.RunwayConfigurationException;
+import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.GDBConfigurationManager.GDBConfigGroup;
 
 public class GeoserverProperties implements Reloadable
 {
-  private static final String          GEOSERVER_PROPERTIES = "geoserver.properties";
+  private static final String          GEOSERVER_PROPERTIES = "geoserver";
   
-  private ConfigurationReaderIF reader;
+  private ResourceBundle bundle;
 
   private static GeoServerRESTPublisher publisher;
 
@@ -27,17 +28,17 @@ public class GeoserverProperties implements Reloadable
   
   private GeoserverProperties()
   {
-    reader = ConfigurationManager.getReader(GDBConfigGroup.SERVER, GEOSERVER_PROPERTIES);
-  }
+    bundle = ResourceBundle.getBundle(GEOSERVER_PROPERTIES, CommonProperties.getDefaultLocale(),
+        BusinessDTO.class.getClassLoader());  }
   
   private static class Singleton implements Reloadable
   {
     private static GeoserverProperties INSTANCE = new GeoserverProperties();
   }
 
-  private static ConfigurationReaderIF getBundle()
+  private static ResourceBundle getBundle()
   {
-    return Singleton.INSTANCE.reader;
+    return Singleton.INSTANCE.bundle;
   }
   
   public static Integer getDecimalLength()
@@ -52,52 +53,52 @@ public class GeoserverProperties implements Reloadable
 
   public static String getWorkspace()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.workspace");
+    return getBundle().getString("geoserver.workspace");
   }
   
   public static Integer getSessionMapLimit()
   {
-    return Integer.valueOf(Singleton.INSTANCE.reader.getString("geoserver.session.map.limit"));
+    return Integer.valueOf(getBundle().getString("geoserver.session.map.limit"));
   }
 
   public static Integer getSavedMapLimit()
   {
-    return Integer.valueOf(Singleton.INSTANCE.reader.getString("geoserver.saved.map.limit"));
+    return Integer.valueOf(getBundle().getString("geoserver.saved.map.limit"));
   }
 
   public static String getStore()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.store");
+    return getBundle().getString("geoserver.store");
   }
 
   public static String getAdminUser()
   {
-    return Singleton.INSTANCE.reader.getString("admin.user");
+    return getBundle().getString("admin.user");
   }
 
   public static String getAdminPassword()
   {
-    return Singleton.INSTANCE.reader.getString("admin.password");
+    return getBundle().getString("admin.password");
   }
 
   public static String getRemotePath()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.remote.path");
+    return getBundle().getString("geoserver.remote.path");
   }
 
   public static String getLocalPath()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.local.path");
+    return getBundle().getString("geoserver.local.path");
   }
 
   public static String getGeoserverSLDDir()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.sld.dir");
+    return getBundle().getString("geoserver.sld.dir");
   }
 
   public static String getGeoserverGWCDir()
   {
-    return Singleton.INSTANCE.reader.getString("geoserver.gwc.dir");
+    return getBundle().getString("geoserver.gwc.dir");
   }
 
   /**

@@ -1,5 +1,11 @@
 package com.runwaysdk.geodashboard;
 
+import java.rmi.ServerException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.transaction.LockObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -26,6 +32,8 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
 {
   private static final long serialVersionUID = -1326763274;
 
+  private static final Log log  = LogFactory.getLog(SessionEntry.class);
+  
   public SessionEntry()
   {
     super();
@@ -62,21 +70,101 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   @Transaction
   public synchronized static void deleteAll()
   {
-    SessionEntryQuery q = new SessionEntryQuery(new QueryFactory());
-
-    OIterator<? extends SessionEntry> iter = q.getIterator();
+    log.debug("Preparing to delete all SessionEntry objects.");
+    
     try
     {
-      while (iter.hasNext())
+      SessionEntryQuery q = new SessionEntryQuery(new QueryFactory());
+
+      OIterator<? extends SessionEntry> iter = q.getIterator();
+      try
       {
-        iter.next().delete();
+        while (iter.hasNext())
+        {
+          iter.next().delete();
+        }
+      }
+      catch(Throwable t)
+      {
+        // only a dev should cause this mistake
+        String msg = "Failed to delete all SessionEntry.deleteAll() objects.";
+        log.error(msg);
+        throw new ProgrammingErrorException(msg, t);
+      }
+      finally
+      {
+        iter.close();
       }
     }
-    finally
+    catch (Throwable t)
     {
-      iter.close();
+      // only a dev should cause this mistake
+      String msg = "Failed to delete all SessionEntry.deleteAll() objects.";
+      log.error(msg);
+      throw new ProgrammingErrorException(msg, t);
     }
   }
+
+  /*
+   * 
+   * <log4j:throwable><![CDATA[org.aspectj.lang.NoAspectBoundException^M at
+   * org.aspectj.runtime.internal.CFlowStack.peekInstance(CFlowStack.java:101)^M
+   * at
+   * com.runwaysdk.session.RequestManagement.aspectOf(RequestManagement.aj:1)^M
+   * at com.runwaysdk.dataaccess.transaction.TransactionManagement.
+   * getRequestProblemList(TransactionManagement.aj:73)^M at
+   * com.runwaysdk.dataaccess.transaction.AbstractTransactionManagement.
+   * ajc$inlineAccessMethod$com_runwaysdk_dataaccess_transaction_AbstractTransactionManagement$com_runwaysdk_dataaccess_transaction_AbstractTransactionManagement$getRequestProblemList
+   * (AbstractTransactionManagement.aj:1)^M at
+   * com.runwaysdk.business.Element.delete_aroundBody7$advice
+   * (Element.java:1033)^M at
+   * com.runwaysdk.business.Element.delete_aroundBody8(Element.java:1)^M at
+   * com.runwaysdk.business.Element.delete_aroundBody10(Element.java:1)^M at
+   * com.
+   * runwaysdk.business.Element.delete_aroundBody11$advice(Element.java:763)^M
+   * at com.runwaysdk.business.Element.delete(Element.java:1)^M at
+   * com.runwaysdk.
+   * geodashboard.gis.persist.DashboardThematicStyle.delete(DashboardThematicStyle
+   * .java:40)^M at
+   * com.runwaysdk.geodashboard.gis.persist.DashboardLayer.delete(
+   * DashboardLayer.java:327)^M at
+   * com.runwaysdk.geodashboard.gis.persist.DashboardMap
+   * .delete(DashboardMap.java:360)^M at
+   * com.runwaysdk.geodashboard.SessionEntry.delete(SessionEntry.java:52)^M at
+   * com.runwaysdk.geodashboard.SessionEntry.deleteAll(SessionEntry.java:72)^M
+   * at
+   * com.runwaysdk.geodashboard.ServerInitializer.initialize(ServerInitializer
+   * .java:16)^M at sun.reflect.NativeMethodAccessorImpl.invoke0(Native
+   * Method)^M at
+   * sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl
+   * .java:39)^M at
+   * sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl
+   * .java:25)^M at java.lang.reflect.Method.invoke(Method.java:597)^M at
+   * com.runwaysdk
+   * .geodashboard.gis.web.context.GeodashboardContextListener.contextInitialized
+   * (GeodashboardContextListener.java:14)^M at
+   * org.apache.catalina.core.StandardContext
+   * .listenerStart(StandardContext.java:4206)^M at
+   * org.apache.catalina.core.StandardContext.start(StandardContext.java:4705)^M
+   * at
+   * org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java
+   * :799)^M at
+   * org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:779)^M
+   * at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:601)^M
+   * at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:943)^M
+   * at org.apache.catalina.startup.HostConfig.deployWARs(HostConfig.java:778)^M
+   * at org.apache.catalina.startup.HostConfig.deployApps(HostConfig.java:504)^M
+   * at org.apache.catalina.startup.HostConfig.start(HostConfig.java:1317)^M at
+   * org
+   * .apache.catalina.startup.HostConfig.lifecycleEvent(HostConfig.java:324)^M
+   * at
+   * org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport
+   * .java:142)^M at
+   * org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1065)^M at
+   * org.apache.catalina.core.StandardHost.start(StandardHost.java:840)^M at
+   * org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1057)^M at
+   * org.apache.catalina.core.StandardEngine.start(StandardEngine.java:463)^M
+   */
 
   private static void aquireLock(String userId)
   {
@@ -98,14 +186,14 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
   public static void deleteBySession(String sessionId)
   {
     String userId = null;
-    
+
     try
     {
       SessionEntry entry = SessionEntry.getByKey(sessionId);
       userId = entry.getSessionUserId();
-      
+
       aquireLock(userId);
-      
+
       entry.delete();
     }
     catch (DataNotFoundException ex)
@@ -116,7 +204,7 @@ public class SessionEntry extends SessionEntryBase implements com.runwaysdk.gene
     }
     finally
     {
-      if(userId != null)
+      if (userId != null)
       {
         releaseUnlock(userId);
       }

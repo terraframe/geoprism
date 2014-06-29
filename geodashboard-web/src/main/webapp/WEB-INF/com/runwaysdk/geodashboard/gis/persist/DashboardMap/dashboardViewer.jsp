@@ -125,7 +125,7 @@ $(document).ready(function(){
         <article class="accordion info-box" id="base-map-container">
             <div class="accordion-group sales-accortion">
               <div class="accordion-heading">
-                <a class="map-layers-opener opener collapsed" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"> Base Maps </a>
+                <a class="map-layers-opener opener" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"> Base Maps </a>
               </div>
               <div id="collapse-base-maps" class="accordion-body" style="height: 0px;">
                 <div class="accordion-inner holder" id="baseLayerContainer"></div>
@@ -140,9 +140,9 @@ $(document).ready(function(){
       </fieldset>
     </form>
     <!-- contain aside of the page -->
-    <aside class="aside animated slideInRight">
+    <aside class="aside animated slideInRight" id="dashboardMetadata">
       <div class="nav-bar">
-        <a href="#" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
+        <a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
         <div class="sales-menu dropdown">
           
           <c:forEach items="${dashboards}" var="dashboard" varStatus="status">
@@ -165,22 +165,27 @@ $(document).ready(function(){
       </div>
         <button class="none">submit</button>
         <div class="choice-form">
+        
           <div class="row-holder">
-            <input type="text" autocomplete="off" id="geocode" name="geocode" class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;" />
+            <label class="none" for="geocode">choice select</label>
+            <span class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;">
+            <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
+            </span>
           </div>
+
           <!-- datapicker block -->
           <div class="data-block">
             <div class="col">
               <label for="from-field">From</label>
               <span class="text">
-                <input disabled="disabled" class="checkin" id="from-field" type="text" placeholder="">
+                <input class="checkin" id="from-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
             <div class="col">
               <label for="to-field">To</label>
               <span class="text">
-                <input disabled="disabled" class="checkout" id="to-field" type="text" placeholder="">
+                <input class="checkout" id="to-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
@@ -208,9 +213,10 @@ $(document).ready(function(){
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
- 										  <span data-toggle="modal" data-target="#modal01">opener</span>
+ 										  <span data-toggle="modal" data-target="#modal01">map it</span>
 										</a>
 									</h4>
+									
                   <!-- slide block -->
                   <div id="collapse00${attrStatus.index}" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -257,7 +263,7 @@ $(document).ready(function(){
   <div class="slide-navigation animated slideInRight">
     <aside id="sidebar">
       <div class="widget">
-        <h3>Luke Skywalker</h3>
+        <h3>Menu</h3>
         <ul class="links-list">
           <li><a href="#">Log out</a></li>
           <li><a href="#">Account</a></li>

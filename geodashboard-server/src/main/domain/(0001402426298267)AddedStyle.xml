@@ -1,0 +1,21 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+        <create>
+          <attributes>
+            <double name="pointStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+          </attributes>
+        </create>
+      </mdBusiness>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute"/>
+    </delete>
+  </undoIt>
+</version>

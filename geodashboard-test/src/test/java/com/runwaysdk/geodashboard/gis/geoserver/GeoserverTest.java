@@ -1,22 +1,16 @@
 package com.runwaysdk.geodashboard.gis.geoserver;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +26,7 @@ import org.junit.rules.TestName;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.constants.MdAttributeDateUtil;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -60,6 +55,7 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
+import com.runwaysdk.geodashboard.gis.sld.SLDValidator;
 import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
@@ -72,6 +68,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeReference;
@@ -82,11 +79,96 @@ import com.runwaysdk.system.metadata.MdView;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
-public class GeoserverTest extends GeoserverTestSetup
-{
 
+
+
+  /**
+   * Simple class to be run as a way to load test data into the system.
+   * 
+   * @author justin
+   * 
+   */
+  public class GeoserverTest
+  {
+    protected static final String         TEST_PACKAGE   = "com.test.geodashboard";
+
+    protected static final String         TYPE_NAME      = "StateInfo";
+
+    protected static final String         VIEW_NAME      = "StateInfoView";
+
+    protected static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
+
+    protected static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
+
+    protected static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
+
+    protected static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
+
+    protected static int                  stateCount     = 0;
+
+    protected static boolean              GEOSERVER_RUNNING;
+
+    protected static final File           xsd            = new File(SLD_SCHEMA);
+
+    protected static final boolean        consoleDebug   = true;
+
+    protected static Universal            state;
+
+    protected static Universal            country;
+
+    protected static GeoEntity            usa;
+
+    protected static MdBusiness           stateInfo;
+
+    protected static MdView               stateInfoView;
+
+    protected static String               stateInfoId;
+
+    protected static MdAttributeInteger   rank;
+    
+    protected static MdAttributeDate date;
+
+    protected static MdAttributeDouble    ratio;
+
+    protected static MdAttributeReference geoentityRef;
+    
+    protected static Dashboard dashboard;
+    
+    private static boolean keepData = true;
+
+    protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
+
+    static
+    {
+      if (consoleDebug)
+      {
+        BasicConfigurator.configure();
+        RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
+      }
+    }
+
+    public static void main(String[] args) throws Throwable
+    {
+      try
+      {
+        log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
+
+        GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
+
+        metadataSetup();
+        dataSetup();
+      }
+      catch (Throwable t)
+      {
+        log.error("Unable to invoke classSetup()", t);
+        throw new RuntimeException(t);
+      }
+    }
+
+
+  public
   @Rule
-  public TestName                     name           = new TestName();
+   TestName                     name           = new TestName();
 
   /*
    * static {
@@ -156,6 +238,12 @@ public class GeoserverTest extends GeoserverTestSetup
     rank.setAttributeName("rank");
     rank.getDisplayLabel().setDefaultValue("Alphabetic Rank");
     rank.apply();
+    
+    date = new MdAttributeDate();
+    date.setDefiningMdClass(stateInfo);
+    date.setAttributeName("studyDate");
+    date.getDisplayLabel().setDefaultValue("Study Date");
+    date.apply();
     
     // ratio = rank/total (linear relationship...higher rank = 
     ratio = new MdAttributeDouble();
@@ -228,8 +316,15 @@ public class GeoserverTest extends GeoserverTestSetup
     virtualRatio.setDefiningMdView(stateInfoView);
     virtualRatio.getDisplayLabel().setDefaultValue("Crime Rate");
     virtualRatio.apply();
+
+    MdAttributeVirtual virtualDate = new MdAttributeVirtual();
+    virtualDate.setAttributeName("studyDate");
+    virtualDate.setMdAttributeConcrete(date);
+    virtualDate.setDefiningMdView(stateInfoView);
+    virtualDate.getDisplayLabel().setDefaultValue("Study Date");
+    virtualDate.apply();
     
-    Dashboard dashboard = new Dashboard();
+    dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
     dashboard.apply();
     
@@ -259,6 +354,16 @@ public class GeoserverTest extends GeoserverTestSetup
     DashboardAttributes da2 = mWrapper.addAttributeWrapper(aWrapper2);
     da2.setListOrder(1);
     da2.apply();
+    
+    // date
+    AttributeWrapper aWrapper3 = new AttributeWrapper();
+    aWrapper3.setWrappedMdAttribute(virtualDate);
+    aWrapper3.apply();
+    
+    DashboardAttributes da3 = mWrapper.addAttributeWrapper(aWrapper3);
+    da3.setListOrder(2);
+    da3.apply();
+    
   }
 
   private static void dataSetup()
@@ -286,9 +391,13 @@ public class GeoserverTest extends GeoserverTestSetup
       
       double total = q.getCount();
       
+      
       try
       {
         int count = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+
         while (iter.hasNext())
         {
           GeoEntity ge = iter.next();
@@ -309,6 +418,11 @@ public class GeoserverTest extends GeoserverTestSetup
 
           ge.addLink(usa, LocatedIn.CLASS).apply();
 
+          // add a day to the date
+          cal.roll(Calendar.DATE, true);
+          Date current = cal.getTime();
+          String dateStr = MdAttributeDateUtil.getTypeUnsafeValue(current);
+          
           Integer rankI = ++count; // 1-based starting index
           Double ratioD = rankI/total;
           
@@ -316,6 +430,7 @@ public class GeoserverTest extends GeoserverTestSetup
           si.setValue(rank.getAttributeName(), rankI.toString());
           si.setValue(ratio.getAttributeName(), ratioD.toString());
           si.setValue(geoentityRef.getAttributeName(), ge.getId());
+          si.setValue(date.getAttributeName(), dateStr);
           si.apply();
         }
 
@@ -336,8 +451,15 @@ public class GeoserverTest extends GeoserverTestSetup
   @Request
   public static void classTeardown()
   {
-    metadataTeardown();
-//    StrategyInitializer.tearDown();
+    if(keepData){
+      log.debug("Skipping teardown process.");      
+    }
+    else
+    {
+      log.debug("Starting teardown process.");      
+      metadataTeardown();
+      StrategyInitializer.shutDown();
+    }
   }
 
   @Transaction
@@ -345,6 +467,10 @@ public class GeoserverTest extends GeoserverTestSetup
   {
     try
     {
+      dashboard.delete();
+      
+      stateInfoView.delete();
+      
       // Delete all generated views
       List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
       Database.dropViews(viewNames);
@@ -360,33 +486,24 @@ public class GeoserverTest extends GeoserverTestSetup
       throw new RuntimeException(t);
     }
   }
-
+  
   private void validate(String sld)
   {
     try
     {
-      SchemaFactory f = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-      Schema schema = f.newSchema(xsd);
-      Validator v = schema.newValidator();
-
-      InputStream stream;
-      stream = new ByteArrayInputStream(sld.getBytes("UTF-8"));
-      Source s = new StreamSource(stream);
-      v.validate(s);
+      new SLDValidator().validate(sld);
     }
-    catch (Throwable e)
+    catch(Throwable t)
     {
-      log.warn(name.getMethodName(), e);
-      log.warn(sld);
-
-      Assert.fail(e.getLocalizedMessage());
+      log.error(sld);
+      Assert.fail(t.getLocalizedMessage());
     }
   }
 
   /**
    * Creates styling for a point layer.
    */
-  @Test
+  //@Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -447,7 +564,7 @@ public class GeoserverTest extends GeoserverTestSetup
   /**
    * Creates styling for a polygon layer.
    */
-  @Test
+  //@Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -920,46 +1037,117 @@ public class GeoserverTest extends GeoserverTestSetup
     }
   }
 
-  //@Test
+ 
+  /**
+   * Tests the interpolate SLD code for a bubble map.
+   */
+  @Test
   @Request
   @Transaction
-  public void createManyPointLayers()
+  public void createGradientSLD()
   {
-    Assert.fail("Not implemented");
+    DashboardMap map = null;
+    
+    try
+    {
+      
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
+      
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.GRADIENT);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
+      
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
+      
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+      
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+      
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+      
+      SLDMapVisitor visitor = new SLDMapVisitor();
+      map.accepts(visitor);
+      String sld = visitor.getSLD(layer);
+      
+      validate(sld);
+    }
+    finally
+    {
+      map.delete();
+    }
   }
-
-  //@Test
+  
+  /**
+   * Tests the interpolate SLD code for a bubble map.
+   */
+  @Test
   @Request
   @Transaction
-  public void createManyPolygonLayers()
+  public void createBubbleSLD()
   {
-    Assert.fail("Not implemented");
+    DashboardMap map = null;
 
-  }
+    try
+    {
 
-  //@Test
-  @Request
-  @Transaction
-  public void createManyMixedLayers()
-  {
+      map = new DashboardMap();
+      map.setName("Test Map");
+      map.apply();
 
-    Assert.fail("Not implemented");
-  }
+      DashboardLayer layer = new DashboardLayer();
+      layer.setName("Layer 1");
+      layer.setUniversal(state);
+      layer.addLayerType(AllLayerType.BUBBLE);
+      layer.setVirtual(true);
+      layer.setGeoEntity(geoentityRef);
+      layer.apply();
 
-  //@Test
-  @Request
-  @Transaction
-  public void testRemoveLayer()
-  {
-    Assert.fail("Not implemented");
-  }
+      HasLayer hasLayer = map.addHasLayer(layer);
+      hasLayer.setLayerIndex(0);
+      hasLayer.apply();
 
-  //@Test
-  @Request
-  @Transaction
-  public void testRemoveStyle()
-  {
-    Assert.fail("Not implemented");
+      DashboardEqual eq = new DashboardEqual();
+      eq.setComparisonValue("5");
+      eq.setParentCondition(null);
+      eq.setRootCondition(null);
+      eq.apply();
+
+      DashboardThematicStyle style = new DashboardThematicStyle();
+      style.setMdAttribute(rank);
+      style.setName("Style 1");
+      style.setStyleCondition(eq);
+      style.apply();
+
+      HasStyle hasStyle = layer.addHasStyle(style);
+      hasStyle.apply();
+
+      SLDMapVisitor visitor = new SLDMapVisitor();
+      map.accepts(visitor);
+      String sld = visitor.getSLD(layer);
+
+      validate(sld);
+    }
+    finally
+    {
+      map.delete();
+    }
   }
 
   /**
@@ -1063,7 +1251,7 @@ public class GeoserverTest extends GeoserverTestSetup
   /**
    * Ensures that a dashboard retrieves the proper metadata
    */
-  @Test
+  //@Test
   @Request
   public void testDashboardMetadata()
   {
@@ -1091,7 +1279,7 @@ public class GeoserverTest extends GeoserverTestSetup
     }
   }
   
-  @Test
+  //@Test
   @Request
   public void testMapJSON() throws JSONException
   {
@@ -1205,24 +1393,6 @@ public class GeoserverTest extends GeoserverTestSetup
       map.delete();
     }
   }
-
-// Test is no longer valid.
-//  @Test
-//  @Request
-//  public void testNoLayerException()
-//  {
-//    DashboardMap map = this.testNoLayerException_trans(); 
-//    
-//    try
-//    {
-//      map.getMapJSON();
-//      Assert.fail("A JSON was created for a map without layers.");
-//    }
-//    finally
-//    {
-//      map.delete();
-//    }
-//  }
   
   @Transaction
   private DashboardMap testNoLayerException_trans()

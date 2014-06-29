@@ -75,6 +75,8 @@ public interface Style extends Component
   public String getPointStroke();
 
   public Integer getPointStrokeWidth();
+  
+  public Double getPointStrokeOpacity();
 
   public String getPointWellKnownName();
 

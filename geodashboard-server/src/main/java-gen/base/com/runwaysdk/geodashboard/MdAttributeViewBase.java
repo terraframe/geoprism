@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1344817675)
+@com.runwaysdk.business.ClassSignature(hash = 1439442564)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,15 +11,73 @@ package com.runwaysdk.geodashboard;
 public abstract class MdAttributeViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.MdAttributeView";
+  public static java.lang.String ATTRIBUTENAME = "attributeName";
+  public static java.lang.String ATTRIBUTETYPE = "attributeType";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String MDATTRIBUTEID = "mdAttributeId";
   public static java.lang.String MDCLASSID = "mdClassId";
-  private static final long serialVersionUID = -1344817675;
+  private static final long serialVersionUID = 1439442564;
   
   public MdAttributeViewBase()
   {
     super();
+  }
+  
+  public String getAttributeName()
+  {
+    return getValue(ATTRIBUTENAME);
+  }
+  
+  public void validateAttributeName()
+  {
+    this.validateAttribute(ATTRIBUTENAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAttributeNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MdAttributeView.CLASS);
+    return mdClassIF.definesAttribute(ATTRIBUTENAME);
+  }
+  
+  public void setAttributeName(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTENAME, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTENAME, value);
+    }
+  }
+  
+  public String getAttributeType()
+  {
+    return getValue(ATTRIBUTETYPE);
+  }
+  
+  public void validateAttributeType()
+  {
+    this.validateAttribute(ATTRIBUTETYPE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAttributeTypeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MdAttributeView.CLASS);
+    return mdClassIF.definesAttribute(ATTRIBUTETYPE);
+  }
+  
+  public void setAttributeType(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTETYPE, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTETYPE, value);
+    }
   }
   
   public String getDisplayLabel()

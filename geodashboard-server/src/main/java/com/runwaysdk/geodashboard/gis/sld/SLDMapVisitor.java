@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.gis.sld;
 
+import groovy.util.NodeBuilder;
+
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
@@ -52,22 +55,23 @@ import com.runwaysdk.transport.conversion.ConversionException;
  */
 public class SLDMapVisitor implements MapVisitor
 {
-  private static abstract class Symbolizer
+  private static class Provider
   {
     protected SLDMapVisitor visitor;
-
-    protected Style         style;
-
-    private Symbolizer(SLDMapVisitor visitor, Style style)
+    
+    private Provider(SLDMapVisitor visitor)
     {
-      super();
       this.visitor = visitor;
-      this.style = style;
     }
-
+    
     protected NodeBuilder node(String node)
     {
       return this.visitor.node(node);
+    }
+    
+    protected NodeBuilder node(String ns, String node)
+    {
+      return this.visitor.node(ns, node);
     }
 
     protected NodeBuilder css(String name, Object value)
@@ -75,11 +79,27 @@ public class SLDMapVisitor implements MapVisitor
       return this.visitor.css(name, value);
     }
 
+    protected NodeBuilder css(String name)
+    {
+      return this.visitor.css(name);
+    }
+  }
+  
+  private static abstract class Symbolizer extends Provider
+  {
+    protected Style         style;
+
+    private Symbolizer(SLDMapVisitor visitor, Style style)
+    {
+      super(visitor);
+      this.style = style;
+    }
+
     protected abstract String getSymbolizerName();
 
     protected Node getSLD()
     {
-      return this.visitor.node(this.getSymbolizerName()).build();
+      return node(this.getSymbolizerName()).build();
     }
   }
 
@@ -101,21 +121,57 @@ public class SLDMapVisitor implements MapVisitor
     {
       Node root = super.getSLD();
 
-      Integer size = this.style.getPointSize();
       String fill = this.style.getPointFill();
       Double opacity = this.style.getPointOpacity();
       String stroke = this.style.getPointStroke();
       Integer width = this.style.getPointStrokeWidth();
+      Double strokeOpacity = this.style.getPointStrokeOpacity();
       String wkn = this.style.getPointWellKnownName();
       Integer rotation = this.style.getPointRotation();
 
+      NodeBuilder sizeNode = interpolateSize();
+      
       node("Graphic").child(
           node("Mark").child(node("WellKnownName").text(wkn),
               node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
-              node("Stroke").child(css("stroke", stroke), css("stroke-width", width))),
-          node("Size").text(size), node("Rotation").text(rotation)).build(root);
+              node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))),
+          sizeNode, node("Rotation").text(rotation)).build(root);
 
       return root;
+    }
+    
+    private NodeBuilder interpolateSize()
+    {
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
+        String minAttr = SLDConstants.getMinProperty(attribute);
+        String maxAttr = SLDConstants.getMaxProperty(attribute);
+        
+        
+        // thematic interpolation
+        return node("Size").child(
+          node(OGC, "Function").attr("name", "Interpolate").child(
+              // property to interpolate
+              node(OGC, "PropertyName").text(attribute),
+              // min definition
+              node(OGC, "PropertyName").text(minAttr),
+              node(OGC, "Literal").text(tStyle.getPointMinSize()),
+              // max definition
+              node(OGC, "PropertyName").text(maxAttr),
+              node(OGC, "Literal").text(tStyle.getPointMaxSize()),
+              // interpolation method
+              node(OGC, "Literal").text("numeric")
+              )
+            );
+      }
+      else
+      {
+        // non-thematic
+        return node("Size").text(style.getPointSize());
+      }
     }
   }
 
@@ -138,17 +194,53 @@ public class SLDMapVisitor implements MapVisitor
       Node root = super.getSLD();
 
       Integer width = this.style.getPolygonStrokeWidth();
-      String fill = this.style.getPolygonFill();
       Double fillOpacity = this.style.getPolygonFillOpacity();
       String stroke = this.style.getPolygonStroke();
       Double strokeOpacity = this.style.getPolygonStrokeOpacity();
 
-      node("Fill").child(css("fill", fill), css("fill-opacity", fillOpacity)).build(root);
+      NodeBuilder fillNode = this.interpolateColor();
+      
+      node("Fill").child(fillNode, css("fill-opacity", fillOpacity)).build(root);
 
       node("Stroke").child(css("stroke", stroke), css("stroke-width", width),
           css("stroke-opacity", strokeOpacity)).build(root);
 
       return root;
+    }
+    
+    private NodeBuilder interpolateColor()
+    {
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
+        String minAttr = SLDConstants.getMinProperty(attribute);
+        String maxAttr = SLDConstants.getMaxProperty(attribute);
+        
+        
+        // thematic interpolation
+        return css("fill").child(
+          node(OGC, "Function").attr("name", "Interpolate").child(
+              // property to interpolate
+              node(OGC, "PropertyName").text(attribute),
+              // min definition
+              node(OGC, "PropertyName").text(minAttr),
+              node(OGC, "Literal").text(tStyle.getPolygonMinFill()),
+              // max definition
+              node(OGC, "PropertyName").text(maxAttr),
+              node(OGC, "Literal").text(tStyle.getPolygonMaxFill()),
+              // interpolation method
+              node(OGC, "Literal").text("color")
+              )
+            );
+      }
+      else
+      {
+        // non-thematic
+        String fill = this.style.getPolygonFill();
+        return css("fill", fill);
+      }
     }
   }
 
@@ -177,11 +269,22 @@ public class SLDMapVisitor implements MapVisitor
   private static class TextSymbolizer extends Symbolizer
   {
     private Node[] nodes;
-
+    
+    private String color;
+    private String font;
+    private String halo;
+    private Integer haloWidth;
+    private Integer size;   
+    
     private TextSymbolizer(SLDMapVisitor visitor, Style style, Node... nodes)
     {
       super(visitor, style);
       this.nodes = nodes;
+      this.color = style.getLabelColor();
+      this.font = style.getLabelFont();
+      this.halo = style.getLabelHalo();
+      this.haloWidth = style.getLabelHaloWidth();
+      this.size = style.getLabelSize();
     }
 
     @Override
@@ -196,7 +299,18 @@ public class SLDMapVisitor implements MapVisitor
       Node root = super.getSLD();
 
       node("Label").child(nodes).build(root);
-
+      node("Font").child(
+          css("font-size", size),
+          css("font-family", font)
+          ).build(root);
+      node("Halo").child(
+          node("Radius").text(haloWidth),
+          node("Fill").child(css("fill", halo))
+          ).build(root);
+      node("Fill").child(
+         css("fill", color) 
+          ).build(root);
+      
       return root;
     }
   }
@@ -319,7 +433,7 @@ public class SLDMapVisitor implements MapVisitor
 
   private Stack<Node>                                       parents;
 
-  private Node                                              currentLayer;
+  private Node                                              currentLayerNode;
 
   private java.util.Map<String, Node>                       layerToNodeMap;
 
@@ -332,6 +446,8 @@ public class SLDMapVisitor implements MapVisitor
   private java.util.Map<Condition, Node>                    conditions;
 
   private Node                                              root;
+
+  private Layer currentLayer;
 
   public SLDMapVisitor()
   {
@@ -354,7 +470,7 @@ public class SLDMapVisitor implements MapVisitor
     this.doc.setStrictErrorChecking(false);
     this.doc.setXmlStandalone(true);
 
-    this.currentLayer = null;
+    this.currentLayerNode = null;
     this.layerToNodeMap = new HashMap<String, Node>();
     this.parents = new Stack<Node>();
     this.layers = new LinkedHashMap<Node, LinkedList<DocumentFragment>>();
@@ -377,6 +493,11 @@ public class SLDMapVisitor implements MapVisitor
   private NodeBuilder css(String name, Object value)
   {
     return new NodeBuilder(this, null, "CssParameter").attr("name", name).text(value);
+  }
+
+  private NodeBuilder css(String name)
+  {
+    return new NodeBuilder(this, null, "CssParameter").attr("name", name);
   }
 
   private NodeBuilder node(String node)
@@ -465,7 +586,8 @@ public class SLDMapVisitor implements MapVisitor
 
     parents.push(userStyle);
 
-    this.currentLayer = layerNode;
+    this.currentLayer = layer;
+    this.currentLayerNode = layerNode;
     layerToNodeMap.put(layer.getId(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
 
@@ -554,6 +676,7 @@ public class SLDMapVisitor implements MapVisitor
       Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
           .build() };
 
+      
       TextSymbolizer text = new TextSymbolizer(this, style, nodes);
       rule.appendChild(text.getSLD());
     }
@@ -568,13 +691,133 @@ public class SLDMapVisitor implements MapVisitor
   @Override
   public void visit(Style style)
   {
-    this.style(style, null);
+    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
+
+    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
+
+    if (this.virtual)
+    {
+      Node fts = this.node("FeatureTypeStyle").child(rule).build();
+      rulesFragment.appendChild(fts);
+    }
+    else
+    {
+      rulesFragment.appendChild(rule);
+    }
+
+    Symbolizer symbolizer;
+    if (this.featureType == FeatureType.POINT)
+    {
+      symbolizer = new PointSymbolizer(this, style);
+    }
+    else if (this.featureType == FeatureType.POLYGON)
+    {
+      symbolizer = new PolygonSymbolizer(this, style);
+    }
+    else if (this.featureType == FeatureType.LINE)
+    {
+      symbolizer = new LineSymbolizer(this, style);
+    }
+    // TODO text symbolizer
+    else
+    {
+      throw new ProgrammingErrorException("Geometry type [" + this.featureType
+          + "] is not supported for SLD generation.");
+    }
+
+    rule.appendChild(symbolizer.getSLD());
+
+    this.parents.pop().appendChild(rulesFragment);
   }
 
   @Override
   public void visit(ThematicStyle style)
   {
-    this.style(style, style.getCondition());
+    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
+
+    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
+
+    if (this.virtual)
+    {
+      Node fts = this.node("FeatureTypeStyle").child(rule).build();
+      rulesFragment.appendChild(fts);
+    }
+    else
+    {
+      rulesFragment.appendChild(rule);
+    }
+
+    Symbolizer symbolizer;
+    if (this.featureType == FeatureType.POINT)
+    {
+      symbolizer = new PointSymbolizer(this, style);
+    }
+    else if (this.featureType == FeatureType.POLYGON)
+    {
+      symbolizer = new PolygonSymbolizer(this, style);
+    }
+    else if (this.featureType == FeatureType.LINE)
+    {
+      symbolizer = new LineSymbolizer(this, style);
+    }
+    // TODO text symbolizer
+    else
+    {
+      throw new ProgrammingErrorException("Geometry type [" + this.featureType
+          + "] is not supported for SLD generation.");
+    }
+
+    // START - Thematic filter
+    Condition cond = style.getCondition();
+    if (cond != null)
+    {
+      Node filter = this.node(OGC, "Filter").build(rule);
+
+      this.parents.push(filter);
+
+      cond.accepts(this);
+
+      // pop the filter as the conditions tree has been added by now
+      this.parents.pop();
+    }
+    // END - Thematic filter
+
+    rule.appendChild(symbolizer.getSLD());
+
+    boolean thematic = style instanceof ThematicStyle;
+
+    if (thematic && style.getEnableLabel() && style.getEnableValue())
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      Node[] nodes = new Node[] {
+          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+          this.doc.createTextNode(" - "),
+          node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
+    }
+    else if (style.getEnableLabel())
+    {
+      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())
+          .build() };
+
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
+    }
+    else if (thematic && style.getEnableValue())
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
+          .build() };
+
+      
+      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+      rule.appendChild(text.getSLD());
+    }
+
+    // append the rule to user styles
+    this.parents.pop().appendChild(rulesFragment);
   }
 
   @Override

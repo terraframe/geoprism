@@ -29,6 +29,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return q;
   }
   
+  @Override
+  public void delete()
+  {
+    for(MetadataWrapper mw : this.getAllMetadata())
+    {
+      mw.delete();
+    }
+    
+    // TODO Auto-generated method stub
+    super.delete();
+  }
+  
   public MdClass[] getSortedTypes()
   {
     // This operation should use only cached objects

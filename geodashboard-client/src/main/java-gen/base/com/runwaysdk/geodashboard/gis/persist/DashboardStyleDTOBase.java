@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1383546039)
+@com.runwaysdk.business.ClassSignature(hash = 886128070)
 public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
-  private static final long serialVersionUID = 1383546039;
+  private static final long serialVersionUID = 886128070;
   
   protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -53,6 +53,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String POINTROTATION = "pointRotation";
   public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
+  public static java.lang.String POINTSTROKEOPACITY = "pointStrokeOpacity";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
   public static java.lang.String POINTWELLKNOWNNAME = "pointWellKnownName";
   public static java.lang.String POLYGONFILL = "polygonFill";
@@ -991,6 +992,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPointStrokeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POINTSTROKE).getAttributeMdDTO();
+  }
+  
+  public Double getPointStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(POINTSTROKEOPACITY));
+  }
+  
+  public void setPointStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(POINTSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(POINTSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public boolean isPointStrokeOpacityWritable()
+  {
+    return isWritable(POINTSTROKEOPACITY);
+  }
+  
+  public boolean isPointStrokeOpacityReadable()
+  {
+    return isReadable(POINTSTROKEOPACITY);
+  }
+  
+  public boolean isPointStrokeOpacityModified()
+  {
+    return isModified(POINTSTROKEOPACITY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDecMdDTO getPointStrokeOpacityMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDecMdDTO) getAttributeDTO(POINTSTROKEOPACITY).getAttributeMdDTO();
   }
   
   public Integer getPointStrokeWidth()

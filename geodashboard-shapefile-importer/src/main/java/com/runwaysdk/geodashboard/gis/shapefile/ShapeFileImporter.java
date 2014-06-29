@@ -197,12 +197,12 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         this.fireStart();
 
         // If the strategy has not be initialized then do so
-        if (!GeoEntity.getStrategy().isInitialized(LocatedIn.CLASS))
+        if (!GeoEntity.getStrategy().isInitialized())
         {
           GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
         }
         
-        if (!Universal.getStrategy().isInitialized(AllowedIn.CLASS))
+        if (!Universal.getStrategy().isInitialized())
         {
           Universal.getStrategy().initialize(AllowedIn.CLASS);
         }
