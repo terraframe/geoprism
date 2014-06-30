@@ -80,8 +80,8 @@
 	   
 	<!-- jQuery  -->
 	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
-	<!-- <script src="https://code.jquery.com/jquery-1.9.0.js"></script> -->
+  <!-- <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-1.9.0.js"></script>
 	  
 	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
