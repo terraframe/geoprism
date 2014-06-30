@@ -281,8 +281,13 @@ public class DashboardLayer extends DashboardLayerBase implements
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-          v.SELECT(label);  
-
+          v.SELECT(label);
+          
+          // geo id (for uniqueness)
+          Selectable geoId = geQ.getGeoId(GeoEntity.GEOID);
+          geoId.setColumnAlias(GeoEntity.GEOID);
+          v.SELECT(geoId);
+          
           // geometry
           Selectable geom;
           if (this.getFeatureType().equals(FeatureType.POINT))
