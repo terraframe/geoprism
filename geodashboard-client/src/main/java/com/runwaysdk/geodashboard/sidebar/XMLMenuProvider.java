@@ -19,15 +19,16 @@ import com.runwaysdk.configuration.RunwayConfigurationException;
 
 public class XMLMenuProvider
 {
-  private static final String fileName = "geodashboard/sidebar.xml";
-  
-  private static final Object initializeLock = new Object();
-  
+  private static final String        fileName       = "geodashboard/sidebar.xml";
+
+  private static final Object        initializeLock = new Object();
+
   private static ArrayList<MenuItem> menu;
-  
-  public XMLMenuProvider() {
+
+  public XMLMenuProvider()
+  {
     String exMsg = "An exception occurred while reading the geodashboard sidebar configuration file.";
-    
+
     try
     {
       this.readMenu();
@@ -37,64 +38,82 @@ public class XMLMenuProvider
       throw new RunwayConfigurationException(exMsg, e);
     }
   }
-  
-  public ArrayList<MenuItem> getMenu() {
+
+  public ArrayList<MenuItem> getMenu()
+  {
     return menu;
   }
-  
-  public void readMenu() throws ParserConfigurationException, SAXException, IOException {
-    
-    synchronized(initializeLock) {
-      if (menu != null) {
+
+  public void readMenu() throws ParserConfigurationException, SAXException, IOException
+  {
+
+    synchronized (initializeLock)
+    {
+      if (menu != null)
+      {
         return;
       }
-      
+
       menu = new ArrayList<MenuItem>();
     }
-    
+
     InputStream stream = ConfigurationManager.getResourceAsStream(ConfigurationManager.ConfigGroup.ROOT, fileName);
-    
-    if (stream != null) {
+
+    if (stream != null)
+    {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.parse(stream);
-      
+
       Element xmlMappings = doc.getDocumentElement();
-      
+
       NodeList children = xmlMappings.getChildNodes();
-      for (int i = 0; i < children.getLength(); ++i) {
+      for (int i = 0; i < children.getLength(); ++i)
+      {
         Node n = children.item(i);
-        
-        if (n.getNodeType() == Node.ELEMENT_NODE) {
+
+        if (n.getNodeType() == Node.ELEMENT_NODE)
+        {
           Element el = (Element) n;
-          
+
           String name = el.getAttribute("name");
           String uri = null;
-          if (el.hasAttribute("uri")) {
+          if (el.hasAttribute("uri"))
+          {
             uri = el.getAttribute("uri");
           }
-          
-          MenuItem item = new MenuItem(name, uri);
-          
+
+          String roles = null;
+          if (el.hasAttribute("roles"))
+          {
+            roles = el.getAttribute("roles");
+          }
+
+          MenuItem item = new MenuItem(name, uri, roles);
+
           NodeList itemChildren = el.getChildNodes();
-          for (int iChild = 0; iChild < itemChildren.getLength(); ++iChild) {
+          for (int iChild = 0; iChild < itemChildren.getLength(); ++iChild)
+          {
             Node nodeItem = itemChildren.item(iChild);
-            
-            if (nodeItem.getNodeType() == Node.ELEMENT_NODE) {
+
+            if (nodeItem.getNodeType() == Node.ELEMENT_NODE)
+            {
               Element elChild = (Element) nodeItem;
-              
+
               String name2 = elChild.getAttribute("name");
               String uri2 = elChild.getAttribute("uri");
-              
-              item.addChild(new MenuItem(name2, uri2));
+              String roles2 = elChild.getAttribute("roles");
+
+              item.addChild(new MenuItem(name2, uri2, roles2));
             }
           }
-          
+
           menu.add(item);
         }
       }
     }
-    else {
+    else
+    {
       throw new RunwayConfigurationException("Expected the geodashboard sidebar configuration file on the classpath at [" + fileName + "].");
     }
   }

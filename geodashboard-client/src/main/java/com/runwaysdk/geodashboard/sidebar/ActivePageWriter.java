@@ -63,10 +63,10 @@ public class ActivePageWriter
   }
   
   public void writeLiA(String title, String url, boolean isSync) throws IOException {
-    this.writeLiA(new MenuItem(title, url), null, isSync);
+    this.writeLiA(new MenuItem(title, url, null), null, isSync);
   }
   
   public void writeLiA(String title, String url, String classes, boolean isSync) throws IOException {
-    this.writeLiA(new MenuItem(title, url), classes, isSync);
+    this.writeLiA(new MenuItem(title, url, null), classes, isSync);
   }
 }

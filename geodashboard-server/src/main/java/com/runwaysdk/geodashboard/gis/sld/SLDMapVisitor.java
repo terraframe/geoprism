@@ -1,7 +1,5 @@
 package com.runwaysdk.geodashboard.gis.sld;
 
-import groovy.util.NodeBuilder;
-
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -310,6 +308,12 @@ public class SLDMapVisitor implements MapVisitor
       node("Fill").child(
          css("fill", color) 
           ).build(root);
+      
+      // vendor options (possibly put these in a props file)
+      node("VendorOption").attr("name", "group").text("yes").build(root);
+      node("VendorOption").attr("name", "conflict-resolution").text(true).build(root);
+      node("VendorOption").attr("name", "spaceAround").text(2).build(root);
+      node("VendorOption").attr("name", "goodnessOfFit").text(0.1).build(root);
       
       return root;
     }

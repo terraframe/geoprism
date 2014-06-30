@@ -178,6 +178,10 @@ public class DashboardLayer extends DashboardLayerBase implements
       {
         DashboardStyle style = iter.next();
 
+        // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
+        // but we need to define a non-thematic's behavior or even finalize
+        // on the semantics of a layer without a thematic attribute...which might
+        // not even exist!
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
@@ -277,8 +281,13 @@ public class DashboardLayer extends DashboardLayerBase implements
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-          v.SELECT(label);  
-
+          v.SELECT(label);
+          
+          // geo id (for uniqueness)
+          Selectable geoId = geQ.getGeoId(GeoEntity.GEOID);
+          geoId.setColumnAlias(GeoEntity.GEOID);
+          v.SELECT(geoId);
+          
           // geometry
           Selectable geom;
           if (this.getFeatureType().equals(FeatureType.POINT))

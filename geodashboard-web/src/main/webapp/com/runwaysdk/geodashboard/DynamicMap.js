@@ -24,7 +24,9 @@
       GEOSERVER_WORKSPACE : 'geodashboard',
       GEOCODE : 'geocode',
       GEOCODE_LABEL : 'geocodeLabel',
-      LAYER_MODAL : '#modal01'
+      LAYER_MODAL : '#modal01',
+      TO_DATE : 'to-field',
+      FROM_DATE : 'from-field'
     },
     
     Instance : {
@@ -36,7 +38,7 @@
       initialize : function(mapDivId, mapId){
         this.$initialize();
         
-        
+        this._googleEnabled = Mojo.Util.isObject(Mojo.GLOBAL.google);
         
         this._mapDivId = mapDivId;
         this._mapId = mapId;
@@ -387,6 +389,31 @@
        */
       render : function(){
         
+        this._refreshMap();
+        
+        // Make sure all openers for each attribute have a click event
+        $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
+        
+        if(this._googleEnabled){
+          this._addAutoComplete();
+        }
+        else {
+          
+        }
+      },
+      
+      /**
+       * Disables the search functionality if google can't be loaded
+       */
+      _disableAutoComplete : function(){
+        $('#'+DynamicMap.GEOCODE).attr('disabled', 'disabled');
+      },
+      
+      /**
+       * Hooks the auto-complete functionality to the Dashboard.
+       */
+      _addAutoComplete : function(){
+        
         var that = this;
         
         this._autocomplete = $('#'+DynamicMap.GEOCODE).autocomplete({
@@ -424,15 +451,9 @@
                 response(suggestions);
               }
             });      
-          },
+          }
         });
-//        that._autocomplete.show();      
-//        $('#'+DynamicMap.GEOCODE).on('keypress', Mojo.Util.bind(this, this._geocodeHandler));
-
-         this._refreshMap();
         
-         // Make sure all openers for each attribute have a click event
-         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
       },
       
       _refreshMapInternal : function(jsonObj){

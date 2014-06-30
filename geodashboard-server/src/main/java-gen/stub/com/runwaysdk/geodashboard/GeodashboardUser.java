@@ -2,11 +2,15 @@ package com.runwaysdk.geodashboard;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
@@ -24,12 +28,12 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   @Transaction
   public void delete()
   {
-    this.appLock();
+    this.lock();
     this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
     this.apply();
 
     SessionEntry.deleteByUser(this);
-    
+
     super.delete();
   }
 
@@ -41,7 +45,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     this.setSessionLimit(40);
 
     SessionEntry.deleteByUser(this);
-    
+
     super.apply();
 
     if (firstApply)
@@ -81,9 +85,44 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     }
   }
 
+  public static GeodashboardUser getByUsername(String username)
+  {
+    GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+    query.WHERE(query.getUsername().EQ(username));
+
+    OIterator<? extends GeodashboardUser> it = query.getIterator();
+
+    try
+    {
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+
+      // TODO Change exception type
+      throw new RuntimeException("Unknown user [" + username + "]");
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+
   public static GeodashboardUser getCurrentUser()
   {
     return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
+  }
+
+  public static Boolean isRoleMemeber(String roles)
+  {
+    // TODO roles should actually be a ',' delimited list of role names
+    // isRoleMember should return true if the user is a member of any of the roles
+    // specified in the role name list.
+    
+    Map<String, String> map = Session.getCurrentSession().getUserRoles();
+    Set<String> keySet = map.keySet();
+
+    return keySet.contains(roles);
   }
 
 }

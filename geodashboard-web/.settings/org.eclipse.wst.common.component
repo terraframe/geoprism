@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="geodashboard-web">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/com/runwaysdk/runwaysdk-gis-web/1.8.1-SNAPSHOT/runwaysdk-gis-web-1.8.1-SNAPSHOT.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+            <dependency-type>consumes</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+            <dependency-type>consumes</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="geodashboard"/>
+        <property name="java-output-path" value="/geodashboard-web/target/classes"/>
+        <property name="component.exclusion.patterns" value="**/*geodashboard-common*.jar,**/*geodashboard-client*.jar,**/*geodashboard-server*.jar,**/*catalina*.jar,**/*servlet-api*.jar,**/*annotations-api*.jar"/>
+    </wb-module>
+</project-modules>
+=======
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="geodashboard-web">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
@@ -17,3 +39,4 @@
         <property name="component.exclusion.patterns" value="**/*geodashboard-common*.jar,**/*geodashboard-client*.jar,**/*geodashboard-server*.jar,**/*catalina*.jar,**/*servlet-api*.jar,**/*annotations-api*.jar"/>
     </wb-module>
 </project-modules>
+>>>>>>> refs/remotes/origin/master

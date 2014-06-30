@@ -1,0 +1,15 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser" >
+        <create>
+        <mdMethod name="isRoleMemeber" label="isRoleMember" returnType="java.lang.Boolean" static="true">
+          <mdParameter name="roles" label="Roles" order="0" type="java.lang.String" />
+        </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+  </undoIt>
+</version>

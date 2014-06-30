@@ -35,7 +35,7 @@ public class JSONMenuProvider
         uri = item.getString("uri");
       }
       
-      MenuItem parent = new MenuItem(item.getString("name"), uri);
+      MenuItem parent = new MenuItem(item.getString("name"), uri, null);
       menu.add(parent);
       
       if (item.has("children")) {

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -452766427)
+@com.runwaysdk.business.ClassSignature(hash = -22558374)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -15,7 +15,7 @@ public abstract class GeodashboardUserBase extends com.runwaysdk.system.Users im
   public static java.lang.String FIRSTNAME = "firstName";
   public static java.lang.String LASTNAME = "lastName";
   public static java.lang.String PHONENUMBER = "phoneNumber";
-  private static final long serialVersionUID = -452766427;
+  private static final long serialVersionUID = -22558374;
   
   public GeodashboardUserBase()
   {
@@ -169,6 +169,12 @@ public abstract class GeodashboardUserBase extends com.runwaysdk.system.Users im
   }
   
   public static com.runwaysdk.geodashboard.GeodashboardUser getCurrentUser()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeodashboardUser.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.Boolean isRoleMemeber(java.lang.String roles)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeodashboardUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

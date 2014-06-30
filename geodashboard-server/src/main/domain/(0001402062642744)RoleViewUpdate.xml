@@ -1,0 +1,22 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<update>
+			<mdView name="com.runwaysdk.geodashboard.RoleView">
+				<create>
+					<attributes>
+						<text name="groupName" label="Group name" />
+					</attributes>
+					<mdMethod name="getRoles" label="Get roles" static="true" returnType="com.runwaysdk.geodashboard.RoleView[]">
+						<mdParameter name="user" label="User" order="0" type="com.runwaysdk.geodashboard.GeodashboardUser" />
+					</mdMethod>
+				</create>
+			</mdView>
+		</update>
+	</doIt>
+	<undoIt>
+		<delete>
+			<object key="com.runwaysdk.geodashboard.RoleView.groupName" type="com.runwaysdk.system.metadata.MdAttribute" />
+			<object key="com.runwaysdk.geodashboard.RoleView.getRoles" type="com.runwaysdk.system.metadata.MdMethod" />
+		</delete>
+	</undoIt>
+</version>
