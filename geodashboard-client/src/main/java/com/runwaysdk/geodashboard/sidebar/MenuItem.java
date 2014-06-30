@@ -10,81 +10,110 @@ import com.runwaysdk.controller.URLConfigurationManager.UriMapping;
 
 public class MenuItem
 {
-  private String name;
-  private String url;
-  private String mappedUrl;
-  private ArrayList<MenuItem> children = new ArrayList<MenuItem>();
-  
-  private static URLConfigurationManager mapper = new URLConfigurationManager();
-  
-  public MenuItem(String name, String URL) {
+  private String                         name;
+
+  private String                         url;
+
+  private String                         mappedUrl;
+
+  private String                         roles;
+
+  private ArrayList<MenuItem>            children = new ArrayList<MenuItem>();
+
+  private static URLConfigurationManager mapper   = new URLConfigurationManager();
+
+  public MenuItem(String name, String URL, String roles)
+  {
     this.name = name;
     this.url = URL;
-    
-    if (URL != null) {
+    this.roles = roles;
+
+    if (URL != null)
+    {
       UriMapping mapping = mapper.getMapping(URL);
-      if (mapping != null && mapping instanceof UriForwardMapping) {
+      if (mapping != null && mapping instanceof UriForwardMapping)
+      {
         this.mappedUrl = ( (UriForwardMapping) mapping ).getUriEnd();
       }
     }
   }
-  
-  public void addChild(MenuItem child) {
+
+  public void addChild(MenuItem child)
+  {
     this.children.add(child);
   }
-  
-  public void addChildren(ArrayList<MenuItem> children) {
+
+  public void addChildren(ArrayList<MenuItem> children)
+  {
     this.children.addAll(children);
   }
-  
-  public boolean handlesUri(String uri, String context) {
+
+  public boolean handlesUri(String uri, String context)
+  {
     // If we have children loop over them.
-    if (this.getURL() == null) {
+    if (this.getURL() == null)
+    {
       List<MenuItem> children = this.getChildren();
-      for (MenuItem child : children) {
-        if (child.handlesUri(uri, context)) {
+      for (MenuItem child : children)
+      {
+        if (child.handlesUri(uri, context))
+        {
           return true;
         }
       }
       return false;
     }
-    
-    if (this.mappedUrl != null) {
+
+    if (this.mappedUrl != null)
+    {
       return uri.equals(context + this.mappedUrl);
     }
-    else {
+    else
+    {
       return uri.equals(context + this.getURL());
     }
   }
-  
-  public String getName() {
+
+  public String getName()
+  {
     return this.name;
   }
-  
-  public String getURL() {
+
+  public String getURL()
+  {
     return this.url;
   }
-  
-  public boolean hasChildren() {
+
+  public String getRoles()
+  {
+    return roles;
+  }
+
+  public boolean hasChildren()
+  {
     return !this.children.isEmpty();
   }
-  
-  public List<MenuItem> getChildren() {
+
+  public List<MenuItem> getChildren()
+  {
     return this.children;
   }
-  
+
   @Override
-  public String toString() {
+  public String toString()
+  {
     String out = "MenuItem: " + this.getName();
-    if (this.getURL() != null) {
-     out = out + this.getURL();
+    if (this.getURL() != null)
+    {
+      out = out + this.getURL();
     }
-    
+
     Iterator<MenuItem> it = this.getChildren().iterator();
-    while (it.hasNext()) {
+    while (it.hasNext())
+    {
       out = out + it.next().toString() + "\n";
     }
-    
+
     return out;
   }
 }
