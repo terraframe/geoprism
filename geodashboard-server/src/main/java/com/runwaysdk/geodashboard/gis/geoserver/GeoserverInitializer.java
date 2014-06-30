@@ -18,7 +18,7 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
 
   private static final Log           initLog     = LogFactory.getLog(GeoserverInitializer.class);
 
-  private static class CheckThread implements Runnable
+  public static class CheckThread implements Runnable, Reloadable
   {
 
     private static final Log log = LogFactory.getLog(CheckThread.class);

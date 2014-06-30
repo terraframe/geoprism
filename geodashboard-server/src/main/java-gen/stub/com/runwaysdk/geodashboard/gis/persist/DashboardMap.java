@@ -87,6 +87,35 @@ public class DashboardMap extends DashboardMapBase implements
       iter.close();
     }
   }
+  
+//  public String orderLayers(String[] layerIds)
+//  {
+//    HasLayerQuery q = new HasLayerQuery(new QueryFactory());
+//    q.WHERE(q.parentId().EQ(this.getId()));
+//    q.AND(q.childId().IN(layerIds));
+//    
+//    OIterator<? extends HasLayer> iter = q.getIterator();
+//    
+//    try
+//    {
+//      int order = 1;
+//      while(iter.hasNext())
+//      {
+//        HasLayer rel = iter.next();
+//        rel.appLock();
+//        rel.setLayerIndex(order++);
+//        rel.apply();
+//      }
+//    }
+//    finally
+//    {
+//      iter.close();
+//    }
+//
+//    return this.getMapJSON();
+//  }
+  
+  
 
   @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
   public String getMapJSON()
