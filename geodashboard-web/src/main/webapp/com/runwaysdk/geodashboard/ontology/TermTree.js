@@ -691,7 +691,10 @@
       
       getParentRunwayId : function(node) {
         var id = this.getParentId(node);
+        
         var node = this.getImpl().jstree("get_node", id);
+        if (node == null || node == false) { return null; }
+        
         return this.__getRunwayIdFromNode(node);
       },
       

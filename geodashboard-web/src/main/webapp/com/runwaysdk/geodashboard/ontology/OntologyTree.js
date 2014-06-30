@@ -88,6 +88,7 @@
           cmiExport.setEnabled(false);
         }
         
+        // You can't delete the built in ontology nodes (IDE ontologys, geodashboard ontologies, etc)
         if (this.getParentRunwayId(node) === this.rootTermId) {
           del.setEnabled(false);
         }
@@ -97,6 +98,23 @@
         this._cm.addDestroyEventListener(function() {
           $tree.jstree("deselect_node", node);
         });
+      },
+      
+      // @Override
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't move the built in ontology nodes (IDE ontologies, geodashboard ontologies, etc)
+          if (this.getParentRunwayId(node) === this.rootTermId) {
+            return false;
+          }
+          
+          // You can't move nodes onto the root level (Only a developer can create a root level node.)
+          if (this.__getRunwayIdFromNode(node_parent) === this.rootTermId) {
+            return false;
+          } 
+        }
+        
+        return true;
       },
       
       destroy : function() {
