@@ -1,18 +1,13 @@
 package com.runwaysdk.geodashboard;
 
-import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.reflections.Reflections;
 
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer;
-import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
-import com.runwaysdk.gis.StrategyInitializer;
 import com.runwaysdk.session.Request;
-import com.runwaysdk.system.scheduler.SchedulerManager;
 
 public class ServerInitializer implements Reloadable
 {
@@ -22,37 +17,23 @@ public class ServerInitializer implements Reloadable
   @Request
   public static void initialize()
   {
-    StrategyInitializer.startUp();
-    log.debug("COMLPETE: StrategyInitializer.startUp()");
+    ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
+    List<ServerContextListenerInfo> infos = builder.read();
 
-    SchedulerManager.start();
-    log.debug("COMLPETE: SchedulerManager.start();");
-
-    SessionEntry.deleteAll();
-    log.debug("COMLPETE: SessionEntry.deleteAll();");
-
-    GeoserverInitializer.setup();
-    log.debug("COMLPETE: GeoserverInitializer.setup();");
-
-    DashboardMap.cleanup();
-    log.debug("COMLPETE: DashboardMap.cleanup();");
-
-    Reflections reflections = new Reflections("com", LoaderDecorator.instance());
-
-    Set<Class<? extends ServerContextListener>> subTypes = reflections.getSubTypesOf(ServerContextListener.class);
-
-    for (Class<? extends ServerContextListener> subType : subTypes)
+    for (ServerContextListenerInfo info : infos)
     {
       try
       {
-        ServerContextListener listener = subType.newInstance();
+        Class<?> clazz = LoaderDecorator.load(info.getClassName());
+        ServerContextListener listener = (ServerContextListener) clazz.newInstance();
         listener.startup();
+
+        log.debug("COMLPETE: " + info.getClassName() + ".setup();");
       }
       catch (Exception e)
       {
-        // TODO change this
-
-        e.printStackTrace();
+        // TODO Add a better error message
+        throw new RuntimeException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
       }
     }
   }
@@ -60,28 +41,23 @@ public class ServerInitializer implements Reloadable
   @Request
   public static void destroy()
   {
-    StrategyInitializer.shutDown();
+    ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
+    List<ServerContextListenerInfo> infos = builder.read();
 
-    SchedulerManager.shutdown();
-
-    SessionEntry.deleteAll();
-
-    Reflections reflections = new Reflections("com", LoaderDecorator.instance());
-
-    Set<Class<? extends ServerContextListener>> subTypes = reflections.getSubTypesOf(ServerContextListener.class);
-
-    for (Class<? extends ServerContextListener> subType : subTypes)
+    for (ServerContextListenerInfo info : infos)
     {
       try
       {
-        ServerContextListener listener = subType.newInstance();
+        Class<?> clazz = LoaderDecorator.load(info.getClassName());
+        ServerContextListener listener = (ServerContextListener) clazz.newInstance();
         listener.shutdown();
       }
       catch (Exception e)
       {
-        // TODO change this
-        e.printStackTrace();
+        // TODO Add a better error message
+        throw new RuntimeException("Unable to shutdown the server context listener [" + info.getClassName() + "]", e);
       }
     }
+
   }
 }

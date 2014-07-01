@@ -44,11 +44,6 @@
 			<artifactId>org.eclipse.birt.runtime</artifactId>
 			<version>3.7.2.v20120214-1408</version>
 		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.9-RC1</version>
-		</dependency>
 	</dependencies>
 
 	<!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, 

@@ -525,7 +525,7 @@
     	this.setInnerHTML('');
     	this._footer = null;
     	  
-        var builder = this.builder(this.getFactory(), user, null);
+        var builder = this._configuator.get(this.getFactory(), user, null);
         builder.render(this, readOnly);
         builder.addListener(this);            	    	  
       },
