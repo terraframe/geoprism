@@ -73,8 +73,8 @@
 <%--   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script> --%>
   
   <!-- JQuery UI -->
-<%--   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script> --%>
-<%--   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link> --%>
+   <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
+   <link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
   
   <!-- Localization -->
   <script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>

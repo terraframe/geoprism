@@ -511,12 +511,30 @@
             
             var nodes = that.__getNodesById(termId);
             for (var i = 0; i < nodes.length; ++i) {
-              $tree.jstree("rename_node", nodes[i], that._getTermDisplayLabel(term));
+              var node = nodes[i];
+              // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
+              node.data.runwayId = term.getId();
+              if (that.duplicateMap.get(termId) != null) {
+                var duplicates = that.duplicateMap.get(termId);
+                that.duplicateMap.remove(termId);
+                that.duplicateMap.put(term.getId(), duplicates);
+              }
+              // jsTree has no support for changing ids of nodes, so we have to delete and recreate the node
+              var nodeMetadata = node.original;
+              nodeMetadata.text = that._getTermDisplayLabel(term);
+              nodeMetadata.data = node.data;
+              nodeMetadata.state = node.state;
+              nodeMetadata.children = node.children;
+              nodeMetadata.id = term.getId();
+              var retval = $tree.jstree("delete_node", node);
+              var parentId = that.getParentId(node);
+              $tree.jstree("create_node", parentId, nodeMetadata, that.__findInsertIndex(nodeMetadata.text, parentId), false, true);
             }
             
-            that.setTermBusy(termId, false);
+            that.setTermBusy(term.getId(), false);
             that.termCache[termId] = null;
             that.termCache[term.getId()] = term;
+            that.parentRelationshipCache.updateTermId(termId, term.getId());
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
@@ -691,7 +709,10 @@
       
       getParentRunwayId : function(node) {
         var id = this.getParentId(node);
+        
         var node = this.getImpl().jstree("get_node", id);
+        if (node == null || node == false) { return null; }
+        
         return this.__getRunwayIdFromNode(node);
       },
       
@@ -1358,7 +1379,7 @@
   });
   
   /**
-   * @class com.runwaysdk.geodashboard.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records. This class is used internally only.
+   * @class com.runwaysdk.geodashboard.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records.
    */
   var ParentRelationshipCache = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.ParentRelationshipCache', {
     
@@ -1379,7 +1400,30 @@
       },
       
       /**
-       * @param childId
+       * Updates all references in the cache from oldId to newId. 
+       */
+      updateTermId : function(oldId, newId) {
+        var oldParents = this.get(oldId);
+        this.removeAll(oldId);
+        
+        this.putAll(newId, oldParents);
+        
+        for(childId in this.cache) {
+          if(this.cache.hasOwnProperty(childId)) {
+            var parentRecordArray = this.cache[childId];
+            
+            for (var i = 0; i < parentRecordArray.length; ++i) {
+              var parentRecord = parentRecordArray[i];
+              if (parentRecord.parentId === oldId) {
+                parentRecord.parentId = newId;
+              }
+            }
+          }
+        }
+      },
+      
+      /**
+       * @param childId A Term's RunwayId
        * @param parentRecord
        */
       put : function(childId, record) {
@@ -1411,8 +1455,8 @@
       /**
        * Removes the specified parentRecord from the parentRecord[] matching the term id and the parent id.
        */
-      removeRecordMatchingId : function(childId, parentId, treeInst) {
-        var records = this.get(childId, treeInst);
+      removeRecordMatchingId : function(childId, parentId) {
+        var records = this.get(childId);
         
         for (var i = 0; i < records.length; ++i) {
           if (records[i].parentId === parentId) {
@@ -1491,6 +1535,12 @@
         }
         
         throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] and relType [" + relType + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      putAll : function(childId, records) {
+        for (var i = 0; i < records.length; ++i) {
+          this.put(childId, records[i]);
+        }
       },
       
       removeAll : function(termId) {

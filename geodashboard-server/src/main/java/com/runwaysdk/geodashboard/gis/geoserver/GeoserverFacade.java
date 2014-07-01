@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.geoserver;
 
-
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getLocalPath;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getPublisher;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getReader;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getWorkspace;
+import it.geosolutions.geoserver.rest.decoder.RESTLayer;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
@@ -24,7 +24,6 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -33,7 +32,7 @@ import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
 public class GeoserverFacade // extends GeoserverFacadeBase implements
-                             // Reloadable
+// Reloadable
 {
 
   public static final int    SRS_CODE    = 4326;
@@ -41,7 +40,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   public static final String SRS         = "EPSG:" + SRS_CODE;
 
   public static final String GEOM_COLUMN = "geom";
-  
+
   public static int          MINX_INDEX  = 0;
 
   public static int          MINY_INDEX  = 1;
@@ -66,7 +65,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
 
   public static void refresh()
   {
-    if(GeoserverProperties.getPublisher().reload())
+    if (GeoserverProperties.getPublisher().reload())
     {
       log.info("Reloaded geoserver.");
     }
@@ -78,25 +77,26 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
 
   public static void removeStore()
   {
-    if(GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), true))
+    if (GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(),
+        GeoserverProperties.getStore(), true))
     {
-      log.info("Removed the datastore ["+GeoserverProperties.getStore()+"].");
+      log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
     }
     else
     {
-      log.warn("Failed to remove the datastore ["+GeoserverProperties.getStore()+"].");
+      log.warn("Failed to remove the datastore [" + GeoserverProperties.getStore() + "].");
     }
   }
 
   public static void removeWorkspace()
   {
-    if(GeoserverProperties.getPublisher().removeWorkspace(GeoserverProperties.getWorkspace(), true))
+    if (GeoserverProperties.getPublisher().removeWorkspace(GeoserverProperties.getWorkspace(), true))
     {
-      log.info("Removed the workspace ["+GeoserverProperties.getWorkspace()+"].");
+      log.info("Removed the workspace [" + GeoserverProperties.getWorkspace() + "].");
     }
     else
     {
-      log.warn("Failed to remove the workspace ["+GeoserverProperties.getWorkspace()+"].");
+      log.warn("Failed to remove the workspace [" + GeoserverProperties.getWorkspace() + "].");
     }
   }
 
@@ -104,35 +104,38 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   {
     try
     {
-      if(GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getLocalPath())))
+      if (GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(),
+          new URI(GeoserverProperties.getLocalPath())))
       {
-        log.info("Created the workspace ["+GeoserverProperties.getWorkspace()+"].");
+        log.info("Created the workspace [" + GeoserverProperties.getWorkspace() + "].");
       }
       else
       {
-        log.warn("Failed to create the workspace ["+GeoserverProperties.getWorkspace()+"].");
+        log.warn("Failed to create the workspace [" + GeoserverProperties.getWorkspace() + "].");
       }
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI ["+GeoserverProperties.getLocalPath()+"] is invalid.", e);
+      throw new ConfigurationException("The URI [" + GeoserverProperties.getLocalPath()
+          + "] is invalid.", e);
     }
   }
-  
+
   /**
    * Checks if Geoserver is available.
+   * 
    * @return
    */
   public static boolean geoserverExists()
   {
-    if(getReader().existGeoserver())
+    if (getReader().existGeoserver())
     {
-      log.info("A geoserver instance is running at ["+getLocalPath()+"].");
+      log.info("A geoserver instance is running at [" + getLocalPath() + "].");
       return true;
     }
     else
     {
-      log.warn("A geoserver instance is NOT running at ["+getLocalPath()+"].");
+      log.warn("A geoserver instance is NOT running at [" + getLocalPath() + "].");
       return false;
     }
   }
@@ -165,7 +168,8 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
     encoder.setLooseBBox(true);
     encoder.setExposePrimaryKeys(true);
 
-    if (GeoserverProperties.getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(), encoder))
+    if (GeoserverProperties.getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(),
+        encoder))
     {
       log.info("Published the store [" + GeoserverProperties.getStore() + "].");
     }
@@ -207,7 +211,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
    */
   public static List<String> getLayers()
   {
-    return GeoserverProperties.getReader().getLayers().getNames();
+    return getReader().getLayers().getNames();
   }
 
   /**
@@ -283,34 +287,34 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
     }
   }
 
-  public static void publishStyle(String styleName, String body, boolean force)
+  public static boolean publishStyle(String styleName, String body, boolean force)
   {
-    if(force && styleExists(styleName))
+    if (force && styleExists(styleName))
     {
       getPublisher().removeStyle(styleName, true);
     }
+
+    if (GeoserverProperties.getPublisher().publishStyle(body, styleName))
+    {
+      log.info("Published the SLD [" + styleName + "].");
+      return true;
+    }
     else
     {
-      if (GeoserverProperties.getPublisher().publishStyle(body, styleName))
-      {
-        log.info("Published the SLD [" + styleName + "].");
-      }
-      else
-      {
-        log.warn("Failed to publish the SLD [" + styleName + "].");
-      }
+      log.warn("Failed to publish the SLD [" + styleName + "].");
+      return false;
     }
   }
-  
+
   /**
    * Publishes the SQL of the given name with the XML body.
    * 
    * @param styleName
    * @param body
    */
-  public static void publishStyle(String styleName, String body)
+  public static boolean publishStyle(String styleName, String body)
   {
-    publishStyle(styleName, body, true);
+    return publishStyle(styleName, body, true);
   }
 
   /**
@@ -349,7 +353,8 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
 
-      if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
+      if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
+          GeoserverProperties.getStore(), fte, le))
       {
         log.info("Created the layer [" + layer + "] in geoserver.");
         return true;
@@ -362,41 +367,41 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
     }
   }
 
-//  public static void publishSQLView(String viewName, String sql)
-//  {
-//    if (viewExists(viewName))
-//    {
-//      log.info("The database view [" + viewName + "] already exists.");
-//    }
-//    else
-//    {
-//      Database.createView(viewName, sql);
-//      log.info("Created the database view [" + viewName + "].");
-//    }
-//  }
-//
-//  /**
-//   * Removes the database view that is associated with a layer.
-//   * 
-//   * @param viewName
-//   */
-//  public static void removeSQLView(String viewName, String sql)
-//  {
-//    // Remove the database view
-//    if (viewExists(viewName))
-//    {
-//      try
-//      {
-//        Database.dropView(viewName, sql, false);
-//        log.info("Removed the database view [" + viewName + "].");
-//      }
-//      catch (Throwable t)
-//      {
-//        // log the error but continue to allow further processing
-//        log.error("Failed to remove the database view [" + viewName + "].");
-//      }
-//    }
-//  }
+  // public static void publishSQLView(String viewName, String sql)
+  // {
+  // if (viewExists(viewName))
+  // {
+  // log.info("The database view [" + viewName + "] already exists.");
+  // }
+  // else
+  // {
+  // Database.createView(viewName, sql);
+  // log.info("Created the database view [" + viewName + "].");
+  // }
+  // }
+  //
+  // /**
+  // * Removes the database view that is associated with a layer.
+  // *
+  // * @param viewName
+  // */
+  // public static void removeSQLView(String viewName, String sql)
+  // {
+  // // Remove the database view
+  // if (viewExists(viewName))
+  // {
+  // try
+  // {
+  // Database.dropView(viewName, sql, false);
+  // log.info("Removed the database view [" + viewName + "].");
+  // }
+  // catch (Throwable t)
+  // {
+  // // log the error but continue to allow further processing
+  // log.error("Failed to remove the database view [" + viewName + "].");
+  // }
+  // }
+  // }
 
   /**
    * Removes the layer from geoserver.
@@ -488,7 +493,9 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
    */
   public static boolean layerExists(String layer)
   {
-    return GeoserverProperties.getReader().getLayer(layer) != null;
+    String workspace = GeoserverProperties.getWorkspace();
+    RESTLayer layerObj = getReader().getLayer(workspace, layer);
+    return layerObj != null;
   }
 
   /**

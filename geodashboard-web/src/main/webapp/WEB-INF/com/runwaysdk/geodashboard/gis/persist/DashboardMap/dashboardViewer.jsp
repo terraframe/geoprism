@@ -46,7 +46,8 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerController.CLASS
+      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerController.CLASS,
+      
       }, true);
     out.print(js);
   }

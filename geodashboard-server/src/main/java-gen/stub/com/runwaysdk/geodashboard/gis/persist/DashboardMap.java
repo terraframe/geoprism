@@ -22,6 +22,7 @@ import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
+import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
@@ -86,15 +87,81 @@ public class DashboardMap extends DashboardMapBase implements
       iter.close();
     }
   }
+  
+//  public String orderLayers(String[] layerIds)
+//  {
+//    HasLayerQuery q = new HasLayerQuery(new QueryFactory());
+//    q.WHERE(q.parentId().EQ(this.getId()));
+//    q.AND(q.childId().IN(layerIds));
+//    
+//    OIterator<? extends HasLayer> iter = q.getIterator();
+//    
+//    try
+//    {
+//      int order = 1;
+//      while(iter.hasNext())
+//      {
+//        HasLayer rel = iter.next();
+//        rel.appLock();
+//        rel.setLayerIndex(order++);
+//        rel.apply();
+//      }
+//    }
+//    finally
+//    {
+//      iter.close();
+//    }
+//
+//    return this.getMapJSON();
+//  }
 
-  public String getMapJSON()
+  @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
+  public String getMapJSON(String config)
   {
     try
     {
+      System.out.print("CONFIG: ");
+      System.out.println(config);
+      
+      DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      
+      log.debug("Looping over layers for map ["+this.toString()+"] and removing artifacts.");
+      
+      for(DashboardLayer layer : orderedLayers)
+      {
+        String layerName = layer.getViewName();
+        
+        // remove the layer
+        try
+        {
+          GeoserverFacade.removeLayer(layerName);
+          log.debug("Deleting layer ["+layerName+"].");
+        }
+        catch(Throwable t)
+        {
+          log.error("Error deleting layer ["+layerName+"].", t);
+          
+        }
+        
+        // remove the style
+        try
+        {
+          GeoserverFacade.removeStyle(layerName);
+          log.debug("Deleting style ["+layerName+"].");
+        }
+        catch(Throwable t)
+        {
+          log.error("Error deleting style ["+layerName+"].", t);
+        }
+      }
+      
+      // now that we've deleted all the map artifacts refresh geoserver
+      // so any read/write operations will use accurate date
+      GeoserverFacade.refresh();
+      
       /**
        * All layers returned in order and if they're enabled
        */
-      DashboardLayer[] orderedLayers = this.getOrderedLayers();
       for(DashboardLayer layer : orderedLayers)
       {
         String layerName = layer.getViewName();
@@ -114,31 +181,30 @@ public class DashboardMap extends DashboardMapBase implements
         
         try
         {
-          GeoserverFacade.removeStyle(layerName);
-        }
-        catch(Throwable t)
-        {
-          log.warn("Publishing style ["+layerName+"].", t);
-        }
-        finally
-        {
           SLDMapVisitor visitor = new SLDMapVisitor();
           this.accepts(visitor);
           String sld = visitor.getSLD(layer);
-          GeoserverFacade.publishStyle(layerName, sld);
+          
+          if(!GeoserverFacade.publishStyle(layerName, sld))
+          {
+            log.error("Failure publishing style ["+layerName+"].");
+          }
+        }
+        catch(Throwable t)
+        {
+          log.error("Error publishing style ["+layerName+"].", t);
         }
         
         try
         {
-          GeoserverFacade.removeLayer(layerName);
+          if(!GeoserverFacade.publishLayer(layerName, layerName))
+          {
+            log.error("Failure publishing layer ["+layerName+"].");
+          }
         }
         catch(Throwable t)
         {
-          log.warn("Publishing layer ["+layerName+"].", t);
-        }
-        finally
-        {
-          GeoserverFacade.publishLayer(layerName, layerName);
+          log.error("Error publishing layer ["+layerName+"].", t);
         }
       }
 
@@ -361,6 +427,12 @@ public class DashboardMap extends DashboardMapBase implements
     }
 
     super.delete();
+  }
+  
+  @Override
+  public String toString()
+  {
+    return String.format("[%s] = %s", this.getClassDisplayLabel(), this.getName());
   }
   
   /**

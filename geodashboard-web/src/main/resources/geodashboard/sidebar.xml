@@ -8,7 +8,7 @@
   </item>
   
   <item name="Datatype_Management">
-    <!-- <item name="Term_Ontology_Admin" uri="admin/ontologies"/> -->
+    <item name="Term_Ontology_Admin" uri="admin/ontologies"/>
     <item name="Data_Browser" uri="admin/databrowser"/> 
   </item>
   

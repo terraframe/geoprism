@@ -1,7 +1,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdTerm isAbstract="false" description="Classifier" removable="false"
+      <mdTerm isAbstract="false" description="Classifier" hasDeterministicId="true" removable="false"
 	      name="com.runwaysdk.geodashboard.ontology.Classifier" label="Classifier"
 	      table="classifier" publish="true" extendable="true"
 	      generateController="true">
