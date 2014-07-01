@@ -557,7 +557,7 @@
           });             
 
           // Create the HTML for each row (base layer representation).
-          var checked = '';
+          var checked = 'checked="checked"';
           var id = 'overlay_layer_'+i;                  
           var b = layer;
           b.id = id;  
@@ -569,9 +569,10 @@
           // It often helps new users to see an overlay in action on initial map load.
           if(i === 0){
             this._currentOverlay = this._defaultOverlay = layer;
-            checked = 'checked="checked"';
-            this._map.addLayer(layer);
+            //checked = 'checked="checked"';
           }
+
+          this._map.addLayer(layer);
 
           html += '<div class="row-form">';
           html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
