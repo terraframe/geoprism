@@ -1,5 +1,5 @@
 (function(){
-	
+  
   var Component = com.runwaysdk.ui.Component;  
   var DynamicMapName = GDB.Constants.GIS_PACKAGE+'DynamicMap';
   
@@ -7,16 +7,16 @@
   * LANGUAGE
   */
   com.runwaysdk.Localize.defineLanguage(DynamicMapName, {
-	 "googleStreets" : "Google Streets",
-	 "googleSatellite" : "Google Satellite",
-	 "googleHybrid" : "Google Hybrid",
-	 "googleTerrain" : "Google Terrain",
-	 "osmBasic" : "Open Street Map"
+   "googleStreets" : "Google Streets",
+   "googleSatellite" : "Google Satellite",
+   "googleHybrid" : "Google Hybrid",
+   "googleTerrain" : "Google Terrain",
+   "osmBasic" : "Open Street Map"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
-	  
-	Extends : Component,
+    
+  Extends : Component,
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
@@ -100,7 +100,7 @@
           var id = el.data('id');
           com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
             onSuccess : function(){
-              that._removeLayer(id);
+              that._removeLayer(el, id);
             },
             onFailure : function(e){
               that.handleException(e);
@@ -115,7 +115,7 @@
        * 
        * @param id
        */
-      _removeLayer : function(id){
+      _removeLayer : function(el, id){
         
         var toRemove = this._layerCache.get(id);
         
@@ -164,9 +164,6 @@
             }
           },
           onFailure : function(e){
-            if(Mojo.Util.isString(e)){
-              console.log('EX: '+e)
-            }
             that.handleException(e);
           }
         });
@@ -219,7 +216,7 @@
         // the SATELLITE layer has all 22 zoom level, so we add it first to
         // become the internal base layer that determines the zoom levels of the
         // map.
-        var gsat = new L.Google('SATELLITE');        	
+        var gsat = new L.Google('SATELLITE');         
         var gphy = new L.Google('TERRAIN');       
         var gmap = new L.Google('ROADMAP');       
         var ghyb = new L.Google('HYBRID');
@@ -262,19 +259,19 @@
           // Assigning better display labels.
           var label = '';
           if(b._type === 'ROADMAP'){
-        	  label = this.localize("googleStreets");
+            label = this.localize("googleStreets");
           }
           else if(b._type === 'SATELLITE'){
-        	  label = this.localize("googleSatellite");
+            label = this.localize("googleSatellite");
           }
           else if(b._type === 'TERRAIN'){
-        	  label = this.localize("googleTerrain");
+            label = this.localize("googleTerrain");
           }
           else if(b._type === 'HYBRID'){
-        	  label = this.localize("googleHybrid");
+            label = this.localize("googleHybrid");
           }
           else if(b._gdbcustomtype === 'OSM'){
-        	  label = this.localize("osmBasic");
+            label = this.localize("osmBasic");
           }
 
           html += '<div class="row-form">';
@@ -296,12 +293,13 @@
         jcf.customForms.replaceAll(el);
         
         // add event handlers to manage the actual check/uncheck process
+        var handler = Mojo.Util.bind(this, this._selectBaseLayer);
         for(var i=0; i<ids.length; i++){
           var id = ids[i];
           var check = $('#'+id);
           
-          var handler = Mojo.Util.bind(this, this._selectBaseLayer);
           check.on('change', this._baseLayers.get(id), handler);
+          jcf.lib.event.add(check.prev()[0], jcf.eventPress, handler, this);
         }
         
       },
@@ -312,39 +310,74 @@
        * @param e
        */
       _selectBaseLayer : function(e){
-    	  				
-        var changed = e.currentTarget;
-        var changedId = changed.id;
-        var changedLayer = this._baseLayers.get(changedId);
-        
-        var ids = this._baseLayers.keySet();
-        
-        var newBaseLayer = null;
-        if(changed.checked){
-          // uncheck other base layers without firing the event (to avoid infinte event looping)
-          for(var i=0; i<ids.length; i++){
+        if(e.type === jcf.eventPress){
+          
+          // is this input already checked? If so uncheck it even if it means
+          // removing the base layer and rendering the map empty.
+          
+          // DIV is the current target which will be used as the reference
+          var div = e.currentTarget;
+          var checkbox = div.nextSibling;
+          var parent = div.parentNode;
+          
+          var real = checkbox; //document.getElementById(checkbox.id);
+          var checked = real.getAttribute('checked') === 'checked' || real.checked === true;
+
+          if(checked){
+            var id = checkbox.id;
+
+            checkbox.jcf.realElement.disabled = true;
+            checkbox.jcf.realElement.checked = false;
+            checkbox.jcf.fakeElement.disabled = true;
+            checkbox.jcf.fakeElement.checked = false;
             
-            var id = ids[i];
-            if(id === changedId){
-              newBaseLayer = changedLayer;
-              document.getElementById(id).disabled=true;
-            }
-            else{
-              document.getElementById(id).disabled=false;
-              var uncheck = document.getElementById(id);
-              uncheck.checked = false;
-              jcf.customForms.refreshElement(uncheck);
-              
-              var layer = this._baseLayers.get(id);
-              this._map.removeLayer(layer);             	
-            }
+            checkbox.jcf.refreshState();
+            
+            var layer = this._baseLayers.get(id);
+            this._map.removeLayer(layer);
           }
         }
-        // then add the layer and set it to stack below the overlays
-        this._map.addLayer(newBaseLayer);
-        if(newBaseLayer._gdbcustomtype === 'OSM'){
-        	newBaseLayer.bringToBack();  // this throws an error for non OSM layers 
+        else {
+
+          var changed = e.currentTarget;
+          
+          if(changed.checked){
+            var changedId = changed.id;
+            var changedLayer = this._baseLayers.get(changedId);
+            
+            var ids = this._baseLayers.keySet();
+            
+            var newBaseLayer = null;
+
+            // uncheck other base layers without firing the event (to avoid infinte event looping)
+            for(var i=0; i<ids.length; i++){
+              
+              var id = ids[i];
+              if(id === changedId){
+                newBaseLayer = changedLayer;
+                document.getElementById(id).disabled=true;
+              }
+              else{
+                document.getElementById(id).disabled=false;
+                var uncheck = document.getElementById(id);
+                uncheck.checked = false;
+                jcf.customForms.refreshElement(uncheck);
+                
+                var layer = this._baseLayers.get(id);
+                this._map.removeLayer(layer);               
+              }
+            }
+          
+            // then add the layer and set it to stack below the overlays
+            this._map.addLayer(newBaseLayer);
+            if(newBaseLayer._gdbcustomtype === 'OSM'){
+              newBaseLayer.bringToBack();  // this throws an error for non OSM layers 
+            }
+
+          }
         }
+        
+        return false;
       },
       
       /**
@@ -353,7 +386,7 @@
        * @param e
        */
       _selectOverlayLayer : function(e){
-    	  
+        
           var changed = e.currentTarget;
           var changedId = changed.id;
           var changedLayer = this._overlayLayers.get(changedId);
@@ -361,26 +394,26 @@
           
           var newOverlayLayer = null;
           if(changed.checked){
-        	  for(var i=0; i<ids.length; i++){
-        		  var id = ids[i];
-        		  if(id === changedId){
-        			  newOverlayLayer = changedLayer;
-        			  this._map.addLayer(newOverlayLayer);
-        		  }
-        	  }
+            for(var i=0; i<ids.length; i++){
+              var id = ids[i];
+              if(id === changedId){
+                newOverlayLayer = changedLayer;
+                this._map.addLayer(newOverlayLayer);
+              }
+            }
           }
           else{
-        	  for(var i=0; i<ids.length; i++){            	  
+            for(var i=0; i<ids.length; i++){                
                   var id = ids[i];
                   if(id === changedId){
-                	  var uncheck = document.getElementById(id);
-                	  uncheck.checked = false;
-                	  jcf.customForms.refreshElement(uncheck);
+                    var uncheck = document.getElementById(id);
+                    uncheck.checked = false;
+                    jcf.customForms.refreshElement(uncheck);
                   
-                	  var removeLayer = this._overlayLayers.get(id);
-                	  this._map.removeLayer(removeLayer);
+                    var removeLayer = this._overlayLayers.get(id);
+                    this._map.removeLayer(removeLayer);
                   }
-        	  }
+            }
           }
       },
       
@@ -567,8 +600,6 @@
         this._rendered = true;       
       },
       
-      
-      
       _refreshMap : function(){
         
         var that = this;
@@ -632,24 +663,24 @@
        * 
        */
       _selectColor : function(){
-    	  
-    	  // color dropdown buttons
-    	  var total1 = $('.color-holder').colpick({
-    			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-    			onChange:function(hsb,hex,rgb,el,bySetColor) {
-    				$(el).find(".ico").css('background','#'+hex);
-    				$(el).find('.color-input').attr('value', '#'+hex);
-    			}
-    		}); 
-    	  
-    	  // category layer type colors
-    	  var total2 = $("#category-colors-container").find('.icon-color').colpick({
-  			submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-  			onChange:function(hsb,hex,rgb,el,bySetColor) {
-  				$(el).css('background','#'+hex);
-  				$(el).find('.color-input').attr('value', '#'+hex);
-  			}
-    	  });
+        
+        // color dropdown buttons
+        var total1 = $('.color-holder').colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).find(".ico").css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);
+          }
+        }); 
+        
+        // category layer type colors
+        var total2 = $("#category-colors-container").find('.icon-color').colpick({
+        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+        onChange:function(hsb,hex,rgb,el,bySetColor) {
+          $(el).css('background','#'+hex);
+          $(el).find('.color-input').attr('value', '#'+hex);
+        }
+        });
       },
       
       /**
@@ -658,32 +689,32 @@
        * 
        */
       _selectLayerType : function(){
-    	  var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
-    	  $('input:radio[name="layer.'+layerType+'"]').change(function(){ 	
-    		  		
-    		  		var targetRadio = $(this);
-    		  		
-    		  		// hide all the styling options
-	        		$.each($('.tab-pane'), function(){
-	        			if($(this).is(":visible")){
-	        				$(this).hide();	
-	        			}
-	        		});
-	        	
-	        		// add the relevant styling options for the layer type
-			        if (targetRadio.attr("id") === "radio1") {
-			            $("#tab001").show();
-			        }
-			        else if (targetRadio.attr("id") === "radio2") {
-			            $("#tab002").show();
-			        }
-			        else if (targetRadio.attr("id") === "radio3") {
-			            $("#tab003").show();
-			        }
-			        else if (targetRadio.attr("id") === "radio4") {
-			            $("#tab004").show();
-			        }
-    		});
+        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
+        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
+              
+              var targetRadio = $(this);
+              
+              // hide all the styling options
+              $.each($('.tab-pane'), function(){
+                if($(this).is(":visible")){
+                  $(this).hide(); 
+                }
+              });
+            
+              // add the relevant styling options for the layer type
+              if (targetRadio.attr("id") === "radio1") {
+                  $("#tab001").show();
+              }
+              else if (targetRadio.attr("id") === "radio2") {
+                  $("#tab002").show();
+              }
+              else if (targetRadio.attr("id") === "radio3") {
+                  $("#tab003").show();
+              }
+              else if (targetRadio.attr("id") === "radio4") {
+                  $("#tab004").show();
+              }
+        });
       }
     }
    
@@ -712,4 +743,3 @@
   });
   
 })();
-
