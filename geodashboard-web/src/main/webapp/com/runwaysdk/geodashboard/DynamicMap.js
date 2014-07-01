@@ -614,7 +614,7 @@
                   that.handleException(e);
                 }
             })
-            , this._mapId);
+            , this._mapId, '{testKey:"TestValue"}');
       },
       
       _openLayerForAttribute : function(e){
