@@ -114,14 +114,14 @@ public class DashboardMap extends DashboardMapBase implements
 //
 //    return this.getMapJSON();
 //  }
-  
-  
 
   @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
-  public String getMapJSON()
+  public String getMapJSON(String config)
   {
     try
     {
+      System.out.print("CONFIG: ");
+      System.out.println(config);
       
       DashboardLayer[] orderedLayers = this.getOrderedLayers();
       
