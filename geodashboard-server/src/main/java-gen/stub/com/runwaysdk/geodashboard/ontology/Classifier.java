@@ -2,6 +2,8 @@ package com.runwaysdk.geodashboard.ontology;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.business.ontology.Term;
@@ -11,6 +13,8 @@ import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.DeleteRootException;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.ImmutableRootException;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
@@ -25,6 +29,36 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   public Classifier()
   {
     super();
+  }
+  
+  @Override
+  public void apply()
+  {
+    applyInternal();
+  }
+
+  /**
+   * Persists this Classifier, performs validation on its values, and generates a UniqueId from the display label, if necessary.
+   */
+  @Transaction
+  public void applyInternal()
+  {
+    if (this.getKey().equals(ROOT_KEY))
+    {
+      ImmutableRootException exception = new ImmutableRootException("Cannot modify the root Classifier.");
+      exception.setRootName(ROOT_KEY);
+      exception.apply();
+      
+      throw exception;
+    }
+    
+    // If they didn't specify a UniqueId we can figure one out from the DisplayLabel
+    if (this.getClassifierId() == null || this.getClassifierId().length() == 0) {
+      String uniqueId = this.getDisplayLabel().getValue().trim().replaceAll("\\s+","");
+      this.setClassifierId(uniqueId);
+    }
+    
+    super.apply();
   }
   
   @Override
@@ -56,9 +90,15 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public static TermAndRel create(Classifier dto, String parentId)
   {
-    dto.apply();
-    
     Classifier parent = Classifier.get(parentId);
+    
+    // If they didn't specify a package we can attempt to figure one out for them.
+    if (dto.getClassifierPackage() == null || dto.getClassifierPackage().length() == 0) {
+      String camelUniqueId = StringUtils.uncapitalize(parent.getClassifierId().trim().replaceAll("\\s+",""));
+      dto.setClassifierPackage(parent.getClassifierPackage() + KEY_CONCATENATOR + camelUniqueId);
+    }
+    
+    dto.apply();
     
     Relationship rel = dto.addLink(parent, ClassifierIsARelationship.CLASS);
     
