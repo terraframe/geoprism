@@ -21,9 +21,11 @@
       </object>      
     </create>
     <permissions>
+    <!-- 
       <role roleName="geodashboard.admin.Administrator">
         <superRole roleName="Administrator"/>
       </role>
+     -->
       <role roleName="geodashboard.dashboard.TestDashboard">
         <grant>
           <mdBusinessPermission type="com.runwaysdk.geodashboard.GeodashboardUser">
