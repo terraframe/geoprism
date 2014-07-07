@@ -30,7 +30,7 @@
 	    </object>
 	    
 	    <mdTermRelationship name="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship"
-	      isAbstract="false" description="ClassifierIsA Relationship"
+	      isAbstract="false" description="ClassifierIsA Relationship" hasDeterministicId="true"
 	      label="ClassifierIsA Relationship" generateController="false" associationType="TREE">
 	      <parent cardinality="*"
 	        name="com.runwaysdk.geodashboard.ontology.Classifier" method="IsAParent" />
