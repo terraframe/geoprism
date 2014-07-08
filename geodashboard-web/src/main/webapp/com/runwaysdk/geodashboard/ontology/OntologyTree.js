@@ -31,11 +31,7 @@
    * LANGUAGE
    */
   com.runwaysdk.Localize.defineLanguage(ontologyTreeName, {
-    "newCountry" : "New Country",
-    "deleteDescribe" : "Are you sure you want to delete '${termLabel}' and all GeoEntities that may reference it?",
-    "isANode" : "Subtypes",
-    "createIsA" : "Create Subtype",
-    "refreshIsA" : "Refresh Subtypes"
+    "deleteDescribe" : "Are you sure you want to delete '${termLabel}' and all of its children?",
   });
   
   /**

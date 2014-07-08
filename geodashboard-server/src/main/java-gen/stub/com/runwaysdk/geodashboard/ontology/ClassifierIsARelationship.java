@@ -14,4 +14,10 @@ public class ClassifierIsARelationship extends ClassifierIsARelationshipBase imp
     this(parent.getId(), child.getId());
   }
   
+  @Override
+  public String buildKey()
+  {
+    return this.getParentId() + this.getChildId();
+  }
+  
 }
