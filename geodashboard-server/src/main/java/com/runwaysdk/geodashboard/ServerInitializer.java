@@ -23,38 +23,43 @@ public class ServerInitializer implements Reloadable
 
         for (ServerContextListenerInfo info : infos)
         {
-            System.out.println(info.getClassName());
-            
             try
             {
 
                 Class<?> clazz = LoaderDecorator.load(info.getClassName());
                 Object newInstance = clazz.newInstance();
 
-                Class<? extends Object> class1 = newInstance.getClass();
-                ClassLoader loader1 = class1.getClassLoader();
+                try
+                {
+                    ServerContextListener listener = (ServerContextListener) newInstance;
+                    listener.startup();
+                }
+                catch (ClassCastException e)
+                {
+                    log.error("ClassCastException initializer", e);
 
-                System.out.println("New instance class : " + class1.hashCode());
-                System.out.println("New instance class loader: " + loader1.hashCode());
+                    Class<? extends Object> class1 = newInstance.getClass();
+                    ClassLoader loader1 = class1.getClassLoader();
 
-                Class<? extends Object> class2 = ServerContextListener.class;
-                ClassLoader loader2 = class2.getClassLoader();
+                    log.debug("New instance class : " + class1.hashCode());
+                    log.debug("New instance class loader: " + loader1.hashCode());
 
-                System.out.println("Interface class : " + class2.hashCode());
-                System.out.println("New instance class loader: " + loader2.hashCode());
+                    Class<? extends Object> class2 = ServerContextListener.class;
+                    ClassLoader loader2 = class2.getClassLoader();
 
-                ServerContextListener listener = (ServerContextListener) newInstance;
-                listener.startup();
+                    log.debug("Interface class : " + class2.hashCode());
+                    log.debug("New instance class loader: " + loader2.hashCode());
+
+                    clazz.getMethod("startup").invoke(newInstance);
+                }
 
                 log.debug("COMLPETE: " + info.getClassName() + ".setup();");
             }
             catch (Exception e)
             {
                 log.error(e);
-                
-                e.printStackTrace();
 
-                //throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+                throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
             }
         }
     }
@@ -69,12 +74,35 @@ public class ServerInitializer implements Reloadable
         {
             try
             {
+
                 Class<?> clazz = LoaderDecorator.load(info.getClassName());
-                ServerContextListener listener = (ServerContextListener) clazz.newInstance();
-                listener.shutdown();
+                Object newInstance = clazz.newInstance();
 
-                log.debug("COMLPETE: " + info.getClassName() + ".setup();");
+                try
+                {
+                    ServerContextListener listener = (ServerContextListener) newInstance;
+                    listener.shutdown();
+                }
+                catch (ClassCastException e)
+                {
+                    log.error("ClassCastException in ServerInitializer.shutdown", e);
 
+                    Class<? extends Object> class1 = newInstance.getClass();
+                    ClassLoader loader1 = class1.getClassLoader();
+
+                    log.debug("New instance class : " + class1.hashCode());
+                    log.debug("New instance class loader: " + loader1.hashCode());
+
+                    Class<? extends Object> class2 = ServerContextListener.class;
+                    ClassLoader loader2 = class2.getClassLoader();
+
+                    log.debug("Interface class : " + class2.hashCode());
+                    log.debug("New instance class loader: " + loader2.hashCode());
+
+                    clazz.getMethod("shutdown").invoke(newInstance);
+                }
+
+                log.debug("COMLPETE: " + info.getClassName() + ".shutdown();");
             }
             catch (Exception e)
             {
@@ -83,6 +111,5 @@ public class ServerInitializer implements Reloadable
                 throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
             }
         }
-
     }
 }
