@@ -15,8 +15,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   
   private static final String KEY_CONCATENATOR    = ".";
   
-  public static final String ROOT_KEY             = "ROOT" + KEY_CONCATENATOR + "ROOT";
-  
   public Classifier()
   {
     super();
@@ -64,7 +62,13 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     // If they didn't specify a package we can attempt to figure one out for them.
     if (dto.getClassifierPackage() == null || dto.getClassifierPackage().length() == 0) {
       String camelUniqueId = StringUtils.uncapitalize(parent.getClassifierId().trim().replaceAll("\\s+",""));
-      dto.setClassifierPackage(parent.getClassifierPackage() + KEY_CONCATENATOR + camelUniqueId);
+      
+      if (Classifier.getRoot().equals(parent)) {
+        dto.setClassifierPackage(camelUniqueId);
+      }
+      else {
+        dto.setClassifierPackage(parent.getClassifierPackage() + KEY_CONCATENATOR + camelUniqueId);
+      }
     }
     
     dto.apply();
