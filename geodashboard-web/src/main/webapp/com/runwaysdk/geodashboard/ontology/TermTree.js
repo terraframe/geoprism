@@ -720,27 +720,23 @@
         
         if (node === "#") { return; }
         
+        var li = $("#" + node.id);
+        
         if (bool) {
           this.busyNodes.add(node.id);
+          
+          if (li != null && li != false && li.length != 0) {
+            li.addClass("jstree-loading");
+          }
         }
         else {
           this.busyNodes.remove(node.id);
+          
+          if (li != null && li != false && li.length != 0) {
+            li.removeClass("jstree-loading");
+          }
         }
         
-//        if (node.parent == null) {
-//          if (bool) {
-//            this._busydiv = this.getFactory().newElement("div");
-//            this._busydiv.addClassName("jqtree-node-busy");
-//            this.insertBefore(this._busydiv, this.getChildren()[0]);
-//            return;
-//          }
-//          else {
-//            if (this._busydiv.getParent() != null) {
-//              this._busydiv.destroy();
-//            }
-//          }
-//        }
-//        else {
 //          var el = $(node.element);
 //          
 //          if (bool) {
@@ -862,12 +858,13 @@
           this.duplicateMap.put(movedNode.data.runwayId, duplicates);
         }
         var index = this.__findInsertIndex(nodeMetadata.text, newParent);
-        $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
+        var newNodeId = $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
         $thisTree.jstree("open_node", newParent);
+        return $thisTree.jstree("get_node", newNodeId);
       },
       
       /**
-       * is binded to jqtree's node move event.s
+       * is binded to jqtree's node move event.
        */
       __onNodeMove : function(jqEvent, treeEvent) {
         if (this._isMoving || this._isMoving2) { return; }
@@ -885,7 +882,7 @@
         
         // Really lame jsTree.. the move has already happend and there's no way to prevent it, so we're going to roll it back right here and then perform it later manually.
         this._isMoving = true;
-        this.moveNode(movedNode, previousParent);
+        movedNode = this.moveNode(movedNode, previousParent);
         this._isMoving = false;
         
         
