@@ -18,15 +18,6 @@ public class ClassifierController extends ClassifierControllerBase implements co
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
   
-  public void cancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
-  {
-    dto.unlock();
-    this.view(dto.getId());
-  }
-  public void failCancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
-  {
-    this.edit(dto.getId());
-  }
   public void create(ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
   {
     try
@@ -45,37 +36,16 @@ public class ClassifierController extends ClassifierControllerBase implements co
       }
     }
   }
-  public void failCreate(ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
-  {
-    req.setAttribute("item", dto);
-    render("createComponent.jsp");
-  }
   public void delete(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.delete();
-      this.viewAll();
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failDelete(dto);
     }
-  }
-  public void failDelete(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
-  {
-    req.setAttribute("item", dto);
-    render("editComponent.jsp");
-  }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), id);
-    req.setAttribute("item", dto);
-    render("editComponent.jsp");
-  }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    this.view(id);
   }
   public void getDirectDescendants(java.lang.String parentId, java.lang.Integer pageNum, java.lang.Integer pageSize) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -92,21 +62,6 @@ public class ClassifierController extends ClassifierControllerBase implements co
     catch(Throwable t) {
       ErrorUtility.prepareAjaxThrowable(t, resp);
     }
-  }
-  public void failGetDirectDescendants(java.lang.String parentId, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
-  {
-    resp.sendError(500);
-  }
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
-  {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    ClassifierDTO dto = new ClassifierDTO(clientRequest);
-    req.setAttribute("item", dto);
-    render("createComponent.jsp");
-  }
-  public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
-  {
-    this.viewAll();
   }
   public void update(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -126,6 +81,50 @@ public class ClassifierController extends ClassifierControllerBase implements co
         this.viewUpdate(dto.getId());
       }
     }
+  }
+  public void failCreate(ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    req.setAttribute("item", dto);
+    render("createComponent.jsp");
+  }
+  public void cancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  {
+    dto.unlock();
+    this.view(dto.getId());
+  }
+  public void failCancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.edit(dto.getId());
+  }
+  public void failDelete(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  {
+    req.setAttribute("item", dto);
+    render("editComponent.jsp");
+  }
+  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), id);
+    req.setAttribute("item", dto);
+    render("editComponent.jsp");
+  }
+  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.view(id);
+  }
+  public void failGetDirectDescendants(java.lang.String parentId, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
+  {
+    resp.sendError(500);
+  }
+  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+  {
+    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
+    ClassifierDTO dto = new ClassifierDTO(clientRequest);
+    req.setAttribute("item", dto);
+    render("createComponent.jsp");
+  }
+  public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.viewAll();
   }
   public void failUpdate(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
