@@ -21,7 +21,7 @@
 	      </attributes>
 	    </mdTerm>
     
-	    <object key="ROOT.ROOT" type="com.runwaysdk.geodashboard.ontology.Classifier">
+	    <object key="ROOT" type="com.runwaysdk.geodashboard.ontology.Classifier">
 	      <attribute name="classifierId" value="ROOT" />
 	      <attribute name="classifierPackage" value="ROOT" />
 	      <attributeStruct name="displayLabel">
