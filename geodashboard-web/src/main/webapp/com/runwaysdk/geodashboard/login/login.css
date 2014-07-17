@@ -38,7 +38,7 @@ h1 {
 }
 header {
   margin: 80px auto;
-  width: 280px;
+  text-align: center;
   position: relative;
 }
 label.remember-me {

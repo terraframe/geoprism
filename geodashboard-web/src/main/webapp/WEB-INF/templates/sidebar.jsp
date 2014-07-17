@@ -117,33 +117,31 @@
   activeLink = null;
 
 	function activateLinks(clickedLink) {
-	  if (clickedLink != null && activeLink != null && clickedLink[0] === activeLink[0]) {
-	    return;
-	  }
-	  activeLink = clickedLink;
-
+	    if (clickedLink != null && activeLink != null && clickedLink[0] === activeLink[0]) {
+	    	return;
+	    }
+	    activeLink = clickedLink;
+	
 		// deactivate any active links to start fresh	
 		clearLinks();
-
+		clearBusySpinner()
+	
 		if (clickedLink.hasClass("gdb-links-expander")) {
 			if (clickedLink.next(".gdb-link-container") && window.location.hash) {
-				$(".gdb-link-container a")
-						.each(
-								function() {
-									if ($(this).attr("href") === window.location.pathname
-											+ window.location.hash) {
-										$(this).addClass("link-active");
-									}
-								});
+				$(".gdb-link-container a").each(function() {
+					if ($(this).attr("href") === window.location.pathname + window.location.hash) {
+						$(this).addClass("link-active");
+						clearBusySpinner()
+					}
+				});
 			}
 		} else {
-			clickedLink.addClass("link-active");
-			
+			clickedLink.addClass("link-active");	
 			$("section#main").append("<div class=\"gdb-maincontent-busy\"></div>");
 		}
-
+	
 		var thisParentContainer = clickedLink.parents(".gdb-link-container");
-
+	
 		if (thisParentContainer) {
 			// expand the dropdown if not expanded already
 			if (!thisParentContainer.hasClass("in")) {
@@ -156,8 +154,11 @@
 		$("a.link-active").each(function() {
 			$(this).removeClass("link-active");
 		});
+	}
+
+	function clearBusySpinner() {
 		$(".gdb-maincontent-busy").each(function() {
-		  $(this).remove();
+			  $(this).remove();
 		});
 	}
 
@@ -165,13 +166,11 @@
 		// check for hash because only the home page has no hash
 		// if hash exists set the active link relative to the current
 		if (window.location.hash) {
-			$("a").each(
-					function() {
-						if ($(this).attr("href") === window.location.pathname
-								+ window.location.hash) {
-							activateLinks($(this));
-						}
-					});
+			$("a").each(function() {
+				if ($(this).attr("href") === window.location.pathname + window.location.hash) {
+					activateLinks($(this));
+				}
+			});
 		}
 	}
 
