@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.runwaysdk.constants.ClientConstants;
+import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.web.WebClientSession;
@@ -62,7 +65,14 @@ public class SessionFilter implements Filter, Reloadable
       }
       catch (InvalidSessionExceptionDTO e)
       {
-        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+        // If we're asynchronous, we want to return a serialized exception
+        if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
+          ErrorUtility.prepareAjaxThrowable(e, httpRes);
+        }
+        else {
+          // Not an asynchronous request, redirect to the login page.
+          httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+        }
       }
 
       return;
@@ -74,7 +84,16 @@ public class SessionFilter implements Filter, Reloadable
     }
     else
     {
-      httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+      // The user is not logged in
+      
+      // If we're asynchronous, we want to return a serialized exception
+      if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
+        ErrorUtility.prepareAjaxThrowable(new InvalidSessionExceptionDTO(), httpRes);
+      }
+      else {
+        // Not an asynchronous request, redirect to the login page.
+        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+      }
     }
   }
 
