@@ -59,7 +59,7 @@ public class ServerInitializer implements Reloadable
             {
                 log.error(e);
 
-                throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+//                throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
             }
         }
     }
