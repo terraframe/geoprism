@@ -77,6 +77,7 @@
 	<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
 	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
 	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
 	   
 	<!-- jQuery  -->
 	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
@@ -90,6 +91,9 @@
 	<!-- Custom JavaScript -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 	
     <!-- JQuery UI -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
