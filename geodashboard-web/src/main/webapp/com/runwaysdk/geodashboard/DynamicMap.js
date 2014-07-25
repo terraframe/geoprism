@@ -478,12 +478,19 @@
         
         var jsonBbox = jsonObj.bbox; 
         var jsonLayers = jsonObj.layers;
+        
+        // Handle points & polygons 
+        if (jsonBbox.length === 2){
+        	var center = L.latLng(jsonBbox[1], jsonBbox[0]);
+        	this._map.setView(center, 9);
+        }
+        else if (jsonBbox.length === 4){
+        		var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
+        		var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
+        		var bounds = L.latLngBounds(swLatLng, neLatLng);   
 
-        var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
-        var bounds = L.latLngBounds(swLatLng, neLatLng);   
-
-        this._map.fitBounds(bounds);
+        		this._map.fitBounds(bounds);
+        }
 
         // Add attribution to the map
         this._map.attributionControl.setPrefix('');
