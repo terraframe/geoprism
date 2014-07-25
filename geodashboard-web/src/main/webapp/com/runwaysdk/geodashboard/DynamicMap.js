@@ -269,13 +269,13 @@
 	            label = this.localize("osmBasic");
 	          }
 	          
-	          checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
+	          var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
 	          checkbox.setId(id);
 	          if(i === 0){
 	        	  checkbox.setChecked(checkbox);
 	          }
 	          checkbox.addOnCheckListener(function(event){
-	        	  target = event.getCheckBox();   	
+	        	  target = event.getCheckBox();   
 	        	  that._toggleBaseLayer(target);
 	          });
 	          checkboxContainer.appendChild(checkbox);	          
@@ -295,9 +295,10 @@
        * @param targetCheckbox - target checkbox Checkbox object
       */
       _toggleBaseLayer : function(targetCheckbox){
+    	  
     	target = targetCheckbox;
       	targetId = target.getId();
-    	  	targetEl = document.getElementById(targetId);
+    	targetEl = document.getElementById(targetId);
 
     	var ids = baseLayers.keySet();   	  	   	
     	var isChecked = target.isChecked();
