@@ -38,6 +38,8 @@
       initialize : function(mapDivId, mapId){
         this.$initialize();
         
+        var overlayLayerContainer = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        
         this._googleEnabled = Mojo.Util.isObject(Mojo.GLOBAL.google);
         
         this._mapDivId = mapDivId;
@@ -66,13 +68,23 @@
         this._rendered = false;
         
         var bound = Mojo.Util.bind(this, this._overlayHandler);
-        $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).on('click', 'a', bound);
+        overlayLayerContainer.on('click', 'a', bound);
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
+        
+        
+        overlayLayerContainer.sortable({
+          update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
+        });
+        overlayLayerContainer.disableSelection();
+      },
+      
+      _overlayLayerSortUpdate : function(event, ui) {
+        
       },
       
       _overlayHandler : function(e){
@@ -598,6 +610,58 @@
         this._selectLayerType();
         
         eval(exec);
+        
+        // Move reusable cells to active cell holder
+        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
+        if (activeTab === "tab001basic") {
+          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+        }
+        else if (activeTab === "tab003gradient") {
+          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+        }
+        
+        // Attach listeners
+        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+      },
+      
+      
+      __attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
+        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+        strokeCellHolder.append(polyStroke);
+        polyStroke.show();
+        
+        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+        strokeCellHolder.append(polyStrokeWidth);
+        polyStrokeWidth.show();
+        
+        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+        strokeCellHolder.append(polyStrokeOpacity);
+        polyStrokeOpacity.show();
+        
+        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+        fillCellHolder.append(polyFillOpacity);
+        polyFillOpacity.show();
+      },
+      
+      _onLayerTypeTabChange : function(e) {
+        var activeTab = e.target;
+        
+        var type = activeTab.dataset["gdbTabType"];
+        
+        if (type === "basic") {
+          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+          $("#tab001basic").show();
+        }
+        else if (type === "bubble") {
+          $("#tab002bubble").show();
+        }
+        else if (type === "gradient") {
+          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+          $("#tab003gradient").show();
+        }
+        else if (type === "categories") {
+          $("#tab004categories").show();
+        }
       },
       
       /**

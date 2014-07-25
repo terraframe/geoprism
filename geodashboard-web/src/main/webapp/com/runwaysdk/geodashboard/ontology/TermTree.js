@@ -524,7 +524,7 @@
               nodeMetadata.text = that._getTermDisplayLabel(term);
               nodeMetadata.data = node.data;
               nodeMetadata.state = node.state;
-              nodeMetadata.children = node.children;
+              nodeMetadata.children = that.__recursiveBuildChildren(node);
               nodeMetadata.id = term.getId();
               var retval = $tree.jstree("delete_node", node);
               var parentId = that.getParentId(node);
@@ -550,6 +550,26 @@
         Mojo.Util.merge(this._config.crud.update, config);
         
         new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+      },
+      
+      /**
+       * 
+       * @param parent A jsTree node
+       * @returns An array of children of the given parent node, recursively built to include children of children, if they've been loaded.
+       */
+      __recursiveBuildChildren : function(parent) {
+        var ret = [];
+        var $tree = this.getImpl();
+        
+        for (var i = 0; i < parent.children.length; ++i) {
+          var child = $tree.jstree("get_node", parent.children[i]);
+          
+          child.children = this.__recursiveBuildChildren(child);
+          
+          ret.push(child);
+        }
+        
+        return ret;
       },
       
       getParentNode : function(node) {
@@ -843,8 +863,8 @@
         var $thisTree = this._impl;
         var nodeMetadata = movedNode.original;
         nodeMetadata.data = movedNode.data;
-        nodeMetadata.state = {opened: false};
-        nodeMetadata.children = true;
+        nodeMetadata.state = movedNode.state;
+        nodeMetadata.children = this.__recursiveBuildChildren(movedNode);
         if (!isCopy) {
           $thisTree.jstree("delete_node", movedNode);
         }
