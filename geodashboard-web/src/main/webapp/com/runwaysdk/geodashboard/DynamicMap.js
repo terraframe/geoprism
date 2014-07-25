@@ -84,7 +84,28 @@
       },
       
       _overlayLayerSortUpdate : function(event, ui) {
+        var that = this;
         
+        
+        // Calculate an array of layer ids
+        var layerIds = [];
+        var layers = $("#overlayLayerContainer").find("input");
+        for (var i = 0; i < layers.length; ++i) {
+          var layer = $(layers[i]);
+          layerIds.push(layer.data("id"));
+        }
+        
+        var clientRequest = new Mojo.ClientRequest({
+          onSuccess : function(json){
+            var jsonObj = Mojo.Util.toObject(json);
+            that._refreshMapInternal(jsonObj);
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
       },
       
       _overlayHandler : function(e){
@@ -551,6 +572,8 @@
         // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).         
         var html = '';
         var ids = [];
+        // First create the html objects that represent the layers
+        var layers = [];
         for(var i = 0; i < jsonLayers.length; i++){
           
           var layerObj = jsonObj.layers[i];
@@ -566,7 +589,8 @@
             format: 'image/png',
             transparent: true,
             styles: sldName
-          });             
+          });
+          layers.push(layer);
 
           // Create the HTML for each row (base layer representation).
           var checked = 'checked="checked"';
@@ -584,8 +608,6 @@
             //checked = 'checked="checked"';
           }
 
-          this._map.addLayer(layer);
-
           html += '<div class="row-form">';
           html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+id+'">'+displayName+'</label>';
@@ -593,6 +615,11 @@
           html += '<a href="#" data-id="'+layerId+'" class="ico-edit">edit</a>';
           html += '<a href="#" data-id="'+layerId+'" class="ico-control">control</a></div>';
           html += '</div>';                   
+        }
+        
+        // Then push the layers to leaflet in reverse order to render them as we would expect.
+        for (var i = layers.length-1; i >= 0; i--) {
+          this._map.addLayer(layers[i]);
         }
 
         // combine the rows into new HTML that goes in to the layer switcher

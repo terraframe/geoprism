@@ -241,7 +241,7 @@
                   <label for="f59">According to</label>
                   <div class="select-box">
                     <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
-                      <option value="">none</option>
+                      <option value="">&nbsp;</option>
                       <c:forEach items="${aggregations}" var="aggregation">
                          <c:choose>
                            <c:when test="${aggregation.displayLabel.value == activeAggregation}">

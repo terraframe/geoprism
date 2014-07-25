@@ -7,6 +7,10 @@
 					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
 				</attributes>
 				<mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
+				<mdMethod name="orderLayers" static="false" label="Order Layers" 
+          returnType="java.lang.String">
+          <mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids"  />
+        </mdMethod>
 			</mdBusiness>
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">

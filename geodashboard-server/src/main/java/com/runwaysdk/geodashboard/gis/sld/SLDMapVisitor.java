@@ -23,6 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
@@ -309,11 +310,11 @@ public class SLDMapVisitor implements MapVisitor
          css("fill", color) 
           ).build(root);
       
-      // vendor options (possibly put these in a props file)
-      node("VendorOption").attr("name", "group").text("yes").build(root);
-      node("VendorOption").attr("name", "conflict-resolution").text(true).build(root);
-      node("VendorOption").attr("name", "spaceAround").text(2).build(root);
-      node("VendorOption").attr("name", "goodnessOfFit").text(0.1).build(root);
+      // vendor options
+      node("VendorOption").attr("name", "group").text(GeoserverProperties.getLabelGroup()).build(root);
+      node("VendorOption").attr("name", "conflict-resolution").text(GeoserverProperties.getLabelConflictResolution()).build(root);
+      node("VendorOption").attr("name", "spaceAround").text(GeoserverProperties.getLabelSpaceAround()).build(root);
+      node("VendorOption").attr("name", "goodnessOfFit").text(GeoserverProperties.getLabelGoodnessOfFit()).build(root);
       
       return root;
     }

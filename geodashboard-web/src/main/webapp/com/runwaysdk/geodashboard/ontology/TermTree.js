@@ -1154,7 +1154,7 @@
           node.children = isNodeClosed;
         }
         
-        // God damn it jsTree you buggy piece of shit
+        // jsTree you buggy piece of pie
         if (parentNode.id === "#") {
           parentNode.parents = [];
         }

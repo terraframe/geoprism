@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +53,39 @@ public class DashboardMap extends DashboardMapBase implements
   {
     return this.getAllHasLayer().getAll();
   }
+  
+  /**
+   * MdMethod
+   * 
+   * Invoked after the user reorders a layer via drag+drop in the dashboard viewer.
+   * 
+   * @return The JSON representation of the current DashboardMap.
+   */
+  @Override
+  public java.lang.String orderLayers(java.lang.String[] layerIds) {
+    HasLayerQuery q = new HasLayerQuery(new QueryFactory());
+    q.WHERE(q.parentId().EQ(this.getId()));
+    q.AND(q.childId().IN(layerIds));
+    
+    OIterator<? extends HasLayer> iter = q.getIterator();
+    
+    try
+    {
+      while(iter.hasNext())
+      {
+        HasLayer rel = iter.next();
+        rel.appLock();
+        rel.setLayerIndex(ArrayUtils.indexOf(layerIds, rel.getChildId())+1);
+        rel.apply();
+      }
+    }
+    finally
+    {
+      iter.close();
+    }
+
+    return this.getMapJSON(null);
+  }
 
   /**
    * Returns the layers this map defines in the proper order.
@@ -63,21 +97,17 @@ public class DashboardMap extends DashboardMapBase implements
     QueryFactory f = new QueryFactory();
 
     HasLayerQuery hsQ = new HasLayerQuery(f);
-    DashboardLayerQuery layerQ = new DashboardLayerQuery(f);
-
     hsQ.WHERE(hsQ.parentId().EQ(this.getId()));
-    layerQ.WHERE(layerQ.containingMap(hsQ));
-    layerQ.WHERE(layerQ.getLayerEnabled().EQ(true));
     hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
 
-    OIterator<? extends DashboardLayer> iter = layerQ.getIterator();
+    OIterator<? extends HasLayer> iter = hsQ.getIterator();
 
     try
     {
       List<DashboardLayer> layers = new LinkedList<DashboardLayer>();
       while (iter.hasNext())
       {
-        layers.add(iter.next());
+        layers.add(iter.next().getChild());
       }
 
       return layers.toArray(new DashboardLayer[layers.size()]);
@@ -87,33 +117,6 @@ public class DashboardMap extends DashboardMapBase implements
       iter.close();
     }
   }
-  
-//  public String orderLayers(String[] layerIds)
-//  {
-//    HasLayerQuery q = new HasLayerQuery(new QueryFactory());
-//    q.WHERE(q.parentId().EQ(this.getId()));
-//    q.AND(q.childId().IN(layerIds));
-//    
-//    OIterator<? extends HasLayer> iter = q.getIterator();
-//    
-//    try
-//    {
-//      int order = 1;
-//      while(iter.hasNext())
-//      {
-//        HasLayer rel = iter.next();
-//        rel.appLock();
-//        rel.setLayerIndex(order++);
-//        rel.apply();
-//      }
-//    }
-//    finally
-//    {
-//      iter.close();
-//    }
-//
-//    return this.getMapJSON();
-//  }
 
   @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
   public String getMapJSON(String config)
