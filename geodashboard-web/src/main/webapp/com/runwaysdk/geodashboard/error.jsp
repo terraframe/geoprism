@@ -26,11 +26,21 @@
   <header id="header">
     <h1><gdb:localize key="error.header" /></h1>
   </header>
+    
+  <div name = "main-content" style="color: #F6F3F3;text-align: center;">
+    
+  <c:if test="${exception != null}">
+      <gdb:localize key="error.message" />
   
-  <gdb:localize key="error.message" />
+      <hr>
+      
+      ${exception.localizedMessage}  
+    </c:if>
+    
+    <c:if test="${exception == null}">
+      <gdb:localize key="error.generic" />
+    </c:if>
+  </div>
   
-  <hr>
-  
-  ${exception.localizedMessage}
 </body>
 </html>

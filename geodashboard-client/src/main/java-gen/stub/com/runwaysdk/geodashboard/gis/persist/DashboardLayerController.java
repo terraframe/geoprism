@@ -1,7 +1,8 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -10,8 +11,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
-import com.runwaysdk.system.gis.geo.UniversalQueryDTO;
+import com.runwaysdk.system.gis.geo.AllowedInDTO;
+import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.ontology.TermUtilDTO;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -22,10 +26,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
   private static final Log log = LogFactory.getLog(DashboardLayerController.class);
   
+  private static String rootUniId;
+  
   public DashboardLayerController(javax.servlet.http.HttpServletRequest req,
       javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
+    
+    rootUniId = UniversalDTO.getRoot(this.getClientRequest()).getId();
   }
 
   public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto)
@@ -115,23 +123,46 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("layer", layer);
 
     req.setAttribute("style", style);
-
+    
     String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
     req.setAttribute("fonts", fonts);
 
+    
     // get the universals
-    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
-    req.setAttribute("universals", universals.getResultSet());
+//    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
+//    req.setAttribute("universals", universals.getResultSet());
+    
+    // Get the universals, sorted by their ordering in the universal tree.
+    List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[]{AllowedInDTO.CLASS}));
+    req.setAttribute("universals", universals);
 
+    
     // aggregations
     AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
     req.setAttribute("aggregations", aggQuery.getResultSet());
     Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
     req.setAttribute("aggregationLabels", aggregations);
+    
+    List<String> activeAgg = style.getAggregationTypeEnumNames();
+    if (activeAgg.size() > 0) {
+      req.setAttribute("activeAggregation", aggregations.get(activeAgg.get(0)));
+    }
+    else {
+      req.setAttribute("activeAggregation", "");
+    }
+    
 
     // feature types
     Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
     req.setAttribute("features", features);
+    
+    List<String> layerType = layer.getLayerTypeEnumNames();
+    if (layerType.size() > 0) {
+      req.setAttribute("activeFeature", features.get(layerType.get(0)));
+    }
+    else {
+      req.setAttribute("activeFeature", features.get(AllLayerTypeDTO.BASIC.getName()));
+    }
   }
 
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException

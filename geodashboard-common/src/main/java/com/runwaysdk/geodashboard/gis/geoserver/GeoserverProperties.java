@@ -16,7 +16,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 
 public class GeoserverProperties implements Reloadable
 {
-  private static final String          GEOSERVER_PROPERTIES = "geoserver";
+  private static final String          GEOSERVER_PROPERTIES = "geodashboard/geoserver";
   
   private ResourceBundle bundle;
 
@@ -100,7 +100,43 @@ public class GeoserverProperties implements Reloadable
   {
     return getBundle().getString("geoserver.gwc.dir");
   }
-
+  
+  /**
+   * Labeling VendorOption
+   * group
+   * http://docs.geoserver.org/latest/en/user/styling/sld-reference/labeling.html
+   */
+  public static String getLabelGroup() {
+    return getBundle().getString("geoserver.labeling.group");
+  }
+  
+  /**
+   * Labeling VendorOption
+   * conflict-resolution
+   * http://docs.geoserver.org/latest/en/user/styling/sld-reference/labeling.html
+   */
+  public static String getLabelConflictResolution() {
+    return getBundle().getString("geoserver.labeling.conflict-resolution");
+  }
+  
+  /**
+   * Labeling VendorOption
+   * spaceAround
+   * http://docs.geoserver.org/latest/en/user/styling/sld-reference/labeling.html
+   */
+  public static String getLabelSpaceAround() {
+    return getBundle().getString("geoserver.labeling.spaceAround");
+  }
+  
+  /**
+   * Labeling VendorOption
+   * goodnessOfFit
+   * http://docs.geoserver.org/latest/en/user/styling/sld-reference/labeling.html
+   */
+  public static String getLabelGoodnessOfFit() {
+    return getBundle().getString("geoserver.labeling.goodnessOfFit");
+  }
+  
   /**
    * Returns the Geoserver REST publisher.
    * 

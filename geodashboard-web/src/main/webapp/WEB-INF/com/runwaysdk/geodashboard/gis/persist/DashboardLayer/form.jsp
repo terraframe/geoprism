@@ -241,11 +241,11 @@
                   <label for="f59">According to</label>
                   <div class="select-box">
                     <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
-                      <option></option>
+                      <option value="">&nbsp;</option>
                       <c:forEach items="${aggregations}" var="aggregation">
                          <c:choose>
-                           <c:when test="">
-                             <option value="${fn:length(style.aggregationTypeEnumNames) > 0 && style.aggregationTypeEnumNames[0] == aggregation.enumName}" selected="selected">
+                           <c:when test="${aggregation.displayLabel.value == activeAggregation}">
+                             <option value="${aggregation.enumName}" selected="selected">
                                ${aggregation.displayLabel.value}
                              </option>
                            </c:when>
@@ -269,27 +269,64 @@
               </div>
               <div class="holder style04">
                 <ul class="nav-tabs type-tabs">
-                  <li class="active">
-                    <a href="#" data-toggle="tab">
-                      <input checked id="radio1" name="layer.${layer.layerTypeMd.name}" value="BASIC" type="radio">
+                  <li 
+                    <c:if test="${activeFeature == features['BASIC']}">
+                      class="active"
+                    </c:if>
+                  >
+                    <a href="#" data-toggle="tab" data-gdb-tab-type="basic">
+                      <input
+                        <c:if test="${activeFeature == features['BASIC']}">
+                          checked
+                        </c:if>
+                        id="radio1" name="layer.${layer.layerTypeMd.name}" value="BASIC" type="radio">
+                      </input>
                       <label for="radio1">${features['BASIC']}</label>
                     </a>
                   </li>
-                  <li class="bubble">
-                    <a href="#" data-toggle="tab">
-                      <input id="radio2" name="layer.${layer.layerTypeMd.name}" value="BUBBLE" type="radio">
+                  <li
+                    <c:choose>
+								      <c:when test="${activeFeature == features['BUBBLE']}">
+								        class="bubble active"
+								      </c:when>
+								      <c:otherwise>
+								        class="bubble"
+								      </c:otherwise>
+								    </c:choose>
+                  >
+                    <a href="#" data-toggle="tab" data-gdb-tab-type="bubble">
+                      <input
+                        <c:if test="${activeFeature == features['BUBBLE']}">
+                          checked
+                        </c:if>
+                        id="radio2" name="layer.${layer.layerTypeMd.name}" value="BUBBLE" type="radio">
+                      </input>
                       <label for="radio2">${features['BUBBLE']}</label>
                     </a>
                   </li>
-                  <li class="gradient">
-                    <a href="#" data-toggle="tab">
-                      <input id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
+                  <li 
+                    <c:choose>
+                      <c:when test="${activeFeature == features['GRADIENT']}">
+                        class="gradient active"
+                      </c:when>
+                      <c:otherwise>
+                        class="gradient"
+                      </c:otherwise>
+                    </c:choose>
+                  >
+                    <a href="#" data-toggle="tab" data-gdb-tab-type="gradient">
+                      <input
+                        <c:if test="${activeFeature == features['GRADIENT']}">
+                          checked
+                        </c:if>
+                        id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
+                      </input>
                       <label for="radio3">${features['GRADIENT']}</label>
                     </a>
                   </li>
                   <!-- Removed for deploy until functionality exists.
                   <li class="category">
-                    <a href="#" data-toggle="tab">
+                    <a href="#" data-toggle="tab" data-gdb-tab-type="category">
                       <input id="radio4" name="layer.${layer.layerTypeMd.name}" value="CATEGORY" type="radio">
                       <label for="radio4">${features['CATEGORY']}</label>
                     </a>
@@ -306,10 +343,89 @@
               </div>
               <div class="holder">
                 <div id="layer-type-styler-container" class="tab-content">
-                  <div class="tab-pane active" id="tab001">
+                  <%-- 
+                    These are reusable cell components that are used across multiple tabs. These are inserted on tab change by custom javascript in DynamicMap.js
+                  --%>
+                  <div id="gdb-reusable-cell-polygonStroke" style="display: none;" class="cell">
+                    <span>${style.polygonStrokeMd.displayLabel}</span>
+                    <div class="color-holder">
+                      <a href="#" class="color-choice">
+                       <span class="ico" style="background:${style.polygonStroke};">icon</span>
+                       <span class="arrow">arrow</span>
+                       <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
+	                    </a>
+	                   </div>
+	                </div>
+	                <div id="gdb-reusable-cell-polygonStrokeWidth" style="display: none;" class="cell">
+                    <label for="f80">${style.polygonStrokeWidthMd.displayLabel}</label>
+                    <div class="select-holder">
+                      <select id="f80" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
+                        <c:forEach begin="0" end="15" var="size">
+                          <c:choose>
+                            <c:when test="${style.polygonStrokeWidth == size}">
+                              <option selected="selected" value="${size}">${size}</option>
+                            </c:when>
+                            <c:otherwise>
+                              <option value="${size}">${size}</option>
+                            </c:otherwise>
+                          </c:choose>
+                        </c:forEach>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="gdb-reusable-cell-polygonStrokeOpacity" style="display: none;" class="cell">
+                    <label for="f81">${style.polygonStrokeOpacityMd.displayLabel}</label>
+                    <div class="text">
+                      <select id="f81" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
+                        <c:forEach step="5" begin="0" end="100" var="size">
+                          <c:choose>
+                            <c:when test="${style.polygonStrokeOpacity*100 == size}">
+                              <option selected="selected" value="${size/100}">${size}</option>
+                            </c:when>
+                            <c:otherwise>
+                              <option value="${size/100}">${size}</option>
+                            </c:otherwise>
+                          </c:choose>
+                        </c:forEach>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="gdb-reusable-cell-polygonFillOpacity" style="display: none;" class="cell">
+                    <label for="f78">${style.polygonFillOpacityMd.displayLabel}</label>
+                    <div class="text">
+                      <select id="f78" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
+                        <c:forEach step="5" begin="0" end="100" var="size">
+                          <c:choose>
+                            <c:when test="${style.polygonFillOpacity*100 == size}">
+                              <option selected="selected" value="${size/100}">${size}</option>
+                            </c:when>
+                            <c:otherwise>
+                              <option value="${size/100}">${size}</option>
+                            </c:otherwise>
+                          </c:choose>
+                        </c:forEach>
+                      </select>  
+                    </div>
+                  </div>
+                  <%--
+                    End Reusable Cell Components
+                  --%>
+                  
+                  <div
+                    <c:choose>
+                      <c:when test="${activeFeature == features['BASIC']}">
+                        class="tab-pane active"
+                      </c:when>
+                      <c:otherwise>
+                        class="tab-pane" style="display: none;"
+                      </c:otherwise>
+                    </c:choose>
+                    
+                    id="tab001basic"
+                  >
                     <div class="fill-block">
                       <strong class="title">Fill</strong>
-                      <div class="cell-holder">
+                      <div id="gdb-reusable-basic-fill-cell-holder" class="cell-holder">
                         <div class="cell">
                           <span>${style.polygonFillMd.displayLabel}</span>
                           <div class="color-holder">
@@ -320,76 +436,28 @@
                             </a>
                           </div>
                         </div>
-                        <div class="cell">
-                          <label for="f210">${style.polygonFillOpacityMd.displayLabel}</label>
-                          <div class="text">
-                            <select id="f210" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
-                              <c:forEach step="5" begin="0" end="100" var="size">
-                                <c:choose>
-                                  <c:when test="${style.polygonFillOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
-                                  </c:when>
-                                  <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
-                                  </c:otherwise>
-                                </c:choose>
-                              </c:forEach>
-                            </select>
-                          </div>
-                        </div>
                       </div>
+                      <%-- Dynamically inserted: PolygonFillOpacity --%>
                     </div>
                     <div class="stroke-block">
                       <strong class="title">Stroke</strong>
-                      <div class="cell-holder">
-                        <div class="cell">
-                          <span>${style.polygonStrokeMd.displayLabel}</span>
-                          <div class="color-holder">
-                            <a href="#" class="color-choice">
-                              <span class="ico" style="background:${style.polygonStroke};">icon</span>
-                              <span class="arrow">arrow</span>
-                              <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
-                            </a>
-                          </div>
-                        </div>
-                        <div class="cell">
-                          <label for="f63">${style.polygonStrokeWidthMd.displayLabel}</label>
-                          <div class="select-holder">
-                            <select id="f63" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
-			                        <c:forEach begin="0" end="15" var="size">
-			                          <c:choose>
-			                            <c:when test="${style.polygonStrokeWidth == size}">
-			                              <option selected="selected" value="${size}">${size}</option>
-			                            </c:when>
-			                            <c:otherwise>
-			                              <option value="${size}">${size}</option>
-			                            </c:otherwise>
-			                          </c:choose>
-			                        </c:forEach>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="cell">
-                          <label for="f64">${style.polygonStrokeOpacityMd.displayLabel}</label>
-                          <div class="text">
-                            <select id="f64" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
-                              <c:forEach step="5" begin="0" end="100" var="size">
-                                <c:choose>
-                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
-                                  </c:when>
-                                  <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
-                                  </c:otherwise>
-                                </c:choose>
-                              </c:forEach>
-                            </select>
-                          </div>
-                        </div>
+                      <div id="gdb-reusable-basic-stroke-cell-holder" class="cell-holder">
+                        <%-- Dynamically inserted --%>
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane" id="tab002" style="display: none;">
+                  <div
+                    <c:choose>
+                      <c:when test="${activeFeature == features['BUBBLE']}">
+                        class="tab-pane active"
+                      </c:when>
+                      <c:otherwise>
+                        class="tab-pane" style="display: none;"
+                      </c:otherwise>
+                    </c:choose>
+                    
+                    id="tab002bubble"
+                  >
                     <div class="fill-block">
                       <strong class="title">Fill</strong>
                       <div class="cell-holder">
@@ -438,7 +506,7 @@
                         <div class="cell">
                           <label for="f33">${style.pointStrokeWidthMd.displayLabel}</label>
                           <div class="select-holder">
-                            <select id="f73" class="tab-select">
+                            <select name="style.${style.pointStrokeWidthMd.name}" id="f73" class="tab-select">
                               <c:forEach begin="0" end="15" var="size">
                                 <c:choose>
                                   <c:when test="${style.pointStrokeWidth == size}">
@@ -476,21 +544,32 @@
                       <div class="cell-holder">
                         <div class="cell">
                           <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
-                          <div class="text"><input id="f76" name="${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
+                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
                         </div>
                         <div class="cell">
                           <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
                           <div class="text">
-                            <input id="f77" name="${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
+                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane active" id="tab003" style="display: none;">
+                  <div
+                    <c:choose>
+                      <c:when test="${activeFeature == features['GRADIENT']}">
+                        class="tab-pane active"
+                      </c:when>
+                      <c:otherwise>
+                        class="tab-pane" style="display: none;"
+                      </c:otherwise>
+                    </c:choose>
+                    
+                    id="tab003gradient"
+                  >
                     <div class="gradient-block">
                       <strong class="title">Fill</strong>
-                      <div class="cell-holder">
+                      <div id="gdb-reusable-gradient-fill-cell-holder" class="cell-holder">
                         <div class="cell">
                           <span>${style.polygonMinFillMd.displayLabel}</span>
                           <div class="color-holder">
@@ -511,76 +590,27 @@
                             </a>
                           </div>
                         </div>
-                        <div class="cell">
-                          <label for="f78">${style.polygonFillOpacityMd.displayLabel}</label>
-                          <div class="text">
-                            <select id="f78" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
-                              <c:forEach step="5" begin="0" end="100" var="size">
-                                <c:choose>
-                                  <c:when test="${style.polygonFillOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
-                                  </c:when>
-                                  <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
-                                  </c:otherwise>
-                                </c:choose>
-                              </c:forEach>
-                            </select>  
-                          </div>
-                        </div>
                       </div>
                     </div>
                     <div class="stroke-block">
                       <strong class="title">Stroke</strong>
-                      <div class="cell-holder">
-                        <div class="cell">
-                          <span>${style.polygonStrokeMd.displayLabel}</span>
-                          <div class="color-holder">
-                            <a href="#" class="color-choice">
-                              <span class="ico" style="background:${style.polygonStroke};">icon</span>
-                              <span class="arrow">arrow</span>
-                              <input type="hidden" class="color-input" name="style.${style.polygonStrokeMd.name}" value="${style.polygonStroke}" />
-                            </a>
-                          </div>
-                        </div>
-                       <div class="cell">
-                          <label for="f80">${style.polygonStrokeWidthMd.displayLabel}</label>
-                          <div class="select-holder">
-                            <select id="f80" class="tab-select" name="style.${style.polygonStrokeWidthMd.name}">
-                              <c:forEach begin="0" end="15" var="size">
-                                <c:choose>
-                                  <c:when test="${style.polygonStrokeWidth == size}">
-                                    <option selected="selected" value="${size}">${size}</option>
-                                  </c:when>
-                                  <c:otherwise>
-                                    <option value="${size}">${size}</option>
-                                  </c:otherwise>
-                                </c:choose>
-                              </c:forEach>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="cell">
-                          <label for="f81">${style.polygonStrokeOpacityMd.displayLabel}</label>
-                          <div class="text">
-                            <select id="f81" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
-                              <c:forEach step="5" begin="0" end="100" var="size">
-                                <c:choose>
-                                  <c:when test="${style.polygonStrokeOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
-                                  </c:when>
-                                  <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
-                                  </c:otherwise>
-                                </c:choose>
-                              </c:forEach>
-                            </select>
-                          </div>
-                        </div>
+                      <div id="gdb-reusable-gradient-stroke-cell-holder" class="cell-holder">
+                        
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane active" id="tab004" style="display: none;">
+                  <div
+                    <c:choose>
+                      <c:when test="${activeFeature == features['CATEGORY']}">
+                        class="tab-pane active"
+                      </c:when>
+                      <c:otherwise>
+                        class="tab-pane" style="display: none;"
+                      </c:otherwise>
+                    </c:choose>
+                    
+                    id="tab004category"
+                  >
                     <div class="color-section">
                       <strong class="title">Fill</strong>
                       <div class="heading-list">

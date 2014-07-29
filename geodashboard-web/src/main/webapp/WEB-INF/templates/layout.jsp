@@ -77,11 +77,13 @@
 	<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
 	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
 	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
+	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
 	   
 	<!-- jQuery  -->
 	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
-  <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script>
+    <!-- <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script> -->
 	<!-- <script src="https://code.jquery.com/jquery-1.9.0.js"></script> -->
+	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.9.0.min.js"></script>
 	  
 	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
@@ -89,6 +91,9 @@
 	<!-- Custom JavaScript -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 	
     <!-- JQuery UI -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>

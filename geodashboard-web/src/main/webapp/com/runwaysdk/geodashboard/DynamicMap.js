@@ -38,6 +38,8 @@
       initialize : function(mapDivId, mapId){
         this.$initialize();
         
+        var overlayLayerContainer = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        
         this._googleEnabled = Mojo.Util.isObject(Mojo.GLOBAL.google);
         
         this._mapDivId = mapDivId;
@@ -66,13 +68,44 @@
         this._rendered = false;
         
         var bound = Mojo.Util.bind(this, this._overlayHandler);
-        $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).on('click', 'a', bound);
+        overlayLayerContainer.on('click', 'a', bound);
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
+        
+        
+        overlayLayerContainer.sortable({
+          update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
+        });
+        overlayLayerContainer.disableSelection();
+      },
+      
+      _overlayLayerSortUpdate : function(event, ui) {
+        var that = this;
+        
+        
+        // Calculate an array of layer ids
+        var layerIds = [];
+        var layers = $("#overlayLayerContainer").find("input");
+        for (var i = 0; i < layers.length; ++i) {
+          var layer = $(layers[i]);
+          layerIds.push(layer.data("id"));
+        }
+        
+        var clientRequest = new Mojo.ClientRequest({
+          onSuccess : function(json){
+            var jsonObj = Mojo.Util.toObject(json);
+            that._refreshMapInternal(jsonObj);
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
       },
       
       _overlayHandler : function(e){
@@ -211,7 +244,7 @@
       /**
        * Return all allowable base maps.
        */
-      getBaseLayers : function(){
+      _getBaseLayers : function(){
         
         // the SATELLITE layer has all 22 zoom level, so we add it first to
         // become the internal base layer that determines the zoom levels of the
@@ -235,149 +268,91 @@
        */
       _renderBaseLayerSwitcher : function(base){
         
-        var container = $('#'+DynamicMap.BASE_LAYER_CONTAINER);
-        var el = container[0];
+    	that = this;
         
         // Create the HTML for each row (base layer representation).
-        var html = '';
         var ids = [];
+        baseLayers = new com.runwaysdk.structure.HashMap();
         for(var i=0; i<base.length; i++){
           
-          var id = 'base_layer_'+i;
-          
-          var b = base[i];
-          b.id = id;
-          
-          var checked = '';
-          if(i === 0){
-            this._currentBase = this._defaultBase = base[0];
-            checked = 'checked="checked"';
-          }
-          
-          ids.push(id);
-          
-          // Assigning better display labels.
-          var label = '';
-          if(b._type === 'ROADMAP'){
-            label = this.localize("googleStreets");
-          }
-          else if(b._type === 'SATELLITE'){
-            label = this.localize("googleSatellite");
-          }
-          else if(b._type === 'TERRAIN'){
-            label = this.localize("googleTerrain");
-          }
-          else if(b._type === 'HYBRID'){
-            label = this.localize("googleHybrid");
-          }
-          else if(b._gdbcustomtype === 'OSM'){
-            label = this.localize("osmBasic");
-          }
-
-          html += '<div class="row-form">';
-          html += '<input id="'+id+'" class="check" type="checkbox" '+checked+'>';
-          html += '<label for="'+id+'">'+ label +'</label>';
-          html += '</div>';
-          
-          this._baseLayers.put(id, b);
+	          var id = 'base_layer_'+i;
+	          
+	          var b = base[i];
+	          b.id = id;          
+	          ids.push(id);
+	          baseLayers.put(id, b);
+	          
+	          var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
+	          
+	          // Assigning better display labels.
+	          var label = '';	      
+	          if(b._type === 'ROADMAP'){
+	        	  label = this.localize("googleStreets");
+	          }
+	          else if(b._type === 'SATELLITE'){
+		          label = this.localize("googleSatellite");
+	          }
+	          else if(b._type === 'TERRAIN'){
+		           label = this.localize("googleTerrain"); 
+	          }
+	          else if(b._type === 'HYBRID'){
+	            label = this.localize("googleHybrid");
+	          }
+	          else if(b._gdbcustomtype === 'OSM'){
+	            label = this.localize("osmBasic");
+	          }
+	          
+	          var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
+	          checkbox.setId(id);
+	          if(i === 0){
+	        	  checkbox.setChecked(checkbox);
+	          }
+	          checkbox.addOnCheckListener(function(event){
+	        	  target = event.getCheckBox();   
+	        	  that._toggleBaseLayer(target);
+	          });
+	          checkboxContainer.appendChild(checkbox);	          
+	          
+	          var labelObj = this.getFactory().newElement("label", {"for" : id, "class" : "checkbox-label"});
+	          labelObj.setInnerHTML(label);
+	          	         	              	          
+	          checkboxContainer.appendChild(labelObj);
+	          checkboxContainer.render('#'+DynamicMap.BASE_LAYER_CONTAINER);  
         }
-
-        // combine the rows into new HTML that goes in to the layer switcher
-        var rows = $(html);
-
-        var container = $('#'+DynamicMap.BASE_LAYER_CONTAINER);
-        var el = container[0];    
-        
-        container.append(rows);
-        
-        jcf.customForms.replaceAll(el);
-        
-        // add event handlers to manage the actual check/uncheck process
-        var handler = Mojo.Util.bind(this, this._selectBaseLayer);
-        for(var i=0; i<ids.length; i++){
-          var id = ids[i];
-          var check = $('#'+id);
-          
-          check.on('change', this._baseLayers.get(id), handler);
-          jcf.lib.event.add(check.prev()[0], jcf.eventPress, handler, this);
-        }
-        
       },
       
       /**
        * Changes the base layer of the map.
        * 
-       * @param e
-       */
-      _selectBaseLayer : function(e){
-        if(e.type === jcf.eventPress){
-          
-          // is this input already checked? If so uncheck it even if it means
-          // removing the base layer and rendering the map empty.
-          
-          // DIV is the current target which will be used as the reference
-          var div = e.currentTarget;
-          var checkbox = div.nextSibling;
-          var parent = div.parentNode;
-          
-          var real = checkbox; //document.getElementById(checkbox.id);
-          var checked = real.getAttribute('checked') === 'checked' || real.checked === true;
+       * @param that - reference to this at method scope
+       * @param targetCheckbox - target checkbox Checkbox object
+      */
+      _toggleBaseLayer : function(targetCheckbox){
+    	  
+    	target = targetCheckbox;
+      	targetId = target.getId();
+    	targetEl = document.getElementById(targetId);
 
-          if(checked){
-            var id = checkbox.id;
-
-            checkbox.jcf.realElement.disabled = true;
-            checkbox.jcf.realElement.checked = false;
-            checkbox.jcf.fakeElement.disabled = true;
-            checkbox.jcf.fakeElement.checked = false;
-            
-            checkbox.jcf.refreshState();
-            
-            var layer = this._baseLayers.get(id);
-            this._map.removeLayer(layer);
-          }
-        }
-        else {
-
-          var changed = e.currentTarget;
-          
-          if(changed.checked){
-            var changedId = changed.id;
-            var changedLayer = this._baseLayers.get(changedId);
-            
-            var ids = this._baseLayers.keySet();
-            
-            var newBaseLayer = null;
-
-            // uncheck other base layers without firing the event (to avoid infinte event looping)
-            for(var i=0; i<ids.length; i++){
-              
-              var id = ids[i];
-              if(id === changedId){
-                newBaseLayer = changedLayer;
-                document.getElementById(id).disabled=true;
-              }
-              else{
-                document.getElementById(id).disabled=false;
-                var uncheck = document.getElementById(id);
-                uncheck.checked = false;
-                jcf.customForms.refreshElement(uncheck);
-                
-                var layer = this._baseLayers.get(id);
-                this._map.removeLayer(layer);               
-              }
-            }
-          
-            // then add the layer and set it to stack below the overlays
-            this._map.addLayer(newBaseLayer);
-            if(newBaseLayer._gdbcustomtype === 'OSM'){
-              newBaseLayer.bringToBack();  // this throws an error for non OSM layers 
-            }
-
-          }
-        }
-        
-        return false;
+    	var ids = baseLayers.keySet();   	  	   	
+    	var isChecked = target.isChecked();
+  	
+  	  	if(isChecked){
+  	  		for(var i=0; i<ids.length; i++){ 
+  	  			if(ids[i] !== targetId){
+  	  				$("#"+ids[i]).removeClass('checked');
+  	  				var otherBaselayer = baseLayers.get(ids[i]);
+			        that._map.removeLayer(otherBaselayer);  	  				
+  	  			}
+  	  			else{
+  	  				var newBaselayer = baseLayers.get(targetId);
+  	  				that._map.addLayer(newBaselayer);
+  	  			}
+  	  		}
+  	  	}
+  	  	else{
+			var unchecklayer = baseLayers.get(targetId);
+	        that._map.removeLayer(unchecklayer);
+  	  	}
       },
       
       /**
@@ -503,12 +478,19 @@
         
         var jsonBbox = jsonObj.bbox; 
         var jsonLayers = jsonObj.layers;
+        
+        // Handle points & polygons 
+        if (jsonBbox.length === 2){
+        	var center = L.latLng(jsonBbox[1], jsonBbox[0]);
+        	this._map.setView(center, 9);
+        }
+        else if (jsonBbox.length === 4){
+        		var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
+        		var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
+        		var bounds = L.latLngBounds(swLatLng, neLatLng);   
 
-        var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
-        var bounds = L.latLngBounds(swLatLng, neLatLng);   
-
-        this._map.fitBounds(bounds);
+        		this._map.fitBounds(bounds);
+        }
 
         // Add attribution to the map
         this._map.attributionControl.setPrefix('');
@@ -526,7 +508,7 @@
         L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
 
         // Add Base Layers to map and layer switcher panel
-        var base = this.getBaseLayers();                                
+        var base = this._getBaseLayers();                                
         this._map.addLayer(base[0]); 
         this._renderBaseLayerSwitcher(base);
 
@@ -539,6 +521,8 @@
         // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).         
         var html = '';
         var ids = [];
+        // First create the html objects that represent the layers
+        var layers = [];
         for(var i = 0; i < jsonLayers.length; i++){
           
           var layerObj = jsonObj.layers[i];
@@ -554,7 +538,8 @@
             format: 'image/png',
             transparent: true,
             styles: sldName
-          });             
+          });
+          layers.push(layer);
 
           // Create the HTML for each row (base layer representation).
           var checked = 'checked="checked"';
@@ -572,8 +557,6 @@
             //checked = 'checked="checked"';
           }
 
-          this._map.addLayer(layer);
-
           html += '<div class="row-form">';
           html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+id+'">'+displayName+'</label>';
@@ -581,6 +564,11 @@
           html += '<a href="#" data-id="'+layerId+'" class="ico-edit">edit</a>';
           html += '<a href="#" data-id="'+layerId+'" class="ico-control">control</a></div>';
           html += '</div>';                   
+        }
+        
+        // Then push the layers to leaflet in reverse order to render them as we would expect.
+        for (var i = layers.length-1; i >= 0; i--) {
+          this._map.addLayer(layers[i]);
         }
 
         // combine the rows into new HTML that goes in to the layer switcher
@@ -656,6 +644,58 @@
         this._selectLayerType();
         
         eval(exec);
+        
+        // Move reusable cells to active cell holder
+        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
+        if (activeTab === "tab001basic") {
+          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+        }
+        else if (activeTab === "tab003gradient") {
+          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+        }
+        
+        // Attach listeners
+        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+      },
+      
+      
+      __attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
+        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+        strokeCellHolder.append(polyStroke);
+        polyStroke.show();
+        
+        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+        strokeCellHolder.append(polyStrokeWidth);
+        polyStrokeWidth.show();
+        
+        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+        strokeCellHolder.append(polyStrokeOpacity);
+        polyStrokeOpacity.show();
+        
+        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+        fillCellHolder.append(polyFillOpacity);
+        polyFillOpacity.show();
+      },
+      
+      _onLayerTypeTabChange : function(e) {
+        var activeTab = e.target;
+        
+        var type = activeTab.dataset["gdbTabType"];
+        
+        if (type === "basic") {
+          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+          $("#tab001basic").show();
+        }
+        else if (type === "bubble") {
+          $("#tab002bubble").show();
+        }
+        else if (type === "gradient") {
+          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+          $("#tab003gradient").show();
+        }
+        else if (type === "categories") {
+          $("#tab004categories").show();
+        }
       },
       
       /**

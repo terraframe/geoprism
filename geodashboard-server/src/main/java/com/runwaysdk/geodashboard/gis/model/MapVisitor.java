@@ -1,7 +1,5 @@
 package com.runwaysdk.geodashboard.gis.model;
 
-import org.apache.derby.iapi.sql.compile.Visitable;
-
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Category;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;

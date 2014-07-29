@@ -437,7 +437,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         name = label.toString();
       }
 
-      Universal universal = Universal.getUniversal(name);
+      Universal universal = Universal.getByKey(name);
 
       if (universal != null)
       {

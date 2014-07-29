@@ -524,7 +524,7 @@
               nodeMetadata.text = that._getTermDisplayLabel(term);
               nodeMetadata.data = node.data;
               nodeMetadata.state = node.state;
-              nodeMetadata.children = node.children;
+              nodeMetadata.children = that.__recursiveBuildChildren(node);
               nodeMetadata.id = term.getId();
               var retval = $tree.jstree("delete_node", node);
               var parentId = that.getParentId(node);
@@ -550,6 +550,26 @@
         Mojo.Util.merge(this._config.crud.update, config);
         
         new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+      },
+      
+      /**
+       * 
+       * @param parent A jsTree node
+       * @returns An array of children of the given parent node, recursively built to include children of children, if they've been loaded.
+       */
+      __recursiveBuildChildren : function(parent) {
+        var ret = [];
+        var $tree = this.getImpl();
+        
+        for (var i = 0; i < parent.children.length; ++i) {
+          var child = $tree.jstree("get_node", parent.children[i]);
+          
+          child.children = this.__recursiveBuildChildren(child);
+          
+          ret.push(child);
+        }
+        
+        return ret;
       },
       
       getParentNode : function(node) {
@@ -720,27 +740,23 @@
         
         if (node === "#") { return; }
         
+        var li = $("#" + node.id);
+        
         if (bool) {
           this.busyNodes.add(node.id);
+          
+          if (li != null && li != false && li.length != 0) {
+            li.addClass("jstree-loading");
+          }
         }
         else {
           this.busyNodes.remove(node.id);
+          
+          if (li != null && li != false && li.length != 0) {
+            li.removeClass("jstree-loading");
+          }
         }
         
-//        if (node.parent == null) {
-//          if (bool) {
-//            this._busydiv = this.getFactory().newElement("div");
-//            this._busydiv.addClassName("jqtree-node-busy");
-//            this.insertBefore(this._busydiv, this.getChildren()[0]);
-//            return;
-//          }
-//          else {
-//            if (this._busydiv.getParent() != null) {
-//              this._busydiv.destroy();
-//            }
-//          }
-//        }
-//        else {
 //          var el = $(node.element);
 //          
 //          if (bool) {
@@ -847,8 +863,8 @@
         var $thisTree = this._impl;
         var nodeMetadata = movedNode.original;
         nodeMetadata.data = movedNode.data;
-        nodeMetadata.state = {opened: false};
-        nodeMetadata.children = true;
+        nodeMetadata.state = movedNode.state;
+        nodeMetadata.children = this.__recursiveBuildChildren(movedNode);
         if (!isCopy) {
           $thisTree.jstree("delete_node", movedNode);
         }
@@ -862,12 +878,13 @@
           this.duplicateMap.put(movedNode.data.runwayId, duplicates);
         }
         var index = this.__findInsertIndex(nodeMetadata.text, newParent);
-        $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
+        var newNodeId = $thisTree.jstree("create_node", newParent, nodeMetadata, index, false, true);
         $thisTree.jstree("open_node", newParent);
+        return $thisTree.jstree("get_node", newNodeId);
       },
       
       /**
-       * is binded to jqtree's node move event.s
+       * is binded to jqtree's node move event.
        */
       __onNodeMove : function(jqEvent, treeEvent) {
         if (this._isMoving || this._isMoving2) { return; }
@@ -885,7 +902,7 @@
         
         // Really lame jsTree.. the move has already happend and there's no way to prevent it, so we're going to roll it back right here and then perform it later manually.
         this._isMoving = true;
-        this.moveNode(movedNode, previousParent);
+        movedNode = this.moveNode(movedNode, previousParent);
         this._isMoving = false;
         
         
@@ -1137,7 +1154,7 @@
           node.children = isNodeClosed;
         }
         
-        // God damn it jsTree you buggy piece of shit
+        // jsTree you buggy piece of pie
         if (parentNode.id === "#") {
           parentNode.parents = [];
         }

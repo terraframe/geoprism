@@ -7,6 +7,10 @@
 					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
 				</attributes>
 				<mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
+				<mdMethod name="orderLayers" static="false" label="Order Layers" 
+          returnType="java.lang.String">
+          <mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids"  />
+        </mdMethod>
 			</mdBusiness>
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">
@@ -90,21 +94,21 @@
 					<integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
 					<char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
 					<char name="pointFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="pointOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="pointOpacity" label="Opacity" required="true" length="3" decimal="3" defaultValue=".7" rejectNegative="true" />
 					<integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
 					
 					<!-- line styles -->
 					<char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000"/>
 					<integer name="lineStrokeWidth" label="Width" required="true" defaultValue="3" rejectNegative="true" />
 					<char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
-					<double name="lineOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="lineOpacity" label="Opacity" required="true" length="3" decimal="3" defaultValue=".7" rejectNegative="true" />
 					
 					<!-- polygon styles -->
 					<char name="polygonFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="polygonFillOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="3" defaultValue=".7" rejectNegative="true" />
 					<char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
 					<integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-					<double name="polygonStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="3" defaultValue=".7" rejectNegative="true" />
 				</attributes>
 			</mdBusiness>
 
