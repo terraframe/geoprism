@@ -1364,7 +1364,7 @@ import com.runwaysdk.util.FileIO;
       GeoserverFacade.publishLayer(layer.getViewName(), "polygon");
       GeoserverFacade.publishLayer(layer2.getViewName(), "demo");
 
-      String json = map.getMapJSON();
+      String json = map.getMapJSON("");
       JSONObject mapJsonObj = new JSONObject(json);
       
       System.out.println(json);

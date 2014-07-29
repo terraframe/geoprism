@@ -50,7 +50,7 @@ public class Sandbox
   {
     //StrategyInitializer.tearDown();
     StrategyInitializer.startUp();
-    System.out.println(DashboardMap.getMapJSON("sxt2uo8qxyil66jmlk6h7l965h38m2da1w3bn55ecea1siqb7qj7vnuivq3gync2"));
+//    System.out.println(DashboardMap.getMapJSON("sxt2uo8qxyil66jmlk6h7l965h38m2da1w3bn55ecea1siqb7qj7vnuivq3gync2"));
   }
   
   private static void runONE(HashMap<String, Object> req, ClientRequestIF clientRequest)
