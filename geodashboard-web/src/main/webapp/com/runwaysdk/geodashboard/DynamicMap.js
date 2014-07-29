@@ -606,8 +606,8 @@
       },
       
       _openLayerForAttribute : function(e){
-        e.preventDefault();
-
+        e.preventDefault();      
+        
         var el = $(e.currentTarget);
         var attrId = el.data('id');
         this._mdAttribute = attrId;
@@ -628,7 +628,11 @@
       },
       
       _displayLayerForm : function(html, forceShow){
-        var modal = $(DynamicMap.LAYER_MODAL).first();
+    	  
+        // clear all previous color picker dom elements
+        $(".colpick.colpick_full.colpick_full_ns").remove();
+        
+        var modal = $(DynamicMap.LAYER_MODAL).first();       
         if(forceShow){
           modal.modal('show');
         }
