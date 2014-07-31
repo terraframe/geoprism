@@ -84,19 +84,19 @@
       },
       
       _getActiveOverlayOrderedArrayIds : function() {
-          // Calculate an array of layer ids
-          var layerIds = [];
+          var checkedLayerIds = [];
           var layers = $("#overlayLayerContainer").find("input");
-          for (var i = 0; i < layers.length; ++i) {       	 
+          
+          for (var i = layers.length; i-- > 0;) {       	 
             var inputEl = layers[i];
             var checkboxEl = inputEl.previousSibling;
 
             if($(checkboxEl).hasClass('chk-checked')){ 
             	testing = inputEl;
-            	layerIds.push(inputEl.id); 
+            	checkedLayerIds.push(inputEl.id); 
             }
           }
-          return layerIds;
+          return checkedLayerIds;
       },
       
       /**
@@ -385,51 +385,17 @@
        * 
        * @param e
        */
-      _selectOverlayLayer : function(e){
-        
+      _selectOverlayLayer : function(e){       
           var changed = e.currentTarget;
-          var changedId = changed.id;
-          var changedLayer = this._overlayLayers.get(changedId);
           var ids = this._overlayLayers.keySet();
-          var layers = [];
           
-//          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
-          
-          // Function for keeping sort order
-          function sortByKey(array, key) {
-              return array.sort(function (a, b) {
-                  var x = a[key];
-                  var y = b[key];
-                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-              });
-          }        
-          
-          var newOverlayLayer = null;
           if(changed.checked){
-            for(var i=0; i<ids.length; i++){
-              var id = ids[i];
-
-              if(id === changedId){
-            	  newOverlayLayer = changedLayer;
-//            	  this._map.removeLayer(newOverlayLayer);
- 
-//            	  // Add checked layer to sorting array
-//            	  if($.inArray(changedId, checkboxLayerIds) != -1){
-//            		  zIndex = $.inArray(changedId, checkboxLayerIds);
-//            		  layers.push({
-//            			  "z-index": zIndex,
-//            			  "layer": newOverlayLayer
-//            		  });
-//            		  console.log(layers)
-//            	  }             
-//                this._map.addLayer(newOverlayLayer);
-               }
-            }
+              this._addOverlay();
           }
           else{
         	  for(var i=0; i<ids.length; i++){                
                   var id = ids[i];
-                  if(id === changedId){
+                  if(id === changed.id){
                     var uncheck = document.getElementById(id);
                     uncheck.checked = false;
                     jcf.customForms.refreshElement(uncheck);
@@ -440,19 +406,39 @@
         	  }
           }
           
+                 
+      },
+      
+      /**
+       * Removes and re-adds all overlay leaflet layer objects that are checked 
+       * to maintain the order of the layers in the sidebar
+       * 
+       */
+      _addOverlay : function(){
+    	  var layers = []; 
+    	  
+          // Function for keeping sort order
+          function sortByKey(array, key) {
+              return array.sort(function (a, b) {
+                  var x = a[key];
+                  var y = b[key];
+                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              });
+          }  
+          
           var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
-          console.log(checkboxLayerIds)
-//          that = this
           for(var i=0; i<checkboxLayerIds.length; i++){ 
         	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
-        	  this._map.removeLayer(layer);       	  
-        		  
+        	  
+        	  // Remove all existing layers to re-add in order later
+        	  this._map.removeLayer(layer);   
+        	  
+        	  // add to a sorting array
         	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
         	  layers.push({
         		  "z-index": zIndex,
         		  "layer": layer
-        	  });
-        	  console.log(layers);       	  
+        	  });       	  
     	  } 
           
           // Sort layers array by z-index
@@ -461,7 +447,7 @@
           // Loop through ordered layers array and add to map in correct order
           that = this;
           $.each(orderedLayers, function () {
-              that._map.addLayer(that._overlayLayers.get(this.layer.id));
+        	  that._map.addLayer(that._overlayLayers.get(this.layer.id));
           });
       },
       
