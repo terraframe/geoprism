@@ -83,10 +83,31 @@
         overlayLayerContainer.disableSelection();
       },
       
+      _getActiveOverlayOrderedArrayIds : function() {
+          // Calculate an array of layer ids
+          var layerIds = [];
+          var layers = $("#overlayLayerContainer").find("input");
+          for (var i = 0; i < layers.length; ++i) {       	 
+            var inputEl = layers[i];
+            var checkboxEl = inputEl.previousSibling;
+
+            if($(checkboxEl).hasClass('chk-checked')){ 
+            	testing = inputEl;
+            	layerIds.push(inputEl.id); 
+            }
+          }
+          return layerIds;
+      },
+      
+      /**
+       * Callback handler when layers are reordered which persists index order of layers to db and
+       * 
+       * @param event
+       * @param ui
+       */
       _overlayLayerSortUpdate : function(event, ui) {
         var that = this;
-        
-        
+              
         // Calculate an array of layer ids
         var layerIds = [];
         var layers = $("#overlayLayerContainer").find("input");
@@ -108,13 +129,16 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
       },
       
-      _overlayHandler : function(e){
-        
-        var that = this;
-        
+      /**
+       * Opens the layer edit form for existing layers  
+       * 
+       * @param e
+       */
+      _overlayHandler : function(e){       
+        var that = this;     
         var el = $(e.currentTarget);
-        if(el.hasClass('ico-edit')){
-          
+        
+        if(el.hasClass('ico-edit')){          
           // edit the layer
           var id = el.data('id');
           this._LayerController.edit(new Mojo.ClientRequest({
@@ -127,8 +151,7 @@
           }), id);
           
         }
-        else if(el.hasClass('ico-remove')){
-          
+        else if(el.hasClass('ico-remove')){         
           // delete the layer
           var id = el.data('id');
           com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
@@ -215,8 +238,7 @@
        * 
        * @param params
        */
-      _cancelListener : function(params){
-        
+      _cancelListener : function(params){        
         var that = this;
         
         if(params['layer.isNew'] === 'true')
@@ -265,6 +287,8 @@
       /**
        * Renders each base layer as a checkable option in
        * the layer switcher.
+       * 
+       * @param base - array of leaflet basemap layer objects
        */
       _renderBaseLayerSwitcher : function(base){
         
@@ -366,19 +390,43 @@
           var changedId = changed.id;
           var changedLayer = this._overlayLayers.get(changedId);
           var ids = this._overlayLayers.keySet();
+          var layers = [];
+          
+//          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
+          
+          // Function for keeping sort order
+          function sortByKey(array, key) {
+              return array.sort(function (a, b) {
+                  var x = a[key];
+                  var y = b[key];
+                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              });
+          }        
           
           var newOverlayLayer = null;
           if(changed.checked){
             for(var i=0; i<ids.length; i++){
               var id = ids[i];
+
               if(id === changedId){
-                newOverlayLayer = changedLayer;
-                this._map.addLayer(newOverlayLayer);
-              }
+            	  newOverlayLayer = changedLayer;
+//            	  this._map.removeLayer(newOverlayLayer);
+ 
+//            	  // Add checked layer to sorting array
+//            	  if($.inArray(changedId, checkboxLayerIds) != -1){
+//            		  zIndex = $.inArray(changedId, checkboxLayerIds);
+//            		  layers.push({
+//            			  "z-index": zIndex,
+//            			  "layer": newOverlayLayer
+//            		  });
+//            		  console.log(layers)
+//            	  }             
+//                this._map.addLayer(newOverlayLayer);
+               }
             }
           }
           else{
-            for(var i=0; i<ids.length; i++){                
+        	  for(var i=0; i<ids.length; i++){                
                   var id = ids[i];
                   if(id === changedId){
                     var uncheck = document.getElementById(id);
@@ -388,8 +436,32 @@
                     var removeLayer = this._overlayLayers.get(id);
                     this._map.removeLayer(removeLayer);
                   }
-            }
+        	  }
           }
+          
+          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
+          console.log(checkboxLayerIds)
+//          that = this
+          for(var i=0; i<checkboxLayerIds.length; i++){ 
+        	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
+        	  this._map.removeLayer(layer);       	  
+        		  
+        	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
+        	  layers.push({
+        		  "z-index": zIndex,
+        		  "layer": layer
+        	  });
+        	  console.log(layers);       	  
+    	  } 
+          
+          // Sort layers array by z-index
+          var orderedLayers = sortByKey(layers, "z-index");
+
+          // Loop through ordered layers array and add to map in correct order
+          that = this;
+          $.each(orderedLayers, function () {
+              that._map.addLayer(that._overlayLayers.get(this.layer.id));
+          });
       },
       
       /**
