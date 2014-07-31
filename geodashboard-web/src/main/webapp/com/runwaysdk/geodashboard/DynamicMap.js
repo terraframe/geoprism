@@ -115,6 +115,7 @@
           var layer = $(layers[i]);
           layerIds.push(layer.data("id"));
         }
+        layerIds.reverse();
         
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function(json){
@@ -595,15 +596,15 @@
         var ids = [];
         // First create the html objects that represent the layers
         var layers = [];
+        var htmlInfo = [];
         for(var i = 0; i < jsonLayers.length; i++){
+          var layerObj = jsonLayers[i];
           
-          var layerObj = jsonObj.layers[i];
-          
-          var layerId = layerObj.layerId;
           var viewName = layerObj.viewName;
           var sldName = layerObj.sldName || "";  // This should be enabled we wire up the interface or set up a better test process
           var displayName = layerObj.layerName || "N/A";
           var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
+          var layerId = layerObj.layerId;
 
           var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
             layers: geoserverName,
@@ -613,9 +614,7 @@
           });
           layers.push(layer);
 
-          // Create the HTML for each row (base layer representation).
-          var checked = 'checked="checked"';
-          var id = 'overlay_layer_'+i;                  
+          var id = 'overlay_layer_'+i;
           var b = layer;
           b.id = id;  
           ids.push(id);  
@@ -628,21 +627,27 @@
             this._currentOverlay = this._defaultOverlay = layer;
             //checked = 'checked="checked"';
           }
-
-          html += '<div class="row-form">';
-          html += '<input data-id="'+layerId+'" id="'+id+'" class="check" type="checkbox" '+checked+'>';
-          html += '<label for="'+id+'">'+displayName+'</label>';
-          html += '<div class="cell"><a href="#" data-id="'+layerId+'" class="ico-remove">remove</a>';
-          html += '<a href="#" data-id="'+layerId+'" class="ico-edit">edit</a>';
-          html += '<a href="#" data-id="'+layerId+'" class="ico-control">control</a></div>';
-          html += '</div>';                   
+          
+          this._map.addLayer(layers[i]);
+          htmlInfo.push({id: id, layerId: layerId, displayName: displayName});
         }
         
-        // Then push the layers to leaflet in reverse order to render them as we would expect.
-        for (var i = layers.length-1; i >= 0; i--) {
-          this._map.addLayer(layers[i]);
+        htmlInfo.reverse();
+        for(var i = 0; i < htmlInfo.length; i++){
+          var layerObj = htmlInfo[i];
+          
+          // Create the HTML for each row (base layer representation).
+          var checked = 'checked="checked"';
+          
+          html += '<div class="row-form">';
+          html += '<input data-id="'+layerObj.layerId+'" id="'+layerObj.id+'" class="check" type="checkbox" '+checked+'>';
+          html += '<label for="'+layerObj.id+'">'+layerObj.displayName+'</label>';
+          html += '<div class="cell"><a href="#" data-id="'+layerId+'" class="ico-remove">remove</a>';
+          html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-edit">edit</a>';
+          html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-control">control</a></div>';
+          html += '</div>';
         }
-
+        
         // combine the rows into new HTML that goes in to the layer switcher
         var rows = $(html);
         var el = container[0];
