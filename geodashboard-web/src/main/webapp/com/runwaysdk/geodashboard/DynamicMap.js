@@ -186,7 +186,8 @@
         
         var that = this;
         
-        var request = new Mojo.ClientRequest({
+//        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             if(Mojo.Util.trim(html).length === 0){
               that._closeLayerModal();
@@ -200,7 +201,7 @@
           onFailure : function(e){
             that.handleException(e);
           }
-        });
+        }, $(DynamicMap.LAYER_MODAL)[0]);
         
         params['mapId'] = this._mapId;
         params['style.mdAttribute'] = this._mdAttribute;
@@ -570,7 +571,7 @@
           html += '<div class="row-form">';
           html += '<input data-id="'+layerObj.layerId+'" id="'+layerObj.id+'" class="check" type="checkbox" '+checked+'>';
           html += '<label for="'+layerObj.id+'">'+layerObj.displayName+'</label>';
-          html += '<div class="cell"><a href="#" data-id="'+layerId+'" class="ico-remove">remove</a>';
+          html += '<div class="cell"><a href="#" data-id="'+layerObj.layerId+'" class="ico-remove">remove</a>';
           html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-edit">edit</a>';
           html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-control">control</a></div>';
           html += '</div>';
@@ -657,18 +658,17 @@
         // Move reusable cells to active cell holder
         var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
         if (activeTab === "tab001basic") {
-          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
         }
         else if (activeTab === "tab003gradient") {
-          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
         }
         
         // Attach listeners
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
       },
       
-      
-      __attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
+      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
         var polyStroke = $("#gdb-reusable-cell-polygonStroke");
         strokeCellHolder.append(polyStroke);
         polyStroke.show();
@@ -692,14 +692,14 @@
         var type = activeTab.dataset["gdbTabType"];
         
         if (type === "basic") {
-          this.__attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
           $("#tab001basic").show();
         }
         else if (type === "bubble") {
           $("#tab002bubble").show();
         }
         else if (type === "gradient") {
-          this.__attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
           $("#tab003gradient").show();
         }
         else if (type === "categories") {

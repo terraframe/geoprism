@@ -310,6 +310,14 @@ public class SLDMapVisitor implements MapVisitor
          css("fill", color) 
           ).build(root);
       
+      // Label Positioning
+      if (this.visitor.currentLayer.getFeatureType().compareTo(FeatureType.POINT) == 0) {
+        node("LabelPlacement").child(node("PointPlacement").child(node("AnchorPoint").child(node("AnchorPointX").text("0.0"), node("AnchorPointY").text("0.5")))).build(root);
+      }
+      else {
+        node("LabelPlacement").child(node("PointPlacement").child(node("AnchorPoint").child(node("AnchorPointX").text("0.5"), node("AnchorPointY").text("0.5")))).build(root);
+      }
+      
       // vendor options
       node("VendorOption").attr("name", "group").text(GeoserverProperties.getLabelGroup()).build(root);
       node("VendorOption").attr("name", "conflict-resolution").text(GeoserverProperties.getLabelConflictResolution()).build(root);
