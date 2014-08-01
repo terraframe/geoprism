@@ -13,103 +13,103 @@ import com.runwaysdk.session.Request;
 public class ServerInitializer implements Reloadable
 {
 
-    private static final Log log = LogFactory.getLog(ServerInitializer.class);
+  private static final Log log = LogFactory.getLog(ServerInitializer.class);
 
-    @Request
-    public static void initialize()
+  @Request
+  public static void initialize()
+  {
+    ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
+    List<ServerContextListenerInfo> infos = builder.read();
+
+    for (ServerContextListenerInfo info : infos)
     {
-        ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
-        List<ServerContextListenerInfo> infos = builder.read();
+      try
+      {
 
-        for (ServerContextListenerInfo info : infos)
+        Class<?> clazz = LoaderDecorator.load(info.getClassName());
+        Object newInstance = clazz.newInstance();
+
+        try
         {
-            try
-            {
-
-                Class<?> clazz = LoaderDecorator.load(info.getClassName());
-                Object newInstance = clazz.newInstance();
-
-                try
-                {
-                    ServerContextListener listener = (ServerContextListener) newInstance;
-                    listener.startup();
-                }
-                catch (ClassCastException e)
-                {
-                    log.error("ClassCastException initializer", e);
-
-                    Class<? extends Object> class1 = newInstance.getClass();
-                    ClassLoader loader1 = class1.getClassLoader();
-
-                    log.debug("New instance class : " + class1.hashCode());
-                    log.debug("New instance class loader: " + loader1.hashCode());
-
-                    Class<? extends Object> class2 = ServerContextListener.class;
-                    ClassLoader loader2 = class2.getClassLoader();
-
-                    log.debug("Interface class : " + class2.hashCode());
-                    log.debug("New instance class loader: " + loader2.hashCode());
-
-                    clazz.getMethod("startup").invoke(newInstance);
-                }
-
-                log.debug("COMLPETE: " + info.getClassName() + ".setup();");
-            }
-            catch (Exception e)
-            {
-                log.error(e);
-
-//                throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
-            }
+          ServerContextListener listener = (ServerContextListener) newInstance;
+          listener.startup();
         }
-    }
+        catch (ClassCastException e)
+        {
+          log.error("ClassCastException initializer", e);
 
-    @Request
-    public static void destroy()
+          Class<? extends Object> class1 = newInstance.getClass();
+          ClassLoader loader1 = class1.getClassLoader();
+
+          log.debug("New instance class : " + class1.hashCode());
+          log.debug("New instance class loader: " + loader1.hashCode());
+
+          Class<? extends Object> class2 = ServerContextListener.class;
+          ClassLoader loader2 = class2.getClassLoader();
+
+          log.debug("Interface class : " + class2.hashCode());
+          log.debug("New instance class loader: " + loader2.hashCode());
+
+          clazz.getMethod("startup").invoke(newInstance);
+        }
+
+        log.debug("COMLPETE: " + info.getClassName() + ".setup();");
+      }
+      catch (Exception e)
+      {
+        log.error(e);
+
+        throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+      }
+    }
+  }
+
+  @Request
+  public static void destroy()
+  {
+    ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
+    List<ServerContextListenerInfo> infos = builder.read();
+
+    for (ServerContextListenerInfo info : infos)
     {
-        ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
-        List<ServerContextListenerInfo> infos = builder.read();
+      try
+      {
 
-        for (ServerContextListenerInfo info : infos)
+        Class<?> clazz = LoaderDecorator.load(info.getClassName());
+        Object newInstance = clazz.newInstance();
+
+        try
         {
-            try
-            {
-
-                Class<?> clazz = LoaderDecorator.load(info.getClassName());
-                Object newInstance = clazz.newInstance();
-
-                try
-                {
-                    ServerContextListener listener = (ServerContextListener) newInstance;
-                    listener.shutdown();
-                }
-                catch (ClassCastException e)
-                {
-                    log.error("ClassCastException in ServerInitializer.shutdown", e);
-
-                    Class<? extends Object> class1 = newInstance.getClass();
-                    ClassLoader loader1 = class1.getClassLoader();
-
-                    log.debug("New instance class : " + class1.hashCode());
-                    log.debug("New instance class loader: " + loader1.hashCode());
-
-                    Class<? extends Object> class2 = ServerContextListener.class;
-                    ClassLoader loader2 = class2.getClassLoader();
-
-                    log.debug("Interface class : " + class2.hashCode());
-                    log.debug("New instance class loader: " + loader2.hashCode());
-
-                    clazz.getMethod("shutdown").invoke(newInstance);
-                }
-
-                log.debug("COMLPETE: " + info.getClassName() + ".shutdown();");
-            }
-            catch (Exception e)
-            {
-                log.error(e);
-
-                throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
-            }
+          ServerContextListener listener = (ServerContextListener) newInstance;
+          listener.shutdown();
         }
+        catch (ClassCastException e)
+        {
+          log.error("ClassCastException in ServerInitializer.shutdown", e);
+
+          Class<? extends Object> class1 = newInstance.getClass();
+          ClassLoader loader1 = class1.getClassLoader();
+
+          log.debug("New instance class : " + class1.hashCode());
+          log.debug("New instance class loader: " + loader1.hashCode());
+
+          Class<? extends Object> class2 = ServerContextListener.class;
+          ClassLoader loader2 = class2.getClassLoader();
+
+          log.debug("Interface class : " + class2.hashCode());
+          log.debug("New instance class loader: " + loader2.hashCode());
+
+          clazz.getMethod("shutdown").invoke(newInstance);
+        }
+
+        log.debug("COMLPETE: " + info.getClassName() + ".shutdown();");
+      }
+      catch (Exception e)
+      {
+        log.error(e);
+
+        throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+      }
     }
+  }
 }
