@@ -83,10 +83,35 @@
         overlayLayerContainer.disableSelection();
       },
       
+      /**
+       * Returns an array of overlay checkbox id's that correspond to leaflet layer object id's
+       * 
+       */
+      _getActiveOverlayOrderedArrayIds : function() {
+          var checkedLayerIds = [];
+          var layers = $("#overlayLayerContainer").find("input");
+          
+          for (var i = 0; i < layers.length; ++i) {       	 
+            var inputEl = layers[i];
+            var checkboxEl = inputEl.previousSibling;
+
+            if($(checkboxEl).hasClass('chk-checked')){ 
+            	testing = inputEl;
+            	checkedLayerIds.push(inputEl.id); 
+            }
+          }
+          return checkedLayerIds.reverse();
+      },
+      
+      /**
+       * Callback handler when layers are reordered which persists index order of layers to db and
+       * 
+       * @param event
+       * @param ui
+       */
       _overlayLayerSortUpdate : function(event, ui) {
         var that = this;
-        
-        
+              
         // Calculate an array of layer ids
         var layerIds = [];
         var layers = $("#overlayLayerContainer").find("input");
@@ -97,9 +122,8 @@
         layerIds.reverse();
         
         var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(json){
-            var jsonObj = Mojo.Util.toObject(json);
-            that._refreshMapInternal(jsonObj);
+          onSuccess : function(json){	
+            that._addSortedOverlays();
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -109,13 +133,16 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
       },
       
-      _overlayHandler : function(e){
-        
-        var that = this;
-        
+      /**
+       * Opens the layer edit form for existing layers  
+       * 
+       * @param e
+       */
+      _overlayHandler : function(e){       
+        var that = this;     
         var el = $(e.currentTarget);
-        if(el.hasClass('ico-edit')){
-          
+        
+        if(el.hasClass('ico-edit')){          
           // edit the layer
           var id = el.data('id');
           this._LayerController.edit(new Mojo.ClientRequest({
@@ -128,8 +155,7 @@
           }), id);
           
         }
-        else if(el.hasClass('ico-remove')){
-          
+        else if(el.hasClass('ico-remove')){         
           // delete the layer
           var id = el.data('id');
           com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
@@ -145,7 +171,7 @@
       
       /**
        * Removes the Layer with the given object id (Runway Id)
-       * from all caches and the map itself.
+       * from all caches, the sidebar, and the map itself.
        * 
        * @param id
        */
@@ -199,7 +225,7 @@
             }
           },
           onFailure : function(e){
-            that.handleException(e);
+        	  that.handleException(e);
           }
         }, $(DynamicMap.LAYER_MODAL)[0]);
         
@@ -210,6 +236,7 @@
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
+        
         return request;
       },
       
@@ -217,8 +244,7 @@
        * 
        * @param params
        */
-      _cancelListener : function(params){
-        
+      _cancelListener : function(params){        
         var that = this;
         
         if(params['layer.isNew'] === 'true')
@@ -245,6 +271,7 @@
       
       /**
        * Return all allowable base maps.
+       * 
        */
       _getBaseLayers : function(){
         
@@ -267,6 +294,8 @@
       /**
        * Renders each base layer as a checkable option in
        * the layer switcher.
+       * 
+       * @param base - array of leaflet basemap layer objects
        */
       _renderBaseLayerSwitcher : function(base){
         
@@ -362,27 +391,17 @@
        * 
        * @param e
        */
-      _selectOverlayLayer : function(e){
-        
+      _toggleOverlayLayer : function(e){       
           var changed = e.currentTarget;
-          var changedId = changed.id;
-          var changedLayer = this._overlayLayers.get(changedId);
           var ids = this._overlayLayers.keySet();
           
-          var newOverlayLayer = null;
           if(changed.checked){
-            for(var i=0; i<ids.length; i++){
-              var id = ids[i];
-              if(id === changedId){
-                newOverlayLayer = changedLayer;
-                this._map.addLayer(newOverlayLayer);
-              }
-            }
+              this._addSortedOverlays();
           }
           else{
-            for(var i=0; i<ids.length; i++){                
+        	  for(var i=0; i<ids.length; i++){                
                   var id = ids[i];
-                  if(id === changedId){
+                  if(id === changed.id){
                     var uncheck = document.getElementById(id);
                     uncheck.checked = false;
                     jcf.customForms.refreshElement(uncheck);
@@ -390,8 +409,50 @@
                     var removeLayer = this._overlayLayers.get(id);
                     this._map.removeLayer(removeLayer);
                   }
-            }
-          }
+        	  }
+          }                       
+      },
+      
+      /**
+       * Removes and re-adds all overlay leaflet layer objects that are checked 
+       * to maintain the order of the layers in the sidebar
+       * 
+       */
+      _addSortedOverlays : function(){
+    	  var layers = []; 
+    	  
+          // Function for keeping sort order
+          function sortByKey(array, key) {
+              return array.sort(function (a, b) {
+                  var x = a[key];
+                  var y = b[key];
+                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              });
+          }  
+          
+          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
+          for(var i=0; i<checkboxLayerIds.length; i++){ 
+        	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
+        	  
+        	  // Remove all existing layers to re-add in order later
+        	  this._map.removeLayer(layer);   
+        	  
+        	  // add to a sorting array
+        	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
+        	  layers.push({
+        		  "z-index": zIndex,
+        		  "layer": layer
+        	  });       	  
+    	  } 
+          
+          // Sort layers array by z-index
+          var orderedLayers = sortByKey(layers, "z-index");
+
+          // Loop through ordered layers array and add to map in correct order
+          that = this;
+          $.each(orderedLayers, function () {
+        	  that._map.addLayer(that._overlayLayers.get(this.layer.id));
+          });
       },
       
       /**
@@ -466,10 +527,17 @@
         
       },
       
+      /**
+       * Builds the map elements (map, layers, etc...)
+       * 
+       * @param jsonObj - map propertiees from the database for the map (layers, bounds, etc...)
+       */
       _refreshMapInternal : function(jsonObj){
-        
+          var jsonBbox = jsonObj.bbox; 
+          var jsonLayers = jsonObj.layers;
+          
         // FIXME Lewis
-        if(this._rendered){
+        if(this._rendered){          
           $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
           $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).html('');
           this._baseLayers.clear();
@@ -477,21 +545,20 @@
           $('#'+this._mapDivId).html('');
           this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
         }
+
+
         
-        var jsonBbox = jsonObj.bbox; 
-        var jsonLayers = jsonObj.layers;
-        
-        // Handle points & polygons 
+        // Handle points (2 coord sets) & polygons (4 coord sets)
         if (jsonBbox.length === 2){
         	var center = L.latLng(jsonBbox[1], jsonBbox[0]);
         	this._map.setView(center, 9);
         }
         else if (jsonBbox.length === 4){
-        		var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        		var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
-        		var bounds = L.latLngBounds(swLatLng, neLatLng);   
+        	var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
+        	var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
+        	var bounds = L.latLngBounds(swLatLng, neLatLng);   
 
-        		this._map.fitBounds(bounds);
+        	this._map.fitBounds(bounds);
         }
 
         // Add attribution to the map
@@ -512,9 +579,10 @@
         // Add Base Layers to map and layer switcher panel
         var base = this._getBaseLayers();                                
         this._map.addLayer(base[0]); 
-        this._renderBaseLayerSwitcher(base);
-
+        this._renderBaseLayerSwitcher(base);        
+	    
         var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        
         
         //// Add associated Overlays
         // @viewName
@@ -523,8 +591,8 @@
         // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).         
         var html = '';
         var ids = [];
+        
         // First create the html objects that represent the layers
-        var layers = [];
         var htmlInfo = [];
         for(var i = 0; i < jsonLayers.length; i++){
           var layerObj = jsonLayers[i];
@@ -533,7 +601,7 @@
           var sldName = layerObj.sldName || "";  // This should be enabled we wire up the interface or set up a better test process
           var displayName = layerObj.layerName || "N/A";
           var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
-          var layerId = layerObj.layerId;
+          var layerId = layerObj.layerId;         
 
           var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
             layers: geoserverName,
@@ -541,23 +609,16 @@
             transparent: true,
             styles: sldName
           });
-          layers.push(layer);
+
 
           var id = 'overlay_layer_'+i;
           var b = layer;
           b.id = id;  
           ids.push(id);  
           this._overlayLayers.put(id, b);
-          this._layerCache.put(layerId, b);
-
-          // This if statement is completely unneeded but makes sure a single layer is rendered on the map.  
-          // It often helps new users to see an overlay in action on initial map load.
-          if(i === 0){
-            this._currentOverlay = this._defaultOverlay = layer;
-            //checked = 'checked="checked"';
-          }
+          this._layerCache.put(layerId, b);         
+          this._map.addLayer(layer);
           
-          this._map.addLayer(layers[i]);
           htmlInfo.push({id: id, layerId: layerId, displayName: displayName});
         }
         
@@ -565,7 +626,7 @@
         for(var i = 0; i < htmlInfo.length; i++){
           var layerObj = htmlInfo[i];
           
-          // Create the HTML for each row (base layer representation).
+          // Create the HTML for each overlay checkbox
           var checked = 'checked="checked"';
           
           html += '<div class="row-form">';
@@ -588,13 +649,18 @@
         for(var i=0; i<ids.length; i++){
           var id = ids[i];
           var check = $('#'+id);                    
-          var handler = Mojo.Util.bind(this, this._selectOverlayLayer);
+          var handler = Mojo.Util.bind(this, this._toggleOverlayLayer);
           check.on('change', this._overlayLayers.get(id), handler);
-        }
+        }       
         
         this._rendered = true;       
+        
       },
       
+      /**
+       * Requests map properties from the database (bounds, persisted layers, etc...) and renders the map
+       * 
+       */
       _refreshMap : function(){
         
         var that = this;
@@ -611,6 +677,11 @@
             , this._mapId, '{testKey:"TestValue"}');
       },
       
+      /**
+       * Gets the html for and calls the layer creation/edit form 
+       * 
+       * @e 
+       */
       _openLayerForAttribute : function(e){
         e.preventDefault();      
         
@@ -633,6 +704,12 @@
         
       },
       
+      /**
+       * Renders the layer creation/edit form
+       * 
+       * @html
+       * @forceShow
+       */
       _displayLayerForm : function(html, forceShow){
     	  
         // clear all previous color picker dom elements
