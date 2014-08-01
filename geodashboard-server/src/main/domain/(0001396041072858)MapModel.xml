@@ -94,21 +94,21 @@
 					<integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
 					<char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
 					<char name="pointFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
 					<integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
 					
 					<!-- line styles -->
 					<char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000"/>
 					<integer name="lineStrokeWidth" label="Width" required="true" defaultValue="3" rejectNegative="true" />
 					<char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
-					<double name="lineOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="lineOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
 					
 					<!-- polygon styles -->
 					<char name="polygonFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
 					<char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
 					<integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-					<double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".7" rejectNegative="true" />
+					<double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
 				</attributes>
 			</mdBusiness>
 
@@ -192,6 +192,19 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" label="Or"
 				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="true">
 			</mdBusiness>
+			
+			<mdException
+        name="com.runwaysdk.geodashboard.gis.DuplicateMapDataException"
+        label="Duplicate Map Data Exception"
+        description="Thrown when a user tries to create a map with duplicate geo entities."
+        message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
+      </mdException>
+      <mdInformation
+        name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation"
+        label="Empty Layer Information"
+        description="Created when a user creates a layer with no data to display."
+        message="The layer you have created contains no data.">
+      </mdInformation>
 
 		</create>
 		<update></update>
@@ -215,6 +228,7 @@
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
 			<object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
+			<object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
 
 		</delete>
 	</undoIt>

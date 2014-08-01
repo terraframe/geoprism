@@ -198,11 +198,16 @@ public class DashboardMap extends DashboardMapBase implements
           log.error("Error publishing style ["+layerName+"].", t);
         }
         
+        layer.validate();
+        
         try
         {
           if(!GeoserverFacade.publishLayer(layerName, layerName))
           {
             log.error("Failure publishing layer ["+layerName+"].");
+          }
+          else {
+            log.info("Published layer: " + layerName);
           }
         }
         catch(Throwable t)

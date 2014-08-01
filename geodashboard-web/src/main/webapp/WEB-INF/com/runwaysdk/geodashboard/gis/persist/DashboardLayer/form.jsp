@@ -6,7 +6,7 @@
 <mjl:component param="style" item="${style}">
 </mjl:component>
 
-    <div class="modal-dialog">
+    <div id="DashboardLayer-mainDiv" class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
           <h1>New map layer for Number of Units</h1>
@@ -496,7 +496,7 @@
                           <span>${style.pointStrokeMd.displayLabel}</span>
                           <div class="color-holder">
                             <a href="#" class="color-choice">
-                              <span class="ico" style="background:${style.pointFill};">icon</span>
+                              <span class="ico" style="background:${style.pointStroke};">icon</span>
                               <span class="arrow">arrow</span>
                               <input type="hidden" class="color-input" name="style.${style.pointStrokeMd.name}" value="${style.pointStroke}" />
                             </a>
@@ -802,6 +802,7 @@
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.create.button" 
 							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle.mojo"
 							      classes="btn btn-primary"  />
+							    <!-- <input id="DashboardLayer-create-button" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.create.button" value="Map It" class="btn btn-primary" type="button"> -->
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.cancel.button"
 							      value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.cancel.mojo"
 							      classes="btn btn-default" />

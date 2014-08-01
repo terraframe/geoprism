@@ -13,6 +13,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
@@ -164,6 +165,56 @@ public class DashboardLayer extends DashboardLayerBase implements
     String path = GeoserverProperties.getGeoserverSLDDir();
     String sld = path + this.getSLDName() + GeoserverProperties.SLD_EXTENSION;
     return new File(sld);
+  }
+  
+  public void validate() {
+//    String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
+//    
+//    // make sure there are no duplicate geo entities
+//    String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " + ((MdEntity)this.getMdClass()).getTableName();
+//    countSQL += " GROUP BY " + geoIdColumnName + " HAVING COUNT(*) > 1";
+//
+//    ResultSet resultSet = Database.query(countSQL);
+//
+//    try
+//    {
+//      if (resultSet.next())
+//      {
+//        // We have duplicate data! Throw an exception if this is the base
+//        // layer,
+//        // but only omit the layer with info if non-base.
+//        if (i == 0)
+//        {
+//          DuplicateMapDataException ex = new DuplicateMapDataException();
+//          throw ex;
+//        }
+//        else
+//        {
+//          LayerOmittedDuplicateDataInformation info = new LayerOmittedDuplicateDataInformation();
+//          info.setLayerName(layerName);
+//          info.throwIt();
+//         
+//          continue;
+//        }
+//      }
+//    }
+//    catch (SQLException sqlEx1)
+//    {
+//      Database.throwDatabaseException(sqlEx1);
+//    }
+//    finally
+//    {
+//      try
+//      {
+//        java.sql.Statement statement = resultSet.getStatement();
+//        resultSet.close();
+//        statement.close();
+//      }
+//      catch (SQLException sqlEx2)
+//      {
+//        Database.throwDatabaseException(sqlEx2);
+//      }
+//    }
   }
 
   public ValueQuery asValueQuery()
@@ -330,6 +381,13 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       // print the SQL if the generated
       log.debug("SLD for Layer [%s], this:\n" + v.getSQL());
+    }
+    
+    if (v.getCount() == 0) {
+      EmptyLayerInformation info = new EmptyLayerInformation();
+      info.apply();
+      
+      info.throwIt();
     }
 
     return v;

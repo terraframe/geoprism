@@ -20,7 +20,7 @@ public interface MapVisitor
 
   public void visit(Layer component);
 
-  public void visit(Style component);
+  public void visit(Style style);
 
   public void visit(ThematicStyle component);
 
