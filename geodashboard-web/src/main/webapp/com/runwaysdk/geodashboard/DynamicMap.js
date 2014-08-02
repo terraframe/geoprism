@@ -147,7 +147,7 @@
           var id = el.data('id');
           this._LayerController.edit(new Mojo.ClientRequest({
             onSuccess : function(html){
-              that._displayLayerForm(html, true);
+              that._displayLayerForm(html);
             },
             onFailure : function(e){
               that.handleException(e);
@@ -214,14 +214,17 @@
         
 //        var request = new Mojo.ClientRequest({
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(html){
-            if(Mojo.Util.trim(html).length === 0){
-              that._closeLayerModal();
+          onSuccess : function(html, response){
+            if (response.isJSON()) {
+//              that._closeLayerModal();
               that._refreshMap();
+              
+              // TODO : Push this somewhere as a default handler.
+              that.handleMessages(response);
             }
-            else {
+            else if (response.isHTML()) {
               // we got html back, meaning there was an error
-              that._displayLayerForm(html, false);
+              that._displayLayerForm(html);
             }
           },
           onFailure : function(e){
@@ -693,9 +696,10 @@
         
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){
-            that._displayLayerForm(html, false);
+            that._displayLayerForm(html);
           },
           onFailure : function(e){
+            that._closeLayerModal();
             that.handleException(e);
           }
         });
@@ -708,29 +712,24 @@
        * Renders the layer creation/edit form
        * 
        * @html
-       * @forceShow
        */
-      _displayLayerForm : function(html, forceShow){
+      _displayLayerForm : function(html){
     	  
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
         
-        var modal = $(DynamicMap.LAYER_MODAL).first();       
-        if(forceShow){
-          modal.modal('show');
-        }
-        
-        var exec = Mojo.Util.extractScripts(html);
-        
+        // Show the white background modal.
+        var modal = $(DynamicMap.LAYER_MODAL).first();
+        modal.modal('show');
         modal.html(html);
-        jcf.customForms.replaceAll(modal[0]);
         
+        eval(Mojo.Util.extractScripts(html));
+        
+        jcf.customForms.replaceAll(modal[0]);
         
         // Add layer styling event listeners
         this._selectColor();
         this._selectLayerType();
-        
-        eval(exec);
         
         // Move reusable cells to active cell holder
         var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;

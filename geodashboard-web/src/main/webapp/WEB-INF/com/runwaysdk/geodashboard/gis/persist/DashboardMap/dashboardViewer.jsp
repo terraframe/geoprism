@@ -214,7 +214,8 @@ $(document).ready(function(){
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
- 										  <span data-toggle="modal" data-target="#modal01">map it</span>
+ 										  <!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
+ 										  <span>map it</span>
 										</a>
 									</h4>
 									

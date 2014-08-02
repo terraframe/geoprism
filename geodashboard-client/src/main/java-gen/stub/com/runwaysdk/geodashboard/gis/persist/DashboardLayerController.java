@@ -16,6 +16,7 @@ import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
+import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements
     com.runwaysdk.generation.loader.Reloadable
@@ -254,12 +255,22 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     try
     {
+      // MdMethod invocation -> Goes to server.
       layer.applyWithStyle(style, mapId);
+      
+      JSONReturnObject jsonReturn = new JSONReturnObject();
+      jsonReturn.setInformation( this.getClientRequest().getInformation() );
+      jsonReturn.setWarnings(this.getClientRequest().getWarnings());
+      
+      this.getResponse().setStatus(200);
+      this.getResponse().setContentType("application/json");
+      
+      this.getResponse().getWriter().print(jsonReturn.toString());
     }
     catch (Throwable t)
     {
       this.loadLayerData(layer, (DashboardThematicStyleDTO) style);
-
+      
       if(t instanceof ProblemExceptionDTO)
       {
         ProblemExceptionDTO ex = (ProblemExceptionDTO) t;
@@ -269,6 +280,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       {
         GDBErrorUtility.prepareThrowable(t, req);
       }
+      
+      // TODO: this needs to be pushed into the render method.
+      this.getResponse().setContentType("text/html");
  
       if (layer.isNewInstance())
       {
