@@ -20,6 +20,7 @@
 --%>
 
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -46,7 +47,7 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerController.CLASS,
+      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
       
       }, true);
     out.print(js);

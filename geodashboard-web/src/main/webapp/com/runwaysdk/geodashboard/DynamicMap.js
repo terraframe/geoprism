@@ -45,16 +45,13 @@
         this._mapDivId = mapDivId;
         this._mapId = mapId;
         this._mdAttribute = null;
-        this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
+        this._map = null;
         
-        // key => value = dom id => Layer
-        this._overlayLayers = new com.runwaysdk.structure.HashMap();
-        
-        // key -> value = object => Layer
-        this._layerCache = new com.runwaysdk.structure.HashMap();     
+        // LinkedHashMap<runwayId, DashboardLayerView>
+        this._layerCache = new com.runwaysdk.structure.LinkedHashMap();
         
         // The current base map (only one at a time is allowed)
         this._defaultBase = null;
@@ -64,8 +61,7 @@
         this._suggestionCoords = new com.runwaysdk.structure.HashMap();      
         this._autocomplete = null;
         this._responseCallback = null;
-        
-        this._rendered = false;
+        this._bBox = null;
         
         var bound = Mojo.Util.bind(this, this._overlayHandler);
         overlayLayerContainer.on('click', 'a', bound);
@@ -84,23 +80,187 @@
       },
       
       /**
-       * Returns an array of overlay checkbox id's that correspond to leaflet layer object id's
-       * 
+       * Retrieves new data from the server and then refreshes everything on the map with the new data.
        */
-      _getActiveOverlayOrderedArrayIds : function() {
-          var checkedLayerIds = [];
-          var layers = $("#overlayLayerContainer").find("input");
-          
-          for (var i = 0; i < layers.length; ++i) {       	 
-            var inputEl = layers[i];
-            var checkboxEl = inputEl.previousSibling;
+      fullRefresh : function() {
+        var that = this;
+        
+        this._updateCachedData(function(){
+          that._renderMap();
+          that._renderBaseLayers();
+          that._renderUserLayers();
+        });
+      },
+      
+      /**
+       * Requests all map data again from the server (bounds, persisted layers, etc...) and updates our internal caches.
+       */
+      _updateCachedData : function(fnSuccess) {
+        var that = this;
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
+          new Mojo.ClientRequest({
+            onSuccess : function(json){
+              var jsonObj = Mojo.Util.toObject(json);
+              
+              // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
+              //          Since we're using JSON, we have to create DashboardLayerView objects here.
+              for (var i = 0; i < jsonObj.layers; ++i) {
+                var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
+                view.setViewName(jsonObj.viewName);
+                view.setLayerId(jsonObj.layerId);
+                view.setSldName(jsonObj.sldName);
+                view.setLayerName(jsonObj.layerName);
+                that._layerCache.put(jsonObj.layerId, view);
+              }
+              
+              that._bBox = jsonObj.bbox;
+              
+              fnSuccess();
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          })
+          , this._mapId, '{testKey:"TestValue"}');
+      },
+      
+      /**
+       * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
+       */
+      _renderMap : function() {
+        if (this._map != null) {
+          $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
+          this._map.remove();
+          $('#'+this._mapDivId).html('');
+        }
+        
+        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
+        
+        // Handle points (2 coord sets) & polygons (4 coord sets)
+        if (this._bBox.length === 2){
+          var center = L.latLng(this._bBox[1], this._bBox[0]);
+          this._map.setView(center, 9);
+        }
+        else if (this._bBox.length === 4){
+          var swLatLng = L.latLng(this._bBox[1], this._bBox[0]);
+          var neLatLng = L.latLng(this._bBox[3], this._bBox[2]);            
+          var bounds = L.latLngBounds(swLatLng, neLatLng);   
 
-            if($(checkboxEl).hasClass('chk-checked')){ 
-            	testing = inputEl;
-            	checkedLayerIds.push(inputEl.id); 
+          this._map.fitBounds(bounds);
+        }
+
+        // Add attribution to the map
+        this._map.attributionControl.setPrefix('');
+        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+
+        // Hide mouse position coordinate display when outside of map
+        this._map.on('mouseover', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").show();
+        });
+        
+        this._map.on('mouseout', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").hide();
+        });
+        
+        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
+      },
+      
+      _renderBaseLayers : function() {
+        this._baseLayers.clear();
+        
+        var base = this._getBaseLayers();                                
+        this._map.addLayer(base[0]); 
+        this._renderBaseLayerSwitcher(base);
+      },
+      
+      /**
+       * Redraws the HTML representing the user-defined layers and adds the layers to Leaflet.
+       */
+      _renderUserLayers : function() {
+        this._drawUserLayersHMTL();
+        this._addUserLayersToMap();
+      },
+      
+      _drawUserLayersHMTL : function(htmlInfo) {
+        var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        var onCheckHandler = Mojo.Util.bind(this, this._toggleOverlayLayer);
+        var html = '';
+        var layers = this._layerCache.values();
+        
+        // 1) Create the HTML for the layer overlay.
+        for(var i = layers.length-1; i >= 0; i--){
+          var layer = layers[i];
+          
+          var displayName = layer.getLayerName() || "N/A";
+          
+          html += '<div class="row-form">';
+          html += "<div id=" + layer.getLayerId() + "/>";
+          html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
+          html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove">remove</a>';
+          html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit">edit</a>';
+          html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+          html += '</div>';
+        }
+        
+        // 2) Render the HTML we just generated.
+        container.html(html);
+//        jcf.customForms.replaceAll(container[0]);
+        
+        // 3) Add checkboxes and register click events
+        for(var i = 0; i < layers.length; i++){
+          var layer = layers[i];
+          
+          var chexd = layer.checked === false || layer.checked === true ? layer.checked : true;
+          
+          com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(layer.getLayerId());
+          var checkbox = this.getFactory().newCheckBox({el: "#"+layer.getLayerId(), data: {runwayId: layer.getLayerId()}, checked: chexd, classes: ["check"]});
+          checkbox.addOnCheckListener(onCheckHandler);
+          checkbox.render();
+        }
+      },
+      
+      /**
+       * Adds all layers in the layerCache to leaflet, in the proper ordering.
+       * 
+       * @param boolean removeExisting Optional, if unspecified all exisiting layers will be removed first. If set to false, only layers that leaflet
+       *   does not already know about will be added.
+       */
+      _addUserLayersToMap : function(removeExisting) {
+        var layers = this._layerCache.values();
+        
+        // Remove any already rendered layers
+        if (removeExisting !== false) {
+          for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            
+            if (layer.leafletLayer != null) {
+              this._map.removeLayer(layer.leafletLayer);
             }
           }
-          return checkedLayerIds.reverse();
+        }
+        
+        // Add all our layers from the layerCache to leaflet.
+        for (var i = 0; i < layers.length; i++) {
+          var layer = layers[i];
+          
+          if (layer.checked !== false && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
+            var viewName = layer.getViewName();
+            var displayName = layer.getLayerName() || "N/A";
+            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
+            
+            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+              layers: geoserverName,
+              format: 'image/png',
+              transparent: true,
+              styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+            });
+            
+            this._map.addLayer(leafletLayer);
+            
+            layer.leafletLayer = leafletLayer;
+          }
+        }
       },
       
       /**
@@ -117,16 +277,27 @@
         var layers = $("#overlayLayerContainer").find("input");
         for (var i = 0; i < layers.length; ++i) {
           var layer = $(layers[i]);
-          layerIds.push(layer.data("id"));
+          layerIds.push(layer.data("runwayid"));
         }
         layerIds.reverse();
         
         var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(json){	
-            that._addSortedOverlays();
+          onSuccess : function(json) {
+            // Update the layer cache with the new layer ordering
+            var reorderedLayerCache = new com.runwaysdk.structure.LinkedHashMap();
+            for (var i = 0; i < layerIds.length; ++i) {
+              reorderedLayerCache.put(layerIds[i], that._layerCache.get(layerIds[i]));
+            }
+            that._layerCache = reorderedLayerCache;
+            
+            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform leaflet of the new ordering.
+            that._addUserLayersToMap();
           },
           onFailure : function(e) {
             that.handleException(e);
+            
+            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update leaflet because that ordering is still correct.
+            that._drawUserLayersHMTL();
           }
         });
         
@@ -179,14 +350,11 @@
         
         var toRemove = this._layerCache.get(id);
         
-        // remove layer from both caches
+        // remove layer from our cache
         this._layerCache.remove(id);
 
-        var name = toRemove.id;
-        this._overlayLayers.remove(name);
-        
-        // remove the actual layer from the map        
-        this._map.removeLayer(toRemove);
+        // remove the actual layer from the map
+        this._map.removeLayer(toRemove.leafletLayer);
         
         // remove the layer from the map and UI
         // FIXME use selector
@@ -214,17 +382,23 @@
         
 //        var request = new Mojo.ClientRequest({
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(html, response){
+          onSuccess : function(htmlOrLayerView, response){
             if (response.isJSON()) {
-//              that._closeLayerModal();
-              that._refreshMap();
+              that._closeLayerModal();
+              
+              // Update the layer cache with the updated layer the server returned to us.
+              that._layerCache.put(htmlOrLayerView.getLayerId(), htmlOrLayerView);
+              
+              // Redraw the HTML and only add the new layer to leaflet.
+              that._drawUserLayersHMTL();
+              that._addUserLayersToMap(false);
               
               // TODO : Push this somewhere as a default handler.
               that.handleMessages(response);
             }
             else if (response.isHTML()) {
               // we got html back, meaning there was an error
-              that._displayLayerForm(html);
+              that._displayLayerForm(htmlOrLayerView);
             }
           },
           onFailure : function(e){
@@ -302,11 +476,11 @@
        */
       _renderBaseLayerSwitcher : function(base){
         
-    	that = this;
+        var that = this;
         
         // Create the HTML for each row (base layer representation).
         var ids = [];
-        baseLayers = new com.runwaysdk.structure.HashMap();
+        var baseLayers = this._baseLayers;
         for(var i=0; i<base.length; i++){
           
 	          var id = 'base_layer_'+i;
@@ -336,6 +510,7 @@
 	            label = this.localize("osmBasic");
 	          }
 	          
+	          com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
 	          var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
 	          checkbox.setId(id);
 	          if(i === 0){
@@ -358,34 +533,29 @@
       /**
        * Changes the base layer of the map.
        * 
-       * @param that - reference to this at method scope
-       * @param targetCheckbox - target checkbox Checkbox object
+       * @param checkbox - Checkbox object
       */
-      _toggleBaseLayer : function(targetCheckbox){
-    	  
-    	target = targetCheckbox;
-      	targetId = target.getId();
-    	targetEl = document.getElementById(targetId);
-
-    	var ids = baseLayers.keySet();   	  	   	
-    	var isChecked = target.isChecked();
-  	
-  	  	if(isChecked){
-  	  		for(var i=0; i<ids.length; i++){ 
-  	  			if(ids[i] !== targetId){
+      _toggleBaseLayer : function(checkBox) {
+        var targetId = checkBox.getId();
+      	var ids = this._baseLayers.keySet();
+      	var isChecked = checkBox.isChecked();
+    	
+  	  	if (isChecked) {
+  	  		for (var i=0; i<ids.length; i++) { 
+  	  			if (ids[i] !== targetId) {
   	  				$("#"+ids[i]).removeClass('checked');
-  	  				var otherBaselayer = baseLayers.get(ids[i]);
-			        that._map.removeLayer(otherBaselayer);  	  				
+  	  				var otherBaselayer = this._baseLayers.get(ids[i]);
+			        this._map.removeLayer(otherBaselayer);
   	  			}
-  	  			else{
-  	  				var newBaselayer = baseLayers.get(targetId);
-  	  				that._map.addLayer(newBaselayer);
+  	  			else {
+  	  				var newBaselayer = this._baseLayers.get(targetId);
+  	  				this._map.addLayer(newBaselayer);
   	  			}
   	  		}
   	  	}
-  	  	else{
-			var unchecklayer = baseLayers.get(targetId);
-	        that._map.removeLayer(unchecklayer);
+  	  	else {
+  	  	  var unchecklayer = this._baseLayers.get(targetId);
+	        this._map.removeLayer(unchecklayer);
   	  	}
       },
       
@@ -394,26 +564,19 @@
        * 
        * @param e
        */
-      _toggleOverlayLayer : function(e){       
-          var changed = e.currentTarget;
-          var ids = this._overlayLayers.keySet();
-          
-          if(changed.checked){
-              this._addSortedOverlays();
-          }
-          else{
-        	  for(var i=0; i<ids.length; i++){                
-                  var id = ids[i];
-                  if(id === changed.id){
-                    var uncheck = document.getElementById(id);
-                    uncheck.checked = false;
-                    jcf.customForms.refreshElement(uncheck);
-                  
-                    var removeLayer = this._overlayLayers.get(id);
-                    this._map.removeLayer(removeLayer);
-                  }
-        	  }
-          }                       
+      _toggleOverlayLayer : function(e){
+        var cbox = e.getCheckBox();
+        var checked = cbox.isChecked();
+        var layer = this._layerCache.get(cbox.getData().runwayId);
+        
+        layer.checked = checked;
+        
+        if (checked) {
+          this._renderUserLayers();
+        }
+        else {
+          this._map.removeLayer(layer.leafletLayer);
+        }
       },
       
       /**
@@ -421,60 +584,42 @@
        * to maintain the order of the layers in the sidebar
        * 
        */
-      _addSortedOverlays : function(){
-    	  var layers = []; 
-    	  
-          // Function for keeping sort order
-          function sortByKey(array, key) {
-              return array.sort(function (a, b) {
-                  var x = a[key];
-                  var y = b[key];
-                  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-              });
-          }  
-          
-          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
-          for(var i=0; i<checkboxLayerIds.length; i++){ 
-        	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
-        	  
-        	  // Remove all existing layers to re-add in order later
-        	  this._map.removeLayer(layer);   
-        	  
-        	  // add to a sorting array
-        	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
-        	  layers.push({
-        		  "z-index": zIndex,
-        		  "layer": layer
-        	  });       	  
-    	  } 
-          
-          // Sort layers array by z-index
-          var orderedLayers = sortByKey(layers, "z-index");
-
-          // Loop through ordered layers array and add to map in correct order
-          that = this;
-          $.each(orderedLayers, function () {
-        	  that._map.addLayer(that._overlayLayers.get(this.layer.id));
-          });
-      },
-      
-      /**
-       * Builds the autocomplete and renders the map using Leaflet.
-       */
-      render : function(){
-        
-        this._refreshMap();
-        
-        // Make sure all openers for each attribute have a click event
-        $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
-        
-        if(this._googleEnabled){
-          this._addAutoComplete();
-        }
-        else {
-          
-        }
-      },
+//      _addSortedOverlays : function(){
+//    	  var layers = []; 
+//    	  
+//          // Function for keeping sort order
+//          function sortByKey(array, key) {
+//            return array.sort(function (a, b) {
+//              var x = a[key];
+//              var y = b[key];
+//              return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+//            });
+//          }
+//          
+//          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
+//          for (var i = 0; i < checkboxLayerIds.length; i++) {
+//        	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
+//        	  
+//        	  // Remove all existing layers to re-add in order later
+//        	  this._map.removeLayer(layer);
+//        	  
+//        	  // add to a sorting array
+//        	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
+//        	  layers.push({
+//        		  "z-index": zIndex,
+//        		  "layer": layer
+//        	  });
+//    	    }
+//          
+//          // Sort layers array by z-index
+//          var orderedLayers = sortByKey(layers, "z-index");
+//          
+//          // Loop through ordered layers array and add to map in correct order
+//          that = this;
+//          $.each(orderedLayers, function () {
+//        	  that._map.addLayer(that._overlayLayers.get(this.layer.id));
+//          });
+//      },
       
       /**
        * Disables the search functionality if google can't be loaded
@@ -527,157 +672,6 @@
             });      
           }
         });
-        
-      },
-      
-      /**
-       * Builds the map elements (map, layers, etc...)
-       * 
-       * @param jsonObj - map propertiees from the database for the map (layers, bounds, etc...)
-       */
-      _refreshMapInternal : function(jsonObj){
-          var jsonBbox = jsonObj.bbox; 
-          var jsonLayers = jsonObj.layers;
-          
-        // FIXME Lewis
-        if(this._rendered){          
-          $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
-          $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER).html('');
-          this._baseLayers.clear();
-          this._map.remove();
-          $('#'+this._mapDivId).html('');
-          this._map = new L.Map(this._mapDivId,{zoomAnimation: false,zoomControl: true});
-        }
-
-
-        
-        // Handle points (2 coord sets) & polygons (4 coord sets)
-        if (jsonBbox.length === 2){
-        	var center = L.latLng(jsonBbox[1], jsonBbox[0]);
-        	this._map.setView(center, 9);
-        }
-        else if (jsonBbox.length === 4){
-        	var swLatLng = L.latLng(jsonBbox[1], jsonBbox[0]);
-        	var neLatLng = L.latLng(jsonBbox[3], jsonBbox[2]);            
-        	var bounds = L.latLngBounds(swLatLng, neLatLng);   
-
-        	this._map.fitBounds(bounds);
-        }
-
-        // Add attribution to the map
-        this._map.attributionControl.setPrefix('');
-        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
-
-        // Hide mouse position coordinate display when outside of map
-        this._map.on('mouseover', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").show();
-        });
-
-        this._map.on('mouseout', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").hide();
-        });
-
-        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
-
-        // Add Base Layers to map and layer switcher panel
-        var base = this._getBaseLayers();                                
-        this._map.addLayer(base[0]); 
-        this._renderBaseLayerSwitcher(base);        
-	    
-        var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
-        
-        
-        //// Add associated Overlays
-        // @viewName
-        // @sldName - must be a valid style registered with geoserver (no .sld extension) or the default for that layer will be used.
-        // @displayName
-        // @geoserverName - must be include workspace and layername (ex: workspace:layer_name).         
-        var html = '';
-        var ids = [];
-        
-        // First create the html objects that represent the layers
-        var htmlInfo = [];
-        for(var i = 0; i < jsonLayers.length; i++){
-          var layerObj = jsonLayers[i];
-          
-          var viewName = layerObj.viewName;
-          var sldName = layerObj.sldName || "";  // This should be enabled we wire up the interface or set up a better test process
-          var displayName = layerObj.layerName || "N/A";
-          var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
-          var layerId = layerObj.layerId;         
-
-          var layer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-            layers: geoserverName,
-            format: 'image/png',
-            transparent: true,
-            styles: sldName
-          });
-
-
-          var id = 'overlay_layer_'+i;
-          var b = layer;
-          b.id = id;  
-          ids.push(id);  
-          this._overlayLayers.put(id, b);
-          this._layerCache.put(layerId, b);         
-          this._map.addLayer(layer);
-          
-          htmlInfo.push({id: id, layerId: layerId, displayName: displayName});
-        }
-        
-        htmlInfo.reverse();
-        for(var i = 0; i < htmlInfo.length; i++){
-          var layerObj = htmlInfo[i];
-          
-          // Create the HTML for each overlay checkbox
-          var checked = 'checked="checked"';
-          
-          html += '<div class="row-form">';
-          html += '<input data-id="'+layerObj.layerId+'" id="'+layerObj.id+'" class="check" type="checkbox" '+checked+'>';
-          html += '<label for="'+layerObj.id+'">'+layerObj.displayName+'</label>';
-          html += '<div class="cell"><a href="#" data-id="'+layerObj.layerId+'" class="ico-remove">remove</a>';
-          html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-edit">edit</a>';
-          html += '<a href="#" data-id="'+layerObj.layerId+'" class="ico-control">control</a></div>';
-          html += '</div>';
-        }
-        
-        // combine the rows into new HTML that goes in to the layer switcher
-        var rows = $(html);
-        var el = container[0];
-
-        container.append(rows);               
-        jcf.customForms.replaceAll(el);
-
-        // add event handlers to manage the actual check/uncheck process
-        for(var i=0; i<ids.length; i++){
-          var id = ids[i];
-          var check = $('#'+id);                    
-          var handler = Mojo.Util.bind(this, this._toggleOverlayLayer);
-          check.on('change', this._overlayLayers.get(id), handler);
-        }       
-        
-        this._rendered = true;       
-        
-      },
-      
-      /**
-       * Requests map properties from the database (bounds, persisted layers, etc...) and renders the map
-       * 
-       */
-      _refreshMap : function(){
-        
-        var that = this;
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
-            new Mojo.ClientRequest({
-                onSuccess : function(json){
-                  var jsonObj = Mojo.Util.toObject(json);
-                  that._refreshMapInternal(jsonObj);
-                },
-                onFailure : function(e){
-                  that.handleException(e);
-                }
-            })
-            , this._mapId, '{testKey:"TestValue"}');
       },
       
       /**
@@ -841,7 +835,24 @@
                   $("#tab004").show();
               }
         });
-      }
+      },
+      
+      /**
+       * Renders the mapping widget, performing a full refresh.
+       */
+      render : function(){
+        this.fullRefresh();
+        
+        // Make sure all openers for each attribute have a click event
+        $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
+        
+        if(this._googleEnabled){
+          this._addAutoComplete();
+        }
+        else {
+          
+        }
+      },
     }
    
   });

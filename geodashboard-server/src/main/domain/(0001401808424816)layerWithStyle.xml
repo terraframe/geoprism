@@ -2,7 +2,6 @@
   <doIt>
     <create></create>
     <update>
-      
       <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController">
         <create>
           <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
@@ -15,7 +14,7 @@
       
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
         <create>
-          <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="void">
+          <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView">
             <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
             <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
           </mdMethod>

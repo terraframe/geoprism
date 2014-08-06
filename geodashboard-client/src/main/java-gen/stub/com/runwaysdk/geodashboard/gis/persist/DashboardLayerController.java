@@ -255,10 +255,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     try
     {
-      // MdMethod invocation -> Goes to server.
-      layer.applyWithStyle(style, mapId);
+      DashboardLayerViewDTO layerView = layer.applyWithStyle(style, mapId);
       
-      JSONReturnObject jsonReturn = new JSONReturnObject();
+      JSONReturnObject jsonReturn = new JSONReturnObject(layerView);
       jsonReturn.setInformation( this.getClientRequest().getInformation() );
       jsonReturn.setWarnings(this.getClientRequest().getWarnings());
       
@@ -292,7 +291,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       {
         render("editComponent.jsp");
       }
-      
     }
   }
 }
