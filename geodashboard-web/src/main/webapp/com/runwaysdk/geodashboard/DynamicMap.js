@@ -357,10 +357,7 @@
         this._map.removeLayer(toRemove.leafletLayer);
         
         // remove the layer from the map and UI
-        // FIXME use selector
         el.parent().parent().remove();
-        
-        this._refreshMap();
       },
       
       /**
@@ -380,18 +377,22 @@
         
         var that = this;
         
-//        var request = new Mojo.ClientRequest({
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(htmlOrLayerView, response){
             if (response.isJSON()) {
               that._closeLayerModal();
               
               // Update the layer cache with the updated layer the server returned to us.
+              var oldLayer = that._layerCache.get(htmlOrLayerView.getLayerId());
+              if (oldLayer != null) {
+                htmlOrLayerView.leafletLayer = oldLayer.leafletLayer;
+              }
               that._layerCache.put(htmlOrLayerView.getLayerId(), htmlOrLayerView);
               
-              // Redraw the HTML and only add the new layer to leaflet.
+              // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
-              that._addUserLayersToMap(false);
+//              that._addUserLayersToMap(false); // We can't only add the new layer here because the logic is different for create/update and we can't know at this point which one we're at
+              that._addUserLayersToMap();
               
               // TODO : Push this somewhere as a default handler.
               that.handleMessages(response);
