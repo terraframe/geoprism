@@ -248,14 +248,17 @@
             var viewName = layer.getViewName();
             var displayName = layer.getLayerName() || "N/A";
             var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
-            
+            var mapBounds = this._map.getBounds();
+            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+            	
             var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
               layers: geoserverName,
               format: 'image/png',
               transparent: true,
+              tiled: true,
+              tilesorigin: mapSWOrigin,
               styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
             });
-            
             this._map.addLayer(leafletLayer);
             
             layer.leafletLayer = leafletLayer;
