@@ -277,6 +277,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       }
       else
       {
+        log.error(t);
         GDBErrorUtility.prepareThrowable(t, req);
       }
       

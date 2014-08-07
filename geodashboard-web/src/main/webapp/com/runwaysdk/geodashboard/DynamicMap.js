@@ -223,7 +223,7 @@
       /**
        * Adds all layers in the layerCache to leaflet, in the proper ordering.
        * 
-       * @param boolean removeExisting Optional, if unspecified all exisiting layers will be removed first. If set to false, only layers that leaflet
+       * @param boolean removeExisting Optional, if unspecified all existing layers will be removed first. If set to false, only layers that leaflet
        *   does not already know about will be added.
        */
       _addUserLayersToMap : function(removeExisting) {
@@ -274,7 +274,7 @@
        */
       _overlayLayerSortUpdate : function(event, ui) {
         var that = this;
-              
+        
         // Calculate an array of layer ids
         var layerIds = [];
         var layers = $("#overlayLayerContainer").find("input");
@@ -349,13 +349,13 @@
        * 
        * @param id
        */
-      _removeLayer : function(el, id){
+      _removeLayer : function(el, id) {
         
         var toRemove = this._layerCache.get(id);
         
         // remove layer from our cache
         this._layerCache.remove(id);
-
+        
         // remove the actual layer from the map
         this._map.removeLayer(toRemove.leafletLayer);
         
@@ -576,7 +576,7 @@
         layer.checked = checked;
         
         if (checked) {
-          this._renderUserLayers();
+          this._addUserLayersToMap();
         }
         else {
           this._map.removeLayer(layer.leafletLayer);
