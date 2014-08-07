@@ -324,11 +324,10 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
    */
   public static boolean publishLayer(String layer, String styleName)
   {
-
     // create the layer if it does not exist
     if (layerExists(layer))
     {
-      log.info("The layer [" + layer + "] already exists in geoserver.");
+      log.debug("The layer [" + layer + "] already exists in geoserver.");
       return true;
     }
     else
@@ -356,12 +355,12 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
       if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
           GeoserverProperties.getStore(), fte, le))
       {
-        log.info("Created the layer [" + layer + "] in geoserver.");
+        log.debug("Created the layer [" + layer + "] in geoserver.");
         return true;
       }
       else
       {
-        log.warn("Failed to create the layer [" + layer + "] in geoserver.");
+        log.error("Failed to create the layer [" + layer + "] in geoserver.");
         return false;
       }
     }

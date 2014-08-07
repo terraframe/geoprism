@@ -56,8 +56,6 @@ public class DashboardLayer extends DashboardLayerBase implements
 
   private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
   
-  private boolean isPublished = false;
-  
   public DashboardLayer()
   {
     super();
@@ -73,15 +71,15 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
-
-    if (this.isNew())
-    {
-      // generate a db view name unique across space and time
-      String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
-      this.setViewName(vn);
-
-      this.setVirtual(true);
-    }
+    boolean isNew = this.isNew();
+    
+    // generate a db view name unique across space and time
+    // We don't want to do this in isNew because leaflet will cache the old layer and the user won't see the new changes.
+    // (there's no way to dump the cache in leaflet) Leaflet needs to think its an entirely new layer.
+    String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
+    this.setViewName(vn);
+    this.setVirtual(true);
+    
     super.apply();
   }
 
@@ -135,10 +133,10 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     
     this.apply();
-
+    
     style.setName("style_" + IDGenerator.nextID());
     style.apply();
-
+    
     if (isNew)
     {
       QueryFactory f = new QueryFactory();
@@ -160,12 +158,16 @@ public class DashboardLayer extends DashboardLayerBase implements
       hasStyle.apply();
     }
     
-    this.validate();
+    String sql = this.asValueQuery().getSQL();
     
-    createView();
+    if (!isNew) {
+      Database.dropView(this.getViewName(), sql, false);
+    }
+    Database.createView(this.getViewName(), sql);
+    
+    this.validate();
   }
   
-
   /**
    * For easy reference, the name of the SLD is the same as the db view name.
    * The .sld extension is automatically added
@@ -176,7 +178,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   {
     return this.getViewName();
   }
-
+  
   /**
    * Returns the File object associated with the SLD for this view.
    * 
@@ -245,7 +247,7 @@ public class DashboardLayer extends DashboardLayerBase implements
    * @param refreshGeoServer If true, we'll tell GeoServer to refresh itself at the end, which should prevent any sort of caching issues.
    */
   public void drop(boolean refreshGeoServer) {
-    if (isPublished) {
+    if (this.isPublished()) {
       String layerName = this.getViewName();
       
       // remove the layer
@@ -278,25 +280,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
   
   public boolean isPublished() {
-    return this.isPublished;
-  }
-  
-  private void createView() {
-    String viewName = this.getViewName();
-    
-    ValueQuery vq = this.asValueQuery();
-    try
-    {
-      Database.dropView(viewName, vq.getSQL(), false);
-    }
-    catch(Throwable t)
-    {
-      log.warn("Dropping/creating view ["+viewName+"].", t);
-    }
-    finally
-    {
-      Database.createView(viewName, vq.getSQL());
-    }
+    return GeoserverFacade.layerExists(this.getViewName());
   }
   
   /**
@@ -343,9 +327,6 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       log.error("Error publishing layer ["+layerName+"].", t);
     }
-    
-    // TODO : Is there going to be some sort of threading issue related to this?
-    isPublished = true;
   }
   
   public ValueQuery asValueQuery()
@@ -359,7 +340,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       while (iter.hasNext())
       {
         DashboardStyle style = iter.next();
-
+        
         // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
         // but we need to define a non-thematic's behavior or even finalize
         // on the semantics of a layer without a thematic attribute...which might
