@@ -11,5 +11,7 @@ geodashboard-web/bin
 geodashboard-client/.settings
 geodashboard-common/.settings
 geodashboard-web/.settings
-geodashboard-server/.settings/geodashboard-common
+geodashboard-server/.settings
+/geodashboard-common
 /geodashboard-server
+/geodashboard-web
