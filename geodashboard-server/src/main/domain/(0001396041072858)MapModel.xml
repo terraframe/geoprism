@@ -83,7 +83,7 @@
 					
 					<!-- value styles -->
 					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
-					<char name="valueFont" label="Font" size="50" required="true" defaultValue="Helvetica" />
+					<char name="valueFont" label="Font" size="50" required="true" defaultValue="Arial" />
 					<integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
 					<char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
@@ -91,7 +91,7 @@
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
-					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Helvetica"/>
+					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Arial"/>
 					<integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000"/>
 					<char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF"/>
