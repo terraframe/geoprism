@@ -50,8 +50,8 @@
         
         jqDiv.addClass('standby-overlay');
         
-        jqDiv.css('min-height',jqDiv.height());
-        jqDiv.css('min-width',jqDiv.width());
+//        jqDiv.css('min-height',jqDiv.height());
+//        jqDiv.css('min-width',jqDiv.width());
         jqDiv.css('top',top);
         jqDiv.css('left',left);
         
