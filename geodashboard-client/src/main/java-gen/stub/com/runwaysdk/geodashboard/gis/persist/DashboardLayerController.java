@@ -13,6 +13,8 @@ import org.apache.commons.logging.LogFactory;
 import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
@@ -120,14 +122,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-
+    
     req.setAttribute("layer", layer);
-
+    
     req.setAttribute("style", style);
     
     String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
     req.setAttribute("fonts", fonts);
-
+    
     
     // get the universals
 //    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
@@ -136,7 +138,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[]{AllowedInDTO.CLASS}));
     req.setAttribute("universals", universals);
-
+    
     
     // aggregations
     AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
@@ -152,7 +154,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       req.setAttribute("activeAggregation", "");
     }
     
-
+    
     // feature types
     Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
     req.setAttribute("features", features);
@@ -172,9 +174,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(
         clientRequest);
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
-
+    
     this.loadLayerData(layer, style);
-
+    
     render("createComponent.jsp");
   }
 
@@ -250,12 +252,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   }
 
   @Override
-  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId)
+  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO condition)
       throws IOException, ServletException
   {
     try
     {
-      DashboardLayerViewDTO layerView = layer.applyWithStyle(style, mapId);
+      DashboardLayerViewDTO layerView = layer.applyWithStyle(style, mapId, condition);
       
       JSONReturnObject jsonReturn = new JSONReturnObject(layerView);
       jsonReturn.setInformation( this.getClientRequest().getInformation() );

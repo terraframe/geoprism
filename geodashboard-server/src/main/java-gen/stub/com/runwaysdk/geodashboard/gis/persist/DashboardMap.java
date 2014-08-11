@@ -152,13 +152,13 @@ public class DashboardMap extends DashboardMapBase implements
       
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
-  
+      
       JSONArray mapBBox = getMapLayersBBox();
       mapJSON.put("bbox", mapBBox);
-  
+      
       JSONArray layers = new JSONArray();
       mapJSON.put("layers", layers);
-  
+      
       List<DashboardLayer> addedLayers = new LinkedList<DashboardLayer>();
   
       for (int i = 0; i < orderedLayers.length; i++)

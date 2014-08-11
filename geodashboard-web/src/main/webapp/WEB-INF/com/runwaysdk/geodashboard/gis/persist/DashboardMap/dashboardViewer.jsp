@@ -18,10 +18,15 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -47,8 +52,8 @@
   try
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
-      
+        DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
+        DashboardGreaterThan.CLASS, DashboardGreaterThanOrEqual.CLASS, DashboardLessThan.CLASS, DashboardLessThanOrEqual.CLASS
       }, true);
     out.print(js);
   }
@@ -167,25 +172,25 @@ $(document).ready(function(){
       </div>
         <button class="none">submit</button>
         <div class="choice-form">
-        
+          
           <div class="row-holder">
             <label class="none" for="geocode">choice select</label>
             <span class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;">
             <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
             </span>
           </div>
-
+          
           <!-- datapicker block -->
           <div class="data-block">
             <div class="col">
-              <label for="from-field">From</label>
+              <label for="from-field"><gdb:localize var="dates_from" key="dashboardViewer.dates.from"/>${dates_from}</label>
               <span class="text">
                 <input class="checkin" id="from-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
               </span>
             </div>
             <div class="col">
-              <label for="to-field">To</label>
+              <label for="to-field"><gdb:localize var="dates_to" key="dashboardViewer.dates.to"/>${dates_to}</label>
               <span class="text">
                 <input class="checkout" id="to-field" type="text" placeholder="">
                 <a href="#" class="datapicker-opener">datapicker</a>
@@ -207,16 +212,14 @@ $(document).ready(function(){
             <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse01">${type.displayLabel.value}</a>
             <div id="collapse01" class="panel-collapse collapse">
               <div class="panel-body">
-            <!-- slide block -->
-            
-          <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
-            
+              <!-- slide block -->
+              <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
                 <div class="panel">
                   <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
                     <a href="#" class="opener attributeLayer" data-toggle="tooltip"
 										  data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
  										  <!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
- 										  <span>map it</span>
+ 										  <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
 										</a>
 									</h4>
 									
@@ -225,29 +228,28 @@ $(document).ready(function(){
                     <div class="panel-body">
                       <div class="filter-block">
                         <div class="row-holder">
-                          <label for="f${attrStatus.index}">Filter</label>
+                          <label for="f${attrStatus.index}"><gdb:localize var="dbviewer_filter" key="dashboardViewer.filter"/>${dbviewer_filter}</label>
                         </div>
                         <div class="row-holder">
                           <!-- Number attribute -->
                           <div class="select-holder">
-                            <select id="f${attrStatus.index}" class="filter-select">
-                              <option value="">&gt;</option>
-                              <option value="">&gt;=</option>
-                              <option value="">&lt;</option>
-                              <option value="">&lt;=</option>
+                            <select id="f${attrStatus.index}" class="filter-select gdb-attr-filter ${attr.mdAttributeId}">
+                              <option value="gt">&gt;</option>
+                              <option value="ge">&gt;=</option>
+                              <option value="lt">&lt;</option>
+                              <option value="le">&lt;=</option>
                             </select>
                           </div>
                           <div class="text">
                             <label for="f${attrStatus.index}" class="none">number</label>
-                            <input id="f${attrStatus.index}" type="text" placeholder="Number">
+                            <input id="f${attrStatus.index}" type="text" placeholder="Number" class="gdb-attr-filter ${attr.mdAttributeId}">
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-   
-          </c:forEach>           
+              </c:forEach>
             </div></div></div>
             
             
@@ -257,8 +259,8 @@ $(document).ready(function(){
             </c:otherwise>
           </c:choose>
         </c:forEach>
-          
-
+        
+        
         
         </div>
     </aside>

@@ -415,6 +415,29 @@
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
+        // Include attribute condition filtering (i.e. sales unit is greater than 50)
+        var select = $("select.gdb-attr-filter." + this._mdAttribute).val();
+        var textValue = $("input.gdb-attr-filter." + this._mdAttribute).val();
+        if (textValue !== null && textValue !== "") {
+          var condition = null;
+          if (select === "gt") {
+            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan";
+          }
+          else if (select === "ge") {
+            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual";
+          }
+          else if (select === "lt") {
+            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan";
+          }
+          else if (select === "le") {
+            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual";
+          }
+          
+          params["condition.comparisonValue"] = textValue;
+          params["condition.isNew"] = "true";
+          params["#condition.actualType"] = condition;
+        }
+        
         return request;
       },
       

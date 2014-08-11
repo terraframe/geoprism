@@ -134,7 +134,7 @@
 				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
 				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
 			</mdRelationship>
-
+      
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true"
 				generateController="true">
 				<attributes>

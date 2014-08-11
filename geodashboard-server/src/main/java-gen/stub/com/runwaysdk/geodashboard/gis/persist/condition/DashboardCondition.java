@@ -5,6 +5,7 @@ import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleQuery;
+import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
@@ -28,6 +29,8 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
   {
     return "["+getName()+"] - "+this.getId();
   }
+  
+  abstract public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr);
   
   @Override
   public void setParentCondition(DashboardCondition value)

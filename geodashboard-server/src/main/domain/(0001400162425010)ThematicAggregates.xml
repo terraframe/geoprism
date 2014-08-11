@@ -61,7 +61,7 @@
 					<attributes>
 						<enumeration name="aggregationType" selectMultiple="false"
 							label="Aggregation Type" required="false"
-							type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" />
+							type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
 					</attributes>
 				</create>
 			</mdBusiness>

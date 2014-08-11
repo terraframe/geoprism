@@ -785,18 +785,18 @@ public class SLDMapVisitor implements MapVisitor
     }
 
     // START - Thematic filter
-    Condition cond = style.getCondition();
-    if (cond != null)
-    {
-      Node filter = this.node(OGC, "Filter").build(rule);
-
-      this.parents.push(filter);
-
-      cond.accepts(this);
-
-      // pop the filter as the conditions tree has been added by now
-      this.parents.pop();
-    }
+//    Condition cond = style.getCondition();
+//    if (cond != null)
+//    {
+//      Node filter = this.node(OGC, "Filter").build(rule);
+//
+//      this.parents.push(filter);
+//
+//      cond.accepts(this);
+//
+//      // pop the filter as the conditions tree has been added by now
+//      this.parents.pop();
+//    }
     // END - Thematic filter
 
     rule.appendChild(symbolizer.getSLD());

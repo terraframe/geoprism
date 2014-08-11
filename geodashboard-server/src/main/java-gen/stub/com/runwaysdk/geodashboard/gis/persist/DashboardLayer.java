@@ -24,9 +24,11 @@ import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
@@ -82,11 +84,11 @@ public class DashboardLayer extends DashboardLayerBase implements
     
     super.apply();
   }
-
+  
   @Override
-  public DashboardLayerView applyWithStyle(DashboardStyle style, String mapId)
+  public DashboardLayerView applyWithStyle(DashboardStyle style, String mapId, DashboardCondition condition)
   {
-    this.applyWithStyleInTransaction(style, mapId);
+    this.applyWithStyleInTransaction(style, mapId, condition);
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
     this.publish(true);
@@ -99,7 +101,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     return view;
   }
   @Transaction
-  public void applyWithStyleInTransaction(DashboardStyle style, String mapId) {
+  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition condition) {
     boolean isNew = this.isNew();
     if (isNew && style instanceof DashboardThematicStyle)
     {
@@ -133,6 +135,14 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     
     this.apply();
+    
+    if (condition != null) {
+      condition.apply();
+      
+      if (style instanceof DashboardThematicStyle) {
+        ((DashboardThematicStyle)style).setStyleCondition(condition);
+      }
+    }
     
     style.setName("style_" + IDGenerator.nextID());
     style.apply();
@@ -354,10 +364,10 @@ public class DashboardLayer extends DashboardLayerBase implements
           MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
           MdClass mdClass = mdC.getDefiningMdClass();
           EntityQuery entityQ = f.businessQuery(mdClass.definesType());
-
+          
           // thematic attribute
           Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
-
+          
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
@@ -435,11 +445,11 @@ public class DashboardLayer extends DashboardLayerBase implements
                   mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
             }
           }
-
+          
           thematicSel.setColumnAlias(attribute);
-
+          
           v.SELECT(thematicSel);
-
+          
           // geoentity label
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
@@ -461,26 +471,32 @@ public class DashboardLayer extends DashboardLayerBase implements
           {
             geom = geQ.get(GeoEntity.GEOMULTIPOLYGON);
           }
-
+          
           geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
           geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-
+          
           v.SELECT(geom);
-
+          
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
           Attribute geoAttr = entityQ.get(geoRef.getAttributeName());
-
+          
           // the entity's GeoEntity should match the all path's child
           GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(v);
           v.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
-
+          
           // the displayed GeoEntity should match the all path's parent
           v.AND(geAllPathsQ.getParentTerm().EQ(geQ));
-
+          
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();
           v.AND(geQ.getUniversal().EQ(universal));
+          
+          // Attribute condition filtering (i.e. sales unit is greater than 50)
+          DashboardCondition condition = tStyle.getStyleCondition();
+          if (condition != null && thematicAttr instanceof AttributeNumber) {
+            v.AND(condition.asRunwayQuery(thematicAttr));
+          }
         }
       }
     }
@@ -488,7 +504,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       iter.close();
     }
-
+    
     if (log.isDebugEnabled())
     {
       // print the SQL if the generated
@@ -501,7 +517,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       
       info.throwIt();
     }
-
+    
     return v;
   }
 
