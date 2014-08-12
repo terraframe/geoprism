@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}">
@@ -9,10 +10,10 @@
     <div id="DashboardLayer-mainDiv" class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1>New map layer for Number of Units</h1>
+          <h1><gdb:localize var="dl_form_heading" key="DashboardLayer.form.heading"/>${dl_form_heading}Number of Units</h1>
         </div>
           <fieldset>
-
+          
           <c:if test="${errorMessage != null || errorMessageArray != null}">
             <div class="row-holder">
               <div class="label-holder">
@@ -22,10 +23,10 @@
               </div>
             </div>
           </c:if>
-
+            
             <div class="row-holder">
               <div class="label-holder">
-                <strong>Name the layer</strong>
+                <strong><gdb:localize var="dl_form_nameTheLayer" key="DashboardLayer.form.nameTheLayer"/>${dl_form_nameTheLayer}</strong>
               </div>
               <div class="holder">
 <mjl:component param="layer" item="${layer}">
@@ -42,7 +43,7 @@
 <mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder style02">
-                <strong>Labels and Values</strong>
+                <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
               </div>
               <div class="holder">
                 <div class="row-holder">
@@ -210,11 +211,11 @@
 </mjl:component>
             <div class="row-holder">
               <div class="label-holder style03">
-                <strong>Define an aggregation method</strong>
+                <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong>
               </div>
               <div class="holder add">
                 <div class="box">
-                  <label for="f58">Group by</label>
+                  <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardLayer.form.groupBy"/>${dl_form_groupBy}</label>
                   <div class="select-box">
 <mjl:component param="layer" item="${layer}">
                     <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
@@ -238,7 +239,7 @@
                 </div>
 <mjl:component param="style" item="${style}">
                 <div class="box">
-                  <label for="f59">According to</label>
+                  <label for="f59"><gdb:localize var="dl_form_accordingTo" key="DashboardLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
                   <div class="select-box">
                     <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
                       <c:forEach items="${aggregations}" var="aggregation">
@@ -264,7 +265,7 @@
 <mjl:component param="layer" item="${layer}">
             <div class="row-holder">
               <div class="label-holder style04">
-                <strong>Choose a layer type</strong>
+                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
               </div>
               <div class="holder style04">
                 <ul class="nav-tabs type-tabs">
@@ -338,7 +339,7 @@
 <mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder">
-                <strong>Style the layer</strong>
+                <strong><gdb:localize var="dl_form_styleTheLayer" key="DashboardLayer.form.styleTheLayer"/>${dl_form_styleTheLayer}</strong>
               </div>
               <div class="holder">
                 <div id="layer-type-styler-container" class="tab-content">
@@ -423,7 +424,7 @@
                     id="tab001basic"
                   >
                     <div class="fill-block">
-                      <strong class="title">Fill</strong>
+                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>${dl_form_fill}</strong>
                       <div id="gdb-reusable-basic-fill-cell-holder" class="cell-holder">
                         <div class="cell">
                           <span>${style.polygonFillMd.displayLabel}</span>
@@ -439,7 +440,7 @@
                       <%-- Dynamically inserted: PolygonFillOpacity --%>
                     </div>
                     <div class="stroke-block">
-                      <strong class="title">Stroke</strong>
+                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div id="gdb-reusable-basic-stroke-cell-holder" class="cell-holder">
                         <%-- Dynamically inserted --%>
                       </div>
@@ -458,7 +459,7 @@
                     id="tab002bubble"
                   >
                     <div class="fill-block">
-                      <strong class="title">Fill</strong>
+                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>${dl_form_fill}</strong>
                       <div class="cell-holder">
                         <div class="cell">
                           <span>${style.pointFillMd.displayLabel}</span>
@@ -490,7 +491,7 @@
                       </div>
                     </div>
                     <div class="stroke-block">
-                      <strong class="title">Stroke</strong>
+                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div class="cell-holder">
                         <div class="cell">
                           <span>${style.pointStrokeMd.displayLabel}</span>
@@ -539,7 +540,7 @@
                       </div>
                     </div>
                     <div class="fill-block">
-                      <strong class="title">Radius</strong>
+                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardLayer.form.radius"/>${dl_form_radius}</strong>
                       <div class="cell-holder">
                         <div class="cell">
                           <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
@@ -567,7 +568,7 @@
                     id="tab003gradient"
                   >
                     <div class="gradient-block">
-                      <strong class="title">Fill</strong>
+                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>${dl_form_fill}</strong>
                       <div id="gdb-reusable-gradient-fill-cell-holder" class="cell-holder">
                         <div class="cell">
                           <span>${style.polygonMinFillMd.displayLabel}</span>
@@ -592,7 +593,7 @@
                       </div>
                     </div>
                     <div class="stroke-block">
-                      <strong class="title">Stroke</strong>
+                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div id="gdb-reusable-gradient-stroke-cell-holder" class="cell-holder">
                         
                       </div>
@@ -611,7 +612,7 @@
                     id="tab004category"
                   >
                     <div class="color-section">
-                      <strong class="title">Fill</strong>
+                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>${dl_form_fill}</strong>
                       <div class="heading-list">
                         <span>Name of Ontology</span>
                         <span>Color</span>
@@ -754,7 +755,7 @@
                       </div>
                     </div>
                     <div class="stroke-block">
-                      <strong class="title">Stroke</strong>
+                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div class="cell-holder">
                         <div class="cell">
                           <span>Color</span>

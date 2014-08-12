@@ -52,26 +52,39 @@ public class SessionFilter implements Filter, Reloadable
 
       // They're already logged in, but they're trying to login again? Redirect
       // to the index.
-      if (uri.equals(httpReq.getContextPath() + "/login") || uri.equals(httpReq.getContextPath() + "/session/login"))
-      {
-        httpRes.sendRedirect(httpReq.getContextPath());
-        return;
-      }
+//      if (uri.equals(httpReq.getContextPath() + "/login") || uri.equals(httpReq.getContextPath() + "/session/login"))
+//      {
+//        httpRes.sendRedirect(httpReq.getContextPath());
+//        return;
+//      }
 
       try
       {
         req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
         chain.doFilter(req, res);
       }
-      catch (InvalidSessionExceptionDTO e)
-      {
-        // If we're asynchronous, we want to return a serialized exception
-        if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
-          ErrorUtility.prepareAjaxThrowable(e, httpRes);
+      catch (Throwable t) {
+        while (t.getCause() != null && !t.getCause().equals(t)) {
+          t = t.getCause();
+        }
+        
+        if (t instanceof InvalidSessionExceptionDTO) {
+          // If we're asynchronous, we want to return a serialized exception
+          if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
+            ErrorUtility.prepareAjaxThrowable(t, httpRes);
+          }
+          else {
+            // Not an asynchronous request, redirect to the login page.
+            httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+          }
         }
         else {
-          // Not an asynchronous request, redirect to the login page.
-          httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+          if (t instanceof RuntimeException) {
+            throw (RuntimeException)t;
+          }
+          else {
+            throw new RuntimeException(t);
+          }
         }
       }
 

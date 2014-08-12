@@ -12,7 +12,7 @@
           <mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids"  />
         </mdMethod>
 			</mdBusiness>
-
+			
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" />
@@ -23,7 +23,16 @@
 				  <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
 				</attributes>
 			</mdBusiness>
-
+			
+			<mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View" >
+        <attributes>
+          <char name="viewName" label="viewName" size="64" required="true"/>
+          <char name="layerName" label="layerName" size="64" required="true"/>
+          <char name="layerId" label="layerId" size="64" required="true"/>
+          <char name="sldName" label="sldName" size="64" required="true"/>
+        </attributes>
+      </mdView>
+      
 			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false">
 				<attributes>
 					<integer name="layerIndex" required="true" rejectNegative="true" />
@@ -74,7 +83,7 @@
 					
 					<!-- value styles -->
 					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
-					<char name="valueFont" label="Font" size="50" required="true" defaultValue="Helvetica" />
+					<char name="valueFont" label="Font" size="50" required="true" defaultValue="Arial" />
 					<integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
 					<char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
@@ -82,7 +91,7 @@
 					
 					<!-- label styles -->
 					<boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
-					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Helvetica"/>
+					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Arial"/>
 					<integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
 					<char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000"/>
 					<char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF"/>
@@ -125,7 +134,7 @@
 				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
 				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
 			</mdRelationship>
-
+      
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true"
 				generateController="true">
 				<attributes>

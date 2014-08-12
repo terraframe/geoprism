@@ -586,19 +586,23 @@ public class SLDMapVisitor implements MapVisitor
   @Override
   public void visit(Layer layer)
   {
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld")
+        .attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc")
+        .attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
+    
     // We're starting a new layer so clear the prior structures
     this.parents.clear();
     this.conditions.clear();
-
+    
     this.virtual = layer.getVirtual();
     this.featureType = layer.getFeatureType();
-
+    
     Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();
-
+    
     Node userStyle = this.node("UserStyle").build(layerNode);
-
+    
     parents.push(userStyle);
-
+    
     this.currentLayer = layer;
     this.currentLayerNode = layerNode;
     layerToNodeMap.put(layer.getId(), layerNode);
@@ -781,18 +785,18 @@ public class SLDMapVisitor implements MapVisitor
     }
 
     // START - Thematic filter
-    Condition cond = style.getCondition();
-    if (cond != null)
-    {
-      Node filter = this.node(OGC, "Filter").build(rule);
-
-      this.parents.push(filter);
-
-      cond.accepts(this);
-
-      // pop the filter as the conditions tree has been added by now
-      this.parents.pop();
-    }
+//    Condition cond = style.getCondition();
+//    if (cond != null)
+//    {
+//      Node filter = this.node(OGC, "Filter").build(rule);
+//
+//      this.parents.push(filter);
+//
+//      cond.accepts(this);
+//
+//      // pop the filter as the conditions tree has been added by now
+//      this.parents.pop();
+//    }
     // END - Thematic filter
 
     rule.appendChild(symbolizer.getSLD());
