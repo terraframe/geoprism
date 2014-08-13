@@ -30,6 +30,31 @@
   <description>
 	A Runway SDK Project
   </description>
+
+  <error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/com/runwaysdk/geodashboard/error.jsp</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.runwaysdk.session.InvalidSessionExceptionDTO</exception-type>
+    <location>/com/runwaysdk/geodashboard/login/login.jsp</location>
+  </error-page>
+  
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+  </error-page>
+  
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error.jsp</location>
+  </error-page>  
+  
+  <error-page>
+    <error-code>401</error-code>
+    <location>/error.jsp</location>
+  </error-page> 
   
   <servlet>
     <servlet-name>SecureFileDownloadServlet</servlet-name>
