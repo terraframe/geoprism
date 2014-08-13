@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1220587918)
+@com.runwaysdk.business.ClassSignature(hash = -86759377)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -24,12 +24,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MAP = "map";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1220587918;
+  private static final long serialVersionUID = -86759377;
   
   public DashboardBase()
   {
@@ -319,6 +320,46 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
     return mdClassIF.definesAttribute(LOCKEDBY);
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMap getMap()
+  {
+    if (getValue(MAP).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.gis.persist.DashboardMap.get(getValue(MAP));
+    }
+  }
+  
+  public String getMapId()
+  {
+    return getValue(MAP);
+  }
+  
+  public void validateMap()
+  {
+    this.validateAttribute(MAP);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMapMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return mdClassIF.definesAttribute(MAP);
+  }
+  
+  public void setMap(com.runwaysdk.geodashboard.gis.persist.DashboardMap value)
+  {
+    if(value == null)
+    {
+      setValue(MAP, "");
+    }
+    else
+    {
+      setValue(MAP, value.getId());
+    }
   }
   
   public com.runwaysdk.system.Actor getOwner()

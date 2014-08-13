@@ -105,13 +105,15 @@
               
               // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
               //          Since we're using JSON, we have to create DashboardLayerView objects here.
-              for (var i = 0; i < jsonObj.layers; ++i) {
+              for (var i = 0; i < jsonObj.layers.length; ++i) {
+                var layer = jsonObj.layers[i];
+                
                 var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
-                view.setViewName(jsonObj.viewName);
-                view.setLayerId(jsonObj.layerId);
-                view.setSldName(jsonObj.sldName);
-                view.setLayerName(jsonObj.layerName);
-                that._layerCache.put(jsonObj.layerId, view);
+                view.setViewName(layer.viewName);
+                view.setLayerId(layer.layerId);
+                view.setSldName(layer.sldName);
+                view.setLayerName(layer.layerName);
+                that._layerCache.put(layer.layerId, view);
               }
               
               that._bBox = jsonObj.bbox;

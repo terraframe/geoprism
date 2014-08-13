@@ -12,10 +12,12 @@ import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -58,6 +60,11 @@ public class DashboardLayer extends DashboardLayerBase implements
 
   private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
   
+  enum DatabaseViewState implements Reloadable {
+    VALID, INVALID;
+  }
+  private DatabaseViewState viewState = DatabaseViewState.INVALID;
+  
   public DashboardLayer()
   {
     super();
@@ -83,6 +90,8 @@ public class DashboardLayer extends DashboardLayerBase implements
     this.setVirtual(true);
     
     super.apply();
+    
+    viewState = DatabaseViewState.INVALID;
   }
   
   @Override
@@ -91,7 +100,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     this.applyWithStyleInTransaction(style, mapId, condition);
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
-    this.publish(true);
+    this.publish();
     
     DashboardLayerView view = new DashboardLayerView();
     view.setLayerId(this.getId());
@@ -167,13 +176,6 @@ public class DashboardLayer extends DashboardLayerBase implements
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
     }
-    
-    String sql = this.asValueQuery().getSQL();
-    
-    if (!isNew) {
-      Database.dropView(this.getViewName(), sql, false);
-    }
-    Database.createView(this.getViewName(), sql);
     
     this.validate();
   }
@@ -269,9 +271,11 @@ public class DashboardLayer extends DashboardLayerBase implements
       catch(Throwable t)
       {
         log.error("Error deleting layer ["+layerName+"].", t);
+        throw new ProgrammingErrorException("Error deleting layer [" + layerName + "]", t);
       }
       
-      // TODO : A layer may have more than one style associated with it. Also this code should be in the style object, not in Layer.
+      // TODO : A layer may have more than one style associated with it. This code should be in the style object, not in Layer.
+      
       // remove the style
       try
       {
@@ -281,6 +285,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       catch(Throwable t)
       {
         log.error("Error deleting style ["+layerName+"].", t);
+        throw new ProgrammingErrorException("Error deleting style [" + layerName + "]", t);
       }
       
       if (refreshGeoServer) {
@@ -295,13 +300,24 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   /**
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it does not exist yet.
-   * 
-   * @param removeFromGeoServerFirst If set to true, we will first try to remove the layer from GeoServer, otherwise, if the layer already
-   *                                   exists in GeoServer this will cause GeoServer to throw an exception.
    */
-  public void publish(boolean removeFromGeoServerFirst) {
-    if (removeFromGeoServerFirst) {
+  public void publish() {
+    if (isPublished()) {
       this.drop(true);
+    }
+    
+    if (viewState.equals(DatabaseViewState.INVALID)) {
+      String sql = this.asValueQuery().getSQL();
+      
+      try {
+        Database.dropView(this.getViewName(), sql, false);
+      }
+      catch (DataNotFoundException e) {
+        
+      }
+      Database.createView(this.getViewName(), sql);
+      
+      viewState = DatabaseViewState.VALID;
     }
     
     String layerName = this.getViewName();
@@ -321,6 +337,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     catch(Throwable t)
     {
       log.error("Error publishing style ["+layerName+"].", t);
+      throw new ProgrammingErrorException("Error publishing style [" + layerName + "]", t);
     }
     
     try
@@ -329,13 +346,11 @@ public class DashboardLayer extends DashboardLayerBase implements
       {
         log.error("Failure publishing layer ["+layerName+"].");
       }
-      else {
-        log.info("Published layer: " + layerName);
-      }
     }
     catch(Throwable t)
     {
       log.error("Error publishing layer ["+layerName+"].", t);
+      throw new ProgrammingErrorException("Error publishing layer [" + layerName + "]", t);
     }
   }
   
