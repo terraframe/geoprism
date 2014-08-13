@@ -84,7 +84,7 @@ public class DashboardMap extends DashboardMapBase implements
       iter.close();
     }
 
-    return this.getMapJSON(null);
+    return "";
   }
 
   /**
@@ -95,13 +95,13 @@ public class DashboardMap extends DashboardMapBase implements
   public DashboardLayer[] getOrderedLayers()
   {
     QueryFactory f = new QueryFactory();
-
+    
     HasLayerQuery hsQ = new HasLayerQuery(f);
     hsQ.WHERE(hsQ.parentId().EQ(this.getId()));
     hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
-
+    
     OIterator<? extends HasLayer> iter = hsQ.getIterator();
-
+    
     try
     {
       List<DashboardLayer> layers = new LinkedList<DashboardLayer>();
@@ -109,7 +109,7 @@ public class DashboardMap extends DashboardMapBase implements
       {
         layers.add(iter.next().getChild());
       }
-
+      
       return layers.toArray(new DashboardLayer[layers.size()]);
     }
     finally
@@ -117,137 +117,59 @@ public class DashboardMap extends DashboardMapBase implements
       iter.close();
     }
   }
+  
+  /**
+   * Removes all layers, and all their nested styles, from GeoServer.
+   */
+  public void dropAllLayers(DashboardLayer[] orderedLayers) {
+    for (DashboardLayer layer : orderedLayers)
+    {
+      layer.drop(false);
+    }
+    
+    // This prevents any sort of caching errors we may run into with GeoServer.
+    GeoserverFacade.refresh();
+  }
+  
+  public void publishAllLayers(DashboardLayer[] orderedLayers) {
+    for (DashboardLayer layer : orderedLayers)
+    {
+      layer.publish();
+    }
+  }
 
+  /**
+   * MdMethod
+   */
   @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
   public String getMapJSON(String config)
   {
-    try
-    {
-      System.out.print("CONFIG: ");
-      System.out.println(config);
-      
-      DashboardLayer[] orderedLayers = this.getOrderedLayers();
-      
-      log.debug("Looping over layers for map ["+this.toString()+"] and removing artifacts.");
-      
-      for(DashboardLayer layer : orderedLayers)
-      {
-        String layerName = layer.getViewName();
-        
-        // remove the layer
-        try
-        {
-          GeoserverFacade.removeLayer(layerName);
-          log.debug("Deleting layer ["+layerName+"].");
-        }
-        catch(Throwable t)
-        {
-          log.error("Error deleting layer ["+layerName+"].", t);
-          
-        }
-        
-        // remove the style
-        try
-        {
-          GeoserverFacade.removeStyle(layerName);
-          log.debug("Deleting style ["+layerName+"].");
-        }
-        catch(Throwable t)
-        {
-          log.error("Error deleting style ["+layerName+"].", t);
-        }
-      }
-      
-      // now that we've deleted all the map artifacts refresh geoserver
-      // so any read/write operations will use accurate date
-      GeoserverFacade.refresh();
-      
-      /**
-       * All layers returned in order and if they're enabled
-       */
-      for(DashboardLayer layer : orderedLayers)
-      {
-        String layerName = layer.getViewName();
-        ValueQuery vq = layer.asValueQuery();
-        try
-        {
-          Database.dropView(layerName, vq.getSQL(), false);
-        }
-        catch(Throwable t)
-        {
-          log.warn("Dropping/creating view ["+layerName+"].", t);
-        }
-        finally
-        {
-          Database.createView(layerName, vq.getSQL());
-        }
-        
-        try
-        {
-          SLDMapVisitor visitor = new SLDMapVisitor();
-          this.accepts(visitor);
-          String sld = visitor.getSLD(layer);
-          
-          if(!GeoserverFacade.publishStyle(layerName, sld))
-          {
-            log.error("Failure publishing style ["+layerName+"].");
-          }
-        }
-        catch(Throwable t)
-        {
-          log.error("Error publishing style ["+layerName+"].", t);
-        }
-        
-        layer.validate();
-        
-        try
-        {
-          if(!GeoserverFacade.publishLayer(layerName, layerName))
-          {
-            log.error("Failure publishing layer ["+layerName+"].");
-          }
-          else {
-            log.info("Published layer: " + layerName);
-          }
-        }
-        catch(Throwable t)
-        {
-          log.error("Error publishing layer ["+layerName+"].", t);
-        }
-      }
-
+    try {
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
-
+      
+      
       JSONArray mapBBox = getMapLayersBBox();
       mapJSON.put("bbox", mapBBox);
-
+      
+      
+      DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      dropAllLayers(orderedLayers);
+      publishAllLayers(orderedLayers);
+      
       JSONArray layers = new JSONArray();
-      mapJSON.put("layers", layers);
-
-      List<DashboardLayer> addedLayers = new LinkedList<DashboardLayer>();
-
       for (int i = 0; i < orderedLayers.length; i++)
       {
-        DashboardLayer layer = orderedLayers[i];
-        if (true /* test if layer is valid--1+ rows and valid geoms */)
-        {
-          JSONObject layerObj = new JSONObject();
-          layerObj.put("viewName", layer.getViewName());
-          layerObj.put("sldName", layer.getSLDName());
-          layerObj.put("layerName", layer.getName());
-          layerObj.put("layerId", layer.getId());
-          layers.put(layerObj);
-
-          addedLayers.add(layer);
-        }
+        orderedLayers[i].put(layer.toJSON());
       }
-
+      mapJSON.put("layers", layers);
+      
+      
       if (log.isDebugEnabled())
       {
         log.debug("JSON for map [" + this + "]:\n" + mapJSON.toString(4));
       }
-
+  
       return mapJSON.toString();
     }
     catch (JSONException ex)
@@ -256,7 +178,7 @@ public class DashboardMap extends DashboardMapBase implements
       throw new ProgrammingErrorException(ex);
     }
   }
-
+  
   @Override
   public String getName()
   {
