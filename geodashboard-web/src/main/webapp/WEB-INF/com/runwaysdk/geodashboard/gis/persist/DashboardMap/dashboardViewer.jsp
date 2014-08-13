@@ -264,7 +264,7 @@ $(document).ready(function(){
         
         </div>
     </aside>
-
+  
   <div class="slide-navigation animated slideInRight">
     <aside id="sidebar">
       <div class="widget">

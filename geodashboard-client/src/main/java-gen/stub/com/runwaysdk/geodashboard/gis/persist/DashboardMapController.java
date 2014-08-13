@@ -9,11 +9,13 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.controller.ErrorUtility;
+import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
+import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
+import com.runwaysdk.geodashboard.gis.NoDashboardExceptionDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements
@@ -180,45 +182,43 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   @Override
   public void createMapForSession() throws IOException, ServletException
   {
-    try
+    ClientRequestIF clientRequest = this.getClientRequest();
+    
+    // Populate the dropdown menu with Dashboards
+    DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
+    List<? extends DashboardDTO> results = dashboardQ.getResultSet();
+    req.setAttribute("dashboards", results);
+    
+    if (results.size() == 0) { throw new NoDashboardExceptionDTO(clientRequest); }
+    
+    // TODO : Allow the user to specify an active dashboard.
+    DashboardDTO activeDashboard = results.get(0);
+    
+    if (activeDashboard.getMapId() == null) { throw new DashboardHasNoMapExceptionDTO(clientRequest); }
+    
+    req.setAttribute("mapId", activeDashboard.getMapId());
+    
+    // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
+    if (results.size() > 0)
     {
-      ClientRequestIF clientRequest = this.getClientRequest();
-      DashboardMapDTO map = com.runwaysdk.geodashboard.SessionEntryDTO
-          .createMapForSession(clientRequest);
-      req.setAttribute("mapId", map.getId());
-
-      // populates the dropdown menu
-      DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
-      List<? extends DashboardDTO> results = dashboardQ.getResultSet();
-      req.setAttribute("dashboards", results);
-
-      // load the default type (index of 0)
-      if (results.size() > 0)
+      MdClassDTO[] types = activeDashboard.getSortedTypes();
+      req.setAttribute("types", types);
+      
+      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
+      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+      
+      for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
       {
-        DashboardDTO first = results.get(0);
-        MdClassDTO[] types = first.getSortedTypes();
-        req.setAttribute("types", types);
-
-        List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
-        Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
-
-        for (MetadataWrapperDTO mdDTO : first.getAllMetadata())
+        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+        for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
         {
-          attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
-          for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
-          {
-            attrs.add(mdAttrView);
-          }
+          attrs.add(mdAttrView);
         }
-
-        req.setAttribute("attrMap", attrMap);
       }
+      
+      req.setAttribute("attrMap", attrMap);
+    }
 
-      render("dashboardViewer.jsp");
-    }
-    catch (Throwable t)
-    {
-      System.out.println(t);
-    }
+    render("dashboardViewer.jsp");
   }
 }

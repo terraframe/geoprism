@@ -36,8 +36,6 @@ public class DashboardMap extends DashboardMapBase implements
   private static Log        log              = LogFactory.getLog(DashboardMap.class);
 
   private static final long serialVersionUID = 861649895;
-  
-  private DashboardLayer[] orderedLayers = new DashboardLayer[]{};
 
   public DashboardMap()
   {
@@ -97,7 +95,7 @@ public class DashboardMap extends DashboardMapBase implements
   public DashboardLayer[] getOrderedLayers()
   {
     QueryFactory f = new QueryFactory();
-
+    
     HasLayerQuery hsQ = new HasLayerQuery(f);
     hsQ.WHERE(hsQ.parentId().EQ(this.getId()));
     hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
@@ -111,7 +109,7 @@ public class DashboardMap extends DashboardMapBase implements
       {
         layers.add(iter.next().getChild());
       }
-
+      
       return layers.toArray(new DashboardLayer[layers.size()]);
     }
     finally
@@ -123,7 +121,7 @@ public class DashboardMap extends DashboardMapBase implements
   /**
    * Removes all layers, and all their nested styles, from GeoServer.
    */
-  public void dropAllLayers() {
+  public void dropAllLayers(DashboardLayer[] orderedLayers) {
     for (DashboardLayer layer : orderedLayers)
     {
       layer.drop(false);
@@ -133,44 +131,39 @@ public class DashboardMap extends DashboardMapBase implements
     GeoserverFacade.refresh();
   }
   
-  public void publishAllLayers() {
+  public void publishAllLayers(DashboardLayer[] orderedLayers) {
     for (DashboardLayer layer : orderedLayers)
     {
-      layer.publish(false);
+      layer.publish();
     }
   }
 
+  /**
+   * MdMethod
+   */
   @com.runwaysdk.logging.Log(level=LogLevel.DEBUG)
   public String getMapJSON(String config)
   {
     try {
-      orderedLayers = this.getOrderedLayers();
-      
-      dropAllLayers();
-      
-      publishAllLayers();
-      
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
+      
       
       JSONArray mapBBox = getMapLayersBBox();
       mapJSON.put("bbox", mapBBox);
       
-      JSONArray layers = new JSONArray();
-      mapJSON.put("layers", layers);
       
-      List<DashboardLayer> addedLayers = new LinkedList<DashboardLayer>();
-  
+      DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      dropAllLayers(orderedLayers);
+      publishAllLayers(orderedLayers);
+      
+      JSONArray layers = new JSONArray();
       for (int i = 0; i < orderedLayers.length; i++)
       {
-        DashboardLayer layer = orderedLayers[i];
-        if (true /* test if layer is valid--1+ rows and valid geoms */)
-        {
-          layers.put(layer.toJSON());
-  
-          addedLayers.add(layer);
-        }
+        orderedLayers[i].put(layer.toJSON());
       }
+      mapJSON.put("layers", layers);
+      
       
       if (log.isDebugEnabled())
       {
@@ -185,7 +178,7 @@ public class DashboardMap extends DashboardMapBase implements
       throw new ProgrammingErrorException(ex);
     }
   }
-
+  
   @Override
   public String getName()
   {
