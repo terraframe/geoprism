@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -101,6 +102,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
     this.publish();
+    GeoserverFacade.pushUpdates();
     
     DashboardLayerView view = new DashboardLayerView();
     view.setLayerId(this.getId());
@@ -153,7 +155,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       }
     }
     
-    style.setName("style_" + IDGenerator.nextID());
+    style.generateName(this.getViewName());
     style.apply();
     
     if (isNew)
@@ -255,42 +257,10 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   /**
    * Removes the layer, and all its styles, from GeoServer.
-   * 
-   * @param refreshGeoServer If true, we'll tell GeoServer to refresh itself at the end, which should prevent any sort of caching issues.
    */
-  public void drop(boolean refreshGeoServer) {
+  public void drop() {
     if (this.isPublished()) {
-      String layerName = this.getViewName();
-      
-      // remove the layer
-      try
-      {
-        GeoserverFacade.removeLayer(layerName);
-        log.debug("Deleting layer ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting layer ["+layerName+"].", t);
-        throw new ProgrammingErrorException("Error deleting layer [" + layerName + "]", t);
-      }
-      
-      // TODO : A layer may have more than one style associated with it. This code should be in the style object, not in Layer.
-      
-      // remove the style
-      try
-      {
-        GeoserverFacade.removeStyle(layerName);
-        log.debug("Deleting style ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting style ["+layerName+"].", t);
-        throw new ProgrammingErrorException("Error deleting style [" + layerName + "]", t);
-      }
-      
-      if (refreshGeoServer) {
-        GeoserverFacade.refresh();
-      }
+      GeoserverFacade.dropLayerOnUpdate(this);
     }
   }
   
@@ -303,7 +273,7 @@ public class DashboardLayer extends DashboardLayerBase implements
    */
   public void publish() {
     if (isPublished()) {
-      this.drop(true);
+      this.drop();
     }
     
     if (viewState.equals(DatabaseViewState.INVALID)) {
@@ -320,38 +290,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       viewState = DatabaseViewState.VALID;
     }
     
-    String layerName = this.getViewName();
-    
-    // TODO : A layer may have more than one style associated with it. Also this code should be in the style object, not in Layer.
-    try
-    {
-      SLDMapVisitor visitor = new SLDMapVisitor();
-      this.accepts(visitor);
-      String sld = visitor.getSLD(this);
-      
-      if(!GeoserverFacade.publishStyle(layerName, sld))
-      {
-        log.error("Failure publishing style ["+layerName+"].");
-      }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing style ["+layerName+"].", t);
-      throw new ProgrammingErrorException("Error publishing style [" + layerName + "]", t);
-    }
-    
-    try
-    {
-      if(!GeoserverFacade.publishLayer(layerName, layerName))
-      {
-        log.error("Failure publishing layer ["+layerName+"].");
-      }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing layer ["+layerName+"].", t);
-      throw new ProgrammingErrorException("Error publishing layer [" + layerName + "]", t);
-    }
+    GeoserverFacade.publishLayerOnUpdate(this);
   }
   
   public ValueQuery asValueQuery()
@@ -600,7 +539,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
 
   @Override
-  public List<? extends Style> getStyles()
+  public List<? extends DashboardStyle> getStyles()
   {
     return this.getAllHasStyle().getAll();
   }
@@ -641,11 +580,19 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("layerName", getName());
       json.put("layerId", getId());
       
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i) {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+      
       return json;
     }
     catch (JSONException ex)
     {
-      log.error("Could not properly form map [" + this + "] into valid JSON to send back to the client.");
+      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
   }
