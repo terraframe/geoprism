@@ -1,10 +1,12 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,12 +14,10 @@ import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -25,10 +25,8 @@ import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
-import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.EntityQuery;
@@ -60,10 +58,7 @@ public class DashboardLayer extends DashboardLayerBase implements
 
   private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
   
-  enum DatabaseViewState implements Reloadable {
-    VALID, INVALID;
-  }
-  private DatabaseViewState viewState = DatabaseViewState.INVALID;
+  private boolean viewHasData = true;
   
   public DashboardLayer()
   {
@@ -80,34 +75,66 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
-    boolean isNew = this.isNew();
-    
     // generate a db view name unique across space and time
     // We don't want to do this in isNew because leaflet will cache the old layer and the user won't see the new changes.
     // (there's no way to dump the cache in leaflet) Leaflet needs to think its an entirely new layer.
-    String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
-    this.setViewName(vn);
-    this.setVirtual(true);
+    if (this.isNew()) {
+      String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
+      this.setViewName(vn);
+      this.setVirtual(true);
+    }
     
     super.apply();
     
-    viewState = DatabaseViewState.INVALID;
+//    List<? extends DashboardStyle> styles = this.getStyles();
+//    for (int i = 0; i < styles.size(); ++i) {
+//      DashboardStyle style = styles.get(i);
+//      style.appLock();
+//      style.generateName(vn);
+//      style.apply();
+//      style.unlock();
+//    }
+  }
+  
+  public boolean viewHasData() {
+    return viewHasData;
   }
   
   @Override
-  public DashboardLayerView applyWithStyle(DashboardStyle style, String mapId, DashboardCondition condition)
+  public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition condition)
   {
     this.applyWithStyleInTransaction(style, mapId, condition);
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
     this.publish();
+    GeoserverFacade.pushUpdates();
     
-    DashboardLayerView view = new DashboardLayerView();
-    view.setLayerId(this.getId());
-    view.setLayerName(this.getName());
-    view.setViewName(this.getViewName());
-    view.setSldName(this.getSLDName());
-    return view;
+    try {
+      JSONObject json = new JSONObject();
+      json.put("layerId", this.getId());
+      json.put("layerName", this.getName());
+      json.put("viewName", this.getViewName());
+      json.put("sldName", this.getSLDName());
+      
+      JSONArray jsonArray = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i) {
+        DashboardStyle stile = styles.get(i);
+        jsonArray.put(stile.toJSON());
+      }
+      json.put("styles", jsonArray);
+      return json.toString();
+    }
+    catch (JSONException e) {
+      throw new ProgrammingErrorException(e);
+    }
+    
+//    DashboardLayerView view = new DashboardLayerView();
+//    view.setLayerId(this.getId());
+//    view.setLayerName(this.getName());
+//    view.setViewName(this.getViewName());
+//    view.setSldName(this.getSLDName());
+//    return view;
   }
   @Transaction
   public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition condition) {
@@ -145,6 +172,16 @@ public class DashboardLayer extends DashboardLayerBase implements
     
     this.apply();
     
+    boolean isLocked = false;
+    if (!style.isNew()) {
+//      style = DashboardStyle.get(style.getId()); // Prevents a StaleEntityException, since DashboardLayer.apply will modify the style name.
+//      style.appLock();
+//      isLocked = true;
+    }
+    else {
+      style.generateName(this.getViewName());
+    }
+    
     if (condition != null) {
       condition.apply();
       
@@ -153,8 +190,10 @@ public class DashboardLayer extends DashboardLayerBase implements
       }
     }
     
-    style.setName("style_" + IDGenerator.nextID());
     style.apply();
+//    if (isLocked) {
+//      style.unlock();
+//    }
     
     if (isNew)
     {
@@ -255,42 +294,10 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   /**
    * Removes the layer, and all its styles, from GeoServer.
-   * 
-   * @param refreshGeoServer If true, we'll tell GeoServer to refresh itself at the end, which should prevent any sort of caching issues.
    */
-  public void drop(boolean refreshGeoServer) {
+  public void drop() {
     if (this.isPublished()) {
-      String layerName = this.getViewName();
-      
-      // remove the layer
-      try
-      {
-        GeoserverFacade.removeLayer(layerName);
-        log.debug("Deleting layer ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting layer ["+layerName+"].", t);
-        throw new ProgrammingErrorException("Error deleting layer [" + layerName + "]", t);
-      }
-      
-      // TODO : A layer may have more than one style associated with it. This code should be in the style object, not in Layer.
-      
-      // remove the style
-      try
-      {
-        GeoserverFacade.removeStyle(layerName);
-        log.debug("Deleting style ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting style ["+layerName+"].", t);
-        throw new ProgrammingErrorException("Error deleting style [" + layerName + "]", t);
-      }
-      
-      if (refreshGeoServer) {
-        GeoserverFacade.refresh();
-      }
+      GeoserverFacade.dropLayerOnUpdate(this);
     }
   }
   
@@ -302,55 +309,45 @@ public class DashboardLayer extends DashboardLayerBase implements
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it does not exist yet.
    */
   public void publish() {
-    if (isPublished()) {
-      this.drop(true);
+    if (needsRepublish()) {
+      this.drop();
+      
+      createDatabaseView(true);
+      
+      if (viewHasData) {
+        GeoserverFacade.publishLayerOnUpdate(this);
+      }
+      
+      this.appLock();
+      this.setLastPublishDate(new Date());
+      this.apply();
+      this.unlock();
+    }
+  }
+  
+  public boolean needsRepublish() {
+    boolean isPublished = isPublished();
+    if (!isPublished) { return true; }
+    
+    Date lastUpdate = this.getLastUpdateDate();
+    Date lastPublish = this.getLastPublishDate();
+    if (lastPublish == null || lastUpdate.after(lastPublish)) {
+      return true;
     }
     
-    if (viewState.equals(DatabaseViewState.INVALID)) {
+    return false;
+  }
+  
+  public void createDatabaseView(boolean force) {
+    Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
+    
+    if (force || !viewExists) {
       String sql = this.asValueQuery().getSQL();
       
-      try {
+      if (viewExists) {
         Database.dropView(this.getViewName(), sql, false);
       }
-      catch (DataNotFoundException e) {
-        
-      }
       Database.createView(this.getViewName(), sql);
-      
-      viewState = DatabaseViewState.VALID;
-    }
-    
-    String layerName = this.getViewName();
-    
-    // TODO : A layer may have more than one style associated with it. Also this code should be in the style object, not in Layer.
-    try
-    {
-      SLDMapVisitor visitor = new SLDMapVisitor();
-      this.accepts(visitor);
-      String sld = visitor.getSLD(this);
-      
-      if(!GeoserverFacade.publishStyle(layerName, sld))
-      {
-        log.error("Failure publishing style ["+layerName+"].");
-      }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing style ["+layerName+"].", t);
-      throw new ProgrammingErrorException("Error publishing style [" + layerName + "]", t);
-    }
-    
-    try
-    {
-      if(!GeoserverFacade.publishLayer(layerName, layerName))
-      {
-        log.error("Failure publishing layer ["+layerName+"].");
-      }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing layer ["+layerName+"].", t);
-      throw new ProgrammingErrorException("Error publishing layer [" + layerName + "]", t);
     }
   }
   
@@ -526,11 +523,14 @@ public class DashboardLayer extends DashboardLayerBase implements
       log.debug("SLD for Layer [%s], this:\n" + v.getSQL());
     }
     
+    viewHasData = true;
     if (v.getCount() == 0) {
       EmptyLayerInformation info = new EmptyLayerInformation();
       info.apply();
       
       info.throwIt();
+      
+      viewHasData = false;
     }
     
     return v;
@@ -600,7 +600,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
 
   @Override
-  public List<? extends Style> getStyles()
+  public List<? extends DashboardStyle> getStyles()
   {
     return this.getAllHasStyle().getAll();
   }
@@ -641,11 +641,19 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("layerName", getName());
       json.put("layerId", getId());
       
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i) {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+      
       return json;
     }
     catch (JSONException ex)
     {
-      log.error("Could not properly form map [" + this + "] into valid JSON to send back to the client.");
+      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
   }

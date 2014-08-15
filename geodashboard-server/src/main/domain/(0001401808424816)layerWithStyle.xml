@@ -15,7 +15,7 @@
       
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
         <create>
-          <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView">
+          <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="java.lang.String">
             <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
             <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
             <mdParameter name="condition" label="Condition" order="2" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />

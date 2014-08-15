@@ -14,6 +14,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -31,10 +34,8 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
-public class GeoserverFacade // extends GeoserverFacadeBase implements
-// Reloadable
+public class GeoserverFacade implements Reloadable
 {
-
   public static final int    SRS_CODE    = 4326;
 
   public static final String SRS         = "EPSG:" + SRS_CODE;
@@ -50,6 +51,12 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   public static int          MAXY_INDEX  = 3;
 
   private static Log         log         = LogFactory.getLog(GeoserverFacade.class);
+  
+  /**
+   * These are for storing mass publish/deletes which can be pushArrayList<E> once for maximum efficiency.
+   */
+  private static ArrayList<DashboardLayer> layersToPublish = new ArrayList<DashboardLayer>();
+  private static ArrayList<DashboardLayer> layersToDrop = new ArrayList<DashboardLayer>();
 
   /**
    * Checks if a given File is a cache directory for the workspace.
@@ -231,8 +238,8 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
    */
   public static void removeStyle(String styleName)
   {
-    if (styleExists(styleName))
-    {
+//    if (styleExists(styleName))
+//    {
       if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
       {
         log.info("Removed the SLD [" + styleName + "].");
@@ -284,9 +291,9 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
         log.info("The file [" + xml + "] does not exist.");
       }
 
-    }
+//    }
   }
-
+  
   public static boolean publishStyle(String styleName, String body, boolean force)
   {
     if (force && styleExists(styleName))
@@ -316,7 +323,52 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   {
     return publishStyle(styleName, body, true);
   }
+  
+  public static void pushUpdates() {
+    try {
+      for (DashboardLayer layer : layersToDrop) {
+        removeLayer(layer.getViewName());
+        
+        List<? extends DashboardStyle> styles = layer.getStyles();
+        for (int i = 0; i < styles.size(); ++i) {
+          DashboardStyle style = styles.get(i);
+          removeStyle(style.getName());
+        }
+      }
+      
+      // GeoServer will say these layers already exist if we don't refresh here.
+      if (layersToDrop.size() > 0 && layersToPublish.size() > 0) {
+        refresh();
+      }
+      
+      for (DashboardLayer layer : layersToPublish) {
+        List<? extends DashboardStyle> styles = layer.getStyles();
+        for (int i = 0; i < styles.size(); ++i) {
+          DashboardStyle style = styles.get(i);
+          publishStyle(style.getName(), style.generateSLD(), false);
+        }
+        
+        publishLayer(layer.getViewName(), layer.getViewName());
+      }
+      
+      // GeoServer will cache old tiles if we've changed a style.
+      if (layersToDrop.size() > 0) {
+        refresh();
+      }
+    }
+    finally {
+      layersToDrop.clear();
+      layersToPublish.clear();
+    }
+  }
+  public static void publishLayerOnUpdate(DashboardLayer layer) {
+    layersToPublish.add(layer);
+  }
+  public static void dropLayerOnUpdate(DashboardLayer layer) {
+    layersToDrop.add(layer);
+  }
 
+  
   /**
    * Adds a database view and publishes the layer if necessary.
    * 
@@ -325,13 +377,13 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   public static boolean publishLayer(String layer, String styleName)
   {
     // create the layer if it does not exist
-    if (layerExists(layer))
-    {
-      log.debug("The layer [" + layer + "] already exists in geoserver.");
-      return true;
-    }
-    else
-    {
+//    if (layerExists(layer))
+//    {
+//      log.debug("The layer [" + layer + "] already exists in geoserver.");
+//      return true;
+//    }
+//    else
+//    {
       double[] bbox = getBBOX(layer);
 
       double minX = bbox[MINX_INDEX];
@@ -363,7 +415,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
         log.error("Failed to create the layer [" + layer + "] in geoserver.");
         return false;
       }
-    }
+//    }
   }
 
   // public static void publishSQLView(String viewName, String sql)
@@ -494,6 +546,7 @@ public class GeoserverFacade // extends GeoserverFacadeBase implements
   {
     String workspace = GeoserverProperties.getWorkspace();
     RESTLayer layerObj = getReader().getLayer(workspace, layer);
+    
     return layerObj != null;
   }
 

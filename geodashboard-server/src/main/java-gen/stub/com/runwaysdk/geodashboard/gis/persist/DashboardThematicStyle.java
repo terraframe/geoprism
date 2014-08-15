@@ -1,5 +1,9 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
@@ -31,6 +35,20 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
   public Condition getCondition()
   {
     return this.getStyleCondition();
+  }
+  
+  public JSONObject toJSON() {
+    try {
+      JSONObject json = new JSONObject();
+      json.put("mdAttribute", this.getMdAttribute().getId());
+      
+      return json;
+    }
+    catch (JSONException ex)
+    {
+      String msg = "Could not properly form DashboardStyle [" + this.toString() + "] into valid JSON to send back to the client.";
+      throw new ProgrammingErrorException(msg, ex);
+    }
   }
   
   @Override

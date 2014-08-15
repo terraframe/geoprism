@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1927973535)
+@com.runwaysdk.business.ClassSignature(hash = 134835664)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -190,6 +190,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.KEYNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate()
+  {
+    return getLastPublishDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -785,6 +802,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate();
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate();
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel);
@@ -1045,6 +1065,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.KEYNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate()
+  {
+    return getLastPublishDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1587,6 +1624,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate();
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate();
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel);
@@ -1844,6 +1884,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.KEYNAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate()
+  {
+    return getLastPublishDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getLastPublishDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LASTPUBLISHDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()

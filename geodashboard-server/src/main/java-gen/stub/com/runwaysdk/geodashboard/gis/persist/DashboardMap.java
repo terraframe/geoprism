@@ -63,6 +63,10 @@ public class DashboardMap extends DashboardMapBase implements
    */
   @Override
   public java.lang.String orderLayers(java.lang.String[] layerIds) {
+    if (layerIds == null || layerIds.length == 0) {
+      throw new RuntimeException("Unable to order layers, the layerIds array is either null or empty.");
+    }
+    
     HasLayerQuery q = new HasLayerQuery(new QueryFactory());
     q.WHERE(q.parentId().EQ(this.getId()));
     q.AND(q.childId().IN(layerIds));
@@ -119,23 +123,15 @@ public class DashboardMap extends DashboardMapBase implements
   }
   
   /**
-   * Removes all layers, and all their nested styles, from GeoServer.
+   * Republishes all layers to GeoServer.
    */
-  public void dropAllLayers(DashboardLayer[] orderedLayers) {
-    for (DashboardLayer layer : orderedLayers)
-    {
-      layer.drop(false);
-    }
-    
-    // This prevents any sort of caching errors we may run into with GeoServer.
-    GeoserverFacade.refresh();
-  }
-  
   public void publishAllLayers(DashboardLayer[] orderedLayers) {
     for (DashboardLayer layer : orderedLayers)
     {
       layer.publish();
     }
+    
+    GeoserverFacade.pushUpdates();
   }
 
   /**
@@ -145,25 +141,22 @@ public class DashboardMap extends DashboardMapBase implements
   public String getMapJSON(String config)
   {
     try {
+      DashboardLayer[] orderedLayers = this.getOrderedLayers();
+      
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
       
-      
-      JSONArray mapBBox = getMapLayersBBox();
-      mapJSON.put("bbox", mapBBox);
-      
-      
-      DashboardLayer[] orderedLayers = this.getOrderedLayers();
-      dropAllLayers(orderedLayers);
       publishAllLayers(orderedLayers);
       
       JSONArray layers = new JSONArray();
       for (int i = 0; i < orderedLayers.length; i++)
       {
-        orderedLayers[i].put(layer.toJSON());
+        layers.put(orderedLayers[i].toJSON());
       }
       mapJSON.put("layers", layers);
       
+      JSONArray mapBBox = getMapLayersBBox(orderedLayers);
+      mapJSON.put("bbox", mapBBox);
       
       if (log.isDebugEnabled())
       {
@@ -183,11 +176,6 @@ public class DashboardMap extends DashboardMapBase implements
   public String getName()
   {
     return super.getName();
-  }
-
-  public JSONArray getMapLayersBBox()
-  {
-    return this.getMapLayersBBox(this.getOrderedLayers());
   }
 
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)

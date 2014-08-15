@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -233904264)
+@com.runwaysdk.business.ClassSignature(hash = 1688643559)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -19,6 +19,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
+  public static java.lang.String LASTPUBLISHDATE = "lastPublishDate";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LAYERENABLED = "layerEnabled";
@@ -32,7 +33,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -233904264;
+  private static final long serialVersionUID = 1688643559;
   
   public DashboardLayerBase()
   {
@@ -260,6 +261,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     else
     {
       setValue(KEYNAME, value);
+    }
+  }
+  
+  public java.util.Date getLastPublishDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(LASTPUBLISHDATE));
+  }
+  
+  public void validateLastPublishDate()
+  {
+    this.validateAttribute(LASTPUBLISHDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastPublishDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(LASTPUBLISHDATE);
+  }
+  
+  public void setLastPublishDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(LASTPUBLISHDATE, "");
+    }
+    else
+    {
+      setValue(LASTPUBLISHDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATETIME_FORMAT).format(value));
     }
   }
   
@@ -691,13 +720,13 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     return (DashboardLayer) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public com.runwaysdk.geodashboard.gis.persist.DashboardLayerView applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition condition)
+  public java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition condition)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.DashboardLayerView applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition condition)
+  public static final java.lang.String applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition condition)
   {
     DashboardLayer _instance = DashboardLayer.get(id);
     return _instance.applyWithStyle(style, mapId, condition);
