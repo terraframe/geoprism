@@ -357,6 +357,66 @@
     }
   });  
   
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ReadTextAreaEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Instance : {
+      initialize : function(id, displayLabel, value, config)
+      {
+        this.$initialize();
+          
+        this._value = value;
+          
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix');
+          
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, id);
+        this._label.setAttribute('for', id);
+        
+        this._text = new com.runwaysdk.ui.factory.runway.TextArea(id);
+        this._text.setAttribute('disabled', true);
+        this._text.setValue(value);
+          
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
+          
+        this._div.appendChild(this._label);
+        this._div.appendChild(this._text);
+        this._div.appendChild(this._error);        
+          
+        this.setId(id);
+      },
+      getName : function()
+      {
+        return this._name;  
+      },
+      getValue : function()
+      {
+        return this._value;  
+      },
+      getLabel : function()
+      {
+        return this._label;
+      },      
+      getDiv : function()
+      {
+        return this._div;
+      },
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      accept : function(visitor) {
+        visitor.visitDefaultInput(this);
+      }     
+    }
+  });  
+    
+  
+  
   var FormList = Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormList', {
     Extends : Widget,
     Instance : {

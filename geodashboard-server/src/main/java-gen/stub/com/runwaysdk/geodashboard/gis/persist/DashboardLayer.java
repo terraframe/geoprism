@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,10 +13,12 @@ import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -24,9 +27,11 @@ import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
@@ -56,6 +61,11 @@ public class DashboardLayer extends DashboardLayerBase implements
 
   private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
   
+  enum DatabaseViewState implements Reloadable {
+    VALID, INVALID;
+  }
+  private DatabaseViewState viewState = DatabaseViewState.INVALID;
+  
   public DashboardLayer()
   {
     super();
@@ -81,15 +91,18 @@ public class DashboardLayer extends DashboardLayerBase implements
     this.setVirtual(true);
     
     super.apply();
+    
+    viewState = DatabaseViewState.INVALID;
   }
-
+  
   @Override
-  public DashboardLayerView applyWithStyle(DashboardStyle style, String mapId)
+  public DashboardLayerView applyWithStyle(DashboardStyle style, String mapId, DashboardCondition condition)
   {
-    this.applyWithStyleInTransaction(style, mapId);
+    this.applyWithStyleInTransaction(style, mapId, condition);
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
-    this.publish(true);
+    this.publish();
+    GeoserverFacade.pushUpdates();
     
     DashboardLayerView view = new DashboardLayerView();
     view.setLayerId(this.getId());
@@ -99,7 +112,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     return view;
   }
   @Transaction
-  public void applyWithStyleInTransaction(DashboardStyle style, String mapId) {
+  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition condition) {
     boolean isNew = this.isNew();
     if (isNew && style instanceof DashboardThematicStyle)
     {
@@ -134,7 +147,15 @@ public class DashboardLayer extends DashboardLayerBase implements
     
     this.apply();
     
-    style.setName("style_" + IDGenerator.nextID());
+    if (condition != null) {
+      condition.apply();
+      
+      if (style instanceof DashboardThematicStyle) {
+        ((DashboardThematicStyle)style).setStyleCondition(condition);
+      }
+    }
+    
+    style.generateName(this.getViewName());
     style.apply();
     
     if (isNew)
@@ -157,13 +178,6 @@ public class DashboardLayer extends DashboardLayerBase implements
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
     }
-    
-    String sql = this.asValueQuery().getSQL();
-    
-    if (!isNew) {
-      Database.dropView(this.getViewName(), sql, false);
-    }
-    Database.createView(this.getViewName(), sql);
     
     this.validate();
   }
@@ -243,39 +257,10 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   /**
    * Removes the layer, and all its styles, from GeoServer.
-   * 
-   * @param refreshGeoServer If true, we'll tell GeoServer to refresh itself at the end, which should prevent any sort of caching issues.
    */
-  public void drop(boolean refreshGeoServer) {
+  public void drop() {
     if (this.isPublished()) {
-      String layerName = this.getViewName();
-      
-      // remove the layer
-      try
-      {
-        GeoserverFacade.removeLayer(layerName);
-        log.debug("Deleting layer ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting layer ["+layerName+"].", t);
-      }
-      
-      // TODO : A layer may have more than one style associated with it. Also this code should be in the style object, not in Layer.
-      // remove the style
-      try
-      {
-        GeoserverFacade.removeStyle(layerName);
-        log.debug("Deleting style ["+layerName+"].");
-      }
-      catch(Throwable t)
-      {
-        log.error("Error deleting style ["+layerName+"].", t);
-      }
-      
-      if (refreshGeoServer) {
-        GeoserverFacade.refresh();
-      }
+      GeoserverFacade.dropLayerOnUpdate(this);
     }
   }
   
@@ -285,48 +270,27 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   /**
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it does not exist yet.
-   * 
-   * @param removeFromGeoServerFirst If set to true, we will first try to remove the layer from GeoServer, otherwise, if the layer already
-   *                                   exists in GeoServer this will cause GeoServer to throw an exception.
    */
-  public void publish(boolean removeFromGeoServerFirst) {
-    if (removeFromGeoServerFirst) {
-      this.drop(true);
+  public void publish() {
+    if (isPublished()) {
+      this.drop();
     }
     
-    String layerName = this.getViewName();
-    
-    // TODO : A layer may have more than one style associated with it. Also this code should be in the style object, not in Layer.
-    try
-    {
-      SLDMapVisitor visitor = new SLDMapVisitor();
-      this.accepts(visitor);
-      String sld = visitor.getSLD(this);
+    if (viewState.equals(DatabaseViewState.INVALID)) {
+      String sql = this.asValueQuery().getSQL();
       
-      if(!GeoserverFacade.publishStyle(layerName, sld))
-      {
-        log.error("Failure publishing style ["+layerName+"].");
+      try {
+        Database.dropView(this.getViewName(), sql, false);
       }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing style ["+layerName+"].", t);
+      catch (DataNotFoundException e) {
+        
+      }
+      Database.createView(this.getViewName(), sql);
+      
+      viewState = DatabaseViewState.VALID;
     }
     
-    try
-    {
-      if(!GeoserverFacade.publishLayer(layerName, layerName))
-      {
-        log.error("Failure publishing layer ["+layerName+"].");
-      }
-      else {
-        log.info("Published layer: " + layerName);
-      }
-    }
-    catch(Throwable t)
-    {
-      log.error("Error publishing layer ["+layerName+"].", t);
-    }
+    GeoserverFacade.publishLayerOnUpdate(this);
   }
   
   public ValueQuery asValueQuery()
@@ -354,10 +318,10 @@ public class DashboardLayer extends DashboardLayerBase implements
           MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
           MdClass mdClass = mdC.getDefiningMdClass();
           EntityQuery entityQ = f.businessQuery(mdClass.definesType());
-
+          
           // thematic attribute
           Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
-
+          
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
@@ -435,11 +399,11 @@ public class DashboardLayer extends DashboardLayerBase implements
                   mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
             }
           }
-
+          
           thematicSel.setColumnAlias(attribute);
-
+          
           v.SELECT(thematicSel);
-
+          
           // geoentity label
           GeoEntityQuery geQ = new GeoEntityQuery(v);
           Selectable label = geQ.getDisplayLabel().localize();
@@ -461,26 +425,32 @@ public class DashboardLayer extends DashboardLayerBase implements
           {
             geom = geQ.get(GeoEntity.GEOMULTIPOLYGON);
           }
-
+          
           geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
           geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-
+          
           v.SELECT(geom);
-
+          
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
           Attribute geoAttr = entityQ.get(geoRef.getAttributeName());
-
+          
           // the entity's GeoEntity should match the all path's child
           GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(v);
           v.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
-
+          
           // the displayed GeoEntity should match the all path's parent
           v.AND(geAllPathsQ.getParentTerm().EQ(geQ));
-
+          
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();
           v.AND(geQ.getUniversal().EQ(universal));
+          
+          // Attribute condition filtering (i.e. sales unit is greater than 50)
+          DashboardCondition condition = tStyle.getStyleCondition();
+          if (condition != null && thematicAttr instanceof AttributeNumber) {
+            v.AND(condition.asRunwayQuery(thematicAttr));
+          }
         }
       }
     }
@@ -488,7 +458,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       iter.close();
     }
-
+    
     if (log.isDebugEnabled())
     {
       // print the SQL if the generated
@@ -501,7 +471,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       
       info.throwIt();
     }
-
+    
     return v;
   }
 
@@ -569,7 +539,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
 
   @Override
-  public List<? extends Style> getStyles()
+  public List<? extends DashboardStyle> getStyles()
   {
     return this.getAllHasStyle().getAll();
   }
@@ -610,11 +580,19 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("layerName", getName());
       json.put("layerId", getId());
       
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i) {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+      
       return json;
     }
     catch (JSONException ex)
     {
-      log.error("Could not properly form map [" + this + "] into valid JSON to send back to the client.");
+      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
   }

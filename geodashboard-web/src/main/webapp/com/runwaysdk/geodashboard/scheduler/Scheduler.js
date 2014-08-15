@@ -270,7 +270,7 @@
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          }, dialog.getParentNode());
+          }, dialog);
             
           job.apply(applyCallback);
         });
@@ -284,12 +284,12 @@
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          }, dialog.getParentNode());
+          }, dialog);
     
           job.unlock(unlockCallback);  
         });
         
-                
+        
         dialog.addButton(that.localize("submit"), handleSubmit, null, {class:'btn btn-primary'});
         dialog.addButton(that.localize("cancel"), handleCancel, null, {class:'btn'});                        
         dialog.render();
@@ -297,7 +297,7 @@
         if (jcf != null && jcf.customForms != null) {
           jcf.customForms.replaceAll(dialog.getRawEl());
         }
-            
+        
         return false;
       },
 

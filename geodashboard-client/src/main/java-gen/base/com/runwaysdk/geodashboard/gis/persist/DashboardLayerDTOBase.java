@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 822734797)
+@com.runwaysdk.business.ClassSignature(hash = 953636344)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 822734797;
+  private static final long serialVersionUID = 953636344;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -760,18 +760,18 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(VIRTUAL).getAttributeMdDTO();
   }
   
-  public final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId)
+  public final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String"};
-    Object[] _parameters = new Object[]{style, mapId};
+    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"};
+    Object[] _parameters = new Object[]{style, mapId, condition};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
     return (com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId)
+  public static final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, style, mapId};
+    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"};
+    Object[] _parameters = new Object[]{id, style, mapId, condition};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
     return (com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

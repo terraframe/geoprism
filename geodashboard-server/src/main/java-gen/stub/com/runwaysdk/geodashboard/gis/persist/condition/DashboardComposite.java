@@ -2,6 +2,8 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 
 import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.geodashboard.gis.model.condition.Composite;
+import com.runwaysdk.geodashboard.gis.model.condition.Condition;
+import com.runwaysdk.query.Attribute;
 
 public abstract class DashboardComposite extends DashboardCompositeBase implements
     com.runwaysdk.generation.loader.Reloadable, Composite
@@ -11,6 +13,11 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
   public DashboardComposite()
   {
     super();
+  }
+  
+  @Override
+  public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr) {
+    throw new UnsupportedOperationException();
   }
   
   @Override

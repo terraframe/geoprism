@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
+import com.runwaysdk.query.Attribute;
 
 public class DashboardOr extends DashboardOrBase implements com.runwaysdk.generation.loader.Reloadable, Or
 {
@@ -10,6 +11,11 @@ public class DashboardOr extends DashboardOrBase implements com.runwaysdk.genera
   public DashboardOr()
   {
     super();
+  }
+  
+  @Override
+  public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr) {
+    throw new UnsupportedOperationException();
   }
   
   @Override
