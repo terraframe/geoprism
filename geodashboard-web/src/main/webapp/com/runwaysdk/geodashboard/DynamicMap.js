@@ -45,7 +45,6 @@
         
         this._mapDivId = mapDivId;
         this._mapId = mapId;
-        this._mdAttribute = null;
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
@@ -110,13 +109,18 @@
               
               // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
               //          Since we're using JSON, we have to create DashboardLayerView objects here.
-              for (var i = 0; i < jsonObj.layers; ++i) {
+              for (var i = 0; i < jsonObj.layers.length; ++i) {
+                var layer = jsonObj.layers[i];
+                
                 var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
-                view.setViewName(jsonObj.viewName);
-                view.setLayerId(jsonObj.layerId);
-                view.setSldName(jsonObj.sldName);
-                view.setLayerName(jsonObj.layerName);
-                that._layerCache.put(jsonObj.layerId, view);
+                view.setViewName(layer.viewName);
+                view.setLayerId(layer.layerId);
+                view.setSldName(layer.sldName);
+                view.setLayerName(layer.layerName);
+                
+                view.style = layer.styles[0];
+                
+                that._layerCache.put(layer.layerId, view);
               }
               
               that._bBox = jsonObj.bbox;
@@ -415,8 +419,10 @@
           }
         }, $(DynamicMap.LAYER_MODAL)[0]);
         
+        var layer = this._layerCache.get(params["layer.componentId"]);
+        
         params['mapId'] = this._mapId;
-        params['style.mdAttribute'] = this._mdAttribute;
+        params['style.mdAttribute'] = layer.style.mdAttribute;
         
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
@@ -424,9 +430,9 @@
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         // Include attribute condition filtering (i.e. sales unit is greater than 50)
-        var select = $("select.gdb-attr-filter." + this._mdAttribute).val();
-        var textValue = $("input.gdb-attr-filter." + this._mdAttribute).val();
-        if (textValue !== null && textValue !== "") {
+        var select = $("select.gdb-attr-filter." + layer.style.mdAttribute).val();
+        var textValue = $("input.gdb-attr-filter." + layer.style.mdAttribute).val();
+        if (textValue != null && textValue !== "") {
           var condition = null;
           if (select === "gt") {
             condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan";
@@ -799,8 +805,7 @@
         
         var el = $(e.currentTarget);
         var attrId = el.data('id');
-        this._mdAttribute = attrId;
-        
+
         var that = this;
         
         var request = new Mojo.ClientRequest({

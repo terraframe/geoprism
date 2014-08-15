@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1542315250)
+@com.runwaysdk.business.ClassSignature(hash = 1421366959)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1542315250;
+  private static final long serialVersionUID = 1421366959;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -38,6 +38,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MAP = "map";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
@@ -399,6 +400,55 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLockedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO getMap()
+  {
+    if(getValue(MAP) == null || getValue(MAP).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.get(getRequest(), getValue(MAP));
+    }
+  }
+  
+  public String getMapId()
+  {
+    return getValue(MAP);
+  }
+  
+  public void setMap(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO value)
+  {
+    if(value == null)
+    {
+      setValue(MAP, "");
+    }
+    else
+    {
+      setValue(MAP, value.getId());
+    }
+  }
+  
+  public boolean isMapWritable()
+  {
+    return isWritable(MAP);
+  }
+  
+  public boolean isMapReadable()
+  {
+    return isReadable(MAP);
+  }
+  
+  public boolean isMapModified()
+  {
+    return isModified(MAP);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMapMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MAP).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.ActorDTO getOwner()

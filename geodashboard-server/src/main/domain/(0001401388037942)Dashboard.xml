@@ -8,7 +8,8 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.Dashboard"
 				label="Dashboard" cacheAlgorithm="everything">
 				<attributes>
-					<localChar name="displayLabel" label="Name" required="true" />
+					<localChar name="displayLabel" required="true" />
+					<reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false"/>
 				</attributes>
 				<mdMethod name="getSortedDashboards" label="Get Sorted Dashboards"
 					static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery">
@@ -68,7 +69,20 @@
           <reference name="wrappedMdAttribute" type="com.runwaysdk.system.metadata.MdAttribute"
             label="MdAttribute" required="true" />
         </attributes>
-      </mdBusiness>			
+      </mdBusiness>
+      
+      <mdException
+        name="com.runwaysdk.geodashboard.gis.NoDashboardException"
+        label="No Dashboard Exception"
+        description="Thrown when a user tries to render a map without a dashboard."
+        message="You must first create a Dashboard before you can render a map.">
+      </mdException>
+      <mdException
+        name="com.runwaysdk.geodashboard.gis.DashboardHasNoMapException"
+        label="Dashboard Has No Map Exception"
+        description="Thrown when a user tries to render a dashboard that has no map."
+        message="This Dashboard has no map to display.">
+      </mdException>
 			
 		</create>
 		<update></update>
