@@ -20,6 +20,8 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
+<%@page import="com.runwaysdk.geodashboard.DashboardController"%>
+<%@page import="com.runwaysdk.geodashboard.DashboardDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
@@ -36,7 +38,6 @@
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMap" %>
 
 <%
   String webappRoot = request.getContextPath() + "/";
@@ -53,7 +54,8 @@
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
-        DashboardGreaterThan.CLASS, DashboardGreaterThanOrEqual.CLASS, DashboardLessThan.CLASS, DashboardLessThanOrEqual.CLASS
+        DashboardGreaterThan.CLASS, DashboardGreaterThanOrEqual.CLASS, DashboardLessThan.CLASS, DashboardLessThanOrEqual.CLASS,
+        DashboardController.CLASS, DashboardDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -165,12 +167,17 @@ $(document).ready(function(){
               </c:otherwise>
             </c:choose>
           </c:forEach>
-        
+       
           </ul>
         
         </div>
       </div>
         <button class="none">submit</button>
+        
+        <a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
+        	<span style="color:white;font-weight:bold;"> + Create New Dashboard</span>
+		</a>
+		
         <div class="choice-form">
           
           <div class="row-holder">
@@ -327,6 +334,11 @@ $(document).ready(function(){
   <!-- modal -->
   <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <!-- Filled in by ajax call to create/edit layer -->
+  </div>
+  
+  <!-- modal -->
+  <div class="modal fade" id="dashboardModal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <!-- Filled in by ajax call to create new dashboard -->
   </div>
   
   

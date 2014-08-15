@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard;
 
+import com.runwaysdk.transport.conversion.json.JSONReturnObject;
+
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/Dashboard/";
@@ -12,8 +14,9 @@ public class DashboardController extends DashboardControllerBase implements com.
   
   public void cancel(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    dto.unlock();
-    this.view(dto.getId());
+    if (!dto.isNewInstance()){
+      dto.unlock();
+    }
   }
   public void failCancel(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -24,7 +27,15 @@ public class DashboardController extends DashboardControllerBase implements com.
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      
+      JSONReturnObject jsonReturn = new JSONReturnObject(dto);
+      jsonReturn.setInformation( this.getClientRequest().getInformation() );
+      jsonReturn.setWarnings(this.getClientRequest().getWarnings());
+      
+      this.getResponse().setStatus(200);
+      this.getResponse().setContentType("application/json");
+      
+      this.getResponse().getWriter().print(jsonReturn.toString());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -33,7 +44,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   }
   public void failCreate(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    req.setAttribute("item", dto);
+    req.setAttribute("dashboard", dto);
     render("createComponent.jsp");
   }
   public void delete(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -67,7 +78,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     com.runwaysdk.geodashboard.DashboardDTO dto = new com.runwaysdk.geodashboard.DashboardDTO(clientRequest);
-    req.setAttribute("item", dto);
+    req.setAttribute("dashboard", dto);
     render("createComponent.jsp");
   }
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
