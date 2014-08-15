@@ -191,7 +191,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     try
     {
       dto.apply();
-      this.view(dto.getId());
     }
     catch (com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -257,9 +256,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     try
     {
-      DashboardLayerViewDTO layerView = layer.applyWithStyle(style, mapId, condition);
+      String layerJSON = layer.applyWithStyle(style, mapId, condition);
       
-      JSONReturnObject jsonReturn = new JSONReturnObject(layerView);
+      JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
       jsonReturn.setInformation( this.getClientRequest().getInformation() );
       jsonReturn.setWarnings(this.getClientRequest().getWarnings());
       

@@ -84,8 +84,10 @@
       fullRefresh : function() {
         var that = this;
         
+        that._renderMap();
+        
         this._updateCachedData(function(){
-          that._renderMap();
+          that._configureMap();
           that._renderBaseLayers();
           that._renderUserLayers();
         });
@@ -102,23 +104,7 @@
             onSuccess : function(json){
               var jsonObj = Mojo.Util.toObject(json);
               
-              // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
-              //          Since we're using JSON, we have to create DashboardLayerView objects here.
-              for (var i = 0; i < jsonObj.layers.length; ++i) {
-                var layer = jsonObj.layers[i];
-                
-                var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
-                view.setViewName(layer.viewName);
-                view.setLayerId(layer.layerId);
-                view.setSldName(layer.sldName);
-                view.setLayerName(layer.layerName);
-                
-                view.style = layer.styles[0];
-                
-                that._layerCache.put(layer.layerId, view);
-              }
-              
-              that._bBox = jsonObj.bbox;
+              that._updateCacheFromJSONResponse(jsonObj);
               
               fnSuccess();
             },
@@ -127,6 +113,32 @@
             }
           })
           , this._mapId, '{testKey:"TestValue"}');
+      },
+      
+      _updateCacheFromJSONResponse : function(json) {
+        // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
+        //          Since we're using JSON, we have to create DashboardLayerView objects here.
+        for (var i = 0; i < json.layers.length; ++i) {
+          var layer = json.layers[i];
+          
+          var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
+          view.setViewName(layer.viewName);
+          view.setLayerId(layer.layerId);
+          view.setSldName(layer.sldName);
+          view.setLayerName(layer.layerName);
+          
+          view.style = layer.styles[0];
+          
+          var oldLayer = this._layerCache.get(layer.layerId);
+          if (oldLayer != null) {
+            view.leafletLayer = oldLayer.leafletLayer;
+          }
+          this._layerCache.put(layer.layerId, view);
+        }
+        
+        if (json.bbox != null) {
+          this._bBox = json.bbox;
+        }
       },
       
       /**
@@ -141,6 +153,23 @@
         
         this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
         
+        // Add attribution to the map
+        this._map.attributionControl.setPrefix('');
+        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+        
+        // Hide mouse position coordinate display when outside of map
+        this._map.on('mouseover', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").show();
+        });
+        
+        this._map.on('mouseout', function(e) {
+          $(".leaflet-control-mouseposition.leaflet-control").hide();
+        });
+        
+        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
+      },
+      
+      _configureMap : function() {
         // Handle points (2 coord sets) & polygons (4 coord sets)
         if (this._bBox.length === 2){
           var center = L.latLng(this._bBox[1], this._bBox[0]);
@@ -153,21 +182,6 @@
 
           this._map.fitBounds(bounds);
         }
-
-        // Add attribution to the map
-        this._map.attributionControl.setPrefix('');
-        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
-
-        // Hide mouse position coordinate display when outside of map
-        this._map.on('mouseover', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").show();
-        });
-        
-        this._map.on('mouseout', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").hide();
-        });
-        
-        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
       },
       
       _renderBaseLayers : function() {
@@ -281,10 +295,10 @@
         
         // Calculate an array of layer ids
         var layerIds = [];
-        var layers = $("#overlayLayerContainer").find("input");
+        var layers = $("#overlayLayerContainer").find(".com-runwaysdk-ui-factory-runway-checkbox-CheckBox");
         for (var i = 0; i < layers.length; ++i) {
-          var layer = $(layers[i]);
-          layerIds.push(layer.data("runwayid"));
+          var layer = layers[i];
+          layerIds.push(layer.id);
         }
         layerIds.reverse();
         
@@ -320,7 +334,7 @@
         var that = this;     
         var el = $(e.currentTarget);
         
-        if(el.hasClass('ico-edit')){          
+        if(el.hasClass('ico-edit')) {
           // edit the layer
           var id = el.data('id');
           this._LayerController.edit(new Mojo.ClientRequest({
@@ -385,16 +399,11 @@
         var that = this;
         
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(htmlOrLayerView, response){
+          onSuccess : function(htmlOrJson, response){
             if (response.isJSON()) {
               that._closeLayerModal();
               
-              // Update the layer cache with the updated layer the server returned to us.
-              var oldLayer = that._layerCache.get(htmlOrLayerView.getLayerId());
-              if (oldLayer != null) {
-                htmlOrLayerView.leafletLayer = oldLayer.leafletLayer;
-              }
-              that._layerCache.put(htmlOrLayerView.getLayerId(), htmlOrLayerView);
+              that._updateCacheFromJSONResponse({layers: [Mojo.Util.toObject(htmlOrJson)]});
               
               // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
@@ -406,7 +415,8 @@
             }
             else if (response.isHTML()) {
               // we got html back, meaning there was an error
-              that._displayLayerForm(htmlOrLayerView);
+              that._displayLayerForm(htmlOrJson);
+              $('#modal01').animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
             }
           },
           onFailure : function(e){
@@ -415,9 +425,16 @@
         }, $(DynamicMap.LAYER_MODAL)[0]);
         
         var layer = this._layerCache.get(params["layer.componentId"]);
+        var mdAttribute = null;
+        if (layer != null) {
+          mdAttribute = layer.style.mdAttribute;
+        }
+        else {
+          mdAttribute = this._currentAttributeId;
+        }
         
         params['mapId'] = this._mapId;
-        params['style.mdAttribute'] = layer.style.mdAttribute;
+        params['style.mdAttribute'] = mdAttribute;
         
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
@@ -425,8 +442,8 @@
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         // Include attribute condition filtering (i.e. sales unit is greater than 50)
-        var select = $("select.gdb-attr-filter." + layer.style.mdAttribute).val();
-        var textValue = $("input.gdb-attr-filter." + layer.style.mdAttribute).val();
+        var select = $("select.gdb-attr-filter." + mdAttribute).val();
+        var textValue = $("input.gdb-attr-filter." + mdAttribute).val();
         if (textValue != null && textValue !== "") {
           var condition = null;
           if (select === "gt") {
@@ -717,6 +734,7 @@
         
         var el = $(e.currentTarget);
         var attrId = el.data('id');
+        this._currentAttributeId = attrId;
 
         var that = this;
         

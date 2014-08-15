@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 953636344)
+@com.runwaysdk.business.ClassSignature(hash = -1866787225)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 953636344;
+  private static final long serialVersionUID = -1866787225;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -35,6 +35,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
+  public static java.lang.String LASTPUBLISHDATE = "lastPublishDate";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LAYERENABLED = "layerEnabled";
@@ -317,6 +318,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getKeyNameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(KEYNAME).getAttributeMdDTO();
+  }
+  
+  public java.util.Date getLastPublishDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(LASTPUBLISHDATE));
+  }
+  
+  public void setLastPublishDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(LASTPUBLISHDATE, "");
+    }
+    else
+    {
+      setValue(LASTPUBLISHDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATETIME_FORMAT).format(value));
+    }
+  }
+  
+  public boolean isLastPublishDateWritable()
+  {
+    return isWritable(LASTPUBLISHDATE);
+  }
+  
+  public boolean isLastPublishDateReadable()
+  {
+    return isReadable(LASTPUBLISHDATE);
+  }
+  
+  public boolean isLastPublishDateModified()
+  {
+    return isModified(LASTPUBLISHDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO getLastPublishDateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO) getAttributeDTO(LASTPUBLISHDATE).getAttributeMdDTO();
   }
   
   public java.util.Date getLastUpdateDate()
@@ -760,20 +798,20 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(VIRTUAL).getAttributeMdDTO();
   }
   
-  public final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
+  public final java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
   {
     String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"};
     Object[] _parameters = new Object[]{style, mapId, condition};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO) getRequest().invokeMethod(_metadata, this, _parameters);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO applyWithStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
+  public static final java.lang.String applyWithStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO condition)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"};
     Object[] _parameters = new Object[]{id, style, mapId, condition};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.system.gis.geo.UniversalQueryDTO getSortedUniversals(com.runwaysdk.constants.ClientRequestIF clientRequest)

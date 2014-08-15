@@ -2,7 +2,7 @@
 	<doIt>
 		<create>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true">
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
 				</attributes>
@@ -13,12 +13,13 @@
         </mdMethod>
 			</mdBusiness>
 			
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true">
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true" cacheAlgorithm="everything">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" />
 					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
 					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
 					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
+					<dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)"/>
 				  <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
 				  <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
 				</attributes>
@@ -33,7 +34,7 @@
         </attributes>
       </mdView>
       
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false">
+			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
 				<attributes>
 					<integer name="layerIndex" required="true" rejectNegative="true" />
 				</attributes>
@@ -77,7 +78,7 @@
 				<includeAll></includeAll>
 			</mdEnumeration>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true">
+			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
 				<attributes>
 					<char name="name" label="Name" size="50" required="true" />
 					

@@ -63,6 +63,10 @@ public class DashboardMap extends DashboardMapBase implements
    */
   @Override
   public java.lang.String orderLayers(java.lang.String[] layerIds) {
+    if (layerIds == null || layerIds.length == 0) {
+      throw new RuntimeException("Unable to order layers, the layerIds array is either null or empty.");
+    }
+    
     HasLayerQuery q = new HasLayerQuery(new QueryFactory());
     q.WHERE(q.parentId().EQ(this.getId()));
     q.AND(q.childId().IN(layerIds));
@@ -119,7 +123,7 @@ public class DashboardMap extends DashboardMapBase implements
   }
   
   /**
-   * Republishes all modified layers to GeoServer.
+   * Republishes all layers to GeoServer.
    */
   public void publishAllLayers(DashboardLayer[] orderedLayers) {
     for (DashboardLayer layer : orderedLayers)
