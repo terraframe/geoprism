@@ -523,6 +523,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       log.debug("SLD for Layer [%s], this:\n" + v.getSQL());
     }
     
+    viewHasData = true;
     if (v.getCount() == 0) {
       EmptyLayerInformation info = new EmptyLayerInformation();
       info.apply();
