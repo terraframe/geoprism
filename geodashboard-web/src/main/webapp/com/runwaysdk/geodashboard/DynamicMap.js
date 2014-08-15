@@ -25,6 +25,7 @@
       GEOCODE : 'geocode',
       GEOCODE_LABEL : 'geocodeLabel',
       LAYER_MODAL : '#modal01',
+      DASHBOARD_MODAL : "#dashboardModal01",
       TO_DATE : 'to-field',
       FROM_DATE : 'from-field'
     },
@@ -67,10 +68,14 @@
         overlayLayerContainer.on('click', 'a', bound);
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
+        this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         
         // set controller listeners
-        this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelListener));
+        this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
+        
+        this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
+        this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
         
         overlayLayerContainer.sortable({
@@ -250,7 +255,7 @@
             var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
             var mapBounds = this._map.getBounds();
             var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-            	
+              
             var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
               layers: geoserverName,
               format: 'image/png',
@@ -406,7 +411,7 @@
             }
           },
           onFailure : function(e){
-        	  that.handleException(e);
+            that.handleException(e);
           }
         }, $(DynamicMap.LAYER_MODAL)[0]);
         
@@ -448,7 +453,7 @@
        * 
        * @param params
        */
-      _cancelListener : function(params){        
+      _cancelLayerListener : function(params){        
         var that = this;
         
         if(params['layer.isNew'] === 'true')
@@ -471,6 +476,14 @@
           var id = params['layer.componentId'];
           com.runwaysdk.geodashboard.gis.persist.DashboardLayer.unlock(request, id);
         }
+      },
+      
+      /**
+       * Cancel a dashboard creation crud form
+       * 
+       */
+      _cancelDashboardListener : function(){        
+          this._closeDashboardModal();
       },
       
       /**
@@ -510,50 +523,50 @@
         var baseLayers = this._baseLayers;
         for(var i=0; i<base.length; i++){
           
-	          var id = 'base_layer_'+i;
-	          
-	          var b = base[i];
-	          b.id = id;          
-	          ids.push(id);
-	          baseLayers.put(id, b);
-	          
-	          var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
-	          
-	          // Assigning better display labels.
-	          var label = '';	      
-	          if(b._type === 'ROADMAP'){
-	        	  label = this.localize("googleStreets");
-	          }
-	          else if(b._type === 'SATELLITE'){
-		          label = this.localize("googleSatellite");
-	          }
-	          else if(b._type === 'TERRAIN'){
-		           label = this.localize("googleTerrain"); 
-	          }
-	          else if(b._type === 'HYBRID'){
-	            label = this.localize("googleHybrid");
-	          }
-	          else if(b._gdbcustomtype === 'OSM'){
-	            label = this.localize("osmBasic");
-	          }
-	          
-	          com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
-	          var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
-	          checkbox.setId(id);
-	          if(i === 0){
-	        	  checkbox.setChecked(checkbox);
-	          }
-	          checkbox.addOnCheckListener(function(event){
-	        	  target = event.getCheckBox();   
-	        	  that._toggleBaseLayer(target);
-	          });
-	          checkboxContainer.appendChild(checkbox);	          
-	          
-	          var labelObj = this.getFactory().newElement("label", {"for" : id, "class" : "checkbox-label"});
-	          labelObj.setInnerHTML(label);
-	          	         	              	          
-	          checkboxContainer.appendChild(labelObj);
-	          checkboxContainer.render('#'+DynamicMap.BASE_LAYER_CONTAINER);  
+            var id = 'base_layer_'+i;
+            
+            var b = base[i];
+            b.id = id;          
+            ids.push(id);
+            baseLayers.put(id, b);
+            
+            var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
+            
+            // Assigning better display labels.
+            var label = '';        
+            if(b._type === 'ROADMAP'){
+              label = this.localize("googleStreets");
+            }
+            else if(b._type === 'SATELLITE'){
+              label = this.localize("googleSatellite");
+            }
+            else if(b._type === 'TERRAIN'){
+               label = this.localize("googleTerrain"); 
+            }
+            else if(b._type === 'HYBRID'){
+              label = this.localize("googleHybrid");
+            }
+            else if(b._gdbcustomtype === 'OSM'){
+              label = this.localize("osmBasic");
+            }
+            
+            com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
+            var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
+            checkbox.setId(id);
+            if(i === 0){
+              checkbox.setChecked(checkbox);
+            }
+            checkbox.addOnCheckListener(function(event){
+              target = event.getCheckBox();   
+              that._toggleBaseLayer(target);
+            });
+            checkboxContainer.appendChild(checkbox);            
+            
+            var labelObj = this.getFactory().newElement("label", {"for" : id, "class" : "checkbox-label"});
+            labelObj.setInnerHTML(label);
+                                                   
+            checkboxContainer.appendChild(labelObj);
+            checkboxContainer.render('#'+DynamicMap.BASE_LAYER_CONTAINER);  
         }
       },
       
@@ -564,26 +577,26 @@
       */
       _toggleBaseLayer : function(checkBox) {
         var targetId = checkBox.getId();
-      	var ids = this._baseLayers.keySet();
-      	var isChecked = checkBox.isChecked();
-    	
-  	  	if (isChecked) {
-  	  		for (var i=0; i<ids.length; i++) { 
-  	  			if (ids[i] !== targetId) {
-  	  				$("#"+ids[i]).removeClass('checked');
-  	  				var otherBaselayer = this._baseLayers.get(ids[i]);
-			        this._map.removeLayer(otherBaselayer);
-  	  			}
-  	  			else {
-  	  				var newBaselayer = this._baseLayers.get(targetId);
-  	  				this._map.addLayer(newBaselayer);
-  	  			}
-  	  		}
-  	  	}
-  	  	else {
-  	  	  var unchecklayer = this._baseLayers.get(targetId);
-	        this._map.removeLayer(unchecklayer);
-  	  	}
+        var ids = this._baseLayers.keySet();
+        var isChecked = checkBox.isChecked();
+      
+        if (isChecked) {
+          for (var i=0; i<ids.length; i++) { 
+            if (ids[i] !== targetId) {
+              $("#"+ids[i]).removeClass('checked');
+              var otherBaselayer = this._baseLayers.get(ids[i]);
+              this._map.removeLayer(otherBaselayer);
+            }
+            else {
+              var newBaselayer = this._baseLayers.get(targetId);
+              this._map.addLayer(newBaselayer);
+            }
+          }
+        }
+        else {
+          var unchecklayer = this._baseLayers.get(targetId);
+          this._map.removeLayer(unchecklayer);
+        }
       },
       
       /**
@@ -612,8 +625,8 @@
        * 
        */
 //      _addSortedOverlays : function(){
-//    	  var layers = []; 
-//    	  
+//        var layers = []; 
+//        
 //          // Function for keeping sort order
 //          function sortByKey(array, key) {
 //            return array.sort(function (a, b) {
@@ -625,18 +638,18 @@
 //          
 //          var checkboxLayerIds = this._getActiveOverlayOrderedArrayIds();
 //          for (var i = 0; i < checkboxLayerIds.length; i++) {
-//        	  var layer = this._overlayLayers.get(checkboxLayerIds[i]);
-//        	  
-//        	  // Remove all existing layers to re-add in order later
-//        	  this._map.removeLayer(layer);
-//        	  
-//        	  // add to a sorting array
-//        	  zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
-//        	  layers.push({
-//        		  "z-index": zIndex,
-//        		  "layer": layer
-//        	  });
-//    	    }
+//            var layer = this._overlayLayers.get(checkboxLayerIds[i]);
+//            
+//            // Remove all existing layers to re-add in order later
+//            this._map.removeLayer(layer);
+//            
+//            // add to a sorting array
+//            zIndex = $.inArray(checkboxLayerIds[i], checkboxLayerIds);
+//            layers.push({
+//              "z-index": zIndex,
+//              "layer": layer
+//            });
+//          }
 //          
 //          // Sort layers array by z-index
 //          var orderedLayers = sortByKey(layers, "z-index");
@@ -644,7 +657,7 @@
 //          // Loop through ordered layers array and add to map in correct order
 //          that = this;
 //          $.each(orderedLayers, function () {
-//        	  that._map.addLayer(that._overlayLayers.get(this.layer.id));
+//            that._map.addLayer(that._overlayLayers.get(this.layer.id));
 //          });
 //      },
       
@@ -702,6 +715,81 @@
       },
       
       /**
+       * Gets the html for and calls the new dashboard creation form 
+       * 
+       * @e 
+       */
+      _openNewDashboardForm : function(e){
+          e.preventDefault();               
+          
+          var that = this;
+          
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(html){
+              that._displayDashboardForm(html);
+            },
+            onFailure : function(e){
+              that._closeDashboardModal();
+              that.handleException(e);
+            }
+          });
+
+          this._DashboardController.newInstance(request);
+          
+        },
+        
+        /**
+         * Renders the dashboard creation form
+         * 
+         * @html
+         */
+        _displayDashboardForm : function(html){         
+          
+          // Show the white background modal.
+          var modal = $(DynamicMap.DASHBOARD_MODAL).first();
+          modal.modal('show');
+          modal.html(html);
+          
+          eval(Mojo.Util.extractScripts(html));
+          
+          jcf.customForms.replaceAll(modal[0]);
+        },
+        
+        /**
+         * Called when a user submits a new dashboard.
+         * 
+         */
+        _applyDashboardListener : function(){
+          
+          var that = this;
+          
+          var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            onSuccess : function(html, response){
+              if (response.isJSON()) {
+                that._closeDashboardModal();
+              }
+              else if (response.isHTML()) {
+                // we got html back, meaning there was an error
+                that._displayDashboardForm(html);
+              }
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          }, $(DynamicMap.DASHBOARD_MODAL)[0]);
+                   
+          return request;
+        },
+        
+        /**
+         * Closes the new dashboard CRUD.
+         * 
+         */
+        _closeDashboardModal : function(){
+          $(DynamicMap.DASHBOARD_MODAL).modal('hide').html('');
+        },
+      
+      /**
        * Gets the html for and calls the layer creation/edit form 
        * 
        * @e 
@@ -735,7 +823,7 @@
        * @html
        */
       _displayLayerForm : function(html){
-    	  
+        
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
         
@@ -781,7 +869,7 @@
         var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
         fillCellHolder.append(polyFillOpacity);
         polyFillOpacity.show();
-      },
+      },          
       
       _onLayerTypeTabChange : function(e) {
         var activeTab = e.target;
@@ -872,6 +960,7 @@
         
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
+        $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         
         if(this._googleEnabled){
           this._addAutoComplete();

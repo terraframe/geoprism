@@ -8,7 +8,7 @@
 			<mdBusiness name="com.runwaysdk.geodashboard.Dashboard"
 				label="Dashboard" cacheAlgorithm="everything">
 				<attributes>
-					<localChar name="displayLabel" required="true" />
+					<localChar name="displayLabel" label="Name" required="true" />
 				</attributes>
 				<mdMethod name="getSortedDashboards" label="Get Sorted Dashboards"
 					static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery">
