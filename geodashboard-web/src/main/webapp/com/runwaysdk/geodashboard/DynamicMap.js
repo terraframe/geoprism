@@ -66,6 +66,9 @@
         var bound = Mojo.Util.bind(this, this._overlayHandler);
         overlayLayerContainer.on('click', 'a', bound);
         
+        var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
+        $(".gdb-dashboard").on("click", dashboardBound);
+        
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         
@@ -75,7 +78,6 @@
         
         this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
         this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
-        
         
         overlayLayerContainer.sortable({
           update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
@@ -328,6 +330,18 @@
         });
         
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
+      },
+      
+      /**
+       * Handler for when the user clicks on a dashboard on the dropdown.
+       */
+      _dashboardClickHandler : function(e) {
+        var that = this;     
+        var el = $(e.currentTarget);
+        
+        var dashboardId = el[0].id;
+        
+        window.location = "?dashboard=" + dashboardId;
       },
       
       /**

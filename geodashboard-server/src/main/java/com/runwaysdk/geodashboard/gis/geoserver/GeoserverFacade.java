@@ -352,9 +352,9 @@ public class GeoserverFacade implements Reloadable
       }
       
       // GeoServer will cache old tiles if we've changed a style.
-      if (layersToDrop.size() > 0) {
-        refresh();
-      }
+//      if (layersToDrop.size() > 0) {
+//        refresh();
+//      }
     }
     finally {
       layersToDrop.clear();

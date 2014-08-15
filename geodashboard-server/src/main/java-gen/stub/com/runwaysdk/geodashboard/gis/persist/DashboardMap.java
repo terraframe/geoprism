@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
@@ -294,10 +295,12 @@ public class DashboardMap extends DashboardMapBase implements
                 throw new ProgrammingErrorException(error);
               }
             }
+            
+            if (bboxArr.length() > 0) {
+              return bboxArr;
+            }
           }
         }
-
-        return bboxArr;
       }
       catch (SQLException sqlEx1)
       {
@@ -317,9 +320,10 @@ public class DashboardMap extends DashboardMapBase implements
         }
       }
     }
-    else
+    
+    // There are no layers in the map (that contain data) so return the Cambodian defaults
+    if (bboxArr.length() == 0)
     {
-      // There are no layers in the map so return the Cambodian defaults
       try
       {
         bboxArr.put(99.60205078124999);
