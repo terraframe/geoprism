@@ -154,20 +154,16 @@ $(document).ready(function(){
         <a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
         <div class="sales-menu dropdown">
           
+          <a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
+          <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
+          
           <c:forEach items="${dashboards}" var="dashboard" varStatus="status">
-            <c:choose>
-              <c:when test="${status.index == 0}">
-              
-                <a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${dashboard.id}">${dashboard.displayLabel.value}</a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
-              
-              </c:when>
-              <c:otherwise>
-                <li><a>${dashboard.displayLabel.value}</a></li>
-              </c:otherwise>
-            </c:choose>
+            <li><a class="gdb-dashboard" id="${dashboard.id}">${dashboard.displayLabel.value}</a></li>
           </c:forEach>
-       
+          <c:if test="${empty dashboards}">
+            &nbsp;
+					</c:if>
+          
           </ul>
         
         </div>

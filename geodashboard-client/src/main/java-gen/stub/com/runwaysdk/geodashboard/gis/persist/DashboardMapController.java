@@ -184,40 +184,45 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   {
     ClientRequestIF clientRequest = this.getClientRequest();
     
-    // Populate the dropdown menu with Dashboards
+    String dashboardId = req.getParameter("dashboard");
+    
+    // Get all dashboards
     DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
-    List<? extends DashboardDTO> results = dashboardQ.getResultSet();
-    req.setAttribute("dashboards", results);
+    List<? extends DashboardDTO> dashboards = dashboardQ.getResultSet();
+    if (dashboards.size() == 0) { throw new NoDashboardExceptionDTO(clientRequest); }
     
-    if (results.size() == 0) { throw new NoDashboardExceptionDTO(clientRequest); }
+    // Figure out the active dashboard.
+    DashboardDTO activeDashboard = dashboards.get(0);
+    if (dashboardId != null) {
+      activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
+    }
+    req.setAttribute("activeDashboard", activeDashboard);
     
-    // TODO : Allow the user to specify an active dashboard.
-    DashboardDTO activeDashboard = results.get(0);
+    // Dashboards does not include the active dashboard.
+    dashboards.remove(activeDashboard);
+    req.setAttribute("dashboards", dashboards);
     
     if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals("")) { throw new DashboardHasNoMapExceptionDTO(clientRequest); }
     
     req.setAttribute("mapId", activeDashboard.getMapId());
     
     // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
-    if (results.size() > 0)
+    MdClassDTO[] types = activeDashboard.getSortedTypes();
+    req.setAttribute("types", types);
+    
+    List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
+    Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+    
+    for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
     {
-      MdClassDTO[] types = activeDashboard.getSortedTypes();
-      req.setAttribute("types", types);
-      
-      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
-      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
-      
-      for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
+      attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+      for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
       {
-        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
-        for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
-        {
-          attrs.add(mdAttrView);
-        }
+        attrs.add(mdAttrView);
       }
-      
-      req.setAttribute("attrMap", attrMap);
     }
+    
+    req.setAttribute("attrMap", attrMap);
 
     render("dashboardViewer.jsp");
   }

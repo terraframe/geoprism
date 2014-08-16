@@ -657,69 +657,76 @@
       },     
       
       _buildDialog : function(label, user) {
-      
-        var Structure = com.runwaysdk.structure;
-        var tq = new Structure.TaskQueue();
-        var that = this;
-        var rolesMap = {};
+    	  
+      	var id = "dialog-" + (user.isNewInstance() ? 'new' : user.getId());
+    	var element = document.getElementById(id);
+                    
+    	if(element == null)
+        {      
+          var Structure = com.runwaysdk.structure;
+          var tq = new Structure.TaskQueue();
+          var that = this;
+          var rolesMap = {};
           
-        // First load the users admin role information
-        tq.addTask(new Structure.TaskIF({
-          start : function(){
+          // First load the users admin role information
+          tq.addTask(new Structure.TaskIF({
+            start : function(){
           
-            var callback = new Mojo.ClientRequest({
-              onSuccess : function(roles) {
-                for(var i = 0; i < roles.length; i++)
-                {
-                  var groupName = roles[i].getGroupName();
-                  
-                  if(rolesMap[groupName] == null)
+              var callback = new Mojo.ClientRequest({
+                onSuccess : function(roles) {
+                  for(var i = 0; i < roles.length; i++)
                   {
-                    rolesMap[groupName] = [];
-                  }
+                    var groupName = roles[i].getGroupName();
                   
-                  rolesMap[groupName].push(roles[i]);                  
-                }
+                    if(rolesMap[groupName] == null)
+                    {
+                      rolesMap[groupName] = [];
+                    }
+                  
+                    rolesMap[groupName].push(roles[i]);                  
+                  }
                 
-                tq.next();
-              },
-              onFailure : function(ex) {
-                tq.stop();
-                that.handleException(ex);               
-              }
-            }); 
-
-            that._configuator.getRoles(callback, user);
-          }
-        }));
-                     
-        // Last build the dialog form
-        tq.addTask(new Structure.TaskIF({
-          start : function(){
-            var fac = that.getFactory();
-            var table = that._table;
-        
-            var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});        
-            
-            var builder = that._configuator.get(fac, user, rolesMap);
-            builder.addListener({
-              handleEvent : function(event) {
-                if(event.getEventType() === UserFormEvent.APPLY_SUCCESS) {
-                  table.refresh();
+                  tq.next();
+                },
+                onFailure : function(ex) {
+                  tq.stop();
+                  that.handleException(ex);               
                 }
-              }              
-            });
-            builder.render(dialog, false);
-        
-            dialog.render();   
-        
-            if (jcf != null && jcf.customForms != null) {
-              jcf.customForms.replaceAll();
+              }); 
+
+              that._configuator.getRoles(callback, user);
             }
-          }
-        }));
+          }));
+                     
+          // Last build the dialog form
+          tq.addTask(new Structure.TaskIF({
+            start : function(){
+              var fac = that.getFactory();
+              var table = that._table;
         
-        tq.start();
+              var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});   
+              dialog.setId(id);
+            
+              var builder = that._configuator.get(fac, user, rolesMap);
+              builder.addListener({
+                handleEvent : function(event) {
+                  if(event.getEventType() === UserFormEvent.APPLY_SUCCESS) {
+                    table.refresh();
+                  }
+                }              
+              });
+              builder.render(dialog, false);
+        
+              dialog.render();   
+        
+              if (jcf != null && jcf.customForms != null) {
+                jcf.customForms.replaceAll();
+              }
+            }
+          }));
+        
+          tq.start();
+        }
       },     
       
       _onDeleteUser : function(e) {

@@ -75,25 +75,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   @Override
   public void apply()
   {
-    // generate a db view name unique across space and time
-    // We don't want to do this in isNew because leaflet will cache the old layer and the user won't see the new changes.
-    // (there's no way to dump the cache in leaflet) Leaflet needs to think its an entirely new layer.
-    if (this.isNew()) {
-      String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
-      this.setViewName(vn);
-      this.setVirtual(true);
-    }
-    
     super.apply();
-    
-//    List<? extends DashboardStyle> styles = this.getStyles();
-//    for (int i = 0; i < styles.size(); ++i) {
-//      DashboardStyle style = styles.get(i);
-//      style.appLock();
-//      style.generateName(vn);
-//      style.apply();
-//      style.unlock();
-//    }
   }
   
   public boolean viewHasData() {
@@ -170,17 +152,17 @@ public class DashboardLayer extends DashboardLayerBase implements
       }
     }
     
-    this.apply();
+    // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that won't show the new style update.
+    String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
+    this.setViewName(vn);
+    this.setVirtual(true);
     
-    boolean isLocked = false;
-    if (!style.isNew()) {
-//      style = DashboardStyle.get(style.getId()); // Prevents a StaleEntityException, since DashboardLayer.apply will modify the style name.
+//    boolean isLocked = false;
+//    if (!style.isNew()) {
 //      style.appLock();
 //      isLocked = true;
-    }
-    else {
-      style.generateName(this.getViewName());
-    }
+//    }
+    style.generateName(this.getViewName());
     
     if (condition != null) {
       condition.apply();
@@ -195,6 +177,9 @@ public class DashboardLayer extends DashboardLayerBase implements
 //      style.unlock();
 //    }
     
+    this.apply();
+    
+    // Create hasLayer and hasStyle relationships
     if (isNew)
     {
       QueryFactory f = new QueryFactory();
