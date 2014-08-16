@@ -804,6 +804,8 @@
             onSuccess : function(html, response){
               if (response.isJSON()) {
                 that._closeDashboardModal();
+                
+                window.location = "?dashboard=" + html.getId();
               }
               else if (response.isHTML()) {
                 // we got html back, meaning there was an error
