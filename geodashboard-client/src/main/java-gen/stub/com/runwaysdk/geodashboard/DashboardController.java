@@ -26,9 +26,9 @@ public class DashboardController extends DashboardControllerBase implements com.
   {
     try
     {
-      dto.apply();
+      DashboardDTO applied = DashboardDTO.create(getClientRequest(), dto);
       
-      JSONReturnObject jsonReturn = new JSONReturnObject(dto);
+      JSONReturnObject jsonReturn = new JSONReturnObject(applied);
       jsonReturn.setInformation( this.getClientRequest().getInformation() );
       jsonReturn.setWarnings(this.getClientRequest().getWarnings());
       

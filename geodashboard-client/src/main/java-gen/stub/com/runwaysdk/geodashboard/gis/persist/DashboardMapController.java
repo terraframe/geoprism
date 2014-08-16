@@ -194,7 +194,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     // TODO : Allow the user to specify an active dashboard.
     DashboardDTO activeDashboard = results.get(0);
     
-    if (activeDashboard.getMapId() == null) { throw new DashboardHasNoMapExceptionDTO(clientRequest); }
+    if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals("")) { throw new DashboardHasNoMapExceptionDTO(clientRequest); }
     
     req.setAttribute("mapId", activeDashboard.getMapId());
     

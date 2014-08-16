@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1421366959)
+@com.runwaysdk.business.ClassSignature(hash = 1901156716)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1421366959;
+  private static final long serialVersionUID = 1901156716;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -585,6 +585,14 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeDateMdDTO getToDateMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(TODATE).getAttributeMdDTO();
+  }
+  
+  public static final com.runwaysdk.geodashboard.DashboardDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, com.runwaysdk.geodashboard.DashboardDTO dto)
+  {
+    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.Dashboard"};
+    Object[] _parameters = new Object[]{dto};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "create", _declaredTypes);
+    return (com.runwaysdk.geodashboard.DashboardDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.geodashboard.DashboardQueryDTO getSortedDashboards(com.runwaysdk.constants.ClientRequestIF clientRequest)

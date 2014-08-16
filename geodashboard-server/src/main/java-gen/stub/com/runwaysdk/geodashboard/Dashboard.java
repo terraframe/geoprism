@@ -5,10 +5,15 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdView;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -75,4 +80,84 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
     
   }
+  
+  public static Dashboard create(Dashboard dto) {
+    dto.apply();
+    
+    dto.lock();
+    dto.linkMetadata();
+    dto.unlock();
+    
+    return dto;
+  }
+  
+  public void linkMetadata() {
+    String pack = "org.ideorg.iq.demo";
+    String type = "SalesTransactionView";
+
+    try {
+      // Make the MdView the Dashboard will reference
+      MdView demoView = new MdView();
+      demoView.getDisplayLabel().setDefaultValue("Sale Statistics");
+      demoView.setTypeName(type);
+      demoView.setPackageName(pack);
+      demoView.apply();
+      
+      //SalesTransaction.NUMBEROFUNITS
+      String unitsKey = "org.ideorg.iq.demo.SalesTransaction.numberOfUnits";
+      MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
+      
+      MdAttributeVirtual virtualUnits = new MdAttributeVirtual();
+      virtualUnits.setMdAttributeConcrete(units);
+      virtualUnits.setDefiningMdView(demoView);
+      virtualUnits.apply();
+    }
+    catch (DuplicateDataException e) {
+      
+    }
+    
+    MdView view = MdView.getMdView("org.ideorg.iq.demo.SalesTransactionView");
+
+    MetadataWrapper mWrapper = new MetadataWrapper();
+    mWrapper.setWrappedMdClass(view);
+    mWrapper.apply();
+
+    DashboardMetadata dm = this.addMetadata(mWrapper);
+    dm.setListOrder(0);
+    dm.apply();
+
+//      // SalesTransaction.NUMBEROFUNITS
+//      String unitsKey = "org.ideorg.iq.SalesTransaction.numberOfUnits";
+//      MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
+    
+    MdAttributeVirtual virtualUnits = MdAttributeVirtual.getByKey("org.ideorg.iq.demo.SalesTransactionView.numberOfUnits");
+    
+    AttributeWrapper unitWrapper = new AttributeWrapper();
+    unitWrapper.setWrappedMdAttribute(virtualUnits);
+    unitWrapper.apply();
+
+    DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
+    unitWrapperRel.setListOrder(1);
+    unitWrapperRel.apply();
+    
+    apply();
+  }
+  
+  @Override
+  public void apply()
+  {
+    
+    boolean isNew = isNew();
+    
+    if (isNew) {
+      DashboardMap map = new DashboardMap();
+      map.setName(this.getDisplayLabel().getValue());
+      map.apply();
+
+      this.setMap(map);
+    }
+    
+    super.apply();
+  }
+  
 }
