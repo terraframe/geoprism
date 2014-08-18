@@ -69,6 +69,13 @@
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
         $(".gdb-dashboard").on("click", dashboardBound);
         
+        var legendBound = Mojo.Util.bind(this, this._legendClickHandler);
+        $(".legend-opener").on('click', legendBound);
+        
+        $("#legend-list").sortable({
+            update: Mojo.Util.bind(this, this._legendSortUpdate)
+        });
+        
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         
@@ -82,7 +89,7 @@
         overlayLayerContainer.sortable({
           update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
         });
-        overlayLayerContainer.disableSelection();
+        overlayLayerContainer.disableSelection();      
       },
       
       /**
@@ -162,7 +169,7 @@
         
         // Add attribution to the map
         this._map.attributionControl.setPrefix('');
-        this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+        //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         
         // Hide mouse position coordinate display when outside of map
         this._map.on('mouseover', function(e) {
@@ -191,6 +198,7 @@
         }
       },
       
+      
       _renderBaseLayers : function() {
         this._baseLayers.clear();
         
@@ -207,6 +215,33 @@
         this._addUserLayersToMap();
       },
       
+      /**
+       * Draws legend entries based on the layer cache
+       * 
+       */
+      _drawLegendItems : function() {
+    	  
+    	  $("#legend-list").html('');
+    	  
+          var layers = this._layerCache.values();
+          
+          for(var i = layers.length-1; i >= 0; i--){
+            var layer = layers[i];
+            var displayName = layer.getLayerName() || "N/A";
+            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
+            
+            var html = '';
+  			html += '<li class="legend-item">';
+  			html += '<img src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&amp;LAYER='+geoserverName+'&amp;SCALE=700000" alt="">'+ displayName;
+  			html += '</li>';
+  			
+  			$("#legend-list").append(html);
+          }
+      },
+      
+      /**
+       * Build HTML for user defined overlays
+       */
       _drawUserLayersHMTL : function(htmlInfo) {
         var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
         var onCheckHandler = Mojo.Util.bind(this, this._toggleOverlayLayer);
@@ -242,7 +277,8 @@
           var checkbox = this.getFactory().newCheckBox({el: "#"+layer.getLayerId(), data: {runwayId: layer.getLayerId()}, checked: chexd, classes: ["check"]});
           checkbox.addOnCheckListener(onCheckHandler);
           checkbox.render();
-        }
+        }        
+        this._drawLegendItems();
       },
       
       /**
@@ -427,7 +463,7 @@
               // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
 //              that._addUserLayersToMap(false); // We can't only add the new layer here because the logic is different for create/update and we can't know at this point which one we're at
-              that._addUserLayersToMap();
+              that._addUserLayersToMap();            
               
               // TODO : Push this somewhere as a default handler.
               that.handleMessages(response);
@@ -989,6 +1025,21 @@
                   $("#tab004").show();
               }
         });
+      },
+      
+      /**
+       * Hide / show the legend
+       */
+      _legendClickHandler : function(e){
+          
+          $("#legend-items-container").slideToggle("slow");
+      },
+      
+      /**
+       * Callback for sorting legend items
+       */
+      _legendSortUpdate : function(event, ui){
+    	   // No action needed at this time. This is simply a ui feature.
       },
       
       /**

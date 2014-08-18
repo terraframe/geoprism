@@ -130,7 +130,6 @@ $(document).ready(function(){
           <div id="overlayLayerContainer" class="holder"></div>
         </article>
         
-          
         <article class="accordion info-box" id="base-map-container">
             <div class="accordion-group sales-accortion">
               <div class="accordion-heading">
@@ -141,34 +140,49 @@ $(document).ready(function(){
               </div>
             </div>
         </article>
-        
-<!--        <ul class="scale-nav"> -->
+
+		<!--        <ul class="scale-nav"> -->
 <!--          <li><a href="#">plus</a></li> -->
 <!--          <li><a href="#" class="minus">minus</a></li> -->
 <!--        </ul> -->
       </fieldset>
     </form>
+    
+    <div class="info-box" id="legend-container">
+    	<a class="legend-opener opener" href="#collapse-legend">Legend</a>
+    	<div id="legend-items-container">
+    		<ul id="legend-list">
+<!--     			<li class="legend-item"> -->
+<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x302822;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
+<!--     			Layer 1 -->
+<!--     			</li> -->
+<!--     			<li class="legend-item"> -->
+<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x3e352f;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
+<!--     			Layer 2 longer -->
+<!--     			</li> -->
+<!--     			<li class="legend-item"> -->
+<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x3e352f;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
+<!--     			Layer 3 -->
+<!--     			</li> -->
+    		</ul>
+    	</div>
+    </div>
+    
     <!-- contain aside of the page -->
     <aside class="aside animated slideInRight" id="dashboardMetadata">
-      <div class="nav-bar">
-        <a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
-        <div class="sales-menu dropdown">
-          
-          <a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
-          <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
-          
-          <c:forEach items="${dashboards}" var="dashboard" varStatus="status">
-            <li><a class="gdb-dashboard" id="${dashboard.id}">${dashboard.displayLabel.value}</a></li>
-          </c:forEach>
-          <c:if test="${empty dashboards}">
-            &nbsp;
-					</c:if>
-          
-          </ul>
-        
-        </div>
-      </div>
-        <button class="none">submit</button>
+	<div class="nav-bar">
+		<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
+		<div class="sales-menu dropdown">
+			<a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
+			<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
+				<c:forEach items="${dashboards}" var="dashboard" varStatus="status">
+					<li><a class="gdb-dashboard" id="${dashboard.id}">${dashboard.displayLabel.value}</a></li>
+				</c:forEach>
+				<c:if test="${empty dashboards}">&nbsp;</c:if>
+			</ul>
+		</div>
+	</div>
+	<button class="none">submit</button>
         
         <a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
         	<span style="color:white;font-weight:bold;"> + Create New Dashboard</span>
