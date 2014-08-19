@@ -18,6 +18,9 @@
 					description="Returns a sorted list of de-referenced MdClasses stored by MetadataWrapper"
 					returnType="com.runwaysdk.system.metadata.MdClass[]">
 				</mdMethod>
+				<mdMethod static="true" description="Creates a new dashboard." name="create" label="create" returnType="com.runwaysdk.geodashboard.Dashboard">
+				  <mdParameter order="0" description="A Dashboard to create." name="dto" label="A Dashboard to apply." type="com.runwaysdk.geodashboard.Dashboard" />
+                </mdMethod>
 			</mdBusiness>
 
 			<mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata"

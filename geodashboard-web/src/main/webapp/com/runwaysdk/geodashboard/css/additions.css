@@ -165,3 +165,58 @@ a.map-layers-opener.opener {
 	margin-left: 7px;
 }
 
+
+
+/*** 
+** Legend
+***/
+
+#legend-container {
+	position: absolute;
+	/* float: right; */
+	right: 300px;
+	background: rgba(0, 0, 0, 0.8);
+	border: solid black 1px;
+	z-index: 999;	
+	bottom: 0px;
+	margin-right: 5px;
+/* 	margin-bottom: 5px; */
+}
+
+#legend-items-container{
+	display: none;
+}
+
+.legend-item{
+	padding: 3px;
+	font-size: 13px;
+	line-height: 16px;
+	font-weight: normal;
+	color: #ececec;
+	background: rgba(255,255,255,0.05);
+	border: solid 2px rgba(0, 0, 0, 0.30);
+	border-bottom: solid 1px rgba(0, 0, 0, 0.30);
+	border-top: solid 1px rgba(0, 0, 0, 0.30);
+}
+
+ul#legend-list{
+    list-style-type: none;
+    padding: 2px;
+    margin: 2px;
+}
+
+a.legend-opener.opener{
+	font-size:15px;
+	line-height:15px;
+	font-weight:normal;
+	color:#bababa;
+	margin:5px;
+	margin-top: 5px;
+	text-align: center;
+	display: block;
+}
+
+a.legend-opener.opener:hover{
+	color: #00bfff;
+}
+
