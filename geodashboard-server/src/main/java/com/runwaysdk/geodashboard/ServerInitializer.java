@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -71,6 +72,8 @@ public class ServerInitializer implements Reloadable
   {
     ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
     List<ServerContextListenerInfo> infos = builder.read();
+    
+    Collections.reverse(infos);
 
     for (ServerContextListenerInfo info : infos)
     {
@@ -110,7 +113,7 @@ public class ServerInitializer implements Reloadable
       {
         log.error(e);
 
-        throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+        throw new ProgrammingErrorException("Unable to shutdown the server context listener [" + info.getClassName() + "]", e);
       }
     }
   }
