@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1688643559)
+@com.runwaysdk.business.ClassSignature(hash = 2117076136)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,9 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
+  private com.runwaysdk.business.Struct dashboardLegend = null;
+  
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String GEOENTITY = "geoEntity";
@@ -33,11 +36,12 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1688643559;
+  private static final long serialVersionUID = 2117076136;
   
   public DashboardLayerBase()
   {
     super();
+    dashboardLegend = super.getStruct("dashboardLegend");
   }
   
   public Boolean getBBoxIncluded()
@@ -110,6 +114,22 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardLegend getDashboardLegend()
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardLegend) dashboardLegend;
+  }
+  
+  public void validateDashboardLegend()
+  {
+    this.validateAttribute(DASHBOARDLEGEND);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardLegendMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(DASHBOARDLEGEND);
   }
   
   public Boolean getDisplayInLegend()
@@ -736,6 +756,18 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void updateLegend(java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  {
+    DashboardLayer _instance = DashboardLayer.get(id);
+    _instance.updateLegend(legendXPosition, legendYPosition);
   }
   
   public static DashboardLayer lock(java.lang.String id)

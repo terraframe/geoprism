@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1866787225)
+@com.runwaysdk.business.ClassSignature(hash = -1591695832)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = -1866787225;
+  private static final long serialVersionUID = -1591695832;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -30,6 +30,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String GEOENTITY = "geoEntity";
@@ -146,6 +147,31 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO getDashboardLegend()
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO) this.getAttributeStructDTO(DASHBOARDLEGEND).getStructDTO();
+  }
+  
+  public boolean isDashboardLegendWritable()
+  {
+    return isWritable(DASHBOARDLEGEND);
+  }
+  
+  public boolean isDashboardLegendReadable()
+  {
+    return isReadable(DASHBOARDLEGEND);
+  }
+  
+  public boolean isDashboardLegendModified()
+  {
+    return isModified(DASHBOARDLEGEND);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeStructMdDTO getDashboardLegendMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeStructMdDTO) getAttributeDTO(DASHBOARDLEGEND).getAttributeMdDTO();
   }
   
   public Boolean getDisplayInLegend()
@@ -820,6 +846,22 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "getSortedUniversals", _declaredTypes);
     return (com.runwaysdk.system.gis.geo.UniversalQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.Integer", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{legendXPosition, legendYPosition};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "updateLegend", _declaredTypes);
+    getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final void updateLegend(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.Integer", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{id, legendXPosition, legendYPosition};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "updateLegend", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   @SuppressWarnings("unchecked")

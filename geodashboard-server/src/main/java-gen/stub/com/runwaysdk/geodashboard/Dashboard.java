@@ -92,7 +92,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
   
   public void linkMetadata() {
-    String pack = "org.ideorg.iq.demo";
+    String pack = "org.ideorg.iq";
     String type = "SalesTransactionView";
 
     try {
@@ -104,7 +104,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       demoView.apply();
       
       //SalesTransaction.NUMBEROFUNITS
-      String unitsKey = "org.ideorg.iq.demo.SalesTransaction.numberOfUnits";
+      String unitsKey = "org.ideorg.iq.SalesTransaction.numberOfUnits";
       MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
       
       MdAttributeVirtual virtualUnits = new MdAttributeVirtual();
@@ -116,7 +116,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       
     }
     
-    MdView view = MdView.getMdView("org.ideorg.iq.demo.SalesTransactionView");
+    MdView view = MdView.getMdView("org.ideorg.iq.SalesTransactionView");
 
     MetadataWrapper mWrapper = new MetadataWrapper();
     mWrapper.setWrappedMdClass(view);
@@ -130,7 +130,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 //      String unitsKey = "org.ideorg.iq.SalesTransaction.numberOfUnits";
 //      MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
     
-    MdAttributeVirtual virtualUnits = MdAttributeVirtual.getByKey("org.ideorg.iq.demo.SalesTransactionView.numberOfUnits");
+    MdAttributeVirtual virtualUnits = MdAttributeVirtual.getByKey("org.ideorg.iq.SalesTransactionView.numberOfUnits");
     
     AttributeWrapper unitWrapper = new AttributeWrapper();
     unitWrapper.setWrappedMdAttribute(virtualUnits);

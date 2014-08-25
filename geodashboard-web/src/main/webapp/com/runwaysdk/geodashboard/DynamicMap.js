@@ -67,22 +67,18 @@
         overlayLayerContainer.on('click', 'a', bound);
         
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
-        $(".gdb-dashboard").on("click", dashboardBound);
-        
-        var legendBound = Mojo.Util.bind(this, this._legendClickHandler);
-        $(".legend-opener").on('click', legendBound);
+        $(".gdb-dashboard").on("click", dashboardBound);      
         
         $("#legend-list").sortable({
             update: Mojo.Util.bind(this, this._legendSortUpdate)
-        });
+        });        
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
-        this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));
-        
+        this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));       
         this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
         this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
@@ -140,6 +136,9 @@
           view.setLayerId(layer.layerId);
           view.setSldName(layer.sldName);
           view.setLayerName(layer.layerName);
+          view.setDisplayInLegend(layer.inLegend);
+          view.setLegendXPosition(layer.legendXPosition);
+          view.setLegendYPosition(layer.legendYPosition);
           
           view.style = layer.styles[0];
           
@@ -221,22 +220,57 @@
        */
       _drawLegendItems : function() {
     	  
-    	  $("#legend-list").html('');
+    	  $(".legend-container").remove();  	     	 
     	  
           var layers = this._layerCache.values();
           
           for(var i = layers.length-1; i >= 0; i--){
-            var layer = layers[i];
-            var displayName = layer.getLayerName() || "N/A";
-            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
-            
-            var html = '';
-  			html += '<li class="legend-item">';
-  			html += '<img src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&amp;LAYER='+geoserverName+'&amp;SCALE=700000" alt="">'+ displayName;
-  			html += '</li>';
-  			
-  			$("#legend-list").append(html);
+        	var layer = layers[i];
+        	  
+        	var displayInLegend = layer.getDisplayInLegend();
+
+        	if(displayInLegend){
+	            var layerId = layer.getLayerId();
+	            var legendId = "legend_" + layerId;
+	            var displayName = layer.getLayerName() || "N/A";
+	            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
+	            var legendXPosition = layer.getLegendXPosition();
+	            var legendYPosition = layer.getLegendYPosition();
+	            
+	            // weak control to set the legend in a better position than upper left when the legend is initially created
+	            if(legendXPosition == 0 && legendYPosition == 0){
+	            	legendXPosition += 300;
+	            	legendYPosition += 100;
+	            }
+	            
+	            var html = '';	            
+	    	    html += '<div class="info-box legend-container legend-snapable" id="'+legendId+'" data-parentLayerId="'+layerId+'" style="top:'+legendYPosition+'px; left:'+legendXPosition+'px;">';
+//	    	    html += '<a class="legend-opener opener" href="#collapse-legend">'+displayName+'</a>';
+	    	    html += '<div id="legend-items-container"><ul id="legend-list">';
+	        	
+	  			html += '<li class="legend-item">';
+	  			html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
+	  			html += '</li>';
+	  			
+	  			html += '</ul></div></div>';
+	  			
+	  			$(".pageContent").append(html);	
+        	}
           }
+          
+          // Click and drag handlers  
+          var legendClickDragBound = Mojo.Util.bind(this, this._legendClickDragHandler);
+          var legendDragStopDragBound = Mojo.Util.bind(this, this._legendDragStopHandler);
+          $(".legend-container").draggable({
+        	  containment: "body", 
+        	  snap: true, 
+        	  snap: ".legend-snapable", 
+        	  snapMode: "outer", 
+        	  snapTolerance: 5,
+        	  stack: ".legend-container"
+          });
+          $(".legend-container").on('click', legendClickDragBound );
+          $(".legend-container").on('dragstop', legendDragStopDragBound);
       },
       
       /**
@@ -372,7 +406,7 @@
        * Handler for when the user clicks on a dashboard on the dropdown.
        */
       _dashboardClickHandler : function(e) {
-        var that = this;     
+
         var el = $(e.currentTarget);
         
         var dashboardId = el[0].id;
@@ -434,6 +468,10 @@
         
         // remove the layer from the map and UI
         el.parent().parent().remove();
+        
+        // remove associated legend
+        //// legend id's are set as the 'legend_' + layer id @ legend creation
+        $("#legend_"+id).remove();
       },
       
       /**
@@ -471,7 +509,7 @@
             else if (response.isHTML()) {
               // we got html back, meaning there was an error
               that._displayLayerForm(htmlOrJson);
-              $('#modal01').animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
+              $(DynamicMap.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
             }
           },
           onFailure : function(e){
@@ -495,6 +533,8 @@
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
+//        params['layer.legendXPosition'] = params['layer.legendXPosition'].length > 0;
+//        params['layer.legendYPosition'] = params['layer.legendYPosition'].length > 0;
         
         // Include attribute condition filtering (i.e. sales unit is greater than 50)
         var select = $("select.gdb-attr-filter." + mdAttribute).val();
@@ -1030,9 +1070,44 @@
       /**
        * Hide / show the legend
        */
-      _legendClickHandler : function(e){
+      _legendClickDragHandler : function(e){
           
-          $("#legend-items-container").slideToggle("slow");
+    	  var topZ = 0;
+    	  $('.legend-container').each(function(){
+    	    var thisZ = parseInt($(this).css('zIndex'), 10);
+    	    if (thisZ > topZ){
+    	      topZ = thisZ;
+    	    }
+    	  });
+    	  $(e.currentTarget).css('zIndex', topZ+1);
+      },
+      
+      /**
+       * Persist legend position
+       */
+      _legendDragStopHandler : function(e){
+    	  var that = this;
+    	  var target = e.currentTarget;
+    	  var relatedLayerId = $(e.currentTarget).data('parentlayerid');
+    	  var newPosition = $(target).position();
+    	  var x = newPosition.left;
+    	  var y = newPosition.top;
+    	  
+          var clientRequest = new Mojo.ClientRequest({
+              onSuccess : function() {
+            	  // Update the layer object in the layer cache with the new legend position
+            	  var relatedLayer = that._layerCache.get(relatedLayerId);
+            	  relatedLayer.setLegendXPosition(x);
+            	  relatedLayer.setLegendYPosition(y);
+              },
+              onFailure : function(e) {
+                that.handleException(e);
+               
+              }
+            });
+          
+          com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y);
+          
       },
       
       /**
@@ -1054,9 +1129,6 @@
         
         if(this._googleEnabled){
           this._addAutoComplete();
-        }
-        else {
-          
         }
       },
     }

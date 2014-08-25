@@ -20,6 +20,7 @@ body.iFrameBody {
 
 div.pageContent {
 	padding:13px 25px 0 25px;
+	height: 100%;
 }
 
 /* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
@@ -171,21 +172,25 @@ a.map-layers-opener.opener {
 ** Legend
 ***/
 
-#legend-container {
+.legend-container {
 	position: absolute;
-	/* float: right; */
-	right: 300px;
+	float: left;
+	left: 300px;
 	background: rgba(0, 0, 0, 0.8);
 	border: solid black 1px;
 	z-index: 999;	
-	bottom: 0px;
-	margin-right: 5px;
-/* 	margin-bottom: 5px; */
+/* 	margin: 5px 5px 5px auto; */
 }
 
-#legend-items-container{
-	display: none;
+#legend-container-group {
+	z-index: 999;
+	position: absolute;
+	right: 300px;
+	bottom: 0px;
 }
+/* #legend-items-container{ */
+/* 	display: none; */
+/* } */
 
 .legend-item{
 	padding: 3px;
@@ -216,7 +221,10 @@ a.legend-opener.opener{
 	display: block;
 }
 
-a.legend-opener.opener:hover{
-	color: #00bfff;
+.legend-image{
+	margin-right: 10px;
 }
+/* a.legend-opener.opener:hover{ */
+/* 	color: #00bfff; */
+/* } */
 

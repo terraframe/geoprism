@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1441901649)
+@com.runwaysdk.business.ClassSignature(hash = 952741684)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,6 +25,24 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS;
   }
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
+  {
+    return getDisplayInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.DISPLAYINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.DISPLAYINLEGEND, alias, displayLabel);
+
+  }
+ 
   public com.runwaysdk.query.SelectableChar getId()
   {
     return getId(null);
@@ -76,6 +94,42 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   public com.runwaysdk.query.SelectableChar getLayerName(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LAYERNAME, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendXPosition()
+  {
+    return getLegendXPosition(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendXPosition(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LEGENDXPOSITION, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendXPosition(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LEGENDXPOSITION, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendYPosition()
+  {
+    return getLegendYPosition(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendYPosition(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LEGENDYPOSITION, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getLegendYPosition(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LEGENDYPOSITION, alias, displayLabel);
 
   }
  

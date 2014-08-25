@@ -148,28 +148,15 @@ $(document).ready(function(){
       </fieldset>
     </form>
     
-    <div class="info-box" id="legend-container">
-    	<a class="legend-opener opener" href="#collapse-legend">Legend</a>
-    	<div id="legend-items-container">
-    		<ul id="legend-list">
-<!--     			<li class="legend-item"> -->
-<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x302822;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
-<!--     			Layer 1 -->
-<!--     			</li> -->
-<!--     			<li class="legend-item"> -->
-<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x3e352f;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
-<!--     			Layer 2 longer -->
-<!--     			</li> -->
-<!--     			<li class="legend-item"> -->
-<!--     				<img src="https://localhost:8443/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=25&HEIGHT=25&LEGEND_OPTIONS=bgColor:0x3e352f;fontAntiAliasing:true;fontColor:0x515796;fontSize:12;fontStyle:bold;&LAYER=topp:states&SCALE=700000" alt="">  -->
-<!--     			Layer 3 -->
-<!--     			</li> -->
-    		</ul>
-    	</div>
-    </div>
+<!--     <div class="info-box" id="legend-container-group"> -->
+<!--     	<a class="legend-opener opener" href="#collapse-legend">Legend</a> -->
+<!--     	<div id="legend-items-container-group"> -->
+<!--     		<ul id="legend-list"></ul> -->
+<!--     	</div> -->
+<!--     </div> -->
     
     <!-- contain aside of the page -->
-    <aside class="aside animated slideInRight" id="dashboardMetadata">
+    <aside class="aside animated slideInRight legend-snapable" id="dashboardMetadata">
 	<div class="nav-bar">
 		<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
 		<div class="sales-menu dropdown">

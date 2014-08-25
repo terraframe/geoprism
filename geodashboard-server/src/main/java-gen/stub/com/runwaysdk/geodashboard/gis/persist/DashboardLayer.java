@@ -92,11 +92,8 @@ public class DashboardLayer extends DashboardLayerBase implements
     GeoserverFacade.pushUpdates();
     
     try {
-      JSONObject json = new JSONObject();
-      json.put("layerId", this.getId());
-      json.put("layerName", this.getName());
-      json.put("viewName", this.getViewName());
-      json.put("sldName", this.getSLDName());
+      
+      JSONObject json = this.toJSON();     
       
       JSONArray jsonArray = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -105,6 +102,7 @@ public class DashboardLayer extends DashboardLayerBase implements
         jsonArray.put(stile.toJSON());
       }
       json.put("styles", jsonArray);
+
       return json.toString();
     }
     catch (JSONException e) {
@@ -625,6 +623,9 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("sldName", getSLDName());
       json.put("layerName", getName());
       json.put("layerId", getId());
+      json.put("inLegend", this.getDisplayInLegend());
+      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
+      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
       
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -641,5 +642,15 @@ public class DashboardLayer extends DashboardLayerBase implements
       log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
+  }
+  
+  @Override
+  @Transaction
+  public void updateLegend(Integer legendXPosition, Integer legendYPosition)
+  {
+    this.appLock();
+    this.getDashboardLegend().setLegendXPosition(legendXPosition);
+    this.getDashboardLegend().setLegendYPosition(legendYPosition);
+    this.apply();
   }
 }

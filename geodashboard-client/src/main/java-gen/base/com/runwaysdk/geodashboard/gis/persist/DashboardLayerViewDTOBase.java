@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 818322872)
+@com.runwaysdk.business.ClassSignature(hash = 1691367677)
 public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
-  private static final long serialVersionUID = 818322872;
+  private static final long serialVersionUID = 1691367677;
   
   protected DashboardLayerViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -16,11 +16,51 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
     return CLASS;
   }
   
+  public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
   public static java.lang.String LAYERNAME = "layerName";
+  public static java.lang.String LEGENDXPOSITION = "legendXPosition";
+  public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
+  public Boolean getDisplayInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(DISPLAYINLEGEND));
+  }
+  
+  public void setDisplayInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(DISPLAYINLEGEND, "");
+    }
+    else
+    {
+      setValue(DISPLAYINLEGEND, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isDisplayInLegendWritable()
+  {
+    return isWritable(DISPLAYINLEGEND);
+  }
+  
+  public boolean isDisplayInLegendReadable()
+  {
+    return isReadable(DISPLAYINLEGEND);
+  }
+  
+  public boolean isDisplayInLegendModified()
+  {
+    return isModified(DISPLAYINLEGEND);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getDisplayInLegendMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(DISPLAYINLEGEND).getAttributeMdDTO();
+  }
+  
   public String getLayerId()
   {
     return getValue(LAYERID);
@@ -93,6 +133,80 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLayerNameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LAYERNAME).getAttributeMdDTO();
+  }
+  
+  public Integer getLegendXPosition()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LEGENDXPOSITION));
+  }
+  
+  public void setLegendXPosition(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LEGENDXPOSITION, "");
+    }
+    else
+    {
+      setValue(LEGENDXPOSITION, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLegendXPositionWritable()
+  {
+    return isWritable(LEGENDXPOSITION);
+  }
+  
+  public boolean isLegendXPositionReadable()
+  {
+    return isReadable(LEGENDXPOSITION);
+  }
+  
+  public boolean isLegendXPositionModified()
+  {
+    return isModified(LEGENDXPOSITION);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLegendXPositionMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LEGENDXPOSITION).getAttributeMdDTO();
+  }
+  
+  public Integer getLegendYPosition()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LEGENDYPOSITION));
+  }
+  
+  public void setLegendYPosition(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LEGENDYPOSITION, "");
+    }
+    else
+    {
+      setValue(LEGENDYPOSITION, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isLegendYPositionWritable()
+  {
+    return isWritable(LEGENDYPOSITION);
+  }
+  
+  public boolean isLegendYPositionReadable()
+  {
+    return isReadable(LEGENDYPOSITION);
+  }
+  
+  public boolean isLegendYPositionModified()
+  {
+    return isModified(LEGENDYPOSITION);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLegendYPositionMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LEGENDYPOSITION).getAttributeMdDTO();
   }
   
   public String getSldName()

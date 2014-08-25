@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1676501960)
+@com.runwaysdk.business.ClassSignature(hash = 1481742205)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,16 +11,47 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
+  public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
   public static java.lang.String LAYERNAME = "layerName";
+  public static java.lang.String LEGENDXPOSITION = "legendXPosition";
+  public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = -1676501960;
+  private static final long serialVersionUID = 1481742205;
   
   public DashboardLayerViewBase()
   {
     super();
+  }
+  
+  public Boolean getDisplayInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(DISPLAYINLEGEND));
+  }
+  
+  public void validateDisplayInLegend()
+  {
+    this.validateAttribute(DISPLAYINLEGEND);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayInLegendMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(DISPLAYINLEGEND);
+  }
+  
+  public void setDisplayInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(DISPLAYINLEGEND, "");
+    }
+    else
+    {
+      setValue(DISPLAYINLEGEND, java.lang.Boolean.toString(value));
+    }
   }
   
   public String getId()
@@ -92,6 +123,62 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     else
     {
       setValue(LAYERNAME, value);
+    }
+  }
+  
+  public Integer getLegendXPosition()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LEGENDXPOSITION));
+  }
+  
+  public void validateLegendXPosition()
+  {
+    this.validateAttribute(LEGENDXPOSITION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendXPositionMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(LEGENDXPOSITION);
+  }
+  
+  public void setLegendXPosition(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LEGENDXPOSITION, "");
+    }
+    else
+    {
+      setValue(LEGENDXPOSITION, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Integer getLegendYPosition()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(LEGENDYPOSITION));
+  }
+  
+  public void validateLegendYPosition()
+  {
+    this.validateAttribute(LEGENDYPOSITION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendYPositionMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(LEGENDYPOSITION);
+  }
+  
+  public void setLegendYPosition(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(LEGENDYPOSITION, "");
+    }
+    else
+    {
+      setValue(LEGENDYPOSITION, java.lang.Integer.toString(value));
     }
   }
   
