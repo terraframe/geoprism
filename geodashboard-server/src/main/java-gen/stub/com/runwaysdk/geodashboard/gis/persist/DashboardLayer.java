@@ -2,10 +2,13 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+//import org.hsqldb.lib.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +17,7 @@ import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -25,6 +29,7 @@ import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.query.Attribute;
@@ -331,6 +336,53 @@ public class DashboardLayer extends DashboardLayerBase implements
         Database.dropView(this.getViewName(), sql, false);
       }
       Database.createView(this.getViewName(), sql);
+    }
+  }
+  
+  public HashMap<String, Double> getLayerMinMax(String attribute)
+  {
+    
+    HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
+    
+    QueryFactory f = new QueryFactory();
+    ValueQuery wrapper = new ValueQuery(f);
+    wrapper.FROM(getViewName(), "");
+
+    List<Selectable> selectables = new LinkedList<Selectable>();
+    AllLayerType layerType = this.getLayerType().get(0);
+    if(layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
+    {
+      
+//      String minAttr = SLDConstants.getMinProperty(attribute);
+//      String maxAttr = SLDConstants.getMaxProperty(attribute);
+      
+//      String minAttr = "min_numberofunits";
+//      String maxAttr = "max_numberofunits";
+
+      selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + attribute + ")"));
+      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + attribute + ")"));    
+    }
+
+    selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
+
+    wrapper.SELECT(selectables.toArray(new Selectable[selectables.size()]));
+
+    OIterator<? extends ValueObject> iter = wrapper.getIterator();
+    try
+    {
+      ValueObject row = iter.next();
+
+      String min = row.getValue("min_data");
+      String max = row.getValue("max_data");
+      
+      minMaxMap.put("min", Double.parseDouble(min));
+      minMaxMap.put("max", Double.parseDouble(max));
+
+      return minMaxMap;
+    }
+    finally
+    {
+      iter.close();
     }
   }
   

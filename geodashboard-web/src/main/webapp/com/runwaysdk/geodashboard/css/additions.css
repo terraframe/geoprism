@@ -188,9 +188,6 @@ a.map-layers-opener.opener {
 	right: 300px;
 	bottom: 0px;
 }
-/* #legend-items-container{ */
-/* 	display: none; */
-/* } */
 
 .legend-item{
 	padding: 3px;
@@ -224,7 +221,5 @@ a.legend-opener.opener{
 .legend-image{
 	margin-right: 10px;
 }
-/* a.legend-opener.opener:hover{ */
-/* 	color: #00bfff; */
-/* } */
+
 

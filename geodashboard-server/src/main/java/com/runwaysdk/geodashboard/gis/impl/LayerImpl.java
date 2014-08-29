@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ public class LayerImpl extends ComponentImpl implements Layer
   private List<Style> styles;
   
   private String name;
+  
+  private HashMap<String, Double> layerMinMax;
 
   private Boolean virtual;
 
@@ -102,6 +105,11 @@ public class LayerImpl extends ComponentImpl implements Layer
   public void setFeatureStrategy(FeatureStrategy featureStrategy)
   {
     this.featureStrategy = featureStrategy;
+  }
+  
+  public HashMap<String, Double> getLayerMinMax(String attribute)
+  {
+    return layerMinMax;
   }
 
 }

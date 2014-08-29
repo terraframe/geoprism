@@ -151,7 +151,7 @@ $(document).ready(function(){
 <!--     <div class="info-box" id="legend-container-group"> -->
 <!--     	<a class="legend-opener opener" href="#collapse-legend">Legend</a> -->
 <!--     	<div id="legend-items-container-group"> -->
-<!--     		<ul id="legend-list"></ul> -->
+<!--     		<ul id="legend-list-group"></ul> -->
 <!--     	</div> -->
 <!--     </div> -->
     

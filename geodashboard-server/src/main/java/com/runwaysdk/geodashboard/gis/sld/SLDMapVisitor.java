@@ -173,7 +173,72 @@ public class SLDMapVisitor implements MapVisitor
       }
     }
   }
+  
+  
+  /**
+   * Build <Rule> tag and contents 
+   * a <Rule> tag encloses logic for filtering data to create categories and styling for that category
+   * 
+   */
+  private static class PolygonRuleBuilder extends Symbolizer
+  {
+    private PolygonRuleBuilder(SLDMapVisitor visitor, Style style)
+    {
+      super(visitor, style);
+    }
+    
+    @Override
+    protected String getSymbolizerName()
+    {
+      return "Rule";
+    }
+    
+    @Override
+    protected Node getSLD()
+    {
+      Node root = super.getSLD();
+      
+      node("Name").text(style.getName()).build(root);
+      
+      return root;
+    }
+  }
+  
+  /**
+   * Build <Filter> tag and contents to be embeded in a <Rule>
+   * a <Filter> tag encloses logic for filtering data to create categories
+   * 
+   */
+  private static class PolygonFilterBuilder extends Symbolizer
+  {
+    private PolygonFilterBuilder(SLDMapVisitor visitor, Style style)
+    {
+      super(visitor, style);
+    }
+    
+    @Override
+    protected String getSymbolizerName()
+    {
+      return "Filter";
+    }
+    
+    @Override
+    protected Node getSLD()
+    {
+      Node root = super.getSLD();
+      
+      node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal")).build(root);
+      
+      return root;
+    }
+  }
 
+  
+  /**
+   * Build <PolygonSymbolizer> tag and contents
+   * a <PolygonSymbolizer> encloses the styling params and the geometry field used for rendering features
+   * 
+   */
   private static class PolygonSymbolizer extends Symbolizer
   {
     private PolygonSymbolizer(SLDMapVisitor visitor, Style style)
@@ -184,55 +249,140 @@ public class SLDMapVisitor implements MapVisitor
     @Override
     protected String getSymbolizerName()
     {
-      return "PolygonSymbolizer";
+      return "FeatureTypeStyle";
     }
 
     @Override
     protected Node getSLD()
     {
+      // supers up to Symbolizer to getSymbolizerName() and builds the node from the return
+      // i.e. builds the <PolygonSymbolizer> node in this case
       Node root = super.getSLD();
 
       Integer width = this.style.getPolygonStrokeWidth();
       Double fillOpacity = this.style.getPolygonFillOpacity();
       String stroke = this.style.getPolygonStroke();
       Double strokeOpacity = this.style.getPolygonStrokeOpacity();
-
-      NodeBuilder fillNode = this.interpolateColor();
       
-      node("Fill").child(fillNode, css("fill-opacity", fillOpacity)).build(root);
-
-      node("Stroke").child(css("stroke", stroke), css("stroke-width", width),
-          css("stroke-opacity", strokeOpacity)).build(root);
-
-      return root;
-    }
-    
-    private NodeBuilder interpolateColor()
-    {
+      node("FeatureTypeName").text(style.getName()).build(root);
+      
       if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
+        
+        
         String minAttr = SLDConstants.getMinProperty(attribute);
         String maxAttr = SLDConstants.getMaxProperty(attribute);
         
+        HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
+        double minAttrVal = minMaxMap.get("min");
+        double maxAttrVal = minMaxMap.get("max");
         
-        // thematic interpolation
-        return css("fill").child(
-          node(OGC, "Function").attr("name", "Interpolate").child(
-              // property to interpolate
-              node(OGC, "PropertyName").text(attribute),
-              // min definition
-              node(OGC, "PropertyName").text(minAttr),
-              node(OGC, "Literal").text(tStyle.getPolygonMinFill()),
-              // max definition
-              node(OGC, "PropertyName").text(maxAttr),
-              node(OGC, "Literal").text(tStyle.getPolygonMaxFill()),
-              // interpolation method
-              node(OGC, "Literal").text("color")
-              )
-            );
+        
+        double categoryLen = (maxAttrVal - minAttrVal) / 5;
+        
+        for(int i = 0; i<=5; i++){
+          
+          double currentCatMin = minAttrVal + (i * categoryLen);
+          double currentCatMax = minAttrVal + ((i + 1) * categoryLen);  
+          
+          Node ruleNode = node("Rule").build(root);
+          node("Name").text(currentCatMin+ " - " + currentCatMax).build(ruleNode);
+          node("Title").text(currentCatMin+ " - " + currentCatMax).build(ruleNode);
+  
+  //        NodeBuilder fillNode = this.interpolateColor();
+          
+          Node filterNode = node(OGC, "Filter").build(ruleNode);
+          Node firstAndNode = node(OGC, "And").build(filterNode);
+          Node notNode = node(OGC, "Not").build(firstAndNode);
+          Node secondAndNode = node(OGC, "And").build(notNode);
+          
+          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+            
+          Node orNode = node(OGC, "Or").build(secondAndNode);
+          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+            node(OGC, "PropertyName").text("numberofunits").build(propIsNullNode);
+            
+          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
+            node(OGC, "Literal").text("NEVER").build(propEqualToNode);
+            node(OGC, "Literal").text("TRUE").build(propEqualToNode);
+            
+          Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
+          node(OGC, "PropertyName").text("numberofunits").build(propIsBetween);
+          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
+          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
+          
+  //        node("MaxScaleDenominator").text("1.7976931348623157E308").build(ruleNode);
+          
+          // Polygon styles
+          Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
+          node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
+          Node geomFillNode = node("Fill").build(polySymbolNode);
+              css("fill", "#ffffb2").build(geomFillNode);
+              css("fill-opacity", fillOpacity).build(geomFillNode);
+              
+          node("Stroke")
+              .child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
+        };
+      }
+      
+      return root;
+    }
+    
+    private NodeBuilder interpolateColor()
+    {
+      
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
+        
+        
+        String minAttr = SLDConstants.getMinProperty(attribute);
+        String maxAttr = SLDConstants.getMaxProperty(attribute);
+        
+        HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
+        double minAttrVal = minMaxMap.get("min");
+        double maxAttrVal = minMaxMap.get("max");
+        
+        
+        double categoryLen = (maxAttrVal - minAttrVal) / 5;
+        
+        for(int i = 0; i<=5; i++){
+          double currentCatMin = minAttrVal + (i * categoryLen);
+          double currentCatMax = minAttrVal + ((i + 1) * categoryLen);
+          System.out.println(currentCatMin+ " - " + currentCatMax);
+        };
+       
+        
+//        // thematic interpolation
+//        return css("fill").child(
+//          node(OGC, "Function").attr("name", "Interpolate").child(
+//              // property to interpolate
+//              node(OGC, "PropertyName").text(attribute),
+//              // min definition
+//              node(OGC, "PropertyName").text(minAttr),
+//              node(OGC, "Literal").text(tStyle.getPolygonMinFill()),
+//              // max definition
+//              node(OGC, "PropertyName").text(maxAttr),
+//              node(OGC, "Literal").text(tStyle.getPolygonMaxFill()),
+//              // interpolation method
+//              node(OGC, "Literal").text("color")
+//              )
+//            );
+        
+      // thematic interpolation
+        return 
+            node(OGC, "PropertyIsLessThan")
+                .child(node(OGC, "PropertyName").text(minAttrVal)
+                    .child(node(OGC, "Literal").text(categoryLen)
+                        )
+        );
       }
       else
       {
@@ -599,7 +749,7 @@ public class SLDMapVisitor implements MapVisitor
     
     Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();
     
-    Node userStyle = this.node("UserStyle").build(layerNode);
+    Node userStyle = this.node("UserStyle").child(node("Title").text(layer.getName())).build(layerNode);
     
     parents.push(userStyle);
     
@@ -752,17 +902,22 @@ public class SLDMapVisitor implements MapVisitor
   {
     DocumentFragment rulesFragment = this.doc.createDocumentFragment();
 
-    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
-
-    if (this.virtual)
-    {
-      Node fts = this.node("FeatureTypeStyle").child(rule).build();
-      rulesFragment.appendChild(fts);
-    }
-    else
-    {
-      rulesFragment.appendChild(rule);
-    }
+//    Node rule = this.node("Rule").child(this.node("Name").text("in thematic style")).build();
+//    Node rule = this.node("FeatureTypeStyle").child(this.node("FeatureTypeName").text("in thematic style")).build();
+//    Node rule = this.node("UserStyle").child(node("Title").text(style.getName())).build();
+//    rulesFragment.appendChild(rule);
+ 
+    
+//    if (this.virtual)
+//    {
+//      Node fts = this.node("FeatureTypeStyle").child(rule).build();
+////      Node fts = this.node("FeatureTypeStyle").build();
+//      rulesFragment.appendChild(fts);      
+//    }
+//    else
+//    {
+//      rulesFragment.appendChild(rule);
+//    }
 
     Symbolizer symbolizer;
     if (this.featureType == FeatureType.POINT)
@@ -798,43 +953,43 @@ public class SLDMapVisitor implements MapVisitor
 //      this.parents.pop();
 //    }
     // END - Thematic filter
+    
+//    rule.appendChild(symbolizer.getSLD());
 
-    rule.appendChild(symbolizer.getSLD());
-
-    boolean thematic = style instanceof ThematicStyle;
-
-    if (thematic && style.getEnableLabel() && style.getEnableValue())
-    {
-      ThematicStyle tStyle = (ThematicStyle) style;
-      Node[] nodes = new Node[] {
-          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-          this.doc.createTextNode(" - "),
-          node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-    else if (style.getEnableLabel())
-    {
-      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())
-          .build() };
-
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-    else if (thematic && style.getEnableValue())
-    {
-      ThematicStyle tStyle = (ThematicStyle) style;
-      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
-          .build() };
-
-      
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-
-    // append the rule to user styles
-    this.parents.pop().appendChild(rulesFragment);
+//    boolean thematic = style instanceof ThematicStyle;
+//
+//    if (thematic && style.getEnableLabel() && style.getEnableValue())
+//    {
+//      ThematicStyle tStyle = (ThematicStyle) style;
+//      Node[] nodes = new Node[] {
+//          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//          this.doc.createTextNode(" - "),
+//          node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+//
+//      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+//      rule.appendChild(text.getSLD());
+//    }
+//    else if (style.getEnableLabel())
+//    {
+//      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())
+//          .build() };
+//
+//      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+//      rule.appendChild(text.getSLD());
+//    }
+//    else if (thematic && style.getEnableValue())
+//    {
+//      ThematicStyle tStyle = (ThematicStyle) style;
+//      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase())
+//          .build() };
+//
+//      
+//      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
+//      rule.appendChild(text.getSLD());
+//    }
+//
+//    // append the rule to user styles
+    this.parents.pop().appendChild(symbolizer.getSLD());
   }
 
   @Override

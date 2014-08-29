@@ -68,10 +68,7 @@
         
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
         $(".gdb-dashboard").on("click", dashboardBound);      
-        
-        $("#legend-list").sortable({
-            update: Mojo.Util.bind(this, this._legendSortUpdate)
-        });        
+              
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
@@ -275,6 +272,7 @@
       
       /**
        * Build HTML for user defined overlays
+       * 
        */
       _drawUserLayersHMTL : function(htmlInfo) {
         var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
@@ -533,8 +531,6 @@
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
-//        params['layer.legendXPosition'] = params['layer.legendXPosition'].length > 0;
-//        params['layer.legendYPosition'] = params['layer.legendYPosition'].length > 0;
         
         // Include attribute condition filtering (i.e. sales unit is greater than 50)
         var select = $("select.gdb-attr-filter." + mdAttribute).val();
@@ -776,6 +772,7 @@
       
       /**
        * Disables the search functionality if google can't be loaded
+       * 
        */
       _disableAutoComplete : function(){
         $('#'+DynamicMap.GEOCODE).attr('disabled', 'disabled');
@@ -783,6 +780,7 @@
       
       /**
        * Hooks the auto-complete functionality to the Dashboard.
+       * 
        */
       _addAutoComplete : function(){
         
@@ -1108,14 +1106,7 @@
           
           com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y);
           
-      },
-      
-      /**
-       * Callback for sorting legend items
-       */
-      _legendSortUpdate : function(event, ui){
-    	   // No action needed at this time. This is simply a ui feature.
-      },
+      },     
       
       /**
        * Renders the mapping widget, performing a full refresh.
