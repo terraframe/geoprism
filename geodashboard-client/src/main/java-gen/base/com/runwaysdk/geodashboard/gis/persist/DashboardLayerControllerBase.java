@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -321792361)
+@com.runwaysdk.business.ClassSignature(hash = -1891158565)
 public class DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController";
@@ -147,6 +147,20 @@ public class DashboardLayerControllerBase implements com.runwaysdk.generation.lo
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failNewInstance");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute", post=true)
+  public void newThematicInstance(java.lang.String mdAttribute) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.newThematicInstance");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute", post=true)
+  public void failNewThematicInstance(java.lang.String mdAttribute) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failNewThematicInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:dto", post=true)

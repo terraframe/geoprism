@@ -330,7 +330,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
     
     if (force || !viewExists) {
-      String sql = this.asValueQuery().getSQL();
+      String sql = this.getViewQuery().getSQL();
       
       if (viewExists) {
         Database.dropView(this.getViewName(), sql, false);
@@ -386,7 +386,10 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
   }
   
-  public ValueQuery asValueQuery()
+  /**
+   * @return A ValueQuery for use in creating/dropping the database view which will be used with GeoServer.
+   */
+  public ValueQuery getViewQuery()
   {
     QueryFactory f = new QueryFactory();
     ValueQuery v = new ValueQuery(f);

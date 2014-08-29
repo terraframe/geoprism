@@ -919,7 +919,7 @@ import com.runwaysdk.util.FileIO;
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
 
-      ValueQuery v = layer.asValueQuery();
+      ValueQuery v = layer.getViewQuery();
 
       // This query should have all states in it
       QueryFactory checkF = new QueryFactory();
@@ -1014,7 +1014,7 @@ import com.runwaysdk.util.FileIO;
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
 
-      ValueQuery v = layer.asValueQuery();
+      ValueQuery v = layer.getViewQuery();
 
       // This query should have all states in it
       QueryFactory checkF = new QueryFactory();
@@ -1194,7 +1194,7 @@ import com.runwaysdk.util.FileIO;
       HasStyle hasStyle = layer.addHasStyle(style);
       hasStyle.apply();
 
-      ValueQuery v = layer.asValueQuery();
+      ValueQuery v = layer.getViewQuery();
 
       // This query should have all states in it
       QueryFactory checkF = new QueryFactory();
@@ -1347,8 +1347,8 @@ import com.runwaysdk.util.FileIO;
       HasStyle hasStyle2 = layer2.addHasStyle(style2);
       hasStyle2.apply();
 
-      ValueQuery v = layer.asValueQuery();
-      ValueQuery v2 = layer2.asValueQuery();
+      ValueQuery v = layer.getViewQuery();
+      ValueQuery v2 = layer2.getViewQuery();
 
       // This query should have all states in it
       QueryFactory checkF = new QueryFactory();

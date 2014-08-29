@@ -10,7 +10,7 @@
     <div id="DashboardLayer-mainDiv" class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize var="dl_form_heading" key="DashboardLayer.form.heading"/>${dl_form_heading}Number of Units</h1>
+          <h1><gdb:localize var="dl_form_heading" key="DashboardLayer.form.heading"/>${dl_form_heading}${activeMdAttributeLabel}</h1>
         </div>
           <fieldset>
           
@@ -58,80 +58,6 @@
                     <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
                     <label for="f94">${style.enableLabelMd.displayLabel}</label>
                   </div>              
-                  <!-- 
-                  <div class="cell style02">
-                    <label for="f52">${style.valueFontMd.displayLabel}</label>
-                    <div class="select-holder">
-                      <select class="font-select" name="style.${style.valueFontMd.name}" id="f52">
-                        <c:forEach items="${fonts}" var="font">
-                          <c:choose>
-                            <c:when test="${style.valueFont == font}">
-                              <option value="${font}" selected="selected">${font}</option>
-                            </c:when>
-                            <c:otherwise>
-                              <option value="${font}">${font}</option>
-                            </c:otherwise>
-                          </c:choose>
-                        </c:forEach>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="cell">
-                    <label for="f53">${style.valueSizeMd.displayLabel}</label>
-                    <div class="select-holder">
-                      <select class="size-select" name="style.${style.valueSizeMd.name}" id="f53">
-                        <c:forEach begin="0" end="30" var="size">
-                          <c:choose>
-                            <c:when test="${style.valueSize == size}">
-                              <option selected="selected" value="${size}">${size}</option>
-                            </c:when>
-                            <c:otherwise>
-                              <option value="${size}">${size}</option>
-                            </c:otherwise>
-                          </c:choose>
-                        </c:forEach>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="cell">
-                    <span>${style.valueColorMd.displayLabel}</span>
-                    <div class="color-holder">
-                      <a href="#" class="color-choice">
-                        <span class="ico" style="background:${style.valueColor};">icon</span>
-                        <span class="arrow">arrow</span>
-                        <input type="hidden" class="color-input" name="style.${style.valueColorMd.name}" value="${style.valueColor}" />
-                      </a>
-                    </div>
-                  </div>
-                  <div class="cell">
-                    <span>${style.valueHaloMd.displayLabel}</span>
-                    <div class="color-holder">
-                      <a href="#" class="color-choice">
-                        <span class="ico" style="background:${style.valueHalo};">icon</span>
-                        <span class="arrow">arrow</span>
-                        <input type="hidden" class="color-input" name="style.${style.valueHaloMd.name}" value="${style.valueHalo}" />
-                      </a>
-                    </div>
-                  </div>
-                  <div class="cell">
-                    <label for="f54">${style.valueHaloWidthMd.displayLabel}</label>
-                    <div class="select-holder">
-                      <select class="size-select" name="style.${style.valueHaloWidthMd.name}" id="f54">
-                        <option value=""></option>
-                        <c:forEach begin="0" end="15" var="size">
-                          <c:choose>
-                            <c:when test="${style.valueHaloWidth == size}">
-                              <option selected="selected" value="${size}">${size}</option>
-                            </c:when>
-                            <c:otherwise>
-                              <option value="${size}">${size}</option>
-                            </c:otherwise>
-                          </c:choose>
-                        </c:forEach>
-                      </select>
-                    </div>
-                  </div>
-                  -->
                 </div>
                 <div class="row-holder">
                   <div class="cell style02">
@@ -262,6 +188,10 @@
 </mjl:component>
               </div>
             </div>
+            
+            <!-- 
+               Begin Layer Types
+             -->
 <mjl:component param="layer" item="${layer}">
             <div class="row-holder">
               <div class="label-holder style04">
@@ -269,73 +199,32 @@
               </div>
               <div class="holder style04">
                 <ul class="nav-tabs type-tabs">
-                  <li 
-                    <c:if test="${activeFeature == features['BASIC']}">
-                      class="active"
-                    </c:if>
-                  >
-                    <a href="#" data-toggle="tab" data-gdb-tab-type="basic">
-                      <input
-                        <c:if test="${activeFeature == features['BASIC']}">
-                          checked
-                        </c:if>
-                        id="radio1" name="layer.${layer.layerTypeMd.name}" value="BASIC" type="radio">
-                      </input>
-                      <label for="radio1">${features['BASIC']}</label>
-                    </a>
-                  </li>
-                  <li
-                    <c:choose>
-								      <c:when test="${activeFeature == features['BUBBLE']}">
-								        class="bubble active"
-								      </c:when>
-								      <c:otherwise>
-								        class="bubble"
-								      </c:otherwise>
-								    </c:choose>
-                  >
-                    <a href="#" data-toggle="tab" data-gdb-tab-type="bubble">
-                      <input
-                        <c:if test="${activeFeature == features['BUBBLE']}">
-                          checked
-                        </c:if>
-                        id="radio2" name="layer.${layer.layerTypeMd.name}" value="BUBBLE" type="radio">
-                      </input>
-                      <label for="radio2">${features['BUBBLE']}</label>
-                    </a>
-                  </li>
-                  <li 
-                    <c:choose>
-                      <c:when test="${activeFeature == features['GRADIENT']}">
-                        class="gradient active"
-                      </c:when>
-                      <c:otherwise>
-                        class="gradient"
-                      </c:otherwise>
-                    </c:choose>
-                  >
-                    <a href="#" data-toggle="tab" data-gdb-tab-type="gradient">
-                      <input
-                        <c:if test="${activeFeature == features['GRADIENT']}">
-                          checked
-                        </c:if>
-                        id="radio3" name="layer.${layer.layerTypeMd.name}" value="GRADIENT" type="radio">
-                      </input>
-                      <label for="radio3">${features['GRADIENT']}</label>
-                    </a>
-                  </li>
-                  <!-- Removed for deploy until functionality exists.
-                  <li class="category">
-                    <a href="#" data-toggle="tab" data-gdb-tab-type="category">
-                      <input id="radio4" name="layer.${layer.layerTypeMd.name}" value="CATEGORY" type="radio">
-                      <label for="radio4">${features['CATEGORY']}</label>
-                    </a>
-                  </li>
-                   -->
+	                <c:forEach items="${layerTypeNames}" var="layerTypeName" varStatus="loop">
+	                  <li
+	                    class="${layerTypeName}  
+	                    <c:if test="${layerTypeName == activeLayerTypeName}">
+	                        active
+	                    </c:if>
+	                    "
+	                  >
+	                    <a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}">
+	                      <input
+	                        <c:if test="${layerTypeName == activeLayerTypeName}">
+	                          checked="checked"
+	                        </c:if>
+	                        id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio">
+	                      </input>
+	                      <label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label>
+	                    </a>
+	                  </li>
+	                </c:forEach>
                 </ul>
               </div>
             </div>
 </mjl:component>
+            <!-- 
+              End Layer Types
+             -->
 <mjl:component param="style" item="${style}">
             <div class="row-holder">
               <div class="label-holder">
@@ -413,7 +302,7 @@
                   
                   <div
                     <c:choose>
-                      <c:when test="${activeFeature == features['BASIC']}">
+                      <c:when test="${'BASIC' == activeLayerTypeName}">
                         class="tab-pane active"
                       </c:when>
                       <c:otherwise>
@@ -448,7 +337,7 @@
                   </div>
                   <div
                     <c:choose>
-                      <c:when test="${activeFeature == features['BUBBLE']}">
+                      <c:when test="${'BUBBLE' == activeLayerTypeName}">
                         class="tab-pane active"
                       </c:when>
                       <c:otherwise>
@@ -557,7 +446,7 @@
                   </div>
                   <div
                     <c:choose>
-                      <c:when test="${activeFeature == features['GRADIENT']}">
+                      <c:when test="${'GRADIENT' == activeLayerTypeName}">
                         class="tab-pane active"
                       </c:when>
                       <c:otherwise>
@@ -599,9 +488,10 @@
                       </div>
                     </div>
                   </div>
+                  <!-- CATEGORIES
                   <div
                     <c:choose>
-                      <c:when test="${activeFeature == features['CATEGORY']}">
+                      <c:when test="${'CATEGORY' == activeLayerTypeName}">
                         class="tab-pane active"
                       </c:when>
                       <c:otherwise>
@@ -784,6 +674,7 @@
                       </div>
                     </div>
                   </div>
+                  -->
                 </div>
               </div>
             </div>

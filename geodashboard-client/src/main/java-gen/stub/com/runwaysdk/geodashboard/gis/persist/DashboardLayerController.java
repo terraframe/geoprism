@@ -1,7 +1,9 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +16,10 @@ import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
@@ -104,7 +107,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     // There will be one style only for this layer (for IDE)
     DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
 
-    this.loadLayerData(layer, style);
+    this.loadLayerData(layer, style, null);
 
     render("editComponent.jsp");
   }
@@ -119,7 +122,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    * 
    * @param layer
    */
-  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style)
+  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mdAttribute)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     
@@ -140,44 +143,89 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("universals", universals);
     
     
-    // aggregations
-    AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
-    req.setAttribute("aggregations", aggQuery.getResultSet());
-    Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
-    req.setAttribute("aggregationLabels", aggregations);
+    // selected attribute
+    MdAttributeConcreteDTO mdAttr;
+    if (mdAttribute != null) { // new instance
+      mdAttr = MdAttributeConcreteDTO.get(clientRequest, mdAttribute);
+    }
+    else { // edit
+      mdAttr = ((MdAttributeConcreteDTO) style.getMdAttribute());
+    }
+    req.setAttribute("activeMdAttributeLabel", mdAttr.getDisplayLabel().getValue());
     
-    List<String> activeAgg = style.getAggregationTypeEnumNames();
-    if (activeAgg.size() > 0) {
-      req.setAttribute("activeAggregation", aggregations.get(activeAgg.get(0)));
+    
+    
+    // aggregations
+    List<? extends AggregationTypeDTO> aggregations = DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
+    
+    // filter out invalid aggregations depending on attribute type
+    List<AllAggregationTypeDTO> filters = new ArrayList<AllAggregationTypeDTO>();
+    if (mdAttr instanceof MdAttributeMomentDTO) {
+      filters.add(AllAggregationTypeDTO.AVG);
+      filters.add(AllAggregationTypeDTO.SUM);
+    }
+    for (AllAggregationTypeDTO filter : filters) {
+      for (int i = 0; i < aggregations.size(); ++i) {
+        if (aggregations.get(i).getEnumName().equals(filter.getName())) {
+          aggregations.remove(i);
+        }
+      }
+    }
+    
+    req.setAttribute("aggregations", aggregations);
+    
+    // Pick an active aggregation.
+    if (aggregations.size() > 0) {
+      req.setAttribute("activeAggregation", aggregations.get(0).getDisplayLabel().getValue());
     }
     else {
       req.setAttribute("activeAggregation", "");
     }
     
     
-    // feature types
-    Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
-    req.setAttribute("features", features);
     
-    List<String> layerType = layer.getLayerTypeEnumNames();
-    if (layerType.size() > 0) {
-      req.setAttribute("activeFeature", features.get(layerType.get(0)));
+    // layer types
+    Map<String, String> labels = layer.getLayerTypeMd().getEnumItems();
+    
+    Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+    layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+    layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+    
+    // filter out invalid layer types depending on attribute type
+    if ( !(mdAttr instanceof MdAttributeMomentDTO) ) {
+      layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
+    }
+    
+    req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
+    req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
+    
+    List<String> activeLayerType = layer.getLayerTypeEnumNames();
+    if (activeLayerType.size() > 0) { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not new instances)
+      req.setAttribute("activeLayerTypeName", activeLayerType.get(0));
     }
     else {
-      req.setAttribute("activeFeature", features.get(AllLayerTypeDTO.BASIC.getName()));
+      req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
   }
 
+  /**
+   * @deprecated
+   * 
+   * Call newThematicInstance instead.
+   */
+  @Deprecated
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(
-        clientRequest);
-    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+//    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
+//    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(
+//        clientRequest);
+//    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+//    
+//    this.loadLayerData(layer, style);
+//    
+//    render("createComponent.jsp");
     
-    this.loadLayerData(layer, style);
-    
-    render("createComponent.jsp");
+    throw new UnsupportedOperationException();
   }
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
@@ -249,6 +297,18 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   {
     resp.sendError(500);
   }
+  
+  public void newThematicInstance(java.lang.String mdAttribute) throws java.io.IOException, javax.servlet.ServletException
+  {
+    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(
+        clientRequest);
+    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
+    
+    this.loadLayerData(layer, style, mdAttribute);
+    
+    render("createComponent.jsp");
+  }
 
   @Override
   public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO condition)
@@ -269,7 +329,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
     catch (Throwable t)
     {
-      this.loadLayerData(layer, (DashboardThematicStyleDTO) style);
+      this.loadLayerData(layer, (DashboardThematicStyleDTO) style, ((DashboardThematicStyleDTO) style).getMdAttributeId());
       
       if(t instanceof ProblemExceptionDTO)
       {
