@@ -1705,9 +1705,9 @@ a.blueactive,
 	margin:0 0 0 20px;
 	border-radius:0;
 }
-.nav-tabs.type-tabs .bubble{margin-left:42px;}
-.nav-tabs.type-tabs .gradient{margin-left:27px;}
-.nav-tabs.type-tabs .category{margin-left:30px;}
+.nav-tabs.type-tabs .BUBBLE{margin-left:42px;}
+.nav-tabs.type-tabs .GRADIENT{margin-left:27px;}
+.nav-tabs.type-tabs .CATEGORY{margin-left:30px;}
 .nav-tabs.type-tabs li:first-child{margin:0;}
 .nav-tabs.type-tabs li a,
 .nav-tabs.type-tabs li a:hover,
@@ -1738,21 +1738,21 @@ a.blueactive,
 	top:1px;
 	background:url(../images/sprite.png) no-repeat 0 -50px;
 }
-.nav-tabs.type-tabs .bubble label:after{
+.nav-tabs.type-tabs .BUBBLE label:after{
 	width:60px;
 	height:58px;
 	left:28px;
 	top:12px;
 	background:url(../images/sprite.png) no-repeat -100px -50px;
 }
-.nav-tabs.type-tabs .gradient label:after{
+.nav-tabs.type-tabs .GRADIENT label:after{
 	width:87px;
 	height:77px;
 	background:url(../images/sprite.png) no-repeat -200px -50px;
 	left:13px;
 	top:1px;
 }
-.nav-tabs.type-tabs .category label:after{
+.nav-tabs.type-tabs .CATEGORY label:after{
 	width:87px;
 	height:80px;
 	background:url(../images/sprite.png) no-repeat -300px -50px;

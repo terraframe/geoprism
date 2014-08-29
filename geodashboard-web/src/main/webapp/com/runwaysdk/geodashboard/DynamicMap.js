@@ -36,15 +36,16 @@
        * Constructor
        * @param mapDivId DOM id of the map div.
        */
-      initialize : function(mapDivId, mapId){
+      initialize : function(config){
         this.$initialize();
         
         var overlayLayerContainer = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
         
         this._googleEnabled = Mojo.Util.isObject(Mojo.GLOBAL.google);
         
-        this._mapDivId = mapDivId;
-        this._mapId = mapId;
+        this._config = config;
+        this._mapDivId = config.mapDivId;
+        this._mapId = config.mapId;
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
@@ -848,7 +849,6 @@
           });
 
           this._DashboardController.newInstance(request);
-          
         },
         
         /**
@@ -928,7 +928,7 @@
           }
         });
         
-        this._LayerController.newInstance(request);
+        this._LayerController.newThematicInstance(request, this._currentAttributeId);
         
       },
       
@@ -963,9 +963,31 @@
         else if (activeTab === "tab003gradient") {
           this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
         }
+        else if (activeTab === "tab004category") {
+          this._showCategoryTab();
+        }
         
         // Attach listeners
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+      },
+      
+      _showCategoryTab : function() {
+        // Hide the reusable input cells that don't apply to categories
+        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+        polyStroke.hide();
+        
+        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+        polyStrokeWidth.hide();
+        
+        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+        polyStrokeOpacity.hide();
+        
+        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+        polyFillOpacity.hide();
+        
+        // Display the tree picker
+        this._layerCategoriesTree = new com.runwaysdk.geodashboard.ontology.LayerCategoriesTree(this._config.layerCategoriesTree);
+        this._layerCategoriesTree.render("#category-colors-container");
       },
       
       _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
@@ -991,18 +1013,18 @@
         
         var type = activeTab.dataset["gdbTabType"];
         
-        if (type === "basic") {
+        if (type === "BASIC") {
           this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
           $("#tab001basic").show();
         }
-        else if (type === "bubble") {
+        else if (type === "BUBBLE") {
           $("#tab002bubble").show();
         }
-        else if (type === "gradient") {
+        else if (type === "GRADIENT") {
           this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
           $("#tab003gradient").show();
         }
-        else if (type === "categories") {
+        else if (type === "CATGORIES") {
           $("#tab004categories").show();
         }
       },

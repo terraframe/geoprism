@@ -10,6 +10,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdClass;
@@ -111,6 +112,15 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       virtualUnits.setMdAttributeConcrete(units);
       virtualUnits.setDefiningMdView(demoView);
       virtualUnits.apply();
+      
+      // Delivery Date
+      String deliveryDateKey = "org.ideorg.iq.SalesTransaction.deliveryDate";
+      MdAttributeDate date = MdAttributeDate.getByKey(deliveryDateKey);
+      
+      MdAttributeVirtual virtualDate = new MdAttributeVirtual();
+      virtualDate.setMdAttributeConcrete(date);
+      virtualDate.setDefiningMdView(demoView);
+      virtualDate.apply();
     }
     catch (DuplicateDataException e) {
       
@@ -126,10 +136,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     dm.setListOrder(0);
     dm.apply();
 
-//      // SalesTransaction.NUMBEROFUNITS
-//      String unitsKey = "org.ideorg.iq.SalesTransaction.numberOfUnits";
-//      MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
-    
+    // Number of Units
     MdAttributeVirtual virtualUnits = MdAttributeVirtual.getByKey("org.ideorg.iq.SalesTransactionView.numberOfUnits");
     
     AttributeWrapper unitWrapper = new AttributeWrapper();
@@ -140,6 +147,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     unitWrapperRel.setListOrder(1);
     unitWrapperRel.apply();
     
+    // Delivery Date
+    MdAttributeVirtual virtualDate = MdAttributeVirtual.getByKey("org.ideorg.iq.SalesTransactionView.deliveryDate");
+    
+    AttributeWrapper dateWrapper = new AttributeWrapper();
+    dateWrapper.setWrappedMdAttribute(virtualDate);
+    dateWrapper.apply();
+    
+    DashboardAttributes dateWrapperRel = mWrapper.addAttributeWrapper(dateWrapper);
+    dateWrapperRel.setListOrder(2);
+    dateWrapperRel.apply();
+    
     apply();
   }
   
@@ -149,7 +167,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     
     boolean isNew = isNew();
     
-    if (isNew) {
+    if (isNew && this.getMap() == null) {
       DashboardMap map = new DashboardMap();
       map.setName(this.getDisplayLabel().getValue());
       map.apply();
