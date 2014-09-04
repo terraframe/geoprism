@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +29,8 @@ import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
+import com.runwaysdk.util.IDGenerator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -50,9 +53,40 @@ public class DashboardMap extends DashboardMapBase implements
   }
 
   @Override
-  public List<? extends Layer> getLayers()
+  public List<? extends DashboardLayer> getLayers()
   {
     return this.getAllHasLayer().getAll();
+  }
+  
+  /**
+   * MdMethod
+   * 
+   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the updated filter criteria conditions.
+   */
+  @Override
+  public String updateConditions(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions) {
+    List<? extends DashboardLayer> layers = this.getLayers();
+    
+    for (DashboardLayer layer : layers) {
+      layer.setConditions(Arrays.asList(conditions));
+      
+      // We have to generate a new viewName because otherwise there's browser-side caching that won't show the new update.
+      String vn = layer.generateViewName();
+      layer.appLock();
+      layer.setViewName(vn);
+      layer.apply();
+      
+      DashboardStyle style = layer.getStyles().get(0);
+      style.appLock();
+      style.generateName(layer.getViewName());
+      style.apply();
+      
+      layer.publish();
+    }
+    
+    GeoserverFacade.pushUpdates();
+    
+    return getMapJSON("republish=false");
   }
   
   /**
@@ -147,7 +181,9 @@ public class DashboardMap extends DashboardMapBase implements
       JSONObject mapJSON = new JSONObject();
       mapJSON.put("mapName", this.getName());
       
-      publishAllLayers(orderedLayers);
+      if (config == null || !config.equals("republish=false")) {
+        publishAllLayers(orderedLayers);
+      }
       
       JSONArray layers = new JSONArray();
       for (int i = 0; i < orderedLayers.length; i++)
@@ -163,7 +199,7 @@ public class DashboardMap extends DashboardMapBase implements
       {
         log.debug("JSON for map [" + this + "]:\n" + mapJSON.toString(4));
       }
-  
+      
       return mapJSON.toString();
     }
     catch (JSONException ex)

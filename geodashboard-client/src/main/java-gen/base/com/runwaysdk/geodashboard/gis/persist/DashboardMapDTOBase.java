@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 575122190)
+@com.runwaysdk.business.ClassSignature(hash = -1611117688)
 public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = 575122190;
+  private static final long serialVersionUID = -1611117688;
   
   protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -452,6 +452,22 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;"};
     Object[] _parameters = new Object[]{id, layerIds};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "orderLayers", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.String updateConditions(com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "updateConditions", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String updateConditions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{id, conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "updateConditions", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

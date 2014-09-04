@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis;
 
-@com.runwaysdk.business.ClassSignature(hash = 1740442490)
+@com.runwaysdk.business.ClassSignature(hash = -829819616)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,8 @@ public abstract class EmptyLayerInformationBase extends com.runwaysdk.business.I
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.EmptyLayerInformation";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1740442490;
+  public static java.lang.String LAYERNAME = "layerName";
+  private static final long serialVersionUID = -829819616;
   
   public EmptyLayerInformationBase()
   {
@@ -35,6 +36,34 @@ public abstract class EmptyLayerInformationBase extends com.runwaysdk.business.I
     return mdClassIF.definesAttribute(ID);
   }
   
+  public String getLayerName()
+  {
+    return getValue(LAYERNAME);
+  }
+  
+  public void validateLayerName()
+  {
+    this.validateAttribute(LAYERNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.EmptyLayerInformation.CLASS);
+    return mdClassIF.definesAttribute(LAYERNAME);
+  }
+  
+  public void setLayerName(String value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERNAME, "");
+    }
+    else
+    {
+      setValue(LAYERNAME, value);
+    }
+  }
+  
   protected String getDeclaredType()
   {
     return CLASS;
@@ -44,6 +73,7 @@ public abstract class EmptyLayerInformationBase extends com.runwaysdk.business.I
   {
     java.lang.String message = super.localize(locale);
     message = replace(message, "{id}", this.getId());
+    message = replace(message, "{layerName}", this.getLayerName());
     return message;
   }
   

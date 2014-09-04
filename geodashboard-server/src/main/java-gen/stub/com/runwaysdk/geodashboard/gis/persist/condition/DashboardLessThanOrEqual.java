@@ -4,6 +4,7 @@ import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.ValueQuery;
 
 public class DashboardLessThanOrEqual extends DashboardLessThanOrEqualBase implements
     com.runwaysdk.generation.loader.Reloadable, LessThanOrEqual
@@ -16,8 +17,10 @@ public class DashboardLessThanOrEqual extends DashboardLessThanOrEqualBase imple
   }
   
   @Override
-  public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr) {
-    return ((AttributeNumber)attr).LE(this.getComparisonValue());
+  public void restrictQuery(ValueQuery query, Attribute attr) {
+    if (attr instanceof AttributeNumber) {
+      query.AND(((AttributeNumber)attr).LE(this.getComparisonValue()));
+    }
   }
 
   @Override

@@ -8,6 +8,7 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleQuery;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardCondition extends DashboardConditionBase implements com.runwaysdk.generation.loader.Reloadable, Condition
 {
@@ -30,7 +31,7 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
     return "["+getName()+"] - "+this.getId();
   }
   
-  abstract public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr);
+  abstract public void restrictQuery(ValueQuery query, Attribute attr);
   
   @Override
   public void setParentCondition(DashboardCondition value)

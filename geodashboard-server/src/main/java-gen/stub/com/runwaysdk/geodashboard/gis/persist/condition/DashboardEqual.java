@@ -1,9 +1,9 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.ValueQuery;
 
 public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.generation.loader.Reloadable, Equal
 {
@@ -15,7 +15,7 @@ public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.
   }
   
   @Override
-  public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr) {
+  public void restrictQuery(ValueQuery query, Attribute attr) {
     throw new UnsupportedOperationException();
   }
   

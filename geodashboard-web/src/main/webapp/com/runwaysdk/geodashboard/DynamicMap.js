@@ -112,12 +112,15 @@
         
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON(
           new Mojo.ClientRequest({
-            onSuccess : function(json){
+            onSuccess : function(json, mapObj, response){
               var jsonObj = Mojo.Util.toObject(json);
               
               that._updateCacheFromJSONResponse(jsonObj);
               
               fnSuccess();
+              
+              // TODO : Push this somewhere as a default handler.
+              that.handleMessages(response);
             },
             onFailure : function(e){
               that.handleException(e);
@@ -202,9 +205,15 @@
       _renderBaseLayers : function() {
         this._baseLayers.clear();
         
-        var base = this._getBaseLayers();                                
-        this._map.addLayer(base[0]); 
-        this._renderBaseLayerSwitcher(base);
+        try {
+          var base = this._getBaseLayers();                                
+          this._map.addLayer(base[0]);
+          
+          this._renderBaseLayerSwitcher(base);
+        }
+        catch (ex) {
+          // If we don't have internet, rendering the base layer will fail.
+        }
       },
       
       /**
@@ -555,9 +564,9 @@
             condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual";
           }
           
-          params["condition.comparisonValue"] = textValue;
-          params["condition.isNew"] = "true";
-          params["#condition.actualType"] = condition;
+          params["conditions_0.comparisonValue"] = textValue;
+          params["conditions_0.isNew"] = "true";
+          params["#conditions_0.actualType"] = condition;
         }
         
         return request;
@@ -567,7 +576,7 @@
        * 
        * @param params
        */
-      _cancelLayerListener : function(params){        
+      _cancelLayerListener : function(params){
         var that = this;
         
         if(params['layer.isNew'] === 'true')
@@ -1115,21 +1124,73 @@
     	  var x = newPosition.left;
     	  var y = newPosition.top;
     	  
-          var clientRequest = new Mojo.ClientRequest({
-              onSuccess : function() {
-            	  // Update the layer object in the layer cache with the new legend position
-            	  var relatedLayer = that._layerCache.get(relatedLayerId);
-            	  relatedLayer.setLegendXPosition(x);
-            	  relatedLayer.setLegendYPosition(y);
-              },
-              onFailure : function(e) {
-                that.handleException(e);
-               
-              }
-            });
+        var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function() {
+          	  // Update the layer object in the layer cache with the new legend position
+          	  var relatedLayer = that._layerCache.get(relatedLayerId);
+          	  relatedLayer.setLegendXPosition(x);
+          	  relatedLayer.setLegendYPosition(y);
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+             
+            }
+          });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y);
+      },
+      
+      _onClickApplyFilters : function(e) {
+        var that = this;
+        
+        // Get the attribute filter conditions
+        var layers = this._layerCache.values();
+        var conditions = [];
+        for(var i = layers.length-1; i >= 0; i--) {
+          var layer = layers[i];
           
-          com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y);
+          var mdAttribute = layer.style.mdAttribute;
           
+          var select = $("select.gdb-attr-filter." + mdAttribute).val();
+          var textValue = $("input.gdb-attr-filter." + mdAttribute).val();
+          if (textValue != null && textValue !== "") {
+            var attrCond = null;
+            if (select === "gt") {
+              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
+            }
+            else if (select === "ge") {
+              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+            }
+            else if (select === "lt") {
+              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
+            }
+            else if (select === "le") {
+              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
+            }
+            
+            attrCond.setComparisonValue(textValue);
+            
+            conditions.push(attrCond);
+          }
+        }
+        
+        var clientRequest = new Mojo.ClientRequest({
+          onSuccess : function(json, calledObj, response) {
+            var jsonObj = Mojo.Util.toObject(json);
+            
+            that._updateCacheFromJSONResponse(jsonObj);
+            
+            that._addUserLayersToMap();
+            
+            // TODO : Push this somewhere as a default handler.
+            that.handleMessages(response);
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
       },
       
       /**
@@ -1148,6 +1209,7 @@
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
+        $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         
         if(this._googleEnabled){
           this._addAutoComplete();

@@ -66,14 +66,17 @@ public class MetadataWrapper extends MetadataWrapperBase implements
         
         MdAttribute attr = aWrapper.getWrappedMdAttribute();
         String attrId;
+        String attrType;
         if(attr instanceof MdAttributeVirtual)
         {
           MdAttributeVirtual vAttr = (MdAttributeVirtual) attr;
           attrId = vAttr.getMdAttributeConcreteId();
+          attrType = vAttr.getMdAttributeConcrete().getType();
         }
         else
         {
           attrId = attr.getId();
+          attrType = attr.getType();
         }
         
         MdAttributeView view = new MdAttributeView();
@@ -84,6 +87,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements
         view.setMdAttributeId(attrId);
         view.setDisplayLabel(label);
         view.setAttributeName(attr.getAttributeName());
+        view.setAttributeType(attrType);
 
         mdAttr.add(view);
       }

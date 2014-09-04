@@ -90,7 +90,8 @@ public class DashboardStyle extends DashboardStyleBase implements
 //      String msg = "Could not properly form DashboardStyle [" + this.toString() + "] into valid JSON to send back to the client.";
 //      throw new ProgrammingErrorException(msg, ex);
 //    }
-    
+
+    // Its okay to throw this here (for now) because this method is overridden with an implementation in DashboardThematicStyle
     throw new UnsupportedOperationException();
   }
 

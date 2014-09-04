@@ -23,6 +23,12 @@ div.pageContent {
 	height: 100%;
 }
 
+a.opener.apply-filters-button {
+	position: absolute;
+	bottom: 20px;
+	left: 40%;
+}
+
 /* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
 textarea#description{float:left;}
 
