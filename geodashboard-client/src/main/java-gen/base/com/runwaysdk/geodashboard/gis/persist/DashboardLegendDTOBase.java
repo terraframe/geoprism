@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -562019781)
+@com.runwaysdk.business.ClassSignature(hash = -25360382)
 public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.StructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLegend";
-  private static final long serialVersionUID = -562019781;
+  private static final long serialVersionUID = -25360382;
   
   protected DashboardLegendDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,11 +27,49 @@ public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.Stru
     return CLASS;
   }
   
+  public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SITEMASTER = "siteMaster";
+  public Boolean getGroupedInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(GROUPEDINLEGEND));
+  }
+  
+  public void setGroupedInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(GROUPEDINLEGEND, "");
+    }
+    else
+    {
+      setValue(GROUPEDINLEGEND, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isGroupedInLegendWritable()
+  {
+    return isWritable(GROUPEDINLEGEND);
+  }
+  
+  public boolean isGroupedInLegendReadable()
+  {
+    return isReadable(GROUPEDINLEGEND);
+  }
+  
+  public boolean isGroupedInLegendModified()
+  {
+    return isModified(GROUPEDINLEGEND);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getGroupedInLegendMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(GROUPEDINLEGEND).getAttributeMdDTO();
+  }
+  
   public String getKeyName()
   {
     return getValue(KEYNAME);

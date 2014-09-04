@@ -453,7 +453,7 @@ public class DashboardLayer extends DashboardLayerBase implements
           // If we doing a bubble/gradient map with a min/max add window aggregations
           // to provide the min and max of the attribute.
           AllLayerType layerType = this.getLayerType().get(0);
-          if(layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
+          if(layerType == AllLayerType.BUBBLE)
           {
             String minCol = SLDConstants.getMinProperty(attribute);
             String maxCol = SLDConstants.getMaxProperty(attribute);
@@ -681,6 +681,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("inLegend", this.getDisplayInLegend());
       json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
       json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
+      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
       
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -701,11 +702,12 @@ public class DashboardLayer extends DashboardLayerBase implements
   
   @Override
   @Transaction
-  public void updateLegend(Integer legendXPosition, Integer legendYPosition)
+  public void updateLegend(Integer legendXPosition, Integer legendYPosition, Boolean groupedInLegend)
   {
     this.appLock();
     this.getDashboardLegend().setLegendXPosition(legendXPosition);
     this.getDashboardLegend().setLegendYPosition(legendYPosition);
+    this.getDashboardLegend().setGroupedInLegend(groupedInLegend);
     this.apply();
   }
 }

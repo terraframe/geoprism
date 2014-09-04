@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1591695832)
+@com.runwaysdk.business.ClassSignature(hash = 97669515)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = -1591695832;
+  private static final long serialVersionUID = 97669515;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -848,18 +848,18 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.system.gis.geo.UniversalQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  public final void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
   {
-    String[] _declaredTypes = new String[]{"java.lang.Integer", "java.lang.Integer"};
-    Object[] _parameters = new Object[]{legendXPosition, legendYPosition};
+    String[] _declaredTypes = new String[]{"java.lang.Integer", "java.lang.Integer", "java.lang.Boolean"};
+    Object[] _parameters = new Object[]{legendXPosition, legendYPosition, groupedInLegend};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "updateLegend", _declaredTypes);
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void updateLegend(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  public static final void updateLegend(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.Integer", "java.lang.Integer"};
-    Object[] _parameters = new Object[]{id, legendXPosition, legendYPosition};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.Integer", "java.lang.Integer", "java.lang.Boolean"};
+    Object[] _parameters = new Object[]{id, legendXPosition, legendYPosition, groupedInLegend};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO.CLASS, "updateLegend", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }

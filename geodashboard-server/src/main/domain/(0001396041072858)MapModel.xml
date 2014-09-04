@@ -25,7 +25,8 @@
 				</attributes>
 				<mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
 					<mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer"/>		
-					<mdParameter name="legendYPosition" label="legendYPosition" order="1" type="java.lang.Integer"/>				
+					<mdParameter name="legendYPosition" label="legendYPosition" order="1" type="java.lang.Integer"/>
+					<mdParameter name="groupedInLegend" label="groupedInLegend" order="2" type="java.lang.Boolean"/>					
 				</mdMethod>
 			</mdBusiness>
 
@@ -34,6 +35,7 @@
 					<virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"/>
 					<virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
 					<virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
+					<virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
 					<char name="viewName" label="viewName" size="64" required="true" />
 					<char name="layerName" label="layerName" size="64" required="true" />
 					<char name="layerId" label="layerId" size="64" required="true" />
@@ -45,6 +47,7 @@
 				<attributes>
 					<integer name="legendXPosition" label="Legend X Position" required="false" defaultValue="0" />
 					<integer name="legendYPosition" label="Legend Y Position" required="false" defaultValue="0" />
+					<boolean name="groupedInLegend" label="Grouped In Legend" required="true" defaultValue="true" />
 				</attributes>
 			</mdStruct>
 

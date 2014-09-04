@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1481742205)
+@com.runwaysdk.business.ClassSignature(hash = 2046072622)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,6 +12,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
+  public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
   public static java.lang.String LAYERNAME = "layerName";
@@ -19,7 +20,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = 1481742205;
+  private static final long serialVersionUID = 2046072622;
   
   public DashboardLayerViewBase()
   {
@@ -51,6 +52,34 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     else
     {
       setValue(DISPLAYINLEGEND, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public Boolean getGroupedInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(GROUPEDINLEGEND));
+  }
+  
+  public void validateGroupedInLegend()
+  {
+    this.validateAttribute(GROUPEDINLEGEND);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGroupedInLegendMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(GROUPEDINLEGEND);
+  }
+  
+  public void setGroupedInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(GROUPEDINLEGEND, "");
+    }
+    else
+    {
+      setValue(GROUPEDINLEGEND, java.lang.Boolean.toString(value));
     }
   }
   

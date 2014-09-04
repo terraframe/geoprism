@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -91581509)
+@com.runwaysdk.business.ClassSignature(hash = 652990850)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,12 +11,13 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLegend";
+  public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = -91581509;
+  private static final long serialVersionUID = 652990850;
   
   public DashboardLegendBase()
   {
@@ -36,6 +37,34 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
   public static DashboardLegend getByKey(String key)
   {
     return (DashboardLegend) com.runwaysdk.business.Struct.get(CLASS, key);
+  }
+  
+  public Boolean getGroupedInLegend()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(GROUPEDINLEGEND));
+  }
+  
+  public void validateGroupedInLegend()
+  {
+    this.validateAttribute(GROUPEDINLEGEND);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGroupedInLegendMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLegend.CLASS);
+    return mdClassIF.definesAttribute(GROUPEDINLEGEND);
+  }
+  
+  public void setGroupedInLegend(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(GROUPEDINLEGEND, "");
+    }
+    else
+    {
+      setValue(GROUPEDINLEGEND, java.lang.Boolean.toString(value));
+    }
   }
   
   public String getId()
