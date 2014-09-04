@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 952741684)
+@com.runwaysdk.business.ClassSignature(hash = -655009371)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -40,6 +40,24 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.DISPLAYINLEGEND, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend()
+  {
+    return getGroupedInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.GROUPEDINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.GROUPEDINLEGEND, alias, displayLabel);
 
   }
  

@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.model;
 
 import java.util.List;
+import java.util.HashMap;
 
 
 public interface Layer extends Component
@@ -16,6 +17,8 @@ public interface Layer extends Component
   public FeatureType getFeatureType();
   
   public FeatureStrategy getFeatureStrategy();
+  
+  public HashMap<String, Double> getLayerMinMax(String attribute);
 
 //  public void setDisplayInLegend(Boolean display);
 //  public void setFeatureType(FeatureType featureType);

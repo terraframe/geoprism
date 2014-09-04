@@ -148,12 +148,12 @@ $(document).ready(function(){
       </fieldset>
     </form>
     
-<!--     <div class="info-box" id="legend-container-group"> -->
-<!--     	<a class="legend-opener opener" href="#collapse-legend">Legend</a> -->
-<!--     	<div id="legend-items-container-group"> -->
-<!--     		<ul id="legend-list"></ul> -->
-<!--     	</div> -->
-<!--     </div> -->
+    <div class="info-box" id="legend-container-group">
+<!--     	<a class="legend-opener opener" href="#collapse-legend"><b>Legend</b></a> -->
+    	<div id="legend-items-container-group">
+    		<ul id="legend-list-group"></ul>
+    	</div>
+    </div>
     
     <!-- contain aside of the page -->
   <aside class="aside animated slideInRight legend-snapable" id="dashboardMetadata">

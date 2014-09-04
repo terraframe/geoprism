@@ -25,6 +25,7 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
@@ -376,14 +377,6 @@ public class GeoserverFacade implements Reloadable
    */
   public static boolean publishLayer(String layer, String styleName)
   {
-    // create the layer if it does not exist
-//    if (layerExists(layer))
-//    {
-//      log.debug("The layer [" + layer + "] already exists in geoserver.");
-//      return true;
-//    }
-//    else
-//    {
       double[] bbox = getBBOX(layer);
 
       double minX = bbox[MINX_INDEX];
@@ -415,44 +408,7 @@ public class GeoserverFacade implements Reloadable
         log.error("Failed to create the layer [" + layer + "] in geoserver.");
         return false;
       }
-//    }
   }
-
-  // public static void publishSQLView(String viewName, String sql)
-  // {
-  // if (viewExists(viewName))
-  // {
-  // log.info("The database view [" + viewName + "] already exists.");
-  // }
-  // else
-  // {
-  // Database.createView(viewName, sql);
-  // log.info("Created the database view [" + viewName + "].");
-  // }
-  // }
-  //
-  // /**
-  // * Removes the database view that is associated with a layer.
-  // *
-  // * @param viewName
-  // */
-  // public static void removeSQLView(String viewName, String sql)
-  // {
-  // // Remove the database view
-  // if (viewExists(viewName))
-  // {
-  // try
-  // {
-  // Database.dropView(viewName, sql, false);
-  // log.info("Removed the database view [" + viewName + "].");
-  // }
-  // catch (Throwable t)
-  // {
-  // // log the error but continue to allow further processing
-  // log.error("Failed to remove the database view [" + viewName + "].");
-  // }
-  // }
-  // }
 
   /**
    * Removes the layer from geoserver.

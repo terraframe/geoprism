@@ -36,7 +36,11 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
+<<<<<<< HEAD
   private static final long serialVersionUID = 725242897;
+=======
+  private static final long serialVersionUID = 1369711371;
+>>>>>>> branch 'master' of git@github.com:terraframe/geodashboard.git
   
   public DashboardLayerBase()
   {
@@ -758,16 +762,16 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  public void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final void updateLegend(java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition)
+  public static final void updateLegend(java.lang.String id, java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
   {
     DashboardLayer _instance = DashboardLayer.get(id);
-    _instance.updateLegend(legendXPosition, legendYPosition);
+    _instance.updateLegend(legendXPosition, legendYPosition, groupedInLegend);
   }
   
   public static DashboardLayer lock(java.lang.String id)

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2064625116)
+@com.runwaysdk.business.ClassSignature(hash = 502100715)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -36,6 +36,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public String getClassType()
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardLegend.CLASS;
+  }
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend()
+  {
+    return getGroupedInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLegend.GROUPEDINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLegend.GROUPEDINLEGEND, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableChar getId()
   {
@@ -154,6 +171,9 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public interface DashboardLegendQueryStructIF extends com.runwaysdk.query.SelectableStruct, com.runwaysdk.generation.loader.Reloadable
   {
 
+    public com.runwaysdk.query.SelectableBoolean getGroupedInLegend();
+    public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias);
+    public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
@@ -185,6 +205,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
 
   }
 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend()
+  {
+    return getGroupedInLegend(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLegend.GROUPEDINLEGEND, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getGroupedInLegend(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLegend.GROUPEDINLEGEND, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getId()
   {
     return getId(null);

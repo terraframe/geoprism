@@ -185,6 +185,7 @@ a.map-layers-opener.opener {
 	background: rgba(0, 0, 0, 0.8);
 	border: solid black 1px;
 	z-index: 999;	
+	cursor: move;
 /* 	margin: 5px 5px 5px auto; */
 }
 
@@ -193,10 +194,9 @@ a.map-layers-opener.opener {
 	position: absolute;
 	right: 300px;
 	bottom: 0px;
+	background: rgba(0, 0, 0, 0.8);
+	border: solid black 1px;
 }
-/* #legend-items-container{ */
-/* 	display: none; */
-/* } */
 
 .legend-item{
 	padding: 3px;
@@ -216,6 +216,12 @@ ul#legend-list{
     margin: 2px;
 }
 
+ul#legend-list-group{
+    list-style-type: none;
+    padding: 2px;
+    margin: 2px;
+}
+
 a.legend-opener.opener{
 	font-size:15px;
 	line-height:15px;
@@ -230,7 +236,5 @@ a.legend-opener.opener{
 .legend-image{
 	margin-right: 10px;
 }
-/* a.legend-opener.opener:hover{ */
-/* 	color: #00bfff; */
-/* } */
+
 
