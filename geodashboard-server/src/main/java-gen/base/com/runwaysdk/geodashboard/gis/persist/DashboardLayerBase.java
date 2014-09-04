@@ -36,11 +36,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-<<<<<<< HEAD
   private static final long serialVersionUID = 725242897;
-=======
-  private static final long serialVersionUID = 1369711371;
->>>>>>> branch 'master' of git@github.com:terraframe/geodashboard.git
   
   public DashboardLayerBase()
   {
