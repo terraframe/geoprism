@@ -171,9 +171,11 @@ $(document).ready(function(){
 		</div>
 		<button class="none">submit</button>
         
+        <!--
         <a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
         	<span style="color:white;font-weight:bold;"> + Create New Dashboard</span>
 		    </a>
+		    -->
 		    
         <div class="choice-form">
           

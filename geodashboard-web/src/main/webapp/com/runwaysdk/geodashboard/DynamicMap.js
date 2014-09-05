@@ -585,6 +585,8 @@
         // remove associated legend
         //// legend id's are set as the 'legend_' + layer id @ legend creation
         $("#legend_"+id).remove();
+        
+        $("li[data-parentlayerid='"+id+"']").remove();
       },
       
       /**
