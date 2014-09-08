@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -655009371)
+@com.runwaysdk.business.ClassSignature(hash = 559357041)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,6 +25,60 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS;
   }
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault()
+  {
+    return getActiveByDefault(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.ACTIVEBYDEFAULT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.ACTIVEBYDEFAULT, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationAttribute()
+  {
+    return getAggregationAttribute(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationAttribute(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.AGGREGATIONATTRIBUTE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationAttribute(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.AGGREGATIONATTRIBUTE, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationMethod()
+  {
+    return getAggregationMethod(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationMethod(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.AGGREGATIONMETHOD, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAggregationMethod(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.AGGREGATIONMETHOD, alias, displayLabel);
+
+  }
+ 
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
   {
     return getDisplayInLegend(null);
@@ -94,6 +148,24 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   public com.runwaysdk.query.SelectableChar getLayerId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LAYERID, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerIsActive()
+  {
+    return getLayerIsActive(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerIsActive(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LAYERISACTIVE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getLayerIsActive(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.LAYERISACTIVE, alias, displayLabel);
 
   }
  

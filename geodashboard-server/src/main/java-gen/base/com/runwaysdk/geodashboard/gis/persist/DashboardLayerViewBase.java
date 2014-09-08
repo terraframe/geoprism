@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2046072622)
+@com.runwaysdk.business.ClassSignature(hash = -761873720)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,20 +11,108 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
+  public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
+  public static java.lang.String AGGREGATIONATTRIBUTE = "aggregationAttribute";
+  public static java.lang.String AGGREGATIONMETHOD = "aggregationMethod";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
+  public static java.lang.String LAYERISACTIVE = "layerIsActive";
   public static java.lang.String LAYERNAME = "layerName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = 2046072622;
+  private static final long serialVersionUID = -761873720;
   
   public DashboardLayerViewBase()
   {
     super();
+  }
+  
+  public Boolean getActiveByDefault()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ACTIVEBYDEFAULT));
+  }
+  
+  public void validateActiveByDefault()
+  {
+    this.validateAttribute(ACTIVEBYDEFAULT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getActiveByDefaultMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
+  }
+  
+  public void setActiveByDefault(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBYDEFAULT, "");
+    }
+    else
+    {
+      setValue(ACTIVEBYDEFAULT, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public String getAggregationAttribute()
+  {
+    return getValue(AGGREGATIONATTRIBUTE);
+  }
+  
+  public void validateAggregationAttribute()
+  {
+    this.validateAttribute(AGGREGATIONATTRIBUTE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationAttributeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(AGGREGATIONATTRIBUTE);
+  }
+  
+  public void setAggregationAttribute(String value)
+  {
+    if(value == null)
+    {
+      setValue(AGGREGATIONATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(AGGREGATIONATTRIBUTE, value);
+    }
+  }
+  
+  public String getAggregationMethod()
+  {
+    return getValue(AGGREGATIONMETHOD);
+  }
+  
+  public void validateAggregationMethod()
+  {
+    this.validateAttribute(AGGREGATIONMETHOD);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationMethodMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(AGGREGATIONMETHOD);
+  }
+  
+  public void setAggregationMethod(String value)
+  {
+    if(value == null)
+    {
+      setValue(AGGREGATIONMETHOD, "");
+    }
+    else
+    {
+      setValue(AGGREGATIONMETHOD, value);
+    }
   }
   
   public Boolean getDisplayInLegend()
@@ -124,6 +212,34 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     else
     {
       setValue(LAYERID, value);
+    }
+  }
+  
+  public Boolean getLayerIsActive()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERISACTIVE));
+  }
+  
+  public void validateLayerIsActive()
+  {
+    this.validateAttribute(LAYERISACTIVE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerIsActiveMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return mdClassIF.definesAttribute(LAYERISACTIVE);
+  }
+  
+  public void setLayerIsActive(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERISACTIVE, "");
+    }
+    else
+    {
+      setValue(LAYERISACTIVE, java.lang.Boolean.toString(value));
     }
   }
   

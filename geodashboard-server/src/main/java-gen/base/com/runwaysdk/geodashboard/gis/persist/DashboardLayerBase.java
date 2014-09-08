@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1369711371)
+@com.runwaysdk.business.ClassSignature(hash = -1666139298)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,6 +12,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
   public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
+  public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
@@ -36,7 +37,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1369711371;
+  private static final long serialVersionUID = -1666139298;
   
   public DashboardLayerBase()
   {
@@ -69,6 +70,34 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     else
     {
       setValue(BBOXINCLUDED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public Boolean getActiveByDefault()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ACTIVEBYDEFAULT));
+  }
+  
+  public void validateActiveByDefault()
+  {
+    this.validateAttribute(ACTIVEBYDEFAULT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getActiveByDefaultMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
+  }
+  
+  public void setActiveByDefault(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBYDEFAULT, "");
+    }
+    else
+    {
+      setValue(ACTIVEBYDEFAULT, java.lang.Boolean.toString(value));
     }
   }
   

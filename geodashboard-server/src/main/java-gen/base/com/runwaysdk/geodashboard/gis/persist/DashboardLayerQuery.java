@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 750456436)
+@com.runwaysdk.business.ClassSignature(hash = 1862959559)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -53,6 +53,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.BBOXINCLUDED, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault()
+  {
+    return getActiveByDefault(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -819,6 +836,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded();
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias);
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault();
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias);
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -987,6 +1007,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.BBOXINCLUDED, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault()
+  {
+    return getActiveByDefault(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -1676,6 +1713,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded();
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias);
     public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault();
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias);
+    public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -1841,6 +1881,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.query.SelectableBoolean getBBoxIncluded(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.BBOXINCLUDED, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault()
+  {
+    return getActiveByDefault(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getActiveByDefault(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ACTIVEBYDEFAULT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()

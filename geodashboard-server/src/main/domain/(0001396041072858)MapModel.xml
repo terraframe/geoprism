@@ -21,7 +21,8 @@
 					<dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
 					<reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
 					<reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
-					<struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />		
+					<boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
+					<struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />	
 				</attributes>
 				<mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
 					<mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer"/>		
@@ -32,14 +33,18 @@
 
 			<mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View">
 				<attributes>
+					<virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"/>
 					<virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"/>
 					<virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
 					<virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
 					<virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
+					<boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
 					<char name="viewName" label="viewName" size="64" required="true" />
 					<char name="layerName" label="layerName" size="64" required="true" />
 					<char name="layerId" label="layerId" size="64" required="true" />
 					<char name="sldName" label="sldName" size="64" required="true" />
+					<char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
+					<char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
 				</attributes>
 			</mdView>
 			

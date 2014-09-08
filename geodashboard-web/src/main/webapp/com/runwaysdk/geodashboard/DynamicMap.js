@@ -27,7 +27,8 @@
       LAYER_MODAL : '#modal01',
       DASHBOARD_MODAL : "#dashboardModal01",
       TO_DATE : 'to-field',
-      FROM_DATE : 'from-field'
+      FROM_DATE : 'from-field',
+      SRID : "EPSG:4326"
     },
     
     Instance : {
@@ -68,8 +69,7 @@
         overlayLayerContainer.on('click', 'a', bound);
         
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
-        $(".gdb-dashboard").on("click", dashboardBound);      
-              
+        $(".gdb-dashboard").on("click", dashboardBound); 
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
@@ -143,6 +143,10 @@
           view.setLegendXPosition(layer.legendXPosition);
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
+          view.setActiveByDefault(true);
+          view.setLayerIsActive(true);
+          view.setAggregationMethod(layer.aggregationMethod);
+          view.setAggregationAttribute(layer.aggregationAttribute);
           
           view.style = layer.styles[0];
           
@@ -157,15 +161,7 @@
           this._bBox = json.bbox;
         }
       },
-      
-      /**
-       * Updates a layer in the layer cache with new properties
-       * 
-       */
-      _updateLayerInLayerCache : function() {
-    	  console.log("updating")
-      },
-      
+           
       /**
        * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
        */
@@ -192,6 +188,9 @@
         });
         
         L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
+        
+        var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
+        this._map.on("click", mapClickHandlerBound);
       },
       
       _configureMap : function() {
@@ -210,6 +209,9 @@
       },
       
       
+      /**
+       * Adds leaflet layers to the map and builds the base layer checkboxes
+       */
       _renderBaseLayers : function() {
         this._baseLayers.clear();
         
@@ -261,7 +263,14 @@
 		  			html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
 		  			html += '</li>';
 		  			
+	                // Styling the legend when items are added to an empty legend group
+	                if($("#legend-list-group li").length === 0){
+	                	$("#legend-container-group").css("background", "rgba(0, 0, 0, 0.8)");
+	                	$("#legend-container-group").css("border", "solid black 1px");
+	                }
+	                
 		  			$("#legend-list-group").append(html);	
+		  			
 	            }
 	            else{
 	            	
@@ -329,6 +338,12 @@
                   // Persist legend position to the db
                   com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
                   
+                  // Styling the legend when items are added to an empty legend group
+                  if($("#legend-list-group li").length === 0){
+                	  $("#legend-container-group").css("background", "rgba(0, 0, 0, 0.8)");
+                	  $("#legend-container-group").css("border", "solid black 1px");
+                  }
+                  
         		  draggedListItem.appendTo("#legend-list-group");
         		  draggedListItem.addClass("legend-grouped");
         		  draggedLegendContainer.remove();
@@ -360,7 +375,13 @@
 	    	      li.removeClass("legend-grouped");
 	    	      
 	    	      $(".pageContent").append(html);
-	    	      $("#"+legendId).children().children().append(li)
+	    	      $("#"+legendId).children().children().append(li);
+	    	      
+                  // Styling (visually hiding) the legend when all items are removed from legend group
+                  if($("#legend-list-group li").length === 0){
+                	  $("#legend-container-group").css("background", "none");
+                	  $("#legend-container-group").css("border", "none");
+                  }
 	    	      
 	    	      // Attache draggable event listener to the new element
 		          $("#"+legendId).draggable({
@@ -555,6 +576,96 @@
       },
       
       /**
+       * Performs the identify request when a user clicks on the map
+       * 
+       * This is a first version and will likely need to be rewritten using custom
+       * backend logic (i.e. mdmethod/sql) to allow for more flexibility
+       * 
+       * @param id
+       */
+      _mapClickHandler : function(e) {
+    	  
+    	  // Construct a GetFeatureInfo request URL given a point
+    	  var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
+    	  var size = this._map.getSize();
+    	  var layers = this._layerCache.$values().reverse();
+    	  var mapBbox = this._map.getBounds().toBBoxString();
+    	  var map = this._map;
+    	  var layerNameMap = new Object();
+    	  var layerAggMap = new Object();
+    	  var layerStringList = '';
+    	  var aggregationAttr = '';
+		  var popup = L.popup().setLatLng(e.latlng);
+    	  
+		  // Build a string of layers to query against but geoserver will only return the 
+		  // first entry in the array if anything is found. Otherwise it will query the next layer
+		  // until something is found.
+		  var firstAdded = false;
+    	  for (var i = 0; i < layers.length; i++) { 
+    		  var layer = layers[i];
+    		  
+    		  if(layer.getLayerIsActive()){
+        		  var layerId = layer.attributeMap.viewName.value;
+        		  layerNameMap[layerId] = layer.getLayerName();
+        		  layerAggMap[layerId] = layer.getAggregationMethod();
+        		  if(firstAdded){
+        			  layerStringList += "," + layerId;
+        		  }
+        		  else{
+        			  layerStringList += layerId;
+        			  // we currently only map against a single attribute for a map.  
+        			  // if we allow multiple attributes mapped in a map the assignment of
+        			  // aggregationAttr will need to be refactored to associate a layers
+        			  // identify request with the appropriate aggregationAttr for that layer
+        			  aggregationAttr = layer.getAggregationAttribute().toLowerCase();
+        			  firstAdded = true;
+        		  }
+    		  }
+    	  }
+    	  
+		  var requestURL = window.location.origin+"/geoserver/"+DynamicMap.GEOSERVER_WORKSPACE+"/wms?" +
+	  		"REQUEST=GetFeatureInfo" +
+	  		"&INFO_FORMAT=application/json" +
+	  		"&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
+	  		"&SERVICE=WMS" +
+	  		"&SRS="+DynamicMap.SRID +
+	  		"&VERSION=1.1.1" +
+	        "&height=" + size.y +
+	        "&width=" + size.x +
+	  		"&X="+ point.x +
+	  		"&Y="+ point.y +
+	  		"&BBOX="+ mapBbox +
+	  		"&LAYERS=geodashboard:"+ layerStringList +
+	  		"&QUERY_LAYERS=geodashboard:"+ layerStringList +
+	  		"&TYPENAME=geodashboard:"+ layerStringList +
+	  		"&propertyName=displaylabel,"+ aggregationAttr;
+		  
+		  
+   		  $.ajax({
+  			  url: requestURL,
+  			  context: document.body 
+  			}).done(function(json) {
+  				var popupContent = '';
+      			for(var i = 0; i<json.features.length; i++){
+      				var currLayer = json.features[i];
+      				var currLayerIdReturn = currLayer.id;
+      				var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
+      				var currLayerDisplayName = layerNameMap[currLayerId];
+      				var currFeatureDisplayName = currLayer.properties.displaylabel;
+      				var currAttributeVal = currLayer.properties.numberofunits;
+      				var currAggMethod = layerAggMap[currLayerId];
+      				
+        			popupContent += '<h4 class="popup-heading">'+currLayerDisplayName+'</h4>';
+          			popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
+      			}
+      			
+      			if(popupContent.length > 0){
+      				popup.setContent(popupContent).openOn(map);
+      			}
+  			});
+      },
+      
+      /**
        * Removes the Layer with the given object id (Runway Id)
        * from all caches, the sidebar, and the map itself.
        * 
@@ -573,9 +684,11 @@
         // remove the layer from the map and UI
         el.parent().parent().remove();
         
-        // remove associated legend
+        // Remove associated legend and legend container
         //// legend id's are set as the 'legend_' + layer id @ legend creation
         $("#legend_"+id).remove();
+        // remove associated legend item from the grouped legend
+        $("li[data-parentlayerid='"+id+"']").remove();
       },
       
       /**
@@ -604,7 +717,6 @@
               
               // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
-//              that._addUserLayersToMap(false); // We can't only add the new layer here because the logic is different for create/update and we can't know at this point which one we're at
               that._addUserLayersToMap();            
               
               // TODO : Push this somewhere as a default handler.
@@ -828,9 +940,11 @@
         
         if (checked) {
           this._addUserLayersToMap();
+          layer.setLayerIsActive(true);
         }
         else {
           this._map.removeLayer(layer.leafletLayer);
+          layer.setLayerIsActive(false);
         }
       },
       

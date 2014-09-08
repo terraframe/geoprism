@@ -188,8 +188,8 @@ a.map-layers-opener.opener {
 	position: absolute;
 	right: 300px;
 	bottom: 0px;
-	background: rgba(0, 0, 0, 0.8);
-	border: solid black 1px;
+/* 	background: rgba(0, 0, 0, 0.8); */
+/* 	border: solid black 1px; */
 }
 
 .legend-item{
@@ -231,4 +231,15 @@ a.legend-opener.opener{
 	margin-right: 10px;
 }
 
+h4.popup-heading{
+	margin: 0;
+}
+
+.leaflet-popup-content p{
+	margin: 0;
+}
+
+/* div.leaflet-popup-content-wrapper{ */
+/* 	background: rgba(0, 0, 0, 0.8);  */
+/* } */
 
