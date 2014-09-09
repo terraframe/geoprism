@@ -231,15 +231,20 @@ a.legend-opener.opener{
 	margin-right: 10px;
 }
 
-h4.popup-heading{
+h3.popup-heading{
 	margin: 0;
+	text-align: center;
+	color: #666666;
+	font-weight: bold;
+}
+
+.popup-table-heading{
+	font-style: italic;
 }
 
 .leaflet-popup-content p{
 	margin: 0;
 }
 
-/* div.leaflet-popup-content-wrapper{ */
-/* 	background: rgba(0, 0, 0, 0.8);  */
-/* } */
+
 

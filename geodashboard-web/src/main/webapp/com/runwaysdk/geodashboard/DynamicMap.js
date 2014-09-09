@@ -11,7 +11,10 @@
    "googleSatellite" : "Google Satellite",
    "googleHybrid" : "Google Hybrid",
    "googleTerrain" : "Google Terrain",
-   "osmBasic" : "Open Street Map"
+   "osmBasic" : "Open Street Map",
+   "location" : "Location",
+   "aggregationMethod" : "Aggregation Method", 
+   "aggregateValue" : "Aggregation Value"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
@@ -640,12 +643,13 @@
 	  		"&TYPENAME=geodashboard:"+ layerStringList +
 	  		"&propertyName=displaylabel,"+ aggregationAttr;
 		  
-		  
+		  DynamicMap.that = this;
    		  $.ajax({
   			  url: requestURL,
   			  context: document.body 
   			}).done(function(json) {
   				var popupContent = '';
+  				// The getfeatureinfo request will return only 1 feature
       			for(var i = 0; i<json.features.length; i++){
       				var currLayer = json.features[i];
       				var currLayerIdReturn = currLayer.id;
@@ -655,8 +659,33 @@
       				var currAttributeVal = currLayer.properties.numberofunits;
       				var currAggMethod = layerAggMap[currLayerId];
       				
-        			popupContent += '<h4 class="popup-heading">'+currLayerDisplayName+'</h4>';
-          			popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
+      				
+      				popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
+      				
+      				var html = '';
+      				html += '<table class="table">';
+      				html += '<thead class="popup-table-heading">';
+      				html += '<tr>'; 
+      				html += '<th>'+DynamicMap.that.localize("location")+'</th>';  
+      				html += '<th>'+DynamicMap.that.localize("aggregationMethod")+'</th>'; 
+      				html += '<th>'+DynamicMap.that.localize("aggregateValue")+'</th>'; 
+      				html += '</tr>';  
+      				html += '</thead>';
+      				html += '<tbody>';  
+      				html += '<tr>'; 
+      				html += '<td>'+ currFeatureDisplayName +'</td>';  
+      				html += '<td>' + currAggMethod + '</td>'; 
+      				html += '<td>' + currAttributeVal + '</td>';  
+      				html += '</tr>';  
+      				html += '</tbody>';  
+      				html += '</table>';  
+      	
+      				
+//        			popupContent += '<h4 class="popup-heading">'+currLayerDisplayName+'</h4>';
+//          			popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
+      				
+      				popupContent += html;
+      			
       			}
       			
       			if(popupContent.length > 0){
