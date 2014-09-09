@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2080721294)
+@com.runwaysdk.business.ClassSignature(hash = 2117741064)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -24,7 +24,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 2080721294;
+  private static final long serialVersionUID = 2117741064;
   
   public DashboardMapBase()
   {
@@ -447,6 +447,18 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   {
     DashboardMap _instance = DashboardMap.get(id);
     return _instance.orderLayers(layerIds);
+  }
+  
+  public java.lang.String updateConditions(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String updateConditions(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  {
+    DashboardMap _instance = DashboardMap.get(id);
+    return _instance.updateConditions(conditions);
   }
   
   public static DashboardMap lock(java.lang.String id)

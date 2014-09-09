@@ -311,12 +311,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
   }
 
   @Override
-  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO condition)
+  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO[] conditions)
       throws IOException, ServletException
   {
     try
     {
-      String layerJSON = layer.applyWithStyle(style, mapId, condition);
+      String layerJSON = layer.applyWithStyle(style, mapId, conditions);
       
       JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
       jsonReturn.setInformation( this.getClientRequest().getInformation() );

@@ -1,4 +1,6 @@
-// page init
+/**
+ * This is code that the Ukrainians (PSD2HTML) wrote. This code runs on initialization and creates datepickers based on CSS.
+ */
 jQuery(function(){
 	jQuery('div.datepicker').datepicker({ dateFormat: 'dd/mm/yy' });
 	jQuery('.data-block').each(function(){

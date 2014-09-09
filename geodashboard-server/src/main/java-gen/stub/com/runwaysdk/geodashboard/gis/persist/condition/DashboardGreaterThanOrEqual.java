@@ -4,6 +4,7 @@ import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.condition.GreaterThanOrEqual;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.ValueQuery;
 
 public class DashboardGreaterThanOrEqual extends DashboardGreaterThanOrEqualBase implements com.runwaysdk.generation.loader.Reloadable, GreaterThanOrEqual
 {
@@ -15,8 +16,10 @@ public class DashboardGreaterThanOrEqual extends DashboardGreaterThanOrEqualBase
   }
   
   @Override
-  public com.runwaysdk.query.Condition asRunwayQuery(Attribute attr) {
-    return ((AttributeNumber)attr).GE(this.getComparisonValue());
+  public void restrictQuery(ValueQuery query, Attribute attr) {
+    if (attr instanceof AttributeNumber) {
+      query.AND(((AttributeNumber)attr).GE(this.getComparisonValue()));
+    }
   }
   
   @Override

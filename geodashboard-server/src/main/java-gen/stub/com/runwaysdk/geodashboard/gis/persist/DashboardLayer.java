@@ -1,6 +1,8 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +35,6 @@ import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
@@ -44,6 +45,7 @@ import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -59,16 +61,13 @@ public class DashboardLayer extends DashboardLayerBase implements
 {
   private static final long  serialVersionUID = 1992575686;
 
-  public static final String DB_VIEW_PREFIX   = "layer$";
+  public static final String DB_VIEW_PREFIX   = "l";
 
   private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
   
-  private boolean viewHasData = true;
+  private List<DashboardCondition> conditions = null;
   
-  public DashboardLayer()
-  {
-    super();
-  }
+  private boolean viewHasData = true;
   
   @Override
   public FeatureStrategy getFeatureStrategy()
@@ -87,17 +86,24 @@ public class DashboardLayer extends DashboardLayerBase implements
     return viewHasData;
   }
   
+  public void setConditions(List<DashboardCondition> conditions) {
+    this.conditions = conditions;
+  }
+  
+  public List<DashboardCondition> getConditions() {
+    return this.conditions;
+  }
+  
   @Override
-  public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition condition)
+  public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
-    this.applyWithStyleInTransaction(style, mapId, condition);
+    this.applyWithStyleInTransaction(style, mapId, conditions);
     
     // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
     this.publish();
     GeoserverFacade.pushUpdates();
     
     try {
-      
       JSONObject json = this.toJSON();     
       
       JSONArray jsonArray = new JSONArray();
@@ -122,11 +128,13 @@ public class DashboardLayer extends DashboardLayerBase implements
 //    return view;
   }
   @Transaction
-  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition condition) {
+  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions) {
     boolean isNew = this.isNew();
+    
+    // Find (and set) the GeoEntity reference attribute
+    // FIXME UI needs to allow for picking of the geo entity attribute
     if (isNew && style instanceof DashboardThematicStyle)
     {
-      // FIXME UI needs to allow for picking of the geo entity attribute
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
@@ -151,34 +159,22 @@ public class DashboardLayer extends DashboardLayerBase implements
       }
       else
       {
-        throw new ProgrammingErrorException("Class ["+mdClass.definesType()+"] does not referenced ["+GeoEntity.CLASS+"].");
+        throw new ProgrammingErrorException("Class ["+mdClass.definesType()+"] does not reference a ["+GeoEntity.CLASS+"].");
       }
     }
     
     // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that won't show the new style update.
-    String vn = DB_VIEW_PREFIX + IDGenerator.nextID();
+    String vn = generateViewName();
     this.setViewName(vn);
     this.setVirtual(true);
     
-//    boolean isLocked = false;
-//    if (!style.isNew()) {
-//      style.appLock();
-//      isLocked = true;
-//    }
     style.generateName(this.getViewName());
     
-    if (condition != null) {
-      condition.apply();
-      
-      if (style instanceof DashboardThematicStyle) {
-        ((DashboardThematicStyle)style).setStyleCondition(condition);
-      }
+    if (conditions != null) {
+      this.conditions = Arrays.asList(conditions);
     }
     
     style.apply();
-//    if (isLocked) {
-//      style.unlock();
-//    }
     
     this.apply();
     
@@ -205,6 +201,15 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     
     this.validate();
+  }
+  
+  public String generateViewName() {
+    String sessionId = Session.getCurrentSession().getId();
+    
+    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well. 
+    String vn = DB_VIEW_PREFIX + sessionId + IDGenerator.nextID().substring(0, 30);
+    
+    return vn;
   }
   
   /**
@@ -314,29 +319,35 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
   
   public boolean needsRepublish() {
-    boolean isPublished = isPublished();
-    if (!isPublished) { return true; }
     
-    Date lastUpdate = this.getLastUpdateDate();
-    Date lastPublish = this.getLastPublishDate();
-    if (lastPublish == null || lastUpdate.after(lastPublish)) {
-      return true;
-    }
+    // TODO : layer views need to be associated with a particular session, otherwise when changing filter conditions different users will clobber eachother.
+    return true;
     
-    return false;
+//    boolean isPublished = isPublished();
+//    if (!isPublished) { return true; }
+//    
+//    // TODO : We could optimize this by recording which conditions the view was built with and then saying if the conditions are different return true.
+//    if (conditions != null) { return true; }
+//    
+//    Date lastUpdate = this.getLastUpdateDate();
+//    Date lastPublish = this.getLastPublishDate();
+//    if (lastPublish == null || lastUpdate.after(lastPublish)) {
+//      return true;
+//    }
+//    
+//    return false;
   }
   
   public void createDatabaseView(boolean force) {
-    Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
+//    Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
     
-    if (force || !viewExists) {
+//    if (force || !viewExists) {
       String sql = this.getViewQuery().getSQL();
       
-      if (viewExists) {
-        Database.dropView(this.getViewName(), sql, false);
-      }
+      Database.dropView(this.getViewName(), sql, false);
+      
       Database.createView(this.getViewName(), sql);
-    }
+//    }
   }
   
   public HashMap<String, Double> getLayerMinMax(String attribute)
@@ -387,6 +398,8 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
   
   /**
+   * @prerequisite conditions is populated with any DashboardConditions necessary for restricting the view dataset.
+   * 
    * @return A ValueQuery for use in creating/dropping the database view which will be used with GeoServer.
    */
   public ValueQuery getViewQuery()
@@ -543,9 +556,10 @@ public class DashboardLayer extends DashboardLayerBase implements
           v.AND(geQ.getUniversal().EQ(universal));
           
           // Attribute condition filtering (i.e. sales unit is greater than 50)
-          DashboardCondition condition = tStyle.getStyleCondition();
-          if (condition != null && thematicAttr instanceof AttributeNumber) {
-            v.AND(condition.asRunwayQuery(thematicAttr));
+          if (conditions != null) {
+            for (DashboardCondition condition : conditions) {
+              condition.restrictQuery(v, thematicAttr);
+            }
           }
         }
       }
@@ -564,6 +578,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     viewHasData = true;
     if (v.getCount() == 0) {
       EmptyLayerInformation info = new EmptyLayerInformation();
+      info.setLayerName(this.getName());
       info.apply();
       
       info.throwIt();

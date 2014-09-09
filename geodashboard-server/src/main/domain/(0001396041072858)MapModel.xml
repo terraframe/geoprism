@@ -4,17 +4,20 @@
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
 				<attributes>
-					<char name="name" label="Name" size="50" required="true" indexType="unique index" />
+					<char name="name" label="Name" size="64" required="true" indexType="unique index" />
 				</attributes>
 				<mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
 				<mdMethod name="orderLayers" static="false" label="Order Layers" returnType="java.lang.String">
 					<mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids" />
 				</mdMethod>
+				<mdMethod name="updateConditions" label="updateConditons" returnType="java.lang.String" static="false">
+				  <mdParameter name="conditions" order="0" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
+				</mdMethod>
 			</mdBusiness>
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true" cacheAlgorithm="everything">
 				<attributes>
-					<char name="name" label="Name" size="50" required="true" />
+					<char name="name" label="Name" size="64" required="true" />
 					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
 					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
 					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
@@ -101,7 +104,7 @@
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
 				<attributes>
-					<char name="name" label="Name" size="50" required="true" />
+					<char name="name" label="Name" size="64" required="true" />
 
 					<!-- value styles -->
 					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
@@ -228,7 +231,10 @@
 				description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
 			</mdException>
 			<mdInformation name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation" label="Empty Layer Information"
-				description="Created when a user creates a layer with no data to display." message="The layer you have created contains no data.">
+				description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
+				<attributes>
+          <text name="layerName" label="Layer Name" />
+        </attributes>
 			</mdInformation>
 
 		</create>
