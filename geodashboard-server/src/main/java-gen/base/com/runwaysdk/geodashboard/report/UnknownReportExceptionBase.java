@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -497206814)
+@com.runwaysdk.business.ClassSignature(hash = -2062661973)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,10 +11,9 @@ package com.runwaysdk.geodashboard.report;
 public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.UnknownReportException";
-  public static java.lang.String FORMAT = "format";
   public static java.lang.String ID = "id";
   public static java.lang.String REPORTNAME = "reportName";
-  private static final long serialVersionUID = -497206814;
+  private static final long serialVersionUID = -2062661973;
   
   public UnknownReportExceptionBase()
   {
@@ -34,34 +33,6 @@ public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.
   public UnknownReportExceptionBase(java.lang.Throwable cause)
   {
     super(cause);
-  }
-  
-  public String getFormat()
-  {
-    return getValue(FORMAT);
-  }
-  
-  public void validateFormat()
-  {
-    this.validateAttribute(FORMAT);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getFormatMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.UnknownReportException.CLASS);
-    return mdClassIF.definesAttribute(FORMAT);
-  }
-  
-  public void setFormat(String value)
-  {
-    if(value == null)
-    {
-      setValue(FORMAT, "");
-    }
-    else
-    {
-      setValue(FORMAT, value);
-    }
   }
   
   public String getId()
@@ -116,7 +87,6 @@ public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.
   public java.lang.String localize(java.util.Locale locale)
   {
     java.lang.String message = super.localize(locale);
-    message = replace(message, "{format}", this.getFormat());
     message = replace(message, "{id}", this.getId());
     message = replace(message, "{reportName}", this.getReportName());
     return message;

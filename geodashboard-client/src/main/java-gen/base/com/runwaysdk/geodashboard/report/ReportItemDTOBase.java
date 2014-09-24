@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 1874246260)
+@com.runwaysdk.business.ClassSignature(hash = -1988063786)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = 1874246260;
+  private static final long serialVersionUID = -1988063786;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -30,6 +30,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   public static java.lang.String CACHEDOCUMENT = "cacheDocument";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String DESIGN = "design";
   public static java.lang.String DOCUMENT = "document";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -38,8 +39,6 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String OUTPUTFORMAT = "outputFormat";
-  public static java.lang.String OUTPUTFORMATINDEX = "outputFormatIndex";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String REPORTLABEL = "reportLabel";
   public static java.lang.String REPORTNAME = "reportName";
@@ -143,6 +142,55 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.DashboardDTO getDashboard()
+  {
+    if(getValue(DASHBOARD) == null || getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.DashboardDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
+  }
+  
+  public boolean isDashboardWritable()
+  {
+    return isWritable(DASHBOARD);
+  }
+  
+  public boolean isDashboardReadable()
+  {
+    return isReadable(DASHBOARD);
+  }
+  
+  public boolean isDashboardModified()
+  {
+    return isModified(DASHBOARD);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARD).getAttributeMdDTO();
   }
   
   public String getDesign()
@@ -404,89 +452,6 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
-  @SuppressWarnings("unchecked")
-  public java.util.List<com.runwaysdk.geodashboard.report.OutputFormatDTO> getOutputFormat()
-  {
-    return (java.util.List<com.runwaysdk.geodashboard.report.OutputFormatDTO>) com.runwaysdk.transport.conversion.ConversionFacade.convertEnumDTOsFromEnumNames(getRequest(), com.runwaysdk.geodashboard.report.OutputFormatDTO.CLASS, getEnumNames(OUTPUTFORMAT));
-  }
-  
-  public java.util.List<String> getOutputFormatEnumNames()
-  {
-    return getEnumNames(OUTPUTFORMAT);
-  }
-  
-  public void addOutputFormat(com.runwaysdk.geodashboard.report.OutputFormatDTO enumDTO)
-  {
-    addEnumItem(OUTPUTFORMAT, enumDTO.toString());
-  }
-  
-  public void removeOutputFormat(com.runwaysdk.geodashboard.report.OutputFormatDTO enumDTO)
-  {
-    removeEnumItem(OUTPUTFORMAT, enumDTO.toString());
-  }
-  
-  public void clearOutputFormat()
-  {
-    clearEnum(OUTPUTFORMAT);
-  }
-  
-  public boolean isOutputFormatWritable()
-  {
-    return isWritable(OUTPUTFORMAT);
-  }
-  
-  public boolean isOutputFormatReadable()
-  {
-    return isReadable(OUTPUTFORMAT);
-  }
-  
-  public boolean isOutputFormatModified()
-  {
-    return isModified(OUTPUTFORMAT);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO getOutputFormatMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO) getAttributeDTO(OUTPUTFORMAT).getAttributeMdDTO();
-  }
-  
-  public String getOutputFormatIndex()
-  {
-    return getValue(OUTPUTFORMATINDEX);
-  }
-  
-  public void setOutputFormatIndex(String value)
-  {
-    if(value == null)
-    {
-      setValue(OUTPUTFORMATINDEX, "");
-    }
-    else
-    {
-      setValue(OUTPUTFORMATINDEX, value);
-    }
-  }
-  
-  public boolean isOutputFormatIndexWritable()
-  {
-    return isWritable(OUTPUTFORMATINDEX);
-  }
-  
-  public boolean isOutputFormatIndexReadable()
-  {
-    return isReadable(OUTPUTFORMATINDEX);
-  }
-  
-  public boolean isOutputFormatIndexModified()
-  {
-    return isModified(OUTPUTFORMATINDEX);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getOutputFormatIndexMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(OUTPUTFORMATINDEX).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.ActorDTO getOwner()
   {
     if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
@@ -696,6 +661,30 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public final java.lang.String getParameterDefinitions()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getParameterDefinitions", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getParameterDefinitions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getParameterDefinitions", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.business.ValueQueryDTO getTypesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getTypesForReporting", _declaredTypes);
+    return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public final java.lang.String getURL()
   {
     String[] _declaredTypes = new String[]{};
@@ -712,20 +701,28 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final void render(java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameterDTO[] parameters, java.lang.String baseURL)
+  public static final com.runwaysdk.business.ValueQueryDTO getValuesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String category, java.lang.String criteria)
   {
-    String[] _declaredTypes = new String[]{"java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String"};
-    Object[] _parameters = new Object[]{outputStream, parameters, baseURL};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "render", _declaredTypes);
-    getRequest().invokeMethod(_metadata, this, _parameters);
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{type, category, criteria};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getValuesForReporting", _declaredTypes);
+    return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void render(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameterDTO[] parameters, java.lang.String baseURL)
+  public final java.lang.Long render(java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, outputStream, parameters, baseURL};
+    String[] _declaredTypes = new String[]{"java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{outputStream, parameters, baseURL, reportURL};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "render", _declaredTypes);
-    clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (java.lang.Long) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.Long render(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{id, outputStream, parameters, baseURL, reportURL};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "render", _declaredTypes);
+    return (java.lang.Long) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final void validatePermissions()

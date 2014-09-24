@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1331152030)
+@com.runwaysdk.business.ClassSignature(hash = 1798211627)
 public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.UnknownReportException";
-  private static final long serialVersionUID = -1331152030;
+  private static final long serialVersionUID = 1798211627;
   
   public UnknownReportExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {
@@ -51,46 +51,8 @@ public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.busine
     return CLASS;
   }
   
-  public static java.lang.String FORMAT = "format";
   public static java.lang.String ID = "id";
   public static java.lang.String REPORTNAME = "reportName";
-  public String getFormat()
-  {
-    return getValue(FORMAT);
-  }
-  
-  public void setFormat(String value)
-  {
-    if(value == null)
-    {
-      setValue(FORMAT, "");
-    }
-    else
-    {
-      setValue(FORMAT, value);
-    }
-  }
-  
-  public boolean isFormatWritable()
-  {
-    return isWritable(FORMAT);
-  }
-  
-  public boolean isFormatReadable()
-  {
-    return isReadable(FORMAT);
-  }
-  
-  public boolean isFormatModified()
-  {
-    return isModified(FORMAT);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getFormatMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(FORMAT).getAttributeMdDTO();
-  }
-  
   public String getReportName()
   {
     return getValue(REPORTNAME);
@@ -136,7 +98,6 @@ public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.busine
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{format}", this.getFormat().toString());
     template = template.replace("{id}", this.getId().toString());
     template = template.replace("{reportName}", this.getReportName().toString());
     

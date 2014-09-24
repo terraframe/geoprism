@@ -1,14 +1,15 @@
 package com.runwaysdk.geodashboard.report;
 
+import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.RenderOption;
 
 import com.runwaysdk.generation.loader.Reloadable;
 
 public class PDFUrlActionHandler extends AbstractUrlActionHandler implements Reloadable
 {
-  public PDFUrlActionHandler(String baseURL)
+  public PDFUrlActionHandler(IReportDocument document, String baseURL, String reportURL)
   {
-    super(baseURL);
+    super(document, baseURL, reportURL);
   }
 
   @Override

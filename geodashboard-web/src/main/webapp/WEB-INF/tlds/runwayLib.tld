@@ -553,20 +553,6 @@
     </attribute>
     <attribute>
       <description>
-        Flag denoting if the value is a key to be localized.  By default this value is true
-      </description>
-      <name>
-        localize
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Class of the table
       </description>
       <name>
@@ -679,6 +665,20 @@
     </attribute>
     <attribute>
       <description>
+        Where to open the target URL
+      </description>
+      <name>
+        tar
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
         Script to be run when the form is reset
       </description>
       <name>
@@ -707,10 +707,10 @@
     </attribute>
     <attribute>
       <description>
-        Where to open the target URL
+        Encoding type
       </description>
       <name>
-        tar
+        enctype
       </name>
       <required>
         false
@@ -1015,20 +1015,6 @@
     </attribute>
     <attribute>
       <description>
-        Disabled input controls
-      </description>
-      <name>
-        disabled
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Flag indicating if the input is read only
       </description>
       <name>
@@ -1047,6 +1033,20 @@
       </description>
       <name>
         maxlength
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        Disabled input controls
+      </description>
+      <name>
+        disabled
       </name>
       <required>
         false
@@ -1533,20 +1533,6 @@
     </attribute>
     <attribute>
       <description>
-        Disabled input controls
-      </description>
-      <name>
-        disabled
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Flag indicating if the input is read only
       </description>
       <name>
@@ -1565,6 +1551,20 @@
       </description>
       <name>
         maxlength
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        Disabled input controls
+      </description>
+      <name>
+        disabled
       </name>
       <required>
         false
@@ -2051,20 +2051,6 @@
     </attribute>
     <attribute>
       <description>
-        Disabled input controls
-      </description>
-      <name>
-        disabled
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Flag indicating if the input is read only
       </description>
       <name>
@@ -2083,6 +2069,20 @@
       </description>
       <name>
         maxlength
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        Disabled input controls
+      </description>
+      <name>
+        disabled
       </name>
       <required>
         false
@@ -2499,6 +2499,20 @@
     </body-content>
     <attribute>
       <description>
+        Specifies that the option should appear selected (will be displayed first in the list)
+      </description>
+      <name>
+        selected
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
         Specifies that the option should be disabled when it first loads
       </description>
       <name>
@@ -2517,20 +2531,6 @@
       </description>
       <name>
         label
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
-        Specifies that the option should appear selected (will be displayed first in the list)
-      </description>
-      <name>
-        selected
       </name>
       <required>
         false
@@ -2961,20 +2961,6 @@
     </attribute>
     <attribute>
       <description>
-        Disabled input controls
-      </description>
-      <name>
-        disabled
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Flag indicating if the input is read only
       </description>
       <name>
@@ -2993,6 +2979,20 @@
       </description>
       <name>
         maxlength
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        Disabled input controls
+      </description>
+      <name>
+        disabled
       </name>
       <required>
         false
@@ -3689,20 +3689,6 @@
     </attribute>
     <attribute>
       <description>
-        Flag denoting if the value is a key to be localized.  By default this value is true
-      </description>
-      <name>
-        localize
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         Class of the table
       </description>
       <name>
@@ -3759,20 +3745,6 @@
     </attribute>
     <attribute>
       <description>
-        The name of the scoped variable to which each entry is assigned.
-      </description>
-      <name>
-        var
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         The class of odd rows
       </description>
       <name>
@@ -3791,6 +3763,20 @@
       </description>
       <name>
         even
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        The name of the scoped variable to which each entry is assigned.
+      </description>
+      <name>
+        var
       </name>
       <required>
         false
@@ -3899,20 +3885,6 @@
     </body-content>
     <attribute>
       <description>
-        The name of the scoped struct variable to which each entry is assigned.
-      </description>
-      <name>
-        var
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
         The attribute of the column
       </description>
       <name>
@@ -3920,6 +3892,20 @@
       </name>
       <required>
         true
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
+        The name of the scoped struct variable to which each entry is assigned.
+      </description>
+      <name>
+        var
+      </name>
+      <required>
+        false
       </required>
       <rtexprvalue>
         true
@@ -4025,6 +4011,20 @@
     </attribute>
     <attribute>
       <description>
+        Flag denoting if an empty option should be generated.
+      </description>
+      <name>
+        includeMessages
+      </name>
+      <required>
+        false
+      </required>
+      <rtexprvalue>
+        true
+      </rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>
         The name of the controller parameter or attribute
       </description>
       <name>
@@ -4043,20 +4043,6 @@
       </description>
       <name>
         displayLabel
-      </name>
-      <required>
-        false
-      </required>
-      <rtexprvalue>
-        true
-      </rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>
-        Flag denoting if an empty option should be generated.
-      </description>
-      <name>
-        includeMessages
       </name>
       <required>
         false

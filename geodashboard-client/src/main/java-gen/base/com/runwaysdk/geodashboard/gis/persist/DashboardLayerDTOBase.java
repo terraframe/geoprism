@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 733233809)
+@com.runwaysdk.business.ClassSignature(hash = 1570740738)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 733233809;
+  private static final long serialVersionUID = 1570740738;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

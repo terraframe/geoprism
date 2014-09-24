@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.HTMLActionHandler;
 import org.eclipse.birt.report.engine.api.IAction;
+import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.RenderOption;
 import org.eclipse.birt.report.engine.api.script.IReportContext;
 
+import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.generation.loader.Reloadable;
 
 public abstract class AbstractUrlActionHandler extends HTMLActionHandler implements Reloadable
@@ -27,9 +28,15 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
 
   private String              baseURL;
 
-  public AbstractUrlActionHandler(String baseURL)
+  private IReportDocument     document;
+
+  private String              reportURL;
+
+  public AbstractUrlActionHandler(IReportDocument document, String baseURL, String reportURL)
   {
     this.baseURL = baseURL;
+    this.document = document;
+    this.reportURL = reportURL;
   }
 
   protected abstract String getDefaultFormat();
@@ -41,28 +48,58 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
    * @param context
    * @return URL
    */
-  public String getURL(IAction actionDefn, IReportContext context)
+  public String getURL(IAction action, IReportContext context)
   {
-    Object renderContext = this.getRenderContext(context);
-
-    return getURL(actionDefn, renderContext);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.eclipse.birt.report.engine.api2.IHTMLActionHandler#getURL(org.eclipse
-   * .birt.report.engine.api2.IAction, java.lang.Object)
-   */
-  public String getURL(IAction actionDefn, Object context)
-  {
-    if (actionDefn != null && actionDefn.getType() == IAction.ACTION_DRILLTHROUGH)
+    if (action != null && action.getType() == IAction.ACTION_DRILLTHROUGH)
     {
-      return this.buildDrillAction(actionDefn, context);
+      return this.buildDrillAction(action, context);
+    }
+    else if (action != null && action.getType() == IAction.ACTION_BOOKMARK)
+    {
+      return this.buildBookmarkAction(action, context);
     }
 
-    return super.getURL(actionDefn, context);
+    return super.getURL(action, context);
+  }
+
+  public String buildBookmarkAction(IAction action, IReportContext context)
+  {
+    if (action.getReportName() != null)
+    {
+      StringBuffer buffer = new StringBuffer(this.buildDrillAction(action, context));
+      this.appendBookmark(buffer, action.getBookmark());
+
+      return buffer.toString();
+    }
+    else
+    {
+      StringBuffer buffer = new StringBuffer();
+      buffer.append("/");
+      buffer.append(CommonProperties.getDeployAppName());
+      buffer.append("/");
+      buffer.append(this.reportURL);
+
+      if (this.document != null)
+      {
+        long pageNumber = this.document.getPageNumber(action.getBookmark());
+
+        this.appendParamter(buffer, "pageNumber", pageNumber);
+      }
+
+      this.appendBookmark(buffer, action.getBookmark());
+
+      return buffer.toString();
+    }
+  }
+
+  public String getURL(IAction action, Object context)
+  {
+    if (action != null && action.getType() == IAction.ACTION_DRILLTHROUGH)
+    {
+      return this.buildDrillAction(action, context);
+    }
+
+    return super.getURL(action, context);
   }
 
   /**
@@ -76,10 +113,9 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
    */
   protected String buildDrillAction(IAction action, Object context)
   {
-    StringBuffer link = new StringBuffer();
-
     ReportItem item = this.getReportItem(action);
 
+    StringBuffer link = new StringBuffer();
     link.append(this.baseURL + "/" + item.getURL());
 
     // Adds the parameters
@@ -125,12 +161,14 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
 
     if (reportPath != null && reportPath.length() > 0)
     {
-      int index = reportPath.lastIndexOf(File.separator);
-      String reportName = reportPath.substring(index + 1);
+      String reportName = new File(reportPath).getName();
 
       if (! ( reportName.endsWith(RPTDESIGN) || reportName.endsWith(RPTDOCUMENT) ))
       {
-        throw new RuntimeException("Drill through report must end in .rptdesign or .rptdocument");
+        RuntimeException exception = new RuntimeException("Drill through report must end in .rptdesign or .rptdocument");
+        // exception.apply();
+
+        throw exception;
       }
 
       if (reportName.endsWith(RPTDOCUMENT))
@@ -141,9 +179,7 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
       /*
        * Get the report item from the name of the report and the output format
        */
-      String format = this.getFormat(action);
-
-      ReportItem item = ReportItem.find(reportName, ReportItem.getOutputFormat(format));
+      ReportItem item = ReportItem.find(reportName);
 
       if (item != null)
       {
@@ -151,11 +187,10 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
       }
       else
       {
-        String message = "Unable to find a report in the system with the report name [" + reportName + "] and output format [" + format + "]";
+        String message = "Unable to find a report in the system with the report name [" + reportName + "]";
 
         UnknownReportException e = new UnknownReportException(message);
         e.setReportName(reportName);
-        e.setFormat(format);
 
         throw e;
       }
@@ -171,26 +206,21 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
     }
   }
 
-  private String getFormat(IAction action)
+  public OutputFormat getOutputFormat(String format)
   {
-    String format = action.getFormat();
-
-    if (format == null || format.length() == 0)
+    if (format.equals(RenderOption.OUTPUT_FORMAT_PDF))
     {
-      return this.getDefaultFormat();
+      return OutputFormat.PDF;
     }
-    else if (! ( format.equals(RenderOption.OUTPUT_FORMAT_HTML) || format.equals(RenderOption.OUTPUT_FORMAT_PDF) ))
+    else if (format.equals(RenderOption.OUTPUT_FORMAT_HTML))
     {
-      String message = "Unsupported drill through report format [" + format + "]";
-
-      UnsupportedDrillThroughFormatException e = new UnsupportedDrillThroughFormatException(message);
-      e.setOutputFormat(format);
-      e.apply();
-
-      throw e;
+      return OutputFormat.HTML;
     }
 
-    return format;
+    UnsupportedOutputFormatException e = new UnsupportedOutputFormatException("Unknown output format type");
+    e.apply();
+
+    throw e;
   }
 
   /**
@@ -210,14 +240,21 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
       return reportName;
     }
 
+    if (reportName == null)
+    {
+      return null;
+    }
+
     // if the reportName is an URL, use it directly
     try
     {
       URL url = new URL(reportName);
+
       if ("file".equals(url.getProtocol()))
       {
         return url.getFile();
       }
+
       return url.toExternalForm();
     }
     catch (MalformedURLException ex)
@@ -245,6 +282,7 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
 
     // now the root should be a file and the report name is a file also
     File file = new File(reportName);
+
     if (file.isAbsolute())
     {
       return reportName;
@@ -262,34 +300,5 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
       // DO NOTHING
     }
     return reportName;
-  }
-
-  /**
-   * Get render context.
-   * 
-   * @param context
-   * @return
-   */
-  protected Object getRenderContext(IReportContext context)
-  {
-    if (context != null)
-    {
-      Map<?, ?> appContext = context.getAppContext();
-
-      if (appContext != null)
-      {
-        String renderContextKey = EngineConstants.APPCONTEXT_HTML_RENDER_CONTEXT;
-        String format = context.getOutputFormat();
-
-        if (RenderOption.OUTPUT_FORMAT_PDF.equalsIgnoreCase(format))
-        {
-          renderContextKey = EngineConstants.APPCONTEXT_PDF_RENDER_CONTEXT;
-        }
-
-        return appContext.get(renderContextKey);
-      }
-    }
-
-    return null;
   }
 }
