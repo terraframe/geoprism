@@ -2059,19 +2059,18 @@ a.blueactive,
 	position:fixed;
 	left:0;
 	bottom:0;
-	width:70%;
+	width:100%;
 	padding:13px 13px 0 13px;
 }
-.reporticng-container .box{
-	float:left;
-	max-width:264px;
-	padding:0 14px 13px 0;
-	width:25%;
-}
-.reporticng-container .box img{
-	display:block;
-	width:100%;
-	height:auto;
+
+#report-content{
+	width: 84%;
+	background-color: #FFF;
+	height: 200px;
+	border-top-color: black;
+	border-top-style: solid;
+	border-top-width: 1px;
+	overflow-y: scroll;
 }
 
 /*

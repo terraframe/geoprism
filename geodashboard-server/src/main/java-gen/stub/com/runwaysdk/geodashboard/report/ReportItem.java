@@ -47,7 +47,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.CreatePermissionException;
-import com.runwaysdk.session.Request;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
@@ -737,16 +736,34 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
-  @Request
   public static ValueQuery getValuesForReporting(String type, String category, String criteria)
   {
     return ReportProviderBridge.getValuesForReporting(type, category, criteria);
   }
 
-  @Request
   public static ValueQuery getTypesForReporting()
   {
     return ReportProviderBridge.getTypesForReporting();
+  }
+
+  public static ReportItem getReportItemForDashboard(String dashboardId)
+  {
+    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+    OIterator<? extends ReportItem> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
 }

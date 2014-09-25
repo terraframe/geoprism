@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1570740738)
+@com.runwaysdk.business.ClassSignature(hash = -544850737)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 1570740738;
+  private static final long serialVersionUID = -544850737;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -28,6 +28,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   }
   
   public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
+  public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
@@ -85,6 +86,43 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBBoxIncludedMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BBOXINCLUDED).getAttributeMdDTO();
+  }
+  
+  public Boolean getActiveByDefault()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ACTIVEBYDEFAULT));
+  }
+  
+  public void setActiveByDefault(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBYDEFAULT, "");
+    }
+    else
+    {
+      setValue(ACTIVEBYDEFAULT, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isActiveByDefaultWritable()
+  {
+    return isWritable(ACTIVEBYDEFAULT);
+  }
+  
+  public boolean isActiveByDefaultReadable()
+  {
+    return isReadable(ACTIVEBYDEFAULT);
+  }
+  
+  public boolean isActiveByDefaultModified()
+  {
+    return isModified(ACTIVEBYDEFAULT);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getActiveByDefaultMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(ACTIVEBYDEFAULT).getAttributeMdDTO();
   }
   
   public java.util.Date getCreateDate()

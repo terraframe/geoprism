@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 347871406)
+@com.runwaysdk.business.ClassSignature(hash = 439781704)
 public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
-  private static final long serialVersionUID = 347871406;
+  private static final long serialVersionUID = 439781704;
   
   protected DashboardLayerViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -16,15 +16,130 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
     return CLASS;
   }
   
+  public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
+  public static java.lang.String AGGREGATIONATTRIBUTE = "aggregationAttribute";
+  public static java.lang.String AGGREGATIONMETHOD = "aggregationMethod";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
+  public static java.lang.String LAYERISACTIVE = "layerIsActive";
   public static java.lang.String LAYERNAME = "layerName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
+  public Boolean getActiveByDefault()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ACTIVEBYDEFAULT));
+  }
+  
+  public void setActiveByDefault(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBYDEFAULT, "");
+    }
+    else
+    {
+      setValue(ACTIVEBYDEFAULT, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isActiveByDefaultWritable()
+  {
+    return isWritable(ACTIVEBYDEFAULT);
+  }
+  
+  public boolean isActiveByDefaultReadable()
+  {
+    return isReadable(ACTIVEBYDEFAULT);
+  }
+  
+  public boolean isActiveByDefaultModified()
+  {
+    return isModified(ACTIVEBYDEFAULT);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getActiveByDefaultMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(ACTIVEBYDEFAULT).getAttributeMdDTO();
+  }
+  
+  public String getAggregationAttribute()
+  {
+    return getValue(AGGREGATIONATTRIBUTE);
+  }
+  
+  public void setAggregationAttribute(String value)
+  {
+    if(value == null)
+    {
+      setValue(AGGREGATIONATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(AGGREGATIONATTRIBUTE, value);
+    }
+  }
+  
+  public boolean isAggregationAttributeWritable()
+  {
+    return isWritable(AGGREGATIONATTRIBUTE);
+  }
+  
+  public boolean isAggregationAttributeReadable()
+  {
+    return isReadable(AGGREGATIONATTRIBUTE);
+  }
+  
+  public boolean isAggregationAttributeModified()
+  {
+    return isModified(AGGREGATIONATTRIBUTE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAggregationAttributeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(AGGREGATIONATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public String getAggregationMethod()
+  {
+    return getValue(AGGREGATIONMETHOD);
+  }
+  
+  public void setAggregationMethod(String value)
+  {
+    if(value == null)
+    {
+      setValue(AGGREGATIONMETHOD, "");
+    }
+    else
+    {
+      setValue(AGGREGATIONMETHOD, value);
+    }
+  }
+  
+  public boolean isAggregationMethodWritable()
+  {
+    return isWritable(AGGREGATIONMETHOD);
+  }
+  
+  public boolean isAggregationMethodReadable()
+  {
+    return isReadable(AGGREGATIONMETHOD);
+  }
+  
+  public boolean isAggregationMethodModified()
+  {
+    return isModified(AGGREGATIONMETHOD);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAggregationMethodMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(AGGREGATIONMETHOD).getAttributeMdDTO();
+  }
+  
   public Boolean getDisplayInLegend()
   {
     return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(DISPLAYINLEGEND));
@@ -134,6 +249,43 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getLayerIdMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(LAYERID).getAttributeMdDTO();
+  }
+  
+  public Boolean getLayerIsActive()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(LAYERISACTIVE));
+  }
+  
+  public void setLayerIsActive(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(LAYERISACTIVE, "");
+    }
+    else
+    {
+      setValue(LAYERISACTIVE, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isLayerIsActiveWritable()
+  {
+    return isWritable(LAYERISACTIVE);
+  }
+  
+  public boolean isLayerIsActiveReadable()
+  {
+    return isReadable(LAYERISACTIVE);
+  }
+  
+  public boolean isLayerIsActiveModified()
+  {
+    return isModified(LAYERISACTIVE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getLayerIsActiveMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(LAYERISACTIVE).getAttributeMdDTO();
   }
   
   public String getLayerName()

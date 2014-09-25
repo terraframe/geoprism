@@ -63,7 +63,6 @@ div.standby-overlay {
 
 
 .reporticng-container{
-  display:none;
 }
 
 .submit-form .field-row {
@@ -194,8 +193,8 @@ a.map-layers-opener.opener {
 	position: absolute;
 	right: 300px;
 	bottom: 0px;
-	background: rgba(0, 0, 0, 0.8);
-	border: solid black 1px;
+/* 	background: rgba(0, 0, 0, 0.8); */
+/* 	border: solid black 1px; */
 }
 
 .legend-item{
@@ -236,5 +235,21 @@ a.legend-opener.opener{
 .legend-image{
 	margin-right: 10px;
 }
+
+h3.popup-heading{
+	margin: 0;
+	text-align: center;
+	color: #666666;
+	font-weight: bold;
+}
+
+.popup-table-heading{
+	font-style: italic;
+}
+
+.leaflet-popup-content p{
+	margin: 0;
+}
+
 
 

@@ -11,7 +11,10 @@
    "googleSatellite" : "Google Satellite",
    "googleHybrid" : "Google Hybrid",
    "googleTerrain" : "Google Terrain",
-   "osmBasic" : "Open Street Map"
+   "osmBasic" : "Open Street Map",
+   "location" : "Location",
+   "aggregationMethod" : "Aggregation Method", 
+   "aggregateValue" : "Aggregation Value"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
@@ -27,7 +30,8 @@
       LAYER_MODAL : '#modal01',
       DASHBOARD_MODAL : "#dashboardModal01",
       TO_DATE : 'to-field',
-      FROM_DATE : 'from-field'
+      FROM_DATE : 'from-field',
+      SRID : "EPSG:4326"
     },
     
     Instance : {
@@ -68,11 +72,11 @@
         overlayLayerContainer.on('click', 'a', bound);
         
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
-        $(".gdb-dashboard").on("click", dashboardBound);      
-              
+        $(".gdb-dashboard").on("click", dashboardBound); 
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
+        this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
@@ -99,6 +103,8 @@
           that._renderBaseLayers();
           that._renderUserLayers();
         });
+        
+        that._renderReport();
       },
       
       /**
@@ -146,6 +152,10 @@
           view.setLegendXPosition(layer.legendXPosition);
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
+          view.setActiveByDefault(true);
+          view.setLayerIsActive(true);
+          view.setAggregationMethod(layer.aggregationMethod);
+          view.setAggregationAttribute(layer.aggregationAttribute);
           
           view.style = layer.styles[0];
           
@@ -160,15 +170,7 @@
           this._bBox = json.bbox;
         }
       },
-      
-      /**
-       * Updates a layer in the layer cache with new properties
-       * 
-       */
-      _updateLayerInLayerCache : function() {
-    	  console.log("updating")
-      },
-      
+           
       /**
        * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
        */
@@ -195,8 +197,34 @@
         });
         
         L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
+        
+        var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
+        this._map.on("click", mapClickHandlerBound);
       },
       
+      /**
+       * Creates a new BIRT report. If one already exists the existing one will be cleaned up and removed.
+       */
+      _renderReport : function() {
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          that : this,
+          onSuccess : function(html){
+            this.that._displayReport(html);
+          },
+          onFailure : function(e){
+            this.that.handleException(e);
+          }
+        }, $( "#report-content" )[0]);
+        
+        var dashboardId = '';
+        
+        this._ReportController.run(request, dashboardId);        
+      },
+      
+      _displayReport : function(html) {
+        $( "#report-content" ).html(html);
+      },      
+            
       _configureMap : function() {
         // Handle points (2 coord sets) & polygons (4 coord sets)
         if (this._bBox.length === 2){
@@ -213,6 +241,9 @@
       },
       
       
+      /**
+       * Adds leaflet layers to the map and builds the base layer checkboxes
+       */
       _renderBaseLayers : function() {
         this._baseLayers.clear();
         
@@ -240,94 +271,101 @@
        * 
        */
       _drawLegendItems : function() {
-    	  
-    	  $(".legend-container").remove();  	     	 
-    	  
+        
+        $(".legend-container").remove();            
+        
           var layers = this._layerCache.values();
           
           for(var i = layers.length-1; i >= 0; i--){
-        	var layer = layers[i];
-        	  
-        	var displayInLegend = layer.getDisplayInLegend();
+          var layer = layers[i];
+            
+          var displayInLegend = layer.getDisplayInLegend();
 
-        	if(displayInLegend){
-	            var layerId = layer.getLayerId();
-	            var legendId = "legend_" + layerId;
-	            var displayName = layer.getLayerName() || "N/A";
-	            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
-	            var legendXPosition = layer.getLegendXPosition();
-	            var legendYPosition = layer.getLegendYPosition();
-	            var groupedInLegend = layer.getGroupedInLegend();
-	            
-	            if(groupedInLegend){
-	            	
-	            	// Remove any old grouped legend items before creating new updated items
-	            	var oldLegendItem = $(".legend-item[data-parentlayerid='"+layerId+"']");
-	            	oldLegendItem.remove();
-	            	
-		            var html = '';
-		  			html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
-		  			html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
-		  			html += '</li>';
-		  			
-		  			$("#legend-list-group").append(html);	
-	            }
-	            else{
-	            	
-		            // remove associated legend
-		            //// legend id's are set as the 'legend_' + layer id @ legend creation
-		            $("#"+legendId).remove();
-	            	
-		            // weak control to set the legend in a better position than upper left when the legend is initially created
-		            if(legendXPosition == 0 && legendYPosition == 0){
-		            	legendXPosition += 300;
-		            	legendYPosition += 100;
-		            }
-		            
-		            var html = '';	            
-		    	    html += '<div class="info-box legend-container legend-snapable" id="'+legendId+'" data-parentLayerId="'+layerId+'" style="top:'+legendYPosition+'px; left:'+legendXPosition+'px;">';
-		    	    html += '<div id="legend-items-container"><ul id="legend-list">';
-		        	
-		  			html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
-		  			html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
-		  			html += '</li>';
-		  			
-		  			html += '</ul></div></div>';
-		            
-		            $(".pageContent").append(html);	
-		            
-	    	        // Attache draggable event listener to the new element
-		            $("#"+legendId).draggable({
-		  	        	containment: "body", 
-		  	        	snap: true, 
-		  	        	snap: ".legend-snapable", 
-		  	        	snapMode: "outer", 
-		  	        	snapTolerance: 5,
-		  	        	stack: ".legend-container"
-		  	        });
-	    	        $("#"+legendId).on('dragstop', legendDragStopDragBound); 
-	            }
-        	}
+          if(displayInLegend){
+              var layerId = layer.getLayerId();
+              var legendId = "legend_" + layerId;
+              var displayName = layer.getLayerName() || "N/A";
+              var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
+              var legendXPosition = layer.getLegendXPosition();
+              var legendYPosition = layer.getLegendYPosition();
+              var groupedInLegend = layer.getGroupedInLegend();
+              
+              if(groupedInLegend){
+                
+                // Remove any old grouped legend items before creating new updated items
+                var oldLegendItem = $(".legend-item[data-parentlayerid='"+layerId+"']");
+                oldLegendItem.remove();
+                
+                var html = '';
+            html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
+            html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
+            html += '</li>';
+            
+                  // Styling the legend when items are added to an empty legend group
+                  if($("#legend-list-group li").length === 0){
+                    $("#legend-container-group").css("background", "rgba(0, 0, 0, 0.8)");
+                    $("#legend-container-group").css("border", "solid black 1px");
+                  }
+                  
+            $("#legend-list-group").append(html);  
+            
+              }
+              else{
+                
+                // remove associated legend
+                //// legend id's are set as the 'legend_' + layer id @ legend creation
+                $("#"+legendId).remove();
+                
+                // weak control to set the legend in a better position than upper left when the legend is initially created
+                if(legendXPosition == 0 && legendYPosition == 0){
+                  legendXPosition += 300;
+                  legendYPosition += 100;
+                }
+                
+                var html = '';              
+              html += '<div class="info-box legend-container legend-snapable" id="'+legendId+'" data-parentLayerId="'+layerId+'" style="top:'+legendYPosition+'px; left:'+legendXPosition+'px;">';
+              html += '<div id="legend-items-container"><ul id="legend-list">';
+              
+            html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
+            html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+geoserverName+'" alt="">'+ displayName;
+            html += '</li>';
+            
+            html += '</ul></div></div>';
+                
+                $(".pageContent").append(html);  
+                
+                // Attache draggable event listener to the new element
+                $("#"+legendId).draggable({
+                  containment: "body", 
+                  snap: true, 
+                  snap: ".legend-snapable", 
+                  snapMode: "outer", 
+                  snapTolerance: 5,
+                  stack: ".legend-container"
+                });
+                $("#"+legendId).on('dragstop', legendDragStopDragBound); 
+              }
+          }
           }
           
           var that = this;
           $("#legend-container-group").droppable({
-        	  tolerance: "touch",
-        	  drop: function( event, ui ) {
-        		  var draggedListItem = ui.draggable.children().children().children();
-        		  var draggedLegendContainer = ui.draggable;
-        		  var groupedInLegend = true;
-        		  var relatedLayerId = $(ui.draggable).data('parentlayerid');
-        		  var x = 0;
-        		  var y = 0;
-        		  
+            tolerance: "touch",
+            drop: function( event, ui ) {
+              var draggedListItem = ui.draggable.children().children().children();
+              var draggedLegendContainer = ui.draggable;
+              var groupedInLegend = true;
+              var relatedLayerId = $(ui.draggable).data('parentlayerid');
+              var x = 0;
+              var y = 0;
+              
                   var clientRequest = new Mojo.ClientRequest({
                       onSuccess : function() {
-                    	  // Update the layer object in the layer cache with the new legend position
-                    	  var relatedLayer = that._layerCache.get(relatedLayerId);
-                    	  relatedLayer.setLegendXPosition(x);
-                    	  relatedLayer.setLegendYPosition(y);
-                    	  relatedLayer.setGroupedInLegend(groupedInLegend);
+                        // Update the layer object in the layer cache with the new legend position
+                        var relatedLayer = that._layerCache.get(relatedLayerId);
+                        relatedLayer.setLegendXPosition(x);
+                        relatedLayer.setLegendYPosition(y);
+                        relatedLayer.setGroupedInLegend(groupedInLegend);
                       },
                       onFailure : function(e) {
                         that.handleException(e);
@@ -338,10 +376,16 @@
                   // Persist legend position to the db
                   com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
                   
-        		  draggedListItem.appendTo("#legend-list-group");
-        		  draggedListItem.addClass("legend-grouped");
-        		  draggedLegendContainer.remove();
-        	  }
+                  // Styling the legend when items are added to an empty legend group
+                  if($("#legend-list-group li").length === 0){
+                    $("#legend-container-group").css("background", "rgba(0, 0, 0, 0.8)");
+                    $("#legend-container-group").css("border", "solid black 1px");
+                  }
+                  
+              draggedListItem.appendTo("#legend-list-group");
+              draggedListItem.addClass("legend-grouped");
+              draggedLegendContainer.remove();
+            }
           });
           
           // Click and drag handlers  
@@ -349,39 +393,45 @@
           
           $(".legend-container").on('dragstop', legendDragStopDragBound);         
           $("#legend-list-group").on("click", ".legend-item", function(e) {
-        	  var li = $(this);
-    		  var parentLayerId = li.data("parentlayerid");
-    		  var legendId = "legend_" + parentLayerId;
-    		  
-    		  // prevent legend containers from being created twice. 
-    		  if($("#"+legendId).length === 0){
-	    		  var legendPos = $("#legend-container-group").position();
-	    		  var legendXPosition = legendPos.left;
-	    		  var legendYPosition = legendPos.top;
-	    		  var liYPosition = legendYPosition;
-	    		  var liXPosition = legendXPosition - 50;
-	    		  
-	    		  html = '';
-	    		  html += '<div class="info-box legend-container legend-snapable" id="'+legendId+'" data-parentLayerId="'+parentLayerId+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
-	    	      html += '<div id="legend-items-container"><ul id="legend-list">';
-	    	      html += '</ul></div></div>';
-	    	      
-	    	      li.removeClass("legend-grouped");
-	    	      
-	    	      $(".pageContent").append(html);
-	    	      $("#"+legendId).children().children().append(li)
-	    	      
-	    	      // Attache draggable event listener to the new element
-		          $("#"+legendId).draggable({
-		  	        	containment: "body", 
-		  	        	snap: true, 
-		  	        	snap: ".legend-snapable", 
-		  	        	snapMode: "outer", 
-		  	        	snapTolerance: 5,
-		  	        	stack: ".legend-container"
-		  	      });
-	    	      $("#"+legendId).on('dragstop', legendDragStopDragBound); 
-    		  }
+            var li = $(this);
+          var parentLayerId = li.data("parentlayerid");
+          var legendId = "legend_" + parentLayerId;
+          
+          // prevent legend containers from being created twice. 
+          if($("#"+legendId).length === 0){
+            var legendPos = $("#legend-container-group").position();
+            var legendXPosition = legendPos.left;
+            var legendYPosition = legendPos.top;
+            var liYPosition = legendYPosition;
+            var liXPosition = legendXPosition - 50;
+            
+            html = '';
+            html += '<div class="info-box legend-container legend-snapable" id="'+legendId+'" data-parentLayerId="'+parentLayerId+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
+              html += '<div id="legend-items-container"><ul id="legend-list">';
+              html += '</ul></div></div>';
+              
+              li.removeClass("legend-grouped");
+              
+              $(".pageContent").append(html);
+              $("#"+legendId).children().children().append(li);
+              
+                  // Styling (visually hiding) the legend when all items are removed from legend group
+                  if($("#legend-list-group li").length === 0){
+                    $("#legend-container-group").css("background", "none");
+                    $("#legend-container-group").css("border", "none");
+                  }
+              
+              // Attache draggable event listener to the new element
+              $("#"+legendId).draggable({
+                  containment: "body", 
+                  snap: true, 
+                  snap: ".legend-snapable", 
+                  snapMode: "outer", 
+                  snapTolerance: 5,
+                  stack: ".legend-container"
+              });
+              $("#"+legendId).on('dragstop', legendDragStopDragBound); 
+          }
           });
       },
       
@@ -564,6 +614,122 @@
       },
       
       /**
+       * Performs the identify request when a user clicks on the map
+       * 
+       * This is a first version and will likely need to be rewritten using custom
+       * backend logic (i.e. mdmethod/sql) to allow for more flexibility
+       * 
+       * @param id
+       */
+      _mapClickHandler : function(e) {
+        
+        // Construct a GetFeatureInfo request URL given a point
+        var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
+        var size = this._map.getSize();
+        var layers = this._layerCache.$values().reverse();
+        var mapBbox = this._map.getBounds().toBBoxString();
+        var map = this._map;
+        var layerNameMap = new Object();
+        var layerAggMap = new Object();
+        var layerStringList = '';
+        var aggregationAttr = '';
+        var popup = L.popup().setLatLng(e.latlng);
+        
+        // Build a string of layers to query against but geoserver will only return the 
+        // first entry in the array if anything is found. Otherwise it will query the next layer
+        // until something is found.
+        var firstAdded = false;
+        for (var i = 0; i < layers.length; i++) { 
+          var layer = layers[i];
+          
+          if(layer.getLayerIsActive()){
+              var layerId = layer.attributeMap.viewName.value;
+              layerNameMap[layerId] = layer.getLayerName();
+              layerAggMap[layerId] = layer.getAggregationMethod();
+              if(firstAdded){
+                layerStringList += "," + layerId;
+              }
+              else{
+                layerStringList += layerId;
+                // we currently only map against a single attribute for a map.  
+                // if we allow multiple attributes mapped in a map the assignment of
+                // aggregationAttr will need to be refactored to associate a layers
+                // identify request with the appropriate aggregationAttr for that layer
+                aggregationAttr = layer.getAggregationAttribute().toLowerCase();
+                firstAdded = true;
+              }
+          }
+        }
+        
+      var requestURL = window.location.origin+"/geoserver/"+DynamicMap.GEOSERVER_WORKSPACE+"/wms?" +
+        "REQUEST=GetFeatureInfo" +
+        "&INFO_FORMAT=application/json" +
+        "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
+        "&SERVICE=WMS" +
+        "&SRS="+DynamicMap.SRID +
+        "&VERSION=1.1.1" +
+          "&height=" + size.y +
+          "&width=" + size.x +
+        "&X="+ point.x +
+        "&Y="+ point.y +
+        "&BBOX="+ mapBbox +
+        "&LAYERS=geodashboard:"+ layerStringList +
+        "&QUERY_LAYERS=geodashboard:"+ layerStringList +
+        "&TYPENAME=geodashboard:"+ layerStringList +
+        "&propertyName=displaylabel,"+ aggregationAttr;
+      
+      DynamicMap.that = this;
+         $.ajax({
+          url: requestURL,
+          context: document.body 
+        }).done(function(json) {
+          var popupContent = '';
+          // The getfeatureinfo request will return only 1 feature
+            for(var i = 0; i<json.features.length; i++){
+              var currLayer = json.features[i];
+              var currLayerIdReturn = currLayer.id;
+              var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
+              var currLayerDisplayName = layerNameMap[currLayerId];
+              var currFeatureDisplayName = currLayer.properties.displaylabel;
+              var currAttributeVal = currLayer.properties.numberofunits;
+              var currAggMethod = layerAggMap[currLayerId];
+              
+              
+              popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
+              
+              var html = '';
+              html += '<table class="table">';
+              html += '<thead class="popup-table-heading">';
+              html += '<tr>'; 
+              html += '<th>'+DynamicMap.that.localize("location")+'</th>';  
+              html += '<th>'+DynamicMap.that.localize("aggregationMethod")+'</th>'; 
+              html += '<th>'+DynamicMap.that.localize("aggregateValue")+'</th>'; 
+              html += '</tr>';  
+              html += '</thead>';
+              html += '<tbody>';  
+              html += '<tr>'; 
+              html += '<td>'+ currFeatureDisplayName +'</td>';  
+              html += '<td>' + currAggMethod + '</td>'; 
+              html += '<td>' + currAttributeVal + '</td>';  
+              html += '</tr>';  
+              html += '</tbody>';  
+              html += '</table>';  
+        
+              
+//              popupContent += '<h4 class="popup-heading">'+currLayerDisplayName+'</h4>';
+//                popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
+              
+              popupContent += html;
+            
+            }
+            
+            if(popupContent.length > 0){
+              popup.setContent(popupContent).openOn(map);
+            }
+        });
+      },
+      
+      /**
        * Removes the Layer with the given object id (Runway Id)
        * from all caches, the sidebar, and the map itself.
        * 
@@ -582,10 +748,9 @@
         // remove the layer from the map and UI
         el.parent().parent().remove();
         
-        // remove associated legend
+        // Remove associated legend and legend container
         //// legend id's are set as the 'legend_' + layer id @ legend creation
         $("#legend_"+id).remove();
-        
         $("li[data-parentlayerid='"+id+"']").remove();
       },
       
@@ -615,7 +780,6 @@
               
               // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
-//              that._addUserLayersToMap(false); // We can't only add the new layer here because the logic is different for create/update and we can't know at this point which one we're at
               that._addUserLayersToMap();            
               
               // TODO : Push this somewhere as a default handler.
@@ -839,9 +1003,11 @@
         
         if (checked) {
           this._addUserLayersToMap();
+          layer.setLayerIsActive(true);
         }
         else {
           this._map.removeLayer(layer.leafletLayer);
+          layer.setLayerIsActive(false);
         }
       },
       
@@ -1166,39 +1332,39 @@
        */
       _legendClickDragHandler : function(e){
           
-    	  var topZ = 0;
-    	  $('.legend-container').each(function(){
-    	    var thisZ = parseInt($(this).css('zIndex'), 10);
-    	    if (thisZ > topZ){
-    	      topZ = thisZ;
-    	    }
-    	  });
-    	  $(e.currentTarget).css('zIndex', topZ+1);
+        var topZ = 0;
+        $('.legend-container').each(function(){
+          var thisZ = parseInt($(this).css('zIndex'), 10);
+          if (thisZ > topZ){
+            topZ = thisZ;
+          }
+        });
+        $(e.currentTarget).css('zIndex', topZ+1);
       },
       
       /**
        * Persist legend position
        */
       _legendDragStopHandler : function(e){
-    	  var that = this;
-    	  var target = e.currentTarget;
-    	  var relatedLayerId = $(e.currentTarget).data('parentlayerid');
-    	  var newPosition = $(target).position();
-    	  var x = newPosition.left;
-    	  var y = newPosition.top;
-    	  var groupedInLegend = true;
-    	  
-    	  if(!$(this).parent().is("#legend-list-group")){
-    		  groupedInLegend = false;
-    	  }
-    	  
+        var that = this;
+        var target = e.currentTarget;
+        var relatedLayerId = $(e.currentTarget).data('parentlayerid');
+        var newPosition = $(target).position();
+        var x = newPosition.left;
+        var y = newPosition.top;
+        var groupedInLegend = true;
+        
+        if(!$(this).parent().is("#legend-list-group")){
+          groupedInLegend = false;
+        }
+        
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function() {
-        	  // Update the layer object in the layer cache with the new legend position
-        	  var relatedLayer = that._layerCache.get(relatedLayerId);
-        	  relatedLayer.setLegendXPosition(x);
-        	  relatedLayer.setLegendYPosition(y);
-        	  relatedLayer.setGroupedInLegend(groupedInLegend);
+            // Update the layer object in the layer cache with the new legend position
+            var relatedLayer = that._layerCache.get(relatedLayerId);
+            relatedLayer.setLegendXPosition(x);
+            relatedLayer.setLegendYPosition(y);
+            relatedLayer.setGroupedInLegend(groupedInLegend);
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -1267,7 +1433,7 @@
        * Callback for sorting legend items
        */
       _legendSortUpdate : function(event, ui){
-    	   // No action needed at this time. This is simply a ui feature.
+         // No action needed at this time. This is simply a ui feature.
       },
       
       /**

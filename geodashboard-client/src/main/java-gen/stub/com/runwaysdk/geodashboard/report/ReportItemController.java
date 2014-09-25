@@ -9,9 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 
-import com.example.DashboardViewDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
@@ -300,7 +298,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
   {
     try
     {
-      run(report, DashboardViewDTO.getReportItem(this.getClientRequest()));
+      run(ReportItemDTO.getReportItemForDashboard(this.getClientRequest(), report));
     }
     catch (Throwable t)
     {
@@ -313,7 +311,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
   }
 
-  public void run(String report, ReportItemDTO item) throws UnsupportedEncodingException, ServletException, IOException
+  public void run(ReportItemDTO item) throws UnsupportedEncodingException, ServletException, IOException
   {
     /*
      * First validate permissions, this must be done before
@@ -328,8 +326,6 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
     Enumeration<String> parameterNames = req.getParameterNames();
 
-    Integer pageNumber = 1;
-
     while (parameterNames.hasMoreElements())
     {
       String parameterName = parameterNames.nextElement();
@@ -340,11 +336,6 @@ public class ReportItemController extends ReportItemControllerBase implements co
       parameter.setParameterValue(parameterValues[0]);
 
       parameters.add(parameter);
-
-      if (parameter.getParameterName().equals("pageNumber"))
-      {
-        pageNumber = new Integer(parameter.getParameterValue());
-      }
     }
 
     /*
@@ -362,63 +353,17 @@ public class ReportItemController extends ReportItemControllerBase implements co
     try
     {
       String url = this.req.getRequestURL().toString();
-      String baseURL = url.substring(0, url.lastIndexOf("report/run"));
+      String baseURL = url.substring(0, url.lastIndexOf("/"));
 
-      Long pageCount = item.render(rStream, parameters.toArray(new ReportParameterDTO[parameters.size()]), baseURL, reportUrl);
+      item.render(rStream, parameters.toArray(new ReportParameterDTO[parameters.size()]), baseURL, reportUrl);
 
-      req.setAttribute("pageTitle", item.getReportLabel().getValue());
       req.setAttribute("report", rStream.toString());
-      req.setAttribute("pageNumber", pageNumber);
-      req.setAttribute("pageCount", pageCount);
-      req.setAttribute("id", report);
-      req.setAttribute("cache", item.getCacheDocument());
 
       req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
     }
     finally
     {
       rStream.close();
-    }
-  }
-
-  @Override
-  public void generate(String report) throws IOException, ServletException
-  {
-    try
-    {
-      ReportItemDTO item = ReportItemDTO.get(this.getClientRequest(), report);
-
-      if (item.getCacheDocument())
-      {
-        this.run(report, item);
-      }
-      else
-      {
-        /*
-         * First validate permissions, this must be done before
-         * response.getOutputStream() is called otherwise redirecting on the
-         * error case will not work
-         */
-        item.validatePermissions();
-
-        req.setAttribute("pageTitle", item.getReportLabel().getValue());
-        req.setAttribute("report", null);
-        req.setAttribute("pageNumber", 0);
-        req.setAttribute("pageCount", 0);
-        req.setAttribute("id", report);
-        req.setAttribute("cache", item.getCacheDocument());
-
-        req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
-      }
-    }
-    catch (Throwable t)
-    {
-      boolean redirect = ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
-
-      if (!redirect)
-      {
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
-      }
     }
   }
 

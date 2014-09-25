@@ -37,6 +37,10 @@
 		  <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
 		  <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
 		</mdMethod>
+		<mdMethod name="getReportItemForDashboard" label="Get report item" static="true" returnType="com.runwaysdk.geodashboard.report.ReportItem">
+		  <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />
+		</mdMethod>
+		
       </mdBusiness>
       
       <mdView name="com.runwaysdk.geodashboard.report.ReportItemView" label="Report item" generateController="true">
@@ -90,12 +94,6 @@
           </create>
         </mdAction>
         <create>
-          <mdAction
-             name="generate"
-             isPost="false"
-             label="Generate">
-            <mdParameter name="report" label="report" order="0" type="java.lang.String" />
-          </mdAction>
           <mdAction
              name="run"
              isPost="false"

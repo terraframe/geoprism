@@ -33,6 +33,7 @@
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual"%>
+<%@page import="com.runwaysdk.geodashboard.report.ReportItemController"%>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.constants.DeployProperties"%>
@@ -49,6 +50,8 @@
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 %>
 
+<gdb:localize var="page_title" key="dashboardViewer.title"/>
+
 <script type="text/javascript">
 <%// use a try catch before printing out the definitions, otherwise, if an
   // error occurs here, javascript spills onto the actual page (ugly!)
@@ -57,7 +60,7 @@
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
         DashboardGreaterThan.CLASS, DashboardGreaterThanOrEqual.CLASS, DashboardLessThan.CLASS, DashboardLessThanOrEqual.CLASS,
-        DashboardController.CLASS, DashboardDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS
+        DashboardController.CLASS, DashboardDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS
       }, true);
     out.print(js);
   }
@@ -121,19 +124,19 @@ $(document).ready(function(){
 
     <form action="#" class="control-form" id="control-form">
       <fieldset>
-        <legend class="none">controls form</legend>
-        <button class="none">save</button>
+        <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
+        <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
         
         <!-- This will eventually need to be collapsible -->
         <article class="info-box">
-          <h3>Map Layers</h3>
+          <h3><gdb:localize key="dashboardViewer.mapLayers"/></h3>
           <div id="overlayLayerContainer" class="holder"></div>
         </article>
         
         <article class="accordion info-box" id="base-map-container">
             <div class="accordion-group sales-accortion">
               <div class="accordion-heading">
-                <a class="map-layers-opener opener" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"> Base Maps </a>
+                <a class="map-layers-opener opener" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"><gdb:localize key="dashboardViewer.baseMaps"/></a>
               </div>
               <div id="collapse-base-maps" class="accordion-body" style="height: 0px;">
                 <div class="accordion-inner holder" id="baseLayerContainer"></div>
@@ -158,7 +161,7 @@ $(document).ready(function(){
     <!-- contain aside of the page -->
   <aside class="aside animated slideInRight legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
-			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu">opener</a>
+			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
 				<a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
@@ -172,13 +175,13 @@ $(document).ready(function(){
 		<button class="none">submit</button>
         
         <a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
-        	<span style="color:white;font-weight:bold;"> + Create New Dashboard</span>
+        	<span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.createNewDashboard"/></span>
 		    </a>
 		    
         <div class="choice-form">
           
           <div class="row-holder">
-            <label class="none" for="geocode">choice select</label>
+            <label class="none" for="geocode"><gdb:localize key="dashboardViewer.choiceSelect"/></label>
             <span class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;">
             <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
             </span>
@@ -247,7 +250,7 @@ $(document).ready(function(){
 		                              </select>
 		                            </div>
 		                            <div class="text">
-		                              <label for="attrFilter${attrStatus.index}" class="none">number</label>
+		                              <label for="attrFilter${attrStatus.index}" class="none"><gdb:localize key="dashboardViewer.number"/></label>
 		                              <input id="attrFilter${attrStatus.index}" type="text" placeholder="Number" class="gdb-attr-filter ${attr.mdAttributeId}"></input>
 		                            </div>
 													    </c:when>
@@ -263,7 +266,7 @@ $(document).ready(function(){
                                 </div>
                                 
                                 <div class="text">
-                                  <label for="attrFilter${attrStatus.index}" class="none">number</label>
+                                  <label for="attrFilter${attrStatus.index}" class="none"><gdb:localize key="dashboardViewer.number"/></label>
                                   <input id="attrFilter${attrStatus.index}" type="text" placeholder="Number" class="gdb-attr-filter ${attr.mdAttributeId}"></input>
                                 </div>
                                 <!--
@@ -300,7 +303,7 @@ $(document).ready(function(){
        </div> <!-- END sales-accortion panel-group -->
     
     <a href="#" class="opener apply-filters-button" data-toggle="tooltip" data-placement="left"">
-      <span style="color:white;font-weight:bold;">Apply Filters</span>
+      <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span>
     </a>
   </aside>
   
@@ -321,15 +324,12 @@ $(document).ready(function(){
   </div>
   <!-- reporting container -->
   <article class="reporticng-container">
-    <div class="box"><img src="com/runwaysdk/geodashboard/images/img02.jpg" width="250" height="250" alt="image description"></div>
-    <div class="box"><img src="com/runwaysdk/geodashboard/images/img02.jpg" width="250" height="250" alt="image description"></div>
-    <div class="box"><img src="com/runwaysdk/geodashboard/images/img02.jpg" width="250" height="250" alt="image description"></div>
-    <div class="box"><img src="com/runwaysdk/geodashboard/images/img02.jpg" width="250" height="250" alt="image description"></div>
+    <div id="report-content"></div>
   </article>
   
   <!-- allow a user to go to the top of the page -->
   <div class="skip">
-    <a href="#wrapper">Back to top</a>
+    <a href="#wrapper"><gdb:localize key="dashboardViewer.backToTop"/></a>
   </div>
 </body>
 </html>

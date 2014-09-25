@@ -130,93 +130,186 @@ public class SLDMapVisitor implements MapVisitor
       Double strokeOpacity = this.style.getPointStrokeOpacity();
       String wkn = this.style.getPointWellKnownName();
       Integer rotation = this.style.getPointRotation();
-
-      NodeBuilder sizeNode = interpolateSize();
-      
       
       node("FeatureTypeName").text(style.getName()).build(root);
       
-      Node ruleNode = node("Rule").build(root);
-      node("Name").text("point").build(ruleNode);
-      node("Title").text("point").build(ruleNode);
-      
-      // Polygon styles
-      Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-      node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(pointSymbolNode);
-      
-      node("Graphic").child(
-          node("Mark").child(node("WellKnownName").text(wkn),
-              node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
-              node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))),
-          sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
-      
-      // Adding labels
-      ThematicStyle tStyle = (ThematicStyle) style;
-      boolean thematic = style instanceof ThematicStyle;
-
-      if (thematic && style.getEnableLabel() && style.getEnableValue())
+      if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
-        Node[] nodes = new Node[] {
-            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-            node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+        // SLD generation
+        ThematicStyle tStyle = (ThematicStyle) style;
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
+        
+        HashMap<Integer, Integer> pointSizeRange = new HashMap<Integer, Integer>();        
+        int minSize = tStyle.getPointMinSize();
+        int maxSize = tStyle.getPointMaxSize();
+        
+        // Add the 1st and last point size entries
+        pointSizeRange.put(1, minSize);
+        pointSizeRange.put(5, maxSize);
+        
+        HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
+        double minAttrVal = minMaxMap.get("min");
+        double maxAttrVal = minMaxMap.get("max");
+        
+        int numCategories;
+        if(minSize == maxSize || minAttrVal == maxAttrVal){
+          // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+          numCategories = 1;
+        }
+        else{
+          numCategories = 5;
+        }
+        
+        
+        double categoryLen = (maxAttrVal - minAttrVal) / numCategories;
+        int pointSizeCatLen = (maxSize - minSize) / numCategories;
+        
+        for(int i = 0; i<numCategories; i++){
+          
+          double currentCatMin = minAttrVal + (i * categoryLen);
+          double currentCatMax = minAttrVal + ((i + 1) * categoryLen);  
+          
+          double currentPointSizeRaw = minSize + ((i + 1) * pointSizeCatLen);
+          int currentPointSize = (int) Math.round(currentPointSizeRaw);
+          
+          DecimalFormat displayVal = new DecimalFormat("#.##");
+          String currentCatMinDisplay = displayVal.format(currentCatMin);
+          String currentCatMaxDisplay = displayVal.format(currentCatMax);
+          
+          Node ruleNode = node("Rule").build(root);
+          node("Name").text(currentCatMinDisplay+ " - " +currentCatMaxDisplay).build(ruleNode);
+          node("Title").text(currentCatMinDisplay+ " - " +currentCatMaxDisplay).build(ruleNode);
+  
+          Node filterNode = node(OGC, "Filter").build(ruleNode);
+          Node firstAndNode = node(OGC, "And").build(filterNode);
+          Node notNode = node(OGC, "Not").build(firstAndNode);
+          Node secondAndNode = node(OGC, "And").build(notNode);
+          
+          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+            
+          Node orNode = node(OGC, "Or").build(secondAndNode);
+          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+            node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
+            
+          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
+            node(OGC, "Literal").text("NEVER").build(propEqualToNode);
+            node(OGC, "Literal").text("TRUE").build(propEqualToNode);
+            
+          Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
+          node(OGC, "PropertyName").text(attribute).build(propIsBetween);
+          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
+          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
 
-        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-        ruleNode.appendChild(text.getSLD());
-      }
-      else if (style.getEnableLabel())
-      {
-        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+          
+          // Polygon styles
+          Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+          Node graphicNode = node("Graphic").build(pointSymbolNode);
+          Node markNode = node("Mark").build(graphicNode);
+            node("WellKnownName").text("circle").build(markNode);
+            Node fillNode = node("Fill").build(markNode);
+              css("Fill", fill).build(fillNode);
+              css("fill-opacity", opacity).build(fillNode);
+            
+            node("Stroke")
+              .child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
+            node("Size").text(currentPointSize).build(graphicNode);
+          
+          
+          // Adding labels
+          boolean thematic = style instanceof ThematicStyle;
 
-        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-        ruleNode.appendChild(text.getSLD());
-      }
-      else if (thematic && style.getEnableValue())
-      {
-        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+          if (thematic && style.getEnableLabel() && style.getEnableValue())
+          {
+            Node[] nodes = new Node[] {
+                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+                node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
 
-        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-        ruleNode.appendChild(text.getSLD());
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+          else if (style.getEnableLabel())
+          {
+            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+          else if (thematic && style.getEnableValue())
+          {
+            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+          
+        }
       }
+
+//      NodeBuilder sizeNode = interpolateSize();
+//      
+//      
+//      node("FeatureTypeName").text(style.getName()).build(root);
+//      
+//      Node ruleNode = node("Rule").build(root);
+//      node("Name").text("point").build(ruleNode);
+//      node("Title").text("point").build(ruleNode);
+//      
+//      // Polygon styles
+//      Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+//      node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(pointSymbolNode);
+//      
+//      node("Graphic").child(
+//          node("Mark").child(node("WellKnownName").text(wkn),
+//              node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
+//              node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))),
+//          sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
+//      
+//      // Adding labels
+//      ThematicStyle tStyle = (ThematicStyle) style;
+//      boolean thematic = style instanceof ThematicStyle;
+//
+//      if (thematic && style.getEnableLabel() && style.getEnableValue())
+//      {
+//        Node[] nodes = new Node[] {
+//            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//            node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+//
+//        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+//        ruleNode.appendChild(text.getSLD());
+//      }
+//      else if (style.getEnableLabel())
+//      {
+//        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+//
+//        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+//        ruleNode.appendChild(text.getSLD());
+//      }
+//      else if (thematic && style.getEnableValue())
+//      {
+//        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+//
+//        TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+//        ruleNode.appendChild(text.getSLD());
+//      }
 
       return root;
     }
     
-    private NodeBuilder interpolateSize()
+    private HashMap<Integer, Integer> interpolateColorRange()
     {
+      HashMap<Integer, Integer> pointSizeRange = new HashMap<Integer, Integer>();
       if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
         
-        // This currently relies on 2 db table fields to contain min/max values for the entire table
-        // This could be replaced with the getMinMax() method as used in PolygonSymbolizer but will require a rewrite
-        // of the sld generation.  If this is done remember to remove the generation of the min/max fields from DashboardLayer.java
-        //// http://docs.geoserver.org/latest/en/user/styling/sld-tipstricks/transformation-func.html#interpolate
-        String minAttr = SLDConstants.getMinProperty(attribute);
-        String maxAttr = SLDConstants.getMaxProperty(attribute);
-        
-        // thematic interpolation
-        return node("Size").child(
-          node(OGC, "Function").attr("name", "Interpolate").child(
-              // property to interpolate
-              node(OGC, "PropertyName").text(attribute),
-              // min definition
-              node(OGC, "PropertyName").text(minAttr),
-              node(OGC, "Literal").text(tStyle.getPointMinSize()),
-              // max definition
-              node(OGC, "PropertyName").text(maxAttr),
-              node(OGC, "Literal").text(tStyle.getPointMaxSize()),
-              // interpolation method
-              node(OGC, "Literal").text("numeric")
-              )
-            );
+        String minFill = tStyle.getPointFill();
       }
-      else
-      {
-        // non-thematic
-        return node("Size").text(style.getPointSize());
-      }
+      return pointSizeRange;
     }
   }
   
@@ -404,8 +497,11 @@ public class SLDMapVisitor implements MapVisitor
         int g2 = maxFillRGB.getGreen();
         int b2 = maxFillRGB.getBlue();
         
+        // Currently hard coded to 20% to fit 5 categories (i.e. 20% x 5 = 100%)
         double stepIncrease = .2;
         double stepVal = .2;
+        
+        // Build categories between min/max categories
         for (int i = 0; i < 4; i++)
         {
           int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );

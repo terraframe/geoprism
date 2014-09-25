@@ -17,7 +17,6 @@
   
   <item name="Reports">
     <item name="Report_management" uri="report/viewAll"/>
-    <item name="Run" uri="report/run"/>
   </item>
   <!--
   <item name="Sales Force Import Manager" uri="admin/importer"/>
