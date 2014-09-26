@@ -1,0 +1,11 @@
+package com.runwaysdk.geodashboard.report;
+
+import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.query.ValueQuery;
+
+public interface ReportProviderIF extends Reloadable
+{
+  public ValueQuery getValuesForReporting(String type, String category, String criteria);
+
+  public ValueQuery getTypesForReporting();
+}
