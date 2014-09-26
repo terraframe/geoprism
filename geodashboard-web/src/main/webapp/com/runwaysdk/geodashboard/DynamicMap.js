@@ -50,6 +50,7 @@
         this._config = config;
         this._mapDivId = config.mapDivId;
         this._mapId = config.mapId;
+        this._dashboardId = config.dashboardId;
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
@@ -104,7 +105,7 @@
           that._renderUserLayers();
         });
         
-        that._renderReport();
+        that._renderReport('', '');
       },
       
       /**
@@ -205,7 +206,7 @@
       /**
        * Creates a new BIRT report. If one already exists the existing one will be cleaned up and removed.
        */
-      _renderReport : function() {
+      _renderReport : function(geoId, criteria) {
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           that : this,
           onSuccess : function(html){
@@ -216,9 +217,7 @@
           }
         }, $( "#report-content" )[0]);
         
-        var dashboardId = '';
-        
-        this._ReportController.run(request, dashboardId);        
+        this._ReportController.run(request, this._dashboardId, geoId, criteria);        
       },
       
       _displayReport : function(html) {
@@ -634,6 +633,7 @@
         var layerStringList = '';
         var aggregationAttr = '';
         var popup = L.popup().setLatLng(e.latlng);
+        var that = this;
         
         // Build a string of layers to query against but geoserver will only return the 
         // first entry in the array if anything is found. Otherwise it will query the next layer
@@ -676,7 +676,7 @@
         "&LAYERS=geodashboard:"+ layerStringList +
         "&QUERY_LAYERS=geodashboard:"+ layerStringList +
         "&TYPENAME=geodashboard:"+ layerStringList +
-        "&propertyName=displaylabel,"+ aggregationAttr;
+        "&propertyName=displaylabel,geoid,"+ aggregationAttr;
       
       DynamicMap.that = this;
          $.ajax({
@@ -720,6 +720,13 @@
 //                popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
               
               popupContent += html;
+              
+              var currGeoId = currLayer.properties.geoid;
+              
+              if(currGeoId != null)
+              {            	   
+            	  that._renderReport(currGeoId, '');
+              }
             
             }
             

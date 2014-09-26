@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
@@ -197,6 +196,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
     }
     req.setAttribute("activeDashboard", activeDashboard);
+    req.setAttribute("dashboardId", activeDashboard.getId());
     
     // Dashboards does not include the active dashboard.
     dashboards.remove(activeDashboard);

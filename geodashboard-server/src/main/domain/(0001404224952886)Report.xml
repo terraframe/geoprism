@@ -99,6 +99,8 @@
              isPost="false"
              label="Run">
             <mdParameter name="report" label="report" order="0" type="java.lang.String" />
+            <mdParameter name="category" label="category" order="1" type="java.lang.String" />
+            <mdParameter name="criteria" label="criteria" order="2" type="java.lang.String" />
           </mdAction>
         </create>                      
       </mdController>

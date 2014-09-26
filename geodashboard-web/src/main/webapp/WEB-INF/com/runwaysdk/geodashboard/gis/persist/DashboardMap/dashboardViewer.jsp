@@ -101,12 +101,10 @@ $(document).ready(function(){
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   // Render the map
-  var map = new GDB.gis.DynamicMap({
-    
-    mapDivId: "mapDivId",
-    
+  var map = new GDB.gis.DynamicMap({    
+    mapDivId: "mapDivId",    
     mapId: '${mapId}',
-    
+    dashboardId : '<%=request.getAttribute("dashboardId")%>',    
     layerCategoriesTree: {
       termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
       relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],

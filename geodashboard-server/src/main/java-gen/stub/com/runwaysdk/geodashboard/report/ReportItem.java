@@ -345,12 +345,12 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
         if (task.getRenderOption() instanceof HTMLRenderOption)
         {
-          long pageNumber = this.getPageNumber(parameterMap);
-
-          if (pageNumber > 0)
-          {
-            task.setPageNumber(pageNumber);
-          }
+//          long pageNumber = this.getPageNumber(parameterMap);
+//
+//          if (pageNumber > 0)
+//          {
+//            task.setPageNumber(pageNumber);
+//          }
         }
 
         IReportRunnable design = engine.openReportDesign(document.getDesignStream());
@@ -749,6 +749,8 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static ReportItem getReportItemForDashboard(String dashboardId)
   {
     ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(dashboardId));
+
     OIterator<? extends ReportItem> iterator = query.getIterator();
 
     try

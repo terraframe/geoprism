@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1812533534)
+@com.runwaysdk.business.ClassSignature(hash = 91748368)
 public class ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.report.ReportItemController";
@@ -121,20 +121,6 @@ public class ReportItemControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.failEdit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report", post=false)
-  public void generate(java.lang.String report) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItemController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.generate");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report", post=false)
-  public void failGenerate(java.lang.String report) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItemController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.failGenerate");
-  }
-  
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -149,15 +135,15 @@ public class ReportItemControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.failNewInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report", post=false)
-  public void run(java.lang.String report) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report, java.lang.String:category, java.lang.String:criteria", post=false)
+  public void run(java.lang.String report, java.lang.String category, java.lang.String criteria) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItemController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.run");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report", post=false)
-  public void failRun(java.lang.String report) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report, java.lang.String:category, java.lang.String:criteria", post=false)
+  public void failRun(java.lang.String report, java.lang.String category, java.lang.String criteria) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItemController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.report.ReportItemController.failRun");
