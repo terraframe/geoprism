@@ -321,7 +321,7 @@ $(document).ready(function(){
     <div id="mapDivId" class="dynamicMap"></div>
   </div>
   <!-- reporting container -->
-  <article class="reporticng-container">
+  <article id="reporticng-container" class="reporticng-container">
     <div id="report-content"></div>
   </article>
   

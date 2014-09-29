@@ -51,6 +51,7 @@
         this._mapDivId = config.mapDivId;
         this._mapId = config.mapId;
         this._dashboardId = config.dashboardId;
+        this._criteria = []; // Default criteria for filtering
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
@@ -105,7 +106,7 @@
           that._renderUserLayers();
         });
         
-        that._renderReport('', '');
+        that._renderReport('', that._criteria);
       },
       
       /**
@@ -217,7 +218,7 @@
           }
         }, $( "#report-content" )[0]);
         
-        this._ReportController.run(request, this._dashboardId, geoId, criteria);        
+        this._ReportController.run(request, this._dashboardId, geoId, JSON.stringify(criteria));        
       },
       
       _displayReport : function(html) {
@@ -725,7 +726,7 @@
               
               if(currGeoId != null)
               {            	   
-            	  that._renderReport(currGeoId, '');
+            	  that._renderReport(currGeoId, that._criteria);
               }
             
             }
@@ -1386,9 +1387,12 @@
       _onClickApplyFilters : function(e) {
         var that = this;
         
-        // Get the attribute filter conditions
+        // Get the attribute filter conditions (And its shortened criteria reprensentation for reporting)
         var layers = this._layerCache.values();
         var conditions = [];
+        this._criteria = [];
+        
+        
         for(var i = layers.length-1; i >= 0; i--) {
           var layer = layers[i];
 
@@ -1414,6 +1418,7 @@
             attrCond.setComparisonValue(textValue);
             
             conditions.push(attrCond);
+            this._criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});
           }
         }
         
@@ -1434,6 +1439,8 @@
         });
         
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
+        
+        this._renderReport('', this._criteria);
       },
       
       /**
@@ -1457,6 +1464,15 @@
         if(this._googleEnabled){
           this._addAutoComplete();
         }
+        
+//        $( "#reporticng-container" ).resizable({
+//            handles: 'n',
+//            resize: function(event, ui) {
+//              $("reporticng-container").css("position", "fixed");
+//              $("reporticng-container").css("bottom", "0px");
+//              $("reporticng-container").css("top", "");
+//            }            	
+//        });
       },
     }
    
