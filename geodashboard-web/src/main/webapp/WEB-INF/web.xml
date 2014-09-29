@@ -30,7 +30,7 @@
   <description>
 	A Runway SDK Project
   </description>
-
+<!-- 
   <error-page>
     <exception-type>java.lang.Exception</exception-type>
     <location>/com/runwaysdk/geodashboard/error.jsp</location>
@@ -55,6 +55,7 @@
     <error-code>401</error-code>
     <location>/error.jsp</location>
   </error-page> 
+ -->
   
   <servlet>
     <servlet-name>SecureFileDownloadServlet</servlet-name>

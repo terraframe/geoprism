@@ -2,21 +2,26 @@ package com.runwaysdk.geodashboard.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
+import com.runwaysdk.geodashboard.DashboardDTO;
+import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
+import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ReportItemController extends ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/report/ReportItem/";
 
-  public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
+  public static final String LAYOUT  = "/WEB-INF/templates/layout.jsp";
 
   public ReportItemController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
@@ -49,12 +54,13 @@ public class ReportItemController extends ReportItemControllerBase implements co
         dto.applyWithFile(null);
       }
 
-      this.view(dto.getId());
+      this.resp.getWriter().print(new JSONReturnObject(dto).toString());
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
-      if (!redirect)
+      boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
+
+      if (needsRedirect)
       {
         this.failCreate(dto, design);
       }
@@ -76,7 +82,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirected = false; // ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirected = false; // ErrorUtility.prepareThrowable(t, req, resp,
+                                  // this.isAsynchronous());
 
       if (!redirected)
       {
@@ -98,7 +105,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
+                                // req, resp, this.isAsynchronous());
       if (!redirect)
       {
         this.failEdit(id);
@@ -110,14 +118,15 @@ public class ReportItemController extends ReportItemControllerBase implements co
   {
     try
     {
-      req.setAttribute("outputFormat", OutputFormatDTO.allItems(this.getClientRequest()));
       req.setAttribute("item", dto);
+      req.setAttribute("dashboards", DashboardDTO.getSortedDashboards(this.getClientRequest()).getResultSet());
 
       render("editComponent.jsp");
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
+                                // req, resp, this.isAsynchronous());
       if (!redirect)
       {
         this.failEdit(dto.getId());
@@ -138,7 +147,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
+                                // req, resp, this.isAsynchronous());
       if (!redirect)
       {
         this.failNewInstance();
@@ -150,14 +160,14 @@ public class ReportItemController extends ReportItemControllerBase implements co
   {
     try
     {
-      req.setAttribute("outputFormat", OutputFormatDTO.allItems(this.getClientRequest()));
       req.setAttribute("item", dto);
+      req.setAttribute("dashboards", DashboardDTO.getSortedDashboards(this.getClientRequest()).getResultSet());
 
       render("createComponent.jsp");
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirect = false;
       if (!redirect)
       {
         this.failNewInstance();
@@ -185,13 +195,13 @@ public class ReportItemController extends ReportItemControllerBase implements co
         dto.applyWithFile(null);
       }
 
-      this.view(dto.getId());
+      this.resp.getWriter().print(new JSONReturnObject(dto).toString());
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
 
-      if (!redirect)
+      if (needsRedirect)
       {
         this.failUpdate(dto, design);
       }
@@ -211,7 +221,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
+                                // req, resp, this.isAsynchronous());
       if (!redirect)
       {
         this.failView(id);
@@ -223,10 +234,6 @@ public class ReportItemController extends ReportItemControllerBase implements co
   {
     try
     {
-//      RedirectUtility utility = new RedirectUtility(req, resp);
-//      utility.put("id", dto.getId());
-//      utility.checkURL(this.getClass().getSimpleName(), "view");
-
       req.setAttribute("item", dto);
       render("viewComponent.jsp");
     }
@@ -248,37 +255,67 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
   public void viewAll() throws IOException, ServletException
   {
-    ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.report.ReportItemQueryDTO query = ReportItemDTO.getAllInstances(clientRequest, null, true, 20, 1);
-    req.setAttribute("query", query);
-    render("viewAllComponent.jsp");
+    try
+    {
+      ClientRequestIF clientRequest = super.getClientRequest();
+      ReportItemQueryDTO query = ReportItemDTO.getAllInstances(clientRequest, null, true, 20, 1);
+      req.setAttribute("query", query);
+
+      this.render("viewAllComponent.jsp");
+    }
+    catch (Throwable t)
+    {
+      boolean redirect = ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+
+      if (!redirect)
+      {
+        this.failViewAll();
+      }
+    }
   }
 
   public void failViewAll() throws IOException, ServletException
   {
-    resp.sendError(500);
+    this.req.getRequestDispatcher("/index.jsp").forward(this.req, this.resp);
   }
 
   public void viewPage(String sortAttribute, Boolean isAscending, Integer pageSize, Integer pageNumber) throws IOException, ServletException
   {
-    ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.report.ReportItemQueryDTO query = ReportItemDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
-    req.setAttribute("query", query);
-    render("viewAllComponent.jsp");
+    try
+    {
+      ClientRequestIF clientRequest = super.getClientRequest();
+      ReportItemQueryDTO query = ReportItemDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+      req.setAttribute("query", query);
+      render("viewAllComponent.jsp");
+    }
+    catch (Exception e)
+    {
+      this.failViewAll();
+    }
   }
 
-  public void failViewPage(String sortAttribute, String isAscending, String pageSize, String pageNumber) throws IOException, ServletException
-  {
-    resp.sendError(500);
-  }
-
-  @SuppressWarnings("unchecked")
   @Override
-  public void generate(String report) throws IOException, ServletException
+  public void run(String report, String category, String criteria) throws IOException, ServletException
   {
     try
     {
-      ReportItemDTO item = ReportItemDTO.get(this.getClientRequest(), report);
+      run(ReportItemDTO.getReportItemForDashboard(this.getClientRequest(), report), category, criteria);
+    }
+    catch (Throwable t)
+    {
+      boolean redirect = ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
+
+      if (!redirect)
+      {
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+      }
+    }
+  }
+
+  public void run(ReportItemDTO item, String category, String criteria) throws UnsupportedEncodingException, ServletException, IOException
+  {
+    if (item != null)
+    {
       /*
        * First validate permissions, this must be done before
        * response.getOutputStream() is called otherwise redirecting on the error
@@ -286,21 +323,11 @@ public class ReportItemController extends ReportItemControllerBase implements co
        */
       item.validatePermissions();
 
+      String reportUrl = this.getReportURL();
+
       List<ReportParameterDTO> parameters = new LinkedList<ReportParameterDTO>();
-
-      Enumeration<String> parameterNames = req.getParameterNames();
-
-      while (parameterNames.hasMoreElements())
-      {
-        String parameterName = parameterNames.nextElement();
-        String[] parameterValues = req.getParameterValues(parameterName);
-
-        ReportParameterDTO parameter = new ReportParameterDTO(this.getClientRequest());
-        parameter.setParameterName(parameterName);
-        parameter.setParameterValue(parameterValues[0]);
-
-        parameters.add(parameter);
-      }
+      parameters.add(this.createReportParameter("category", category));
+      parameters.add(this.createReportParameter("criteria", criteria));
 
       /*
        * Important: Calling resp.getOutputStream() changes the state of the HTTP
@@ -317,42 +344,62 @@ public class ReportItemController extends ReportItemControllerBase implements co
       try
       {
         String url = this.req.getRequestURL().toString();
-        String baseURL = url.substring(0, url.lastIndexOf('/'));
+        String baseURL = url.substring(0, url.lastIndexOf("/"));
 
-        item.render(rStream, parameters.toArray(new ReportParameterDTO[parameters.size()]), baseURL);
+        item.render(rStream, parameters.toArray(new ReportParameterDTO[parameters.size()]), baseURL, reportUrl);
 
-        if (item.getOutputFormatEnumNames().contains(OutputFormatDTO.PDF.name()))
-        {
-          String fileName = item.getReportLabel().getValue().replaceAll("\\s", "_");
-          resp.setHeader("Content-Type", "application/pdf");
-          resp.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".pdf");
-        }
+        req.setAttribute("report", rStream.toString());
 
-        ServletOutputStream oStream = resp.getOutputStream();
-
-        try
-        {
-          oStream.write(rStream.toByteArray());
-        }
-        finally
-        {
-          oStream.flush();
-          oStream.close();
-        }
+        req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
       }
       finally
       {
         rStream.close();
       }
     }
-    catch (Throwable t)
+    else
     {
-      this.failGenerate(report);
+      req.setAttribute("report", LocalizationFacadeDTO.getFromBundles(this.getClientRequest(), "report.empty"));
     }
   }
 
-  public void failGenerate(java.lang.String report) throws java.io.IOException, javax.servlet.ServletException
+  private ReportParameterDTO createReportParameter(String parameterName, String parameterValue)
   {
-    resp.sendError(500);
+    ReportParameterDTO parameter = new ReportParameterDTO(this.getClientRequest());
+    parameter.setParameterName(parameterName);
+    parameter.setParameterValue(parameterValue);
+
+    return parameter;
+  }
+
+  public String getReportURL() throws UnsupportedEncodingException
+  {
+    String str = "com.runwaysdk.geodashboard.report.ReportItemController.generate.mojo?";
+    boolean isFirst = true;
+
+    Enumeration<String> paramNames = req.getParameterNames();
+    while (paramNames.hasMoreElements())
+    {
+      String paramName = paramNames.nextElement();
+
+      if (!paramName.equals("pageNumber"))
+      {
+        if (!isFirst)
+        {
+          str = str + "&";
+        }
+
+        String[] paramValues = req.getParameterValues(paramName);
+
+        for (int i = 0; i < paramValues.length; i++)
+        {
+          String paramValue = paramValues[i];
+          str = str + URLEncoder.encode(paramName, "UTF-8") + "=" + URLEncoder.encode(paramValue, "UTF-8");
+        }
+
+        isFirst = false;
+      }
+    }
+    return str;
   }
 }

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -595437324)
+@com.runwaysdk.business.ClassSignature(hash = 1161977663)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String CACHEDOCUMENT = "cacheDocument";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String DESIGN = "design";
   public static java.lang.String DOCUMENT = "document";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -22,8 +23,6 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String OUTPUTFORMAT = "outputFormat";
-  public static java.lang.String OUTPUTFORMATINDEX = "outputFormatIndex";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String REPORTLABEL = "reportLabel";
   private com.runwaysdk.business.Struct reportLabel = null;
@@ -32,7 +31,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -595437324;
+  private static final long serialVersionUID = 1161977663;
   
   public ReportItemBase()
   {
@@ -110,6 +109,46 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
     return mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public com.runwaysdk.geodashboard.Dashboard getDashboard()
+  {
+    if (getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.Dashboard.get(getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void validateDashboard()
+  {
+    this.validateAttribute(DASHBOARD);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
+    return mdClassIF.definesAttribute(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.Dashboard value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
   }
   
   public String getDesign()
@@ -324,72 +363,6 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return mdClassIF.definesAttribute(LOCKEDBY);
   }
   
-  @SuppressWarnings("unchecked")
-  public java.util.List<com.runwaysdk.geodashboard.report.OutputFormat> getOutputFormat()
-  {
-    return (java.util.List<com.runwaysdk.geodashboard.report.OutputFormat>) getEnumValues(OUTPUTFORMAT);
-  }
-  
-  public void addOutputFormat(com.runwaysdk.geodashboard.report.OutputFormat value)
-  {
-    if(value != null)
-    {
-      addEnumItem(OUTPUTFORMAT, value.getId());
-    }
-  }
-  
-  public void removeOutputFormat(com.runwaysdk.geodashboard.report.OutputFormat value)
-  {
-    if(value != null)
-    {
-      removeEnumItem(OUTPUTFORMAT, value.getId());
-    }
-  }
-  
-  public void clearOutputFormat()
-  {
-    clearEnum(OUTPUTFORMAT);
-  }
-  
-  public void validateOutputFormat()
-  {
-    this.validateAttribute(OUTPUTFORMAT);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOutputFormatMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(OUTPUTFORMAT);
-  }
-  
-  public String getOutputFormatIndex()
-  {
-    return getValue(OUTPUTFORMATINDEX);
-  }
-  
-  public void validateOutputFormatIndex()
-  {
-    this.validateAttribute(OUTPUTFORMATINDEX);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOutputFormatIndexMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(OUTPUTFORMATINDEX);
-  }
-  
-  public void setOutputFormatIndex(String value)
-  {
-    if(value == null)
-    {
-      setValue(OUTPUTFORMATINDEX, "");
-    }
-    else
-    {
-      setValue(OUTPUTFORMATINDEX, value);
-    }
-  }
-  
   public com.runwaysdk.system.Actor getOwner()
   {
     if (getValue(OWNER).trim().equals(""))
@@ -580,6 +553,30 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getDocumentAsStream();
   }
   
+  public java.lang.String getParameterDefinitions()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getParameterDefinitions(java.lang.String id)
+  {
+    ReportItem _instance = ReportItem.get(id);
+    return _instance.getParameterDefinitions();
+  }
+  
+  public static com.runwaysdk.geodashboard.report.ReportItem getReportItemForDashboard(java.lang.String dashboardId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.query.ValueQuery getTypesForReporting()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public java.lang.String getURL()
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
@@ -592,16 +589,22 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getURL();
   }
   
-  public void render(java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameter[] parameters, java.lang.String baseURL)
+  public static com.runwaysdk.query.ValueQuery getValuesForReporting(java.lang.String type, java.lang.String category, java.lang.String criteria)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final void render(java.lang.String id, java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameter[] parameters, java.lang.String baseURL)
+  public java.lang.Long render(java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameter[] parameters, java.lang.String baseURL, java.lang.String reportURL)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.Long render(java.lang.String id, java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameter[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
     ReportItem _instance = ReportItem.get(id);
-    _instance.render(outputStream, parameters, baseURL);
+    return _instance.render(outputStream, parameters, baseURL, reportURL);
   }
   
   public void validatePermissions()
