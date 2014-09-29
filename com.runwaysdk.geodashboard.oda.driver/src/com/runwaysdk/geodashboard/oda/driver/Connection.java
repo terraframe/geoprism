@@ -7,6 +7,7 @@
 
 package com.runwaysdk.geodashboard.oda.driver;
 
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.oda.IConnection;
@@ -15,6 +16,9 @@ import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
 import com.ibm.icu.util.ULocale;
+import com.runwaysdk.geodashboard.oda.driver.session.ClientSessionCache;
+import com.runwaysdk.geodashboard.oda.driver.session.ClientSessionProxy;
+import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 
 /**
  * Implementation class of IConnection for an ODA runtime driver.
@@ -39,7 +43,13 @@ public class Connection implements IConnection
     public static final String PASS_IN_CONNECTION        = "connection";
   }
 
-  private ClientSessionProxy session;
+  private IClientSession      session;
+
+  /**
+   * Application context. This is used for sending in the user's session when
+   * the driver being run
+   */
+  private Map<Object, Object> context;
 
   /*
    * @see
@@ -51,10 +61,24 @@ public class Connection implements IConnection
     if (this.session == null)
     {
       String url = props.getProperty(Constants.ODA_URL);
-      String username = props.getProperty(Constants.ODA_USER);
-      String password = props.getProperty(Constants.ODA_PASSWORD);
 
-      this.session = ClientSessionCache.getClientSession(url, username, password);
+      if (this.context != null)
+      {
+        String sessionId = (String) this.context.get(ClientSessionProxy.SESSION_ID);
+
+        if (sessionId != null)
+        {
+          this.session = ClientSessionCache.getClientSession(url, sessionId);
+        }
+      }
+
+      if (this.session == null)
+      {
+        String username = props.getProperty(Constants.ODA_USER);
+        String password = props.getProperty(Constants.ODA_PASSWORD);
+
+        this.session = ClientSessionCache.getClientSession(url, username, password);
+      }
     }
 
     if (props == null)
@@ -68,8 +92,10 @@ public class Connection implements IConnection
    * org.eclipse.datatools.connectivity.oda.IConnection#setAppContext(java.lang
    * .Object)
    */
+  @SuppressWarnings("unchecked")
   public void setAppContext(Object context) throws OdaException
   {
+    this.context = (Map<Object, Object>) context;
   }
 
   /*
@@ -80,6 +106,8 @@ public class Connection implements IConnection
     if (this.session != null)
     {
       this.session.logout();
+
+      ClientSessionCache.close(this.session);
     }
   }
 

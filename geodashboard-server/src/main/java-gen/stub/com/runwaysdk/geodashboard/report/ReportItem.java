@@ -43,6 +43,7 @@ import com.runwaysdk.constants.VaultFileInfo;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
@@ -505,6 +506,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
       HashMap<String, Object> contextMap = new HashMap<String, Object>();
       contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
+      contextMap.put(IClientSession.SESSION_ID, Session.getCurrentSession().getId());
 
       IReportRunnable design = engine.openReportDesign(this.getDesignAsStream());
 
