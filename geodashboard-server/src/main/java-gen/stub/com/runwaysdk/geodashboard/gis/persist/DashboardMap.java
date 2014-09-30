@@ -221,141 +221,142 @@ public class DashboardMap extends DashboardMapBase implements
     ResultSet resultSet = null;
     String[] layerNames = null;
 
-    if (layers.length > 0)
-    {
-      layerNames = new String[layers.length];
-      String sql;
-
-      if (layers.length == 1)
-      {
-        // This needs to get the 1st (only) layer in the list and that layers
-        // viewname and layername
-        DashboardLayer layer = layers[0];
-        String viewName = layer.getViewName();
-        layerNames[0] = layer.getName();
-
-        sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN
-            + ")) AS bbox FROM " + viewName;
-      }
-      else
-      {
-        // More than one layer so union the geometry columns
-        sql = "SELECT ST_AsText(ST_Extent(geo_v)) AS bbox FROM (\n";
-
-        for (int i = 0; i < layers.length; i++)
-        {
-          DashboardLayer layer = layers[i];
-          String viewName = layer.getViewName();
-          layerNames[i] = layer.getName();
-
-          sql += "(SELECT " + GeoserverFacade.GEOM_COLUMN + " AS geo_v FROM " + viewName + ") \n";
-
-          if (i != layers.length - 1)
-          {
-            sql += "UNION ALL\n";
-          }
-        }
-
-        sql += ") bbox_union";
-      }
-
-      resultSet = Database.query(sql);
-
-      try
-      {
-        if (resultSet.next())
-        {
-          String bbox = resultSet.getString("bbox");
-          if (bbox != null)
-          {
-            Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
-            Matcher m = p.matcher(bbox);
-
-            if (m.matches())
-            {
-              String coordinates = m.group(1);
-              List<Coordinate> coords = new LinkedList<Coordinate>();
-
-              for (String c : coordinates.split(","))
-              {
-                String[] xAndY = c.split(" ");
-                double x = Double.valueOf(xAndY[0]);
-                double y = Double.valueOf(xAndY[1]);
-
-                coords.add(new Coordinate(x, y));
-              }
-
-              Envelope e = new Envelope(coords.get(0), coords.get(2));
-
-              try
-              {
-                bboxArr.put(e.getMinX());
-                bboxArr.put(e.getMinY());
-                bboxArr.put(e.getMaxX());
-                bboxArr.put(e.getMaxY());
-              }
-              catch (JSONException ex)
-              {
-                throw new ProgrammingErrorException(ex);
-              }
-            }
-            else
-            {
-              // There will not be a match if there is a single point geo
-              // entity.
-              // In this case, return the x,y coordinates to OpenLayers.
-
-              p = Pattern.compile("POINT\\((.*)\\)");
-              m = p.matcher(bbox);
-              if (m.matches())
-              {
-                String c = m.group(1);
-                String[] xAndY = c.split(" ");
-                double x = Double.valueOf(xAndY[0]);
-                double y = Double.valueOf(xAndY[1]);
-
-                try
-                {
-                  bboxArr.put(x);
-                  bboxArr.put(y);
-                }
-                catch (JSONException ex)
-                {
-                  throw new ProgrammingErrorException(ex);
-                }
-              }
-              else
-              {
-                String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
-                    + "] could not be used to create a valid bounding box";
-                throw new ProgrammingErrorException(error);
-              }
-            }
-            
-            if (bboxArr.length() > 0) {
-              return bboxArr;
-            }
-          }
-        }
-      }
-      catch (SQLException sqlEx1)
-      {
-        Database.throwDatabaseException(sqlEx1);
-      }
-      finally
-      {
-        try
-        {
-          java.sql.Statement statement = resultSet.getStatement();
-          resultSet.close();
-          statement.close();
-        }
-        catch (SQLException sqlEx2)
-        {
-          Database.throwDatabaseException(sqlEx2);
-        }
-      }
-    }
+    // TODO : Our dataset contains misplaced points, so, for now, this code is commented out and we'll always center on Cambodia.
+//    if (layers.length > 0)
+//    {
+//      layerNames = new String[layers.length];
+//      String sql;
+//
+//      if (layers.length == 1)
+//      {
+//        // This needs to get the 1st (only) layer in the list and that layers
+//        // viewname and layername
+//        DashboardLayer layer = layers[0];
+//        String viewName = layer.getViewName();
+//        layerNames[0] = layer.getName();
+//
+//        sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN
+//            + ")) AS bbox FROM " + viewName;
+//      }
+//      else
+//      {
+//        // More than one layer so union the geometry columns
+//        sql = "SELECT ST_AsText(ST_Extent(geo_v)) AS bbox FROM (\n";
+//
+//        for (int i = 0; i < layers.length; i++)
+//        {
+//          DashboardLayer layer = layers[i];
+//          String viewName = layer.getViewName();
+//          layerNames[i] = layer.getName();
+//
+//          sql += "(SELECT " + GeoserverFacade.GEOM_COLUMN + " AS geo_v FROM " + viewName + ") \n";
+//
+//          if (i != layers.length - 1)
+//          {
+//            sql += "UNION ALL\n";
+//          }
+//        }
+//
+//        sql += ") bbox_union";
+//      }
+//
+//      resultSet = Database.query(sql);
+//
+//      try
+//      {
+//        if (resultSet.next())
+//        {
+//          String bbox = resultSet.getString("bbox");
+//          if (bbox != null)
+//          {
+//            Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
+//            Matcher m = p.matcher(bbox);
+//
+//            if (m.matches())
+//            {
+//              String coordinates = m.group(1);
+//              List<Coordinate> coords = new LinkedList<Coordinate>();
+//
+//              for (String c : coordinates.split(","))
+//              {
+//                String[] xAndY = c.split(" ");
+//                double x = Double.valueOf(xAndY[0]);
+//                double y = Double.valueOf(xAndY[1]);
+//
+//                coords.add(new Coordinate(x, y));
+//              }
+//
+//              Envelope e = new Envelope(coords.get(0), coords.get(2));
+//
+//              try
+//              {
+//                bboxArr.put(e.getMinX());
+//                bboxArr.put(e.getMinY());
+//                bboxArr.put(e.getMaxX());
+//                bboxArr.put(e.getMaxY());
+//              }
+//              catch (JSONException ex)
+//              {
+//                throw new ProgrammingErrorException(ex);
+//              }
+//            }
+//            else
+//            {
+//              // There will not be a match if there is a single point geo
+//              // entity.
+//              // In this case, return the x,y coordinates to OpenLayers.
+//
+//              p = Pattern.compile("POINT\\((.*)\\)");
+//              m = p.matcher(bbox);
+//              if (m.matches())
+//              {
+//                String c = m.group(1);
+//                String[] xAndY = c.split(" ");
+//                double x = Double.valueOf(xAndY[0]);
+//                double y = Double.valueOf(xAndY[1]);
+//
+//                try
+//                {
+//                  bboxArr.put(x);
+//                  bboxArr.put(y);
+//                }
+//                catch (JSONException ex)
+//                {
+//                  throw new ProgrammingErrorException(ex);
+//                }
+//              }
+//              else
+//              {
+//                String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
+//                    + "] could not be used to create a valid bounding box";
+//                throw new ProgrammingErrorException(error);
+//              }
+//            }
+//            
+//            if (bboxArr.length() > 0) {
+//              return bboxArr;
+//            }
+//          }
+//        }
+//      }
+//      catch (SQLException sqlEx1)
+//      {
+//        Database.throwDatabaseException(sqlEx1);
+//      }
+//      finally
+//      {
+//        try
+//        {
+//          java.sql.Statement statement = resultSet.getStatement();
+//          resultSet.close();
+//          statement.close();
+//        }
+//        catch (SQLException sqlEx2)
+//        {
+//          Database.throwDatabaseException(sqlEx2);
+//        }
+//      }
+//    }
     
     // There are no layers in the map (that contain data) so return the Cambodian defaults
     if (bboxArr.length() == 0)
