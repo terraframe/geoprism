@@ -237,7 +237,7 @@ $(document).ready(function(){
 	                        </div>
 	                        <div class="row-holder">
 	                          <c:choose>
-													    <c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
+									<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">	                          
 														    <!-- Number attribute -->
 		                            <div class="select-holder">
 		                              <select id="attrFilterOpt${attrStatus.index}" class="filter-select gdb-attr-filter ${attr.mdAttributeId}">

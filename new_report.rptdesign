@@ -530,7 +530,7 @@
         </Color>
         <Visible>false</Visible>
       </Outline>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <ClientArea>
         <Outline>
           <Style>Solid</Style>
@@ -637,24 +637,22 @@
   <Dimension>Two_Dimensional</Dimension>
   <Script>function beforeGeneration( chart, icsc )
 {
-  var title = icsc.getExternalContext().getScriptable().getParameterValue(&quot;categoryLabel&quot;);
-  chart.getTitle().getLabel().getCaption().setValue(&quot;Agent sales for &quot; + title);
+	    var title = icsc.getExternalContext().getScriptable().getParameterValue(&quot;categoryLabel&quot;);
+    	chart.getTitle().getLabel().getCaption().setValue(&quot;Agent sales for &quot; + title);
 
-  xAxis = chart.getBaseAxes()[0];
-  yAxis = chart.getOrthogonalAxes( xAxis, true )[0];
+	    xAxis = chart.getBaseAxes()[0];
+    	yAxis = chart.getOrthogonalAxes( xAxis, true )[0];
   
-  seriesDef = yAxis.getSeriesDefinitions().get(0);
-  runSeries = seriesDef.getRunTimeSeries()[0];
-  
-  //Retrieve list of data values
-  list = runSeries.getDataSet().getValues();
-  
-  if (list.length > 0)
-  {    
-    height = Math.max((list.length / 3 * 50), 300);
-    chart.getBlock().getBounds().setHeight(height);
-  }
-}</Script>
+	    seriesDef = yAxis.getSeriesDefinitions().get(0);
+    	runSeries = seriesDef.getRunTimeSeries()[0];
+    	
+    	//Retrieve list of data values
+    	list = runSeries.getDataSet().getValues();
+    	
+   		height = (list.length / 3 * 50) + 100;
+  		chart.getBlock().getBounds().setHeight(height);
+}
+</Script>
   <Units>Points</Units>
   <SeriesThickness>10.0</SeriesThickness>
   <ExtendedProperties>
@@ -1520,6 +1518,14 @@
             <property name="height">2.0729166666666665in</property>
             <property name="width">8in</property>
             <property name="dataSet">Data Set</property>
+            <list-property name="visibility">
+                <structure>
+                    <property name="format">all</property>
+                    <expression name="valueExpr" type="javascript">rowsReturned = Total.count();
+
+rowsReturned == 0;</expression>
+                </structure>
+            </list-property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">businessAgent</property>
@@ -1543,5 +1549,14 @@
                 </structure>
             </list-property>
         </extended-item>
+        <label id="231">
+            <list-property name="visibility">
+                <structure>
+                    <property name="format">all</property>
+                    <expression name="valueExpr" type="javascript">rowsReturned > 0</expression>
+                </structure>
+            </list-property>
+            <text-property name="text">No sales agent data</text-property>
+        </label>
     </body>
 </report>
