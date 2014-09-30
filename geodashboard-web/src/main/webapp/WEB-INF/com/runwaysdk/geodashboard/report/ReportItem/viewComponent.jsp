@@ -1,43 +1,28 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<gdb:localize var="page_title" key="report.viewTitle"/>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<c:set scope="request" var="page_title" value="View_ReportItem" />
+<mjl:messages>
+  <mjl:message />
+</mjl:messages>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.report.ReportItem.form.id" name="com.runwaysdk.geodashboard.report.ReportItem.form.name" method="POST">
+  <mjl:form id="dss.vector.solutions.report.ReportItem.form.id" name="dss.vector.solutions.report.ReportItem.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
-      <mjl:dt attribute="cacheDocument">
-        ${item.cacheDocument ? item.cacheDocumentMd.positiveDisplayLabel : item.cacheDocumentMd.negativeDisplayLabel}
-      </mjl:dt>
-      <mjl:dt attribute="design">
-        ${item.design}
-      </mjl:dt>
-      <mjl:dt attribute="document">
-        ${item.document}
-      </mjl:dt>
-      <mjl:dt attribute="outputFormat">
-        <ul>
-          <c:forEach items="${item.outputFormatEnumNames}" var="enumName">
-            <li>
-              ${item.outputFormatMd.enumItems[enumName]}
-            </li>
-          </c:forEach>
-        </ul>
-      </mjl:dt>
-      <mjl:dt attribute="outputFormatIndex">
-        ${item.outputFormatIndex}
-      </mjl:dt>
       <mjl:dt attribute="reportLabel">
         ${item.reportLabel}
+      </mjl:dt>
+      <mjl:dt attribute="dashboard">
+        ${item.dashboard.displayLabel.value}
       </mjl:dt>
       <mjl:dt attribute="reportName">
         ${item.reportName}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.report.ReportItem.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.report.ReportItemController.edit.mojo" />
+    <mjl:command name="dss.vector.solutions.report.ReportItem.form.edit.button" value="Edit" action="dss.vector.solutions.report.ReportItemController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.report.ReportItem.viewAll.link" action="com.runwaysdk.geodashboard.report.ReportItemController.viewAll.mojo">
-  <gdb:localize key="viewAll"/>
+<mjl:commandLink name="dss.vector.solutions.report.ReportItem.viewAll.link" action="dss.vector.solutions.report.ReportItemController.viewAll.mojo">
+  <gdb:localize key="View_All" />
 </mjl:commandLink>

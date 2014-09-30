@@ -7,52 +7,69 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.axis.encoding.Base64;
+import org.eclipse.birt.core.archive.FileArchiveWriter;
+import org.eclipse.birt.core.archive.IDocArchiveReader;
+import org.eclipse.birt.core.archive.compound.ArchiveReader;
 import org.eclipse.birt.core.exception.BirtException;
+import org.eclipse.birt.report.engine.api.DocxRenderOption;
+import org.eclipse.birt.report.engine.api.EXCELRenderOption;
 import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.HTMLRenderOption;
 import org.eclipse.birt.report.engine.api.HTMLServerImageHandler;
+import org.eclipse.birt.report.engine.api.IExcelRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderTask;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportRunnable;
-import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
 import org.eclipse.birt.report.engine.api.PDFRenderOption;
 import org.eclipse.birt.report.engine.api.RenderOption;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.UserDAOIF;
-import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.VaultFileInfo;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
-import com.runwaysdk.dataaccess.io.FileWriteException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.CreatePermissionException;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
+import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.util.FileIO;
-import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
 
 public class ReportItem extends ReportItemBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long  serialVersionUID      = -1301378633;
+  private static final long   serialVersionUID      = -935561311;
 
-  public static final String RPTDESIGN_EXTENSION   = "rptdesign";
+  private static final String TEMP_REPORT_PREFIX    = "birt-temp-doc-archive";
 
-  public static final String RPTDOCUMENT_EXTENSION = "rptdoc";
+  private static final String PAGE_NUMBER           = "pageNumber";
 
-  public static final String BASE_URL              = "dss.vector.solutions.report.ReportController.generate.mojo?report=";
+  private static final String FORMAT                = "format";
+
+  public static final String  RPTDESIGN_EXTENSION   = "rptdesign";
+
+  public static final String  RPTDOCUMENT_EXTENSION = "rptdoc";
+
+  public static final String  BASE_URL              = "dss.vector.solutions.report.ReportController.generate.mojo?report=";
 
   public ReportItem()
   {
@@ -69,6 +86,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   @Transaction
   public void delete()
   {
+
     /*
      * Delete the design file and if there is a document file delete that too
      */
@@ -84,26 +102,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       file.delete();
     }
 
-    // /*
-    // * Delete the job report
-    // */
-    // ReportJob job = ReportJob.get(this);
-    //
-    // if (job != null)
-    // {
-    // job.lock();
-    // job.delete();
-    // }
-
     super.delete();
-  }
-
-  @Override
-  public void apply()
-  {
-    this.setOutputFormatIndex(this.getOutputFormat().get(0).getEnumName());
-
-    super.apply();
   }
 
   @Override
@@ -187,52 +186,32 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
         {
           throw new ReportItemException("Report design must have the rptdesign extension");
         }
+
+        /*
+         * This invalidates all cached report documents so we need to delete
+         */
+        new CacheDocumentManager().run();
       }
     }
 
     this.apply();
-
-    // /*
-    // * Handle the job report
-    // */
-    // ReportJob job = ReportJob.get(this);
-    //
-    // if (this.getCacheDocument())
-    // {
-    // if (job == null)
-    // {
-    // job = new ReportJob();
-    // job.setReportItem(this);
-    // }
-    // else
-    // {
-    // job.lock();
-    // }
-    //
-    // // job.getDisplayLabel().setValue(this.getReportLabel().getValue() + " ["
-    // // + this.getOutputFormat().get(0).getDisplayLabel() + "]");
-    // job.apply();
-    // }
-    // else
-    // {
-    // if (job != null)
-    // {
-    // job.lock();
-    // job.delete();
-    // }
-    // }
   }
 
   private void checkVaultPermissions(VaultFile entity, Operation operation)
   {
-    String sessionId = Session.getCurrentSession().getId();
-    boolean access = SessionFacade.checkAccess(sessionId, operation, entity);
+    SessionIF session = Session.getCurrentSession();
 
-    if (!access)
+    if (session != null)
     {
-      UserDAOIF user = SessionFacade.getUser(sessionId);
-      String errorMsg = "User [" + user.getSingleActorName() + "] does not have permission to upload a new design file ";
-      throw new CreatePermissionException(errorMsg, entity, user);
+      String sessionId = session.getId();
+      boolean access = SessionFacade.checkAccess(sessionId, operation, entity);
+
+      if (!access)
+      {
+        UserDAOIF user = SessionFacade.getUser(sessionId);
+        String errorMsg = "User [" + user.getSingleActorName() + "] does not have permission to upload a new design file ";
+        throw new CreatePermissionException(errorMsg, entity, user);
+      }
     }
   }
 
@@ -298,7 +277,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   @Override
   @Transaction
   @Authenticate
-  public void render(OutputStream outputStream, ReportParameter[] parameters, String baseURL)
+  public Long render(OutputStream outputStream, ReportParameter[] parameters, String baseURL, String reportURL)
   {
     /*
      * Ensure the user has permissions to view the report
@@ -307,14 +286,9 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
     try
     {
-      if (!this.getCacheDocument())
-      {
-        this.runAndRender(outputStream, parameters, baseURL);
-      }
-      else
-      {
-        this.renderFromDocument(outputStream, parameters, baseURL);
-      }
+      Map<String, String> parameterMap = this.createParameterMap(parameters);
+
+      return this.runAndRender(outputStream, parameterMap, baseURL, reportURL);
     }
     catch (EngineException e)
     {
@@ -343,22 +317,23 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
       throw exception;
     }
+    catch (IOException e)
+    {
+      // TODO change exception type
+      throw new RuntimeException("Unable to generate the report document", e);
+    }
   }
 
-  private void renderFromDocument(OutputStream outputStream, ReportParameter[] parameters, String baseURL) throws BirtException, EngineException
+  private Long renderFromDocument(OutputStream outputStream, Map<String, String> parameterMap, String baseURL, String reportURL, IDocArchiveReader reader) throws BirtException, EngineException
   {
     IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
 
     HashMap<String, Object> contextMap = new HashMap<String, Object>();
     contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
 
-    if (this.getDocument() == null || this.getDocument().length() == 0)
-    {
-      throw new MissingReportDocumentException();
-    }
+    IReportDocument document = engine.openReportDocument(this.getReportName(), reader, new HashMap<Object, Object>());
 
-    File file = this.getDocumentAsFile();
-    IReportDocument document = engine.openReportDocument(file.getAbsolutePath());
+    String format = this.getFormat(parameterMap);
 
     try
     {
@@ -366,14 +341,24 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       try
       {
         task.setAppContext(contextMap);
-        task.setRenderOption(this.getRenderOptions(outputStream, baseURL));
+        task.setRenderOption(this.getRenderOptions(outputStream, document, baseURL, reportURL, format));
 
-        // Set parameters
-        for (ReportParameter parameter : parameters)
+        if (task.getRenderOption() instanceof HTMLRenderOption)
         {
-          task.setParameterValue(parameter.getParameterName(), parameter.getParameterValue());
+//          long pageNumber = this.getPageNumber(parameterMap);
+//
+//          if (pageNumber > 0)
+//          {
+//            task.setPageNumber(pageNumber);
+//          }
         }
 
+        IReportRunnable design = engine.openReportDesign(document.getDesignStream());
+
+        Map<String, Object> convertedParameters = new ReportParameterUtil().convertParameters(design, parameterMap);
+
+        // set and validate the parameters
+        task.setParameterValues(convertedParameters);
         task.validateParameters();
 
         // run report
@@ -388,6 +373,46 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     {
       document.close();
     }
+
+    return document.getPageCount();
+  }
+
+  private Map<String, String> createParameterMap(ReportParameter[] parameters)
+  {
+    Map<String, String> map = new HashMap<String, String>();
+
+    for (ReportParameter parameter : parameters)
+    {
+      map.put(parameter.getParameterName(), parameter.getParameterValue());
+    }
+
+    return map;
+  }
+
+  private long getPageNumber(Map<String, String> parameters)
+  {
+    if (parameters.containsKey(PAGE_NUMBER))
+    {
+      String value = parameters.get(PAGE_NUMBER);
+      try
+      {
+        return Long.parseLong(value);
+      }
+      catch (Exception e)
+      {
+      }
+    }
+    return 1;
+  }
+
+  private String getFormat(Map<String, String> parameters)
+  {
+    if (parameters.containsKey(FORMAT))
+    {
+      return parameters.get(FORMAT);
+    }
+
+    return IRenderOption.OUTPUT_FORMAT_HTML;
   }
 
   @Transaction
@@ -396,67 +421,64 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     try
     {
       // Run the report and get the path of the temp rptdocument file
-      String path = this.run(parameters);
+      File file = this.run(this.createParameterMap(parameters));
 
       try
       {
-        // Copy the temp rptdocument file over to the document vault
-        File file = new File(path);
-
-        try
+        // If a vault file doesn't exist for the rptdocument then create one
+        if (this.getDocument() == null || this.getDocument().length() == 0)
         {
-          // If a vault file doesn't exist for the rptdocument then create one
-          if (this.getDocument() == null || this.getDocument().length() == 0)
+          this.lock();
+
+          VaultFile entity = new VaultFile();
+          VaultFileDAO fileDao = (VaultFileDAO) BusinessFacade.getEntityDAO(entity);
+
+          this.checkVaultPermissions(entity, Operation.CREATE);
+
+          String reportName = this.getReportName();
+
+          int index = reportName.lastIndexOf('.');
+
+          String filename = reportName.substring(0, index);
+          String extension = RPTDOCUMENT_EXTENSION;
+
+          entity.setValue(VaultFileInfo.FILE_NAME, filename);
+          entity.setValue(VaultFileInfo.EXTENSION, extension);
+
+          fileDao.setSize(0);
+          entity.apply();
+          fileDao.putFile(new FileInputStream(file));
+
+          this.setDocument(entity.getId());
+          this.apply();
+        }
+        else
+        {
+          VaultFile vaultFile = VaultFile.lock(this.getDocument());
+
+          try
           {
-            this.appLock();
+            VaultFileDAO document = (VaultFileDAO) BusinessFacade.getEntityDAO(vaultFile);
 
-            VaultFile entity = new VaultFile();
-            VaultFileDAO fileDao = (VaultFileDAO) BusinessFacade.getEntityDAO(entity);
-
-            this.checkVaultPermissions(entity, Operation.CREATE);
-
-            String reportName = this.getReportName();
-
-            int index = reportName.lastIndexOf('.');
-
-            String filename = reportName.substring(0, index);
-            String extension = RPTDOCUMENT_EXTENSION;
-
-            entity.setValue(VaultFileInfo.FILE_NAME, filename);
-            entity.setValue(VaultFileInfo.EXTENSION, extension);
-
-            fileDao.setSize(0);
-            entity.apply();
-            fileDao.putFile(new FileInputStream(file));
-
-            this.setDocument(entity.getId());
-            this.apply();
-          }
-          else
-          {
-            VaultFileDAOIF document = this.getDocumentAsVaultFile();
             document.putFile(new FileInputStream(file));
           }
+          finally
+          {
+            vaultFile.unlock();
+          }
         }
-        catch (FileNotFoundException e)
-        {
-          throw new FileReadException(file, e);
-        }
+      }
+      catch (FileNotFoundException e)
+      {
+        throw new FileReadException(file, e);
       }
       finally
       {
-        File file = new File(path);
-
-        try
+        if (file.getName().startsWith(TEMP_REPORT_PREFIX))
         {
           FileIO.deleteFile(file);
         }
-        catch (IOException e)
-        {
-          throw new FileWriteException(file, e);
-        }
       }
-
     }
     catch (BirtException e)
     {
@@ -466,144 +488,200 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
       throw exception;
     }
+    catch (IOException e)
+    {
+      // TODO change exception type
+      throw new RuntimeException("Unable to get a report document", e);
+    }
   }
 
-  private String run(ReportParameter[] parameters) throws BirtException, EngineException
+  private File run(Map<String, String> parameterMap) throws BirtException, EngineException, IOException
   {
-    String path = DeployProperties.getJspDir() + File.separator + "temp" + File.separator + IDGenerator.nextID();
-    IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
+    File file = this.getCachedDocument(parameterMap);
 
-    HashMap<String, Object> contextMap = new HashMap<String, Object>();
-    contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
-
-    IReportRunnable design = engine.openReportDesign(this.getDesignAsStream());
-
-    IRunTask task = engine.createRunTask(design);
-    try
+    if (!file.exists() || file.getName().startsWith(TEMP_REPORT_PREFIX) || ( !parameterMap.containsKey(PAGE_NUMBER) && !this.getCacheDocument() ))
     {
-      task.setAppContext(contextMap);
+      IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
 
-      // Set parameters
-      for (ReportParameter parameter : parameters)
+      HashMap<String, Object> contextMap = new HashMap<String, Object>();
+      contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
+
+      IReportRunnable design = engine.openReportDesign(this.getDesignAsStream());
+
+      IRunTask task = engine.createRunTask(design);
+
+      try
       {
-        task.setParameterValue(parameter.getParameterName(), parameter.getParameterValue());
+        Map<String, Object> convertedParameters = new ReportParameterUtil().convertParameters(design, parameterMap);
+
+        task.setAppContext(contextMap);
+        task.setParameterValues(convertedParameters);
+        task.validateParameters();
+
+        task.run(new FileArchiveWriter(file.getAbsolutePath()));
+      }
+      finally
+      {
+        task.close();
+      }
+    }
+
+    return file;
+  }
+
+  public File getCachedDocument(Map<String, String> parameters)
+  {
+    SessionIF session = Session.getCurrentSession();
+
+    if (session != null)
+    {
+      StringBuffer key = new StringBuffer();
+      key.append(this.getReportName());
+
+      Iterator<Entry<String, String>> iterator = parameters.entrySet().iterator();
+
+      while (iterator.hasNext())
+      {
+        Entry<String, String> entry = iterator.next();
+
+        if (this.isValidParameter(entry))
+        {
+          key.append(entry.getKey() + "-" + entry.getValue());
+        }
       }
 
-      task.validateParameters();
+      int hashCode = key.toString().hashCode();
 
-      task.run(path);
+      String filepath = BirtConstants.CACHE_DIR + File.separator + this.getCacheFolderName();
+      String filename = hashCode + ".rptdocument";
+
+      return new File(filepath + File.separator + filename);
+    }
+
+    try
+    {
+      return File.createTempFile(TEMP_REPORT_PREFIX, "tempReportDocument");
+    }
+    catch (IOException e)
+    {
+      // Change exception
+      throw new RuntimeException(e);
+    }
+  }
+
+  private boolean isValidParameter(Entry<String, String> parameter)
+  {
+    if (parameter.getKey().equals(PAGE_NUMBER))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  private Long runAndRender(OutputStream outputStream, Map<String, String> parameterMap, String baseURL, String reportURL) throws BirtException, EngineException, IOException
+  {
+    File document = null;
+
+    if (this.getCacheDocument() && this.getDocument() != null && this.getDocument().length() > 0)
+    {
+      document = this.getDocumentAsFile();
+    }
+
+    if (document == null || !document.exists() || ( !parameterMap.containsKey(PAGE_NUMBER) && !this.getCacheDocument() ))
+    {
+      document = this.run(parameterMap);
+    }
+
+    try
+    {
+      IDocArchiveReader reader = new ArchiveReader(document.getAbsolutePath());
+
+      return this.renderFromDocument(outputStream, parameterMap, baseURL, reportURL, reader);
     }
     finally
     {
-      task.close();
-    }
-
-    return path;
-  }
-
-  private void runAndRender(OutputStream outputStream, ReportParameter[] parameters, String baseURL) throws BirtException, EngineException
-  {
-    IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
-
-    HashMap<String, Object> contextMap = new HashMap<String, Object>();
-    contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
-
-    // create task to run and render report
-    IReportRunnable design = engine.openReportDesign(this.getDesignAsStream());
-
-    IRunAndRenderTask task = engine.createRunAndRenderTask(design);
-
-    try
-    {
-      task.setAppContext(contextMap);
-      task.setRenderOption(this.getRenderOptions(outputStream, baseURL));
-
-      // Set parameters
-      for (ReportParameter parameter : parameters)
+      if (document != null && document.getName().startsWith(TEMP_REPORT_PREFIX))
       {
-        task.setParameterValue(parameter.getParameterName(), parameter.getParameterValue());
+        FileIO.deleteFile(document);
       }
-
-      task.validateParameters();
-
-      // run report
-      task.run();
-    }
-    finally
-    {
-      task.close();
     }
   }
 
-  private IRenderOption getRenderOptions(OutputStream outputStream, String baseURL)
+  private IRenderOption getRenderOptions(OutputStream outputStream, IReportDocument document, String baseURL, String reportURL, String format)
   {
-    if (this.getOutputFormat().contains(OutputFormat.HTML))
+    if (format.equals("xlsx"))
     {
-      // set output options
-      HTMLRenderOption options = new HTMLRenderOption();
-      options.setOutputFormat(this.getRenderOutputFormat());
+      EXCELRenderOption options = new EXCELRenderOption();
       options.setOutputStream(outputStream);
-      options.setBaseURL(baseURL);
-      options.setImageHandler(new HTMLServerImageHandler());
-      options.setBaseImageURL(baseURL + "/imgs");
-      options.setImageDirectory(DeployProperties.getDeployPath() + "/imgs");
-      options.setActionHandler(new HTMLUrlActionHandler(baseURL));
-      options.setHtmlTitle(this.getReportLabel().getValue());
+      options.setOutputFormat("xlsx");
+      options.setOption(IExcelRenderOption.OFFICE_VERSION, "office2007");
 
       return options;
     }
-    else
+    else if (format.equals("docx"))
+    {
+      DocxRenderOption option = new DocxRenderOption();
+      option.setOutputStream(outputStream);
+      option.setOption(DocxRenderOption.OPTION_EMBED_HTML, Boolean.FALSE);
+      option.setOption(IRenderOption.EMITTER_ID, "org.eclipse.birt.report.engine.emitter.docx");
+      return option;
+    }
+    else if (format.equalsIgnoreCase(OutputFormat.PDF.name()))
     {
       // set output options
       PDFRenderOption options = new PDFRenderOption();
-      options.setOutputFormat(this.getRenderOutputFormat());
+      options.setOutputFormat(RenderOption.OUTPUT_FORMAT_PDF);
       options.setOutputStream(outputStream);
       options.setBaseURL(baseURL);
-      options.setActionHandler(new PDFUrlActionHandler(baseURL));
+      options.setActionHandler(new PDFUrlActionHandler(document, baseURL, reportURL));
 
       return options;
     }
-  }
+    else if (format.equalsIgnoreCase(OutputFormat.HTML.name()))
+    {
+      String folderName = this.getCacheFolderName();
 
-  public String getRenderOutputFormat()
-  {
-    if (this.getOutputFormat().contains(OutputFormat.PDF))
-    {
-      return RenderOption.OUTPUT_FORMAT_PDF;
-    }
-    else if (this.getOutputFormat().contains(OutputFormat.HTML))
-    {
-      return RenderOption.OUTPUT_FORMAT_HTML;
+      // set output options
+      HTMLRenderOption options = new HTMLRenderOption();
+      options.setOutputFormat(RenderOption.OUTPUT_FORMAT_HTML);
+      options.setOutputStream(outputStream);
+      options.setBaseURL(baseURL);
+      options.setImageHandler(new HTMLServerImageHandler());
+      options.setBaseImageURL(baseURL + "/" + BirtConstants.BIRT_SUFFIX + "/" + folderName);
+      options.setImageDirectory(BirtConstants.IMGS_DIR + File.separator + folderName);
+      options.setActionHandler(new HTMLUrlActionHandler(document, baseURL, reportURL));
+      options.setHtmlTitle(this.getReportLabel().getValue());
+      options.setEmbeddable(true);
+      options.setHtmlPagination(true);
+
+      return options;
     }
 
     UnsupportedOutputFormatException e = new UnsupportedOutputFormatException("Unknown output format type");
+    e.setOutputFormat(format);
     e.apply();
 
     throw e;
   }
 
-  public static OutputFormat getOutputFormat(String format)
+  private String getCacheFolderName()
   {
-    if (format.equals(RenderOption.OUTPUT_FORMAT_PDF))
-    {
-      return OutputFormat.PDF;
-    }
-    else if (format.equals(RenderOption.OUTPUT_FORMAT_HTML))
-    {
-      return OutputFormat.HTML;
-    }
+    SessionIF session = Session.getCurrentSession();
+    String sessionId = session.getId();
 
-    UnsupportedOutputFormatException e = new UnsupportedOutputFormatException("Unknown output format type");
-    e.apply();
-
-    throw e;
+    return Base64.encode(sessionId.getBytes());
   }
 
-  public static ReportItem find(String reportName, OutputFormat outputFormat)
+  public void validatePermissions()
+  {
+
+  }
+
+  public static ReportItem find(String reportName)
   {
     ReportItemQuery query = new ReportItemQuery(new QueryFactory());
     query.WHERE(query.getReportName().EQ(reportName));
-    query.AND(query.getOutputFormat().containsAny(outputFormat));
 
     OIterator<? extends ReportItem> it = query.getIterator();
 
@@ -611,21 +689,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     {
       if (it.hasNext())
       {
-        ReportItem item = it.next();
-
-        if (it.hasNext())
-        {
-          String message = "Multiple report items have been found with the report [" + reportName + "] and output format [" + outputFormat.name() + "]";
-
-          MultipleReportException e = new MultipleReportException(message);
-          e.setReportName(reportName);
-          e.setFormat(outputFormat.name());
-          e.apply();
-
-          throw e;
-        }
-
-        return item;
+        return it.next();
       }
       else
       {
@@ -636,7 +700,72 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     {
       it.close();
     }
+  }
 
+  // @Override
+  public String getParameterDefinitions()
+  {
+    InputStream stream = this.getDesignAsStream();
+
+    try
+    {
+      ReportParameterUtil util = new ReportParameterUtil();
+      JSONArray definition = util.getParameterDefinitions(stream);
+
+      return definition.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    catch (BirtException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      try
+      {
+        stream.close();
+      }
+      catch (IOException e)
+      {
+        // TODO change exception type
+        throw new RuntimeException("Unable to get a report document", e);
+      }
+    }
+  }
+
+  public static ValueQuery getValuesForReporting(String type, String category, String criteria)
+  {
+    return ReportProviderBridge.getValuesForReporting(type, category, criteria);
+  }
+
+  public static ValueQuery getTypesForReporting()
+  {
+    return ReportProviderBridge.getTypesForReporting();
+  }
+
+  public static ReportItem getReportItemForDashboard(String dashboardId)
+  {
+    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(dashboardId));
+
+    OIterator<? extends ReportItem> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
 }
