@@ -1463,7 +1463,9 @@
         
         if(this._googleEnabled){
           this._addAutoComplete();
-        }        
+        }    
+        
+//        $("#report-content").resizable({ handles: "n" });
       },
     }
    

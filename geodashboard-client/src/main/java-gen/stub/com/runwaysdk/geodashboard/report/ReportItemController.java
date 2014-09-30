@@ -15,6 +15,7 @@ import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ReportItemController extends ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -324,6 +325,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
       item.validatePermissions();
 
       String reportUrl = this.getReportURL();
+      
 
       List<ReportParameterDTO> parameters = new LinkedList<ReportParameterDTO>();
       parameters.add(this.createReportParameter("category", category));

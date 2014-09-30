@@ -52,6 +52,7 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.VaultFile;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
@@ -346,12 +347,12 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
         if (task.getRenderOption() instanceof HTMLRenderOption)
         {
-//          long pageNumber = this.getPageNumber(parameterMap);
-//
-//          if (pageNumber > 0)
-//          {
-//            task.setPageNumber(pageNumber);
-//          }
+          // long pageNumber = this.getPageNumber(parameterMap);
+          //
+          // if (pageNumber > 0)
+          // {
+          // task.setPageNumber(pageNumber);
+          // }
         }
 
         IReportRunnable design = engine.openReportDesign(document.getDesignStream());
@@ -385,6 +386,27 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     for (ReportParameter parameter : parameters)
     {
       map.put(parameter.getParameterName(), parameter.getParameterValue());
+    }
+
+    String CATEGORY = "category";
+
+    if (map.containsKey(CATEGORY))
+    {
+      String geoId = map.get(CATEGORY);
+
+      if (geoId != null && geoId.length() > 0)
+      {
+        try
+        {
+          GeoEntity geoEntity = GeoEntity.getByKey(geoId);
+
+          map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
+        }
+        catch (Exception e)
+        {
+          // Do nothing
+        }
+      }
     }
 
     return map;
