@@ -11,7 +11,7 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdAttributeDate;
-import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdView;
@@ -106,7 +106,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       
       //SalesTransaction.NUMBEROFUNITS
       String unitsKey = "org.ideorg.iq.SalesTransaction.numberOfUnits";
-      MdAttributeDouble units = MdAttributeDouble.getByKey(unitsKey);
+      MdAttributeInteger units = MdAttributeInteger.getByKey(unitsKey);
       
       MdAttributeVirtual virtualUnits = new MdAttributeVirtual();
       virtualUnits.setMdAttributeConcrete(units);
