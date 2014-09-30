@@ -1463,16 +1463,7 @@
         
         if(this._googleEnabled){
           this._addAutoComplete();
-        }
-        
-//        $( "#reporticng-container" ).resizable({
-//            handles: 'n',
-//            resize: function(event, ui) {
-//              $("reporticng-container").css("position", "fixed");
-//              $("reporticng-container").css("bottom", "0px");
-//              $("reporticng-container").css("top", "");
-//            }            	
-//        });
+        }        
       },
     }
    

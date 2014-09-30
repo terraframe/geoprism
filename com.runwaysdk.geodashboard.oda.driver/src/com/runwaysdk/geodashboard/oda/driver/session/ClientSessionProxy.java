@@ -1,9 +1,9 @@
-package com.runwaysdk.geodashboard.oda.driver;
+package com.runwaysdk.geodashboard.oda.driver.session;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientRequestIF;
 
-public class ClientSessionProxy
+public class ClientSessionProxy implements IClientSession
 {
   private String        url;
 
@@ -26,8 +26,15 @@ public class ClientSessionProxy
   public void logout()
   {
     this.session.logout();
-
-    ClientSessionCache.close(this.url, this.username);
   }
 
+  public String getKey()
+  {
+    return ClientSessionProxy.buildKey(this.url, this.username);
+  }
+
+  public static String buildKey(String url, String username)
+  {
+    return url + "-" + username;
+  }
 }
