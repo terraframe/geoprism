@@ -10,6 +10,9 @@ a:active{
 	text-decoration:none;
 	background-color:transparent;
 }
+.reporticng-container {
+	opacity: 0.9;
+}
 .hidden,
 form legend{
 	display:block !important;
