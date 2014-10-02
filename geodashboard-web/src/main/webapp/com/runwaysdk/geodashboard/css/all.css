@@ -10,6 +10,9 @@ a:active{
 	text-decoration:none;
 	background-color:transparent;
 }
+.reporticng-container {
+	opacity: 0.9;
+}
 .hidden,
 form legend{
 	display:block !important;
@@ -2063,13 +2066,12 @@ a.blueactive,
 }
 
 #report-content{
-	width: 84%;
 	background-color: #FFF;
 	height: 300px;
-	border-top-color: black;
-	border-top-style: solid;
-	border-top-width: 1px;
+	border-top: 1px solid #000;
 	overflow-y: scroll;
+	margin-right: 300px;
+	left: 0px;
 }
 
 /*
