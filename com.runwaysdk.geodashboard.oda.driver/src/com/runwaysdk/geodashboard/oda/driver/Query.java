@@ -33,21 +33,25 @@ import com.runwaysdk.constants.ClientRequestIF;
  */
 public class Query implements IQuery
 {
+
   private String              queryText;
 
   private ClientRequestIF     request;
 
   private IResultSet          resultSet;
 
+  private IParameterMetaData  metadata;
+
   private Map<String, Object> parameters;
 
-  private IParameterMetaData  metadata;
+  private Map<String, String> properties;
 
   public Query(ClientRequestIF request)
   {
     this.request = request;
-    this.parameters = new HashMap<String, Object>();
     this.metadata = null;
+    this.parameters = new HashMap<String, Object>();
+    this.properties = new HashMap<String, String>();
   }
 
   private String getParameterName(int parameterId) throws OdaException
@@ -102,9 +106,9 @@ public class Query implements IQuery
    */
   public IResultSet executeQuery() throws OdaException
   {
-    System.out.println("------------------------------------------EXECUTING QUERY--------------------------------------------------");
+    boolean queryMetadata = this.properties.containsKey(Connection.Constants.METADATA_QUERY);
 
-    this.resultSet = new QueryFacade().invoke(this.request, this.queryText, this.parameters);
+    this.resultSet = new QueryFacade().invoke(this.request, this.queryText, this.parameters, queryMetadata);
 
     return this.resultSet;
   }
@@ -116,7 +120,7 @@ public class Query implements IQuery
    */
   public void setProperty(String name, String value) throws OdaException
   {
-    // do nothing; assumes no data set query property
+    this.properties.put(name, value);
   }
 
   /*

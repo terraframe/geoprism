@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 1787003071)
+@com.runwaysdk.business.ClassSignature(hash = 1382725570)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = 1787003071;
+  private static final long serialVersionUID = 1382725570;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -661,6 +661,14 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public static final com.runwaysdk.business.ValueQueryDTO getMetadataForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String category, java.lang.String criteria)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{type, category, criteria};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getMetadataForReporting", _declaredTypes);
+    return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public final java.lang.String getParameterDefinitions()
   {
     String[] _declaredTypes = new String[]{};
@@ -685,12 +693,12 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (com.runwaysdk.geodashboard.report.ReportItemDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getTypesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final com.runwaysdk.geodashboard.report.ReportQueryViewDTO[] getTypesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getTypesForReporting", _declaredTypes);
-    return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (com.runwaysdk.geodashboard.report.ReportQueryViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.String getURL()
@@ -709,10 +717,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getValuesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String category, java.lang.String criteria)
+  public static final com.runwaysdk.business.ValueQueryDTO getValuesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String category, java.lang.String criteria, java.lang.Integer depth)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{type, category, criteria};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{type, category, criteria, depth};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getValuesForReporting", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

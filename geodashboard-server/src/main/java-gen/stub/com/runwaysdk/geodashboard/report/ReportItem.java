@@ -412,22 +412,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return map;
   }
 
-  private long getPageNumber(Map<String, String> parameters)
-  {
-    if (parameters.containsKey(PAGE_NUMBER))
-    {
-      String value = parameters.get(PAGE_NUMBER);
-      try
-      {
-        return Long.parseLong(value);
-      }
-      catch (Exception e)
-      {
-      }
-    }
-    return 1;
-  }
-
   private String getFormat(Map<String, String> parameters)
   {
     if (parameters.containsKey(FORMAT))
@@ -760,16 +744,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
-  public static ValueQuery getValuesForReporting(String type, String category, String criteria)
-  {
-    return ReportProviderBridge.getValuesForReporting(type, category, criteria);
-  }
-
-  public static ValueQuery getTypesForReporting()
-  {
-    return ReportProviderBridge.getTypesForReporting();
-  }
-
   public static ReportItem getReportItemForDashboard(String dashboardId)
   {
     ReportItemQuery query = new ReportItemQuery(new QueryFactory());
@@ -790,6 +764,24 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     {
       iterator.close();
     }
+  }
+
+  public static ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth)
+  {
+    return ReportProviderBridge.getValuesForReporting(type, category, criteria, depth);
+  }
+
+  public static ValueQuery getMetadataForReporting(String type, String category, String criteria)
+  {
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(type, category, criteria, null);
+    query.restrictRows(1, 1);
+
+    return query;
+  }
+
+  public static ReportQueryView[] getTypesForReporting()
+  {
+    return ReportProviderBridge.getTypesForReporting();
   }
 
 }

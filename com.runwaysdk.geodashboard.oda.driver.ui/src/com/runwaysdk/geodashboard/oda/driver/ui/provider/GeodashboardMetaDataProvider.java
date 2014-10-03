@@ -1,7 +1,7 @@
 package com.runwaysdk.geodashboard.oda.driver.ui.provider;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,17 +57,19 @@ public class GeodashboardMetaDataProvider
     }
   }
 
-  public Map<String, String> getTypes(long milliSeconds)
+  public DataSetType[] getTypes(long milliSeconds)
   {
     class TempThread extends Thread
     {
-      private Map<String, String> types = new HashMap<String, String>();
+      private List<DataSetType> results;
 
-      private Throwable           throwable;
+      private Throwable         throwable;
 
       @Override
       public void run()
       {
+        this.results = new LinkedList<DataSetType>();
+
         try
         {
           IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
@@ -79,10 +81,11 @@ public class GeodashboardMetaDataProvider
 
           while (results.next())
           {
-            String value = results.getString("dashboardId");
-            String label = results.getString("dashboardName");
+            String queryId = results.getString("queryId");
+            String queryLabel = results.getString("queryLabel");
+            int maxDepth = results.getInt("maxDepth");
 
-            types.put(value, label);
+            this.results.add(new DataSetType(queryId, queryLabel, maxDepth));
           }
         }
         catch (Throwable e)
@@ -98,9 +101,9 @@ public class GeodashboardMetaDataProvider
         return this.throwable;
       }
 
-      public Map<String, String> getResult()
+      public List<DataSetType> getResults()
       {
-        return types;
+        return this.results;
       }
     }
 
@@ -120,6 +123,8 @@ public class GeodashboardMetaDataProvider
       throw new RuntimeException(tt.getThrowable());
     }
 
-    return tt.getResult();
+    List<DataSetType> results = tt.getResults();
+
+    return results.toArray(new DataSetType[results.size()]);
   }
 }

@@ -1,26 +1,27 @@
 package com.runwaysdk.geodashboard.oda.driver.ui.editors;
 
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.oda.IConnection;
 import org.eclipse.datatools.connectivity.oda.IDriver;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
-import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.design.DataSetDesign;
 import org.eclipse.datatools.connectivity.oda.design.DataSetParameters;
 import org.eclipse.datatools.connectivity.oda.design.DesignFactory;
-import org.eclipse.datatools.connectivity.oda.design.ParameterDefinition;
 import org.eclipse.datatools.connectivity.oda.design.ResultSetColumns;
 import org.eclipse.datatools.connectivity.oda.design.ResultSetDefinition;
 import org.eclipse.datatools.connectivity.oda.design.ui.designsession.DesignSessionUtil;
 import org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.runwaysdk.geodashboard.oda.driver.Driver;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
+import com.runwaysdk.geodashboard.oda.driver.ui.provider.DataSetType;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.GeodashboardMetaDataProvider;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
 
@@ -49,8 +51,24 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
    */
   private static final int             TIME_OUT_LIMIT = 20;
 
+  /**
+   * Combo viewer to select the query type
+   */
   private ComboViewer                  schemaCombo;
 
+  /**
+   * Max depth text input. Only enabled when applicable
+   */
+  private ComboViewer                  depthInput;
+
+  /**
+   * Max possible depth
+   */
+  private int                          maxDepth;
+
+  /**
+   * Provider used to communicate with the server
+   */
   private GeodashboardMetaDataProvider provider;
 
   /**
@@ -100,38 +118,97 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   {
     // Group for selecting the Tables etc
     // Searching the Tables and Views
-    Group selectTableGroup = new Group(parent, SWT.FILL);
-
     GridLayout groupLayout = new GridLayout();
     groupLayout.numColumns = 3;
     groupLayout.verticalSpacing = 10;
-    selectTableGroup.setLayout(groupLayout);
 
     GridData selectTableData = new GridData(GridData.FILL_HORIZONTAL);
+
+    Group selectTableGroup = new Group(parent, SWT.FILL);
+    selectTableGroup.setLayout(groupLayout);
     selectTableGroup.setLayoutData(selectTableData);
-
-    Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
-    schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
-
-    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    gd.horizontalSpan = 2;
 
     try
     {
-      Map<String, String> types = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
-      Set<String> keySet = types.keySet();
+      Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
+      schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
 
-      String[] input = keySet.toArray(new String[keySet.size()]);
+      GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+      gd.horizontalSpan = 2;
 
-      schemaCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
-      schemaCombo.getControl().setLayoutData(gd);
+      this.schemaCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.schemaCombo.getControl().setLayoutData(gd);
+
+      Label depthLabel = new Label(selectTableGroup, SWT.LEFT);
+      depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.depth"));
+
+      // Create a single line text field
+      this.depthInput = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.depthInput.getControl().setLayoutData(gd);
+      this.depthInput.getControl().setEnabled(false);
+      this.depthInput.setContentProvider(new ArrayContentProvider());
+      this.depthInput.setLabelProvider(new LabelProvider()
+      {
+        @Override
+        public String getText(Object element)
+        {
+          if (element != null)
+          {
+            return ( (Integer) element ).toString();
+          }
+
+          return "";
+        }
+      });
+
+      this.schemaCombo.addSelectionChangedListener(new ISelectionChangedListener()
+      {
+        @Override
+        public void selectionChanged(SelectionChangedEvent event)
+        {
+          IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+          DataSetType element = (DataSetType) selection.getFirstElement();
+
+          maxDepth = element.getMaxDepth();
+
+          if (maxDepth != 0)
+          {
+            Integer[] content = new Integer[maxDepth];
+
+            for (int i = 0; i < maxDepth; i++)
+            {
+              content[i] = ( i + 1 );
+            }
+
+            depthInput.getControl().setEnabled(true);
+            depthInput.setInput(content);
+            depthInput.setSelection(new StructuredSelection(content[0]));
+          }
+          else
+          {
+            depthInput.getControl().setEnabled(false);
+            depthInput.setInput(new Integer[] {});
+            depthInput.setSelection(null);
+          }
+        }
+      });
+
+      DataSetType[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
+
       schemaCombo.setContentProvider(new ArrayContentProvider());
-      schemaCombo.setLabelProvider(new TypeLabelProvider(types));
+      schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
       schemaCombo.setInput(input);
+
+      if (input.length > 0)
+      {
+        schemaCombo.setSelection(new StructuredSelection(input[0]));
+      }
     }
     catch (Exception ex)
     {
       ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("dataset.error"), ex.getLocalizedMessage(), ex);
+
+      this.setPageComplete(false);
     }
 
     return selectTableGroup;
@@ -147,7 +224,8 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
    */
   protected DataSetDesign collectDataSetDesign(DataSetDesign design)
   {
-    savePage(design);
+    this.savePage(design);
+
     return design;
   }
 
@@ -215,8 +293,6 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       // not able to get current metadata, reset previous derived metadata
       dataSetDesign.setResultSets(null);
       dataSetDesign.setParameters(null);
-
-      e.printStackTrace();
     }
     finally
     {
@@ -234,10 +310,31 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   {
     if (this.schemaCombo != null)
     {
-      StructuredSelection selection = (StructuredSelection) this.schemaCombo.getSelection();
-      String value = (String) selection.getFirstElement();
+      String value = this.getValue();
+      String depth = this.getDepth();
 
-      return QueryFacadeUtil.getValuesQueryText(value);
+      return QueryFacadeUtil.getValuesQueryText(value, depth);
+    }
+
+    return null;
+  }
+
+  private String getValue()
+  {
+    StructuredSelection selection = (StructuredSelection) this.schemaCombo.getSelection();
+    DataSetType datasetType = (DataSetType) selection.getFirstElement();
+
+    String value = datasetType.getId();
+    return value;
+  }
+
+  private String getDepth()
+  {
+    if (this.depthInput.getControl().getEnabled())
+    {
+      StructuredSelection sel = (StructuredSelection) this.depthInput.getSelection();
+      String depth = ( (Integer) sel.getFirstElement() ).toString();
+      return depth;
     }
 
     return null;
@@ -261,36 +358,52 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   {
     if (queryText != null)
     {
-      IQuery query = conn.newQuery(null);
-      query.prepare(queryText);
+      MetadataRetriverRunnable runnable = new MetadataRetriverRunnable(conn, queryText);
 
       try
       {
-        // Before the metadata can be retrieved the query must be executed
-        query.executeQuery();
-
-        IResultSetMetaData md = query.getMetaData();
-        updateResultSetDesign(md, dataSetDesign);
+        new ProgressMonitorDialog(getShell()).run(true, false, runnable);
       }
-      catch (OdaException e)
+      catch (Exception e)
       {
-        // no result set definition available, reset previous derived metadata
+
+      }
+
+      if (runnable.getMetadata() != null && runnable.getThrowable() == null)
+      {
+        try
+        {
+          updateResultSetDesign(runnable.getMetadata(), dataSetDesign);
+        }
+        catch (OdaException e)
+        {
+          // no result set definition available, reset previous derived metadata
+          dataSetDesign.setResultSets(null);
+          e.printStackTrace();
+        }
+      }
+      else
+      {
         dataSetDesign.setResultSets(null);
-        e.printStackTrace();
       }
 
-      // proceed to get parameter design definition
-      try
+      if (runnable.getParameterMetadata() != null && runnable.getThrowable() == null)
       {
-        IParameterMetaData paramMd = query.getParameterMetaData();
-
-        updateParameterDesign(paramMd, dataSetDesign);
+        // proceed to get parameter design definition
+        try
+        {
+          updateParameterDesign(runnable.getParameterMetadata(), dataSetDesign);
+        }
+        catch (OdaException ex)
+        {
+          // no parameter definition available, reset previous derived metadata
+          dataSetDesign.setParameters(null);
+          ex.printStackTrace();
+        }
       }
-      catch (OdaException ex)
+      else
       {
-        // no parameter definition available, reset previous derived metadata
         dataSetDesign.setParameters(null);
-        ex.printStackTrace();
       }
     }
   }
@@ -332,9 +445,6 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private void updateParameterDesign(IParameterMetaData paramMd, DataSetDesign dataSetDesign) throws OdaException
   {
     DataSetParameters paramDesign = DesignSessionUtil.toDataSetParametersDesign(paramMd, DesignSessionUtil.toParameterModeDesign(IParameterMetaData.parameterModeIn));
-
-    // no exception in conversion; go ahead and assign to specified
-    // dataSetDesign
     dataSetDesign.setParameters(paramDesign);
 
     if (paramDesign == null)
@@ -343,18 +453,6 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     }
 
     paramDesign.setDerivedMetaData(true);
-
-    // TODO replace below with data source specific implementation;
-    // hard-coded parameter's default value for demo purpose
-    if (paramDesign.getParameterDefinitions().size() > 0)
-    {
-      ParameterDefinition paramDef = (ParameterDefinition) paramDesign.getParameterDefinitions().get(0);
-
-      if (paramDef != null)
-      {
-        paramDef.setDefaultScalarValue("dummy default value");
-      }
-    }
   }
 
   /**
@@ -372,7 +470,6 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     catch (OdaException e)
     {
       // ignore
-      e.printStackTrace();
     }
   }
 }

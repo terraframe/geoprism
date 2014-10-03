@@ -45,12 +45,12 @@ public class ReportProviderBridge implements Reloadable
     getInstance().setProvider(provider);
   }
 
-  public static ValueQuery getValuesForReporting(String type, String category, String criteria)
+  public static ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth)
   {
-    return getInstance().getProvider().getValuesForReporting(type, category, criteria);
+    return getInstance().getProvider().getValuesForReporting(type, category, criteria, depth);
   }
 
-  public static ValueQuery getTypesForReporting()
+  public static ReportQueryView[] getTypesForReporting()
   {
     return getInstance().getProvider().getTypesForReporting();
   }
