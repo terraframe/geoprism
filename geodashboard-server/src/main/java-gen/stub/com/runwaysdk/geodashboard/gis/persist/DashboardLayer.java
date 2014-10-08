@@ -204,10 +204,9 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
   
   public String generateViewName() {
-    String sessionId = Session.getCurrentSession().getId();
     
     // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well. 
-    String vn = DB_VIEW_PREFIX + sessionId + IDGenerator.nextID().substring(0, 30);
+    String vn = DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 30);
     
     return vn;
   }
@@ -426,13 +425,12 @@ public class DashboardLayer extends DashboardLayerBase implements
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String attribute = tStyle.getAttribute();
           
-          MdAttributeConcrete mdAttr = (MdAttributeConcrete) tStyle.getMdAttribute();
-          MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
-          MdClass mdClass = mdC.getDefiningMdClass();
+          MdAttributeConcrete mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
+          MdClass mdClass = mdAttrC.getDefiningMdClass();
           EntityQuery entityQ = f.businessQuery(mdClass.definesType());
           
           // thematic attribute
-          Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
+          Attribute thematicAttr = entityQ.get(mdAttrC.getAttributeName());
           
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
@@ -483,7 +481,7 @@ public class DashboardLayer extends DashboardLayerBase implements
 //            v.SELECT(min, max);
 //            
 //            // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
-//            SelectableSingle groupBy = v.aSQLDouble(thematicSel._getAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+//            SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
 //            groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
 //            v.GROUP_BY(groupBy);
 //            
@@ -502,20 +500,20 @@ public class DashboardLayer extends DashboardLayerBase implements
             
             if(isAggregate)
             {
-              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel._getAttributeName(), sql,
-                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql,
+                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
             else
             {
-              thematicSel = innerQuery1.aSQLDouble(thematicSel._getAttributeName(), sql,
-                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql,
+                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
           }
           
           thematicSel.setColumnAlias(attribute);
           
           innerQuery1.SELECT(thematicSel);
-          
+         
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
           Selectable label = geQ1.getDisplayLabel().localize();
@@ -526,9 +524,6 @@ public class DashboardLayer extends DashboardLayerBase implements
           Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
           geoId1.setColumnAlias(GeoEntity.GEOID);
           innerQuery1.SELECT(geoId1);
-
-          
-
           
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
@@ -601,7 +596,7 @@ public class DashboardLayer extends DashboardLayerBase implements
     
     for (Selectable selectable : innerQuery1.getSelectableRefs())
     {
-      Attribute attribute = innerQuery1.get(selectable._getAttributeName());
+      Attribute attribute = innerQuery1.get(selectable.getResultAttributeName());
       attribute.setColumnAlias(selectable.getColumnAlias());
       
       outerQuery.SELECT(attribute);
