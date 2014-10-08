@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
+import com.runwaysdk.geodashboard.report.ReportQueryViewDTO;
 
 public class QueryFacade
 {
@@ -52,7 +53,12 @@ public class QueryFacade
    */
   public static final String TYPE       = "TYPE";
 
-  public IResultSet invoke(ClientRequestIF request, String query, Map<String, Object> parameters) throws OdaException
+  /**
+   * DEPTH parameter used in the QUERY action
+   */
+  public static final String DEPTH      = "DEPTH";
+
+  public IResultSet invoke(ClientRequestIF request, String query, Map<String, Object> parameters, boolean queryMetadata) throws OdaException
   {
     if (query != null)
     {
@@ -63,22 +69,37 @@ public class QueryFacade
 
         if (action.equals(TYPES))
         {
-          ValueQueryDTO results = ReportItemDTO.getTypesForReporting(request);
+          ReportQueryViewDTO[] results = ReportItemDTO.getTypesForReporting(request);
 
-          return new ComponentQueryResultSet(results);
+          return new ArrayResultSet(results);
         }
         else if (action.equals(QUERY))
         {
           JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
 
           String type = params.getString(QueryFacade.TYPE);
+          Integer depth = null;
+
+          if (params.has(QueryFacade.DEPTH))
+          {
+            depth = params.getInt(QueryFacade.DEPTH);
+          }
 
           String category = (String) parameters.get("category");
           String criteria = (String) parameters.get("criteria");
 
-          ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria);
+          if (queryMetadata)
+          {
+            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria);
 
-          return new ComponentQueryResultSet(results);
+            return new ComponentQueryResultSet(results);
+          }
+          else
+          {
+            ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria, depth);
+
+            return new ComponentQueryResultSet(results);
+          }
         }
 
         throw new OdaException("Unknown query action [" + action + "]");
