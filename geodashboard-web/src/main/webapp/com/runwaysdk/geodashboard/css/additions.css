@@ -15,7 +15,8 @@ body{
 }
 
 body.iFrameBody {
-  overflow: auto;
+/*   overflow: auto; */
+	overflow: hidden;
 }
 
 div.pageContent {
@@ -193,8 +194,13 @@ a.map-layers-opener.opener {
 	position: absolute;
 	right: 300px;
 	bottom: 0px;
-/* 	background: rgba(0, 0, 0, 0.8); */
-/* 	border: solid black 1px; */
+/* 	background: none; */
+/* 	border: none; */
+}
+
+.legend-container-group-active {
+	background: rgba(0, 0, 0, 0.8);
+	border: solid black 1px;	
 }
 
 .legend-item{

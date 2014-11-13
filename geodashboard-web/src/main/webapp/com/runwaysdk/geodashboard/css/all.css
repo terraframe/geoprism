@@ -2054,21 +2054,24 @@ a.blueactive,
 	animation-name:slideInLeft;
 }
 .none{display:none;}
+
 /* reporting container style */
 .reporticng-container{
 	position:fixed;
 	left:0;
 	bottom:0;
 	width:100%;
+	background: none;
 }
 
 #report-content{
-	background-color: #FFF;
+/* 	background-color: #FFF; */
 	height: 300px;
 	border-top: 1px solid #000;
 	overflow-y: scroll;
 	margin-right: 300px;
 	left: 0px;
+	background: rgba(0,0,0,0.8);
 }
 
 /*
