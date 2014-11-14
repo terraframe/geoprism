@@ -1541,7 +1541,24 @@
           this._addAutoComplete();
         }    
         
-//        $("#reporticng-container").resizable({ handles: "n" });
+        //
+        // Chart panel slide toggle behavior
+        //
+        $("#reporting-toggle-button").on('click', function(){
+        	var reportContentHeight = parseInt($("#report-content").css("height"));
+        	if($("#reporticng-container").hasClass("report-panel-closed"))
+        	{
+        		$("#reporticng-container").animate({ bottom: "+="+ reportContentHeight +"px" }, 1000, function() {
+	        	    	$("#reporticng-container").removeClass("report-panel-closed");
+	        	 });
+        	}
+        	else
+        	{
+        		$("#reporticng-container").animate({ bottom: "-="+ reportContentHeight +"px" }, 1000, function() {
+	        	    	$("#reporticng-container").addClass("report-panel-closed");
+	        	 });
+        	}
+        });
       },
     }
    

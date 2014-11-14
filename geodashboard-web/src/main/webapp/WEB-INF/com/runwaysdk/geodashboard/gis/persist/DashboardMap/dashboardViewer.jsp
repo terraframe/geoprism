@@ -157,7 +157,7 @@ $(document).ready(function(){
     </div>
     
     <!-- contain aside of the page -->
-  <aside class="aside animated slideInRight legend-snapable" id="dashboardMetadata">
+  <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
@@ -320,8 +320,10 @@ $(document).ready(function(){
   <div class="bg-stretch">
     <div id="mapDivId" class="dynamicMap"></div>
   </div>
+  
   <!-- reporting container -->
-  <article id="reporticng-container" class="reporticng-container">
+  <article id="reporticng-container" class="reporticng-container report-panel-closed">
+  	<h4 id="reporting-toggle-button">Chart Panel</h4>
     <div id="report-content"></div>
   </article>
   

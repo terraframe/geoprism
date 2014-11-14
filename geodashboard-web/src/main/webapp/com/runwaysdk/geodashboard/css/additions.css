@@ -227,6 +227,10 @@ ul#legend-list-group{
     margin: 2px;
 }
 
+.legend-grouped{
+	cursor: pointer;
+}
+
 a.legend-opener.opener{
 	font-size:15px;
 	line-height:15px;
