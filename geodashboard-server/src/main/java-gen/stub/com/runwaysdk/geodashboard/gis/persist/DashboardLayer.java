@@ -204,10 +204,9 @@ public class DashboardLayer extends DashboardLayerBase implements
   }
   
   public String generateViewName() {
-    String sessionId = Session.getCurrentSession().getId();
     
     // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well. 
-    String vn = DB_VIEW_PREFIX + sessionId + IDGenerator.nextID().substring(0, 30);
+    String vn = DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 30);
     
     return vn;
   }
@@ -405,8 +404,11 @@ public class DashboardLayer extends DashboardLayerBase implements
   public ValueQuery getViewQuery()
   {
     QueryFactory f = new QueryFactory();
-    ValueQuery v = new ValueQuery(f);
-
+    ValueQuery innerQuery1 = new ValueQuery(f);
+    ValueQuery innerQuery2 = new ValueQuery(f);
+   
+    ValueQuery outerQuery = new ValueQuery(f);
+    
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
     try
     {
@@ -423,13 +425,12 @@ public class DashboardLayer extends DashboardLayerBase implements
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String attribute = tStyle.getAttribute();
           
-          MdAttributeConcrete mdAttr = (MdAttributeConcrete) tStyle.getMdAttribute();
-          MdAttributeConcrete mdC = (MdAttributeConcrete) mdAttr;
-          MdClass mdClass = mdC.getDefiningMdClass();
+          MdAttributeConcrete mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
+          MdClass mdClass = mdAttrC.getDefiningMdClass();
           EntityQuery entityQ = f.businessQuery(mdClass.definesType());
           
           // thematic attribute
-          Attribute thematicAttr = entityQ.get(mdC.getAttributeName());
+          Attribute thematicAttr = entityQ.get(mdAttrC.getAttributeName());
           
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
@@ -480,7 +481,7 @@ public class DashboardLayer extends DashboardLayerBase implements
 //            v.SELECT(min, max);
 //            
 //            // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
-//            SelectableSingle groupBy = v.aSQLDouble(thematicSel._getAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+//            SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
 //            groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
 //            v.GROUP_BY(groupBy);
 //            
@@ -499,70 +500,56 @@ public class DashboardLayer extends DashboardLayerBase implements
             
             if(isAggregate)
             {
-              thematicSel = v.aSQLAggregateDouble(thematicSel._getAttributeName(), sql,
-                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql,
+                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
             else
             {
-              thematicSel = v.aSQLDouble(thematicSel._getAttributeName(), sql,
-                  mdC.getAttributeName(), mdC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql,
+                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
           }
           
           thematicSel.setColumnAlias(attribute);
           
-          v.SELECT(thematicSel);
-          
+          innerQuery1.SELECT(thematicSel);
+         
           // geoentity label
-          GeoEntityQuery geQ = new GeoEntityQuery(v);
-          Selectable label = geQ.getDisplayLabel().localize();
+          GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
+          Selectable label = geQ1.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-          v.SELECT(label);
+          innerQuery1.SELECT(label);
           
           // geo id (for uniqueness)
-          Selectable geoId = geQ.getGeoId(GeoEntity.GEOID);
-          geoId.setColumnAlias(GeoEntity.GEOID);
-          v.SELECT(geoId);
-          
-          // geometry
-          Selectable geom;
-          if (this.getFeatureType().equals(FeatureType.POINT))
-          {
-            geom = geQ.get(GeoEntity.GEOPOINT);
-          }
-          else
-          {
-            geom = geQ.get(GeoEntity.GEOMULTIPOLYGON);
-          }
-          
-          geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-          geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-          
-          v.SELECT(geom);
+          Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
+          geoId1.setColumnAlias(GeoEntity.GEOID);
+          innerQuery1.SELECT(geoId1);
           
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
           Attribute geoAttr = entityQ.get(geoRef.getAttributeName());
           
           // the entity's GeoEntity should match the all path's child
-          GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(v);
-          v.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
+          GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
+          innerQuery1.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
           
           // the displayed GeoEntity should match the all path's parent
-          v.AND(geAllPathsQ.getParentTerm().EQ(geQ));
+          innerQuery1.AND(geAllPathsQ.getParentTerm().EQ(geQ1));
           
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();
-          v.AND(geQ.getUniversal().EQ(universal));
+          innerQuery1.AND(geQ1.getUniversal().EQ(universal));
           
           // Attribute condition filtering (i.e. sales unit is greater than 50)
-          if (conditions != null) {
-            for (DashboardCondition condition : conditions) {
-              condition.restrictQuery(v, thematicAttr);
+          if (conditions != null) 
+          {
+            for (DashboardCondition condition : conditions) 
+            {
+              condition.restrictQuery(innerQuery1, thematicAttr);
             }
           }
-        }
-      }
+        } // if (style instanceof DashboardThematicStyle)
+      } // while (iter.hasNext())
     }
     finally
     {
@@ -572,11 +559,12 @@ public class DashboardLayer extends DashboardLayerBase implements
     if (log.isDebugEnabled())
     {
       // print the SQL if the generated
-      log.debug("SLD for Layer [%s], this:\n" + v.getSQL());
+      log.debug("SLD for Layer [%s], this:\n" + innerQuery1.getSQL());
     }
     
     viewHasData = true;
-    if (v.getCount() == 0) {
+    if (innerQuery1.getCount() == 0) 
+    {
       EmptyLayerInformation info = new EmptyLayerInformation();
       info.setLayerName(this.getName());
       info.apply();
@@ -586,7 +574,42 @@ public class DashboardLayer extends DashboardLayerBase implements
       viewHasData = false;
     }
     
-    return v;
+    // Set the GeoID and the Geometry attribute for the second query
+    GeoEntityQuery geQ2 = new GeoEntityQuery(innerQuery2);
+    Selectable geoId2 = geQ2.getGeoId(GeoEntity.GEOID);
+    geoId2.setColumnAlias(GeoEntity.GEOID);
+    innerQuery2.SELECT(geoId2);
+    // geometry
+    Selectable geom;
+    if (this.getFeatureType().equals(FeatureType.POINT))
+    {
+      geom = geQ2.get(GeoEntity.GEOPOINT);
+    }
+    else
+    {
+      geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON);
+    }
+    
+    geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+    geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
+    innerQuery2.SELECT(geom);
+    
+    for (Selectable selectable : innerQuery1.getSelectableRefs())
+    {
+      Attribute attribute = innerQuery1.get(selectable.getResultAttributeName());
+      attribute.setColumnAlias(selectable.getColumnAlias());
+      
+      outerQuery.SELECT(attribute);
+    }
+    
+    Attribute attribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
+    attribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+    outerQuery.SELECT(attribute);
+    outerQuery.FROM(innerQuery1);
+    outerQuery.FROM(innerQuery2);
+    outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
+    
+    return outerQuery;
   }
 
   @Override

@@ -14,10 +14,15 @@ public class QueryFacadeUtil
     return object.toString();
   }
 
-  public static String getValuesQueryText(String type)
+  public static String getValuesQueryText(String type, String depth)
   {
     JSONObject parameters = new JSONObject();
     parameters.put(QueryFacade.TYPE, type);
+
+    if (depth != null && depth.length() > 0)
+    {
+      parameters.put(QueryFacade.DEPTH, depth);
+    }
 
     JSONObject object = new JSONObject();
     object.put(QueryFacade.ACTION, QueryFacade.QUERY);

@@ -15,7 +15,7 @@ public interface ReportProviderIF extends Reloadable
    */
   public static final String DASHBOARD_ID   = "dashboardId";
 
-  public ValueQuery getValuesForReporting(String type, String category, String criteria);
+  public ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth);
 
-  public ValueQuery getTypesForReporting();
+  public ReportQueryView[] getTypesForReporting();
 }

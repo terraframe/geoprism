@@ -41,6 +41,8 @@ public class Connection implements IConnection
     public static final String CONNECTION_PROPERTIES_STR = "connectionProps";
 
     public static final String PASS_IN_CONNECTION        = "connection";
+
+    public static final String METADATA_QUERY            = "METADATA_QUERY";
   }
 
   private IClientSession      session;

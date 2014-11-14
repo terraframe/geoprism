@@ -89,6 +89,7 @@ a.link-active {
 /* Styles related to page loading busy spinner effect */
 body.iFrameBody {
 	background-color: inherit;
+	overflow: hidden;
 }
 div.gdb-maincontent-busy {
   background-color: #CCCCCC;

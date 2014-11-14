@@ -7,13 +7,13 @@ public class DefaultReportProvider implements ReportProviderIF, Reloadable
 {
 
   @Override
-  public ValueQuery getValuesForReporting(String type, String category, String criteria)
+  public ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth)
   {
     return null;
   }
 
   @Override
-  public ValueQuery getTypesForReporting()
+  public ReportQueryView[] getTypesForReporting()
   {
     return null;
   }

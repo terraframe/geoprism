@@ -31,8 +31,14 @@
         <mdMethod name="validatePermissions" label="Validate permissions" returnType="void" static="false" />
         <mdMethod name="getURL" label="Get url" returnType="java.lang.String" static="false" />
         <mdMethod name="getParameterDefinitions" label="Get parameter definitions" static="false" returnType="java.lang.String" />
-        <mdMethod name="getTypesForReporting" label="Get types for reporting" static="true" returnType="com.runwaysdk.query.ValueQuery" />
+        <mdMethod name="getTypesForReporting" label="Get types for reporting" static="true" returnType="com.runwaysdk.geodashboard.report.ReportQueryView[]" />
 		<mdMethod name="getValuesForReporting" label="Get values for reporting" static="true" returnType="com.runwaysdk.query.ValueQuery">
+		  <mdParameter name="type" label="Type" order="0" type="java.lang.String" />
+		  <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
+		  <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
+		  <mdParameter name="depth" label="Depth" order="3" type="java.lang.Integer" />
+		</mdMethod>
+		<mdMethod name="getMetadataForReporting" label="Get metadata for reporting" static="true" returnType="com.runwaysdk.query.ValueQuery">
 		  <mdParameter name="type" label="Type" order="0" type="java.lang.String" />
 		  <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
 		  <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
@@ -51,6 +57,14 @@
           <text name="reportLabel" label="Report label" />
         </attributes>
         <mdMethod name="remove" label="Remove" returnType="void" static="false" />
+      </mdView>      
+      
+      <mdView name="com.runwaysdk.geodashboard.report.ReportQueryView" label="Report item" generateController="true">
+        <attributes>
+          <text name="queryId" label="Query id" />
+          <text name="queryLabel" label="Query label" />
+          <integer name="maxDepth" label="Max depth" /> 
+        </attributes>
       </mdView>      
 
       <mdException name="com.runwaysdk.geodashboard.report.ReportItemException" label="Report item exception" message="Report must have a report design document with the .rptdesign extension" />
