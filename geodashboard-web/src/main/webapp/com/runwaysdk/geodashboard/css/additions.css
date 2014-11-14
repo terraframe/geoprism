@@ -261,5 +261,17 @@ h3.popup-heading{
 	margin: 0;
 }
 
+#new-dashboard-btn-container{
+    margin-bottom: 5px;
+}
+
+.new-dashboard-btn{
+	color:white;
+	font-weight:bold;
+}
+
+.new-dashboard-btn:hover{
+	color:#00bfff;
+}
 
 

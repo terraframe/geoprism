@@ -2082,6 +2082,10 @@ a.blueactive,
 	border-top-left-radius: 5px;
 }
 
+#reporting-toggle-button:hover{
+	color:#00bfff;
+}
+
 #report-content{
 /* 	background-color: #FFF; */
 	height: 300px;
