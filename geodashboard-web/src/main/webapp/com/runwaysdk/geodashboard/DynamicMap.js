@@ -381,7 +381,7 @@
               {
             	  $("#legend-container-group").addClass("legend-container-group-active");
               }
-    	  }
+    	  };
       },
       
       
@@ -661,6 +661,7 @@
           this._LayerController.edit(new Mojo.ClientRequest({
             onSuccess : function(html){
               that._displayLayerForm(html);
+              that._addCategoryAutoComplete(id);
             },
             onFailure : function(e){
               that.handleException(e);
@@ -864,6 +865,7 @@
             }
             else if (response.isHTML()) {
               // we got html back, meaning there was an error
+              var layerId = that._layerCache.get(params["layer.componentId"]).getLayerId();
               that._displayLayerForm(htmlOrJson);
               $(DynamicMap.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
             }
@@ -875,10 +877,12 @@
         
         var layer = this._layerCache.get(params["layer.componentId"]);
         var mdAttribute = null;
-        if (layer != null) {
+        if (layer != null) 
+        {
           mdAttribute = layer.style.mdAttribute;
         }
-        else {
+        else 
+        {
           mdAttribute = this._currentAttributeId;
         }
         
@@ -1152,6 +1156,55 @@
       },
       
       /**
+       * Hooks the auto-complete functionality to the category field input fields
+       * 
+       * This is a first implementation that is only implemented on a existing saved layer.
+       * This can be expanded to work during the layer creation process and should be revisited
+       * when implementing categories on ontologies.
+       * 
+       */
+      _addCategoryAutoComplete : function(layerId){
+        
+        var that = this;
+        
+    	var clientRequest = new Mojo.ClientRequest({
+    		onSuccess : function(jsonCatData) {
+    			
+    			var data = JSON.parse(jsonCatData);
+    			
+    	        that._autocomplete = $('.category-input').autocomplete({
+    	            minLength: 1,
+    	            autoFocus: true,
+    	            select : function(value, data){          
+    	              
+    	          	// Set the field to this value
+    	              
+    	              that._suggestionCoords.clear();
+    	            },
+    	            source: function(request, response){
+    	            
+    	          	  var result = $.grep(data, function (el) {
+    	                    return el.indexOf(request.term) === 0;
+    	                });
+    	                response(result);     
+    	            },
+    	            change: function (e, ui) {
+    	                if (!(0 || ui.item)) e.target.value = "";
+    	            }
+    	            
+    	          });
+    		},
+    		onFailure : function(e) {
+    			that.handleException(e);
+    		}
+    	});
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getThematicAttributeCategories(clientRequest, layerId);
+//        var data = [11, 22, 33, 44, 55];  // just for testing
+        
+      },
+      
+      /**
        * Gets the html for and calls the new dashboard creation form 
        * 
        * @e 
@@ -1285,32 +1338,18 @@
         else if (activeTab === "tab003gradient") {
           this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
         }
-        else if (activeTab === "tab004category") {
-          this._showCategoryTab();
+        else if (activeTab === "tab004categories") {
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+          
+          // Hide the reusable input cells that don't apply to categories
+          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          polyFillOpacity.hide();
         }
         
         // Attach listeners
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
       },
       
-      _showCategoryTab : function() {
-        // Hide the reusable input cells that don't apply to categories
-        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-        polyStroke.hide();
-        
-        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-        polyStrokeWidth.hide();
-        
-        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-        polyStrokeOpacity.hide();
-        
-        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-        polyFillOpacity.hide();
-        
-        // Display the tree picker
-        this._layerCategoriesTree = new com.runwaysdk.geodashboard.ontology.LayerCategoriesTree(this._config.layerCategoriesTree);
-        this._layerCategoriesTree.render("#category-colors-container");
-      },
       
       _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
         var polyStroke = $("#gdb-reusable-cell-polygonStroke");
@@ -1346,8 +1385,9 @@
           this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
           $("#tab003gradient").show();
         }
-        else if (type === "CATGORIES") {
+        else if (type === "CATEGORY") {
           $("#tab004categories").show();
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
         }
       },
       
@@ -1378,7 +1418,7 @@
       },
       
       /**
-       * Handles the selection of layer type representation  
+       * Handles the selection of layer type representation in the layer create/edit form
        * i.e. basic, bubble, gradient, category
        * 
        */

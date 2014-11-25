@@ -145,10 +145,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     // selected attribute
     MdAttributeConcreteDTO mdAttr;
-    if (mdAttribute != null) { // new instance
+    if (mdAttribute != null) 
+    { // new instance
       mdAttr = MdAttributeConcreteDTO.get(clientRequest, mdAttribute);
     }
-    else { // edit
+    else 
+    { // edit
       mdAttr = ((MdAttributeConcreteDTO) style.getMdAttribute());
     }
     req.setAttribute("activeMdAttributeLabel", mdAttr.getDisplayLabel().getValue());
@@ -160,13 +162,18 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     // filter out invalid aggregations depending on attribute type
     List<AllAggregationTypeDTO> filters = new ArrayList<AllAggregationTypeDTO>();
-    if (mdAttr instanceof MdAttributeMomentDTO) {
+    if (mdAttr instanceof MdAttributeMomentDTO) 
+    {
       filters.add(AllAggregationTypeDTO.AVG);
       filters.add(AllAggregationTypeDTO.SUM);
     }
-    for (AllAggregationTypeDTO filter : filters) {
-      for (int i = 0; i < aggregations.size(); ++i) {
-        if (aggregations.get(i).getEnumName().equals(filter.getName())) {
+    
+    for (AllAggregationTypeDTO filter : filters) 
+    {
+      for (int i = 0; i < aggregations.size(); ++i) 
+      {
+        if (aggregations.get(i).getEnumName().equals(filter.getName())) 
+        {
           aggregations.remove(i);
         }
       }
@@ -175,10 +182,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("aggregations", aggregations);
     
     // Pick an active aggregation.
-    if (aggregations.size() > 0) {
+    if (aggregations.size() > 0) 
+    {
       req.setAttribute("activeAggregation", aggregations.get(0).getDisplayLabel().getValue());
     }
-    else {
+    else 
+    {
       req.setAttribute("activeAggregation", "");
     }
     
@@ -192,18 +201,24 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
     
     // filter out invalid layer types depending on attribute type
-    if ( !(mdAttr instanceof MdAttributeMomentDTO) ) {
+    // this is primarily to prevent creating gradients on date fields
+    if ( !(mdAttr instanceof MdAttributeMomentDTO) ) 
+    {
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
     }
+    
+    layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
     
     req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
     req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
     
     List<String> activeLayerType = layer.getLayerTypeEnumNames();
-    if (activeLayerType.size() > 0) { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not new instances)
+    if (activeLayerType.size() > 0) 
+    { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not new instances)
       req.setAttribute("activeLayerTypeName", activeLayerType.get(0));
     }
-    else {
+    else 
+    {
       req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
   }

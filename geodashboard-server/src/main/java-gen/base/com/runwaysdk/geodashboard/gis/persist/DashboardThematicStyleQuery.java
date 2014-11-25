@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 171743263)
+@com.runwaysdk.business.ClassSignature(hash = 1347350227)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -152,6 +152,193 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getStyleCategories()
+  {
+    return getStyleCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory1()
+  {
+    return getStyleCategory1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory2()
+  {
+    return getStyleCategory2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory3()
+  {
+    return getStyleCategory3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory4()
+  {
+    return getStyleCategory4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory5()
+  {
+    return getStyleCategory5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1()
+  {
+    return getStyleCategoryFill1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2()
+  {
+    return getStyleCategoryFill2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3()
+  {
+    return getStyleCategoryFill3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4()
+  {
+    return getStyleCategoryFill4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5()
+  {
+    return getStyleCategoryFill5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, displayLabel);
+
+  }
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()
   {
     return getStyleCondition(null);
@@ -257,6 +444,39 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getPolygonMinFill();
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategories();
+    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory1();
+    public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory2();
+    public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory3();
+    public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory4();
+    public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory5();
+    public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias, String displayLabel);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
@@ -397,6 +617,193 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getStyleCategories()
+  {
+    return getStyleCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory1()
+  {
+    return getStyleCategory1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory2()
+  {
+    return getStyleCategory2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory3()
+  {
+    return getStyleCategory3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory4()
+  {
+    return getStyleCategory4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory5()
+  {
+    return getStyleCategory5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1()
+  {
+    return getStyleCategoryFill1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2()
+  {
+    return getStyleCategoryFill2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3()
+  {
+    return getStyleCategoryFill3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4()
+  {
+    return getStyleCategoryFill4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5()
+  {
+    return getStyleCategoryFill5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, displayLabel);
+
+  }
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()
   {
     return getStyleCondition(null);
@@ -473,6 +880,39 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getPolygonMinFill();
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategories();
+    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory1();
+    public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory2();
+    public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory3();
+    public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory4();
+    public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategory5();
+    public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5();
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias, String displayLabel);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
@@ -660,6 +1100,193 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategories()
+  {
+    return getStyleCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory1()
+  {
+    return getStyleCategory1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory2()
+  {
+    return getStyleCategory2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory3()
+  {
+    return getStyleCategory3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory4()
+  {
+    return getStyleCategory4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategory5()
+  {
+    return getStyleCategory5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategory5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORY5, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1()
+  {
+    return getStyleCategoryFill1(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill1(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL1, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2()
+  {
+    return getStyleCategoryFill2(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill2(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL2, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3()
+  {
+    return getStyleCategoryFill3(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill3(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL3, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4()
+  {
+    return getStyleCategoryFill4(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill4(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL4, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5()
+  {
+    return getStyleCategoryFill5(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleCategoryFill5(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORYFILL5, alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()

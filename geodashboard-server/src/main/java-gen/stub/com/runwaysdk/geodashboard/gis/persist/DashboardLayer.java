@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -8,8 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.HashMap;
 
+import javax.sql.RowSet;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.birt.data.engine.odaconsumer.ResultSet;
 //import org.hsqldb.lib.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +47,15 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableDecimal;
 import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
+import com.runwaysdk.query.SelectablePrimitive;
+import com.runwaysdk.query.SelectableSQLBoolean;
+import com.runwaysdk.query.SelectableSQLChar;
+import com.runwaysdk.query.SelectableSQLDate;
+import com.runwaysdk.query.SelectableSQLDouble;
+import com.runwaysdk.query.SelectableSQLFloat;
+import com.runwaysdk.query.SelectableSQLInteger;
+import com.runwaysdk.query.SelectableSQLNumber;
+import com.runwaysdk.query.SelectableSQLPrimitive;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
@@ -50,7 +63,14 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.metadata.MdAttributeBoolean;
+import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeDate;
+import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeFloat;
+import com.runwaysdk.system.metadata.MdAttributeInt;
+import com.runwaysdk.system.metadata.MdAttributeNumber;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
@@ -99,16 +119,19 @@ public class DashboardLayer extends DashboardLayerBase implements
   {
     this.applyWithStyleInTransaction(style, mapId, conditions);
     
-    // We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database view won't exist yet.
+    // We have to make sure that the transaction has ended before we can publish to geoserver, 
+    // otherwise our database view won't exist yet.
     this.publish();
     GeoserverFacade.pushUpdates();
     
-    try {
+    try 
+    {
       JSONObject json = this.toJSON();     
       
       JSONArray jsonArray = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i) {
+      for (int i = 0; i < styles.size(); ++i) 
+      {
         DashboardStyle stile = styles.get(i);
         jsonArray.put(stile.toJSON());
       }
@@ -116,17 +139,12 @@ public class DashboardLayer extends DashboardLayerBase implements
 
       return json.toString();
     }
-    catch (JSONException e) {
+    catch (JSONException e) 
+    {
       throw new ProgrammingErrorException(e);
     }
-    
-//    DashboardLayerView view = new DashboardLayerView();
-//    view.setLayerId(this.getId());
-//    view.setLayerName(this.getName());
-//    view.setViewName(this.getViewName());
-//    view.setSldName(this.getSLDName());
-//    return view;
   }
+  
   @Transaction
   public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions) {
     boolean isNew = this.isNew();
@@ -489,24 +507,20 @@ public class DashboardLayer extends DashboardLayerBase implements
 //            v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
 //          }
 
-          if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal
-              || thematicSel instanceof SelectableFloat)
+          if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal || thematicSel instanceof SelectableFloat)
           {
             Integer length = GeoserverProperties.getDecimalLength();
             Integer precision = GeoserverProperties.getDecimalPrecision();
             
-            String sql = thematicSel.getSQL()
-                + "::decimal(" + length + "," + precision + ")";
+            String sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
             
-            if(isAggregate)
+            if (isAggregate)
             {
-              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql,
-                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
             else
             {
-              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql,
-                  mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
           }
           
@@ -773,4 +787,98 @@ public class DashboardLayer extends DashboardLayerBase implements
     this.getDashboardLegend().setGroupedInLegend(groupedInLegend);
     this.apply();
   }
+  
+  @Override
+  public String getThematicAttributeCategories()
+  {
+    // This method relies on the existance of a saved layer and a related database view
+    
+    String attribute = null;
+    MdAttributeConcrete mdAttrC = null;
+    JSONArray categoriesJSON = new JSONArray();
+
+    QueryFactory f = new QueryFactory();
+    ValueQuery categoriesQuery = new ValueQuery(f);
+    
+    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
+    try
+    {
+      while (iter.hasNext())
+      {
+        DashboardStyle style = iter.next();
+        
+        if (style instanceof DashboardThematicStyle)
+        {
+          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
+          attribute = tStyle.getAttribute();
+          
+          mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
+        }
+      }
+      
+      SelectableSQLPrimitive vAttributeId = null;
+      if(mdAttrC instanceof MdAttributeBoolean)
+      {
+        vAttributeId = (SelectableSQLBoolean) categoriesQuery.aSQLBoolean("vAttributeId", attribute);
+      }
+      else if(mdAttrC instanceof MdAttributeInt)
+      {
+        vAttributeId = (SelectableSQLInteger) categoriesQuery.aSQLInteger("vAttributeId", attribute);
+      }
+      else if(mdAttrC instanceof MdAttributeDouble)
+      {
+        vAttributeId = (SelectableSQLDouble) categoriesQuery.aSQLDouble("vAttributeId", attribute);
+      }
+      else if(mdAttrC instanceof MdAttributeFloat)
+      {
+        vAttributeId = (SelectableSQLFloat) categoriesQuery.aSQLFloat("vAttributeId", attribute);
+      }
+      else if(mdAttrC instanceof MdAttributeCharacter)
+      {
+        vAttributeId = (SelectableSQLChar) categoriesQuery.aSQLCharacter("vAttributeId", attribute);
+      }
+      else if(mdAttrC instanceof MdAttributeDate)
+      {
+        vAttributeId = (SelectableSQLDate) categoriesQuery.aSQLDate("vAttributeId", attribute);
+      }
+      
+      categoriesQuery.SELECT_DISTINCT((SelectablePrimitive) vAttributeId);
+      categoriesQuery.FROM(this.getViewName(), this.getViewName());
+      categoriesQuery.ORDER_BY_ASC((SelectablePrimitive) vAttributeId);
+      
+      java.sql.ResultSet allUniqueCategories = Database.query(categoriesQuery.getSQL());
+      
+      try
+      {
+        while(allUniqueCategories.next())
+        {
+          categoriesJSON.put(allUniqueCategories.getString(1));
+        }
+      }
+      catch (SQLException e)
+      {
+        Database.throwDatabaseException(e);
+      }
+      finally
+      {
+        try
+        {
+          allUniqueCategories.close();
+        }
+        catch (SQLException e)
+        {
+          Database.throwDatabaseException(e);
+        }
+      }
+    }
+    finally
+    {
+      iter.close();
+    }
+
+    return categoriesJSON.toString();
+  }
+  
+  
+  
 }
