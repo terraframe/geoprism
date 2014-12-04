@@ -36,8 +36,13 @@ public class SessionMapTest
 
   @BeforeClass
   @Request
-  @Transaction
   public static void classSetup()
+  {
+    classSetupInTransaction();
+  }
+
+  @Transaction
+  private static void classSetupInTransaction()
   {
     user = new GeodashboardUser();
     user.setUsername(USER);
@@ -53,8 +58,13 @@ public class SessionMapTest
 
   @AfterClass
   @Request
-  @Transaction
   public static void classTeardown()
+  {
+    classTeardownInTransaction();
+  }
+
+  @Transaction
+  private static void classTeardownInTransaction()
   {
     SessionEntry.deleteAll();
     user.delete();

@@ -208,8 +208,6 @@ public class Query implements IQuery
    */
   public void setString(String parameterName, String value) throws OdaException
   {
-    System.out.println(parameterName + " : " + value);
-
     this.parameters.put(parameterName, value);
   }
 

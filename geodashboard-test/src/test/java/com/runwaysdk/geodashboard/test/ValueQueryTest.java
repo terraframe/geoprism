@@ -8,10 +8,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.example.AdvancedDashboard;
-import com.example.BasicDashboard;
-import com.example.DashboardView;
-import com.example.DashboardViewDTO;
+//import com.example.AdvancedDashboard;
+//import com.example.BasicDashboard;
+//import com.example.DashboardView;
+//import com.example.DashboardViewDTO;
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
@@ -32,8 +32,8 @@ public class ValueQueryTest
   @Request
   public static void classStartup()
   {
-    basicDashboard = MdBusiness.getMdBusiness(BasicDashboard.CLASS);
-    advancedDashboard = MdBusiness.getMdBusiness(AdvancedDashboard.CLASS);
+//    basicDashboard = MdBusiness.getMdBusiness(BasicDashboard.CLASS);
+//    advancedDashboard = MdBusiness.getMdBusiness(AdvancedDashboard.CLASS);
   }
 
   @AfterClass
@@ -41,7 +41,7 @@ public class ValueQueryTest
   {
 
   }
-
+/*
   @Test
   @Request
   public void test1()
@@ -114,4 +114,5 @@ public class ValueQueryTest
       advanced.apply();
     }
   }
+  */
 }

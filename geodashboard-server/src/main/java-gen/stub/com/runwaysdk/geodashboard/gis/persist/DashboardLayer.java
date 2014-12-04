@@ -1,20 +1,19 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.hsqldb.lib.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
@@ -31,11 +30,8 @@ import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.sld.SLDConstants;
 import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -43,9 +39,7 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableDecimal;
 import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
-import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -55,6 +49,7 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
+//import org.hsqldb.lib.HashMap;
 
 public class DashboardLayer extends DashboardLayerBase implements
     com.runwaysdk.generation.loader.Reloadable, Layer
@@ -427,10 +422,10 @@ public class DashboardLayer extends DashboardLayerBase implements
           
           MdAttributeConcrete mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
           MdClass mdClass = mdAttrC.getDefiningMdClass();
-          EntityQuery entityQ = f.businessQuery(mdClass.definesType());
+          BusinessQuery businessQ = f.businessQuery(mdClass.definesType());
           
           // thematic attribute
-          Attribute thematicAttr = entityQ.get(mdAttrC.getAttributeName());
+          Attribute thematicAttr = businessQ.get(mdAttrC.getAttributeName());
           
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
@@ -462,7 +457,7 @@ public class DashboardLayer extends DashboardLayerBase implements
             }
             
             isAggregate = true;
-          }
+          } 
           
           // If we doing a bubble/gradient map with a min/max add window aggregations
           // to provide the min and max of the attribute.
@@ -513,7 +508,7 @@ public class DashboardLayer extends DashboardLayerBase implements
           thematicSel.setColumnAlias(attribute);
           
           innerQuery1.SELECT(thematicSel);
-         
+          
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
           Selectable label = geQ1.getDisplayLabel().localize();
@@ -527,7 +522,7 @@ public class DashboardLayer extends DashboardLayerBase implements
           
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
-          Attribute geoAttr = entityQ.get(geoRef.getAttributeName());
+          Attribute geoAttr = businessQ.get(geoRef.getAttributeName());
           
           // the entity's GeoEntity should match the all path's child
           GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
@@ -602,11 +597,9 @@ public class DashboardLayer extends DashboardLayerBase implements
       outerQuery.SELECT(attribute);
     }
     
-    Attribute attribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
-    attribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-    outerQuery.SELECT(attribute);
-    outerQuery.FROM(innerQuery1);
-    outerQuery.FROM(innerQuery2);
+    Attribute geomAttribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
+    geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+    outerQuery.SELECT(geomAttribute);
     outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
     
     return outerQuery;

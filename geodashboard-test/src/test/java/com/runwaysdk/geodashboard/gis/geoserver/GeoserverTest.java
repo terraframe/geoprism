@@ -1042,55 +1042,57 @@ import com.runwaysdk.util.FileIO;
    */
   @Test
   @Request
-  @Transaction
   public void createGradientSLD()
   {
-    DashboardMap map = null;
+    DashboardMap map = new DashboardMap();
+    map.setName("Test Map");
+    map.apply();
     
     try
-    {
-      
-      map = new DashboardMap();
-      map.setName("Test Map");
-      map.apply();
-      
-      DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");
-      layer.setUniversal(state);
-      layer.addLayerType(AllLayerType.GRADIENT);
-      layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
-      layer.apply();
-      
-      HasLayer hasLayer = map.addHasLayer(layer);
-      hasLayer.setLayerIndex(0);
-      hasLayer.apply();
-      
-      DashboardEqual eq = new DashboardEqual();
-      eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
-      eq.apply();
-      
-      DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
-      style.setName("Style 1");
-      style.setStyleCondition(eq);
-      style.apply();
-      
-      HasStyle hasStyle = layer.addHasStyle(style);
-      hasStyle.apply();
-      
-      SLDMapVisitor visitor = new SLDMapVisitor();
-      map.accepts(visitor);
-      String sld = visitor.getSLD(layer);
-      
-      validate(sld);
+    {    
+      createGraduentSldTransaction(map);
     }
     finally
     {
       map.delete();
     }
+  }
+
+  @Transaction
+  private void createGraduentSldTransaction(DashboardMap map)
+  {       
+    DashboardLayer layer = new DashboardLayer();
+    layer.setName("Layer 1");
+    layer.setUniversal(state);
+    layer.addLayerType(AllLayerType.GRADIENT);
+    layer.setVirtual(true);
+    layer.setGeoEntity(geoentityRef);
+    layer.apply();
+      
+    HasLayer hasLayer = map.addHasLayer(layer);
+    hasLayer.setLayerIndex(0);
+    hasLayer.apply();
+      
+    DashboardEqual eq = new DashboardEqual();
+    eq.setComparisonValue("5");
+    eq.setParentCondition(null);
+    eq.setRootCondition(null);
+    eq.apply();
+      
+    DashboardThematicStyle style = new DashboardThematicStyle();
+    style.setMdAttribute(rank);
+    style.setName("Style 1");
+    style.setStyleCondition(eq);
+    style.apply();
+      
+    HasStyle hasStyle = layer.addHasStyle(style);
+    hasStyle.apply();
+    
+    SLDMapVisitor visitor = new SLDMapVisitor();
+    map.accepts(visitor);
+    String sld = visitor.getSLD(layer);
+    
+    validate(sld);
   }
   
   /**
@@ -1098,55 +1100,49 @@ import com.runwaysdk.util.FileIO;
    */
   @Test
   @Request
-  @Transaction
   public void createBubbleSLD()
   {
-    DashboardMap map = null;
+    DashboardMap map = new DashboardMap();
+    map.setName("Test Map");
+    map.apply();
+    createBubbleSldTransaction(map);
+  }
 
-    try
-    {
+  @Transaction
+  private void createBubbleSldTransaction(DashboardMap map)
+  {
+    DashboardLayer layer = new DashboardLayer();
+    layer.setName("Layer 1");
+    layer.setUniversal(state);
+    layer.addLayerType(AllLayerType.BUBBLE);
+    layer.setVirtual(true);
+    layer.setGeoEntity(geoentityRef);
+    layer.apply();
 
-      map = new DashboardMap();
-      map.setName("Test Map");
-      map.apply();
+    HasLayer hasLayer = map.addHasLayer(layer);
+    hasLayer.setLayerIndex(0);
+    hasLayer.apply();
 
-      DashboardLayer layer = new DashboardLayer();
-      layer.setName("Layer 1");
-      layer.setUniversal(state);
-      layer.addLayerType(AllLayerType.BUBBLE);
-      layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
-      layer.apply();
+    DashboardEqual eq = new DashboardEqual();
+    eq.setComparisonValue("5");
+    eq.setParentCondition(null);
+    eq.setRootCondition(null);
+    eq.apply();
 
-      HasLayer hasLayer = map.addHasLayer(layer);
-      hasLayer.setLayerIndex(0);
-      hasLayer.apply();
+    DashboardThematicStyle style = new DashboardThematicStyle();
+    style.setMdAttribute(rank);
+    style.setName("Style 1");
+    style.setStyleCondition(eq);
+    style.apply();
 
-      DashboardEqual eq = new DashboardEqual();
-      eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
-      eq.apply();
+    HasStyle hasStyle = layer.addHasStyle(style);
+    hasStyle.apply();
 
-      DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
-      style.setName("Style 1");
-      style.setStyleCondition(eq);
-      style.apply();
+    SLDMapVisitor visitor = new SLDMapVisitor();
+    map.accepts(visitor);
+    String sld = visitor.getSLD(layer);
 
-      HasStyle hasStyle = layer.addHasStyle(style);
-      hasStyle.apply();
-
-      SLDMapVisitor visitor = new SLDMapVisitor();
-      map.accepts(visitor);
-      String sld = visitor.getSLD(layer);
-
-      validate(sld);
-    }
-    finally
-    {
-      map.delete();
-    }
+    validate(sld);
   }
 
   /**

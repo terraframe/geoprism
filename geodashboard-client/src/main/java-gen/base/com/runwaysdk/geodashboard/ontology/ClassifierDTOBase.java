@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 717008995)
+@com.runwaysdk.business.ClassSignature(hash = -580775890)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.ontology.Classifier";
-  private static final long serialVersionUID = 717008995;
+  private static final long serialVersionUID = -580775890;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -501,6 +501,60 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.ontology.ClassifierDTO.CLASS, "getRoot", _declaredTypes);
     return (com.runwaysdk.geodashboard.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO> getAllHasSynonym()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO> getAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO> getAllHasSynonymRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO> getAllHasSynonymRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO addHasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO child)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO addHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO child)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  public void removeHasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO relationship)
+  {
+    getRequest().deleteChild(relationship.getId());
+  }
+  
+  public static void removeHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO relationship)
+  {
+    clientRequestIF.deleteChild(relationship.getId());
+  }
+  
+  public void removeAllHasSynonym()
+  {
+    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
+  }
+  
+  public static void removeAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")

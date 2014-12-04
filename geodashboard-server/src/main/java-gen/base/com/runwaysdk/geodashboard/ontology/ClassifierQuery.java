@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1733847116)
+@com.runwaysdk.business.ClassSignature(hash = 1245412581)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -632,6 +632,122 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   }
 
 
+  public com.runwaysdk.query.Condition hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.getBusinessQuery().isParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.getBusinessQuery().isParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.getBusinessQuery().isParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.getBusinessQuery().isParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.getBusinessQuery().isNotParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+
   public com.runwaysdk.query.Condition isAChild()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
@@ -806,6 +922,20 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.Classifier classifier);
 
 
+  public com.runwaysdk.query.Condition hasSynonym();
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery);
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym();
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+
+
   public com.runwaysdk.query.Condition isAChild();
 
   public com.runwaysdk.query.Condition isAChild(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
@@ -818,6 +948,20 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.Condition SUBSELECT_isAChild(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
 
   public com.runwaysdk.query.Condition SUBSELECT_isAChild(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipQuery classifierIsARelationshipQuery);
+
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym();
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery);
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym();
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_isAChild();
@@ -1167,6 +1311,64 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
 
   }
 
+  public com.runwaysdk.query.Condition hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.isParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.isParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.isParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.isParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+
   public com.runwaysdk.query.Condition isAChild()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
@@ -1222,6 +1424,64 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   {
     classifierIsARelationshipQuery.AND(classifierIsARelationshipQuery.hasChild(classifierQuery));
     return this.isParentIn_SUBSELECT(classifierIsARelationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.isNotParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    return this.isNotParentIn_SUBSELECT(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(classifierSynonymQuery));
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.isNotParentIn(classifierHasSynonymQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonymQuery classifierSynonymQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  {
+    classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasChild(classifierSynonymQuery));
+    return this.isNotParentIn_SUBSELECT(classifierHasSynonymQuery);
   }
 
 

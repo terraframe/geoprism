@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1801650659)
+@com.runwaysdk.business.ClassSignature(hash = 1320627886)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,7 +33,7 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1801650659;
+  private static final long serialVersionUID = 1320627886;
   
   public ClassifierBase()
   {
@@ -411,6 +411,49 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
     ClassifierQuery query = new ClassifierQuery(new com.runwaysdk.query.QueryFactory());
     com.runwaysdk.business.Entity.getAllInstances(query, sortAttribute, ascending, pageSize, pageNumber);
     return query;
+  }
+  
+  public com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym addHasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym) addChild(classifierSynonym, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+  }
+  
+  public void removeHasSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym)
+  {
+    removeAllChildren(classifierSynonym, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonym> getAllHasSynonym()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonym>) getChildren(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym> getAllHasSynonymRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym>) getChildRelationships(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym getHasSynonymRel(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym)
+  {
+    com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym> iterator = (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym>) getRelationshipsWithChild(classifierSynonym, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+      else
+      {
+        return null;
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
   
   public com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship addIsAChild(com.runwaysdk.geodashboard.ontology.Classifier classifier)
