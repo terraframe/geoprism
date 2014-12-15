@@ -300,6 +300,8 @@
                     End Reusable Cell Components
                   --%>
                   
+                  
+				  <!-- BASIC -->
                   <div
                     <c:choose>
                       <c:when test="${'BASIC' == activeLayerTypeName}">
@@ -331,10 +333,13 @@
                     <div class="stroke-block">
                       <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div id="gdb-reusable-basic-stroke-cell-holder" class="cell-holder">
-                        <%-- Dynamically inserted --%>
+                        <%-- Dynamically inserted with javascript--%>
                       </div>
                     </div>
                   </div>
+                  
+                  
+                  <!-- BUBBLE -->
                   <div
                     <c:choose>
                       <c:when test="${'BUBBLE' == activeLayerTypeName}">
@@ -444,6 +449,9 @@
                       </div>
                     </div>
                   </div>
+                  
+                  
+                  <!-- GRADIENT -->
                   <div
                     <c:choose>
                       <c:when test="${'GRADIENT' == activeLayerTypeName}">
@@ -484,11 +492,13 @@
                     <div class="stroke-block">
                       <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
                       <div id="gdb-reusable-gradient-stroke-cell-holder" class="cell-holder">
-                        
+                         <%-- Dynamically inserted with javascript--%>
                       </div>
                     </div>
                   </div>
-                  <!-- CATEGORIES
+                  
+                  <gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
+                  <!-- CATEGORIES -->
                   <div
                     <c:choose>
                       <c:when test="${'CATEGORY' == activeLayerTypeName}">
@@ -498,183 +508,159 @@
                         class="tab-pane" style="display: none;"
                       </c:otherwise>
                     </c:choose>
-                    
-                    id="tab004category"
+                  	id="tab004categories" 
                   >
+                  
                     <div class="color-section">
                       <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>${dl_form_fill}</strong>
                       <div class="heading-list">
-                        <span>Name of Ontology</span>
-                        <span>Color</span>
+                        <span><gdb:localize var="dl_form_category" key="DashboardLayer.form.category"/>${dl_form_category}</span>
+                        <span><gdb:localize var="dl_form_color" key="DashboardLayer.form.color"/>${dl_form_color}</span>
+                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardLayer.form.catInputPlaceholder"/></span>
                       </div>
-                      <div class="color-block" id="category-colors-container">
-                        <div class="panel-group choice-color">
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a>
-                            <div id="choice-color01" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color02">Second Node <span class="icon-color" style="background:#d24dff;">color</span></a>
-                            <div id="choice-color02" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color03">Third Node <span class="icon-color" style="background:#00a3d9;">color</span></a>
-                            <div id="choice-color03" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color04">Fourth Node <span class="icon-color" style="background:#ffdb6f;">color</span></a>
-                            <div id="choice-color04" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color05">Fifth Node <span class="icon-color" style="background:#ff7a4d;">color</span></a>
-                            <div id="choice-color05" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color06">Sixth Node <span class="icon-color" style="background:#ffa64d;">color</span></a>
-                            <div id="choice-color06" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color07">First Node <span class="icon-color">color</span></a>
-                            <div id="choice-color07" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color08">Second Node <span class="icon-color" style="background:#d24dff;">color</span></a>
-                            <div id="choice-color08" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#d24dff">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color09">Third Node <span class="icon-color" style="background:#00a3d9;">color</span></a>
-                            <div id="choice-color09" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#00a3d9">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color10">Fourth Node <span class="icon-color" style="background:#ffdb6f;">color</span></a>
-                            <div id="choice-color10" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffdb6f">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color11">Fifth Node <span class="icon-color" style="background:#ff7a4d;">color</span></a>
-                            <div id="choice-color11" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div class="panel">
-                            <a class="opener" data-toggle="collapse" href="#choice-color12">Sixth Node <span class="icon-color" style="background:#ffa64d;">color</span></a>
-                            <div id="choice-color12" class="panel-collapse collapse">
-                              <ul class="color-list">
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                                <li><a href="#">Child Node <span class="icon-color" style="background:#ffa64d;">color</span></a></li>
-                              </ul>
-                            </div>
-                          </div>
+                      <div class="category-block" id="category-colors-container">
+                        <div class="panel-group choice-color category-group">
+                        
+<!--                           <div class="panel"> -->
+<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
+<!--                             <div id="choice-color01" class="panel-collapse"> -->
+<!--                               <ul class="color-list"> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                               </ul> -->
+<!--                             </div> -->
+<!--                           </div> -->
+                          
+					<div class="panel">
+                    	<div id="choice-color01" class="panel-collapse">
+		                    <ul class="color-list">
+		                       <li>
+		                         <div class="category-container">
+			                       	 <div class="text category-input-container">		
+			                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
+			                       	 	<input id="cat1" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 </div>
+	                   	 		 	 <div class="cell">
+					                  	<div class="color-holder">
+			                            	<a href="#" class="color-choice">
+			                              	<span class="ico" style="background:${style.styleCategoryFill1};">icon</span>
+			                              	<span class="arrow">arrow</span>
+			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill1" value="${style.styleCategoryFill1}" />
+			                            	</a>
+			                          	</div>
+			                         </div>
+	                   	 		 </div>
+		                       </li>
+		                       
+		                       <li>
+		                         <div class="category-container">
+			                       	 <div class="text category-input-container">
+			                       	 	<input id="cat1" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 </div>
+	                   	 		 	 <div class="cell">
+					                  	<div class="color-holder">
+			                            	<a href="#" class="color-choice">
+			                              	<span class="ico" style="background:${style.styleCategoryFill2};">icon</span>
+			                              	<span class="arrow">arrow</span>
+			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill2" value="${style.styleCategoryFill2}" />
+			                            	</a>
+			                          	</div>
+			                         </div>
+	                   	 		 </div>
+		                       </li>
+		                       <li>
+		                         <div class="category-container">
+			                       	 <div class="text category-input-container">
+			                       	 	<input id="cat1" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 </div>
+	                   	 		 	 <div class="cell">
+					                  	<div class="color-holder">
+			                            	<a href="#" class="color-choice">
+			                              	<span class="ico" style="background:${style.styleCategoryFill3};">icon</span>
+			                              	<span class="arrow">arrow</span>
+			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill3" value="${style.styleCategoryFill3}" />
+			                            	</a>
+			                          	</div>
+			                         </div>
+	                   	 		 </div>
+		                       </li>
+		                       <li>
+		                         <div class="category-container">
+			                       	 <div class="text category-input-container">
+			                       	 	<input id="cat1" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 </div>
+	                   	 		 	 <div class="cell">
+					                  	<div class="color-holder">
+			                            	<a href="#" class="color-choice">
+			                              	<span class="ico" style="background:${style.styleCategoryFill4};">icon</span>
+			                              	<span class="arrow">arrow</span>
+			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill4" value="${style.styleCategoryFill4}" />
+			                            	</a>
+			                          	</div>
+			                         </div>
+	                   	 		 </div>
+		                       </li>		                       		                       
+		                       <li>
+		                         <div class="category-container">
+			                       	 <div class="text category-input-container">
+			                       	 	<input id="cat1" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 </div>
+	                   	 		 	 <div class="cell">
+					                  	<div class="color-holder">
+			                            	<a href="#" class="color-choice">
+			                              	<span class="ico" style="background:${style.styleCategoryFill5};">icon</span>
+			                              	<span class="arrow">arrow</span>
+			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill5" value="${style.styleCategoryFill5}" />
+			                            	</a>
+			                          	</div>
+			                         </div>
+	                   	 		 </div>
+		                       </li>		                       
+		                       
+<!-- 		                       <li> -->
+<!-- 		                         <div class="category-container"> -->
+<!-- 			                       	 <div class="text category-input-container"> -->
+<%-- 			                       	 	<input id="cat2" class="category-input" name="style.${style.styleCategory2Md.name}" type="text" placeholder="Enter a category value" autocomplete="on" >  --%>
+<!-- 			                       	 </div> -->
+<!-- 			                       	 <a href="#"> -->
+<%-- 			                       	 	<span class="icon-color category-icon" style="background:${style.styleCategoryFill2};">color</span> --%>
+<!-- 			                       	 </a> -->
+<%-- 			                       	 <input type="hidden" class="color-input" name="style.${style.styleCategoryFill2Md.name}" value="${style.styleCategoryFill2}" /> --%>
+<!-- 		                       	 </div> -->
+<!-- 		                       </li> -->
+
+		                     </ul>
+		                   </div>
+		                 </div>
+                    
+                        
+<!--                         START OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
+<!--                           <div class="panel"> -->
+<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
+<!--                             <div id="choice-color01" class="panel-collapse collapse"> -->
+<!--                               <ul class="color-list"> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+<!--                               </ul> -->
+<!--                             </div> -->
+<!--                           </div> -->
+<!--                         END OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
+
                         </div>
                       </div>
                     </div>
                     <div class="stroke-block">
                       <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardLayer.form.stroke"/>${dl_form_stroke}</strong>
-                      <div class="cell-holder">
-                        <div class="cell">
-                          <span>Color</span>
-                          <div class="color-holder">
-                            <a href="#" class="color-choice">
-                              <span class="ico" style="background:#0086b3;">icon</span>
-                              <span class="arrow">arrow</span>
-                            </a>
-                          </div>
-                        </div>
-                        <div class="cell">
-                          <label for="f101">Width</label>
-                          <div class="select-holder">
-                            <select id="f101" class="tab-select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="cell">
-                          <label for="f82">Opacity</label>
-                          <div class="text"><input id="f82" type="text" placeholder="0 to 100"></div>
-                        </div>
+                      <div id="gdb-reusable-categories-stroke-cell-holder" class="cell-holder">
+						 <%-- Dynamically inserted with javascript--%>
                       </div>
                     </div>
                   </div>
-                  -->
+                  
                 </div>
               </div>
             </div>

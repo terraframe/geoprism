@@ -1708,9 +1708,9 @@ a.blueactive,
 	margin:0 0 0 20px;
 	border-radius:0;
 }
-.nav-tabs.type-tabs .BUBBLE{margin-left:42px;}
-.nav-tabs.type-tabs .GRADIENT{margin-left:27px;}
-.nav-tabs.type-tabs .CATEGORY{margin-left:30px;}
+.nav-tabs.type-tabs .BUBBLE{margin-left:20px;}
+.nav-tabs.type-tabs .GRADIENT{margin-left:20px;}
+.nav-tabs.type-tabs .CATEGORY{margin-left:20px;}
 .nav-tabs.type-tabs li:first-child{margin:0;}
 .nav-tabs.type-tabs li a,
 .nav-tabs.type-tabs li a:hover,

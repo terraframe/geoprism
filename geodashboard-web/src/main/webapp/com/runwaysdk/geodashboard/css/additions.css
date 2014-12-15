@@ -275,4 +275,37 @@ h3.popup-heading{
 	color:#00bfff;
 }
 
+.modal-form .category-block {
+	height: 200px;
+	overflow: auto;
+	-webkit-overflow-scrolling:touch;
+	padding: 0;
+}
+
+div.text.category-input-container {
+	width: 225px;
+}
+span.icon-color.category-icon{
+	background: #a6e53b;
+	width: 28px;
+	height: 28px;
+	/* margin: 2px; */
+	top: 0px;
+	border: 1px solid #aaa;
+}
+
+div.category-container{
+	float: left;
+	position: relative;
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+div.panel-group.choice-color.category-group{
+	width: 300px;
+}
+
+.ui-autocomplete {
+	z-index: 999999 !important;
+}
 
