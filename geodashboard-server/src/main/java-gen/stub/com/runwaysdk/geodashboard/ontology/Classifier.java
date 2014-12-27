@@ -6,12 +6,11 @@ import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
-import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -66,7 +65,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
    * @param mdAttributeTermDAO
    * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
    */
-  public static Classifier findMatchingTerm(String sfTermToMatch, MdAttributeTermDAO mdAttributeTermDAO)
+  public static Classifier findMatchingTerm(String sfTermToMatch, MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
       QueryFactory qf = new QueryFactory();
    
@@ -77,8 +76,8 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
   
       carQ.
-      WHERE(carQ.getParent().EQ(mdAttributeTermDAO));
-      
+      WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+            
       classifierRootQ.
       WHERE(classifierRootQ.classifierAttributeRoots(carQ));
       
@@ -97,7 +96,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         for (Classifier classifier : i)
         {     
-  System.out.println("Heads up: FOUND: "+classifier.getClassifierId());
           return classifier;
         }
       }
@@ -105,7 +103,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         i.close();
       }
-  System.out.println("Heads up: NOT FOUND: "+null);
       return null;
     }
 
