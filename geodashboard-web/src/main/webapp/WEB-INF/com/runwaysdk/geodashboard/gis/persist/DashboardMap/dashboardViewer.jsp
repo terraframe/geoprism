@@ -157,7 +157,7 @@ $(document).ready(function(){
     </div>
     
     <!-- contain aside of the page -->
-  <aside class="aside animated slideInRight legend-snapable" id="dashboardMetadata">
+  <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
@@ -172,9 +172,13 @@ $(document).ready(function(){
 		</div>
 		<button class="none">submit</button>
         
-        <a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
-        	<span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.createNewDashboard"/></span>
-		    </a>
+        <div id="new-dashboard-btn-container">
+        	<a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
+        		<span>
+        			<gdb:localize key="dashboardViewer.createNewDashboard"/>
+        		</span>
+			</a>
+		</div>
 		    
         <div class="choice-form">
           
@@ -320,8 +324,10 @@ $(document).ready(function(){
   <div class="bg-stretch">
     <div id="mapDivId" class="dynamicMap"></div>
   </div>
+  
   <!-- reporting container -->
-  <article id="reporticng-container" class="reporticng-container">
+  <article id="reporticng-container" class="reporticng-container report-panel-closed">
+  	<h4 id="reporting-toggle-button">Chart Panel</h4>
     <div id="report-content"></div>
   </article>
   

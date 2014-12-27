@@ -15,7 +15,8 @@ body{
 }
 
 body.iFrameBody {
-  overflow: auto;
+/*   overflow: auto; */
+	overflow: hidden;
 }
 
 div.pageContent {
@@ -194,8 +195,13 @@ a.map-layers-opener.opener {
 	position: absolute;
 	right: 300px;
 	bottom: 0px;
-/* 	background: rgba(0, 0, 0, 0.8); */
-/* 	border: solid black 1px; */
+/* 	background: none; */
+/* 	border: none; */
+}
+
+.legend-container-group-active {
+	background: rgba(0, 0, 0, 0.8);
+	border: solid black 1px;	
 }
 
 .legend-item{
@@ -220,6 +226,10 @@ ul#legend-list-group{
     list-style-type: none;
     padding: 2px;
     margin: 2px;
+}
+
+.legend-grouped{
+	cursor: pointer;
 }
 
 a.legend-opener.opener{
@@ -252,5 +262,50 @@ h3.popup-heading{
 	margin: 0;
 }
 
+#new-dashboard-btn-container{
+    margin-bottom: 5px;
+}
 
+.new-dashboard-btn{
+	color:white;
+	font-weight:bold;
+}
+
+.new-dashboard-btn:hover{
+	color:#00bfff;
+}
+
+.modal-form .category-block {
+	height: 200px;
+	overflow: auto;
+	-webkit-overflow-scrolling:touch;
+	padding: 0;
+}
+
+div.text.category-input-container {
+	width: 225px;
+}
+span.icon-color.category-icon{
+	background: #a6e53b;
+	width: 28px;
+	height: 28px;
+	/* margin: 2px; */
+	top: 0px;
+	border: 1px solid #aaa;
+}
+
+div.category-container{
+	float: left;
+	position: relative;
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+div.panel-group.choice-color.category-group{
+	width: 300px;
+}
+
+.ui-autocomplete {
+	z-index: 999999 !important;
+}
 

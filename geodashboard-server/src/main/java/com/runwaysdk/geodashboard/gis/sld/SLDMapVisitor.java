@@ -2,9 +2,11 @@ package com.runwaysdk.geodashboard.gis.sld;
 
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.text.*;
 import java.awt.Color;
@@ -449,6 +451,98 @@ public class SLDMapVisitor implements MapVisitor
           }
           
         };
+      }
+      else if(this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        // attribute must be lowercase to work with postgres
+        String attribute = tStyle.getAttribute().toLowerCase();
+        
+        // build a hashmap of categories
+        HashMap<String, String> categories = new HashMap<String, String>();
+        categories.put(tStyle.getStyleCategory1(), tStyle.getStyleCategoryFill1());
+        categories.put(tStyle.getStyleCategory2(), tStyle.getStyleCategoryFill2());
+        categories.put(tStyle.getStyleCategory3(), tStyle.getStyleCategoryFill3());
+        categories.put(tStyle.getStyleCategory4(), tStyle.getStyleCategoryFill4());
+        categories.put(tStyle.getStyleCategory5(), tStyle.getStyleCategoryFill5());
+        
+        // remove entries where the user defined category is empty
+        Iterator<Entry<String,String>> iter = categories.entrySet().iterator();
+        while (iter.hasNext()) {
+            Entry<String,String> entry = iter.next();
+            if(entry.getKey().isEmpty()) {
+                iter.remove();
+            }
+        }
+        
+        for(String catVal: categories.keySet())
+        {
+          String catFill = categories.get(catVal);
+          
+          Node ruleNode = node("Rule").build(root);
+            node("Name").text(catVal).build(ruleNode);
+            node("Title").text(catVal).build(ruleNode);
+  
+              Node filterNode = node(OGC, "Filter").build(ruleNode);
+                Node firstAndNode = node(OGC, "And").build(filterNode);
+          
+                  Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(firstAndNode);
+                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+          
+                  Node secondAndNode = node(OGC, "And").build(firstAndNode);
+                    Node notNode = node(OGC, "Not").build(secondAndNode);
+                      Node orNode = node(OGC, "Or").build(notNode);
+          
+                        Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+                          node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
+                        Node secondPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
+                          node(OGC, "Literal").text("NEVER").build(secondPropEqualToNode);
+                          node(OGC, "Literal").text("TRUE").build(secondPropEqualToNode);
+                          
+                    Node thirdPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
+                      node(OGC, "PropertyName").text(attribute).build(thirdPropEqualToNode);
+                      node(OGC, "Literal").text(catVal).build(thirdPropEqualToNode);
+                      
+                      // Polygon styles
+              Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
+                node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
+                Node geomFillNode = node("Fill").build(polySymbolNode);
+                  css("fill", catFill).build(geomFillNode);
+                  css("fill-opacity", fillOpacity).build(geomFillNode);
+                          
+                  node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
+        
+          //        
+          // Adding labels
+          //
+          boolean thematic = style instanceof ThematicStyle;
+
+          if (thematic && style.getEnableLabel() && style.getEnableValue())
+          {
+            Node[] nodes = new Node[] {
+                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+                node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+          else if (style.getEnableLabel())
+          {
+            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+          else if (thematic && style.getEnableValue())
+          {
+            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+            ruleNode.appendChild(text.getSLD());
+          }
+        
+        }
       }
       else
       {

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2027501386)
+@com.runwaysdk.business.ClassSignature(hash = 2056428138)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = -2027501386;
+  private static final long serialVersionUID = 2056428138;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -33,6 +33,17 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
+  public static java.lang.String STYLECATEGORIES = "styleCategories";
+  public static java.lang.String STYLECATEGORY1 = "styleCategory1";
+  public static java.lang.String STYLECATEGORY2 = "styleCategory2";
+  public static java.lang.String STYLECATEGORY3 = "styleCategory3";
+  public static java.lang.String STYLECATEGORY4 = "styleCategory4";
+  public static java.lang.String STYLECATEGORY5 = "styleCategory5";
+  public static java.lang.String STYLECATEGORYFILL1 = "styleCategoryFill1";
+  public static java.lang.String STYLECATEGORYFILL2 = "styleCategoryFill2";
+  public static java.lang.String STYLECATEGORYFILL3 = "styleCategoryFill3";
+  public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
+  public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
   @SuppressWarnings("unchecked")
   public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
@@ -275,6 +286,413 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonMinFillMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONMINFILL).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategories()
+  {
+    return getValue(STYLECATEGORIES);
+  }
+  
+  public void setStyleCategories(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORIES, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORIES, value);
+    }
+  }
+  
+  public boolean isStyleCategoriesWritable()
+  {
+    return isWritable(STYLECATEGORIES);
+  }
+  
+  public boolean isStyleCategoriesReadable()
+  {
+    return isReadable(STYLECATEGORIES);
+  }
+  
+  public boolean isStyleCategoriesModified()
+  {
+    return isModified(STYLECATEGORIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoriesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORIES).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategory1()
+  {
+    return getValue(STYLECATEGORY1);
+  }
+  
+  public void setStyleCategory1(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORY1, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORY1, value);
+    }
+  }
+  
+  public boolean isStyleCategory1Writable()
+  {
+    return isWritable(STYLECATEGORY1);
+  }
+  
+  public boolean isStyleCategory1Readable()
+  {
+    return isReadable(STYLECATEGORY1);
+  }
+  
+  public boolean isStyleCategory1Modified()
+  {
+    return isModified(STYLECATEGORY1);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategory1Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORY1).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategory2()
+  {
+    return getValue(STYLECATEGORY2);
+  }
+  
+  public void setStyleCategory2(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORY2, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORY2, value);
+    }
+  }
+  
+  public boolean isStyleCategory2Writable()
+  {
+    return isWritable(STYLECATEGORY2);
+  }
+  
+  public boolean isStyleCategory2Readable()
+  {
+    return isReadable(STYLECATEGORY2);
+  }
+  
+  public boolean isStyleCategory2Modified()
+  {
+    return isModified(STYLECATEGORY2);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategory2Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORY2).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategory3()
+  {
+    return getValue(STYLECATEGORY3);
+  }
+  
+  public void setStyleCategory3(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORY3, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORY3, value);
+    }
+  }
+  
+  public boolean isStyleCategory3Writable()
+  {
+    return isWritable(STYLECATEGORY3);
+  }
+  
+  public boolean isStyleCategory3Readable()
+  {
+    return isReadable(STYLECATEGORY3);
+  }
+  
+  public boolean isStyleCategory3Modified()
+  {
+    return isModified(STYLECATEGORY3);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategory3Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORY3).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategory4()
+  {
+    return getValue(STYLECATEGORY4);
+  }
+  
+  public void setStyleCategory4(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORY4, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORY4, value);
+    }
+  }
+  
+  public boolean isStyleCategory4Writable()
+  {
+    return isWritable(STYLECATEGORY4);
+  }
+  
+  public boolean isStyleCategory4Readable()
+  {
+    return isReadable(STYLECATEGORY4);
+  }
+  
+  public boolean isStyleCategory4Modified()
+  {
+    return isModified(STYLECATEGORY4);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategory4Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORY4).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategory5()
+  {
+    return getValue(STYLECATEGORY5);
+  }
+  
+  public void setStyleCategory5(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORY5, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORY5, value);
+    }
+  }
+  
+  public boolean isStyleCategory5Writable()
+  {
+    return isWritable(STYLECATEGORY5);
+  }
+  
+  public boolean isStyleCategory5Readable()
+  {
+    return isReadable(STYLECATEGORY5);
+  }
+  
+  public boolean isStyleCategory5Modified()
+  {
+    return isModified(STYLECATEGORY5);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategory5Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORY5).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategoryFill1()
+  {
+    return getValue(STYLECATEGORYFILL1);
+  }
+  
+  public void setStyleCategoryFill1(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORYFILL1, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORYFILL1, value);
+    }
+  }
+  
+  public boolean isStyleCategoryFill1Writable()
+  {
+    return isWritable(STYLECATEGORYFILL1);
+  }
+  
+  public boolean isStyleCategoryFill1Readable()
+  {
+    return isReadable(STYLECATEGORYFILL1);
+  }
+  
+  public boolean isStyleCategoryFill1Modified()
+  {
+    return isModified(STYLECATEGORYFILL1);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoryFill1Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORYFILL1).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategoryFill2()
+  {
+    return getValue(STYLECATEGORYFILL2);
+  }
+  
+  public void setStyleCategoryFill2(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORYFILL2, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORYFILL2, value);
+    }
+  }
+  
+  public boolean isStyleCategoryFill2Writable()
+  {
+    return isWritable(STYLECATEGORYFILL2);
+  }
+  
+  public boolean isStyleCategoryFill2Readable()
+  {
+    return isReadable(STYLECATEGORYFILL2);
+  }
+  
+  public boolean isStyleCategoryFill2Modified()
+  {
+    return isModified(STYLECATEGORYFILL2);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoryFill2Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORYFILL2).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategoryFill3()
+  {
+    return getValue(STYLECATEGORYFILL3);
+  }
+  
+  public void setStyleCategoryFill3(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORYFILL3, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORYFILL3, value);
+    }
+  }
+  
+  public boolean isStyleCategoryFill3Writable()
+  {
+    return isWritable(STYLECATEGORYFILL3);
+  }
+  
+  public boolean isStyleCategoryFill3Readable()
+  {
+    return isReadable(STYLECATEGORYFILL3);
+  }
+  
+  public boolean isStyleCategoryFill3Modified()
+  {
+    return isModified(STYLECATEGORYFILL3);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoryFill3Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORYFILL3).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategoryFill4()
+  {
+    return getValue(STYLECATEGORYFILL4);
+  }
+  
+  public void setStyleCategoryFill4(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORYFILL4, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORYFILL4, value);
+    }
+  }
+  
+  public boolean isStyleCategoryFill4Writable()
+  {
+    return isWritable(STYLECATEGORYFILL4);
+  }
+  
+  public boolean isStyleCategoryFill4Readable()
+  {
+    return isReadable(STYLECATEGORYFILL4);
+  }
+  
+  public boolean isStyleCategoryFill4Modified()
+  {
+    return isModified(STYLECATEGORYFILL4);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoryFill4Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORYFILL4).getAttributeMdDTO();
+  }
+  
+  public String getStyleCategoryFill5()
+  {
+    return getValue(STYLECATEGORYFILL5);
+  }
+  
+  public void setStyleCategoryFill5(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLECATEGORYFILL5, "");
+    }
+    else
+    {
+      setValue(STYLECATEGORYFILL5, value);
+    }
+  }
+  
+  public boolean isStyleCategoryFill5Writable()
+  {
+    return isWritable(STYLECATEGORYFILL5);
+  }
+  
+  public boolean isStyleCategoryFill5Readable()
+  {
+    return isReadable(STYLECATEGORYFILL5);
+  }
+  
+  public boolean isStyleCategoryFill5Modified()
+  {
+    return isModified(STYLECATEGORYFILL5);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoryFill5Md()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORYFILL5).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO getStyleCondition()

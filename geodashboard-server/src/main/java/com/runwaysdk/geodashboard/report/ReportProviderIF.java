@@ -9,13 +9,13 @@ public interface ReportProviderIF extends Reloadable
    * Dashboard name 
    */
   public static final String DASHBOARD_NAME = "dashboardName";
-
+  
   /**
    * Dashboard id
    */
   public static final String DASHBOARD_ID   = "dashboardId";
-
-  public ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth);
-
-  public ReportQueryView[] getTypesForReporting();
+  
+  public ValueQuery getReportQuery(String category, String criteria, Integer depth);
+  
+  public ReportQueryView getReportQueryDescriptor();
 }
