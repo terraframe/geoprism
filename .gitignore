@@ -14,7 +14,3 @@ geodashboard-web/.settings
 geodashboard-server/.settings/geodashboard-common
 geodashboard-web/src/main/webapp/WEB-INF/com/example
 geodashboard-web/vault/geodashboard-client
-/geodashboard-common
-/geodashboard-server
-/geodashboard-web
-/geodashboard-client
