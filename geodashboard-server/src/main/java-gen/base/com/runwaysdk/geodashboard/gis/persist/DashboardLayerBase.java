@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -75997527)
+@com.runwaysdk.business.ClassSignature(hash = -1446782573)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -37,7 +37,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -75997527;
+  private static final long serialVersionUID = -1446782573;
   
   public DashboardLayerBase()
   {
@@ -55,10 +55,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(BBOXINCLUDED);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getBBoxIncludedMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getBBoxIncludedMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(BBOXINCLUDED);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(BBOXINCLUDED);
   }
   
   public void setBBoxIncluded(Boolean value)
@@ -83,10 +83,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(ACTIVEBYDEFAULT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getActiveByDefaultMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getActiveByDefaultMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
   }
   
   public void setActiveByDefault(Boolean value)
@@ -111,10 +111,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(CREATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(CREATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getCreatedBy()
@@ -139,10 +139,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(CREATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(CREATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
   public com.runwaysdk.geodashboard.gis.persist.DashboardLegend getDashboardLegend()
@@ -155,10 +155,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(DASHBOARDLEGEND);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardLegendMd()
+  public static com.runwaysdk.dataaccess.MdAttributeStructDAOIF getDashboardLegendMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(DASHBOARDLEGEND);
+    return (com.runwaysdk.dataaccess.MdAttributeStructDAOIF)mdClassIF.definesAttribute(DASHBOARDLEGEND);
   }
   
   public Boolean getDisplayInLegend()
@@ -171,10 +171,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(DISPLAYINLEGEND);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayInLegendMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getDisplayInLegendMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(DISPLAYINLEGEND);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(DISPLAYINLEGEND);
   }
   
   public void setDisplayInLegend(Boolean value)
@@ -211,10 +211,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(ENTITYDOMAIN);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getEntityDomainMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(ENTITYDOMAIN);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
   public void setEntityDomain(com.runwaysdk.system.metadata.MdDomain value)
@@ -251,10 +251,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(GEOENTITY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGeoEntityMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeoEntityMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(GEOENTITY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOENTITY);
   }
   
   public void setGeoEntity(com.runwaysdk.system.metadata.MdAttributeReference value)
@@ -279,10 +279,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getKeyName()
@@ -295,10 +295,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(KEYNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getKeyNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(KEYNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
   public void setKeyName(String value)
@@ -323,10 +323,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LASTPUBLISHDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastPublishDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastPublishDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LASTPUBLISHDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTPUBLISHDATE);
   }
   
   public void setLastPublishDate(java.util.Date value)
@@ -351,10 +351,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LASTUPDATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getLastUpdatedBy()
@@ -379,10 +379,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LASTUPDATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
   public Boolean getLayerEnabled()
@@ -395,10 +395,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LAYERENABLED);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerEnabledMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getLayerEnabledMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LAYERENABLED);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(LAYERENABLED);
   }
   
   public void setLayerEnabled(Boolean value)
@@ -445,10 +445,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LAYERTYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF getLayerTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LAYERTYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdClassIF.definesAttribute(LAYERTYPE);
   }
   
   public com.runwaysdk.system.Users getLockedBy()
@@ -473,10 +473,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(LOCKEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLockedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(LOCKEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
   public String getName()
@@ -489,10 +489,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(NAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(NAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(NAME);
   }
   
   public void setName(String value)
@@ -529,10 +529,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(OWNER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOwnerMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(OWNER);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
   public void setOwner(com.runwaysdk.system.Actor value)
@@ -557,10 +557,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(SEQ);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSeqMd()
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(SEQ);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
   public String getSiteMaster()
@@ -573,10 +573,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(SITEMASTER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSiteMasterMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(SITEMASTER);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
   public String getType()
@@ -589,10 +589,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(TYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(TYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
   public com.runwaysdk.system.gis.geo.Universal getUniversal()
@@ -617,10 +617,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(UNIVERSAL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getUniversalMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getUniversalMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(UNIVERSAL);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(UNIVERSAL);
   }
   
   public void setUniversal(com.runwaysdk.system.gis.geo.Universal value)
@@ -645,10 +645,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(VIEWNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getViewNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getViewNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(VIEWNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(VIEWNAME);
   }
   
   public void setViewName(String value)
@@ -673,10 +673,10 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     this.validateAttribute(VIRTUAL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getVirtualMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getVirtualMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return mdClassIF.definesAttribute(VIRTUAL);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(VIRTUAL);
   }
   
   public void setVirtual(Boolean value)
@@ -779,18 +779,6 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     DashboardLayer _instance = DashboardLayer.get(id);
     return _instance.applyWithStyle(style, mapId, conditions);
-  }
-  
-  public java.lang.String getOntologyAttributeCategories()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final java.lang.String getOntologyAttributeCategories(java.lang.String id)
-  {
-    DashboardLayer _instance = DashboardLayer.get(id);
-    return _instance.getOntologyAttributeCategories();
   }
   
   public static com.runwaysdk.system.gis.geo.UniversalQuery getSortedUniversals()

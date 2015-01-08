@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 209562602)
+@com.runwaysdk.business.ClassSignature(hash = 1509200371)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -17,7 +17,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
-  public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECATEGORY1 = "styleCategory1";
   public static java.lang.String STYLECATEGORY2 = "styleCategory2";
   public static java.lang.String STYLECATEGORY3 = "styleCategory3";
@@ -29,7 +28,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
   public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 209562602;
+  private static final long serialVersionUID = 1509200371;
   
   public DashboardThematicStyleBase()
   {
@@ -68,10 +67,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(AGGREGATIONTYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF getAggregationTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(AGGREGATIONTYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdClassIF.definesAttribute(AGGREGATIONTYPE);
   }
   
   public com.runwaysdk.system.metadata.MdAttribute getMdAttribute()
@@ -96,10 +95,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(MDATTRIBUTE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMdAttributeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getMdAttributeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(MDATTRIBUTE);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(MDATTRIBUTE);
   }
   
   public void setMdAttribute(com.runwaysdk.system.metadata.MdAttribute value)
@@ -124,10 +123,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(POINTMAXSIZE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointMaxSizeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointMaxSizeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(POINTMAXSIZE);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTMAXSIZE);
   }
   
   public void setPointMaxSize(Integer value)
@@ -152,10 +151,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(POINTMINSIZE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPointMinSizeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointMinSizeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(POINTMINSIZE);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTMINSIZE);
   }
   
   public void setPointMinSize(Integer value)
@@ -180,10 +179,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(POLYGONMAXFILL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonMaxFillMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPolygonMaxFillMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(POLYGONMAXFILL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(POLYGONMAXFILL);
   }
   
   public void setPolygonMaxFill(String value)
@@ -208,10 +207,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(POLYGONMINFILL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getPolygonMinFillMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPolygonMinFillMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(POLYGONMINFILL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(POLYGONMINFILL);
   }
   
   public void setPolygonMinFill(String value)
@@ -226,34 +225,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     }
   }
   
-  public String getStyleCategories()
-  {
-    return getValue(STYLECATEGORIES);
-  }
-  
-  public void validateStyleCategories()
-  {
-    this.validateAttribute(STYLECATEGORIES);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoriesMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORIES);
-  }
-  
-  public void setStyleCategories(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORIES, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORIES, value);
-    }
-  }
-  
   public String getStyleCategory1()
   {
     return getValue(STYLECATEGORY1);
@@ -264,10 +235,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORY1);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategory1Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory1Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORY1);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY1);
   }
   
   public void setStyleCategory1(String value)
@@ -292,10 +263,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORY2);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategory2Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory2Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORY2);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY2);
   }
   
   public void setStyleCategory2(String value)
@@ -320,10 +291,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORY3);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategory3Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory3Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORY3);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY3);
   }
   
   public void setStyleCategory3(String value)
@@ -348,10 +319,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORY4);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategory4Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory4Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORY4);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY4);
   }
   
   public void setStyleCategory4(String value)
@@ -376,10 +347,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORY5);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategory5Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory5Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORY5);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY5);
   }
   
   public void setStyleCategory5(String value)
@@ -404,10 +375,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORYFILL1);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoryFill1Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill1Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORYFILL1);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL1);
   }
   
   public void setStyleCategoryFill1(String value)
@@ -432,10 +403,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORYFILL2);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoryFill2Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill2Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORYFILL2);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL2);
   }
   
   public void setStyleCategoryFill2(String value)
@@ -460,10 +431,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORYFILL3);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoryFill3Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill3Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORYFILL3);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL3);
   }
   
   public void setStyleCategoryFill3(String value)
@@ -488,10 +459,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORYFILL4);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoryFill4Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill4Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORYFILL4);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL4);
   }
   
   public void setStyleCategoryFill4(String value)
@@ -516,10 +487,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORYFILL5);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleCategoryFill5Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill5Md()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECATEGORYFILL5);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL5);
   }
   
   public void setStyleCategoryFill5(String value)
@@ -556,10 +527,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECONDITION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getStyleConditionMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getStyleConditionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return mdClassIF.definesAttribute(STYLECONDITION);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(STYLECONDITION);
   }
   
   public void setStyleCondition(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition value)

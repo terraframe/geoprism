@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1347350227)
+@com.runwaysdk.business.ClassSignature(hash = -587702244)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -150,23 +150,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getStyleCategories()
-  {
-    return getStyleCategories(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getStyleCategory1()
@@ -444,9 +427,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getPolygonMinFill();
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getStyleCategories();
-    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias);
-    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getStyleCategory1();
     public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias);
     public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel);
@@ -615,23 +595,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getStyleCategories()
-  {
-    return getStyleCategories(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getStyleCategory1()
@@ -880,9 +843,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getPolygonMinFill();
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getStyleCategories();
-    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias);
-    public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getStyleCategory1();
     public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias);
     public com.runwaysdk.query.SelectableChar getStyleCategory1(String alias, String displayLabel);
@@ -1100,23 +1060,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getPolygonMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POLYGONMINFILL, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableChar getStyleCategories()
-  {
-    return getStyleCategories(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableChar getStyleCategories(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECATEGORIES, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getStyleCategory1()

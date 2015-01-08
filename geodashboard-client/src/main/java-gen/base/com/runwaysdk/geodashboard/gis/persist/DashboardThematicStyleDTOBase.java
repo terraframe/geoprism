@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2056428138)
+@com.runwaysdk.business.ClassSignature(hash = 1438097523)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 2056428138;
+  private static final long serialVersionUID = 1438097523;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -33,7 +33,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
-  public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECATEGORY1 = "styleCategory1";
   public static java.lang.String STYLECATEGORY2 = "styleCategory2";
   public static java.lang.String STYLECATEGORY3 = "styleCategory3";
@@ -286,43 +285,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonMinFillMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONMINFILL).getAttributeMdDTO();
-  }
-  
-  public String getStyleCategories()
-  {
-    return getValue(STYLECATEGORIES);
-  }
-  
-  public void setStyleCategories(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORIES, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORIES, value);
-    }
-  }
-  
-  public boolean isStyleCategoriesWritable()
-  {
-    return isWritable(STYLECATEGORIES);
-  }
-  
-  public boolean isStyleCategoriesReadable()
-  {
-    return isReadable(STYLECATEGORIES);
-  }
-  
-  public boolean isStyleCategoriesModified()
-  {
-    return isModified(STYLECATEGORIES);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoriesMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORIES).getAttributeMdDTO();
   }
   
   public String getStyleCategory1()
