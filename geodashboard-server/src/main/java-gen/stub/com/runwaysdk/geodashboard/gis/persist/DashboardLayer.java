@@ -1,21 +1,16 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.sql.RowSet;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.birt.data.engine.odaconsumer.ResultSet;
-//import org.hsqldb.lib.HashMap;
+// import org.hsqldb.lib.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,9 +48,7 @@ import com.runwaysdk.query.SelectableSQLDate;
 import com.runwaysdk.query.SelectableSQLDouble;
 import com.runwaysdk.query.SelectableSQLFloat;
 import com.runwaysdk.query.SelectableSQLInteger;
-import com.runwaysdk.query.SelectableSQLNumber;
 import com.runwaysdk.query.SelectableSQLPrimitive;
-import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -68,68 +61,69 @@ import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeFloat;
 import com.runwaysdk.system.metadata.MdAttributeInt;
-import com.runwaysdk.system.metadata.MdAttributeNumber;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
-//import org.hsqldb.lib.HashMap;
 
-public class DashboardLayer extends DashboardLayerBase implements
-    com.runwaysdk.generation.loader.Reloadable, Layer
+
+public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
-  private static final long  serialVersionUID = 1992575686;
+  private static final long        serialVersionUID = 1992575686;
 
-  public static final String DB_VIEW_PREFIX   = "l";
+  public static final String       DB_VIEW_PREFIX   = "l";
 
-  private static final Log   log              = LogFactory.getLog(DashboardLayer.class);
-  
-  private List<DashboardCondition> conditions = null;
-  
-  private boolean viewHasData = true;
-  
+  private static final Log         log              = LogFactory.getLog(DashboardLayer.class);
+
+  private List<DashboardCondition> conditions       = null;
+
+  private boolean                  viewHasData      = true;
+
   @Override
   public FeatureStrategy getFeatureStrategy()
   {
     AllLayerType type = this.getLayerType().get(0);
     return FeatureStrategy.valueOf(type.name());
   }
-  
+
   @Override
   public void apply()
   {
     super.apply();
   }
-  
-  public boolean viewHasData() {
+
+  public boolean viewHasData()
+  {
     return viewHasData;
   }
-  
-  public void setConditions(List<DashboardCondition> conditions) {
+
+  public void setConditions(List<DashboardCondition> conditions)
+  {
     this.conditions = conditions;
   }
-  
-  public List<DashboardCondition> getConditions() {
+
+  public List<DashboardCondition> getConditions()
+  {
     return this.conditions;
   }
-  
+
   @Override
   public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     this.applyWithStyleInTransaction(style, mapId, conditions);
-    
-    // We have to make sure that the transaction has ended before we can publish to geoserver, 
+
+    // We have to make sure that the transaction has ended before we can publish to geoserver,
     // otherwise our database view won't exist yet.
     this.publish();
     GeoserverFacade.pushUpdates();
-    
-    try 
+
+    try
     {
-      JSONObject json = this.toJSON();     
-      
+      JSONObject json = this.toJSON();
+
       JSONArray jsonArray = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i) 
+      for (int i = 0; i < styles.size(); ++i)
       {
         DashboardStyle stile = styles.get(i);
         jsonArray.put(stile.toJSON());
@@ -138,16 +132,17 @@ public class DashboardLayer extends DashboardLayerBase implements
 
       return json.toString();
     }
-    catch (JSONException e) 
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   @Transaction
-  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions) {
+  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  {
     boolean isNew = this.isNew();
-    
+
     // Find (and set) the GeoEntity reference attribute
     // FIXME UI needs to allow for picking of the geo entity attribute
     if (isNew && style instanceof DashboardThematicStyle)
@@ -156,81 +151,82 @@ public class DashboardLayer extends DashboardLayerBase implements
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
       MdAttributeDAOIF attr = null;
-      
-      for(MdAttributeDAOIF mdAttr : md.definesAttributes())
+
+      for (MdAttributeDAOIF mdAttr : md.definesAttributes())
       {
-        if(mdAttr instanceof MdAttributeReferenceDAOIF)
+        if (mdAttr instanceof MdAttributeReferenceDAOIF)
         {
           MdAttributeReferenceDAOIF mdRef = (MdAttributeReferenceDAOIF) mdAttr;
-          if(mdRef.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
+          if (mdRef.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
           {
             attr = mdRef;
             break;
           }
         }
       }
-      
-      if(attr != null)
+
+      if (attr != null)
       {
         this.setValue(DashboardLayer.GEOENTITY, attr.getId());
       }
       else
       {
-        throw new ProgrammingErrorException("Class ["+mdClass.definesType()+"] does not reference a ["+GeoEntity.CLASS+"].");
+        throw new ProgrammingErrorException("Class [" + mdClass.definesType() + "] does not reference a [" + GeoEntity.CLASS + "].");
       }
     }
-    
+
     // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that won't show the new style update.
     String vn = generateViewName();
     this.setViewName(vn);
     this.setVirtual(true);
-    
+
     style.generateName(this.getViewName());
-    
-    if (conditions != null) {
+
+    if (conditions != null)
+    {
       this.conditions = Arrays.asList(conditions);
     }
-    
+
     style.apply();
-    
+
     this.apply();
-    
+
     // Create hasLayer and hasStyle relationships
     if (isNew)
     {
       QueryFactory f = new QueryFactory();
       DashboardLayerQuery q = new DashboardLayerQuery(f);
       DashboardMapQuery mQ = new DashboardMapQuery(f);
-      
+
       mQ.WHERE(mQ.getId().EQ(mapId));
       q.WHERE(q.containingMap(mQ));
-      
+
       int count = (int) q.getCount();
       count++;
-      
+
       DashboardMap map = DashboardMap.get(mapId);
       HasLayer hasLayer = map.addHasLayer(this);
       hasLayer.setLayerIndex(count);
       hasLayer.apply();
-      
+
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
     }
-    
+
     this.validate();
   }
-  
-  public String generateViewName() {
-    
-    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well. 
+
+  public String generateViewName()
+  {
+
+    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well.
     String vn = DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 30);
-    
+
     return vn;
   }
-  
+
   /**
-   * For easy reference, the name of the SLD is the same as the db view name.
-   * The .sld extension is automatically added
+   * For easy reference, the name of the SLD is the same as the db view name. The .sld extension is automatically added
    * 
    * @return
    */
@@ -238,7 +234,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   {
     return this.getViewName();
   }
-  
+
   /**
    * Returns the File object associated with the SLD for this view.
    * 
@@ -250,144 +246,153 @@ public class DashboardLayer extends DashboardLayerBase implements
     String sld = path + this.getSLDName() + GeoserverProperties.SLD_EXTENSION;
     return new File(sld);
   }
-  
-  public void validate() {
-//    String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
-//    
-//    // make sure there are no duplicate geo entities
-//    String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " + ((MdEntity)this.getMdClass()).getTableName();
-//    countSQL += " GROUP BY " + geoIdColumnName + " HAVING COUNT(*) > 1";
-//
-//    ResultSet resultSet = Database.query(countSQL);
-//
-//    try
-//    {
-//      if (resultSet.next())
-//      {
-//        // We have duplicate data! Throw an exception if this is the base
-//        // layer,
-//        // but only omit the layer with info if non-base.
-//        if (i == 0)
-//        {
-//          DuplicateMapDataException ex = new DuplicateMapDataException();
-//          throw ex;
-//        }
-//        else
-//        {
-//          LayerOmittedDuplicateDataInformation info = new LayerOmittedDuplicateDataInformation();
-//          info.setLayerName(layerName);
-//          info.throwIt();
-//         
-//          continue;
-//        }
-//      }
-//    }
-//    catch (SQLException sqlEx1)
-//    {
-//      Database.throwDatabaseException(sqlEx1);
-//    }
-//    finally
-//    {
-//      try
-//      {
-//        java.sql.Statement statement = resultSet.getStatement();
-//        resultSet.close();
-//        statement.close();
-//      }
-//      catch (SQLException sqlEx2)
-//      {
-//        Database.throwDatabaseException(sqlEx2);
-//      }
-//    }
+
+  public void validate()
+  {
+    // String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
+    //
+    // // make sure there are no duplicate geo entities
+    // String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " + ((MdEntity)this.getMdClass()).getTableName();
+    // countSQL += " GROUP BY " + geoIdColumnName + " HAVING COUNT(*) > 1";
+    //
+    // ResultSet resultSet = Database.query(countSQL);
+    //
+    // try
+    // {
+    // if (resultSet.next())
+    // {
+    // // We have duplicate data! Throw an exception if this is the base
+    // // layer,
+    // // but only omit the layer with info if non-base.
+    // if (i == 0)
+    // {
+    // DuplicateMapDataException ex = new DuplicateMapDataException();
+    // throw ex;
+    // }
+    // else
+    // {
+    // LayerOmittedDuplicateDataInformation info = new LayerOmittedDuplicateDataInformation();
+    // info.setLayerName(layerName);
+    // info.throwIt();
+    //
+    // continue;
+    // }
+    // }
+    // }
+    // catch (SQLException sqlEx1)
+    // {
+    // Database.throwDatabaseException(sqlEx1);
+    // }
+    // finally
+    // {
+    // try
+    // {
+    // java.sql.Statement statement = resultSet.getStatement();
+    // resultSet.close();
+    // statement.close();
+    // }
+    // catch (SQLException sqlEx2)
+    // {
+    // Database.throwDatabaseException(sqlEx2);
+    // }
+    // }
   }
-  
+
   /**
    * Removes the layer, and all its styles, from GeoServer.
    */
-  public void drop() {
-    if (this.isPublished()) {
+  public void drop()
+  {
+    if (this.isPublished())
+    {
       GeoserverFacade.dropLayerOnUpdate(this);
     }
   }
-  
-  public boolean isPublished() {
+
+  public boolean isPublished()
+  {
     return GeoserverFacade.layerExists(this.getViewName());
   }
-  
+
   /**
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it does not exist yet.
    */
-  public void publish() {
-    if (needsRepublish()) {
+  public void publish()
+  {
+    if (needsRepublish())
+    {
       this.drop();
-      
+
       createDatabaseView(true);
-      
-      if (viewHasData) {
+
+      if (viewHasData)
+      {
         GeoserverFacade.publishLayerOnUpdate(this);
       }
-      
+
       this.appLock();
       this.setLastPublishDate(new Date());
       this.apply();
       this.unlock();
     }
   }
-  
-  public boolean needsRepublish() {
-    
+
+  public boolean needsRepublish()
+  {
+
     // TODO : layer views need to be associated with a particular session, otherwise when changing filter conditions different users will clobber eachother.
     return true;
-    
-//    boolean isPublished = isPublished();
-//    if (!isPublished) { return true; }
-//    
-//    // TODO : We could optimize this by recording which conditions the view was built with and then saying if the conditions are different return true.
-//    if (conditions != null) { return true; }
-//    
-//    Date lastUpdate = this.getLastUpdateDate();
-//    Date lastPublish = this.getLastPublishDate();
-//    if (lastPublish == null || lastUpdate.after(lastPublish)) {
-//      return true;
-//    }
-//    
-//    return false;
+
+    // boolean isPublished = isPublished();
+    // if (!isPublished) { return true; }
+    //
+    // // TODO : We could optimize this by recording which conditions the view was built with and then saying if the conditions are different return true.
+    // if (conditions != null) { return true; }
+    //
+    // Date lastUpdate = this.getLastUpdateDate();
+    // Date lastPublish = this.getLastPublishDate();
+    // if (lastPublish == null || lastUpdate.after(lastPublish)) {
+    // return true;
+    // }
+    //
+    // return false;
   }
-  
-  public void createDatabaseView(boolean force) {
-//    Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
-    
-//    if (force || !viewExists) {
-      String sql = this.getViewQuery().getSQL();
-      
-      Database.dropView(this.getViewName(), sql, false);
-      
-      Database.createView(this.getViewName(), sql);
-//    }
+
+  public void createDatabaseView(boolean force)
+  {
+    // Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
+
+    // if (force || !viewExists) {
+    String sql = this.getViewQuery().getSQL();
+
+    Database.dropView(this.getViewName(), sql, false);
+
+    Database.createView(this.getViewName(), sql);
+    // }
   }
-  
+
   public HashMap<String, Double> getLayerMinMax(String attribute)
   {
-    
+
     HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
-    
+
     QueryFactory f = new QueryFactory();
     ValueQuery wrapper = new ValueQuery(f);
     wrapper.FROM(getViewName(), "");
 
     List<Selectable> selectables = new LinkedList<Selectable>();
     AllLayerType layerType = this.getLayerType().get(0);
-    if(layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
+    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENT)
     {
-      
-//      String minAttr = SLDConstants.getMinProperty(attribute);
-//      String maxAttr = SLDConstants.getMaxProperty(attribute);
-      
-//      String minAttr = "min_numberofunits";
-//      String maxAttr = "max_numberofunits";
+
+      // String minAttr = SLDConstants.getMinProperty(attribute);
+      // String maxAttr = SLDConstants.getMaxProperty(attribute);
+
+      // String minAttr = "min_numberofunits";
+      // String maxAttr = "max_numberofunits";
 
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + attribute + ")"));
-      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + attribute + ")"));    
+      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + attribute + ")"));
     }
 
     selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
@@ -401,7 +406,7 @@ public class DashboardLayer extends DashboardLayerBase implements
 
       String min = row.getValue("min_data");
       String max = row.getValue("max_data");
-      
+
       minMaxMap.put("min", Double.parseDouble(min));
       minMaxMap.put("max", Double.parseDouble(max));
 
@@ -412,7 +417,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       iter.close();
     }
   }
-  
+
   /**
    * @prerequisite conditions is populated with any DashboardConditions necessary for restricting the view dataset.
    * 
@@ -423,16 +428,16 @@ public class DashboardLayer extends DashboardLayerBase implements
     QueryFactory f = new QueryFactory();
     ValueQuery innerQuery1 = new ValueQuery(f);
     ValueQuery innerQuery2 = new ValueQuery(f);
-   
+
     ValueQuery outerQuery = new ValueQuery(f);
-    
+
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
     try
     {
       while (iter.hasNext())
       {
         DashboardStyle style = iter.next();
-        
+
         // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
         // but we need to define a non-thematic's behavior or even finalize
         // on the semantics of a layer without a thematic attribute...which might
@@ -441,14 +446,14 @@ public class DashboardLayer extends DashboardLayerBase implements
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String attribute = tStyle.getAttribute();
-          
+
           MdAttributeConcrete mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
           MdClass mdClass = mdAttrC.getDefiningMdClass();
           BusinessQuery businessQ = f.businessQuery(mdClass.definesType());
-          
+
           // thematic attribute
           Attribute thematicAttr = businessQ.get(mdAttrC.getAttributeName());
-          
+
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
@@ -477,42 +482,42 @@ public class DashboardLayer extends DashboardLayerBase implements
               // func = "AVG";
               thematicSel = F.AVG(thematicAttr);
             }
-            
+
             isAggregate = true;
-          } 
-          
+          }
+
           // If we doing a bubble/gradient map with a min/max add window aggregations
           // to provide the min and max of the attribute.
-//          AllLayerType layerType = this.getLayerType().get(0);
-//          if(layerType == AllLayerType.BUBBLE)
-//          {
-//            String minCol = SLDConstants.getMinProperty(attribute);
-//            String maxCol = SLDConstants.getMaxProperty(attribute);
-//            
-//            Selectable min = v.aSQLAggregateDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
-//            min.setColumnAlias(minCol);
-//            
-//            Selectable max = v.aSQLAggregateDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
-//            max.setColumnAlias(maxCol);
-//            
-//            v.SELECT(min, max);
-//            
-//            // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
-//            SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
-//            groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
-//            v.GROUP_BY(groupBy);
-//            
-//            // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD trick for this)
-//            v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
-//          }
+          // AllLayerType layerType = this.getLayerType().get(0);
+          // if(layerType == AllLayerType.BUBBLE)
+          // {
+          // String minCol = SLDConstants.getMinProperty(attribute);
+          // String maxCol = SLDConstants.getMaxProperty(attribute);
+          //
+          // Selectable min = v.aSQLAggregateDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
+          // min.setColumnAlias(minCol);
+          //
+          // Selectable max = v.aSQLAggregateDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
+          // max.setColumnAlias(maxCol);
+          //
+          // v.SELECT(min, max);
+          //
+          // // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
+          // SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+          // groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
+          // v.GROUP_BY(groupBy);
+          //
+          // // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD trick for this)
+          // v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
+          // }
 
           if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal || thematicSel instanceof SelectableFloat)
           {
             Integer length = GeoserverProperties.getDecimalLength();
             Integer precision = GeoserverProperties.getDecimalPrecision();
-            
+
             String sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
-            
+
             if (isAggregate)
             {
               thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
@@ -522,41 +527,41 @@ public class DashboardLayer extends DashboardLayerBase implements
               thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
             }
           }
-          
+
           thematicSel.setColumnAlias(attribute);
-          
+
           innerQuery1.SELECT(thematicSel);
-          
+
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
           Selectable label = geQ1.getDisplayLabel().localize();
           label.setColumnAlias(GeoEntity.DISPLAYLABEL);
           innerQuery1.SELECT(label);
-          
+
           // geo id (for uniqueness)
           Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
           geoId1.setColumnAlias(GeoEntity.GEOID);
           innerQuery1.SELECT(geoId1);
-          
+
           // Join the entity's GeoEntity reference with the all paths table
           MdAttributeReference geoRef = this.getGeoEntity();
           Attribute geoAttr = businessQ.get(geoRef.getAttributeName());
-          
+
           // the entity's GeoEntity should match the all path's child
           GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
           innerQuery1.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
-          
+
           // the displayed GeoEntity should match the all path's parent
           innerQuery1.AND(geAllPathsQ.getParentTerm().EQ(geQ1));
-          
+
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();
           innerQuery1.AND(geQ1.getUniversal().EQ(universal));
-          
+
           // Attribute condition filtering (i.e. sales unit is greater than 50)
-          if (conditions != null) 
+          if (conditions != null)
           {
-            for (DashboardCondition condition : conditions) 
+            for (DashboardCondition condition : conditions)
             {
               condition.restrictQuery(innerQuery1, thematicAttr);
             }
@@ -568,25 +573,25 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       iter.close();
     }
-    
+
     if (log.isDebugEnabled())
     {
       // print the SQL if the generated
       log.debug("SLD for Layer [%s], this:\n" + innerQuery1.getSQL());
     }
-    
+
     viewHasData = true;
-    if (innerQuery1.getCount() == 0) 
+    if (innerQuery1.getCount() == 0)
     {
       EmptyLayerInformation info = new EmptyLayerInformation();
       info.setLayerName(this.getName());
       info.apply();
-      
+
       info.throwIt();
-      
+
       viewHasData = false;
     }
-    
+
     // Set the GeoID and the Geometry attribute for the second query
     GeoEntityQuery geQ2 = new GeoEntityQuery(innerQuery2);
     Selectable geoId2 = geQ2.getGeoId(GeoEntity.GEOID);
@@ -602,24 +607,24 @@ public class DashboardLayer extends DashboardLayerBase implements
     {
       geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON);
     }
-    
+
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
     innerQuery2.SELECT(geom);
-    
+
     for (Selectable selectable : innerQuery1.getSelectableRefs())
     {
       Attribute attribute = innerQuery1.get(selectable.getResultAttributeName());
       attribute.setColumnAlias(selectable.getColumnAlias());
-      
+
       outerQuery.SELECT(attribute);
     }
-    
+
     Attribute geomAttribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
     geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     outerQuery.SELECT(geomAttribute);
     outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
-    
+
     return outerQuery;
   }
 
@@ -637,7 +642,7 @@ public class DashboardLayer extends DashboardLayerBase implements
   {
     visitor.visit(this);
   }
-  
+
   @Override
   public void setGeoEntity(MdAttributeReference value)
   {
@@ -647,11 +652,10 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
     else
     {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY
-          + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
-  
+
   @Override
   public void lock()
   {
@@ -720,8 +724,10 @@ public class DashboardLayer extends DashboardLayerBase implements
     }
   }
 
-  public JSONObject toJSON() {
-    try {
+  public JSONObject toJSON()
+  {
+    try
+    {
       JSONObject json = new JSONObject();
       json.put("viewName", getViewName());
       json.put("sldName", getSLDName());
@@ -731,9 +737,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
       json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
       json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
-      
-      
-      
+
       // Getting the aggregation method (i.e. avg, sum, min, max) and aggregation attribute
       // (i.e. numberofunits) for the style representation
       OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
@@ -745,8 +749,8 @@ public class DashboardLayer extends DashboardLayerBase implements
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String aggregationAttribute = tStyle.getAttribute();
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
-          AllAggregationType aggregationMethod =  allAgg.get(0);
-          
+          AllAggregationType aggregationMethod = allAgg.get(0);
+
           json.put("aggregationMethod", aggregationMethod);
           json.put("aggregationAttribute", aggregationAttribute);
         }
@@ -755,16 +759,16 @@ public class DashboardLayer extends DashboardLayerBase implements
       {
         iter.close();
       }
-      
-      
+
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i) {
+      for (int i = 0; i < styles.size(); ++i)
+      {
         DashboardStyle style = styles.get(i);
         jsonStyles.put(style.toJSON());
       }
       json.put("styles", jsonStyles);
-      
+
       return json;
     }
     catch (JSONException ex)
@@ -773,7 +777,7 @@ public class DashboardLayer extends DashboardLayerBase implements
       throw new ProgrammingErrorException(ex);
     }
   }
-  
+
   @Override
   @Transaction
   public void updateLegend(Integer legendXPosition, Integer legendYPosition, Boolean groupedInLegend)
@@ -784,70 +788,70 @@ public class DashboardLayer extends DashboardLayerBase implements
     this.getDashboardLegend().setGroupedInLegend(groupedInLegend);
     this.apply();
   }
-  
+
   @Override
   public String getThematicAttributeCategories()
   {
     // This method relies on the existance of a saved layer and a related database view
-    
+
     String attribute = null;
     MdAttributeConcrete mdAttrC = null;
     JSONArray categoriesJSON = new JSONArray();
 
     QueryFactory f = new QueryFactory();
     ValueQuery categoriesQuery = new ValueQuery(f);
-    
+
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
     try
     {
       while (iter.hasNext())
       {
         DashboardStyle style = iter.next();
-        
+
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           attribute = tStyle.getAttribute();
-          
+
           mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
         }
       }
-      
+
       SelectableSQLPrimitive vAttributeId = null;
-      if(mdAttrC instanceof MdAttributeBoolean)
+      if (mdAttrC instanceof MdAttributeBoolean)
       {
         vAttributeId = (SelectableSQLBoolean) categoriesQuery.aSQLBoolean("vAttributeId", attribute);
       }
-      else if(mdAttrC instanceof MdAttributeInt)
+      else if (mdAttrC instanceof MdAttributeInt)
       {
         vAttributeId = (SelectableSQLInteger) categoriesQuery.aSQLInteger("vAttributeId", attribute);
       }
-      else if(mdAttrC instanceof MdAttributeDouble)
+      else if (mdAttrC instanceof MdAttributeDouble)
       {
         vAttributeId = (SelectableSQLDouble) categoriesQuery.aSQLDouble("vAttributeId", attribute);
       }
-      else if(mdAttrC instanceof MdAttributeFloat)
+      else if (mdAttrC instanceof MdAttributeFloat)
       {
         vAttributeId = (SelectableSQLFloat) categoriesQuery.aSQLFloat("vAttributeId", attribute);
       }
-      else if(mdAttrC instanceof MdAttributeCharacter)
+      else if (mdAttrC instanceof MdAttributeCharacter)
       {
         vAttributeId = (SelectableSQLChar) categoriesQuery.aSQLCharacter("vAttributeId", attribute);
       }
-      else if(mdAttrC instanceof MdAttributeDate)
+      else if (mdAttrC instanceof MdAttributeDate)
       {
         vAttributeId = (SelectableSQLDate) categoriesQuery.aSQLDate("vAttributeId", attribute);
       }
-      
+
       categoriesQuery.SELECT_DISTINCT((SelectablePrimitive) vAttributeId);
       categoriesQuery.FROM(this.getViewName(), this.getViewName());
       categoriesQuery.ORDER_BY_ASC((SelectablePrimitive) vAttributeId);
-      
+
       java.sql.ResultSet allUniqueCategories = Database.query(categoriesQuery.getSQL());
-      
+
       try
       {
-        while(allUniqueCategories.next())
+        while (allUniqueCategories.next())
         {
           categoriesJSON.put(allUniqueCategories.getString(1));
         }
@@ -875,7 +879,5 @@ public class DashboardLayer extends DashboardLayerBase implements
 
     return categoriesJSON.toString();
   }
-  
-  
-  
+
 }

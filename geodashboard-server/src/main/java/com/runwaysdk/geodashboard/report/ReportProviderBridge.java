@@ -23,7 +23,7 @@ public class ReportProviderBridge implements Reloadable
 
   private ReportProviderBridge()
   {
-    
+
   }
 
   public static synchronized ReportProviderBridge getInstance()
@@ -39,7 +39,7 @@ public class ReportProviderBridge implements Reloadable
   public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, Integer depth)
   {
     List<ReportProviderIF> reports = getReportProviders();
-    
+
     for (ReportProviderIF report : reports)
     {
       if (report.getReportQueryDescriptor().getQueryId().equals(queryId))
@@ -47,7 +47,7 @@ public class ReportProviderBridge implements Reloadable
         return report.getReportQuery(category, criteria, depth);
       }
     }
-    
+
     throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
   }
 
@@ -55,33 +55,37 @@ public class ReportProviderBridge implements Reloadable
   {
     ArrayList<ReportQueryView> types = new ArrayList<ReportQueryView>();
     List<ReportProviderIF> reports = getReportProviders();
-    
+
     for (ReportProviderIF report : reports)
     {
       types.add(report.getReportQueryDescriptor());
     }
-    
+
     return types.toArray(new ReportQueryView[types.size()]);
   }
-  
+
   /**
    * Retrieve all implementations of ReportProviderIF.
    */
   public static List<ReportProviderIF> getReportProviders()
   {
     List<ReportProviderIF> reports = new ArrayList<ReportProviderIF>();
-    
-    ServiceLoader<ReportProviderIF> loader = ServiceLoader.load(ReportProviderIF.class, ((DelegatingClassLoader)LoaderDecorator.instance()));
-    
-    try {
+
+    ServiceLoader<ReportProviderIF> loader = ServiceLoader.load(ReportProviderIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+
+    try
+    {
       Iterator<ReportProviderIF> it = loader.iterator();
-      while (it.hasNext()) {
+      while (it.hasNext())
+      {
         reports.add(it.next());
       }
-    } catch (ServiceConfigurationError serviceError) {
+    }
+    catch (ServiceConfigurationError serviceError)
+    {
       throw new ProgrammingErrorException(serviceError);
     }
-    
+
     return reports;
   }
 }
