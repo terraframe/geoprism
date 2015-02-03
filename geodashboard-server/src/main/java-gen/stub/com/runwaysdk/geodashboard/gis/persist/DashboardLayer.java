@@ -33,6 +33,7 @@ import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
@@ -65,7 +66,6 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 import com.runwaysdk.util.IdParser;
-
 
 public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
@@ -371,7 +371,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // }
   }
 
-  public HashMap<String, Double> getLayerMinMax(String attribute)
+  public HashMap<String, Double> getLayerMinMax(String _attribute)
   {
 
     HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
@@ -391,8 +391,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       // String minAttr = "min_numberofunits";
       // String maxAttr = "max_numberofunits";
 
-      selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + attribute + ")"));
-      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + attribute + ")"));
+      selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
+      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
     }
 
     selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
@@ -407,8 +407,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       String min = row.getValue("min_data");
       String max = row.getValue("max_data");
 
-      minMaxMap.put("min", Double.parseDouble(min));
-      minMaxMap.put("max", Double.parseDouble(max));
+      CollectionUtil.populateMap(minMaxMap, "min", min, new Double(0));
+      CollectionUtil.populateMap(minMaxMap, "max", max, new Double(0));
 
       return minMaxMap;
     }
