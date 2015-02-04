@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.dashboard.DashboardBuilderBridge;
+import com.runwaysdk.geodashboard.dashboard.DashboardService;
 import com.runwaysdk.geodashboard.dashboard.DashboardBuilderIF;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.query.OIterator;
@@ -16,6 +16,16 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
+  private static class MdClassComparator implements Comparator<MdClass>, Reloadable
+  {
+
+    @Override
+    public int compare(MdClass m1, MdClass m2)
+    {
+      return m1.getDisplayLabel().getValue().compareTo(m2.getDisplayLabel().getValue());
+    }
+  }
+
   private static final long serialVersionUID = 2043512251;
 
   public Dashboard()
@@ -68,23 +78,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return mdClasses.toArray(new MdClass[mdClasses.size()]);
   }
 
-  private static class MdClassComparator implements Comparator<MdClass>, Reloadable
-  {
-
-    @Override
-    public int compare(MdClass m1, MdClass m2)
-    {
-      return m1.getDisplayLabel().getValue().compareTo(m2.getDisplayLabel().getValue());
-    }
-
-  }
-
   @Transaction
   public static Dashboard create(Dashboard dashboard)
   {
     dashboard.apply();
 
-    List<DashboardBuilderIF> builders = DashboardBuilderBridge.getDashboardBuilders();
+    List<DashboardBuilderIF> builders = DashboardService.getDashboardBuilders();
 
     int i = 0;
 

@@ -12,62 +12,62 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 
 public class LayerImpl extends ComponentImpl implements Layer
 {
-  private List<Style> styles;
-  
-  private String name;
-  
+  private List<Style>             styles;
+
+  private String                  name;
+
   private HashMap<String, Double> layerMinMax;
 
-  private Boolean virtual;
+  private Boolean                 virtual;
 
-  private FeatureType featureType;
+  private FeatureType             featureType;
 
-  private Boolean displayInLegend;
-  
-  private FeatureStrategy featureStrategy;
-  
+  private Boolean                 displayInLegend;
+
+  private FeatureStrategy         featureStrategy;
+
   public LayerImpl()
   {
     this.name = null;
     this.styles = new LinkedList<Style>();
-    
+
     this.virtual = false;
   }
-  
+
   @Override
   public void setName(String name)
   {
     this.name = name;
   }
-  
+
   @Override
   public String getName()
   {
     return name;
   }
-  
+
   public void addStyle(Style style)
   {
     this.styles.add(style);
   }
-  
+
   @Override
   public List<Style> getStyles()
   {
     return this.styles;
   }
-  
+
   public void setVirtual(Boolean virtual)
   {
     this.virtual = virtual;
   }
-  
+
   @Override
   public Boolean getVirtual()
   {
     return this.virtual;
   }
-  
+
   @Override
   public void accepts(MapVisitor visitor)
   {
@@ -76,7 +76,7 @@ public class LayerImpl extends ComponentImpl implements Layer
 
   public void setFeatureType(FeatureType featureType)
   {
-    this.featureType = featureType;    
+    this.featureType = featureType;
   }
 
   @Override
@@ -95,18 +95,18 @@ public class LayerImpl extends ComponentImpl implements Layer
   {
     this.displayInLegend = display;
   }
-  
+
   @Override
   public FeatureStrategy getFeatureStrategy()
   {
     return featureStrategy;
   }
-  
+
   public void setFeatureStrategy(FeatureStrategy featureStrategy)
   {
     this.featureStrategy = featureStrategy;
   }
-  
+
   public HashMap<String, Double> getLayerMinMax(String attribute)
   {
     return layerMinMax;

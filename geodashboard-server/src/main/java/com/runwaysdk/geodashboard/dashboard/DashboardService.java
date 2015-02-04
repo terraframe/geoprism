@@ -11,7 +11,7 @@ import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
 
-public class DashboardBuilderBridge implements Reloadable
+public class DashboardService implements Reloadable
 {
   /**
    * Retrieve all implementations of ReportProviderIF.

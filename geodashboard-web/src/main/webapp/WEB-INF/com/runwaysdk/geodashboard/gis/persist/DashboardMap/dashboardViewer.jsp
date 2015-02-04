@@ -188,26 +188,8 @@ $(document).ready(function(){
             <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
             </span>
           </div>
-          
-          <!-- datapicker block -->
-          <div class="data-block">
-            <div class="col">
-              <label for="from-field"><gdb:localize var="dates_from" key="dashboardViewer.dates.from"/>${dates_from}</label>
-              <span class="text">
-                <input class="checkin" id="from-field" type="text" placeholder="">
-                <a href="#" class="datapicker-opener">datapicker</a>
-              </span>
-            </div>
-            <div class="col">
-              <label for="to-field"><gdb:localize var="dates_to" key="dashboardViewer.dates.to"/>${dates_to}</label>
-              <span class="text">
-                <input class="checkout" id="to-field" type="text" placeholder="">
-                <a href="#" class="datapicker-opener">datapicker</a>
-              </span>
-            </div>
-          </div>
         </div>
-        
+          
         <div class="sales-accortion panel-group">
 	
 	        <!-- 
@@ -241,10 +223,10 @@ $(document).ready(function(){
 	                        </div>
 	                        <div class="row-holder">
 	                          <c:choose>
-									<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">	                          
-														    <!-- Number attribute -->
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
+									<!-- Number attribute -->
 		                            <div class="select-holder">
-		                              <select id="attrFilterOpt${attrStatus.index}" class="filter-select gdb-attr-filter ${attr.mdAttributeId}">
+		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select gdb-attr-filter-number ${attr.mdAttributeId}">
 		                                <option value="gt">&gt;</option>
 		                                <option value="ge">&gt;=</option>
 		                                <option value="lt">&lt;</option>
@@ -252,41 +234,38 @@ $(document).ready(function(){
 		                              </select>
 		                            </div>
 		                            <div class="text">
-		                              <label for="attrFilter${attrStatus.index}" class="none"><gdb:localize key="dashboardViewer.number"/></label>
-		                              <input id="attrFilter${attrStatus.index}" type="text" placeholder="Number" class="gdb-attr-filter ${attr.mdAttributeId}"></input>
+		                              <label for=filter-number-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.number"/></label>
+		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
+		                                <input id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number" class="gdb-attr-filter-number numbers-only ${attr.mdAttributeId}"></input>
+		                              </c:if>
+		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
+		                                <input id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number" class="gdb-attr-filter-number integer-only ${attr.mdAttributeId}"></input>
+		                              </c:if>
 		                            </div>
-													    </c:when>
-													    <c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
-													      <!-- Date attribute -->
-                                <div class="select-holder">
-                                  <select id="attrFilterOpt${attrStatus.index}" class="filter-select gdb-attr-filter ${attr.mdAttributeId}">
-                                    <option value="gt">&gt;</option>
-                                    <option value="ge">&gt;=</option>
-                                    <option value="lt">&lt;</option>
-                                    <option value="le">&lt;=</option>
-                                  </select>
-                                </div>
-                                
-                                <div class="text">
-                                  <label for="attrFilter${attrStatus.index}" class="none"><gdb:localize key="dashboardViewer.number"/></label>
-                                  <input id="attrFilter${attrStatus.index}" type="text" placeholder="Number" class="gdb-attr-filter ${attr.mdAttributeId}"></input>
-                                </div>
-                                <!--
-                                <div class="text submit-form">
-	                                <div class="data-block">
-		                                <div class="col">
-		                                  <label for="attrFilter${attrStatus.index}" class="none">date</label>
-			                                <input id="attrFilter${attrStatus.index}" type="text" placeholder="" class="checkin hasDatepicker gdb-attr-filter ${attr.mdAttributeId}"></input>
-			                                <a class="datapicker-opener" href="#">datapicker</a>
-			                              </div>
-		                              </div>
-	                              </div>
-	                              -->
-													    </c:when>
-													    <c:otherwise>
+								</c:when>
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
+									<!-- datapicker block -->
+									<div class="data-block">
+										<div class="col">
+											<label for="filter-from-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.from" /></label>
+											<span class="text"> 
+												<input class="checkin gdb-attr-filter-date" id="filter-from-${attr.mdAttributeId}" type="text" placeholder="" />
+												<a href="#" class="datapicker-opener"></a>
+											</span>
+										</div>
+										<div class="col">
+											<label for="filter-to-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.to" /></label>
+											<span class="text"> 
+												<input class="checkout gdb-attr-filter-date" id="filter-to-${attr.mdAttributeId}" type="text" placeholder="" />
+												<a href="#" class="datapicker-opener"></a>
+											</span>
+										</div>
+									</div>
+								</c:when>
+								<c:otherwise>
 													      
-													    </c:otherwise>
-														</c:choose>
+								</c:otherwise>
+							  </c:choose>
 	                        </div>
 	                      </div>
 	                    </div>

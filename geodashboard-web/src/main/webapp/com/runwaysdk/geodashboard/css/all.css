@@ -1161,12 +1161,63 @@ a.blueactive,
 	position:relative;
 	outline:none;
 }
+
 .choice-form .data-block input[type="text"]:focus{border-color:#019edc;}
 .choice-form .data-block ::-webkit-input-placeholder{color:#333;}
 .choice-form .data-block :-ms-input-placeholder{color:#333;}
 .choice-form .data-block :-moz-placeholder{color:#333;}
 .choice-form .data-block ::-moz-placeholder{color:#333;}
 .choice-form .data-block .datapicker-opener{
+	position:absolute;
+	right:6px;
+	top:5px;
+	width:18px;
+	height:18px;
+	text-indent:-9999px;
+	overflow:hidden;
+	background:url(../images/sprite.png) no-repeat -21px -20px;
+}
+
+.row-holder .col{
+	float:right;
+	max-width:45.6%;
+	position:relative;
+}
+.row-holder .col:first-child{
+	float:left;
+	max-width:52%;
+}
+.row-holder .data-block{
+	overflow:hidden;
+	font-size:12px;
+	line-height:15px;
+	color:#bbb;
+}
+.row-holder .data-block .filter-block .text {
+    float: left;
+    width: 90px;
+    position: relative;
+}
+.row-holder .data-block input[type="text"]{
+	float:left;
+	color:#333;
+	border:1px solid #bbb;
+	background:#eee;
+	width:100%;
+	height:28px;
+	margin:0;
+	padding:5px 26px 5px 6px;
+	font-size:13px;
+	line-height:18px;
+	position:relative;
+	outline:none;
+}
+.row-holder .data-block input[type="text"]:focus{border-color:#019edc;}
+.row-holder .data-block ::-webkit-input-placeholder{color:#333;}
+.row-holder .data-block :-ms-input-placeholder{color:#333;}
+.row-holder .data-block :-moz-placeholder{color:#333;}
+.row-holder .data-block ::-moz-placeholder{color:#333;}
+.row-holder .data-block .datapicker-opener{
 	position:absolute;
 	right:6px;
 	top:5px;

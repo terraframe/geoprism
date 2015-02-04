@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -692524999)
+@com.runwaysdk.business.ClassSignature(hash = 305655658)
 public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition";
-  private static final long serialVersionUID = -692524999;
+  private static final long serialVersionUID = 305655658;
   
   protected DashboardConditionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,6 +29,7 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DEFININGMDATTRIBUTE = "definingMdAttribute";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -101,6 +102,55 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeDTO getDefiningMdAttribute()
+  {
+    if(getValue(DEFININGMDATTRIBUTE) == null || getValue(DEFININGMDATTRIBUTE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeDTO.get(getRequest(), getValue(DEFININGMDATTRIBUTE));
+    }
+  }
+  
+  public String getDefiningMdAttributeId()
+  {
+    return getValue(DEFININGMDATTRIBUTE);
+  }
+  
+  public void setDefiningMdAttribute(com.runwaysdk.system.metadata.MdAttributeDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DEFININGMDATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(DEFININGMDATTRIBUTE, value.getId());
+    }
+  }
+  
+  public boolean isDefiningMdAttributeWritable()
+  {
+    return isWritable(DEFININGMDATTRIBUTE);
+  }
+  
+  public boolean isDefiningMdAttributeReadable()
+  {
+    return isReadable(DEFININGMDATTRIBUTE);
+  }
+  
+  public boolean isDefiningMdAttributeModified()
+  {
+    return isModified(DEFININGMDATTRIBUTE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDefiningMdAttributeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DEFININGMDATTRIBUTE).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()

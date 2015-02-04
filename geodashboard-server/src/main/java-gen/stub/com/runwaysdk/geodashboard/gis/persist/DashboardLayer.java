@@ -17,11 +17,14 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.generation.NameConventionUtil;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
@@ -563,9 +566,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           {
             for (DashboardCondition condition : conditions)
             {
-              condition.restrictQuery(innerQuery1, thematicAttr);
+              MdAttributeConcreteDAOIF mdAttribute = MdAttributeDAO.get(condition.getDefiningMdAttributeId()).getMdAttributeConcrete();
+              MdClassDAOIF definedByClass = mdAttribute.definedByClass();
+
+              if (definedByClass.getId().equals(mdClass.getId()))
+              {
+                Attribute attr = businessQ.get(mdAttribute.definesAttribute());
+                condition.restrictQuery(innerQuery1, attr);
+              }
             }
           }
+
         } // if (style instanceof DashboardThematicStyle)
       } // while (iter.hasNext())
     }

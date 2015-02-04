@@ -2,7 +2,9 @@ package com.runwaysdk.geodashboard.util;
 
 import java.util.Map;
 
-public class CollectionUtil
+import com.runwaysdk.generation.loader.Reloadable;
+
+public class CollectionUtil implements Reloadable
 {
   /**
    * Populate the key-value pair of map with the value specified. If the value is null or empty then the default value is used instead.

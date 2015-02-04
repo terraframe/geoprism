@@ -1,0 +1,19 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<update>
+			<mdBusiness
+				name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition">
+				<create>
+					<attributes>
+						<reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
+					</attributes>
+				</create>
+			</mdBusiness>
+		</update>
+	</doIt>
+	<undoIt>
+		<delete>
+		</delete>
+	</undoIt>
+</version>
