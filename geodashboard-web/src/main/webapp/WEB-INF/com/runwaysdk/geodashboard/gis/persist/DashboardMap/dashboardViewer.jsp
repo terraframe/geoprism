@@ -226,7 +226,7 @@ $(document).ready(function(){
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
 									<!-- Number attribute -->
 		                            <div class="select-holder">
-		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select gdb-attr-filter-number ${attr.mdAttributeId}">
+		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
 		                                <option value="gt">&gt;</option>
 		                                <option value="ge">&gt;=</option>
 		                                <option value="lt">&lt;</option>
@@ -236,10 +236,10 @@ $(document).ready(function(){
 		                            <div class="text">
 		                              <label for=filter-number-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.number"/></label>
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
-		                                <input id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number" class="gdb-attr-filter-number numbers-only ${attr.mdAttributeId}"></input>
+		                                <input class="gdb-attr-filter filter-number numbers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
 		                              </c:if>
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-		                                <input id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number" class="gdb-attr-filter-number integer-only ${attr.mdAttributeId}"></input>
+		                                <input class="gdb-attr-filter filter-number integer-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
 		                              </c:if>
 		                            </div>
 								</c:when>
@@ -249,14 +249,14 @@ $(document).ready(function(){
 										<div class="col">
 											<label for="filter-from-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.from" /></label>
 											<span class="text"> 
-												<input class="checkin gdb-attr-filter-date" id="filter-from-${attr.mdAttributeId}" type="text" placeholder="" />
+												<input class="checkin gdb-attr-filter filter-date" id="filter-from-${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
 										</div>
 										<div class="col">
 											<label for="filter-to-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.to" /></label>
 											<span class="text"> 
-												<input class="checkout gdb-attr-filter-date" id="filter-to-${attr.mdAttributeId}" type="text" placeholder="" />
+												<input class="checkout gdb-attr-filter filter-date" id="filter-to-${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
 										</div>

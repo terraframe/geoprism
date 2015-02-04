@@ -895,27 +895,16 @@
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         // Include attribute condition filtering (i.e. sales unit is greater than 50)
-        var select = $("select.gdb-attr-filter." + mdAttribute).val();
-        var textValue = $("input.gdb-attr-filter." + mdAttribute).val();
-        if (textValue != null && textValue !== "") {
-          var condition = null;
-          if (select === "gt") {
-            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan";
-          }
-          else if (select === "ge") {
-            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual";
-          }
-          else if (select === "lt") {
-            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan";
-          }
-          else if (select === "le") {
-            condition = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual";
-          }
-          
-          params["conditions_0.comparisonValue"] = textValue;
-          params["conditions_0.isNew"] = "true";
-          params["#conditions_0.actualType"] = condition;
-        }
+        var map = this._getConditionMap();
+        
+        var conditions = map['conditions'];
+        
+        $.each(conditions, function( index, condition ) {
+          params["conditions_" + index + ".comparisonValue"] = condition.getComparisonValue();
+          params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');
+          params["conditions_" + index + ".isNew"] = "true";
+          params["#conditions_" + index + ".actualType"] = condition.getType();
+        });        
         
         return request;
       },
@@ -1500,74 +1489,80 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
       },
       
-      _onClickApplyFilters : function(e) {
+      _getConditionMap : function () {
         var that = this;
-        
-        // Get the attribute filter conditions (And its shortened criteria reprensentation for reporting)
-        var layers = this._layerCache.values();
         var conditions = [];
-        this._criteria = [];
+        var criteria = [];
         
-        // Add all the number criterias
-        $( "input.gdb-attr-filter-number" ).each(function( index ) {
+        $( "input.gdb-attr-filter" ).each(function( index ) {
           var textValue = $(this).val();
-          
+              
           if (textValue != null && textValue !== "") {
-            var mdAttribute = $(this).attr('id').replace('filter-number-', '');   
+            if($(this).hasClass('filter-number')) {
               
-            var select = $("select.gdb-attr-filter-number." + mdAttribute).val();
-              
-            var attrCond = null;
-            
-            if (select === "gt") {
-              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
-            }
-            else if (select === "ge") {
-              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
-            }
-            else if (select === "lt") {
-              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
-            }
-            else if (select === "le") {
-              attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-            }
-              
-            attrCond.setComparisonValue(textValue);
-            attrCond.setDefiningMdAttribute(mdAttribute);
-              
-            conditions.push(attrCond);
-            that._criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});
-          }          
-        });
-        
-        // Add all the date criterias
-        $( "input.gdb-attr-filter-date" ).each(function( index ) {
-          var textValue = $(this).val();
-          
-          if (textValue != null && textValue !== "") {                      
-            if($(this).hasClass('checkin')) {
-              var mdAttribute = $(this).attr('id').replace('filter-from-', '');   
-
-              var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+              // Add number criterias
+              var mdAttribute = $(this).attr('id').replace('filter-number-', '');   
+                
+              var select = $("#filter-opts-" + mdAttribute).val();
+                
+              var attrCond = null;
+                
+              if (select === "gt") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
+              }
+              else if (select === "ge") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+              }
+              else if (select === "lt") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
+              }
+              else if (select === "le") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
+              }
+                
               attrCond.setComparisonValue(textValue);
               attrCond.setDefiningMdAttribute(mdAttribute);
                 
               conditions.push(attrCond);
-              that._criteria.push({'mdAttribute':mdAttribute, 'operation':'ge', 'value':textValue});
+              criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
-            else if($(this).hasClass('checkout')) {
-              var mdAttribute = $(this).attr('id').replace('filter-to-', '');   
-              
-              
-              var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-              attrCond.setComparisonValue(textValue);
-              attrCond.setDefiningMdAttribute(mdAttribute);
-              
-              conditions.push(attrCond);
-              that._criteria.push({'mdAttribute':mdAttribute, 'operation':'le', 'value':textValue});
-            }            
+            else if($(this).hasClass('filter-date')) {
+              // Add the date criteria
+              if($(this).hasClass('checkin')) {
+                var mdAttribute = $(this).attr('id').replace('filter-from-', '');   
+
+                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+                attrCond.setComparisonValue(textValue);
+                attrCond.setDefiningMdAttribute(mdAttribute);
+                      
+                conditions.push(attrCond);
+                criteria.push({'mdAttribute':mdAttribute, 'operation':'ge', 'value':textValue});
+              }
+              else if($(this).hasClass('checkout')) {
+                var mdAttribute = $(this).attr('id').replace('filter-to-', '');   
+                    
+                    
+                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
+                attrCond.setComparisonValue(textValue);
+                attrCond.setDefiningMdAttribute(mdAttribute);
+                    
+                conditions.push(attrCond);
+                criteria.push({'mdAttribute':mdAttribute, 'operation':'le', 'value':textValue});
+              }                          
+            }
           }          
         });
+        
+        return {'conditions' : conditions, 'criteria' : criteria};
+      },
+      
+      _onClickApplyFilters : function(e) {
+        var that = this;
+        
+        var map = this._getConditionMap();
+        
+        this._criteria = map['criteria']; 
+        var conditions = map['conditions'];
                 
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function(json, calledObj, response) {

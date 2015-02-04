@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
@@ -22,6 +23,31 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ReportProviderUtil implements Reloadable
 {
+  /**
+   * Greater than comparison
+   */
+  public static final String GT = "gt";
+
+  /**
+   * Greater than or equal comparison
+   */
+  public static final String GE = "ge";
+
+  /**
+   * Less than comparison
+   */
+  public static final String LT = "lt";
+
+  /**
+   * Less than or equal comparison
+   */
+  public static final String LE = "le";
+
+  /**
+   * Equal comparison
+   */
+  public static final String EQ = "eq";
+
   public static GeoEntity getGeoEntity(String category, String defaultGeoId)
   {
     if (category != null && category.length() > 0)
@@ -85,19 +111,21 @@ public class ReportProviderUtil implements Reloadable
 
   public static Date parseDate(String source)
   {
+    Locale locale = Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", locale);
+
     try
     {
-      Locale locale = Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
-
-      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", locale);
       Date date = format.parse(source);
 
       return date;
     }
-    catch (ParseException e)
+    catch (ParseException cause)
     {
-      // TODO Change exception type
-      throw new RuntimeException(e);
+      DateParseException e = new DateParseException(cause);
+      e.setInput(source);
+      e.setPattern(format.toLocalizedPattern());
+      throw e;
     }
   }
 
@@ -105,55 +133,63 @@ public class ReportProviderUtil implements Reloadable
   {
     Date date = ReportProviderUtil.parseDate(value);
 
-    if (operation.equals("gt"))
+    if (operation.equals(GT))
     {
       vQuery.AND(attribute.GT(date));
     }
-    else if (operation.equals("ge"))
+    else if (operation.equals(GE))
     {
       vQuery.AND(attribute.GE(date));
     }
-    else if (operation.equals("lt"))
+    else if (operation.equals(LT))
     {
       vQuery.AND(attribute.LT(date));
     }
-    else if (operation.equals("le"))
+    else if (operation.equals(LE))
     {
       vQuery.AND(attribute.LE(date));
     }
-    else if (operation.equals("eq"))
+    else if (operation.equals(EQ))
     {
       vQuery.AND(attribute.EQ(date));
     }
     else
     {
-      // TODO Change exception type
+      UnsupportedComparisonException e = new UnsupportedComparisonException();
+      e.setComparison(operation);
 
-      throw new RuntimeException("Unsupported moment comparision : [" + operation + "]");
+      throw e;
     }
   }
 
   public static void addNumberCondition(ValueQuery vQuery, String operation, String value, AttributeNumber attribute)
   {
-    if (operation.equals("gt"))
+    if (operation.equals(GT))
     {
       vQuery.AND(attribute.GT(value));
     }
-    else if (operation.equals("ge"))
+    else if (operation.equals(GE))
     {
       vQuery.AND(attribute.GE(value));
     }
-    else if (operation.equals("lt"))
+    else if (operation.equals(LT))
     {
       vQuery.AND(attribute.LT(value));
     }
-    else if (operation.equals("le"))
+    else if (operation.equals(LE))
     {
       vQuery.AND(attribute.LE(value));
     }
+    else if (operation.equals(EQ))
+    {
+      vQuery.AND(attribute.EQ(value));
+    }
     else
     {
-      throw new RuntimeException("Unsupported number comparision : [" + operation + "]");
+      UnsupportedComparisonException e = new UnsupportedComparisonException();
+      e.setComparison(operation);
+
+      throw e;
     }
   }
 

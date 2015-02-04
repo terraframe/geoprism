@@ -1,19 +1,30 @@
-<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<doIt>
-		<update>
-			<mdBusiness
-				name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition">
-				<create>
-					<attributes>
-						<reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
-					</attributes>
-				</create>
-			</mdBusiness>
-		</update>
-	</doIt>
-	<undoIt>
-		<delete>
-		</delete>
-	</undoIt>
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdException name="com.runwaysdk.geodashboard.parse.DateParseException" label="Date parse exception" message="Unable to parse a date from [{input}].  Expecting a date in the format [{pattern}]">
+        <attributes>
+          <text name="input" label="Value" />
+          <text name="pattern" label="Pattern" />
+        </attributes>
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedComparisonException" label="Unsupported comparison exception" message="The comparison [{comparison}] is not suppported">
+        <attributes>
+          <text name="comparison" label="Comparison" />
+        </attributes>
+      </mdException>
+    </create>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition">
+        <create>
+          <attributes>
+            <reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
+          </attributes>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
 </version>
