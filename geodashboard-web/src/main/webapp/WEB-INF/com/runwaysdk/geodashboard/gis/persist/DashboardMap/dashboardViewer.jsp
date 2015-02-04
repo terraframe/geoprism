@@ -239,23 +239,23 @@ $(document).ready(function(){
 		                                <input class="gdb-attr-filter filter-number numbers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
 		                              </c:if>
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-		                                <input class="gdb-attr-filter filter-number integer-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
+		                                <input class="gdb-attr-filter filter-number integers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
 		                              </c:if>
 		                            </div>
 								</c:when>
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
-									<!-- datapicker block -->
+									<!-- Date attribute -->
 									<div class="data-block">
 										<div class="col">
 											<label for="filter-from-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.from" /></label>
-											<span class="text"> 
+											<span class="data-text"> 
 												<input class="checkin gdb-attr-filter filter-date" id="filter-from-${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
 										</div>
 										<div class="col">
 											<label for="filter-to-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.to" /></label>
-											<span class="text"> 
+											<span class="data-text"> 
 												<input class="checkout gdb-attr-filter filter-date" id="filter-to-${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
@@ -306,7 +306,7 @@ $(document).ready(function(){
   
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
-  	<h4 id="reporting-toggle-button">Chart Panel</h4>
+  	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
     <div id="report-content"></div>
   </article>
   

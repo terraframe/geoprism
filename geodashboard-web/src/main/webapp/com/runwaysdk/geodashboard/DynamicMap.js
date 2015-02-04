@@ -1497,9 +1497,9 @@
         $( "input.gdb-attr-filter" ).each(function( index ) {
           var textValue = $(this).val();
               
+          // Ensure there is a value to filter against
           if (textValue != null && textValue !== "") {
-            if($(this).hasClass('filter-number')) {
-              
+            if($(this).hasClass('filter-number')) {              
               // Add number criterias
               var mdAttribute = $(this).attr('id').replace('filter-number-', '');   
                 
@@ -1627,7 +1627,7 @@
         });
         
         // Javascript to prevent input of non-number values in a number field
-        $('.integer-only').keyup(function () {          
+        $('.integers-only').keyup(function () {          
           var temp = this.value.replace(/[^0-9]/g,'');
           
           if (!$.isNumeric(this.value) || this.value != temp) {

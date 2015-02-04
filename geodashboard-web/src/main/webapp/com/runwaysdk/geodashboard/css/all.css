@@ -1193,11 +1193,12 @@ a.blueactive,
 	line-height:15px;
 	color:#bbb;
 }
-.row-holder .data-block .filter-block .text {
+
+.data-text {
     float: left;
-    width: 90px;
     position: relative;
 }
+
 .row-holder .data-block input[type="text"]{
 	float:left;
 	color:#333;
