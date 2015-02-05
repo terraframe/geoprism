@@ -155,7 +155,14 @@
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
           view.setActiveByDefault(true);
-          view.setLayerIsActive(true);
+          // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+          // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+          if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+        	  view.setLayerIsActive(true);
+          }
+          else{
+        	  view.setLayerIsActive(false);
+          }
           view.setAggregationMethod(layer.aggregationMethod);
           view.setAggregationAttribute(layer.aggregationAttribute);
           
@@ -263,13 +270,13 @@
        */
       _renderUserLayers : function() {
         this._drawUserLayersHMTL();
-        this._addUserLayersToMap();
+        this._addUserLayersToMap(true);
       },
       
       /**
        * Legend instance object
        * 
-       * this could be greatly improved to be more object oriented and encapsulate the even listeners better.
+       * this could be greatly improved to be more object oriented and encapsulate the event listeners better.
        */
       _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend) {
         this.legendId = "legend_" + layerId;
@@ -442,6 +449,13 @@
                      stack: ".legend-container"
                 });
               $("#"+legendObj.legendId).on('dragstop', legendDragStopDragBound); 
+              
+              // hide the legend if the layer is un-checked
+              // originally implemented to handle legends when filters are applied with un-checked layers
+              if(layer.getLayerIsActive() === false){
+            	  legendObj.hide();
+              }
+              
             }
           }
           
@@ -556,8 +570,8 @@
       _addUserLayersToMap : function(removeExisting) {
         var layers = this._layerCache.values();
         
-        // Remove any already rendered layers
-        if (removeExisting !== false) {
+        // Remove any already rendered layers from the leaflet map
+        if (removeExisting === true) {
           for (var i = 0; i < layers.length; i++) {
             var layer = layers[i];
             
@@ -567,11 +581,11 @@
           }
         }
         
-        // Add all our layers from the layerCache to leaflet.
+        // Add all our layers from the layerCache to leaflet map
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
           
-          if (layer.checked !== false && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
+          if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
             var viewName = layer.getViewName();
             var displayName = layer.getLayerName() || "N/A";
             var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
@@ -586,8 +600,9 @@
               tilesorigin: mapSWOrigin,
               styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
             });
-            this._map.addLayer(leafletLayer);
             
+            this._map.addLayer(leafletLayer);
+                     
             layer.leafletLayer = leafletLayer;
           }
         }
@@ -621,7 +636,7 @@
             that._layerCache = reorderedLayerCache;
             
             // At this point, the layers are already ordered properly in the HTML. All we need to do is inform leaflet of the new ordering.
-            that._addUserLayersToMap();
+            that._addUserLayersToMap(true);
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -858,7 +873,7 @@
               
               // Redraw the HTML and update leaflet.
               that._drawUserLayersHMTL();
-              that._addUserLayersToMap();            
+              that._addUserLayersToMap(true);            
               
               // TODO : Push this somewhere as a default handler.
               that.handleMessages(response);
@@ -1072,16 +1087,16 @@
         layer.checked = checked;
         
         if (checked) {
-          this._addUserLayersToMap();
           layer.setLayerIsActive(true);
+          this._addUserLayersToMap(true);       
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.show()
           }
         }
         else {
-          this._map.removeLayer(layer.leafletLayer);
           layer.setLayerIsActive(false);
+          this._map.removeLayer(layer.leafletLayer);          
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.hide()
@@ -1570,7 +1585,9 @@
             
             that._updateCacheFromJSONResponse(jsonObj);
             
-            that._addUserLayersToMap();
+            that._addUserLayersToMap(true);
+            
+            that._drawLegendItems()
             
             // TODO : Push this somewhere as a default handler.
             that.handleMessages(response);
