@@ -12,13 +12,13 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.GeneratedBusinessQuery;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ReportProviderUtil implements Reloadable
@@ -111,7 +111,7 @@ public class ReportProviderUtil implements Reloadable
 
   public static Date parseDate(String source)
   {
-    Locale locale = Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
+    Locale locale = LocalizationFacade.getLocale();
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", locale);
 
     try

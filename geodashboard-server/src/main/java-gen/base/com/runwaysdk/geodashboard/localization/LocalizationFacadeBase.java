@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.localization;
 
-@com.runwaysdk.business.ClassSignature(hash = 223312905)
+@com.runwaysdk.business.ClassSignature(hash = 1198689859)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,7 @@ public abstract class LocalizationFacadeBase extends com.runwaysdk.business.Util
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.localization.LocalizationFacade";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 223312905;
+  private static final long serialVersionUID = 1198689859;
   
   public LocalizationFacadeBase()
   {
@@ -29,10 +29,10 @@ public abstract class LocalizationFacadeBase extends com.runwaysdk.business.Util
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.localization.LocalizationFacade.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()
@@ -43,6 +43,12 @@ public abstract class LocalizationFacadeBase extends com.runwaysdk.business.Util
   public static LocalizationFacade get(String id)
   {
     return (LocalizationFacade) com.runwaysdk.business.Util.get(id);
+  }
+  
+  public static java.lang.String getCalendarLocale()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getFromBundles(java.lang.String key)

@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.localization;
 
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.session.Session;
 
 public class LocalizationFacade extends LocalizationFacadeBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -74,4 +76,34 @@ public class LocalizationFacade extends LocalizationFacadeBase implements com.ru
       throw new ProgrammingErrorException("Error occured creating the localized JSON map", e);
     }
   }
+
+  public static String getCalendarLocale()
+  {
+    Locale locale = getLocale();
+
+    if (locale.getLanguage().equals("de"))
+    {
+      return "de"; // only "de", no country code
+    }
+    else if (locale.getLanguage().equals("en"))
+    {
+      if (locale.getCountry().equals("GB"))
+      {
+        return "en-GB"; // en-GB must be set explicitly
+      }
+      else if (locale.getCountry().equals("US"))
+      {
+        return ""; // en-US is default
+      }
+    }
+    // [...] more locales if needed, see docs for Datepicker Localization.
+
+    return locale.getLanguage();
+  }
+
+  public static Locale getLocale()
+  {
+    return Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
+  }
+
 }

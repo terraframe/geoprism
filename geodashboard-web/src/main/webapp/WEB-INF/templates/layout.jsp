@@ -80,17 +80,14 @@
 	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
 	   
 	<!-- jQuery  -->
-	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
-    <!-- <script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.8.3.min.js"></script> -->
-	<!-- <script src="https://code.jquery.com/jquery-1.9.0.js"></script> -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.9.0.min.js"></script>
-	  
+		  
 	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
 	  
 	<!-- Custom JavaScript -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery.datepicker.js"></script>
+	
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
@@ -98,8 +95,9 @@
     <!-- JQuery UI -->
 	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
-	  
-	<!-- Localization -->
+	
+	<!-- Localization -->	
+	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui-i18n.min.js"></script>	
 	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 	
 	<!-- Color Picker -->
