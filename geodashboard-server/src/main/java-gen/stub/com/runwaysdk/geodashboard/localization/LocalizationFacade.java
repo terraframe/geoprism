@@ -81,24 +81,44 @@ public class LocalizationFacade extends LocalizationFacadeBase implements com.ru
   {
     Locale locale = getLocale();
 
-    if (locale.getLanguage().equals("de"))
-    {
-      return "de"; // only "de", no country code
-    }
-    else if (locale.getLanguage().equals("en"))
-    {
-      if (locale.getCountry().equals("GB"))
-      {
-        return "en-GB"; // en-GB must be set explicitly
-      }
-      else if (locale.getCountry().equals("US"))
-      {
-        return ""; // en-US is default
-      }
-    }
-    // [...] more locales if needed, see docs for Datepicker Localization.
+    String language = locale.getLanguage();
+    String country = locale.getCountry();
 
-    return locale.getLanguage();
+    if (language.equalsIgnoreCase("ar") && country.equalsIgnoreCase("DZ"))
+    {
+      return language + "-" + country;
+    }
+    else if (language.equalsIgnoreCase("cy"))
+    {
+      return "cy-GB";
+    }
+    else if (language.equalsIgnoreCase("en"))
+    {
+      if (country.equalsIgnoreCase("AU") || country.equalsIgnoreCase("GB") || country.equalsIgnoreCase("NZ"))
+      {
+        return language + "-" + country;
+      }
+
+      return ""; // en-US is default
+    }
+    else if (language.equalsIgnoreCase("fr") && country.equalsIgnoreCase("CH"))
+    {
+      return language + "-" + country;
+    }
+    else if (language.equalsIgnoreCase("nl") && country.equalsIgnoreCase("BE"))
+    {
+      return language + "-" + country;
+    }
+    else if (language.equalsIgnoreCase("pt") && country.equalsIgnoreCase("BR"))
+    {
+      return language + "-" + country;
+    }
+    else if (language.equalsIgnoreCase("zh"))
+    {
+      return "zh-HK";
+    }
+
+    return language;
   }
 
   public static Locale getLocale()
