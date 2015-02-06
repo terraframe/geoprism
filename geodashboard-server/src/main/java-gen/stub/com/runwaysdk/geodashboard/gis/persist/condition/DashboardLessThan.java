@@ -3,6 +3,7 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.condition.LessThan;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.ValueQuery;
@@ -26,6 +27,10 @@ public class DashboardLessThan extends DashboardLessThanBase implements com.runw
     else if (attr instanceof AttributeDate)
     {
       query.AND( ( (AttributeDate) attr ).LT(this.getComparisonValueAsDate()));
+    }
+    else if (attr instanceof AttributeCharacter)
+    {
+      query.AND( ( (AttributeDate) attr ).EQ(this.getComparisonValue()));
     }
   }
 

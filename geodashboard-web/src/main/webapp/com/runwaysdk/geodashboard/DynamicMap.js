@@ -158,10 +158,10 @@
           // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
           // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
           if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
-        	  view.setLayerIsActive(true);
+            view.setLayerIsActive(true);
           }
           else{
-        	  view.setLayerIsActive(false);
+            view.setLayerIsActive(false);
           }
           view.setAggregationMethod(layer.aggregationMethod);
           view.setAggregationAttribute(layer.aggregationAttribute);
@@ -453,7 +453,7 @@
               // hide the legend if the layer is un-checked
               // originally implemented to handle legends when filters are applied with un-checked layers
               if(layer.getLayerIsActive() === false){
-            	  legendObj.hide();
+                legendObj.hide();
               }
               
             }
@@ -1541,6 +1541,24 @@
               conditions.push(attrCond);
               criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
+            else if($(this).hasClass('filter-char')) {              
+              // Add character criterias
+              var mdAttribute = $(this).attr('id').replace('filter-char-', '');   
+              
+              var select = $("#filter-opts-" + mdAttribute).val();
+              
+              var attrCond = null;
+              
+              if (select === "eq") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();
+              }
+              
+              attrCond.setComparisonValue(textValue);
+              attrCond.setDefiningMdAttribute(mdAttribute);
+              
+              conditions.push(attrCond);
+              criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
+            }
             else if($(this).hasClass('filter-date')) {
               // Add the date criteria
               if($(this).hasClass('checkin')) {
@@ -1613,6 +1631,8 @@
        * Renders the mapping widget, performing a full refresh.
        */
       render : function(){
+      var that = this;
+        
         this.fullRefresh();
         
         // Make sure all openers for each attribute have a click event
@@ -1664,7 +1684,29 @@
               this.value = this.value.replace(/\.+$/,"");
             }
           }
-        });        
+        });
+        
+        // Hook up the filter auto-complete for character attributes
+        $('.filter-char').each(function(){
+          
+          var mdAttribute = $(this).attr('id').replace('filter-char-', '');   
+          
+          $(this).autocomplete({
+            source: function( request, response ) {
+              var req = new Mojo.ClientRequest({
+                onSuccess : function(results){
+                  response( results );
+                },
+                onFailure : function(e){
+                  that.handleException(e);
+                }
+              });
+              
+              com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(req, mdAttribute, request.term, 10);
+            },
+            minLength: 3
+          });
+        });
       },
     }
    

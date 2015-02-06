@@ -5,13 +5,20 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.dashboard.DashboardService;
 import com.runwaysdk.geodashboard.dashboard.DashboardBuilderIF;
+import com.runwaysdk.geodashboard.dashboard.DashboardService;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
@@ -122,4 +129,41 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     super.apply();
   }
 
+  public static String[] getTextSuggestions(String mdAttributeId, String text, Integer limit)
+  {
+    List<String> suggestions = new LinkedList<String>();
+
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+    MdClassDAOIF mdClass = mdAttributeConcrete.definedByClass();
+
+    QueryFactory factory = new QueryFactory();
+
+    BusinessQuery bQuery = factory.businessQuery(mdClass.definesType());
+    AttributeCharacter selectable = bQuery.aCharacter(mdAttributeConcrete.definesAttribute());
+
+    ValueQuery query = new ValueQuery(factory);
+    query.SELECT_DISTINCT(selectable);
+    query.WHERE(selectable.LIKEi("%" + text + "%"));
+    query.ORDER_BY_ASC(selectable);
+    query.restrictRows(limit, 1);
+
+    OIterator<ValueObject> iterator = query.getIterator();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        ValueObject object = iterator.next();
+        String value = object.getValue(mdAttributeConcrete.definesAttribute());
+
+        suggestions.add(value);
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return suggestions.toArray(new String[suggestions.size()]);
+  }
 }

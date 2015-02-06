@@ -15,6 +15,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.GeneratedBusinessQuery;
@@ -26,27 +27,32 @@ public class ReportProviderUtil implements Reloadable
   /**
    * Greater than comparison
    */
-  public static final String GT = "gt";
+  public static final String GT  = "gt";
 
   /**
    * Greater than or equal comparison
    */
-  public static final String GE = "ge";
+  public static final String GE  = "ge";
 
   /**
    * Less than comparison
    */
-  public static final String LT = "lt";
+  public static final String LT  = "lt";
 
   /**
    * Less than or equal comparison
    */
-  public static final String LE = "le";
+  public static final String LE  = "le";
 
   /**
    * Equal comparison
    */
-  public static final String EQ = "eq";
+  public static final String EQ  = "eq";
+
+  /**
+   * Equal comparison
+   */
+  public static final String NEQ = "neq";
 
   public static GeoEntity getGeoEntity(String category, String defaultGeoId)
   {
@@ -98,6 +104,10 @@ public class ReportProviderUtil implements Reloadable
             else if (attribute instanceof AttributeMoment)
             {
               addMomentCondition(vQuery, operation, value, (AttributeMoment) attribute);
+            }
+            else if (attribute instanceof AttributeCharacter)
+            {
+              addCharacterCondition(vQuery, operation, value, (AttributeCharacter) attribute);
             }
           }
         }
@@ -183,6 +193,25 @@ public class ReportProviderUtil implements Reloadable
     else if (operation.equals(EQ))
     {
       vQuery.AND(attribute.EQ(value));
+    }
+    else
+    {
+      UnsupportedComparisonException e = new UnsupportedComparisonException();
+      e.setComparison(operation);
+
+      throw e;
+    }
+  }
+
+  public static void addCharacterCondition(ValueQuery vQuery, String operation, String value, AttributeCharacter attribute)
+  {
+    if (operation.equals(EQ))
+    {
+      vQuery.AND(attribute.EQ(value));
+    }
+    else if (operation.equals(NEQ))
+    {
+      vQuery.AND(attribute.NE(value));
     }
     else
     {

@@ -29,10 +29,11 @@
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqualDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqualDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO"%>
 <%@page import="com.runwaysdk.geodashboard.report.ReportItemController"%>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
@@ -59,8 +60,9 @@
   {
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
-        DashboardGreaterThan.CLASS, DashboardGreaterThanOrEqual.CLASS, DashboardLessThan.CLASS, DashboardLessThanOrEqual.CLASS,
-        DashboardController.CLASS, DashboardDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS
+        DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
+        DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardController.CLASS, DashboardDTO.CLASS,
+        GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS
       }, true);
     out.print(js);
   }
@@ -262,6 +264,18 @@ $(document).ready(function(){
 											</span>
 										</div>
 									</div>
+								</c:when>
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeCharacter'}">
+									<!-- Character attribute -->
+		                            <div class="select-holder">
+		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
+		                                <option value="eq">=</option>
+		                              </select>
+		                            </div>
+		                            <div class="text">
+		                              <label for=filter-char-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
+		                              <input class="gdb-attr-filter filter-char" id="filter-char-${attr.mdAttributeId}" type="text" placeholder="Text"></input>
+		                            </div>
 								</c:when>
 								<c:otherwise>
 													      
