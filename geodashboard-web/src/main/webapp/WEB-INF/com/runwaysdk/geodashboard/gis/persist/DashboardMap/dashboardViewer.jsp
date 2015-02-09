@@ -18,6 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO"%>
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO"%>
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -63,8 +64,9 @@
     String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
         DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
-        DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardController.CLASS, DashboardDTO.CLASS,
-        GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS, ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS
+        DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
+        DashboardDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS, ClassifierDTO.CLASS,
+        ClassifierDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -274,6 +276,7 @@ $(document).ready(function(){
 		                            <div class="select-holder">
 		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
 		                                <option value="eq">=</option>
+		                                <option value="neq">!=</option>
 		                              </select>
 		                            </div>
 		                            <div class="text">

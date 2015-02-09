@@ -1552,6 +1552,9 @@
               if (select === "eq") {
                 attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();
               }
+              else if(select === "neq") {
+                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual();
+              }
               
               attrCond.setComparisonValue(textValue);
               attrCond.setDefiningMdAttribute(mdAttribute);

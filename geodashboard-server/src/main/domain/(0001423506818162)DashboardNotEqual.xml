@@ -1,0 +1,10 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Equals" generateController="true" />
+    </create>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

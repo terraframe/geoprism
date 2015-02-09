@@ -11,8 +11,8 @@ import com.runwaysdk.geodashboard.gis.model.condition.IsLike;
 import com.runwaysdk.geodashboard.gis.model.condition.IsNull;
 import com.runwaysdk.geodashboard.gis.model.condition.LessThan;
 import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
+import com.runwaysdk.geodashboard.gis.model.condition.NotEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
-
 
 public interface MapVisitor
 {
@@ -30,10 +30,12 @@ public interface MapVisitor
 
   public void visit(Equal component);
 
+  public void visit(NotEqual component);
+
   public void visit(GreaterThan component);
 
   public void visit(GreaterThanOrEqual component);
-  
+
   public void visit(LessThan component);
 
   public void visit(LessThanOrEqual component);
@@ -41,9 +43,9 @@ public interface MapVisitor
   public void visit(IsLike component);
 
   public void visit(IsNull component);
-  
+
   public void visit(IsBetween component);
-  
+
   public void visit(Gradient component);
 
   public void visit(Category component);

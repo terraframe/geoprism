@@ -10,15 +10,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
+import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedBusinessQuery;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
@@ -71,7 +78,7 @@ public class ReportProviderUtil implements Reloadable
     return GeoEntity.getByKey(defaultGeoId);
   }
 
-  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery)
+  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery, QueryFactory factory)
   {
     try
     {
@@ -108,6 +115,10 @@ public class ReportProviderUtil implements Reloadable
             else if (attribute instanceof AttributeCharacter)
             {
               addCharacterCondition(vQuery, operation, value, (AttributeCharacter) attribute);
+            }
+            else if (attribute instanceof AttributeReference)
+            {
+              addTermCondition(vQuery, operation, value, (AttributeReference) attribute, factory);
             }
           }
         }
@@ -219,6 +230,34 @@ public class ReportProviderUtil implements Reloadable
       e.setComparison(operation);
 
       throw e;
+    }
+  }
+
+  private static void addTermCondition(ValueQuery vQuery, String operation, String value, AttributeReference attribute, QueryFactory factory)
+  {
+    MdAttributeReferenceDAOIF mdAttributeTerm = (MdAttributeReferenceDAOIF) attribute.getMdAttributeIF();
+    MdBusinessDAOIF mdBusinessDAO = mdAttributeTerm.getReferenceMdBusinessDAO();
+
+    if (mdBusinessDAO.definesType().equals(Classifier.CLASS))
+    {
+      if (operation.equals(EQ))
+      {
+        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+        allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(value));
+
+        vQuery.AND(attribute.EQ(allPathQuery.getChildTerm()));
+      }
+      else
+      {
+        UnsupportedComparisonException e = new UnsupportedComparisonException();
+        e.setComparison(operation);
+
+        throw e;
+      }
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Condition on the reference type [" + mdBusinessDAO.definesType() + "] is not supported.");
     }
   }
 
