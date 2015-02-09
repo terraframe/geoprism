@@ -880,7 +880,7 @@
             }
             else if (response.isHTML()) {
               // we got html back, meaning there was an error
-              var layerId = that._layerCache.get(params["layer.componentId"]).getLayerId();
+              
               that._displayLayerForm(htmlOrJson);
               $(DynamicMap.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
             }
@@ -1559,6 +1559,21 @@
               conditions.push(attrCond);
               criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
+            else if($(this).hasClass('filter-term')) {              
+              // Add term criterias
+              var mdAttribute = $(this).attr('id').replace('filter-term-', '');
+              var id = $('#filter-hidden-' + mdAttribute).val(); 
+              
+              if(id != null)
+              {
+                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();             
+                attrCond.setComparisonValue(id);
+                attrCond.setDefiningMdAttribute(mdAttribute);
+                
+                conditions.push(attrCond);
+                criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':id});            
+              }
+            }
             else if($(this).hasClass('filter-date')) {
               // Add the date criteria
               if($(this).hasClass('checkin')) {
@@ -1631,7 +1646,7 @@
        * Renders the mapping widget, performing a full refresh.
        */
       render : function(){
-      var that = this;
+        var that = this;
         
         this.fullRefresh();
         
@@ -1704,7 +1719,40 @@
               
               com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(req, mdAttribute, request.term, 10);
             },
-            minLength: 3
+            minLength: 2
+          });
+        });
+        
+        // Hook up the filter auto-complete for term attributes
+        $('.filter-term').each(function(){
+          var mdAttribute = $(this).attr('id').replace('filter-term-', '');   
+          
+          $(this).autocomplete({
+            source: function( request, response ) {
+              var req = new Mojo.ClientRequest({
+                onSuccess : function(classifiers){
+                  var results = [];
+                  
+                  $.each(classifiers, function( index, classifier ) {
+                    var label = classifier.getDisplayLabel().getLocalizedValue();
+                    var id = classifier.getId();
+                    
+                    results.push({'label':label, 'value':label, 'id':id});
+                  });
+                  
+                  response( results );
+                },
+                onFailure : function(e){
+                  that.handleException(e);
+                }
+              });
+              
+              com.runwaysdk.geodashboard.Dashboard.getClassifierSuggestions(req, mdAttribute, request.term, 10);
+            },
+            select: function(event, ui) {
+                $('#filter-hidden-' + mdAttribute ).val(ui.item.id);
+            },           
+            minLength: 2
           });
         });
       },

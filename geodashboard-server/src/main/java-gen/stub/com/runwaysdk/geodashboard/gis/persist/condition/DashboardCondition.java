@@ -31,7 +31,7 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
     return "["+getName()+"] - "+this.getId();
   }
   
-  abstract public void restrictQuery(ValueQuery query, Attribute attr);
+  abstract public void restrictQuery(QueryFactory factory, ValueQuery query, Attribute attr);
   
   @Override
   public void setParentCondition(DashboardCondition value)

@@ -6,6 +6,7 @@ import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 
 public class DashboardLessThan extends DashboardLessThanBase implements com.runwaysdk.generation.loader.Reloadable, LessThan
@@ -18,7 +19,7 @@ public class DashboardLessThan extends DashboardLessThanBase implements com.runw
   }
 
   @Override
-  public void restrictQuery(ValueQuery query, Attribute attr)
+  public void restrictQuery(QueryFactory factory, ValueQuery query, Attribute attr)
   {
     if (attr instanceof AttributeNumber)
     {

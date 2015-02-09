@@ -88,7 +88,7 @@ public class ReportProviderUtil implements Reloadable
           String operation = condition.getString("operation");
           String value = condition.getString("value");
 
-          MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
+          MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
           String attributeName = mdAttribute.definesAttribute();
           String key = mdAttribute.getKey();

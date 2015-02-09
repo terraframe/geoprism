@@ -17,34 +17,29 @@ import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.NoDashboardExceptionDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
 
-public class DashboardMapController extends DashboardMapControllerBase implements
-    com.runwaysdk.generation.loader.Reloadable
+public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 
-  public DashboardMapController(javax.servlet.http.HttpServletRequest req,
-      javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  public DashboardMapController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
 
-  public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
     this.view(dto.getId());
   }
 
-  public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     this.edit(dto.getId());
   }
 
-  public void create(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void create(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -57,15 +52,13 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     }
   }
 
-  public void failCreate(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void failCreate(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
 
-  public void delete(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void delete(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -78,8 +71,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     }
   }
 
-  public void failDelete(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void failDelete(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
@@ -87,8 +79,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO
-        .lock(super.getClientRequest(), id);
+    com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.lock(super.getClientRequest(), id);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -101,8 +92,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto = new com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO(
-        clientRequest);
+    com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto = new com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO(clientRequest);
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
@@ -112,8 +102,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     this.viewAll();
   }
 
-  public void update(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void update(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -126,8 +115,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     }
   }
 
-  public void failUpdate(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto)
-      throws java.io.IOException, javax.servlet.ServletException
+  public void failUpdate(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
@@ -136,8 +124,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item",
-        com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.get(clientRequest, id));
+    req.setAttribute("item", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
 
@@ -149,8 +136,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO
-        .getAllInstances(clientRequest, null, true, 20, 1);
+    com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(clientRequest, null, true, 20, 1);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -160,20 +146,15 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     resp.sendError(500);
   }
 
-  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending,
-      java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException,
-      javax.servlet.ServletException
+  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO
-        .getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+    com.runwaysdk.geodashboard.gis.persist.DashboardMapQueryDTO query = com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
 
-  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending,
-      java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException,
-      javax.servlet.ServletException
+  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -182,46 +163,55 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void createMapForSession() throws IOException, ServletException
   {
     ClientRequestIF clientRequest = this.getClientRequest();
-    
+
     String dashboardId = req.getParameter("dashboard");
-    
+
     // Get all dashboards
     DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
     List<? extends DashboardDTO> dashboards = dashboardQ.getResultSet();
-    if (dashboards.size() == 0) { throw new NoDashboardExceptionDTO(clientRequest); }
-    
+
+    if (dashboards.size() == 0)
+    {
+      throw new NoDashboardExceptionDTO(clientRequest);
+    }
+
     // Figure out the active dashboard.
     DashboardDTO activeDashboard = dashboards.get(0);
-    if (dashboardId != null) {
+    if (dashboardId != null)
+    {
       activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
     }
     req.setAttribute("activeDashboard", activeDashboard);
     req.setAttribute("dashboardId", activeDashboard.getId());
-    
+
     // Dashboards does not include the active dashboard.
     dashboards.remove(activeDashboard);
     req.setAttribute("dashboards", dashboards);
-    
-    if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals("")) { throw new DashboardHasNoMapExceptionDTO(clientRequest); }
-    
+
+    if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals(""))
+    {
+      throw new DashboardHasNoMapExceptionDTO(clientRequest);
+    }
+
     req.setAttribute("mapId", activeDashboard.getMapId());
-    
+
     // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
     MdClassDTO[] types = activeDashboard.getSortedTypes();
     req.setAttribute("types", types);
-    
+
     List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
     Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
-    
+
     for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
     {
       attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+
       for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
       {
         attrs.add(mdAttrView);
       }
     }
-    
+
     req.setAttribute("attrMap", attrMap);
 
     render("dashboardViewer.jsp");

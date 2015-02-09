@@ -18,6 +18,8 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO"%>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
@@ -62,7 +64,7 @@
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
         DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
         DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardController.CLASS, DashboardDTO.CLASS,
-        GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS
+        GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS, ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -173,6 +175,7 @@ $(document).ready(function(){
 				</ul>
 			</div>
 		</div>
+<!-- 
 		<button class="none">submit</button>
         
         <div id="new-dashboard-btn-container">
@@ -192,6 +195,7 @@ $(document).ready(function(){
             </span>
           </div>
         </div>
+ -->		
           
         <div class="sales-accortion panel-group">
 	
@@ -275,6 +279,14 @@ $(document).ready(function(){
 		                            <div class="text">
 		                              <label for=filter-char-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
 		                              <input class="gdb-attr-filter filter-char" id="filter-char-${attr.mdAttributeId}" type="text" placeholder="Text"></input>
+		                            </div>
+								</c:when>
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeTerm'}">
+									<!-- Term attribute -->
+		                            <div class="text">
+		                              <label for=filter-term-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
+		                              <input class="gdb-attr-filter filter-term" id="filter-term-${attr.mdAttributeId}" type="text" placeholder="Term"></input>
+		                              <input id="filter-hidden-${attr.mdAttributeId}" type="hidden"></input>
 		                            </div>
 								</c:when>
 								<c:otherwise>

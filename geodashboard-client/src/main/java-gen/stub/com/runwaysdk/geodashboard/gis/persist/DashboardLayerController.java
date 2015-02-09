@@ -19,7 +19,9 @@ import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
+import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
@@ -134,16 +136,16 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("universals", universals);
 
     // selected attribute
-    MdAttributeConcreteDTO mdAttr;
+    MdAttributeDTO mdAttr;
     if (mdAttribute != null)
     { // new instance
-      mdAttr = MdAttributeConcreteDTO.get(clientRequest, mdAttribute);
+      mdAttr = MdAttributeDTO.get(clientRequest, mdAttribute);
     }
     else
     { // edit
-      mdAttr = ( (MdAttributeConcreteDTO) style.getMdAttribute() );
+      mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
-    req.setAttribute("activeMdAttributeLabel", mdAttr.getDisplayLabel().getValue());
+    req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
@@ -182,6 +184,25 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     {
       req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
+  }
+
+  private String getDisplayLabel(MdAttributeDTO mdAttr)
+  {
+    if (mdAttr instanceof MdAttributeVirtualDTO)
+    {
+      MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
+
+      String label = mdAttributeVirtual.getDisplayLabel().getValue();
+
+      if (label == null || label.length() > 0)
+      {
+        return label;
+      }
+
+      return mdAttributeVirtual.getMdAttributeConcrete().getDisplayLabel().getValue();
+    }
+
+    return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
   }
 
   /**

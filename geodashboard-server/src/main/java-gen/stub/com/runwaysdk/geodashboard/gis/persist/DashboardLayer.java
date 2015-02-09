@@ -15,19 +15,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.generation.NameConventionUtil;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeFloatDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeIntDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -39,6 +45,7 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.F;
+import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
@@ -54,17 +61,11 @@ import com.runwaysdk.query.SelectableSQLFloat;
 import com.runwaysdk.query.SelectableSQLInteger;
 import com.runwaysdk.query.SelectableSQLPrimitive;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwaysdk.system.metadata.MdAttributeBoolean;
-import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDate;
-import com.runwaysdk.system.metadata.MdAttributeDouble;
-import com.runwaysdk.system.metadata.MdAttributeFloat;
-import com.runwaysdk.system.metadata.MdAttributeInt;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
@@ -153,20 +154,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
       MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
-      MdAttributeDAOIF attr = null;
-
-      for (MdAttributeDAOIF mdAttr : md.definesAttributes())
-      {
-        if (mdAttr instanceof MdAttributeReferenceDAOIF)
-        {
-          MdAttributeReferenceDAOIF mdRef = (MdAttributeReferenceDAOIF) mdAttr;
-          if (mdRef.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
-          {
-            attr = mdRef;
-            break;
-          }
-        }
-      }
+      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
 
       if (attr != null)
       {
@@ -428,11 +416,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
    */
   public ValueQuery getViewQuery()
   {
-    QueryFactory f = new QueryFactory();
-    ValueQuery innerQuery1 = new ValueQuery(f);
-    ValueQuery innerQuery2 = new ValueQuery(f);
+    QueryFactory factory = new QueryFactory();
+    ValueQuery innerQuery1 = new ValueQuery(factory);
+    ValueQuery innerQuery2 = new ValueQuery(factory);
 
-    ValueQuery outerQuery = new ValueQuery(f);
+    ValueQuery outerQuery = new ValueQuery(factory);
 
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
     try
@@ -449,13 +437,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String attribute = tStyle.getAttribute();
+          MdAttributeDAOIF mdAttributeDAO = tStyle.getMdAttributeDAO();
 
-          MdAttributeConcrete mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
-          MdClass mdClass = mdAttrC.getDefiningMdClass();
-          BusinessQuery businessQ = f.businessQuery(mdClass.definesType());
+          MdClassDAOIF mdClass = mdAttributeDAO.definedByClass();
+
+          GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, factory);
 
           // thematic attribute
-          Attribute thematicAttr = businessQ.get(mdAttrC.getAttributeName());
+          String attributeName = mdAttributeDAO.definesAttribute();
+          String displayLabel = mdAttributeDAO.getDisplayLabel(Session.getCurrentLocale());
+
+          Attribute thematicAttr = QueryUtil.get(query, attributeName);
 
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
@@ -523,11 +515,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
             if (isAggregate)
             {
-              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
             }
             else
             {
-              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, mdAttrC.getAttributeName(), mdAttrC.getDisplayLabel().getDefaultValue());
+              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
             }
           }
 
@@ -547,8 +539,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           innerQuery1.SELECT(geoId1);
 
           // Join the entity's GeoEntity reference with the all paths table
-          MdAttributeReference geoRef = this.getGeoEntity();
-          Attribute geoAttr = businessQ.get(geoRef.getAttributeName());
+          MdAttributeReferenceDAOIF geoRef = MdAttributeReferenceDAO.get(this.getGeoEntityId());
+          Attribute geoAttr = QueryUtil.get(query, geoRef.definesAttribute());
 
           // the entity's GeoEntity should match the all path's child
           GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
@@ -566,13 +558,13 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           {
             for (DashboardCondition condition : conditions)
             {
-              MdAttributeConcreteDAOIF mdAttribute = MdAttributeDAO.get(condition.getDefiningMdAttributeId()).getMdAttributeConcrete();
+              MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(condition.getDefiningMdAttributeId());
               MdClassDAOIF definedByClass = mdAttribute.definedByClass();
 
               if (definedByClass.getId().equals(mdClass.getId()))
               {
-                Attribute attr = businessQ.get(mdAttribute.definesAttribute());
-                condition.restrictQuery(innerQuery1, attr);
+                Attribute attr = QueryUtil.get(query, mdAttribute.definesAttribute());
+                condition.restrictQuery(factory, innerQuery1, attr);
               }
             }
           }
@@ -806,13 +798,14 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // This method relies on the existance of a saved layer and a related database view
 
     String attribute = null;
-    MdAttributeConcrete mdAttrC = null;
+    MdAttributeDAOIF mdAttrC = null;
     JSONArray categoriesJSON = new JSONArray();
 
     QueryFactory f = new QueryFactory();
     ValueQuery categoriesQuery = new ValueQuery(f);
 
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
+
     try
     {
       while (iter.hasNext())
@@ -822,34 +815,35 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-          attribute = tStyle.getAttribute();
 
-          mdAttrC = (MdAttributeConcrete) tStyle.getMdAttribute();
+          attribute = tStyle.getAttribute();
+          mdAttrC = tStyle.getMdAttributeDAO().getMdAttributeConcrete();
         }
       }
 
       SelectableSQLPrimitive vAttributeId = null;
-      if (mdAttrC instanceof MdAttributeBoolean)
+
+      if (mdAttrC instanceof MdAttributeBooleanDAOIF)
       {
         vAttributeId = (SelectableSQLBoolean) categoriesQuery.aSQLBoolean("vAttributeId", attribute);
       }
-      else if (mdAttrC instanceof MdAttributeInt)
+      else if (mdAttrC instanceof MdAttributeIntDAOIF)
       {
         vAttributeId = (SelectableSQLInteger) categoriesQuery.aSQLInteger("vAttributeId", attribute);
       }
-      else if (mdAttrC instanceof MdAttributeDouble)
+      else if (mdAttrC instanceof MdAttributeDoubleDAOIF)
       {
         vAttributeId = (SelectableSQLDouble) categoriesQuery.aSQLDouble("vAttributeId", attribute);
       }
-      else if (mdAttrC instanceof MdAttributeFloat)
+      else if (mdAttrC instanceof MdAttributeFloatDAOIF)
       {
         vAttributeId = (SelectableSQLFloat) categoriesQuery.aSQLFloat("vAttributeId", attribute);
       }
-      else if (mdAttrC instanceof MdAttributeCharacter)
+      else if (mdAttrC instanceof MdAttributeCharacterDAOIF)
       {
         vAttributeId = (SelectableSQLChar) categoriesQuery.aSQLCharacter("vAttributeId", attribute);
       }
-      else if (mdAttrC instanceof MdAttributeDate)
+      else if (mdAttrC instanceof MdAttributeDateDAOIF)
       {
         vAttributeId = (SelectableSQLDate) categoriesQuery.aSQLDate("vAttributeId", attribute);
       }

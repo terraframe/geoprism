@@ -15,6 +15,10 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.dashboard.DashboardBuilderIF;
 import com.runwaysdk.geodashboard.dashboard.DashboardService;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -166,4 +170,34 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return suggestions.toArray(new String[suggestions.size()]);
   }
+
+  public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+    QueryFactory factory = new QueryFactory();
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
+
+    classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
+    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().LIKEi("%" + text + "%"));
+    classifierQuery.restrictRows(limit, 1);
+
+    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+
+    try
+    {
+      LinkedList<Classifier> suggestions = new LinkedList<Classifier>(iterator.getAll());
+      return suggestions.toArray(new Classifier[suggestions.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
 }

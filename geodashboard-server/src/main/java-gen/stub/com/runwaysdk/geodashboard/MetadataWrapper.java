@@ -4,11 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdAttributeVirtual;
 
 public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -57,20 +58,11 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
       {
         AttributeWrapper aWrapper = iter.next();
 
-        MdAttribute attr = aWrapper.getWrappedMdAttribute();
-        String attrId;
-        String attrType;
-        if (attr instanceof MdAttributeVirtual)
-        {
-          MdAttributeVirtual vAttr = (MdAttributeVirtual) attr;
-          attrId = vAttr.getMdAttributeConcreteId();
-          attrType = vAttr.getMdAttributeConcrete().getType();
-        }
-        else
-        {
-          attrId = attr.getId();
-          attrType = attr.getType();
-        }
+        MdAttributeDAOIF attr = MdAttributeDAO.get(aWrapper.getWrappedMdAttributeId());
+        MdAttributeConcreteDAOIF mdAttributeConcrete = attr.getMdAttributeConcrete();
+
+        String attrId = attr.getId();
+        String attrType = mdAttributeConcrete.getType();
 
         MdAttributeView view = new MdAttributeView();
 
@@ -79,7 +71,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
         view.setMdClassId(mdId);
         view.setMdAttributeId(attrId);
         view.setDisplayLabel(label);
-        view.setAttributeName(attr.getAttributeName());
+        view.setAttributeName(attr.definesAttribute());
         view.setAttributeType(attrType);
 
         mdAttr.add(view);
