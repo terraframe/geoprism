@@ -15,7 +15,7 @@ public class GeoserverContextListener implements Reloadable, ServerContextListen
   @Override
   public void shutdown()
   {
-    // DO NOTHING
+    GeoserverInitializer.shutdown();
   }
 
 }

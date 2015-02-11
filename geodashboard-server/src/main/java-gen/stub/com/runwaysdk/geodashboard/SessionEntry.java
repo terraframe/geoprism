@@ -1,7 +1,5 @@
 package com.runwaysdk.geodashboard;
 
-import java.rmi.ServerException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

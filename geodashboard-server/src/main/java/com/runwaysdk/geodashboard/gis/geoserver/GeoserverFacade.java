@@ -25,7 +25,6 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
@@ -37,27 +36,30 @@ import com.runwaysdk.util.FileIO;
 
 public class GeoserverFacade implements Reloadable
 {
-  public static final int    SRS_CODE    = 4326;
+  public static final int                  SRS_CODE        = 4326;
 
-  public static final String SRS         = "EPSG:" + SRS_CODE;
+  public static final String               SRS             = "EPSG:" + SRS_CODE;
 
-  public static final String GEOM_COLUMN = "geom";
+  public static final String               GEOM_COLUMN     = "geom";
 
-  public static int          MINX_INDEX  = 0;
+  public static int                        MINX_INDEX      = 0;
 
-  public static int          MINY_INDEX  = 1;
+  public static int                        MINY_INDEX      = 1;
 
-  public static int          MAXX_INDEX  = 2;
+  public static int                        MAXX_INDEX      = 2;
 
-  public static int          MAXY_INDEX  = 3;
+  public static int                        MAXY_INDEX      = 3;
 
-  private static Log         log         = LogFactory.getLog(GeoserverFacade.class);
-  
+  private static Log                       log             = LogFactory.getLog(GeoserverFacade.class);
+
   /**
    * These are for storing mass publish/deletes which can be pushArrayList<E> once for maximum efficiency.
    */
   private static ArrayList<DashboardLayer> layersToPublish = new ArrayList<DashboardLayer>();
-  private static ArrayList<DashboardLayer> layersToDrop = new ArrayList<DashboardLayer>();
+
+  private static ArrayList<String>         layersToDrop    = new ArrayList<String>();
+
+  private static ArrayList<String>         stylesToDrop    = new ArrayList<String>();
 
   /**
    * Checks if a given File is a cache directory for the workspace.
@@ -85,8 +87,7 @@ public class GeoserverFacade implements Reloadable
 
   public static void removeStore()
   {
-    if (GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(),
-        GeoserverProperties.getStore(), true))
+    if (GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), true))
     {
       log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
     }
@@ -112,8 +113,7 @@ public class GeoserverFacade implements Reloadable
   {
     try
     {
-      if (GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(),
-          new URI(GeoserverProperties.getLocalPath())))
+      if (GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getLocalPath())))
       {
         log.info("Created the workspace [" + GeoserverProperties.getWorkspace() + "].");
       }
@@ -124,8 +124,7 @@ public class GeoserverFacade implements Reloadable
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI [" + GeoserverProperties.getLocalPath()
-          + "] is invalid.", e);
+      throw new ConfigurationException("The URI [" + GeoserverProperties.getLocalPath() + "] is invalid.", e);
     }
   }
 
@@ -149,14 +148,12 @@ public class GeoserverFacade implements Reloadable
   }
 
   /**
-   * FIXME could not find another API call to do this, but one must exist that
-   * isn't deprecated. Look again later.
+   * FIXME could not find another API call to do this, but one must exist that isn't deprecated. Look again later.
    */
   @SuppressWarnings("deprecation")
   public static void publishStore()
   {
-    String dbSchema = DatabaseProperties.getNamespace().length() != 0 ? DatabaseProperties
-        .getNamespace() : "public";
+    String dbSchema = DatabaseProperties.getNamespace().length() != 0 ? DatabaseProperties.getNamespace() : "public";
 
     GSPostGISDatastoreEncoder encoder = new GSPostGISDatastoreEncoder();
     encoder.setDatabase(DatabaseProperties.getDatabaseName());
@@ -176,8 +173,7 @@ public class GeoserverFacade implements Reloadable
     encoder.setLooseBBox(true);
     encoder.setExposePrimaryKeys(true);
 
-    if (GeoserverProperties.getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(),
-        encoder))
+    if (GeoserverProperties.getPublisher().createPostGISDatastore(GeoserverProperties.getWorkspace(), encoder))
     {
       log.info("Published the store [" + GeoserverProperties.getStore() + "].");
     }
@@ -199,8 +195,7 @@ public class GeoserverFacade implements Reloadable
   }
 
   /**
-   * Checks if the cache directory exists. This method does not check what tiles
-   * or zoom levels have been cached.
+   * Checks if the cache directory exists. This method does not check what tiles or zoom levels have been cached.
    * 
    * @param cacheName
    * @return
@@ -231,70 +226,69 @@ public class GeoserverFacade implements Reloadable
   }
 
   /**
-   * Removes the style defined in Geoserver, including the .sld and .xml file
-   * artifacts.
+   * Removes the style defined in Geoserver, including the .sld and .xml file artifacts.
    * 
    * @param styleName
    *          The name of the style to delete.
    */
   public static void removeStyle(String styleName)
   {
-//    if (styleExists(styleName))
-//    {
-      if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
+    // if (styleExists(styleName))
+    // {
+    if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
+    {
+      log.info("Removed the SLD [" + styleName + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the SLD [" + styleName + "].");
+    }
+
+    // There are problems with Geoserver not removing the SLD artifacts,
+    // so make sure those are gone
+    String stylePath = GeoserverProperties.getGeoserverSLDDir();
+
+    // remove the sld
+    File sld = new File(stylePath + styleName + ".sld");
+    if (sld.exists())
+    {
+      boolean deleted = sld.delete();
+      if (deleted)
       {
-        log.info("Removed the SLD [" + styleName + "].");
+        log.info("Deleted the file [" + sld + "].");
       }
       else
       {
-        log.warn("Failed to remove the SLD [" + styleName + "].");
+        log.warn("Failed to delete the file [" + sld + "].");
       }
+    }
+    else
+    {
+      log.info("The file [" + sld + "] does not exist.");
+    }
 
-      // There are problems with Geoserver not removing the SLD artifacts,
-      // so make sure those are gone
-      String stylePath = GeoserverProperties.getGeoserverSLDDir();
-
-      // remove the sld
-      File sld = new File(stylePath + styleName + ".sld");
-      if (sld.exists())
+    // remove the xml
+    File xml = new File(stylePath + styleName + ".xml");
+    if (xml.exists())
+    {
+      boolean deleted = sld.delete();
+      if (deleted)
       {
-        boolean deleted = sld.delete();
-        if (deleted)
-        {
-          log.info("Deleted the file [" + sld + "].");
-        }
-        else
-        {
-          log.warn("Failed to delete the file [" + sld + "].");
-        }
+        log.info("Deleted the file [" + xml + "].");
       }
       else
       {
-        log.info("The file [" + sld + "] does not exist.");
+        log.warn("Failed to delete the file [" + xml + "].");
       }
+    }
+    else
+    {
+      log.info("The file [" + xml + "] does not exist.");
+    }
 
-      // remove the xml
-      File xml = new File(stylePath + styleName + ".xml");
-      if (xml.exists())
-      {
-        boolean deleted = sld.delete();
-        if (deleted)
-        {
-          log.info("Deleted the file [" + xml + "].");
-        }
-        else
-        {
-          log.warn("Failed to delete the file [" + xml + "].");
-        }
-      }
-      else
-      {
-        log.info("The file [" + xml + "] does not exist.");
-      }
-
-//    }
+    // }
   }
-  
+
   public static boolean publishStyle(String styleName, String body, boolean force)
   {
     if (force && styleExists(styleName))
@@ -324,52 +318,72 @@ public class GeoserverFacade implements Reloadable
   {
     return publishStyle(styleName, body, true);
   }
-  
-  public static void pushUpdates() {
-    try {
-      for (DashboardLayer layer : layersToDrop) {
-        removeLayer(layer.getViewName());
-        
-        List<? extends DashboardStyle> styles = layer.getStyles();
-        for (int i = 0; i < styles.size(); ++i) {
-          DashboardStyle style = styles.get(i);
-          removeStyle(style.getName());
-        }
+
+  public static void pushUpdates()
+  {
+    try
+    {
+      for (String layerName : layersToDrop)
+      {
+        removeLayer(layerName);
       }
-      
+
+      for (String styleName : stylesToDrop)
+      {
+        removeStyle(styleName);
+      }
+
       // GeoServer will say these layers already exist if we don't refresh here.
-      if (layersToDrop.size() > 0 && layersToPublish.size() > 0) {
+      if (layersToDrop.size() > 0 && layersToPublish.size() > 0)
+      {
         refresh();
       }
-      
-      for (DashboardLayer layer : layersToPublish) {
+
+      for (DashboardLayer layer : layersToPublish)
+      {
         List<? extends DashboardStyle> styles = layer.getStyles();
-        for (int i = 0; i < styles.size(); ++i) {
+        for (int i = 0; i < styles.size(); ++i)
+        {
           DashboardStyle style = styles.get(i);
           publishStyle(style.getName(), style.generateSLD(), false);
         }
-        
+
         publishLayer(layer.getViewName(), layer.getViewName());
       }
-      
+
       // GeoServer will cache old tiles if we've changed a style.
-//      if (layersToDrop.size() > 0) {
-//        refresh();
-//      }
+      // if (layersToDrop.size() > 0) {
+      // refresh();
+      // }
     }
-    finally {
+    finally
+    {
       layersToDrop.clear();
+      stylesToDrop.clear();
       layersToPublish.clear();
     }
   }
-  public static void publishLayerOnUpdate(DashboardLayer layer) {
+
+  public static void publishLayerOnUpdate(DashboardLayer layer)
+  {
     layersToPublish.add(layer);
   }
-  public static void dropLayerOnUpdate(DashboardLayer layer) {
-    layersToDrop.add(layer);
+
+  public static void dropLayerOnUpdate(DashboardLayer layer)
+  {
+    layersToDrop.add(layer.getViewName());
+
+    List<? extends DashboardStyle> styles = layer.getStyles();
+
+    for (int i = 0; i < styles.size(); ++i)
+    {
+      DashboardStyle style = styles.get(i);
+
+      stylesToDrop.add(style.getName());
+    }
+
   }
 
-  
   /**
    * Adds a database view and publishes the layer if necessary.
    * 
@@ -377,37 +391,36 @@ public class GeoserverFacade implements Reloadable
    */
   public static boolean publishLayer(String layer, String styleName)
   {
-      double[] bbox = getBBOX(layer);
+    double[] bbox = getBBOX(layer);
 
-      double minX = bbox[MINX_INDEX];
-      double minY = bbox[MINY_INDEX];
-      double maxX = bbox[MAXX_INDEX];
-      double maxY = bbox[MAXY_INDEX];
+    double minX = bbox[MINX_INDEX];
+    double minY = bbox[MINY_INDEX];
+    double maxX = bbox[MAXX_INDEX];
+    double maxY = bbox[MAXY_INDEX];
 
-      GSFeatureTypeEncoder fte = new GSFeatureTypeEncoder();
-      fte.setEnabled(true);
-      fte.setName(layer);
-      fte.setSRS(SRS);
-      fte.setTitle(layer);
-      fte.addKeyword(layer);
-      fte.setNativeBoundingBox(minX, minY, maxX, maxY, SRS);
-      fte.setLatLonBoundingBox(minX, minY, maxX, maxY, SRS);
+    GSFeatureTypeEncoder fte = new GSFeatureTypeEncoder();
+    fte.setEnabled(true);
+    fte.setName(layer);
+    fte.setSRS(SRS);
+    fte.setTitle(layer);
+    fte.addKeyword(layer);
+    fte.setNativeBoundingBox(minX, minY, maxX, maxY, SRS);
+    fte.setLatLonBoundingBox(minX, minY, maxX, maxY, SRS);
 
-      GSLayerEncoder le = new GSLayerEncoder();
-      le.setDefaultStyle(styleName);
-      le.setEnabled(true);
+    GSLayerEncoder le = new GSLayerEncoder();
+    le.setDefaultStyle(styleName);
+    le.setEnabled(true);
 
-      if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(),
-          GeoserverProperties.getStore(), fte, le))
-      {
-        log.debug("Created the layer [" + layer + "] in geoserver.");
-        return true;
-      }
-      else
-      {
-        log.error("Failed to create the layer [" + layer + "] in geoserver.");
-        return false;
-      }
+    if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
+    {
+      log.debug("Created the layer [" + layer + "] in geoserver.");
+      return true;
+    }
+    else
+    {
+      log.error("Failed to create the layer [" + layer + "] in geoserver.");
+      return false;
+    }
   }
 
   /**
@@ -502,7 +515,7 @@ public class GeoserverFacade implements Reloadable
   {
     String workspace = GeoserverProperties.getWorkspace();
     RESTLayer layerObj = getReader().getLayer(workspace, layer);
-    
+
     return layerObj != null;
   }
 
@@ -592,15 +605,11 @@ public class GeoserverFacade implements Reloadable
     }
 
     ValueQuery collected = new ValueQuery(union.getQueryFactory());
-    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")",
-        "collected"));
+    collected.SELECT(collected.aSQLAggregateClob("collected", "st_collect(" + GEOM_COLUMN + ")", "collected"));
     collected.FROM("(" + union.getSQL() + ")", "unioned");
 
     ValueQuery outer = new ValueQuery(union.getQueryFactory());
-    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"),
-        union.aSQLAggregateDouble("miny", "st_ymin(collected)"),
-        union.aSQLAggregateDouble("maxx", "st_xmax(collected)"),
-        union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble("miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
 
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 

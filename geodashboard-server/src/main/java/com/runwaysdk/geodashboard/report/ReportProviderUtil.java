@@ -15,6 +15,7 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
@@ -24,7 +25,7 @@ import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.AttributeReference;
-import com.runwaysdk.query.GeneratedBusinessQuery;
+import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -78,7 +79,7 @@ public class ReportProviderUtil implements Reloadable
     return GeoEntity.getByKey(defaultGeoId);
   }
 
-  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery, QueryFactory factory)
+  public static void addConditions(String criteria, String type, GeneratedComponentQuery query, ValueQuery vQuery, QueryFactory factory)
   {
     try
     {
@@ -102,7 +103,7 @@ public class ReportProviderUtil implements Reloadable
 
           if (key.startsWith(type))
           {
-            Attribute attribute = query.get(attributeName);
+            Attribute attribute = QueryUtil.get(query, attributeName);
 
             if (attribute instanceof AttributeNumber)
             {

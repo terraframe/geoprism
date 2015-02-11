@@ -34,6 +34,7 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.QueryUtil;
+import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -75,7 +76,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 {
   private static final long        serialVersionUID = 1992575686;
 
-  public static final String       DB_VIEW_PREFIX   = "l";
+  public static final String       DB_VIEW_PREFIX   = "lv_";
 
   private static final Log         log              = LogFactory.getLog(DashboardLayer.class);
 
@@ -171,7 +172,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     this.setViewName(vn);
     this.setVirtual(true);
 
-    style.generateName(this.getViewName());
+    style.setName(this.getViewName());
 
     if (conditions != null)
     {
@@ -209,9 +210,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
   public String generateViewName()
   {
+    String sessionId = Session.getCurrentSession().getId();
 
     // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well.
-    String vn = DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 30);
+
+    String vn = DB_VIEW_PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
 
     return vn;
   }
@@ -407,6 +410,30 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     {
       iter.close();
     }
+  }
+
+  @Override
+  public String getViewName()
+  {
+    String sessionId = Session.getCurrentSession().getId();
+
+    String key = sessionId + "-" + this.getId();
+
+    if (!SessionParameterFacade.containsKey(key))
+    {
+      SessionParameterFacade.put(key, this.generateViewName());
+    }
+
+    return SessionParameterFacade.get(key);
+  }
+
+  public void setViewName(String value)
+  {
+    String sessionId = Session.getCurrentSession().getId();
+
+    String key = sessionId + "-" + this.getId();
+
+    SessionParameterFacade.put(key, value);
   }
 
   /**
@@ -883,6 +910,20 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
 
     return categoriesJSON.toString();
+  }
+
+  public static String getSessionId(String viewName)
+  {
+    String[] split = viewName.split("_");
+
+    if (split != null && split.length == 3)
+    {
+      String sessionId = split[1];
+
+      return sessionId;
+    }
+
+    return null;
   }
 
 }

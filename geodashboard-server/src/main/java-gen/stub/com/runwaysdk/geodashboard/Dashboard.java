@@ -49,7 +49,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     QueryFactory f = new QueryFactory();
     DashboardQuery q = new DashboardQuery(f);
 
-    q.ORDER_BY_DESC(q.getDisplayLabel().localize());
+    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
 
     return q;
   }
