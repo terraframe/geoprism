@@ -24,6 +24,7 @@
 					<dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
 					<reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
 					<reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
+					<reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
 					<boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
 					<struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />	
 				</attributes>
@@ -104,7 +105,7 @@
 
 			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
 				<attributes>
-					<char name="name" label="Name" size="64" required="true" />
+					<char name="name" label="Name" size="64" required="false" />
 
 					<!-- value styles -->
 					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />

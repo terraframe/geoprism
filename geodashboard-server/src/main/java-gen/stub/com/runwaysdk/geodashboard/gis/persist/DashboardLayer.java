@@ -15,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.business.generation.NameConventionUtil;
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -70,7 +69,6 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
-import com.runwaysdk.util.IdParser;
 
 public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
@@ -170,6 +168,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that won't show the new style update.
     String vn = generateViewName();
     this.setViewName(vn);
+    this.setDashboardMap(DashboardMap.get(mapId));
     this.setVirtual(true);
 
     style.setName(this.getViewName());
@@ -661,10 +660,15 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   @Override
   protected String buildKey()
   {
-    String name = this.getName();
-    String idRoot = IdParser.parseRootFromId(this.getId());
-    String keyName = NameConventionUtil.buildAttribute(name, idRoot + "_");
-    return keyName;
+    if (this.getDashboardMapId() != null && this.getDashboardMapId().length() > 0)
+    {
+      return this.getDashboardMapId() + "-" + this.getName();
+    }
+
+    /*
+     * The apply will fail because dashboard map is a required field. However, in order to give the user a better error message we still need to populate the key with value.
+     */
+    return this.getId();
   }
 
   @Override

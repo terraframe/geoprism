@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -707720118)
+@com.runwaysdk.business.ClassSignature(hash = -1144142623)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -133,6 +133,29 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDLEGEND);
 
     return (com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDLEGEND, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap()
+  {
+    return getDashboardMap(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP);
+
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP);
+
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
@@ -508,6 +531,10 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -848,6 +875,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend();
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias);
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap();
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias);
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend();
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias);
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel);
@@ -1075,6 +1105,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDLEGEND, com.runwaysdk.system.metadata.MdAttributeStruct.CLASS, alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap()
+  {
+    return getDashboardMap(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
@@ -1640,6 +1687,10 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -1725,6 +1776,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend();
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias);
     public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap();
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias);
+    public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend();
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias);
     public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel);
@@ -1949,6 +2003,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF getDashboardLegend(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.DashboardLegendQuery.DashboardLegendQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDLEGEND, com.runwaysdk.system.metadata.MdAttributeStruct.CLASS, alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap()
+  {
+    return getDashboardMap(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF getDashboardMap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend()
@@ -2281,6 +2352,10 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.DASHBOARDMAP)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery.DashboardMapQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.ENTITYDOMAIN)) 
     {

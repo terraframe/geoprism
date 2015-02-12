@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 452852499)
+@com.runwaysdk.business.ClassSignature(hash = 1506322936)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 452852499;
+  private static final long serialVersionUID = 1506322936;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -32,6 +32,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
+  public static java.lang.String DASHBOARDMAP = "dashboardMap";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String GEOENTITY = "geoEntity";
@@ -210,6 +211,55 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeStructMdDTO getDashboardLegendMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeStructMdDTO) getAttributeDTO(DASHBOARDLEGEND).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO getDashboardMap()
+  {
+    if(getValue(DASHBOARDMAP) == null || getValue(DASHBOARDMAP).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.get(getRequest(), getValue(DASHBOARDMAP));
+    }
+  }
+  
+  public String getDashboardMapId()
+  {
+    return getValue(DASHBOARDMAP);
+  }
+  
+  public void setDashboardMap(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARDMAP, "");
+    }
+    else
+    {
+      setValue(DASHBOARDMAP, value.getId());
+    }
+  }
+  
+  public boolean isDashboardMapWritable()
+  {
+    return isWritable(DASHBOARDMAP);
+  }
+  
+  public boolean isDashboardMapReadable()
+  {
+    return isReadable(DASHBOARDMAP);
+  }
+  
+  public boolean isDashboardMapModified()
+  {
+    return isModified(DASHBOARDMAP);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardMapMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARDMAP).getAttributeMdDTO();
   }
   
   public Boolean getDisplayInLegend()

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1446782573)
+@com.runwaysdk.business.ClassSignature(hash = 184515448)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -18,6 +18,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String DASHBOARDLEGEND = "dashboardLegend";
   private com.runwaysdk.business.Struct dashboardLegend = null;
   
+  public static java.lang.String DASHBOARDMAP = "dashboardMap";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String GEOENTITY = "geoEntity";
@@ -37,7 +38,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1446782573;
+  private static final long serialVersionUID = 184515448;
   
   public DashboardLayerBase()
   {
@@ -159,6 +160,46 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeStructDAOIF)mdClassIF.definesAttribute(DASHBOARDLEGEND);
+  }
+  
+  public com.runwaysdk.geodashboard.gis.persist.DashboardMap getDashboardMap()
+  {
+    if (getValue(DASHBOARDMAP).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.gis.persist.DashboardMap.get(getValue(DASHBOARDMAP));
+    }
+  }
+  
+  public String getDashboardMapId()
+  {
+    return getValue(DASHBOARDMAP);
+  }
+  
+  public void validateDashboardMap()
+  {
+    this.validateAttribute(DASHBOARDMAP);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardMapMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARDMAP);
+  }
+  
+  public void setDashboardMap(com.runwaysdk.geodashboard.gis.persist.DashboardMap value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARDMAP, "");
+    }
+    else
+    {
+      setValue(DASHBOARDMAP, value.getId());
+    }
   }
   
   public Boolean getDisplayInLegend()
