@@ -6,7 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeFloatDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
@@ -19,7 +25,12 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
+import com.runwaysdk.query.AttributeDate;
+import com.runwaysdk.query.AttributeDouble;
+import com.runwaysdk.query.AttributeFloat;
+import com.runwaysdk.query.AttributeInteger;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
@@ -199,5 +210,104 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       iterator.close();
     }
   }
+  
+  public static String[] getCategoryInputSuggestions(String mdAttributeId, String text, Integer limit)
+  {
+	  OIterator<ValueObject> iterator = null;
+	  
+	  List<String> suggestions = new LinkedList<String>();
 
+	    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+	    MdClassDAOIF mdClass = mdAttributeConcrete.definedByClass();
+	    QueryFactory factory = new QueryFactory();
+	    BusinessQuery bQuery = factory.businessQuery(mdClass.definesType());
+	    
+	    if(mdAttributeConcrete instanceof MdAttributeIntegerDAOIF)
+	    {
+		    AttributeInteger selectable = bQuery.aInteger(mdAttributeConcrete.definesAttribute());
+	
+		    ValueQuery query = new ValueQuery(factory);
+		    query.SELECT_DISTINCT(selectable);
+		    query.WHERE(selectable.GE(text));
+		    query.ORDER_BY_ASC(selectable);
+		    query.restrictRows(limit, 1);
+	
+		    iterator = query.getIterator();
+	    }
+	    else if (mdAttributeConcrete instanceof MdAttributeDoubleDAOIF)
+	    {
+		    AttributeDouble selectable = bQuery.aDouble(mdAttributeConcrete.definesAttribute());
+			
+		    ValueQuery query = new ValueQuery(factory);
+		    query.SELECT_DISTINCT(selectable);
+		    query.WHERE(selectable.GE(text));
+		    query.ORDER_BY_ASC(selectable);
+		    query.restrictRows(limit, 1);
+	
+		    iterator = query.getIterator();
+	    }
+	    else if (mdAttributeConcrete instanceof MdAttributeFloatDAOIF)
+	    {
+		    AttributeFloat selectable = bQuery.aFloat(mdAttributeConcrete.definesAttribute());
+			
+		    ValueQuery query = new ValueQuery(factory);
+		    query.SELECT_DISTINCT(selectable);
+		    query.WHERE(selectable.GE(text));
+		    query.ORDER_BY_ASC(selectable);
+		    query.restrictRows(limit, 1);
+	
+		    iterator = query.getIterator();
+	    }
+	    else if (mdAttributeConcrete instanceof MdAttributeCharacterDAOIF)
+	    {
+		    AttributeCharacter selectable = bQuery.aCharacter(mdAttributeConcrete.definesAttribute());
+			
+		    ValueQuery query = new ValueQuery(factory);
+		    query.SELECT_DISTINCT(selectable);
+		    query.WHERE(selectable.LIKEi("%" + text + "%"));
+		    query.ORDER_BY_ASC(selectable);
+		    query.restrictRows(limit, 1);
+	
+		    iterator = query.getIterator();
+	    }
+	    else if (mdAttributeConcrete instanceof MdAttributeDateDAOIF)
+	    {
+	    	// TODO: IMPLEMENT
+	    }
+	    else if (mdAttributeConcrete instanceof MdAttributeBooleanDAOIF)
+	    {
+	    	// TODO: TEST THIS BOOL QUERY
+		    AttributeBoolean selectable = bQuery.aBoolean(mdAttributeConcrete.definesAttribute());
+			
+		    ValueQuery query = new ValueQuery(factory);
+		    query.SELECT_DISTINCT(selectable);
+		    query.WHERE(selectable.EQ(text));
+		    query.ORDER_BY_ASC(selectable);
+		    query.restrictRows(limit, 1);
+	
+		    iterator = query.getIterator();
+	    }
+// 		TODO: IMPLEMENT CLASSIFIER
+	    
+	    
+	
+	    try
+	    {
+	      while (iterator.hasNext())
+	      {
+	        ValueObject object = iterator.next();
+	        String value = object.getValue(mdAttributeConcrete.definesAttribute());
+
+	        suggestions.add(value);
+	      }
+	    }
+	    finally
+	    {
+	      iterator.close();
+	    }
+	    
+	    return suggestions.toArray(new String[suggestions.size()]);
+  }
+  
+  
 }

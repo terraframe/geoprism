@@ -1162,21 +1162,24 @@
       /**
        * Hooks the auto-complete functionality to the category field input fields
        * 
-       * This is a first implementation that is only implemented on a existing saved layer.
-       * This can be expanded to work during the layer creation process and should be revisited
-       * when implementing categories on ontologies.
+       * A similar functionality is implemented for creating new layers with categories in the
+       * _openLayerForAttribute method. The difference being that this method queries the existing 
+       * database view which the layer is built on while the other queries the database from the Dashboard
+       * class to determine the possible values for a layer. 
        * 
+       * This method is a little more acurate because the database view includes any filters
+       * that might have been applied to the layer.
        */
       _addCategoryAutoComplete : function(layerId){
         
         var that = this;
         
-      var clientRequest = new Mojo.ClientRequest({
-        onSuccess : function(jsonCatData) {
+        var clientRequest = new Mojo.ClientRequest({
+        	onSuccess : function(jsonCatData) {
           
-          var data = JSON.parse(jsonCatData);
+        		var data = JSON.parse(jsonCatData);
           
-              that._autocomplete = $('.category-input').autocomplete({
+        		that._autocomplete = $('.category-input').autocomplete({
                   minLength: 1,
                   autoFocus: true,
                   select : function(value, data){          
@@ -1301,6 +1304,32 @@
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
+            
+            // Hook up the auto-complete for category input options
+            $('.category-input').each(function(){
+            	//
+            	// Need to get attribute type ajust ui/functionality accordingly
+            	//// date types should have calendar widgets attached
+            	//// boolean should have just 2 category options 
+              
+              var mdAttribute = $(this).data('mdattributeid');   
+              
+              $(this).autocomplete({
+                source: function( request, response ) {
+                  var req = new Mojo.ClientRequest({
+                    onSuccess : function(results){
+                      response( results );
+                    },
+                    onFailure : function(e){
+                      that.handleException(e);
+                    }
+                  });
+                  
+                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, request.term, 10);
+                },
+                minLength: 1
+              });
+            });
           },
           onFailure : function(e){
             that._closeLayerModal();
