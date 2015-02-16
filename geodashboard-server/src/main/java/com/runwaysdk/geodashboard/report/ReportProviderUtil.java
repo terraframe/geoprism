@@ -25,7 +25,7 @@ import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.AttributeReference;
-import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.GeneratedBusinessQuery;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -79,7 +79,7 @@ public class ReportProviderUtil implements Reloadable
     return GeoEntity.getByKey(defaultGeoId);
   }
 
-  public static void addConditions(String criteria, String type, GeneratedComponentQuery query, ValueQuery vQuery, QueryFactory factory)
+  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery, QueryFactory factory)
   {
     try
     {
