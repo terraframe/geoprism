@@ -146,6 +146,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
+    req.setAttribute("mdAttributeId", mdAttr.getId());
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();

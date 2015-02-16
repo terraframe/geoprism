@@ -1,0 +1,19 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <mdMethod name="getCategoryInputSuggestions" label="Get category input suggestions" static="true" returnType="java.lang.String[]">
+            <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
+            <mdParameter name="text" order="1" type="java.lang.String" label="Text" />
+            <mdParameter name="limit" order="2" type="java.lang.Integer" label="Limit" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

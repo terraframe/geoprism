@@ -3,6 +3,54 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
+
+<head>
+
+<%@page import="com.runwaysdk.constants.DeployProperties" %>
+
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/jstree/jstree.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jstree/style.css" ></link>
+
+<!-- Runway Factory -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/form/Form.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/list/List.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/button/Button.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
+
+<!-- JQuery -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
+
+
+<!-- Runway Generic -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerForm.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/OntologyTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Form.js"></script>
+
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %> --%>
+<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>
+
+<script type="text/javascript"> ${js} </script>
+
+
+<!-- Localization -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/default.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.css" />
+</head>
+
+
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}">
 </mjl:component>
@@ -540,7 +588,7 @@
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">		
 			                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
-			                       	 	<input id="cat1" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -557,7 +605,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat1" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -573,7 +621,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat1" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -589,7 +637,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat1" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -605,7 +653,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat1" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -691,4 +739,33 @@
       </div>
     </div>
     
+    <script type="text/javascript">
+
+	$( document ).ready(function() {
+
+	  // This prevents building duplicate trees when the javascript is being run twice.
+	  // This is a potential bug with a ticket reported #279
+	  // 
+	  // This was the start of an implementation that got put on hold temporarily. The current rootTerm param
+	  // is being set from the controller as a request attribute but needs to be set as the roots of the layer 
+	  // ontology rather than the root of the entire ontology tree for all the data in the system. 
+	  if ('${isOntologyAttribute}' === true && $("#ontology-tree").children().length === 0){
+		      com.runwaysdk.ui.Manager.setFactory("JQuery");
+			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+			      termType : <%="\"" + ClassifierDTO.CLASS + "\""%>,
+			      relationshipTypes : [ <%="\"" + ClassifierIsARelationshipDTO.CLASS + "\""%> ],
+			      rootTerm : '${ontologyId}',
+				  crud: {
+				      create: { // This configuration gets merged into the jquery create dialog.
+				        height: 320
+				      },
+				      update: {
+				        height: 320
+				      }
+				  }
+			  });
+			  tree.render("#ontology-tree");
+	  }
+	});
+	</script>
 
