@@ -13,6 +13,7 @@ import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeFloatDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
@@ -287,8 +288,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 	
 		    iterator = query.getIterator();
 	    }
-// 		TODO: IMPLEMENT CLASSIFIER
-	    
 	    
 	
 	    try

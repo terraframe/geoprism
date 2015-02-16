@@ -20,6 +20,7 @@ import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
+import com.runwaysdk.system.metadata.MdAttributeDateDTO;
 import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
@@ -147,6 +148,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
     req.setAttribute("mdAttributeId", mdAttr.getId());
+    
+    MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
+    MdAttributeConcreteDTO mdAttrConcrete = mdAttributeVirtual.getMdAttributeConcrete();
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
@@ -166,12 +170,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // filter out invalid layer types depending on attribute type
     // this is primarily to prevent creating gradients on date fields
-    if (! ( mdAttr instanceof MdAttributeMomentDTO ))
+    if (! ( mdAttrConcrete instanceof MdAttributeDateDTO ))
     {
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
+      layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
     }
 
-    layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
 
     req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
     req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
