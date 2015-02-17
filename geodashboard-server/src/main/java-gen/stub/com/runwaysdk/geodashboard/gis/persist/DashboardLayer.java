@@ -29,7 +29,6 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.QueryUtil;
@@ -67,7 +66,6 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttributeReference;
-import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
 
 public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
@@ -151,9 +149,9 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     if (isNew && style instanceof DashboardThematicStyle)
     {
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-      MdClass mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
-      MdClassDAO md = (MdClassDAO) MdClassDAO.get(mdClass.getId());
-      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
+      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(tStyle.getMdAttributeId());
+      MdClassDAOIF mdClass = mdAttribute.definedByClass();
+      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
 
       if (attr != null)
       {
@@ -165,7 +163,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       }
     }
 
-    // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that won't show the new style update.
+    // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that
+    // won't show the new style update.
     String vn = generateViewName();
     this.setViewName(vn);
     this.setDashboardMap(DashboardMap.get(mapId));
@@ -211,7 +210,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   {
     String sessionId = Session.getCurrentSession().getId();
 
-    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63 as well.
+    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63
+    // as well.
 
     String vn = DB_VIEW_PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
 
@@ -245,7 +245,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
     //
     // // make sure there are no duplicate geo entities
-    // String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " + ((MdEntity)this.getMdClass()).getTableName();
+    // String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " +
+    // ((MdEntity)this.getMdClass()).getTableName();
     // countSQL += " GROUP BY " + geoIdColumnName + " HAVING COUNT(*) > 1";
     //
     // ResultSet resultSet = Database.query(countSQL);
@@ -289,6 +290,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // Database.throwDatabaseException(sqlEx2);
     // }
     // }
+    createDatabaseView(true);
   }
 
   /**
@@ -308,7 +310,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   }
 
   /**
-   * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it does not exist yet.
+   * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
+   * does not exist yet.
    */
   public void publish()
   {
@@ -333,13 +336,15 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   public boolean needsRepublish()
   {
 
-    // TODO : layer views need to be associated with a particular session, otherwise when changing filter conditions different users will clobber eachother.
+    // TODO : layer views need to be associated with a particular session, otherwise when changing filter conditions
+    // different users will clobber eachother.
     return true;
 
     // boolean isPublished = isPublished();
     // if (!isPublished) { return true; }
     //
-    // // TODO : We could optimize this by recording which conditions the view was built with and then saying if the conditions are different return true.
+    // // TODO : We could optimize this by recording which conditions the view was built with and then saying if the
+    // conditions are different return true.
     // if (conditions != null) { return true; }
     //
     // Date lastUpdate = this.getLastUpdateDate();
@@ -523,12 +528,15 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           //
           // v.SELECT(min, max);
           //
-          // // Because we're using the window functions we must group by the thematic variable, or rather an alias to it
-          // SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY", thematicSel.getDbQualifiedName());
+          // // Because we're using the window functions we must group by the thematic variable, or rather an alias to
+          // it
+          // SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY",
+          // thematicSel.getDbQualifiedName());
           // groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
           // v.GROUP_BY(groupBy);
           //
-          // // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD trick for this)
+          // // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD
+          // trick for this)
           // v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
           // }
 
@@ -666,7 +674,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
 
     /*
-     * The apply will fail because dashboard map is a required field. However, in order to give the user a better error message we still need to populate the key with value.
+     * The apply will fail because dashboard map is a required field. However, in order to give the user a better error
+     * message we still need to populate the key with value.
      */
     return this.getId();
   }

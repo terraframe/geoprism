@@ -27,7 +27,6 @@ import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
-import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeDouble;
 import com.runwaysdk.query.AttributeFloat;
 import com.runwaysdk.query.AttributeInteger;

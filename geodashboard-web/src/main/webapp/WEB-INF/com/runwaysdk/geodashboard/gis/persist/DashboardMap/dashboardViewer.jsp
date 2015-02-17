@@ -295,6 +295,19 @@ $(document).ready(function(){
 		                              <input id="filter-hidden-${attr.mdAttributeId}" type="hidden"></input>
 		                            </div>
 								</c:when>
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeBoolean'}">
+									<!-- Boolean attribute -->
+		                            <div class="checks-frame">
+		                              <div>
+		                                <input class="gdb-attr-filter filter-boolean" id="${attr.mdAttributeId}-true" name="filter-${attr.mdAttributeId}" type="radio" value="true">
+		                                <label for="${attr.mdAttributeId}-true"><gdb:localize key="filter.true" /></label>
+		                              </div>
+		                              <div>
+  		                                <input class="gdb-attr-filter filter-boolean" id="${attr.mdAttributeId}-false" name="filter-${attr.mdAttributeId}" type="radio" value="false">
+		                                <label for="${attr.mdAttributeId}-false"><gdb:localize key="filter.false" /></label>
+		                              </div>
+		                            </div>
+								</c:when>
 								<c:otherwise>
 													      
 								</c:otherwise>

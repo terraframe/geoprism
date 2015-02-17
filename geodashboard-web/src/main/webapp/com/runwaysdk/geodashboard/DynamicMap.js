@@ -1175,11 +1175,11 @@
         var that = this;
         
         var clientRequest = new Mojo.ClientRequest({
-        	onSuccess : function(jsonCatData) {
+          onSuccess : function(jsonCatData) {
           
-        		var data = JSON.parse(jsonCatData);
+            var data = JSON.parse(jsonCatData);
           
-        		that._autocomplete = $('.category-input').autocomplete({
+            that._autocomplete = $('.category-input').autocomplete({
                   minLength: 1,
                   autoFocus: true,
                   select : function(value, data){          
@@ -1307,10 +1307,10 @@
             
             // Hook up the auto-complete for category input options
             $('.category-input').each(function(){
-            	//
-            	// Need to get attribute type ajust ui/functionality accordingly
-            	//// date types should have calendar widgets attached
-            	//// boolean should have just 2 category options 
+              //
+              // Need to get attribute type ajust ui/functionality accordingly
+              //// date types should have calendar widgets attached
+              //// boolean should have just 2 category options 
               
               var mdAttribute = $(this).data('mdattributeid');   
               
@@ -1609,29 +1609,53 @@
             else if($(this).hasClass('filter-date')) {
               // Add the date criteria
               if($(this).hasClass('checkin')) {
-                var mdAttribute = $(this).attr('id').replace('filter-from-', '');   
+                var mdAttribute = $(this).attr('id').replace('filter-from-', '');                 
+                var date = $(this).datepicker('getDate')
+                
+                // Normalize the incoming date to a standard format regardless of the locale
+                var value =  $.datepicker.formatDate('dd/mm/yy', date);
 
                 var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
-                attrCond.setComparisonValue(textValue);
+                attrCond.setComparisonValue(value);
                 attrCond.setDefiningMdAttribute(mdAttribute);
                       
                 conditions.push(attrCond);
-                criteria.push({'mdAttribute':mdAttribute, 'operation':'ge', 'value':textValue});
+                criteria.push({'mdAttribute':mdAttribute, 'operation':'ge', 'value':value});
               }
               else if($(this).hasClass('checkout')) {
                 var mdAttribute = $(this).attr('id').replace('filter-to-', '');   
-                    
+                var date = $(this).datepicker('getDate')
+                
+                // Normalize the incoming date to a standard format regardless of the locale                
+                var value =  $.datepicker.formatDate('dd/mm/yy', date);
                     
                 var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-                attrCond.setComparisonValue(textValue);
+                attrCond.setComparisonValue(value);
                 attrCond.setDefiningMdAttribute(mdAttribute);
                     
                 conditions.push(attrCond);
-                criteria.push({'mdAttribute':mdAttribute, 'operation':'le', 'value':textValue});
+                criteria.push({'mdAttribute':mdAttribute, 'operation':'le', 'value':value});
               }                          
             }
           }          
         });
+        
+        // Add the boolean
+        $( '.jcf-class-filter-boolean.rad-checked' ).each(function( index ) {          
+        	var input = $(this).siblings().first();
+            var value = input.attr('value');
+            
+            var mdAttribute = input.attr('name').replace('filter-', '');   
+            
+            var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();
+            attrCond.setComparisonValue(value);
+            attrCond.setDefiningMdAttribute(mdAttribute);
+            
+            conditions.push(attrCond);
+            criteria.push({'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
+        });
+            
+ 
         
         return {'conditions' : conditions, 'criteria' : criteria};
       },
@@ -1785,6 +1809,18 @@
                 $('#filter-hidden-' + mdAttribute ).val(ui.item.id);
             },           
             minLength: 2
+          });
+        });
+        
+        // Hook up the mutual exclusive filter for boolean attributes
+        $('.jcf-class-filter-boolean').each(function(){
+          $(this).on('click', function(e) {
+            var checked = $(this).hasClass( "rad-checked" );
+            
+            if(e.ctrlKey && checked)
+            {
+            	$(this).removeClass( "rad-checked" );
+            }
           });
         });
       },

@@ -7,7 +7,6 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.Attribute;
@@ -50,7 +49,7 @@ public class QueryUtil implements Reloadable
     return ( (GeneratedEntityQuery) query ).get(attributeName);
   }
 
-  public static MdAttributeDAOIF getGeoEntityAttribute(MdClassDAO mdClass)
+  public static MdAttributeDAOIF getGeoEntityAttribute(MdClassDAOIF mdClass)
   {
     for (MdAttributeDAOIF mdAttr : mdClass.definesAttributes())
     {

@@ -34,7 +34,6 @@ $.datepicker.setDefaults($.datepicker.regional['<%=region%>']);
  */
 jQuery(function(){
   jQuery('div.datepicker').datepicker($.datepicker.regional['<%=region%>']);
-  jQuery('div.datepicker').datepicker("option", { dateFormat: 'dd/mm/yy' });
   
   jQuery('.data-block').each(function(){
     var set = jQuery(this);
@@ -50,7 +49,6 @@ jQuery(function(){
     
     checkin.datepicker($.datepicker.regional['<%=region%>']);
     checkin.datepicker("option", {
-      dateFormat: 'dd/mm/yy' ,
       showOtherMonths: true,
       selectOtherMonths: true,
       onSelect: function(dateText, inst){
@@ -66,7 +64,6 @@ jQuery(function(){
     
     checkout.datepicker($.datepicker.regional['<%=region%>']);
     checkout.datepicker("option", {
-      dateFormat: 'dd/mm/yy' ,
       showOtherMonths: true,
       selectOtherMonths: true,
       onSelect: function(dateText, inst){

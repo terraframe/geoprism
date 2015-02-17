@@ -25,4 +25,9 @@ public abstract class DashboardPrimitive extends DashboardPrimitiveBase implemen
     return ReportProviderUtil.parseDate(this.getComparisonValue());
   }
 
+  public Boolean getComparisonValueAsBoolean()
+  {
+    return new Boolean(this.getComparisonValue());
+  }
+
 }

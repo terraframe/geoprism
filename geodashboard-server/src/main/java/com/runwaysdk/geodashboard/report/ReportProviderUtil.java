@@ -21,6 +21,7 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
@@ -109,6 +110,10 @@ public class ReportProviderUtil implements Reloadable
             {
               addNumberCondition(vQuery, operation, value, (AttributeNumber) attribute);
             }
+            else if (attribute instanceof AttributeBoolean)
+            {
+              addBooleanCondition(vQuery, operation, value, (AttributeBoolean) attribute);
+            }
             else if (attribute instanceof AttributeMoment)
             {
               addMomentCondition(vQuery, operation, value, (AttributeMoment) attribute);
@@ -134,7 +139,7 @@ public class ReportProviderUtil implements Reloadable
   public static Date parseDate(String source)
   {
     Locale locale = LocalizationFacade.getLocale();
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", locale);
+    SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy", locale);
 
     try
     {
@@ -147,6 +152,23 @@ public class ReportProviderUtil implements Reloadable
       DateParseException e = new DateParseException(cause);
       e.setInput(source);
       e.setPattern(format.toLocalizedPattern());
+      throw e;
+    }
+  }
+
+  private static void addBooleanCondition(ValueQuery vQuery, String operation, String value, AttributeBoolean attribute)
+  {
+    Boolean bool = new Boolean(value);
+
+    if (operation.equals(EQ))
+    {
+      vQuery.AND(attribute.EQ(bool));
+    }
+    else
+    {
+      UnsupportedComparisonException e = new UnsupportedComparisonException();
+      e.setComparison(operation);
+
       throw e;
     }
   }
