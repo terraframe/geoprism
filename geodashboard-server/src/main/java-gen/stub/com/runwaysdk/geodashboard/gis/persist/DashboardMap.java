@@ -61,7 +61,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       generateSessionViewName(layer);
 
-      layer.publish();
+      layer.publish(true);
     }
 
     GeoserverFacade.pushUpdates();
@@ -161,7 +161,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     {
       this.generateSessionViewName(layer);
 
-      layer.publish();
+      layer.publish(true);
     }
 
     GeoserverFacade.pushUpdates();

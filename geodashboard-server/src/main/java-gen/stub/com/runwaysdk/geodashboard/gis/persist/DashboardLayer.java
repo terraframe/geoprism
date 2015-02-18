@@ -116,7 +116,12 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
     // We have to make sure that the transaction has ended before we can publish to geoserver,
     // otherwise our database view won't exist yet.
-    this.publish();
+    //
+    // The false flag is set in publish(createDBView) to allow for running the createDatabaseView
+    // method inside the applyWithStyleInTransaction method so that incorrect SQL for view 
+    // creation is caught before database object are created.  Originally noticed on text attribute
+    // layer creation
+    this.publish(false);
     GeoserverFacade.pushUpdates();
 
     try
@@ -205,6 +210,8 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
 
     this.validate();
+    
+    createDatabaseView(true);
   }
 
   public String generateViewName()
@@ -291,7 +298,6 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // Database.throwDatabaseException(sqlEx2);
     // }
     // }
-    createDatabaseView(true);
   }
 
   /**
@@ -314,13 +320,16 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
    * does not exist yet.
    */
-  public void publish()
+  public void publish(boolean createDBView)
   {
     if (needsRepublish())
     {
       this.drop();
 
-      createDatabaseView(true);
+      if(createDBView)
+      {
+    	  createDatabaseView(true);
+      }
 
       if (viewHasData)
       {
