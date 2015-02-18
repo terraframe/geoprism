@@ -5,6 +5,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
   private static final long serialVersionUID = -420671235;
+
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

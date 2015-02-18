@@ -7,6 +7,7 @@ import com.runwaysdk.geodashboard.gis.model.condition.Equal;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
@@ -29,6 +30,10 @@ public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.
     if (attr instanceof AttributeNumber)
     {
       query.AND( ( (AttributeNumber) attr ).EQ(this.getComparisonValue()));
+    }
+    else if (attr instanceof AttributeBoolean)
+    {
+      query.AND( ( (AttributeBoolean) attr ).EQ(this.getComparisonValueAsBoolean()));
     }
     else if (attr instanceof AttributeDate)
     {
