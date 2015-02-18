@@ -1307,12 +1307,8 @@
             
             // Hook up the auto-complete for category input options
             $('.category-input').each(function(){
-            	//
-            	// Need to get attribute type ajust ui/functionality accordingly
-            	//// date types should have calendar widgets attached
-            	//// boolean should have just 2 category options 
               
-              var mdAttribute = $(this).data('mdattributeid');   
+              var mdAttribute = $(this).data('mdattributeid');  
               
               $(this).autocomplete({
                 source: function( request, response ) {
@@ -1325,7 +1321,11 @@
                     }
                   });
                   
-                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, request.term, 10);
+                  // values are scraped from hidden input elements on the layer create form
+                  var universalId = $("#f58").val();
+                  var aggregationVal = $("#f59").val();
+                  
+                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
                 },
                 minLength: 1
               });

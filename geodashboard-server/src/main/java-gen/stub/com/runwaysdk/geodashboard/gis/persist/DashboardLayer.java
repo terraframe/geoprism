@@ -27,6 +27,7 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.database.DatabaseException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
@@ -242,6 +243,24 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
   public void validate()
   {
+	  QueryFactory f = new QueryFactory();
+	  ValueQuery vq = new ValueQuery(f);
+	  
+	  try
+	  {
+		  String sql = this.getViewQuery().getSQL();
+//		  Database.query(sql);
+	  }
+	  catch(DatabaseException e)
+	  {
+		  
+	  }
+      
+
+//	    Database.dropView(this.getViewName(), sql, false);
+
+//	    Database.createView(this.getViewName(), sql);
+	    
     // String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
     //
     // // make sure there are no duplicate geo entities

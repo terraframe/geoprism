@@ -135,6 +135,13 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
     req.setAttribute("universals", universals);
+    
+//    DashboardThematicStyleDTO tStyle = (DashboardThematicStyleDTO) style;
+//    MdClassDTO mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
+//    MdClassDTO md = (MdClassDTO) MdClassDTO.get(clientRequest, mdClass.getId());
+//    MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
+//    geoEntity = attr.getId();
+    
 
     // selected attribute
     MdAttributeDTO mdAttr;
@@ -175,7 +182,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
       layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
     }
-
 
     req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
     req.setAttribute("layerTypeLabels", layerTypes.values().toArray());

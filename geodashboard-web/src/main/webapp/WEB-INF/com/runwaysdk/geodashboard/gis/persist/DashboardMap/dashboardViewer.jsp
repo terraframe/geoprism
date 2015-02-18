@@ -213,17 +213,17 @@ $(document).ready(function(){
 	                <div class="panel">
 	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
 	                   		<%-- This <c:when> check is only needed until ontology and text attributes are supported in layer aggregation --%>
-                           	<c:choose>
-                            	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
+<%--                            	<c:choose> --%>
+<%--                             	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}"> --%>
                                 	<!-- When attribute any type other than Term or Text add the map it button -->
                                     <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
                                     	<!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
                                         <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
                                     </a>
-                                    	</c:when>
-                                	<c:otherwise>
-                            	</c:otherwise>
-                        	</c:choose>
+<%--                                     	</c:when> --%>
+<%--                                 	<c:otherwise> --%>
+<%--                             	</c:otherwise> --%>
+<%--                         	</c:choose> --%>
 						</h4>
 										
 	                  <!-- slide block -->
