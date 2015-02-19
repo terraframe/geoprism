@@ -2175,3 +2175,9 @@ span.select-area span.center {
 #geocode {
 	width: 267px;
 }
+
+a.clone-dashboard {
+	color: #019EDC;
+	position: relative;
+	margin: 0px 9px 0px 0px;
+}

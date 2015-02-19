@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -787187221)
+@com.runwaysdk.business.ClassSignature(hash = -454965508)
 public class DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.DashboardController";
@@ -119,6 +119,20 @@ public class DashboardControllerBase implements com.runwaysdk.generation.loader.
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardController.failEdit");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=true)
+  public void newClone(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardController.newClone");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=true)
+  public void failNewClone(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardController.failNewClone");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)

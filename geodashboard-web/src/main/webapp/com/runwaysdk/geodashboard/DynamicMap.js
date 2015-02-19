@@ -76,6 +76,10 @@
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
         $(".gdb-dashboard").on("click", dashboardBound); 
         
+        // Handler for the clone dashboard button
+        $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler)); 
+        
+        
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
@@ -659,6 +663,66 @@
         var dashboardId = el[0].id;
         
         window.location = "?dashboard=" + dashboardId;
+      },
+      
+      _dashboardCloneHandler : function(e) {
+        e.preventDefault();      
+          
+        var that = this;
+          
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){     
+        	// Remove the internal form div if it exists
+            $( "#clone-dialog" ).remove();
+            
+            // Set the html of the dialog
+            $( "#clone-container" ).html(html);
+            
+            // Show the dialog
+            $( "#clone-dialog" ).dialog({
+              resizable: false,
+              height:200,
+              width:400,
+              modal: true,
+              buttons: [{
+                text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
+                click : function() {
+                  var createRequest = new Mojo.ClientRequest({
+                    onSuccess : function(dashboard){
+                      window.location = "?dashboard=" + dashboard.getId();
+                    },
+                    onFailure : function(e){
+                      that.handleException(e);
+                    }
+                  });
+                  
+                  var dashboardId = $('#clone-dashboard-id').val();
+                  var label = $('#clone-label').val();
+                  
+                  if(label != null && label.length > 0)
+                  {
+                    com.runwaysdk.geodashboard.Dashboard.clone(createRequest, dashboardId, label);                    
+                  }
+                  else
+                  {
+                    alert(com.runwaysdk.Localize.localize("dashboard", "Required"))
+                  }
+                }
+              },
+              {
+                text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
+                click : function() {
+                   $( this ).dialog( "close" );
+                }
+              }]
+            });
+          },
+          onFailure : function(e){
+            that.handleException(e);
+          }
+        });
+        
+        this._DashboardController.newClone(request, this._dashboardId);
       },
       
       /**
@@ -1642,7 +1706,7 @@
         
         // Add the boolean
         $( '.jcf-class-filter-boolean.rad-checked' ).each(function( index ) {          
-        	var input = $(this).siblings().first();
+          var input = $(this).siblings().first();
             var value = input.attr('value');
             
             var mdAttribute = input.attr('name').replace('filter-', '');   
@@ -1819,7 +1883,7 @@
             
             if(e.ctrlKey && checked)
             {
-            	$(this).removeClass( "rad-checked" );
+              $(this).removeClass( "rad-checked" );
             }
           });
         });

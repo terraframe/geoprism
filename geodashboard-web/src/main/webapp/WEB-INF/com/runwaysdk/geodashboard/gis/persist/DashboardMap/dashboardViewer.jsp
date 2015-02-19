@@ -162,6 +162,11 @@ $(document).ready(function(){
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
+		    <span id="clone-dashboard" class="pull-left">
+              <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+		    </span>		
+		    
+		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
 				<a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
@@ -173,27 +178,6 @@ $(document).ready(function(){
 				</ul>
 			</div>
 		</div>
-<!-- 
-		<button class="none">submit</button>
-        
-        <div id="new-dashboard-btn-container">
-        	<a href="#" class="opener new-dashboard-btn" data-toggle="tooltip" data-placement="left" data-id="${attr.mdAttributeId}">
-        		<span>
-        			<gdb:localize key="dashboardViewer.createNewDashboard"/>
-        		</span>
-			</a>
-		</div>
-		    
-        <div class="choice-form">
-          
-          <div class="row-holder">
-            <label class="none" for="geocode"><gdb:localize key="dashboardViewer.choiceSelect"/></label>
-            <span class="jcf-unselectable select-choice-select select-area select-focus" style="width: 267px;">
-            <input type="text" autocomplete="off" id="geocode" name="geocode" class="choice-select">
-            </span>
-          </div>
-        </div>
- -->		
           
         <div class="sales-accortion panel-group">
 	
@@ -360,5 +344,10 @@ $(document).ready(function(){
   <div class="skip">
     <a href="#wrapper"><gdb:localize key="dashboardViewer.backToTop"/></a>
   </div>
+  
 </body>
+
+<!-- Dialog for cloning a dashboard  -->
+<div id="clone-container"></div>  
+
 </html>

@@ -1,5 +1,9 @@
 package com.runwaysdk.geodashboard;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -152,5 +156,15 @@ public class DashboardController extends DashboardControllerBase implements com.
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
+  }
+
+  @Override
+  public void newClone(String dashboardId) throws IOException, ServletException
+  {
+    DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), dashboardId);
+
+    req.setAttribute("dashboard", dashboard);
+    
+    render("newClone.jsp");
   }
 }
