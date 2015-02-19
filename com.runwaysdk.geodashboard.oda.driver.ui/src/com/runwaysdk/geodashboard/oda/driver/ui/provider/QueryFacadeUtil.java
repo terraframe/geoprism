@@ -40,4 +40,19 @@ public class QueryFacadeUtil
 
     return type;
   }
+
+  public static Integer getDepthFromQueryText(String queryText)
+  {
+    JSONObject object = new JSONObject(queryText);
+    JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
+
+    if (parameters.has(QueryFacade.DEPTH))
+    {
+      int depth = parameters.getInt(QueryFacade.DEPTH);
+
+      return depth;
+    }
+
+    return null;
+  }
 }

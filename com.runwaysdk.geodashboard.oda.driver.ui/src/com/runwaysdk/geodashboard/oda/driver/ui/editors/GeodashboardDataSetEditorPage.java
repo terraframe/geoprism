@@ -38,10 +38,8 @@ import com.runwaysdk.geodashboard.oda.driver.ui.provider.GeodashboardMetaDataPro
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
 
 /**
- * The Geodashborad DatasetEditor page which enable user to browse the catalog
- * of the selected data source. The page extends the
- * <code>DataSetWizardPage</code> it could be loaded as a custom page for
- * geodashboard ui.
+ * The Geodashborad DatasetEditor page which enable user to browse the catalog of the selected data source. The page
+ * extends the <code>DataSetWizardPage</code> it could be loaded as a custom page for geodashboard ui.
  */
 
 public class GeodashboardDataSetEditorPage extends DataSetWizardPage
@@ -95,8 +93,8 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private void initializeControl(DataSetDesign dataSetDesign)
   {
     /*
-     * Optionally restores the state of a previous design session. Obtains
-     * designer state, using getInitializationDesignerState();
+     * Optionally restores the state of a previous design session. Obtains designer state, using
+     * getInitializationDesignerState();
      */
     if (dataSetDesign == null)
     {
@@ -217,10 +215,8 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage
-   * #collectDataSetDesign(org.eclipse.datatools.connectivity.oda.design.
-   * DataSetDesign)
+   * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage
+   * #collectDataSetDesign(org.eclipse.datatools.connectivity.oda.design. DataSetDesign)
    */
   protected DataSetDesign collectDataSetDesign(DataSetDesign design)
   {
@@ -237,9 +233,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage
-   * #cleanup()
+   * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage #cleanup()
    */
   protected void cleanup()
   {
@@ -257,8 +251,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   }
 
   /**
-   * Updates the given dataSetDesign with the query and its metadata defined in
-   * this page.
+   * Updates the given dataSetDesign with the query and its metadata defined in this page.
    * 
    * @param dataSetDesign
    */
@@ -346,13 +339,28 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     {
       String type = QueryFacadeUtil.getTypeFromQueryText(queryText);
 
-      this.schemaCombo.setSelection(new StructuredSelection(type));
+      DataSetType[] values = (DataSetType[]) this.schemaCombo.getInput();
+
+      for (DataSetType value : values)
+      {
+        if (value.getId().equals(type))
+        {
+          this.schemaCombo.setSelection(new StructuredSelection(value));
+        }
+      }
+
+      Integer depth = QueryFacadeUtil.getDepthFromQueryText(queryText);
+
+      if (depth != null)
+      {
+        this.depthInput.setSelection(new StructuredSelection(depth));
+      }
     }
   }
 
   /**
-   * Updates the given dataSetDesign with the queryText and its derived metadata
-   * obtained from the ODA runtime connection.
+   * Updates the given dataSetDesign with the queryText and its derived metadata obtained from the ODA runtime
+   * connection.
    */
   private void updateDesign(DataSetDesign dataSetDesign, IConnection conn, String queryText) throws OdaException
   {
@@ -409,8 +417,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   }
 
   /**
-   * Updates the specified data set design's result set definition based on the
-   * specified runtime metadata.
+   * Updates the specified data set design's result set definition based on the specified runtime metadata.
    * 
    * @param md
    *          runtime result set metadata instance
@@ -433,8 +440,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   }
 
   /**
-   * Updates the specified data set design's parameter definition based on the
-   * specified runtime metadata.
+   * Updates the specified data set design's parameter definition based on the specified runtime metadata.
    * 
    * @param paramMd
    *          runtime parameter metadata instance
