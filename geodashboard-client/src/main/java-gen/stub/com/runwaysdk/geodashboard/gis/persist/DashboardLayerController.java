@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +134,20 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
+    
+    // Getting the lowest level universal in the tree (the leaf)
+    TermDTO leaf = null;
+    for(TermDTO universal : universals)
+    {
+    	TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
+	    if(descendants.length == 0)
+	    {
+	    	leaf = universal;
+	    }
+    }
+    
     req.setAttribute("universals", universals);
+    req.setAttribute("universalLeafId", leaf.getId());
     
 //    DashboardThematicStyleDTO tStyle = (DashboardThematicStyleDTO) style;
 //    MdClassDTO mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
@@ -160,6 +174,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
+    Collections.reverse(aggregations); // Simple solution for making SUM the default aggregation type
 
     // Filter out the invalid aggregation types based upon the
     new Iterables<AggregationTypeDTO>().remove(aggregations, new AggregationPredicate(mdAttr));

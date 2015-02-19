@@ -14,7 +14,7 @@
    "osmBasic" : "Open Street Map",
    "location" : "Location",
    "aggregationMethod" : "Aggregation Method", 
-   "aggregateValue" : "Aggregation Value"
+   "aggregateValue" : "Value"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
@@ -830,11 +830,11 @@
       
       DynamicMap.that = this;
          $.ajax({
-          url: requestURL,
-          context: document.body 
+            url: requestURL,
+            context: document.body 
         }).done(function(json) {
-          var popupContent = '';
-          // The getfeatureinfo request will return only 1 feature
+            var popupContent = '';
+            // The getfeatureinfo request will return only 1 feature
             for(var i = 0; i<json.features.length; i++){
               var currLayer = json.features[i];
               var currLayerIdReturn = currLayer.id;
@@ -1369,9 +1369,10 @@
           onSuccess : function(html){
             that._displayLayerForm(html);
             
-            // Hook up the auto-complete for category input options
+            // Hook up the auto-complete for category input options new layers
+            // existing layers have a seperate autocomplete hookup that queries 
+            // the layer database view directly. 
             $('.category-input').each(function(){
-              
               var mdAttribute = $(this).data('mdattributeid');  
               
               $(this).autocomplete({
@@ -1445,6 +1446,17 @@
         
         // Attach listeners
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+     
+        // Attach event listeners for the universal (geo) aggregation dropdown.
+        $("#f58").change(function(){ 
+        	if($("#f58 option:selected").hasClass("universal-leaf")){
+        		// Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+        		$("#f59").parent().parent().hide();
+        	}
+        	else{
+        		$("#f59").parent().parent().show();
+        	}
+        });
       },
       
       

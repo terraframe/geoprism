@@ -201,9 +201,18 @@
 		                         </option>
                            </c:when>
                            <c:otherwise>
-		                         <option value="${universal.id}">
-		                           ${universal.displayLabel.value}
-		                         </option>
+		                         <c:choose>
+			                         <c:when test="${universal.id == universalLeafId}">
+			                         	<option value="${universal.id}" class="method-slect universal-leaf">
+			                         		${universal.displayLabel.value}
+			                         	</option>
+			                         </c:when>
+			                         <c:otherwise>
+			                         	<option value="${universal.id}">
+		                           			${universal.displayLabel.value}
+		                         		</option>
+			                         </c:otherwise>
+			                     </c:choose>
                            </c:otherwise>
                          </c:choose>
                       </c:forEach>
@@ -217,18 +226,18 @@
                   <div class="select-box">
                     <select id="f59" class="method-slect" name="style.${style.aggregationTypeMd.name}">
                       <c:forEach items="${aggregations}" var="aggregation">
-                         <c:choose>
-                           <c:when test="${aggregation.displayLabel.value == activeAggregation}">
-                             <option value="${aggregation.enumName}" selected="selected">
-                               ${aggregation.displayLabel.value}
-                             </option>
-                           </c:when>
-                           <c:otherwise>
-                             <option value="${aggregation.enumName}">
-                               ${aggregation.displayLabel.value}
-                             </option>
-                           </c:otherwise>
-                         </c:choose>
+                         	<c:choose>
+                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}">
+                             		<option value="${aggregation.enumName}" selected="selected">
+                               			${aggregation.displayLabel.value}
+                             		</option>
+                           		</c:when>
+                           		<c:otherwise>
+                             		<option value="${aggregation.enumName}">
+                               			${aggregation.displayLabel.value}
+                             		</option>
+                           		</c:otherwise>
+                         	</c:choose>
                       </c:forEach>
                     </select>
                   </div>
