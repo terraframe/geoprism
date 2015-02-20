@@ -63,7 +63,10 @@
       // @Override
       __onNodeRightClick : function(event, object) {
         var $tree = this.getImpl();
-        var node = object.node;
+//        var node = object.node; // jstree
+        var node = event.node;
+        
+        $tree.tree('selectNode', node);
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -76,7 +79,8 @@
         var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
         var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
         
-        if (this.busyNodes.contains(node.id)) {
+        if (this.isNodeBusy(node)) {
+//        if (this.busyNodes.contains(node.id)) { // jstree
           create.setEnabled(false);
           update.setEnabled(false);
           del.setEnabled(false);
@@ -85,33 +89,35 @@
         }
         
         // You can't delete the built in ontology nodes (IDE ontologys, geodashboard ontologies, etc)
-        if (this.getParentRunwayId(node) === this.rootTermId) {
+        var parentId = this.__getRunwayIdFromNode(node.parent);
+        if (parentId === this.rootTermId) {
           del.setEnabled(false);
         }
         
         this._cm.render();
         
         this._cm.addDestroyEventListener(function() {
-          $tree.jstree("deselect_node", node);
+//          $tree.jstree("deselect_node", node);
+          $tree.tree('selectNode', null);
         });
       },
       
       // @Override
-      _check_callback : function(operation, node, node_parent, node_position, more) {
-        if (operation === "move_node") {
-          // You can't move the built in ontology nodes (IDE ontologies, geodashboard ontologies, etc)
-          if (this.getParentRunwayId(node) === this.rootTermId) {
-            return false;
-          }
-          
-          // You can't move nodes onto the root level (Only a developer can create a root level node.)
-          if (this.__getRunwayIdFromNode(node_parent) === this.rootTermId) {
-            return false;
-          } 
-        }
-        
-        return true;
-      },
+//      _check_callback : function(operation, node, node_parent, node_position, more) {
+//        if (operation === "move_node") {
+//          // You can't move the built in ontology nodes (IDE ontologies, geodashboard ontologies, etc)
+//          if (this.getParentRunwayId(node) === this.rootTermId) {
+//            return false;
+//          }
+//          
+//          // You can't move nodes onto the root level (Only a developer can create a root level node.)
+//          if (this.__getRunwayIdFromNode(node_parent) === this.rootTermId) {
+//            return false;
+//          } 
+//        }
+//        
+//        return true;
+//      },
       
       destroy : function() {
         

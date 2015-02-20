@@ -68,8 +68,10 @@
        */
       // @Override
       __onNodeRightClick : function(event, object) {
-        var node = object.node;
-        var parentId = this.getParentRunwayId(node);
+//        var node = object.node; // jstree
+        var node = event.node;
+//        var parentId = this.getParentRunwayId(node); // jstree
+        var parentId = this.__getRunwayIdFromNode(node.parent);
         var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
