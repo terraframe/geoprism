@@ -13,7 +13,8 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.ValueQuery;
 
 /**
- * This class is responsible for forwarding an MdMethod request from BIRT for either a query (getValues) or a list of possible queries (getTypes).
+ * This class is responsible for forwarding an MdMethod request from BIRT for either a query (getValues) or a list of
+ * possible queries (getTypes).
  * 
  * @author rrowlands, jsmethie
  */
@@ -36,24 +37,24 @@ public class ReportProviderBridge implements Reloadable
     return instance;
   }
 
-  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, Integer depth)
+  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation)
   {
     List<ReportProviderIF> reports = getReportProviders();
 
     for (ReportProviderIF report : reports)
     {
-      if (report.getReportQueryDescriptor().getQueryId().equals(queryId))
+      if (report.getReportQueryDescriptor().getValue().equals(queryId))
       {
-        return report.getReportQuery(category, criteria, depth);
+        return report.getReportQuery(category, criteria, aggregation);
       }
     }
 
     throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
   }
 
-  public static ReportQueryView[] getTypesForReporting()
+  public static PairView[] getQueriesForReporting()
   {
-    ArrayList<ReportQueryView> types = new ArrayList<ReportQueryView>();
+    ArrayList<PairView> types = new ArrayList<PairView>();
     List<ReportProviderIF> reports = getReportProviders();
 
     for (ReportProviderIF report : reports)
@@ -61,7 +62,22 @@ public class ReportProviderBridge implements Reloadable
       types.add(report.getReportQueryDescriptor());
     }
 
-    return types.toArray(new ReportQueryView[types.size()]);
+    return types.toArray(new PairView[types.size()]);
+  }
+
+  public static PairView[] getSupportedAggregation(String queryId)
+  {
+    List<ReportProviderIF> reports = getReportProviders();
+
+    for (ReportProviderIF report : reports)
+    {
+      if (report.getReportQueryDescriptor().getValue().equals(queryId))
+      {
+        return report.getSupportedAggregation();
+      }
+    }
+
+    throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
   }
 
   /**
@@ -88,4 +104,5 @@ public class ReportProviderBridge implements Reloadable
 
     return reports;
   }
+
 }

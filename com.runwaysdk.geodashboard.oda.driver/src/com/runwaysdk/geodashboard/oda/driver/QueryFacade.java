@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
-import com.runwaysdk.geodashboard.report.ReportQueryViewDTO;
+import com.runwaysdk.geodashboard.report.PairViewDTO;
 
 public class QueryFacade
 {
@@ -23,26 +23,31 @@ public class QueryFacade
   /**
    * Mapping to the action which should be executed
    */
-  public static final String ACTION     = "ACTION";
+  public static final String ACTION       = "ACTION";
 
   /**
    * Mapping to the parameters used by the action
    */
-  public static final String PARAMETERS = "PARAMETERS";
+  public static final String PARAMETERS   = "PARAMETERS";
 
   /*
    * Actions supported by the driver
    */
 
   /**
-   * Query for the potential data set types
+   * Query for the potential data set queries
    */
-  public static final String TYPES      = "TYPES";
+  public static final String QUERIES      = "QUERIES";
+
+  /**
+   * Query for the potential data set aggregation levels
+   */
+  public static final String AGGREGATIONS = "AGGREGATIONS";
 
   /**
    * Execute a query for a data set type to get actual values
    */
-  public static final String QUERY      = "QUERY";
+  public static final String QUERY        = "QUERY";
 
   /*
    * Parameter constants
@@ -51,12 +56,12 @@ public class QueryFacade
   /**
    * TYPE parameter used in the QUERY action
    */
-  public static final String TYPE       = "TYPE";
+  public static final String QUERY_ID     = "TYPE";
 
   /**
    * DEPTH parameter used in the QUERY action
    */
-  public static final String DEPTH      = "DEPTH";
+  public static final String AGGREGATION  = "AGGREGATION";
 
   public IResultSet invoke(ClientRequestIF request, String query, Map<String, Object> parameters, boolean queryMetadata) throws OdaException
   {
@@ -67,9 +72,19 @@ public class QueryFacade
         JSONObject object = new JSONObject(query);
         String action = object.getString(ACTION);
 
-        if (action.equals(TYPES))
+        if (action.equals(QUERIES))
         {
-          ReportQueryViewDTO[] results = ReportItemDTO.getTypesForReporting(request);
+          PairViewDTO[] results = ReportItemDTO.getQueriesForReporting(request);
+
+          return new ArrayResultSet(results);
+        }
+        else if (action.equals(AGGREGATIONS))
+        {
+          JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
+
+          String queryId = params.getString(QueryFacade.QUERY_ID);
+
+          PairViewDTO[] results = ReportItemDTO.getSupportedAggregation(request, queryId);
 
           return new ArrayResultSet(results);
         }
@@ -77,12 +92,12 @@ public class QueryFacade
         {
           JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
 
-          String type = params.getString(QueryFacade.TYPE);
-          Integer depth = null;
+          String type = params.getString(QueryFacade.QUERY_ID);
+          String aggregation = null;
 
-          if (params.has(QueryFacade.DEPTH))
+          if (params.has(QueryFacade.AGGREGATION))
           {
-            depth = params.getInt(QueryFacade.DEPTH);
+            aggregation = params.getString(QueryFacade.AGGREGATION);
           }
 
           String category = (String) parameters.get("category");
@@ -96,7 +111,7 @@ public class QueryFacade
           }
           else
           {
-            ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria, depth);
+            ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria, aggregation);
 
             return new ComponentQueryResultSet(results);
           }
@@ -122,7 +137,7 @@ public class QueryFacade
         JSONObject object = new JSONObject(query);
         String action = object.getString(ACTION);
 
-        if (action.equals(TYPES))
+        if (action.equals(QUERIES))
         {
           return new ParameterMetaData();
         }

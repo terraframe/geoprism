@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -33,8 +32,8 @@ import org.eclipse.swt.widgets.Label;
 
 import com.runwaysdk.geodashboard.oda.driver.Driver;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
-import com.runwaysdk.geodashboard.oda.driver.ui.provider.DataSetType;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.GeodashboardMetaDataProvider;
+import com.runwaysdk.geodashboard.oda.driver.ui.provider.LabelValuePair;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
 
 /**
@@ -50,19 +49,14 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private static final int             TIME_OUT_LIMIT = 20;
 
   /**
-   * Combo viewer to select the query type
+   * Combo viewer to select the query
    */
   private ComboViewer                  schemaCombo;
 
   /**
-   * Max depth text input. Only enabled when applicable
+   * Combo viewer of potential aggregation levels. Specific to a query.
    */
-  private ComboViewer                  depthInput;
-
-  /**
-   * Max possible depth
-   */
-  private int                          maxDepth;
+  private ComboViewer                  aggregationCombo;
 
   /**
    * Provider used to communicate with the server
@@ -138,26 +132,13 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       this.schemaCombo.getControl().setLayoutData(gd);
 
       Label depthLabel = new Label(selectTableGroup, SWT.LEFT);
-      depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.depth"));
+      depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
 
       // Create a single line text field
-      this.depthInput = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
-      this.depthInput.getControl().setLayoutData(gd);
-      this.depthInput.getControl().setEnabled(false);
-      this.depthInput.setContentProvider(new ArrayContentProvider());
-      this.depthInput.setLabelProvider(new LabelProvider()
-      {
-        @Override
-        public String getText(Object element)
-        {
-          if (element != null)
-          {
-            return ( (Integer) element ).toString();
-          }
-
-          return "";
-        }
-      });
+      this.aggregationCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.aggregationCombo.getControl().setLayoutData(gd);
+      this.aggregationCombo.setContentProvider(new ArrayContentProvider());
+      this.aggregationCombo.setLabelProvider(new DataSetTypeLabelProvider());
 
       this.schemaCombo.addSelectionChangedListener(new ISelectionChangedListener()
       {
@@ -165,33 +146,24 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
         public void selectionChanged(SelectionChangedEvent event)
         {
           IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-          DataSetType element = (DataSetType) selection.getFirstElement();
+          LabelValuePair element = (LabelValuePair) selection.getFirstElement();
 
-          maxDepth = element.getMaxDepth();
+          LabelValuePair[] input = provider.getSupportedAggregation(element.getValue(), TIME_OUT_LIMIT * 1000);
 
-          if (maxDepth != 0)
+          aggregationCombo.setInput(input);
+
+          if (input.length > 0)
           {
-            Integer[] content = new Integer[maxDepth];
-
-            for (int i = 0; i < maxDepth; i++)
-            {
-              content[i] = ( i + 1 );
-            }
-
-            depthInput.getControl().setEnabled(true);
-            depthInput.setInput(content);
-            depthInput.setSelection(new StructuredSelection(content[0]));
+            aggregationCombo.setSelection(new StructuredSelection(input[0]));
           }
           else
           {
-            depthInput.getControl().setEnabled(false);
-            depthInput.setInput(new Integer[] {});
-            depthInput.setSelection(null);
+            aggregationCombo.getControl().setEnabled(true);
           }
         }
       });
 
-      DataSetType[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
+      LabelValuePair[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
 
       schemaCombo.setContentProvider(new ArrayContentProvider());
       schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
@@ -304,9 +276,9 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     if (this.schemaCombo != null)
     {
       String value = this.getValue();
-      String depth = this.getDepth();
+      String aggregation = this.getAggregation();
 
-      return QueryFacadeUtil.getValuesQueryText(value, depth);
+      return QueryFacadeUtil.getValuesQueryText(value, aggregation);
     }
 
     return null;
@@ -315,19 +287,19 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private String getValue()
   {
     StructuredSelection selection = (StructuredSelection) this.schemaCombo.getSelection();
-    DataSetType datasetType = (DataSetType) selection.getFirstElement();
+    LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
 
-    String value = datasetType.getId();
-    return value;
+    return datasetType.getValue();
   }
 
-  private String getDepth()
+  private String getAggregation()
   {
-    if (this.depthInput.getControl().getEnabled())
+    if (this.aggregationCombo.getControl().getEnabled())
     {
-      StructuredSelection sel = (StructuredSelection) this.depthInput.getSelection();
-      String depth = ( (Integer) sel.getFirstElement() ).toString();
-      return depth;
+      StructuredSelection selection = (StructuredSelection) this.aggregationCombo.getSelection();
+      LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
+
+      return datasetType.getValue();
     }
 
     return null;
@@ -337,23 +309,21 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   {
     if (queryText != null && queryText.length() > 0)
     {
-      String type = QueryFacadeUtil.getTypeFromQueryText(queryText);
+      this.updateComboSelection(QueryFacadeUtil.getQueryIdFromQueryText(queryText), this.schemaCombo);
 
-      DataSetType[] values = (DataSetType[]) this.schemaCombo.getInput();
+      this.updateComboSelection(QueryFacadeUtil.getAggregationFromQueryText(queryText), this.aggregationCombo);
+    }
+  }
 
-      for (DataSetType value : values)
+  private void updateComboSelection(String value, ComboViewer comboViewer)
+  {
+    LabelValuePair[] pairs = (LabelValuePair[]) comboViewer.getInput();
+
+    for (LabelValuePair pair : pairs)
+    {
+      if (pair.getValue().equals(value))
       {
-        if (value.getId().equals(type))
-        {
-          this.schemaCombo.setSelection(new StructuredSelection(value));
-        }
-      }
-
-      Integer depth = QueryFacadeUtil.getDepthFromQueryText(queryText);
-
-      if (depth != null)
-      {
-        this.depthInput.setSelection(new StructuredSelection(depth));
+        comboViewer.setSelection(new StructuredSelection(pair));
       }
     }
   }

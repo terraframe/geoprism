@@ -766,22 +766,27 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
-  public static ValueQuery getValuesForReporting(String type, String category, String criteria, Integer depth)
+  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation)
   {
-    return ReportProviderBridge.getValuesForReporting(type, category, criteria, depth);
+    return ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
   }
 
-  public static ValueQuery getMetadataForReporting(String type, String category, String criteria)
+  public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria)
   {
-    ValueQuery query = ReportProviderBridge.getValuesForReporting(type, category, criteria, null);
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, null);
     query.restrictRows(1, 1);
 
     return query;
   }
 
-  public static ReportQueryView[] getTypesForReporting()
+  public static PairView[] getQueriesForReporting()
   {
-    return ReportProviderBridge.getTypesForReporting();
+    return ReportProviderBridge.getQueriesForReporting();
+  }
+
+  public static PairView[] getSupportedAggregation(String queryId)
+  {
+    return ReportProviderBridge.getSupportedAggregation(queryId);
   }
 
 }

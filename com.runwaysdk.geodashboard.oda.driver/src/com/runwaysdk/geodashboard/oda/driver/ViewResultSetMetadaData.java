@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
-import com.runwaysdk.geodashboard.report.ReportQueryViewDTO;
+import com.runwaysdk.geodashboard.report.PairViewDTO;
 import com.runwaysdk.transport.metadata.AttributeBooleanMdDTO;
 import com.runwaysdk.transport.metadata.AttributeCharacterMdDTO;
 import com.runwaysdk.transport.metadata.AttributeDateMdDTO;
@@ -24,11 +24,11 @@ import com.runwaysdk.transport.metadata.AttributeTimeMdDTO;
 public class ViewResultSetMetadaData implements IResultSetMetaData
 {
 
-  private ReportQueryViewDTO view;
+  private PairViewDTO view;
 
   private List<String>       attributeNames;
 
-  public ViewResultSetMetadaData(ReportQueryViewDTO view)
+  public ViewResultSetMetadaData(PairViewDTO view)
   {
     this.view = view;
     this.attributeNames = new ArrayList<String>(view.getAttributeNames());

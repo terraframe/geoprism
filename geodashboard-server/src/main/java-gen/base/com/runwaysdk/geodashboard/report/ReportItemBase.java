@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 653879618)
+@com.runwaysdk.business.ClassSignature(hash = 59170226)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 653879618;
+  private static final long serialVersionUID = 59170226;
   
   public ReportItemBase()
   {
@@ -49,10 +49,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(CACHEDOCUMENT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCacheDocumentMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getCacheDocumentMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(CACHEDOCUMENT);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(CACHEDOCUMENT);
   }
   
   public void setCacheDocument(Boolean value)
@@ -77,10 +77,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(CREATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(CREATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getCreatedBy()
@@ -105,10 +105,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(CREATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(CREATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
   public com.runwaysdk.geodashboard.Dashboard getDashboard()
@@ -133,10 +133,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(DASHBOARD);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(DASHBOARD);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
   }
   
   public void setDashboard(com.runwaysdk.geodashboard.Dashboard value)
@@ -161,10 +161,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(DESIGN);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDesignMd()
+  public static com.runwaysdk.dataaccess.MdAttributeFileDAOIF getDesignMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(DESIGN);
+    return (com.runwaysdk.dataaccess.MdAttributeFileDAOIF)mdClassIF.definesAttribute(DESIGN);
   }
   
   public void setDesign(String value)
@@ -189,10 +189,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(DOCUMENT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDocumentMd()
+  public static com.runwaysdk.dataaccess.MdAttributeFileDAOIF getDocumentMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(DOCUMENT);
+    return (com.runwaysdk.dataaccess.MdAttributeFileDAOIF)mdClassIF.definesAttribute(DOCUMENT);
   }
   
   public void setDocument(String value)
@@ -229,10 +229,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(ENTITYDOMAIN);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getEntityDomainMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(ENTITYDOMAIN);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
   public void setEntityDomain(com.runwaysdk.system.metadata.MdDomain value)
@@ -257,10 +257,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getKeyName()
@@ -273,10 +273,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(KEYNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getKeyNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(KEYNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
   public void setKeyName(String value)
@@ -301,10 +301,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(LASTUPDATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getLastUpdatedBy()
@@ -329,10 +329,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(LASTUPDATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
   public com.runwaysdk.system.Users getLockedBy()
@@ -357,10 +357,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(LOCKEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLockedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(LOCKEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
   public com.runwaysdk.system.Actor getOwner()
@@ -385,10 +385,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(OWNER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOwnerMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(OWNER);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
   public void setOwner(com.runwaysdk.system.Actor value)
@@ -413,10 +413,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(REPORTLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getReportLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(REPORTLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(REPORTLABEL);
   }
   
   public String getReportName()
@@ -429,10 +429,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(REPORTNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getReportNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(REPORTNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(REPORTNAME);
   }
   
   public void setReportName(String value)
@@ -457,10 +457,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(SEQ);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSeqMd()
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(SEQ);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
   public String getSiteMaster()
@@ -473,10 +473,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(SITEMASTER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSiteMasterMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(SITEMASTER);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
   public String getType()
@@ -489,10 +489,10 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     this.validateAttribute(TYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.report.ReportItem.CLASS);
-    return mdClassIF.definesAttribute(TYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
   protected String getDeclaredType()
@@ -553,7 +553,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getDocumentAsStream();
   }
   
-  public static com.runwaysdk.query.ValueQuery getMetadataForReporting(java.lang.String type, java.lang.String category, java.lang.String criteria)
+  public static com.runwaysdk.query.ValueQuery getMetadataForReporting(java.lang.String queryId, java.lang.String category, java.lang.String criteria)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -571,13 +571,19 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getParameterDefinitions();
   }
   
+  public static com.runwaysdk.geodashboard.report.PairView[] getQueriesForReporting()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static com.runwaysdk.geodashboard.report.ReportItem getReportItemForDashboard(java.lang.String dashboardId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static com.runwaysdk.geodashboard.report.ReportQueryView[] getTypesForReporting()
+  public static com.runwaysdk.geodashboard.report.PairView[] getSupportedAggregation(java.lang.String queryId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -595,7 +601,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getURL();
   }
   
-  public static com.runwaysdk.query.ValueQuery getValuesForReporting(java.lang.String type, java.lang.String category, java.lang.String criteria, java.lang.Integer depth)
+  public static com.runwaysdk.query.ValueQuery getValuesForReporting(java.lang.String queryId, java.lang.String category, java.lang.String criteria, java.lang.String aggregation)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

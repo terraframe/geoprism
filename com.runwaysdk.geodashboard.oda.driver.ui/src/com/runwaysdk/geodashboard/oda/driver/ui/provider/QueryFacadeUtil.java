@@ -9,19 +9,31 @@ public class QueryFacadeUtil
   public static String getDashboardQueryText()
   {
     JSONObject object = new JSONObject();
-    object.put(QueryFacade.ACTION, QueryFacade.TYPES);
+    object.put(QueryFacade.ACTION, QueryFacade.QUERIES);
 
     return object.toString();
   }
 
-  public static String getValuesQueryText(String type, String depth)
+  public static String getSupportedAggregationQueryText(String queryId)
   {
     JSONObject parameters = new JSONObject();
-    parameters.put(QueryFacade.TYPE, type);
+    parameters.put(QueryFacade.QUERY_ID, queryId);
 
-    if (depth != null && depth.length() > 0)
+    JSONObject object = new JSONObject();
+    object.put(QueryFacade.ACTION, QueryFacade.AGGREGATIONS);
+    object.put(QueryFacade.PARAMETERS, parameters);
+
+    return object.toString();
+  }
+
+  public static String getValuesQueryText(String queryId, String aggregation)
+  {
+    JSONObject parameters = new JSONObject();
+    parameters.put(QueryFacade.QUERY_ID, queryId);
+
+    if (aggregation != null && aggregation.length() > 0)
     {
-      parameters.put(QueryFacade.DEPTH, depth);
+      parameters.put(QueryFacade.AGGREGATION, aggregation);
     }
 
     JSONObject object = new JSONObject();
@@ -31,26 +43,26 @@ public class QueryFacadeUtil
     return object.toString();
   }
 
-  public static String getTypeFromQueryText(String queryText)
+  public static String getQueryIdFromQueryText(String queryText)
   {
     JSONObject object = new JSONObject(queryText);
     JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
 
-    String type = parameters.getString(QueryFacade.TYPE);
+    String type = parameters.getString(QueryFacade.QUERY_ID);
 
     return type;
   }
 
-  public static Integer getDepthFromQueryText(String queryText)
+  public static String getAggregationFromQueryText(String queryText)
   {
     JSONObject object = new JSONObject(queryText);
     JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
 
-    if (parameters.has(QueryFacade.DEPTH))
+    if (parameters.has(QueryFacade.AGGREGATION))
     {
-      int depth = parameters.getInt(QueryFacade.DEPTH);
+      String aggregation = parameters.getString(QueryFacade.AGGREGATION);
 
-      return depth;
+      return aggregation;
     }
 
     return null;

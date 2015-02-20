@@ -18,12 +18,12 @@ import com.runwaysdk.constants.MdAttributeDateUtil;
 import com.runwaysdk.constants.MdAttributeDoubleUtil;
 import com.runwaysdk.constants.MdAttributeIntegerUtil;
 import com.runwaysdk.constants.MdAttributeTimeUtil;
-import com.runwaysdk.geodashboard.report.ReportQueryViewDTO;
+import com.runwaysdk.geodashboard.report.PairViewDTO;
 
 public class ArrayResultSet implements IResultSet
 {
 
-  private ReportQueryViewDTO[] results;
+  private PairViewDTO[] results;
 
   /**
    * The current row
@@ -32,7 +32,7 @@ public class ArrayResultSet implements IResultSet
 
   private List<String>         attributeNames;
 
-  public ArrayResultSet(ReportQueryViewDTO[] results)
+  public ArrayResultSet(PairViewDTO[] results)
   {
     this.results = results;
     this.current = -1;
@@ -52,7 +52,7 @@ public class ArrayResultSet implements IResultSet
     return this.attributeNames.get( ( index - 1 ));
   }
 
-  private ReportQueryViewDTO getCurrent()
+  private PairViewDTO getCurrent()
   {
     if (this.results != null)
     {

@@ -57,35 +57,34 @@ public class GeodashboardMetaDataProvider
     }
   }
 
-  public DataSetType[] getTypes(long milliSeconds)
+  public LabelValuePair[] getSupportedAggregation(final String queryId, int milliSeconds)
   {
     class TempThread extends Thread
     {
-      private List<DataSetType> results;
+      private List<LabelValuePair> results;
 
-      private Throwable         throwable;
+      private Throwable            throwable;
 
       @Override
       public void run()
       {
-        this.results = new LinkedList<DataSetType>();
+        this.results = new LinkedList<LabelValuePair>();
 
         try
         {
           IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
 
           IQuery query = connection.newQuery(null);
-          query.prepare(QueryFacadeUtil.getDashboardQueryText());
+          query.prepare(QueryFacadeUtil.getSupportedAggregationQueryText(queryId));
 
           IResultSet results = query.executeQuery();
 
           while (results.next())
           {
-            String queryId = results.getString("queryId");
-            String queryLabel = results.getString("queryLabel");
-            int maxDepth = results.getInt("maxDepth");
+            String value = results.getString("value");
+            String label = results.getString("label");
 
-            this.results.add(new DataSetType(queryId, queryLabel, maxDepth));
+            this.results.add(new LabelValuePair(value, label));
           }
         }
         catch (Throwable e)
@@ -101,7 +100,7 @@ public class GeodashboardMetaDataProvider
         return this.throwable;
       }
 
-      public List<DataSetType> getResults()
+      public List<LabelValuePair> getResults()
       {
         return this.results;
       }
@@ -123,8 +122,78 @@ public class GeodashboardMetaDataProvider
       throw new RuntimeException(tt.getThrowable());
     }
 
-    List<DataSetType> results = tt.getResults();
+    List<LabelValuePair> results = tt.getResults();
 
-    return results.toArray(new DataSetType[results.size()]);
+    return results.toArray(new LabelValuePair[results.size()]);
+  }
+
+  public LabelValuePair[] getTypes(long milliSeconds)
+  {
+    class TempThread extends Thread
+    {
+      private List<LabelValuePair> results;
+
+      private Throwable            throwable;
+
+      @Override
+      public void run()
+      {
+        this.results = new LinkedList<LabelValuePair>();
+
+        try
+        {
+          IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
+
+          IQuery query = connection.newQuery(null);
+          query.prepare(QueryFacadeUtil.getDashboardQueryText());
+
+          IResultSet results = query.executeQuery();
+
+          while (results.next())
+          {
+            String value = results.getString("value");
+            String label = results.getString("label");
+
+            this.results.add(new LabelValuePair(value, label));
+          }
+        }
+        catch (Throwable e)
+        {
+          logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+
+          this.throwable = e;
+        }
+      }
+
+      public Throwable getThrowable()
+      {
+        return this.throwable;
+      }
+
+      public List<LabelValuePair> getResults()
+      {
+        return this.results;
+      }
+    }
+
+    TempThread tt = new TempThread();
+    tt.start();
+
+    try
+    {
+      tt.join(milliSeconds);
+    }
+    catch (InterruptedException e)
+    {
+    }
+
+    if (tt.getThrowable() != null)
+    {
+      throw new RuntimeException(tt.getThrowable());
+    }
+
+    List<LabelValuePair> results = tt.getResults();
+
+    return results.toArray(new LabelValuePair[results.size()]);
   }
 }
