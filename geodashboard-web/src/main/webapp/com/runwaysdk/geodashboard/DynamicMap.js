@@ -51,7 +51,9 @@
         this._mapDivId = config.mapDivId;
         this._mapId = config.mapId;
         this._dashboardId = config.dashboardId;
-        this._criteria = []; // Default criteria for filtering
+        
+        // Default criteria for filtering
+        this._conditionMap = {'conditions' : [], 'criteria' : []};
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
@@ -110,7 +112,7 @@
           that._renderUserLayers();
         });
         
-        that._renderReport('', that._criteria);
+        that._renderReport('', that._conditionMap['criteria']);
       },
       
       /**
@@ -875,7 +877,7 @@
               
               if(currGeoId != null)
               {                 
-                that._renderReport(currGeoId, that._criteria);
+                that._renderReport(currGeoId, that._conditionMap['criteria']);
               }
             
             }
@@ -973,10 +975,7 @@
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
-        // Include attribute condition filtering (i.e. sales unit is greater than 50)
-        var map = this._getConditionMap();
-        
-        var conditions = map['conditions'];
+        var conditions = this._conditionMap['conditions'];
         
         $.each(conditions, function( index, condition ) {
           params["conditions_" + index + ".comparisonValue"] = condition.getComparisonValue();
@@ -1609,7 +1608,7 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
       },
       
-      _getConditionMap : function () {
+      _buildConditionMap : function () {
         var that = this;
         var conditions = [];
         var criteria = [];
@@ -1739,10 +1738,10 @@
       _onClickApplyFilters : function(e) {
         var that = this;
         
-        var map = this._getConditionMap();
+        this._conditionMap = this._buildConditionMap();
         
-        this._criteria = map['criteria']; 
-        var conditions = map['conditions'];
+        var criteria = this._conditionMap['criteria']; 
+        var conditions = this._conditionMap['conditions'];
                 
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function(json, calledObj, response) {
@@ -1764,7 +1763,7 @@
         
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
         
-        this._renderReport('', this._criteria);
+        this._renderReport('', criteria);
       },
       
       /**
