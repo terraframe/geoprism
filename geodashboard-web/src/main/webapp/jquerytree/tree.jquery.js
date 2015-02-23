@@ -98,7 +98,7 @@ limitations under the License.
         if (argument1 === void 0 || typeof argument1 === 'object') {
           options = argument1;
           return createWidget($el, options);
-        } else if (typeof argument1 === 'string') { // && argument1[0] !== '_'
+        } else if (typeof argument1 === 'string' && argument1[0] !== '_') { // && argument1[0] !== '_'
           function_name = argument1;
           if (function_name === 'destroy') {
             return destroyWidget($el);

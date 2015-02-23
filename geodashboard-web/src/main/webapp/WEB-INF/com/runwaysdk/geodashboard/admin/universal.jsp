@@ -51,8 +51,11 @@
 
 <gdb:localize var="page_title" key="universal.title"/>
 
-<script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link>
+<%-- <script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link> --%>
+
+<script src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
+<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css">
 
 <!-- Runway Factory -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>

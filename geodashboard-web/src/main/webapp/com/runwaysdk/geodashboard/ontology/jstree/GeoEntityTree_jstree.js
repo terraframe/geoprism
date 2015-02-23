@@ -68,12 +68,11 @@
        */
       // @Override
       __onNodeRightClick : function(event, object) {
-        var that = this;
+//        var node = object.node; // jstree
         var node = event.node;
+//        var parentId = this.getParentRunwayId(node); // jstree
         var parentId = this.__getRunwayIdFromNode(node.parent);
         var term = this.termCache[this.__getRunwayIdFromNode(node)];
-        
-        that.getImpl().tree('selectNode', node);
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
@@ -109,7 +108,6 @@
           var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
           
           var synonyms = null;
-          if (node.data == null) { node.data = {}; }
           if (node.data.synonymNode != null) {
             synonyms = this._cm.addItem(this.localize("hideSynonyms"), "synonyms", Mojo.Util.bind(this, this.__onHideSynonym));
           }
@@ -119,7 +117,7 @@
           
           var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
           
-          if (this.isNodeBusy(node)) {
+          if (this.busyNodes.contains(node)) {
             create.setEnabled(false);
             update.setEnabled(false);
             del.setEnabled(false);
@@ -130,16 +128,12 @@
         }
         
         this._cm.render();
-        
-        this._cm.addDestroyEventListener(function() {
-          that.getImpl().tree("selectNode", null);
-        });
       },
       
       __onCreateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
-        var parentId = this.__getRunwayIdFromNode(targetNode.parent);
+        var parentId = this.__getRunwayIdFromNode(targetNode);
         
         new com.runwaysdk.ui.RunwayControllerFormDialog({
           type: "com.runwaysdk.system.gis.geo.Synonym",
@@ -150,8 +144,10 @@
           onSuccess : function(tnr) {
             var syn = tnr.getTerm();
             that.termCache[syn.getId()] = syn;
-            that.parentRelationshipCache.put(syn.getId(), {parentId: parentId, relId: tnr.getRelationshipId(), relType: tnr.getRelationshipType()});
-            that.__createTreeNode(syn.getId(), targetNode, true, {data: {isSynonym: true}});
+//            that.parentRelationshipCache.put(syn.getId(), {parentId: parentId, relId: relId, relType: relType});
+            that.__createTreeNode(syn.getId(), targetNode, false, null, null, {isSynonym: true});
+            
+            that._impl.jstree("open_node", targetNode);
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -161,13 +157,13 @@
       __onHideSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
-        this.getImpl().tree("removeNode", targetNode.data.synonymNode);
+        this._impl.jstree("delete_node", targetNode.data.synonymNode);
         targetNode.data.synonymNode = null;
       },
       __onRefreshSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
-        this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
+        this._impl.jstree("load_node", targetNode);
       },
       __onUpdateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
@@ -185,19 +181,15 @@
           onSuccess : function(syn) {
             that.termCache[syn.getId()] = syn;
             
-            var nodes = that.__getNodesById(targetId);
+            var nodes = that.__getNodesById(syn.getId());
             for (var i = 0; i < nodes.length; ++i) {
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(syn), id: syn.getId(), runwayId: syn.getId()});
+              that._impl.jstree("rename_node", nodes[i], that._getTermDisplayLabel(syn));
             }
             
             that.setNodeBusy(targetNode, false);
           },
           onFailure : function(e) {
-            that.setNodeBusy(targetNode, false);
             that.handleException(e);
-          },
-          onCancel : function() {
-            that.setNodeBusy(targetNode, false);
           }
         }).render();
       },
@@ -213,15 +205,11 @@
           action: "delete",
           dto: dto,
           onSuccess : function(response) {
-            that.getImpl().tree("removeNode", targetNode);
+            that._impl.jstree("delete_node", targetNode);
             that.setNodeBusy(targetNode, false);
           },
           onFailure : function(e) {
-            that.setNodeBusy(targetNode, false);
             that.handleException(e);
-          },
-          onCancel : function() {
-            that.setNodeBusy(targetNode, false);
           }
         }).render();
       },
@@ -231,36 +219,44 @@
       __onContextViewSynonymsClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         var that = this;
-        var runwayId = that.__getRunwayIdFromNode(targetNode);
         
         if (targetNode.data != null && targetNode.data.isSynonymContainer) { return; }
         
         var createSynonymNode = function(){
-          targetNode.dontClobberChildren = true;
+          var onOpen = function(justOpened) {
+            justOpened.dontClobberChildren = true;
+            
+            var afterCreateNode = function(justCreated) {
+              targetNode.data.synonymNode = justCreated;
+              that.setNodeBusy(targetNode, false);
+              
+              // Open the target node
+              that._impl.jstree("open_node", targetNode, false);
+              
+              // Load the synonyms
+              that._impl.jstree("load_node", justCreated, function(justLoaded){
+                that._impl.jstree("open_node", justLoaded, false);
+              });
+            };
+            
+            // Create a synonyms node under the target node
+            var idStr = targetNode.id + "_" + Mojo.Util.generateId();
+            that._impl.jstree(
+              'create_node',
+              targetNode,
+              { state:{opened: false}, children:false, text: that.localize("synonymsNode"), data: {runwayId: that.__getRunwayIdFromNode(targetNode), isSynonymContainer: true}, id: idStr },
+              0,
+              afterCreateNode, true
+            );
+          };
           
-          var synId = targetNode.id + "_" + Mojo.Util.generateId();
-          
-          // Create a synonyms node under the target node
-          var justCreated = that.__createTreeNode(synId, targetNode, true, {label: that.localize("synonymsNode"), data: {isSynonymContainer: true}});
-          
-          targetNode.data.synonymNode = justCreated;
-          that.setNodeBusy(targetNode, false);
-          
-          // Load the synonyms
-          that.refreshTerm(synId);
+          that._impl.jstree("open_node", targetNode, onOpen, false);
         };
         
         that.setNodeBusy(targetNode, true);
         
-        if (!that.hasLoadedNode(targetNode)) {
-          that.refreshTerm(runwayId, {
-            onSuccess : function() {
-              createSynonymNode();
-            },
-            onFailure : function() {
-              that.setNodeBusy(targetNode, false);
-            }
-          });
+        if (!this._impl.jstree("is_loaded", targetNode)) {
+          this._impl.jstree("load_node", targetNode, createSynonymNode);
         }
         else {
           createSynonymNode();
@@ -268,103 +264,90 @@
       },
       
       // @Override
-//      __findInsertIndex : function(label, newParent) {
-//        var children = this.getChildren(newParent);
-//        
-//        children.sort(function(nodeA,nodeB){
-//          if (newParent.data != null && nodeA === newParent.data.synonymNode) {
-//            return -1;
-//          }
-//          else if (newParent.data != null && nodeB === newParent.data.synonymNode) {
-//            return 1;
-//          }
-//          
-//          return nodeA.text.localeCompare(nodeB.text);
-//        });
-//        
-//        var i = 0;
-//        if (newParent.data != null && newParent.data.synonymNode != null) {
-//          i = 1;
-//        }
-//        
-//        for (; i < children.length; ++i) {
-//          if (children[i].text.localeCompare(label) > 0) {
-//            break;
-//          }
-//        }
-//        
-//        return i;
-//      },
+      __findInsertIndex : function(label, newParent) {
+        var children = this.getChildren(newParent);
+        
+        children.sort(function(nodeA,nodeB){
+          if (newParent.data != null && nodeA === newParent.data.synonymNode) {
+            return -1;
+          }
+          else if (newParent.data != null && nodeB === newParent.data.synonymNode) {
+            return 1;
+          }
+          
+          return nodeA.text.localeCompare(nodeB.text);
+        });
+        
+        var i = 0;
+        if (newParent.data != null && newParent.data.synonymNode != null) {
+          i = 1;
+        }
+        
+        for (; i < children.length; ++i) {
+          if (children[i].text.localeCompare(label) > 0) {
+            break;
+          }
+        }
+        
+        return i;
+      },
       
       // @Override
-//      _check_callback : function(operation, node, node_parent, node_position, more) {
-//        if (operation === "move_node") {
-//          // You can't drag synonymContainer nodes.
-//          if (node.data != null && node.data.isSynonymContainer) {
-//            return false;
-//          }
-//          // You can't drag synonyms, either
-//          else if (node.data.isSynonym) {
-//            return false;
-//          }
-//          // And you can't drag GeoEntities into synonyms
-//          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
-//            return false;
-//          }
-//        }
-//        
-//        return true;
-//      },
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't drag synonymContainer nodes.
+          if (node.data != null && node.data.isSynonymContainer) {
+            return false;
+          }
+          // You can't drag synonyms, either
+          else if (node.data.isSynonym) {
+            return false;
+          }
+          // And you can't drag GeoEntities into synonyms
+          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
+            return false;
+          }
+        }
+        
+        return true;
+      },
       
-      /**
-       * Override
-       * 
-       * Adds a special case handler for synonyms.
-       */
-      refreshTerm : function(termId, callback) {
+      __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
         var that = this;
-        var id = termId;
         
-        this.setTermBusy(termId, true);
+        var parentId = this.__getRunwayIdFromNode(parent);
         
-        var nodes = that.__getNodesById(termId);
-        var parent = nodes[0];
-        
-        // Special case for synonyms.
         if (parent.data != null && parent.data.isSynonymContainer) {
-          var parentId = this.__getRunwayIdFromNode(parent.parent);
           
           var cr = new Mojo.ClientRequest({
             onSuccess: function(response){
-              var json = Mojo.Util.getObject(response);
-              var tnrs = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+              var tnrs = Mojo.Util.toObject(response).returnValue;
               
-              // Remove existing children
-              for (var iNode = 0; iNode < nodes.length; ++iNode) {
-                var node = nodes[iNode];
-                node.hasFetched = true;
-                var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
-                for (var i=0; i < children.length; i++) {
-                  $(that.getRawEl()).tree("removeNode", children[i]);
-                }
-              }
-              
-              // Create a node for every term we got from the server.
+              var json = [];
               for (var i = 0; i < tnrs.length; ++i) {
-                var childId = tnrs[i].getTerm().getId();
+                var tnr = com.runwaysdk.DTOUtil.convertToType(tnrs[i]);
+                var term = tnr.getTerm();
+                var termId = term.getId();
                 
-                var parentRecord = {parentId: termId, relId: tnrs[i].getRelationshipId(), relType: tnrs[i].getRelationshipType()};
-                that.parentRelationshipCache.put(childId, parentRecord);
-                 
-                that.termCache[childId] = tnrs[i].getTerm();
+                var parentRecord = {parentId: parentId, relId: tnr.getRelationshipId(), relType: tnr.getRelationshipType()};
+                that.parentRelationshipCache.put(termId, parentRecord);
+                that.termCache[termId] = term;
                 
-                for (var iNode = 0; iNode < nodes.length; ++iNode) {
-                  var node = nodes[iNode];
-                  that.__createTreeNode(childId, node, false, {data: {isSynonym: true}});
-                }
+                var treeNode = {
+                  text: that._getTermDisplayLabel(term),
+                  id: termId, state: {opened: true}, children: false,
+                  data: { runwayId: termId, isSynonym: true },
+//                  relType: relType,
+//                  li_attr: {'class' : relType} // Add the relationshipType to the li's class
+                };
+                json.push(treeNode);
               }
               
-              that.setTermBusy(termId, false);
+              jsTreeCallback.call(treeThisRef, json);
+              
+              if (json.length === 0) {
+                that._impl.jstree("redraw_node", parent, false);
+              }
             },
             onFailure : function(ex) {
               jsTreeCallback.call(this, []);
@@ -376,7 +359,7 @@
           Mojo.Util.invokeControllerAction("com.runwaysdk.system.gis.geo.Synonym", "getDirectDescendants", {parentId: parentId}, cr);
         }
         else {
-          this.$refreshTerm(termId, callback);
+          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
         }
       },
       

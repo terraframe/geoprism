@@ -70,7 +70,7 @@
         // Children of universals are appended to the root node
         // The children are repeated under the copies, so its okay to grab node[0]
         var node = nodes[0];
-        var children = node.children;
+        var children = this.getChildren(node);
         var len = children.length;
         for (var i = 0; i < len; ++i) {
           var child = children[i];
@@ -78,7 +78,7 @@
           
           // This child is an isAContainer. Drop all of its children. 
           if (childId === termId) {
-            var isAChildren = child.children;
+            var isAChildren = this.getChildren(child);
             var isALen = isAChildren.length;
             for (var isai = 0; isai < isALen; ++isai) {
               var isAChild = isAChildren[isai];
@@ -105,15 +105,15 @@
       refreshTreeAfterDeleteTerm : function(termId) {
         var nodes = this.__getNodesById(termId);
         var $tree = this.getImpl();
-        var shouldRefresh = !(that.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
+        var shouldRefresh = !($tree.jstree("is_loaded", nodes[0]) && ($tree.jstree("get_children_dom", nodes[0]).length <= 0));
         
         this.parentRelationshipCache.removeAll(termId);
         
         this.__dropAll(termId);
         
         for (var i = 0; i < nodes.length; ++i) {
-          $tree.tree(
-            'removeNode',
+          $tree.jstree(
+            'delete_node',
             nodes[i]
           );
         }
@@ -125,45 +125,45 @@
       },
       
       // @Override
-//      _check_callback : function(operation, node, node_parent, node_position, more) {
-//        if (operation === "move_node") {
-//          // You can't drag isANodeContainers.
-//          if (node.data != null && node.data.isSubtypeContainer) {
-//            return false;
-//          }
-//        }
-//        
-//        return true;
-//      },
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't drag isANodeContainers.
+          if (node.data != null && node.data.isIsANodeContainer) {
+            return false;
+          }
+        }
+        
+        return true;
+      },
       
       // @Override
-//      __findInsertIndex : function(label, newParent) {
-//        var children = this.getChildren(newParent);
-//        
-//        children.sort(function(nodeA,nodeB){
-//          if (newParent.data != null && nodeA.id === newParent.data.isANode) {
-//            return -1;
-//          }
-//          else if (newParent.data != null && nodeB.id === newParent.data.isANode) {
-//            return 1;
-//          }
-//          
-//          return nodeA.text.localeCompare(nodeB.text);
-//        });
-//       
-//        var i = 0;
-//        if (newParent.data != null && newParent.data.isANode != null) {
-//          i = 1;
-//        }
-//        
-//        for (; i < children.length; ++i) {
-//          if (children[i].text.localeCompare(label) >= 0) {
-//            break;
-//          }
-//        }
-//        
-//        return i;
-//      },
+      __findInsertIndex : function(label, newParent) {
+        var children = this.getChildren(newParent);
+        
+        children.sort(function(nodeA,nodeB){
+          if (newParent.data != null && nodeA.id === newParent.data.isANode) {
+            return -1;
+          }
+          else if (newParent.data != null && nodeB.id === newParent.data.isANode) {
+            return 1;
+          }
+          
+          return nodeA.text.localeCompare(nodeB.text);
+        });
+       
+        var i = 0;
+        if (newParent.data != null && newParent.data.isANode != null) {
+          i = 1;
+        }
+        
+        for (; i < children.length; ++i) {
+          if (children[i].text.localeCompare(label) >= 0) {
+            break;
+          }
+        }
+        
+        return i;
+      },
       
       _getContainerNode : function(parentNode, relType) {
         if (relType === "com.runwaysdk.system.gis.geo.IsARelationship") {
@@ -174,20 +174,26 @@
       },
       
       _getRelationshipForNode : function(movedNode, newParent, oldRel) {
-        if (newParent.data != null && newParent.data.isSubtypeContainer) {
+        if (newParent.data != null && newParent.data.isIsANodeContainer) {
           return "com.runwaysdk.system.gis.geo.IsARelationship";
         }
         
         return "com.runwaysdk.system.gis.geo.AllowedIn";
       },
       
-      /**
-       * Override
-       * 
-       * Adds the isanode container to all nodes.
-       */
-      refreshTermHookin : function(parentNode) {
-        if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isSubtypeContainer)) { return; }
+      appendAdditionalData : function(jsonArray, parentNode, isAChildren) {
+        if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isIsANodeContainer)) { return; }
+        
+        var isANode = {
+          text: this.localize("isANode"),
+          id: Mojo.Util.generateId(), state: {opened: false},
+          data: { runwayId: this.__getRunwayIdFromNode(parentNode), isIsANodeContainer: true },
+          children: isAChildren
+        };
+        
+        parentNode.data.isANode = isANode.id;
+        
+        jsonArray.splice(0, 0, isANode);
       },
       
       /**
@@ -195,16 +201,15 @@
        */
       // @Override
       __onNodeRightClick : function(event, object) {
-        var that = this;
-        var node = event.node;
+        var node = object.node;
+        var parentId = this.getParentRunwayId(node);
+        var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
         if (this._cm != null && !this._cm.isDestroyed()) {
           this._cm.destroy();
         }
         
-        that.getImpl().tree('selectNode', node);
-        
-        if (node.data != null && node.data.isSubtypeContainer) {
+        if (node.data != null && node.data.isIsANodeContainer) {
           this._cm = this.getFactory().newContextMenu(node);
           
           // They right clicked on an isA container node. Display the context menu for isA containers.
@@ -212,10 +217,6 @@
           var refresh = this._cm.addItem(this.localize("refreshIsA"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
           
           this._cm.render();
-          
-          this._cm.addDestroyEventListener(function() {
-            that.getImpl().tree("selectNode", null);
-          });
         }
         else {
           this.$__onNodeRightClick(event, object);
@@ -225,98 +226,27 @@
       __onIsACreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         var targetId = this.__getRunwayIdFromNode(targetNode);
-        this.createTerm(targetId, "com.runwaysdk.system.gis.geo.IsARelationship", targetNode);
+        this.createTerm(targetId, targetNode, "com.runwaysdk.system.gis.geo.IsARelationship");
       },
       
-      /**
-       * Override
-       * 
-       * Adds special logic for handling Subtypes.
-       */
-      refreshTerm : function(termId, callback) {
-        var that = this;
-        
-        this.setTermBusy(termId, true);
-        
-        var myCallback = new Mojo.ClientRequest({
-          onSuccess : function(responseText) {
-            var json = Mojo.Util.getObject(responseText);
-            var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
-            var termAndRels = [];
-            for (var i = 0; i < objArray.length; ++i) {
-              termAndRels.push(that.__responseToTNR(objArray[i]));
-            }
-            
-            var nodes = that.__getNodesById(termId);
-            
-            // Remove existing children
-            for (var iNode = 0; iNode < nodes.length; ++iNode) {
-              var node = nodes[iNode];
-              node.hasFetched = true;
-              var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
-              for (var i=0; i < children.length; i++) {
-                $(that.getRawEl()).tree("removeNode", children[i]);
-              }
-            }
-            
-            // Create a node for every term we got from the server.
-            for (var iNode = 0; iNode < nodes.length; ++iNode) {
-              var node = nodes[iNode];
-              var id = Mojo.Util.generateId();
-              
-              node.data = node.data || {};
-              node.data.isANode = id;
-              
-              var synNode = that.__createTreeNode(id, node, true, {label: that.localize("isANode"), runwayId: that.__getRunwayIdFromNode(node), data: { isSubtypeContainer: true }});
-              
-              for (var i = 0; i < termAndRels.length; ++i) {
-                var childId = termAndRels[i].getTerm().getId();
-                
-                var parentRecord = {parentId: termId, relId: termAndRels[i].getRelationshipId(), relType: termAndRels[i].getRelationshipType()};
-                that.parentRelationshipCache.put(childId, parentRecord);
-                
-                that.termCache[childId] = termAndRels[i].getTerm();
-                
-                if (termAndRels[i].getRelationshipType() === "com.runwaysdk.system.gis.geo.IsARelationship")
-                {
-                  that.__createTreeNode(childId, synNode);
-                }
-                else
-                {
-                  that.__createTreeNode(childId, node);
-                }
-              }
-            }
-            
-            that.setTermBusy(termId, false);
-            
-            if (callback != null && Mojo.Util.isFunction(callback.onSuccess))
-            {
-              callback.onSuccess();
-            }
-          },
-          
-          onFailure : function(err) {
-            that.setTermBusy(termId, false);
-            
-            if (callback != null && Mojo.Util.isFunction(callback.onFailure))
-            {
-              callback.onFailure();
-            }
-            else
-            {
-              that.handleException(err);
-            }
-            
-            return;
-          }
-        });
-        
-        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, myCallback);
-      },
+//      __treeWantsData : function(treeThisRef, parent, jsTreeCallback) {
+//        var that = this;
+//        
+//        var parentId = this.__getRunwayIdFromNode(parent);
+//        
+//        if (parent.data != null && parent.data.isIsANodeContainer) {
+//          var oldRel = this._config.relationshipType;
+//          this._config.relationshipType = "com.runwaysdk.system.gis.geo.IsARelationship";
+//          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
+//          this._config.relationshipType = oldRel;
+//        }
+//        else {
+//          this.$__treeWantsData(treeThisRef, parent, jsTreeCallback);
+//        }
+//      },
       
       _onClickNewCountry : function() {
-        this.createTerm(this.rootTermId);
+        this.createTerm(this.rootTermId, {id:"#"});
       },
       
       createCountryButton : function() {
