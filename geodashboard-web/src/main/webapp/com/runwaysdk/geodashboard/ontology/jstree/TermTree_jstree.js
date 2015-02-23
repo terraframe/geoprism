@@ -613,9 +613,6 @@
                 }
               }
               that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
-              
-              // Children of universals are appended to the root node, so refresh the root node.
-//              that.refreshTerm(that.rootTermId);
             },
             onFailure : function(err) {
               that.handleException(err);

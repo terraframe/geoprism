@@ -63,7 +63,7 @@
       // @Override
       __onNodeRightClick : function(event, object) {
         var $tree = this.getImpl();
-//        var node = object.node; // jstree
+        var that = this;
         var node = event.node;
         
         $tree.tree('selectNode', node);

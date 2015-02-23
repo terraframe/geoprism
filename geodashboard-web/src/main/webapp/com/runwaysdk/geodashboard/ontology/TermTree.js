@@ -101,7 +101,7 @@
         
         // jqtree assumes that id's are unique. For our purposes the id may map to multiple nodes.
         // This map maps the runwayId = [ generatedId's ]
-        this.duplicateMap = {};
+        this.duplicateMap = new com.runwaysdk.structure.HashMap();
         
         this.parentRelationshipCache = new ParentRelationshipCache();
         
@@ -316,7 +316,7 @@
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
       
-      createTerm : function(parentId) {
+      createTerm : function(parentId, relType, parentNode) {
         this.requireParameter("parentId", parentId, "string");
         var that = this;
         
@@ -327,11 +327,15 @@
           return;
         }
         
+        if (relType == null) {
+          relType = this._config.relationshipTypes[0];
+        }
+        
         var config = {
           type: this._config.termType,
-          viewParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          viewParams: {parentId: parentId, relationshipType: relType},
           action: "create",
-          actionParams: {parentId: parentId, relationshipType: this._config.relationshipType},
+          actionParams: {parentId: parentId, relationshipType: relType},
           onSuccess : function(responseObj) {
             var termAndRel = that.__responseToTNR(responseObj);
             var term = termAndRel.getTerm();
@@ -341,11 +345,15 @@
             that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
             that.termCache[term.getId()] = term;
             
-            var $thisTree = $(that.getRawEl());
-            for (var i = 0; i < parentNodes.length; ++i) {
-              var node = that.__createTreeNode(term.getId(), parentNodes[i], true);
-              
-              $thisTree.tree("openNode", node);
+            if (parentNode == null)
+            {
+              for (var i = 0; i < parentNodes.length; ++i) {
+                that.__createTreeNode(term.getId(), parentNodes[i], true);
+              }
+            }
+            else
+            {
+              that.__createTreeNode(term.getId(), parentNode, true);
             }
           },
           onFailure : function(e) {
@@ -422,6 +430,8 @@
         var that = this;
         var parentId = this.__getRunwayIdFromNode(node.parent);
         
+        that.setTermBusy(termId, true);
+        
         var config = {
           type: this._config.termType,
           viewParams: {id: termId, parentId: parentId, relationshipType: ""},
@@ -429,44 +439,29 @@
           actionParams: {parentId: parentId, relationshipType: ""},
           onSuccess : function(responseObj) {
             var term = that.__responseToTerm(responseObj);
-            that.termCache[term.getId()] = term;
+            
+            that.setTermBusy(termId, false);
             
             var nodes = that.__getNodesById(termId);
             for (var i = 0; i < nodes.length; ++i) {
-              var duplicateTerm = that.getImpl().tree("getNodeById", termId);
-              
-              that.setTermBusy(termId, false);
-              
-              var idStr = termId;
-              if (duplicateTerm != null) {
-                if (that.duplicateMap[termId] == null) {
-                  that.duplicateMap[termId] = [];
-                }
-                else {
-                  var existing = that.duplicateMap[termId];
-                  for (var i = 0; i < existing.length; ++i)
-                  {
-                    if (existing[id].runwayId === termId)
-                    {
-                      existing.splice(i, 1);
-                    }
-                  }
-                }
-                idStr = Mojo.Util.generateId();
-                that.duplicateMap[termId].push(idStr);
+              // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
+              if (that.duplicateMap.get(termId) != null) {
+                var duplicates = that.duplicateMap.get(termId);
+                that.duplicateMap.remove(termId);
+                that.duplicateMap.put(term.getId(), duplicates);
               }
               
-              $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term), id: term.getId(), runwayId: term.getId()});
+              that.getImpl().tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term), id: term.getId(), runwayId: term.getId()});
             }
+            
+            that.termCache[termId] = null;
+            that.termCache[term.getId()] = term;
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
             that.handleException(e);
           },
-          onClickSubmit : function() {
-            that.setTermBusy(termId, true);
-          },
-          onViewSuccess : function(html) {
+          onCancel : function() {
             that.setTermBusy(termId, false);
           }
         };
@@ -482,6 +477,7 @@
         var node = contextMenu.getTarget();
         var termId = this.__getRunwayIdFromNode(node);
         var parentId = this.__getRunwayIdFromNode(node.parent);
+        var relType = this._getRelationshipForNode(node, node.parent);
         var that = this;
         var dialog = null;
         
@@ -505,7 +501,7 @@
               
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
-                if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId) {
+                if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId && relType === that._getRelationshipForNode(nodes[i], nodes[i].parent)) {
                   $(that.getRawEl()).tree("removeNode", nodes[i]);
                 }
               }
@@ -518,9 +514,7 @@
           }
           Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
           
-          var parentRecord = that.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
-//          that.termCache[termId].removeChildTerm(deleteRelCallback, parentRecord.relId);
-          com.runwaysdk.Facade.deleteChild(deleteRelCallback, parentRecord.relId);
+          com.runwaysdk.system.ontology.TermUtil.removeLink(deleteRelCallback, termId, parentId, relType);
           
           dialog.close();
         };
@@ -722,9 +716,13 @@
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
           
+          var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
+          var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
+          var relType = this._getRelationshipForNode(movedNode, targetNode);
+          
           var moveBizCallback = {
             onSuccess : function(relDTO) {
-              that.parentRelationshipCache.removeRecordMatchingId(movedNodeId, previousParentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
               
               // Remove nodes from old relationship.
@@ -751,12 +749,13 @@
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
           
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, previousParentId, that);
-          com.runwaysdk.Facade.moveBusiness(moveBizCallback, targetNodeId, movedNodeId, parentRecord.relId, parentRecord.relType);
+          com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(moveBizCallback, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
         };
         
         // User clicks Copy on context menu //
         var copyHandler = function(mouseEvent, contextMenu) {
+          
+          var relType = null;
           
           var addChildCallback = {
             onSuccess : function(relDTO) {
@@ -782,6 +781,9 @@
           
           // The oldRelId is null which means that this actually does a copy.
           com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
+          
+          relType = that._getRelationshipForNode(movedNode, targetNode);
+          com.runwaysdk.system.ontology.TermUtil.addLink(addChildCallback, movedNodeId, targetNodeId, relType);
         };
         
         var cm = this.getFactory().newContextMenu({childId: movedNodeId, parentId: targetNodeId});
@@ -789,7 +791,7 @@
         cm.addItem(this.localize("copy"), "paste", Mojo.Util.bind(this, copyHandler));
         cm.render();
         
-        event.preventDefault()
+        event.preventDefault();
       },
       
       /**
@@ -808,7 +810,7 @@
         var that = this;
         
         if (node.hasFetched == null || node.hasFetched == undefined) {
-          this.refreshTerm(nodeId);
+          this.refreshTerm(nodeId, null, null, node);
         }
       },
       
@@ -821,16 +823,20 @@
         return responseObj;
       },
       
+      // Provided for overrides
+      refreshTermHookin : function(parentNode) {
+        
+      },
+      
       /**
        * Fetches all the term's children from the server, drops all children of the node, and then repopulates the child nodes based on the TermAndRel objects receieved from the server.
        */
-      refreshTerm : function(termId) {
+      refreshTerm : function(termId, callback) {
         var that = this;
-        var id = termId;
         
         this.setTermBusy(termId, true);
         
-        var callback = new Mojo.ClientRequest({
+        var myCallback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
             var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
@@ -853,7 +859,6 @@
             
             // Create a node for every term we got from the server.
             for (var i = 0; i < termAndRels.length; ++i) {
-              var $tree = $(that.getRawEl());
               var childId = termAndRels[i].getTerm().getId();
               
               var parentRecord = {parentId: termId, relId: termAndRels[i].getRelationshipId(), relType: termAndRels[i].getRelationshipType()};
@@ -868,17 +873,30 @@
             }
             
             that.setTermBusy(termId, false);
+            
+            if (callback != null && Mojo.Util.isFunction(callback.onSuccess))
+            {
+              callback.onSuccess();
+            }
           },
           
           onFailure : function(err) {
             that.setTermBusy(termId, false);
-            that.handleException(err);
+            
+            if (callback != null && Mojo.Util.isFunction(callback.onFailure))
+            {
+              callback.onFailure();
+            }
+            else
+            {
+              that.handleException(err);
+            }
+            
             return;
           }
         });
         
-//        Mojo.Util.invokeControllerAction(this._config.termType, "getAllChildren", {parentId: termId, pageNum: 0, pageSize: 0}, callback);
-        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, callback);
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, myCallback);
       },
       
       /**
@@ -928,10 +946,10 @@
           return [$(this.getRawEl()).tree("getTree")];
         } 
         
-        if (this.duplicateMap[nodeId] != null) {
+        if (this.duplicateMap.get(nodeId) != null) {
           $thisTree = $(this.getRawEl());
           
-          var duplicates = this.duplicateMap[nodeId];
+          var duplicates = this.duplicateMap.get(nodeId);
           var nodes = [];
           
           for (var i = 0; i < duplicates.length; ++i) {
@@ -966,47 +984,63 @@
       },
       
       /**
+       * Returns true if the children of the node have been loaded.
+       */
+      hasLoadedNode : function(node)
+      {
+        return node.hasFetched;
+      },
+      
+      _getRelationshipForNode : function(movedNode, newParent) {
+        return this._config.relationshipTypes[0];
+      },
+      
+      /**
        * creates a new jqTree node and appends it to the tree. This method will request the term from the server, to get the display label, if the term is not in the cache.
        */
-      __createTreeNode : function(childId, parentNode, hasFetched) {
+      __createTreeNode : function(childId, parentNode, hasFetched, config) {
         var that = this;
         
-        return this.__getTermFromId(childId, {
-          onSuccess : function(childTerm) {
+//        return this.__getTermFromId(childId, {
+//          onSuccess : function(childTerm) {
+            var childTerm = this.termCache[childId];
+        
             var $thisTree = $(that.getRawEl());
             
             var duplicateTerm = $thisTree.tree("getNodeById", childId);
             
             var idStr = childId;
             if (duplicateTerm != null) {
-              if (that.duplicateMap[childId] == null) {
-                that.duplicateMap[childId] = [];
+              if (that.duplicateMap.get(childId) == null) {
+                that.duplicateMap.put(childId, []);
               }
               idStr = Mojo.Util.generateId();
-              that.duplicateMap[childId].push(idStr);
+              that.duplicateMap.get(childId).push(idStr);
             }
             
-            var displayLabel = that._getTermDisplayLabel(childTerm);
+            config = config || {};
+            var defaultConfig = {
+                id: idStr,
+                runwayId: childId
+            };
+            
+            config = Mojo.Util.deepMerge(defaultConfig, config);
+            
+            if (config.label == null) {
+              config.label = that._getTermDisplayLabel(childTerm);
+            }
             
             var node = null;
             if (parentNode == null || parentNode == undefined) {
               node = $thisTree.tree(
                 'appendNode',
-                {
-                    label: displayLabel,
-                    id: idStr,
-                    runwayId: childId
-                }
+                config
               );
             }
             else {
               node = $thisTree.tree(
                 'appendNode',
-                {
-                    label: displayLabel,
-                    id: idStr,
-                    runwayId: childId
-                },
+                config,
                 parentNode
               );
               
@@ -1031,12 +1065,12 @@
             }
             
             return node;
-          },
-          onFailure : function(err) {
-            that.handleException(err);
-            return;
-          }
-        });
+//          },
+//          onFailure : function(err) {
+//            that.handleException(err);
+//            return;
+//          }
+//        });
       },
       
       __getRunwayIdFromNode : function(node) {
@@ -1126,7 +1160,7 @@
   });
   
   /**
-   * @class com.runwaysdk.geodashboard.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records. This class is used internally only.
+   * @class com.runwaysdk.geodashboard.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records.
    */
   var ParentRelationshipCache = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.ParentRelationshipCache', {
     
@@ -1147,7 +1181,30 @@
       },
       
       /**
-       * @param childId
+       * Updates all references in the cache from oldId to newId. 
+       */
+      updateTermId : function(oldId, newId) {
+        var oldParents = this.get(oldId);
+        this.removeAll(oldId);
+        
+        this.putAll(newId, oldParents);
+        
+        for(childId in this.cache) {
+          if(this.cache.hasOwnProperty(childId)) {
+            var parentRecordArray = this.cache[childId];
+            
+            for (var i = 0; i < parentRecordArray.length; ++i) {
+              var parentRecord = parentRecordArray[i];
+              if (parentRecord.parentId === oldId) {
+                parentRecord.parentId = newId;
+              }
+            }
+          }
+        }
+      },
+      
+      /**
+       * @param childId A Term's RunwayId
        * @param parentRecord
        */
       put : function(childId, record) {
@@ -1177,34 +1234,10 @@
       },
       
       /**
-       * Removes all parents in the cache for the given term id.
-       */
-      removeAll : function(termId) {
-        this.cache[termId] = [];
-        
-        // Remove all children
-//        for (var childId in this.cache) {
-//          if (this.cache.hasOwnProperty(childId)) {
-//            var records = this.cache[childId];
-//            
-//            for (var i = 0; i < records.length; ++i) {
-//              if (records[i].parentId === termId) {
-//                records[i].splice(i, 1);
-//              }
-//            }
-//            
-//            if (records.length === 0) {
-//              delete this.cache[childId];
-//            }
-//          }
-//        }
-      },
-      
-      /**
        * Removes the specified parentRecord from the parentRecord[] matching the term id and the parent id.
        */
-      removeRecordMatchingId : function(childId, parentId, treeInst) {
-        var records = this.get(childId, treeInst);
+      removeRecordMatchingId : function(childId, parentId) {
+        var records = this.get(childId);
         
         for (var i = 0; i < records.length; ++i) {
           if (records[i].parentId === parentId) {
@@ -1216,13 +1249,39 @@
         throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
       },
       
+      removeRecordMatchingIdAndRelType : function(childId, parentId, relType) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].parentId === parentId && records[i].relType === relType) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
+      removeRecordMatchingRelId : function(childId, relId) {
+        var records = this.get(childId);
+        
+        for (var i = 0; i < records.length; ++i) {
+          if (records[i].relId === relId) {
+            records.splice(i, 1);
+            return;
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("Unable to find a matching record to remove with childId[" + childId + "] and parentId[" + parentId + "].");
+      },
+      
       /**
        * @returns parentRecord[]
        */
-      get : function(childId, treeInst) {
+      get : function(childId) {
         var got = this.cache[childId];
         
-        if (treeInst != null && (got == null || got == undefined)) {
+        if (got == null) {
           throw new com.runwaysdk.Exception("The term [" + childId + "] is not mapped to a parent record in the parentRelationshipCache.");
         }
         
@@ -1242,6 +1301,48 @@
         }
         
         throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      /**
+       * @returns parentRecord
+       */
+      getRecordWithParentIdAndRelType : function(childId, parentId, relType) {
+        var parentRecords = this.get(childId);
+        
+        for (var i = 0; i < parentRecords.length; ++i) {
+          if (parentId === parentRecords[i].parentId && relType === parentRecords[i].relType) {
+            return parentRecords[i];
+          }
+        }
+        
+        throw new com.runwaysdk.Exception("The ParentRelationshipCache is faulty, unable to find parent with id [" + parentId + "] and relType [" + relType + "] in the cache. The child term in question is [" + childId + "] and that term has [" + parentRecords.length + "] parents in the cache.");
+      },
+      
+      putAll : function(childId, records) {
+        for (var i = 0; i < records.length; ++i) {
+          this.put(childId, records[i]);
+        }
+      },
+      
+      removeAll : function(termId) {
+        this.cache[termId] = [];
+        
+        // Remove all children
+//        for (var childId in this.cache) {
+//          if (this.cache.hasOwnProperty(childId)) {
+//            var records = this.cache[childId];
+//            
+//            for (var i = 0; i < records.length; ++i) {
+//              if (records[i].parentId === termId) {
+//                records[i].splice(i, 1);
+//              }
+//            }
+//            
+//            if (records.length === 0) {
+//              delete this.cache[childId];
+//            }
+//          }
+//        }
       }
     }
   });
