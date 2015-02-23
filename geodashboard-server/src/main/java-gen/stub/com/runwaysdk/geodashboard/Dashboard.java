@@ -29,11 +29,14 @@ import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
+import com.runwaysdk.query.CONCAT;
+import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableDecimal;
 import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
@@ -151,6 +154,35 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     super.apply();
+  }
+
+  @Override
+  @Transaction
+  public Dashboard clone(String name)
+  {
+    Dashboard clone = new Dashboard();
+    clone.getDisplayLabel().setDefaultValue(name);
+    clone.apply();
+
+    OIterator<? extends DashboardMetadata> allMetadata = this.getAllMetadataRel();
+
+    try
+    {
+      while (allMetadata.hasNext())
+      {
+        DashboardMetadata rel = allMetadata.next();
+
+        DashboardMetadata dm = clone.addMetadata(rel.getChild());
+        dm.setListOrder(rel.getListOrder());
+        dm.apply();
+      }
+    }
+    finally
+    {
+      allMetadata.close();
+    }
+
+    return clone;
   }
 
   public static String[] getTextSuggestions(String mdAttributeId, String text, Integer limit)
@@ -349,32 +381,29 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return suggestions.toArray(new String[suggestions.size()]);
   }
 
-  @Override
-  @Transaction
-  public Dashboard clone(String name)
+  public static ValueQuery getGeoEntitySuggestions(String text, Integer limit)
   {
-    Dashboard clone = new Dashboard();
-    clone.getDisplayLabel().setDefaultValue(name);
-    clone.apply();
+    ValueQuery query = new ValueQuery(new QueryFactory());
 
-    OIterator<? extends DashboardMetadata> allMetadata = this.getAllMetadataRel();
+    GeoEntityQuery entityQuery = new GeoEntityQuery(query);
 
-    try
-    {
-      while (allMetadata.hasNext())
-      {
-        DashboardMetadata rel = allMetadata.next();
+    SelectableChar id = entityQuery.getId();
+    Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
+    Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
+    SelectableChar geoId = entityQuery.getGeoId();
 
-        DashboardMetadata dm = clone.addMetadata(rel.getChild());
-        dm.setListOrder(rel.getListOrder());
-        dm.apply();
-      }
-    }
-    finally
-    {
-      allMetadata.close();
-    }
+    CONCAT label = F.CONCAT(F.CONCAT(F.CONCAT(F.CONCAT(geoLabel, " ("), F.CONCAT(universalLabel, ")")), " : "), geoId);
+    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
-    return clone;
+    query.SELECT(id, label);
+    query.WHERE(label.LIKEi("%" + text + "%"));
+    query.ORDER_BY_ASC(geoLabel);
+
+    query.restrictRows(limit, 1);
+
+    return query;
   }
+
 }

@@ -12,8 +12,10 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
@@ -27,41 +29,70 @@ import com.runwaysdk.query.AttributeMoment;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedBusinessQuery;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ReportProviderUtil implements Reloadable
 {
   /**
+   * Condition type for restricting on global location
+   */
+  private static final String LOCATION_CONDITION  = "LOCATION_CONDITION";
+
+  /**
+   * Condition type for restricting on an attribute
+   */
+  private static final String ATTRIBUTE_CONDITION = "ATTRIBUTE_CONDITION";
+
+  /**
+   * Magic value for the json attribute name which specifies the id of the MdAttribute
+   */
+  private static final String MD_ATTRIBUTE        = "mdAttribute";
+
+  /**
+   * Magic value for the json attribute name which specifies the operation type
+   */
+  private static final String OPERATION           = "operation";
+
+  /**
+   * Magic value for the json attribute name which specifies the value
+   */
+  private static final String VALUE               = "value";
+
+  /**
+   * Magic value for the json attribute name which specifies the value
+   */
+  private static final String TYPE                = "type";
+
+  /**
    * Greater than comparison
    */
-  public static final String GT  = "gt";
+  public static final String  GT                  = "gt";
 
   /**
    * Greater than or equal comparison
    */
-  public static final String GE  = "ge";
+  public static final String  GE                  = "ge";
 
   /**
    * Less than comparison
    */
-  public static final String LT  = "lt";
+  public static final String  LT                  = "lt";
 
   /**
    * Less than or equal comparison
    */
-  public static final String LE  = "le";
+  public static final String  LE                  = "le";
 
   /**
    * Equal comparison
    */
-  public static final String EQ  = "eq";
+  public static final String  EQ                  = "eq";
 
   /**
    * Equal comparison
    */
-  public static final String NEQ = "neq";
+  public static final String  NEQ                 = "neq";
 
   public static GeoEntity getGeoEntity(String category, String defaultGeoId)
   {
@@ -80,7 +111,7 @@ public class ReportProviderUtil implements Reloadable
     return GeoEntity.getByKey(defaultGeoId);
   }
 
-  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery, QueryFactory factory)
+  public static void addConditions(String criteria, String type, GeneratedBusinessQuery query, ValueQuery vQuery)
   {
     try
     {
@@ -93,38 +124,54 @@ public class ReportProviderUtil implements Reloadable
         for (int i = 0; i < length; i++)
         {
           JSONObject condition = conditions.getJSONObject(i);
-          String mdAttributeId = condition.getString("mdAttribute");
-          String operation = condition.getString("operation");
-          String value = condition.getString("value");
+          String operation = condition.getString(OPERATION);
+          String value = condition.getString(VALUE);
+          String conditionType = condition.getString(TYPE);
 
-          MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-
-          String attributeName = mdAttribute.definesAttribute();
-          String key = mdAttribute.getKey();
-
-          if (key.startsWith(type))
+          if (conditionType.equals(ATTRIBUTE_CONDITION))
           {
-            Attribute attribute = QueryUtil.get(query, attributeName);
+            String mdAttributeId = condition.getString(MD_ATTRIBUTE);
+            MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
-            if (attribute instanceof AttributeNumber)
+            String attributeName = mdAttribute.definesAttribute();
+            String key = mdAttribute.getKey();
+
+            if (key.startsWith(type))
             {
-              addNumberCondition(vQuery, operation, value, (AttributeNumber) attribute);
+              Attribute attribute = QueryUtil.get(query, attributeName);
+
+              if (attribute instanceof AttributeNumber)
+              {
+                addNumberCondition(vQuery, operation, value, (AttributeNumber) attribute);
+              }
+              else if (attribute instanceof AttributeBoolean)
+              {
+                addBooleanCondition(vQuery, operation, value, (AttributeBoolean) attribute);
+              }
+              else if (attribute instanceof AttributeMoment)
+              {
+                addMomentCondition(vQuery, operation, value, (AttributeMoment) attribute);
+              }
+              else if (attribute instanceof AttributeCharacter)
+              {
+                addCharacterCondition(vQuery, operation, value, (AttributeCharacter) attribute);
+              }
+              else if (attribute instanceof AttributeReference)
+              {
+                addTermCondition(vQuery, operation, value, (AttributeReference) attribute);
+              }
             }
-            else if (attribute instanceof AttributeBoolean)
+          }
+          else if (conditionType.equals(LOCATION_CONDITION))
+          {
+            MdClassDAOIF mdClass = query.getMdClassIF();
+            MdAttributeDAOIF mdAttribute = QueryUtil.getGeoEntityAttribute(mdClass);
+
+            if (mdAttribute != null)
             {
-              addBooleanCondition(vQuery, operation, value, (AttributeBoolean) attribute);
-            }
-            else if (attribute instanceof AttributeMoment)
-            {
-              addMomentCondition(vQuery, operation, value, (AttributeMoment) attribute);
-            }
-            else if (attribute instanceof AttributeCharacter)
-            {
-              addCharacterCondition(vQuery, operation, value, (AttributeCharacter) attribute);
-            }
-            else if (attribute instanceof AttributeReference)
-            {
-              addTermCondition(vQuery, operation, value, (AttributeReference) attribute, factory);
+              AttributeReference attribute = (AttributeReference) QueryUtil.get(query, mdAttribute.definesAttribute());
+
+              addGeoEntityCondition(vQuery, value, attribute);
             }
           }
         }
@@ -256,7 +303,17 @@ public class ReportProviderUtil implements Reloadable
     }
   }
 
-  private static void addTermCondition(ValueQuery vQuery, String operation, String value, AttributeReference attribute, QueryFactory factory)
+  private static void addGeoEntityCondition(ValueQuery vQuery, String entityId, AttributeReference attribute)
+  {
+    GeoEntity entity = GeoEntity.get(entityId);
+
+    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+
+    vQuery.WHERE(aptQuery.getParentTerm().EQ(entity));
+    vQuery.AND(attribute.EQ(aptQuery.getChildTerm()));
+  }
+
+  private static void addTermCondition(ValueQuery vQuery, String operation, String value, AttributeReference attribute)
   {
     MdAttributeReferenceDAOIF mdAttributeTerm = (MdAttributeReferenceDAOIF) attribute.getMdAttributeIF();
     MdBusinessDAOIF mdBusinessDAO = mdAttributeTerm.getReferenceMdBusinessDAO();
@@ -265,7 +322,7 @@ public class ReportProviderUtil implements Reloadable
     {
       if (operation.equals(EQ))
       {
-        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
         allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(value));
 
         vQuery.AND(attribute.EQ(allPathQuery.getChildTerm()));

@@ -27,7 +27,6 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.dataaccess.database.DatabaseException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -41,7 +40,9 @@ import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.F;
@@ -118,10 +119,10 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     // otherwise our database view won't exist yet.
     //
     // The false flag is set in publish(createDBView) to allow for running the createDatabaseView
-    // method inside the applyWithStyleInTransaction method so that incorrect SQL for view 
-    // creation is caught before database object are created.  Originally noticed on text attribute
+    // method inside the applyWithStyleInTransaction method so that incorrect SQL for view
+    // creation is caught before database object are created. Originally noticed on text attribute
     // layer creation
-    this.publish(false);
+    this.publish(true);
     GeoserverFacade.pushUpdates();
 
     try
@@ -210,8 +211,6 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     }
 
     this.validate();
-    
-    createDatabaseView(true);
   }
 
   public String generateViewName()
@@ -250,54 +249,23 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
   public void validate()
   {
-    // String geoIdColumnName = GeoEntity.getIdMd().getColumnName();
-    //
-    // // make sure there are no duplicate geo entities
-    // String countSQL = "SELECT COUNT(*) " + Database.formatColumnAlias("ct") + " FROM " +
-    // ((MdEntity)this.getMdClass()).getTableName();
-    // countSQL += " GROUP BY " + geoIdColumnName + " HAVING COUNT(*) > 1";
-    //
-    // ResultSet resultSet = Database.query(countSQL);
-    //
-    // try
-    // {
-    // if (resultSet.next())
-    // {
-    // // We have duplicate data! Throw an exception if this is the base
-    // // layer,
-    // // but only omit the layer with info if non-base.
-    // if (i == 0)
-    // {
-    // DuplicateMapDataException ex = new DuplicateMapDataException();
-    // throw ex;
-    // }
-    // else
-    // {
-    // LayerOmittedDuplicateDataInformation info = new LayerOmittedDuplicateDataInformation();
-    // info.setLayerName(layerName);
-    // info.throwIt();
-    //
-    // continue;
-    // }
-    // }
-    // }
-    // catch (SQLException sqlEx1)
-    // {
-    // Database.throwDatabaseException(sqlEx1);
-    // }
-    // finally
-    // {
-    // try
-    // {
-    // java.sql.Statement statement = resultSet.getStatement();
-    // resultSet.close();
-    // statement.close();
-    // }
-    // catch (SQLException sqlEx2)
-    // {
-    // Database.throwDatabaseException(sqlEx2);
-    // }
-    // }
+    try
+    {
+      // Ensure the generated query is valid and executes
+      Database.query(this.getViewQuery().getSQL());
+
+      // Create the database view
+      createDatabaseView(true);
+
+      // Ensure there is a valid bounding box
+      GeoserverFacade.getBBOX(this.getViewName());
+    }
+    catch (Exception e)
+    {
+      // If this happens it means the SQL generated wrong and coding will be required to fix.
+
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   /**
@@ -322,61 +290,31 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
    */
   public void publish(boolean createDBView)
   {
-    if (needsRepublish())
+    this.drop();
+
+    if (createDBView)
     {
-      this.drop();
-
-      if(createDBView)
-      {
-    	  createDatabaseView(true);
-      }
-
-      if (viewHasData)
-      {
-        GeoserverFacade.publishLayerOnUpdate(this);
-      }
-
-      this.appLock();
-      this.setLastPublishDate(new Date());
-      this.apply();
-      this.unlock();
+      createDatabaseView(true);
     }
-  }
 
-  public boolean needsRepublish()
-  {
+    if (viewHasData)
+    {
+      GeoserverFacade.publishLayerOnUpdate(this);
+    }
 
-    // TODO : layer views need to be associated with a particular session, otherwise when changing filter conditions
-    // different users will clobber eachother.
-    return true;
-
-    // boolean isPublished = isPublished();
-    // if (!isPublished) { return true; }
-    //
-    // // TODO : We could optimize this by recording which conditions the view was built with and then saying if the
-    // conditions are different return true.
-    // if (conditions != null) { return true; }
-    //
-    // Date lastUpdate = this.getLastUpdateDate();
-    // Date lastPublish = this.getLastPublishDate();
-    // if (lastPublish == null || lastUpdate.after(lastPublish)) {
-    // return true;
-    // }
-    //
-    // return false;
+    this.appLock();
+    this.setLastPublishDate(new Date());
+    this.apply();
+    this.unlock();
   }
 
   public void createDatabaseView(boolean force)
   {
-    // Boolean viewExists = GeoserverFacade.viewExists(this.getViewName());
-
-    // if (force || !viewExists) {
     String sql = this.getViewQuery().getSQL();
 
     Database.dropView(this.getViewName(), sql, false);
 
     Database.createView(this.getViewName(), sql);
-    // }
   }
 
   public HashMap<String, Double> getLayerMinMax(String _attribute)
@@ -602,13 +540,22 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           {
             for (DashboardCondition condition : conditions)
             {
-              MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(condition.getDefiningMdAttributeId());
-              MdClassDAOIF definedByClass = mdAttribute.definedByClass();
-
-              if (definedByClass.getId().equals(mdClass.getId()))
+              if (condition instanceof DashboardAttributeCondition)
               {
-                Attribute attr = QueryUtil.get(query, mdAttribute.definesAttribute());
-                condition.restrictQuery(factory, innerQuery1, attr);
+                String mdAttributeId = ( (DashboardAttributeCondition) condition ).getDefiningMdAttributeId();
+
+                MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
+                MdClassDAOIF definedByClass = mdAttribute.definedByClass();
+
+                if (definedByClass.getId().equals(mdClass.getId()))
+                {
+                  Attribute attr = QueryUtil.get(query, mdAttribute.definesAttribute());
+                  condition.restrictQuery(factory, innerQuery1, attr);
+                }
+              }
+              else if (condition instanceof LocationCondition)
+              {
+                condition.restrictQuery(factory, innerQuery1, geoAttr);
               }
             }
           }

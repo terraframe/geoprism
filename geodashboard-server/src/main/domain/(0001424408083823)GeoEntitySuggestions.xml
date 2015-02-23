@@ -1,0 +1,17 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <mdMethod name="getGeoEntitySuggestions" label="Get geo entity suggestions" static="true" returnType="com.runwaysdk.query.ValueQuery">
+            <mdParameter name="text" order="0" type="java.lang.String" label="Text" />
+            <mdParameter name="limit" order="1" type="java.lang.Integer" label="Limit" />
+          </mdMethod>
+        </create>
+      </mdBusiness>    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

@@ -674,7 +674,7 @@
           
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){     
-        	// Remove the internal form div if it exists
+          // Remove the internal form div if it exists
             $( "#clone-dialog" ).remove();
             
             // Set the html of the dialog
@@ -1448,13 +1448,13 @@
      
         // Attach event listeners for the universal (geo) aggregation dropdown.
         $("#f58").change(function(){ 
-        	if($("#f58 option:selected").hasClass("universal-leaf")){
-        		// Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-        		$("#f59").parent().parent().hide();
-        	}
-        	else{
-        		$("#f59").parent().parent().show();
-        	}
+          if($("#f58 option:selected").hasClass("universal-leaf")){
+            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+            $("#f59").parent().parent().hide();
+          }
+          else{
+            $("#f59").parent().parent().show();
+          }
         });
       },
       
@@ -1643,7 +1643,7 @@
               attrCond.setDefiningMdAttribute(mdAttribute);
                 
               conditions.push(attrCond);
-              criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
+              criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
             else if($(this).hasClass('filter-char')) {              
               // Add character criterias
@@ -1664,7 +1664,7 @@
               attrCond.setDefiningMdAttribute(mdAttribute);
               
               conditions.push(attrCond);
-              criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
+              criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
             else if($(this).hasClass('filter-term')) {              
               // Add term criterias
@@ -1678,7 +1678,7 @@
                 attrCond.setDefiningMdAttribute(mdAttribute);
                 
                 conditions.push(attrCond);
-                criteria.push({'mdAttribute':mdAttribute, 'operation':select, 'value':id});            
+                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':id});            
               }
             }
             else if($(this).hasClass('filter-date')) {
@@ -1695,7 +1695,7 @@
                 attrCond.setDefiningMdAttribute(mdAttribute);
                       
                 conditions.push(attrCond);
-                criteria.push({'mdAttribute':mdAttribute, 'operation':'ge', 'value':value});
+                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'ge', 'value':value});
               }
               else if($(this).hasClass('checkout')) {
                 var mdAttribute = $(this).attr('id').replace('filter-to-', '');   
@@ -1709,7 +1709,7 @@
                 attrCond.setDefiningMdAttribute(mdAttribute);
                     
                 conditions.push(attrCond);
-                criteria.push({'mdAttribute':mdAttribute, 'operation':'le', 'value':value});
+                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'le', 'value':value});
               }                          
             }
           }          
@@ -1727,10 +1727,20 @@
             attrCond.setDefiningMdAttribute(mdAttribute);
             
             conditions.push(attrCond);
-            criteria.push({'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
+            criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
         });
+        
+        // Add the geo entity filter
+        var location = $('#filter-geo-hidden').val();
+        
+        if(location != null && location.length > 0)
+        {
+          var condition = new com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition();
+          condition.setComparisonValue(location);
             
- 
+          conditions.push(condition);          
+          criteria.push({'type':'LOCATION_CONDITION', 'operation':'eq', 'value':location});                          
+        }
         
         return {'conditions' : conditions, 'criteria' : criteria};
       },
@@ -1885,6 +1895,44 @@
             },           
             minLength: 2
           });
+        });
+        
+        // Hook up the filter auto-complete for the global location filter
+        $('#filter-geo').autocomplete({
+          source: function( request, response ) {  
+            var req = new Mojo.ClientRequest({
+              onSuccess : function(query){
+                var resultSet = query.getResultSet()
+                                    
+                var results = [];
+                  
+                $.each(resultSet, function( index, result ) {
+                  var label = result.getValue('displayLabel');
+                  var id = result.getValue('id');
+                    
+                  results.push({'label':label, 'value':label, 'id':id});
+                });
+                  
+                response( results );
+              },
+              onFailure : function(e){
+                that.handleException(e);
+              }
+            });
+              
+            com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, request.term, 10);
+          },
+          select: function(event, ui) {
+            $('#filter-geo-hidden' ).val(ui.item.id);
+          }, 
+          change : function(event, ui) {
+            var value = $('#filter-geo').val();
+          
+            if(value == null || value == '') {                
+              $('#filter-geo-hidden').val('');
+            }
+          },
+          minLength: 2
         });
         
         // Hook up the mutual exclusive filter for boolean attributes

@@ -13,15 +13,6 @@
         </attributes>
       </mdException>
     </create>
-    <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition">
-        <create>
-          <attributes>
-            <reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
-          </attributes>
-        </create>
-      </mdBusiness>
-    </update>
   </doIt>
   <undoIt>
     <delete>
