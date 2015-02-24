@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -554,41 +553,28 @@ public class GeoserverFacade implements Reloadable
   }
 
   /**
-   * Calculates the bounding box of a specific layer.
-   * 
-   * @param views
-   * @return double[] {minx, miny, maxx, maxy}
-   */
-  public static double[] getBBOX(String viewName)
-  {
-    List<String> view = new LinkedList<String>();
-    view.add(viewName);
-
-    return getBBOX(view);
-  }
-
-  /**
    * Calculates the bounding box of all the layers.
    * 
    * @param views
    * @return double[] {minx, miny, maxx, maxy}
    */
-  public static double[] getBBOX(List<String> views)
+  public static double[] getBBOX(String... views)
   {
     // collect all the views and extend the bounding box
     ValueQuery union = new ValueQuery(new QueryFactory());
-    if (views.size() == 1)
+    if (views.length == 1)
     {
-      String view = views.get(0);
+      String view = views[0];
       union.SELECT(union.aSQLClob(GEOM_COLUMN, GEOM_COLUMN, GEOM_COLUMN));
       union.FROM(view, view);
     }
-    else if (views.size() > 1)
+    else if (views.length > 1)
     {
-      ValueQuery[] unionVQs = new ValueQuery[views.size()];
+      ValueQuery[] unionVQs = new ValueQuery[views.length];
+
       for (int i = 0; i < unionVQs.length; i++)
       {
-        String view = views.get(i);
+        String view = views[i];
         ValueQuery vq = new ValueQuery(union.getQueryFactory());
         vq.SELECT(vq.aSQLClob(GEOM_COLUMN, GEOM_COLUMN, GEOM_COLUMN));
         vq.FROM(view, view);
@@ -614,23 +600,23 @@ public class GeoserverFacade implements Reloadable
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
     OIterator<? extends ValueObject> iter = outer.getIterator();
-    ValueObject o;
     try
     {
-      o = iter.next();
+      ValueObject o = iter.next();
+
+      double[] bbox = new double[4];
+      bbox[MINX_INDEX] = Double.parseDouble(o.getValue("minx"));
+      bbox[MINY_INDEX] = Double.parseDouble(o.getValue("miny"));
+      bbox[MAXX_INDEX] = Double.parseDouble(o.getValue("maxx"));
+      bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
+
+      return bbox;
     }
     finally
     {
       iter.close();
     }
 
-    double[] bbox = new double[4];
-    bbox[MINX_INDEX] = Double.parseDouble(o.getValue("minx"));
-    bbox[MINY_INDEX] = Double.parseDouble(o.getValue("miny"));
-    bbox[MAXX_INDEX] = Double.parseDouble(o.getValue("maxx"));
-    bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
-
-    return bbox;
   }
 
 }

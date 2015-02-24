@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -821550870)
+@com.runwaysdk.business.ClassSignature(hash = -79570503)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,7 +13,6 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
-  public static java.lang.String DEFININGMDATTRIBUTE = "definingMdAttribute";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -26,7 +25,7 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -821550870;
+  private static final long serialVersionUID = -79570503;
   
   public DashboardConditionBase()
   {
@@ -75,46 +74,6 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
-  }
-  
-  public com.runwaysdk.system.metadata.MdAttribute getDefiningMdAttribute()
-  {
-    if (getValue(DEFININGMDATTRIBUTE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdAttribute.get(getValue(DEFININGMDATTRIBUTE));
-    }
-  }
-  
-  public String getDefiningMdAttributeId()
-  {
-    return getValue(DEFININGMDATTRIBUTE);
-  }
-  
-  public void validateDefiningMdAttribute()
-  {
-    this.validateAttribute(DEFININGMDATTRIBUTE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDefiningMdAttributeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DEFININGMDATTRIBUTE);
-  }
-  
-  public void setDefiningMdAttribute(com.runwaysdk.system.metadata.MdAttribute value)
-  {
-    if(value == null)
-    {
-      setValue(DEFININGMDATTRIBUTE, "");
-    }
-    else
-    {
-      setValue(DEFININGMDATTRIBUTE, value.getId());
-    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()

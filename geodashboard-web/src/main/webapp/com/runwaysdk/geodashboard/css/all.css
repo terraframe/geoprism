@@ -1436,6 +1436,20 @@ a.blueactive,
 	border-color:#019edc;
 	outline:none;
 }
+.filter-block .geo input{
+	background: none repeat scroll 0% 0% #EEE;
+	border: 1px solid #BBB;
+	width: 100%;
+	height: 28px;
+	padding: 6px 7px 5px;
+	margin: 0px;
+	float: left;
+	font-size: 13px;
+	line-height: 15px;
+	color: #999;
+	outline: medium none;
+}
+
 #ui-datepicker-div{margin-top:3px;}
 /* slide-navigation styles */
 .slide-navigation{

@@ -1,267 +1,245 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<doIt>
-		<create>
+  <doIt>
+    <create>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
-				<attributes>
-					<char name="name" label="Name" size="64" required="true" indexType="unique index" />
-				</attributes>
-				<mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
-				<mdMethod name="orderLayers" static="false" label="Order Layers" returnType="java.lang.String">
-					<mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids" />
-				</mdMethod>
-				<mdMethod name="updateConditions" label="updateConditons" returnType="java.lang.String" static="false">
-				  <mdParameter name="conditions" order="0" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-				</mdMethod>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
+        <attributes>
+          <char name="name" label="Name" size="64" required="true" indexType="unique index" />
+        </attributes>
+        <mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
+        <mdMethod name="orderLayers" static="false" label="Order Layers" returnType="java.lang.String">
+          <mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids" />
+        </mdMethod>
+        <mdMethod name="updateConditions" label="updateConditons" returnType="java.lang.String" static="false">
+          <mdParameter name="conditions" order="0" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
+        </mdMethod>
+      </mdBusiness>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true" cacheAlgorithm="everything">
-				<attributes>
-					<char name="name" label="Name" size="64" required="true" />
-					<boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
-					<boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
-					<enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
-					<dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
-					<reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
-					<reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
-					<reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
-					<boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
-					<struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />	
-				</attributes>
-				<mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
-					<mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer"/>		
-					<mdParameter name="legendYPosition" label="legendYPosition" order="1" type="java.lang.Integer"/>
-					<mdParameter name="groupedInLegend" label="groupedInLegend" order="2" type="java.lang.Boolean"/>					
-				</mdMethod>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" label="Layer" generateController="true" cacheAlgorithm="everything">
+        <attributes>
+          <char name="name" label="Name" size="64" required="true" />
+          <boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
+          <boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
+          <enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
+          <dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
+          <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
+          <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
+          <reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
+          <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
+          <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+        </attributes>
+        <mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
+          <mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer" />
+          <mdParameter name="legendYPosition" label="legendYPosition" order="1" type="java.lang.Integer" />
+          <mdParameter name="groupedInLegend" label="groupedInLegend" order="2" type="java.lang.Boolean" />
+        </mdMethod>
+      </mdBusiness>
 
-			<mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View">
-				<attributes>
-					<virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"/>
-					<virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer"/>
-					<virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
-					<virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
-					<virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend"/>
-					<boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
-					<char name="viewName" label="viewName" size="64" required="true" />
-					<char name="layerName" label="layerName" size="64" required="true" />
-					<char name="layerId" label="layerId" size="64" required="true" />
-					<char name="sldName" label="sldName" size="64" required="true" />
-					<char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
-					<char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
-				</attributes>
-			</mdView>
-			
-			<mdStruct name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" label="Legend">
-				<attributes>
-					<integer name="legendXPosition" label="Legend X Position" required="false" defaultValue="0" />
-					<integer name="legendYPosition" label="Legend Y Position" required="false" defaultValue="0" />
-					<boolean name="groupedInLegend" label="Grouped In Legend" required="true" defaultValue="true" />
-				</attributes>
-			</mdStruct>
+      <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View">
+        <attributes>
+          <virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+          <virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+          <virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
+          <char name="viewName" label="viewName" size="64" required="true" />
+          <char name="layerName" label="layerName" size="64" required="true" />
+          <char name="layerId" label="layerId" size="64" required="true" />
+          <char name="sldName" label="sldName" size="64" required="true" />
+          <char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
+          <char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
+        </attributes>
+      </mdView>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
-				<attributes>
-					<integer name="layerIndex" required="true" rejectNegative="true" />
-				</attributes>
-				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
-				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
-			</mdRelationship>
+      <mdStruct name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" label="Legend">
+        <attributes>
+          <integer name="legendXPosition" label="Legend X Position" required="false" defaultValue="0" />
+          <integer name="legendYPosition" label="Legend Y Position" required="false" defaultValue="0" />
+          <boolean name="groupedInLegend" label="Grouped In Legend" required="true" defaultValue="true" />
+        </attributes>
+      </mdStruct>
 
-			<enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
+      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
+        <attributes>
+          <integer name="layerIndex" required="true" rejectNegative="true" />
+        </attributes>
+        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
+      </mdRelationship>
 
-			<object key="BASIC" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-				<attribute name="enumName" value="BASIC" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Basic" />
-				</attributeStruct>
-			</object>
+      <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
 
-			<object key="BUBBLE" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-				<attribute name="enumName" value="BUBBLE" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Bubble" />
-				</attributeStruct>
-			</object>
+      <object key="BASIC" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="BASIC" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Basic" />
+        </attributeStruct>
+      </object>
 
-			<object key="GRADIENT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-				<attribute name="enumName" value="GRADIENT" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Gradient" />
-				</attributeStruct>
-			</object>
+      <object key="BUBBLE" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="BUBBLE" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Bubble" />
+        </attributeStruct>
+      </object>
 
-			<object key="CATEGORY" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-				<attribute name="enumName" value="CATEGORY" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Category" />
-				</attributeStruct>
-			</object>
+      <object key="GRADIENT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="GRADIENT" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Gradient" />
+        </attributeStruct>
+      </object>
 
-			<mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllLayerType" type="com.runwaysdk.geodashboard.gis.persist.LayerType"
-				label="All Layer Type">
-				<includeAll></includeAll>
-			</mdEnumeration>
+      <object key="CATEGORY" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="CATEGORY" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Category" />
+        </attributeStruct>
+      </object>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
-				<attributes>
-					<char name="name" label="Name" size="64" required="false" />
+      <mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllLayerType" type="com.runwaysdk.geodashboard.gis.persist.LayerType" label="All Layer Type">
+        <includeAll></includeAll>
+      </mdEnumeration>
 
-					<!-- value styles -->
-					<boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
-					<char name="valueFont" label="Font" size="50" required="true" defaultValue="Arial" />
-					<integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
-					<char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
-					<char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
-					<integer name="valueHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
+        <attributes>
+          <char name="name" label="Name" size="64" required="false" />
 
-					<!-- label styles -->
-					<boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
-					<char name="labelFont" label="Font" size="50" required="true" defaultValue="Arial" />
-					<integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
-					<char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000" />
-					<char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF" />
-					<integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
+          <!-- value styles -->
+          <boolean name="enableValue" label="Display Value" required="true" defaultValue="true" />
+          <char name="valueFont" label="Font" size="50" required="true" defaultValue="Arial" />
+          <integer name="valueSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
+          <char name="valueColor" label="Color" size="10" required="true" defaultValue="#000000" />
+          <char name="valueHalo" label="Halo" size="10" required="true" defaultValue="#FFFFFF" />
+          <integer name="valueHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 
-					<!-- point styles -->
-					<integer name="pointSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />
-					<char name="pointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
-					<integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-					<char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
-					<char name="pointFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
-					<integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
+          <!-- label styles -->
+          <boolean name="enableLabel" label="Display Label" required="true" defaultValue="true" />
+          <char name="labelFont" label="Font" size="50" required="true" defaultValue="Arial" />
+          <integer name="labelSize" label="Size" required="true" defaultValue="12" rejectNegative="true" />
+          <char name="labelColor" label="Color" size="7" required="true" defaultValue="#000000" />
+          <char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF" />
+          <integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 
-					<!-- line styles -->
-					<char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000" />
-					<integer name="lineStrokeWidth" label="Width" required="true" defaultValue="3" rejectNegative="true" />
-					<char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
-					<double name="lineOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <!-- point styles -->
+          <integer name="pointSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />
+          <char name="pointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
+          <char name="pointFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
+          <double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
 
-					<!-- polygon styles -->
-					<char name="polygonFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
-					<double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
-					<char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
-					<integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-					<double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
-				</attributes>
-			</mdBusiness>
+          <!-- line styles -->
+          <char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000" />
+          <integer name="lineStrokeWidth" label="Width" required="true" defaultValue="3" rejectNegative="true" />
+          <char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
+          <double name="lineOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+
+          <!-- polygon styles -->
+          <char name="polygonFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
+          <double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+        </attributes>
+      </mdBusiness>
 
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" label="Thematic Attribute" generateController="true"
-				extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
-				<attributes>
-					<reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
-					<reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" label="Thematic Attribute" generateController="true" extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+        <attributes>
+          <reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
+          <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+        </attributes>
+      </mdBusiness>
 
-			<mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="false">
-				<parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
-				<child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
-			</mdRelationship>
+      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="false">
+        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
+      </mdRelationship>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true"
-				generateController="true">
-				<attributes>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true" generateController="false">
+        <attributes>
 
-					<!-- <reference name="styleReference" required="false" label="Style" description="Back-reference to the Style that points to this condition." type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" 
-						/> -->
+          <!-- <reference name="styleReference" required="false" label="Style" description="Back-reference to the Style that points to this condition." type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" /> -->
 
-					<reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists."
-						type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-					<reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists."
-						type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-				</attributes>
-			</mdBusiness>
+          <reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists." type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          <reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists." type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+        </attributes>
+      </mdBusiness>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"
-				label="Primitive" isAbstract="true" generateController="true">
-				<attributes>
-					<char name="comparisonValue" size="255" required="true" label="Value" />
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Attribute condition" isAbstract="true" generateController="false">
+        <attributes>
+          <reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
+        </attributes>
+      </mdBusiness>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
-				label="Equals" generateController="true">
-				<attributes>
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Location condition" isAbstract="false" generateController="false">
+        <attributes>
+          <char name="comparisonValue" size="255" required="true" label="Value" />        
+        </attributes>
+      </mdBusiness>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
-				label="Greater Than" generateController="true">
-				<attributes>
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" label="Primitive" isAbstract="true" generateController="false">
+        <attributes>
+          <char name="comparisonValue" size="255" required="true" label="Value" />
+        </attributes>
+      </mdBusiness>
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
-				label="Less Than" generateController="true">
-				<attributes>
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Equals" generateController="false" />
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
-				label="Greater Than Or Equal" generateController="true">
-				<attributes>
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than" generateController="false" />
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive"
-				label="Less Than Or Equal" generateController="true">
-				<attributes>
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than" generateController="false" />
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition"
-				label="Composite" isAbstract="true" generateController="true">
-				<attributes>
-					<reference name="leftCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-					<reference name="rightCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-				</attributes>
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than Or Equal" generateController="false" />
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" label="And"
-				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="true">
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than Or Equal" generateController="false" />
 
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" label="Or"
-				extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="true">
-			</mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" label="Composite" isAbstract="true" generateController="false">
+        <attributes>
+          <reference name="leftCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          <reference name="rightCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+        </attributes>
+      </mdBusiness>
 
-			<mdException name="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" label="Duplicate Map Data Exception"
-				description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
-			</mdException>
-			<mdInformation name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation" label="Empty Layer Information"
-				description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
-				<attributes>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" label="And" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="false" />
+
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" label="Or" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="false" />
+
+      <mdException name="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" label="Duplicate Map Data Exception" description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
+      </mdException>
+      <mdInformation name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation" label="Empty Layer Information" description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
+        <attributes>
           <text name="layerName" label="Layer Name" />
         </attributes>
-			</mdInformation>
+      </mdInformation>
 
-		</create>
-		<update></update>
-	</doIt>
-	<undoIt>
-		<delete>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete>
 
-			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
 
-		</delete>
-	</undoIt>
+    </delete>
+  </undoIt>
 </version>

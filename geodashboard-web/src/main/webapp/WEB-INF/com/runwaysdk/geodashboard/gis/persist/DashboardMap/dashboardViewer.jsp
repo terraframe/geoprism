@@ -37,6 +37,7 @@
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqualDTO"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO"%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO"%>
 <%@page import="com.runwaysdk.geodashboard.report.ReportItemController"%>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
@@ -65,8 +66,8 @@
         DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
         DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
         DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
-        DashboardDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS, ClassifierDTO.CLASS,
-        ClassifierDisplayLabelDTO.CLASS
+        DashboardDTO.CLASS, LocationConditionDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS,
+        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -162,10 +163,10 @@ $(document).ready(function(){
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
+		    <!-- Clone dashboard button -->
 		    <span id="clone-dashboard" class="pull-left">
               <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
 		    </span>		
-		    
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
@@ -178,9 +179,19 @@ $(document).ready(function(){
 				</ul>
 			</div>
 		</div>
-          
+		
+	    <!-- Global geo filter -->
+	    <div class="filter-block">	    
+	      <div class="row-holder">
+	        <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
+	      </div>	    
+	      <div class="geo">
+		    <input class="gdb-attr-filter filter-geo" id="filter-geo" type="text" placeholder="Geo entity"></input>
+		    <input id="filter-geo-hidden" type="hidden"></input>		    
+	      </div>	    
+		</div>
+		                                        
         <div class="sales-accortion panel-group">
-	
 	        <!-- 
 	        TEST
 	        -->
