@@ -118,6 +118,7 @@
       termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
       relationshipTypes : [ <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>, <% out.print("\"" + IsARelationshipDTO.CLASS + "\""); %> ],
       rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+      editable : true,
       /* checkable: true, */
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.

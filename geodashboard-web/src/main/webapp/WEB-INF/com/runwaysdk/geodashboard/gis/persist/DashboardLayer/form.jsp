@@ -9,8 +9,12 @@
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/jstree/jstree.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/jstree/style.css" ></link>
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/jstree/jstree.js"></script> --%>
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/jstree/style.css" ></link> --%>
+
+<script src="${pageContext.request.contextPath}/jquerytree/tree.jquery.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jquerytree/jqtree.css">
+
 
 <!-- Runway Factory -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
@@ -555,6 +559,8 @@
                   </div>
                   
                   <gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
+                 
+                 
                   <!-- CATEGORIES -->
                   <div
                     <c:choose>
@@ -576,138 +582,147 @@
                         <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardLayer.form.catInputPlaceholder"/></span>
                       </div>
                       <div class="category-block" id="category-colors-container">
-                        <div class="panel-group choice-color category-group">
-                        
-<!--                           <div class="panel"> -->
-<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
-<!--                             <div id="choice-color01" class="panel-collapse"> -->
-<!--                               <ul class="color-list"> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                               </ul> -->
-<!--                             </div> -->
-<!--                           </div> -->
-                          
-					<div class="panel">
-                    	<div id="choice-color01" class="panel-collapse">
-		                    <ul class="color-list">
-		                       <li>
-		                         <div class="category-container">
-			                       	 <div class="text category-input-container">		
-			                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
-			                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-			                       	 </div>
-	                   	 		 	 <div class="cell">
-					                  	<div class="color-holder">
-			                            	<a href="#" class="color-choice">
-			                              	<span class="ico" style="background:${style.styleCategoryFill1};">icon</span>
-			                              	<span class="arrow">arrow</span>
-			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill1" value="${style.styleCategoryFill1}" />
-			                            	</a>
-			                          	</div>
-			                         </div>
-	                   	 		 </div>
-		                       </li>
-		                       
-		                       <li>
-		                         <div class="category-container">
-			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-			                       	 </div>
-	                   	 		 	 <div class="cell">
-					                  	<div class="color-holder">
-			                            	<a href="#" class="color-choice">
-			                              	<span class="ico" style="background:${style.styleCategoryFill2};">icon</span>
-			                              	<span class="arrow">arrow</span>
-			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill2" value="${style.styleCategoryFill2}" />
-			                            	</a>
-			                          	</div>
-			                         </div>
-	                   	 		 </div>
-		                       </li>
-		                       <li>
-		                         <div class="category-container">
-			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-			                       	 </div>
-	                   	 		 	 <div class="cell">
-					                  	<div class="color-holder">
-			                            	<a href="#" class="color-choice">
-			                              	<span class="ico" style="background:${style.styleCategoryFill3};">icon</span>
-			                              	<span class="arrow">arrow</span>
-			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill3" value="${style.styleCategoryFill3}" />
-			                            	</a>
-			                          	</div>
-			                         </div>
-	                   	 		 </div>
-		                       </li>
-		                       <li>
-		                         <div class="category-container">
-			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-			                       	 </div>
-	                   	 		 	 <div class="cell">
-					                  	<div class="color-holder">
-			                            	<a href="#" class="color-choice">
-			                              	<span class="ico" style="background:${style.styleCategoryFill4};">icon</span>
-			                              	<span class="arrow">arrow</span>
-			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill4" value="${style.styleCategoryFill4}" />
-			                            	</a>
-			                          	</div>
-			                         </div>
-	                   	 		 </div>
-		                       </li>		                       		                       
-		                       <li>
-		                         <div class="category-container">
-			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-			                       	 </div>
-	                   	 		 	 <div class="cell">
-					                  	<div class="color-holder">
-			                            	<a href="#" class="color-choice">
-			                              	<span class="ico" style="background:${style.styleCategoryFill5};">icon</span>
-			                              	<span class="arrow">arrow</span>
-			                              	<input type="hidden" class="color-input" name="style.styleCategoryFill5" value="${style.styleCategoryFill5}" />
-			                            	</a>
-			                          	</div>
-			                         </div>
-	                   	 		 </div>
-		                       </li>		                       
-		                       
-<!-- 		                       <li> -->
-<!-- 		                         <div class="category-container"> -->
-<!-- 			                       	 <div class="text category-input-container"> -->
-<%-- 			                       	 	<input id="cat2" class="category-input" name="style.${style.styleCategory2Md.name}" type="text" placeholder="Enter a category value" autocomplete="on" >  --%>
-<!-- 			                       	 </div> -->
-<!-- 			                       	 <a href="#"> -->
-<%-- 			                       	 	<span class="icon-color category-icon" style="background:${style.styleCategoryFill2};">color</span> --%>
-<!-- 			                       	 </a> -->
-<%-- 			                       	 <input type="hidden" class="color-input" name="style.${style.styleCategoryFill2Md.name}" value="${style.styleCategoryFill2}" /> --%>
-<!-- 		                       	 </div> -->
-<!-- 		                       </li> -->
-
-		                     </ul>
-		                   </div>
-		                 </div>
-                    
-                        
-<!--                         START OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
-<!--                           <div class="panel"> -->
-<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
-<!--                             <div id="choice-color01" class="panel-collapse collapse"> -->
-<!--                               <ul class="color-list"> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
-<!--                               </ul> -->
-<!--                             </div> -->
-<!--                           </div> -->
-<!--                         END OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
-
-                        </div>
+                      
+                      <c:choose>
+                      	<c:when test="${'true' == isOntologyAttribute}">
+                      		<!-- RENDER ONTOLOGY TREE DATA -->
+							<div id="ontology-tree"></div>
+                      	</c:when>
+                      	<c:otherwise>
+		                        <div class="panel-group choice-color category-group">
+		                        
+		<!--                           <div class="panel"> -->
+		<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
+		<!--                             <div id="choice-color01" class="panel-collapse"> -->
+		<!--                               <ul class="color-list"> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                               </ul> -->
+		<!--                             </div> -->
+		<!--                           </div> -->
+		                          
+										<div class="panel">
+					                    	<div id="choice-color01" class="panel-collapse">
+							                    <ul class="color-list">
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">		
+								                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
+								                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span class="ico" style="background:${style.styleCategoryFill1};">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill1" value="${style.styleCategoryFill1}" />
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>
+							                       
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+								                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span class="ico" style="background:${style.styleCategoryFill2};">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill2" value="${style.styleCategoryFill2}" />
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+								                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span class="ico" style="background:${style.styleCategoryFill3};">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill3" value="${style.styleCategoryFill3}" />
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+								                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span class="ico" style="background:${style.styleCategoryFill4};">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill4" value="${style.styleCategoryFill4}" />
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>		                       		                       
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+								                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span class="ico" style="background:${style.styleCategoryFill5};">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill5" value="${style.styleCategoryFill5}" />
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>		                       
+							                       
+					<!-- 		                       <li> -->
+					<!-- 		                         <div class="category-container"> -->
+					<!-- 			                       	 <div class="text category-input-container"> -->
+					<%-- 			                       	 	<input id="cat2" class="category-input" name="style.${style.styleCategory2Md.name}" type="text" placeholder="Enter a category value" autocomplete="on" >  --%>
+					<!-- 			                       	 </div> -->
+					<!-- 			                       	 <a href="#"> -->
+					<%-- 			                       	 	<span class="icon-color category-icon" style="background:${style.styleCategoryFill2};">color</span> --%>
+					<!-- 			                       	 </a> -->
+					<%-- 			                       	 <input type="hidden" class="color-input" name="style.${style.styleCategoryFill2Md.name}" value="${style.styleCategoryFill2}" /> --%>
+					<!-- 		                       	 </div> -->
+					<!-- 		                       </li> -->
+					
+							                     </ul>
+							                   </div>
+							                 </div>
+		                    
+		                        
+		<!--                         START OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
+		<!--                           <div class="panel"> -->
+		<!--                             <a class="opener" data-toggle="collapse" href="#choice-color01">First Node <span class="icon-color">color</span></a> -->
+		<!--                             <div id="choice-color01" class="panel-collapse collapse"> -->
+		<!--                               <ul class="color-list"> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                                 <li><a href="#">Child Node <span class="icon-color" style="background:#a6e53b">color</span></a></li> -->
+		<!--                               </ul> -->
+		<!--                             </div> -->
+		<!--                           </div> -->
+		<!--                         END OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
+		
+		                        </div>
+                      	</c:otherwise>
+                      </c:choose>
                       </div>
                     </div>
                     <div class="stroke-block">
@@ -752,18 +767,26 @@
 
 	$( document ).ready(function() {
 
-	  // This prevents building duplicate trees when the javascript is being run twice.
+	  // This first if check prevents building duplicate trees when the javascript is being run twice.
 	  // This is a potential bug with a ticket reported #279
 	  // 
-	  // This was the start of an implementation that got put on hold temporarily. The current rootTerm param
-	  // is being set from the controller as a request attribute but needs to be set as the roots of the layer 
-	  // ontology rather than the root of the entire ontology tree for all the data in the system. 
-	  if ('${isOntologyAttribute}' === true && $("#ontology-tree").children().length === 0){
+	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
 		      com.runwaysdk.ui.Manager.setFactory("JQuery");
 			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
 			      termType : <%="\"" + ClassifierDTO.CLASS + "\""%>,
 			      relationshipTypes : [ <%="\"" + ClassifierIsARelationshipDTO.CLASS + "\""%> ],
 			      rootTerm : '${ontologyId}',
+			      editable : false,
+			      slide : false,
+			      onCreateLi: function(node, $li) {
+			          // Add the color icon for category ontology nodes			        
+			          $li.find('> div').append(
+					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+	            			  '<span class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+	            			  '<input type="hidden" class="color-input" name="style.labelColor" value="#000000">' +
+	            			  '</a>')
+			      },
+			      /* checkable: true, */
 				  crud: {
 				      create: { // This configuration gets merged into the jquery create dialog.
 				        height: 320

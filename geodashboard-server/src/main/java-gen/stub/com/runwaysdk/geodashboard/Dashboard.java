@@ -7,6 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.business.BusinessQuery;
+
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
+
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
@@ -24,7 +29,9 @@ import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTable;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.Attribute;
@@ -190,6 +197,38 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return suggestions.toArray(new String[suggestions.size()]);
   }
+  
+  
+  public static final com.runwaysdk.geodashboard.ontology.Classifier[] getClassifierRoots(String mdAttributeId)
+  {
+	    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+	    QueryFactory factory = new QueryFactory();
+	    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+	    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+	    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+
+	    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+	    allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
+
+	    classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
+//	    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().LIKEi("%" + text + "%"));
+//	    classifierQuery.restrictRows(limit, 1);
+
+	    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+//	    OIterator<? extends Classifier> iterator = rootQuery.getIterator();
+
+	    try
+	    {
+	      LinkedList<Classifier> roots = new LinkedList<Classifier>(iterator.getAll());
+	      return roots.toArray(new Classifier[roots.size()]);
+	    }
+	    finally
+	    {
+	      iterator.close();
+	    }	
+  }
+  
 
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
   {

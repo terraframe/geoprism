@@ -14,17 +14,38 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ontology.TermDTO;
+import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
+import com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO;
+import com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierController;
+import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityController;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
+import com.runwaysdk.system.gis.geo.LocatedInDTO;
+import com.runwaysdk.system.gis.geo.SynonymDTO;
+import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
+
+import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
+import com.runwaysdk.system.metadata.MdAttributeTermDTO;
+
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
+import com.runwaysdk.web.json.JSONController;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -128,10 +149,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
     req.setAttribute("fonts", fonts);
 
-    // get the universals
-    // UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
-    // req.setAttribute("universals", universals.getResultSet());
-
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
     
@@ -148,12 +165,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     req.setAttribute("universals", universals);
     req.setAttribute("universalLeafId", leaf.getId());
-    
-//    DashboardThematicStyleDTO tStyle = (DashboardThematicStyleDTO) style;
-//    MdClassDTO mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
-//    MdClassDTO md = (MdClassDTO) MdClassDTO.get(clientRequest, mdClass.getId());
-//    MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
-//    geoEntity = attr.getId();
     
 
     // selected attribute
@@ -209,6 +220,52 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     {
       req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
+    
+    // Determine if the attribute is an ontology attribute
+    MdAttributeConcreteDTO mtAttrConcrete = ((MdAttributeVirtualDTO) mdAttr).getMdAttributeConcrete();
+    if (mtAttrConcrete instanceof MdAttributeTermDTO)
+    {
+      req.setAttribute("isOntologyAttribute", true);
+      
+      String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] { 
+      	GeoEntityDTO.CLASS, 
+      	LocatedInDTO.CLASS, 
+      	GeoEntityDisplayLabelDTO.CLASS, 
+      	GeoEntityController.CLASS, 
+      	UniversalDTO.CLASS, 
+      	UniversalDisplayLabelDTO.CLASS, 
+      	TermUtilDTO.CLASS, 
+      	GeoEntityViewDTO.CLASS, 
+      	SynonymDTO.CLASS, 
+      	SynonymDisplayLabelDTO.CLASS, 
+      	GeoEntityExportMenuDTO.CLASS, 
+      	
+        ClassifierDTO.CLASS, 
+        ClassifierIsARelationshipDTO.CLASS, 
+        ClassifierDisplayLabelDTO.CLASS, 
+        ClassifierController.CLASS, 
+        ClassifierExportMenuDTO.CLASS
+          
+      }, true);
+      
+      req.setAttribute("js", js);
+      
+     
+      ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
+      // TODO: Make sure this gets the direct parent to the attribute
+      ClassifierDTO parent = roots[0];
+      Boolean parentIsSelectable = parent.getAllClassifierAttributeRootsRelationships(clientRequest, parent.getId()).get(0).getSelectable();
+      
+      // Passing ontology root to layer form categories 
+  	  req.setAttribute("ontologyRootIsSelectable", parentIsSelectable);
+      req.setAttribute("ontologyId", parent.getId());
+      
+    }
+    else
+    {
+    	req.setAttribute("isOntologyAttribute", false);
+    }
+    
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)

@@ -141,6 +141,7 @@
 	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
 	    relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
 	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+	    editable : true,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.
 	        height: 320
