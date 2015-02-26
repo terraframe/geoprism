@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <head>
 
@@ -324,12 +324,14 @@
                     <div class="text">
                       <select id="f81" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}">
                         <c:forEach step="5" begin="0" end="100" var="size">
+                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+                        
                           <c:choose>
                             <c:when test="${style.polygonStrokeOpacity*100 == size}">
-                              <option selected="selected" value="${size/100}">${size}</option>
+                              <option selected="selected" value="${potentialValue}">${size}</option>
                             </c:when>
                             <c:otherwise>
-                              <option value="${size/100}">${size}</option>
+                              <option value="${potentialValue}">${size}</option>
                             </c:otherwise>
                           </c:choose>
                         </c:forEach>
@@ -341,12 +343,14 @@
                     <div class="text">
                       <select id="f78" class="tab-select" name="style.${style.polygonFillOpacityMd.name}">
                         <c:forEach step="5" begin="0" end="100" var="size">
+                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+                                                  
                           <c:choose>
                             <c:when test="${style.polygonFillOpacity*100 == size}">
-                              <option selected="selected" value="${size/100}">${size}</option>
+                              <option selected="selected" value="${potentialValue}">${size}</option>
                             </c:when>
                             <c:otherwise>
-                              <option value="${size/100}">${size}</option>
+                              <option value="${potentialValue}">${size}</option>
                             </c:otherwise>
                           </c:choose>
                         </c:forEach>
@@ -427,12 +431,13 @@
                           <div class="text">
                             <select id="f71" class="tab-select" name="style.${style.pointOpacityMd.name}">
                               <c:forEach step="5" begin="0" end="100" var="size">
+                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
                                 <c:choose>
                                   <c:when test="${style.pointOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
+                                    <option selected="selected" value="${potentialValue}">${size}</option>
                                   </c:when>
                                   <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
+                                    <option value="${potentialValue}">${size}</option>
                                   </c:otherwise>
                                 </c:choose>
                               </c:forEach>
@@ -476,12 +481,14 @@
                           <div class="text">
                              <select id="f74" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
                               <c:forEach step="5" begin="0" end="100" var="size">
+                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+                                
                                 <c:choose>
                                   <c:when test="${style.pointStrokeOpacity*100 == size}">
-                                    <option selected="selected" value="${size/100}">${size}</option>
+                                    <option selected="selected" value="${potentialValue}">${size}</option>
                                   </c:when>
                                   <c:otherwise>
-                                    <option value="${size/100}">${size}</option>
+                                    <option value="${potentialValue}">${size}</option>
                                   </c:otherwise>
                                 </c:choose>
                               </c:forEach>
@@ -597,7 +604,7 @@
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">		
 			                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
-			                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -630,7 +637,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -646,7 +653,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">
@@ -662,7 +669,7 @@
 		                       <li>
 		                         <div class="category-container">
 			                       	 <div class="text category-input-container">
-			                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+			                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 			                       	 </div>
 	                   	 		 	 <div class="cell">
 					                  	<div class="color-holder">

@@ -55,6 +55,10 @@
         // Default criteria for filtering
         this._conditionMap = {'conditions' : [], 'criteria' : []};
         
+        // Number localization setup
+        this._parser = Globalize.numberParser();
+        this._formatter = Globalize.numberFormatter();
+        
         this._defaultOverlay = null;
         this._currentOverlay = null;
         this._map = null;
@@ -982,9 +986,35 @@
           params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');
           params["conditions_" + index + ".isNew"] = "true";
           params["#conditions_" + index + ".actualType"] = condition.getType();
-        });        
+        });      
+        
+        
+        // Normalize any localized number category values
+        if(this._getCategoryType() == "number" ) {
+          var attributes = ['style.styleCategory1', 'style.styleCategory2', 'style.styleCategory3', 'style.styleCategory4', 'style.styleCategory5'];
+          
+          $.each(attributes, function(index, attribute) {
+            if(params[attribute] != null && params[attribute].length > 0) {
+              var number = that._parser(params[attribute])
+              
+              if($.isNumeric(number)) {
+                params[attribute] = number;                
+              }
+            } 
+          });
+        }
         
         return request;
+      },
+      
+      _getCategoryType : function() {
+        var categoryType = null;
+        
+        $.each($('.category-input'), function(index, element) {
+          categoryType = $(element).data("type");
+        });
+        
+        return categoryType;
       },
       
       /**
@@ -1373,11 +1403,23 @@
             // the layer database view directly. 
             $('.category-input').each(function(){
               var mdAttribute = $(this).data('mdattributeid');  
+              var categoryType = $(this).data('type');
               
               $(this).autocomplete({
                 source: function( request, response ) {
                   var req = new Mojo.ClientRequest({
                     onSuccess : function(results){
+                      
+                      // We need to localize the results for numbers
+                      if(categoryType == 'number') {
+                        for(var i = 0; i < results.length; i++) {
+                          var number = parseFloat(results[i]);
+                          var localized = that._formatter(number);
+                          
+                          results[i] = localized;
+                        }
+                      }
+                      
                       response( results );
                     },
                     onFailure : function(e){
@@ -1410,6 +1452,8 @@
        * @html
        */
       _displayLayerForm : function(html){
+    	  
+    	var that = this;
         
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
@@ -1456,6 +1500,24 @@
             $("#f59").parent().parent().show();
           }
         });
+        
+        // Localize any existing number cateogry values
+        $.each($('.category-input'), function() {
+          
+          var value = $(this).val();
+          
+          if(value != null && value.length > 0) {
+            var categoryType = $(this).data("type");
+            
+            if(categoryType == "number") {
+              var number = parseFloat(value);
+              var localized = that._formatter(number);
+              
+              $(this).val(localized);
+            }
+          }
+          
+        });        
       },
       
       
@@ -1612,7 +1674,7 @@
         var that = this;
         var conditions = [];
         var criteria = [];
-        
+          
         $( "input.gdb-attr-filter" ).each(function( index ) {
           var textValue = $(this).val();
               
@@ -1638,12 +1700,14 @@
               else if (select === "le") {
                 attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
               }
-                
-              attrCond.setComparisonValue(textValue);
+
+              var number = that._parser( textValue );
+
+              attrCond.setComparisonValue(number);
               attrCond.setDefiningMdAttribute(mdAttribute);
                 
               conditions.push(attrCond);
-              criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
+              criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':number});            
             }
             else if($(this).hasClass('filter-char')) {              
               // Add character criterias
@@ -1748,32 +1812,46 @@
       _onClickApplyFilters : function(e) {
         var that = this;
         
-        this._conditionMap = this._buildConditionMap();
+        // Validate there are no existing errors
+        var errorCount = $('.gdb-attr-filter.field-error').length
         
-        var criteria = this._conditionMap['criteria']; 
-        var conditions = this._conditionMap['conditions'];
+        if(errorCount > 0) {
+          var message = com.runwaysdk.Localize.localize("filter", "error");
+          
+          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+          dialog.appendContent(message);
+          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
+          dialog.setStyle("z-index", 2001);
+          dialog.render();          
+        }
+        else {
+          this._conditionMap = this._buildConditionMap();
+            
+          var criteria = this._conditionMap['criteria']; 
+          var conditions = this._conditionMap['conditions'];
+                    
+          var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function(json, calledObj, response) {
+              var jsonObj = Mojo.Util.toObject(json);
+               
+              that._updateCacheFromJSONResponse(jsonObj);
                 
-        var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(json, calledObj, response) {
-            var jsonObj = Mojo.Util.toObject(json);
+              that._addUserLayersToMap(true);
+                
+              that._drawLegendItems()
+                
+              // TODO : Push this somewhere as a default handler.
+              that.handleMessages(response);
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+            }
+          });
             
-            that._updateCacheFromJSONResponse(jsonObj);
+          com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
             
-            that._addUserLayersToMap(true);
-            
-            that._drawLegendItems()
-            
-            // TODO : Push this somewhere as a default handler.
-            that.handleMessages(response);
-          },
-          onFailure : function(e) {
-            that.handleException(e);
-          }
-        });
-        
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
-        
-        this._renderReport('', criteria);
+          this._renderReport('', criteria);
+        }
       },
       
       /**
@@ -1781,6 +1859,18 @@
        */
       _legendSortUpdate : function(event, ui){
          // No action needed at this time. This is simply a ui feature.
+      },
+      
+      _validateInteger : function (value) {
+        var number = this._parser( value );
+          
+        return (value != '' && (!$.isNumeric(number) || Math.floor(number) != number));
+      },
+      
+      _validateNumeric : function (value) {
+        var number = this._parser( value );
+        
+        return (value != '' && !$.isNumeric(number));        
       },
       
       /**
@@ -1820,25 +1910,22 @@
         });
         
         // Javascript to prevent input of non-number values in a number field
-        $('.integers-only').keyup(function () {          
-          var temp = this.value.replace(/[^0-9]/g,'');
-          
-          if (!$.isNumeric(this.value) || this.value != temp) {
-            
-            this.value = temp;
+        $('.integers-only').keyup(function (event) {          
+          if (that._validateInteger(this.value)) {            
+            $(this).addClass('field-error');
+          }
+          else {            
+            $(this).removeClass('field-error');
           }
         });      
         
         // Javascript to prevent input of non-number values in a number field
         $('.numbers-only').keyup(function () {
-          if (!$.isNumeric(this.value)) {
-            
-            // TODO this needs to be updated to support localization where the decimal might be a ',' instead of a '.'
-            this.value = this.value.replace(/[^0-9\.]/g,'');
-                
-            if(this.value.split('.').length > 2) {
-              this.value = this.value.replace(/\.+$/,"");
-            }
+          if (!that._validateNumeric(this.value)) {            
+            $(this).addClass('field-error');
+          }
+          else {            
+            $(this).removeClass('field-error');
           }
         });
         

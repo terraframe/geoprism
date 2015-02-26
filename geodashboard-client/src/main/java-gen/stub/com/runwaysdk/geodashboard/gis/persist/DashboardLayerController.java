@@ -22,6 +22,7 @@ import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
+import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
@@ -134,27 +135,26 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
-    
+
     // Getting the lowest level universal in the tree (the leaf)
     TermDTO leaf = null;
-    for(TermDTO universal : universals)
+    for (TermDTO universal : universals)
     {
-    	TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
-	    if(descendants.length == 0)
-	    {
-	    	leaf = universal;
-	    }
+      TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
+      if (descendants.length == 0)
+      {
+        leaf = universal;
+      }
     }
-    
+
     req.setAttribute("universals", universals);
     req.setAttribute("universalLeafId", leaf.getId());
-    
-//    DashboardThematicStyleDTO tStyle = (DashboardThematicStyleDTO) style;
-//    MdClassDTO mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
-//    MdClassDTO md = (MdClassDTO) MdClassDTO.get(clientRequest, mdClass.getId());
-//    MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
-//    geoEntity = attr.getId();
-    
+
+    // DashboardThematicStyleDTO tStyle = (DashboardThematicStyleDTO) style;
+    // MdClassDTO mdClass = tStyle.getMdAttribute().getAllDefiningClass().getAll().get(0);
+    // MdClassDTO md = (MdClassDTO) MdClassDTO.get(clientRequest, mdClass.getId());
+    // MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
+    // geoEntity = attr.getId();
 
     // selected attribute
     MdAttributeDTO mdAttr;
@@ -166,11 +166,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     { // edit
       mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
-    req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
+
     req.setAttribute("mdAttributeId", mdAttr.getId());
-    
-    MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
-    MdAttributeConcreteDTO mdAttrConcrete = mdAttributeVirtual.getMdAttributeConcrete();
+    req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
@@ -191,7 +189,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // filter out invalid layer types depending on attribute type
     // this is primarily to prevent creating gradients on date fields
-    if (! ( mdAttrConcrete instanceof MdAttributeDateDTO ))
+    MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
+
+    if (! ( mdAttributeConcrete instanceof MdAttributeDateDTO ))
     {
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
       layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
@@ -202,13 +202,16 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     List<String> activeLayerType = layer.getLayerTypeEnumNames();
     if (activeLayerType.size() > 0)
-    { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not new instances)
+    { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not
+      // new instances)
       req.setAttribute("activeLayerTypeName", activeLayerType.get(0));
     }
     else
     {
       req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
+
+    req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)
@@ -228,6 +231,34 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
 
     return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
+  }
+
+  private String getCategoryType(MdAttributeDTO mdAttr)
+  {
+    MdAttributeConcreteDTO concrete = this.getMdAttributeConcrete(mdAttr);
+
+    if (concrete instanceof MdAttributeDateDTO)
+    {
+      return "date";
+    }
+    else if (concrete instanceof MdAttributeNumberDTO)
+    {
+      return "number";
+    }
+
+    return "text";
+  }
+
+  private MdAttributeConcreteDTO getMdAttributeConcrete(MdAttributeDTO mdAttr)
+  {
+    if (mdAttr instanceof MdAttributeVirtualDTO)
+    {
+      MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
+
+      return mdAttributeVirtual.getMdAttributeConcrete();
+    }
+
+    return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
   /**
