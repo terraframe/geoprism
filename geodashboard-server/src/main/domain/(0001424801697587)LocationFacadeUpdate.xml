@@ -1,0 +1,18 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdUtil name="com.runwaysdk.geodashboard.localization.LocalizationFacade">
+        <create>
+          <mdMethod name="getConfigurationJSON" label="Get CLDR configuration" static="true" returnType="java.lang.String" />
+          <mdMethod name="getCLDRLocaleName" label="Get CLDR locale name" static="true" returnType="java.lang.String" />
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.localization.LocalizationFacade.getConfigurationJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="com.runwaysdk.geodashboard.localization.LocalizationFacade.getCLDRLocaleName" type="com.runwaysdk.system.metadata.MdMethod" />
+    </delete>
+  </undoIt>
+</version>

@@ -2195,3 +2195,12 @@ a.clone-dashboard {
 	position: relative;
 	margin: 0px 9px 0px 0px;
 }
+
+input.gdb-attr-filter.field-error {
+	border: 1px solid rgb(224, 153, 153);
+}
+
+input:focus.gdb-attr-filter.field-error {
+	border: 1px solid rgb(224, 153, 153);
+    outline: medium none;	
+}

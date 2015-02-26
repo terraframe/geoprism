@@ -77,53 +77,40 @@ public class LocalizationFacade extends LocalizationFacadeBase implements com.ru
     }
   }
 
-  public static String getCalendarLocale()
-  {
-    Locale locale = getLocale();
-
-    String language = locale.getLanguage();
-    String country = locale.getCountry();
-
-    if (language.equalsIgnoreCase("ar") && country.equalsIgnoreCase("DZ"))
-    {
-      return language + "-" + country;
-    }
-    else if (language.equalsIgnoreCase("cy"))
-    {
-      return "cy-GB";
-    }
-    else if (language.equalsIgnoreCase("en"))
-    {
-      if (country.equalsIgnoreCase("AU") || country.equalsIgnoreCase("GB") || country.equalsIgnoreCase("NZ"))
-      {
-        return language + "-" + country;
-      }
-
-      return ""; // en-US is default
-    }
-    else if (language.equalsIgnoreCase("fr") && country.equalsIgnoreCase("CH"))
-    {
-      return language + "-" + country;
-    }
-    else if (language.equalsIgnoreCase("nl") && country.equalsIgnoreCase("BE"))
-    {
-      return language + "-" + country;
-    }
-    else if (language.equalsIgnoreCase("pt") && country.equalsIgnoreCase("BR"))
-    {
-      return language + "-" + country;
-    }
-    else if (language.equalsIgnoreCase("zh"))
-    {
-      return "zh-HK";
-    }
-
-    return language;
-  }
-
   public static Locale getLocale()
   {
     return Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
   }
 
+  public static String getConfigurationJSON()
+  {
+    Locale locale = getLocale();
+
+    JSONObject configuration = LocaleManager.getConfiguration(locale);
+
+    String json = configuration.toString();
+
+    return json;
+  }
+
+  public static String getCLDRLocaleName()
+  {
+    Locale locale = getLocale();
+    Locale cldr = LocaleManager.getBestFitCLDR(locale);
+
+    return LocaleManager.getLocaleName(cldr);
+  }
+
+  public static String getCalendarLocale()
+  {
+    Locale locale = getLocale();
+    Locale datepicker = LocaleManager.getBestFitDatepicker(locale);
+
+    if (datepicker.equals(Locale.ENGLISH))
+    {
+      return "";
+    }
+
+    return LocaleManager.getLocaleName(datepicker);
+  }
 }

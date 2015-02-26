@@ -24,6 +24,11 @@
 <%@ page import="com.runwaysdk.controller.JSPFetcher"%>
 <%@ page import="java.util.regex.Matcher"%>
 <%@ page import="java.util.regex.Pattern" %>
+<%@page import="com.runwaysdk.constants.ClientConstants"%>
+<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
+<%@page import="com.runwaysdk.web.json.JSONController"%>
+<%@page import="com.runwaysdk.constants.DeployProperties" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -51,69 +56,69 @@
 
 	<title>${page_title}</title>
 	 
-	<%@page import="com.runwaysdk.constants.ClientConstants"%>
-	<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-	<%@page import="com.runwaysdk.web.json.JSONController"%>
-	
-	<%@page import="com.runwaysdk.constants.DeployProperties" %>
-	<%
-	  String webappRoot = request.getContextPath() + "/";
-	%>
-	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/log4js.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/errorcatch.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Util.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ClassFramework.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/Structure.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Core.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_DTO.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_GIS.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/RunwaySDK_Inspector.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/RunwaySDK_UI.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/log4js.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/errorcatch.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/Util.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ClassFramework.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/Structure.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_Core.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_DTO.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_GIS.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_Inspector.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwaySDK_UI.js"></script>
 	  
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Geodashboard.js"></script>
 	  
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>bootstrap/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>jquery/ui/themes/lightness.css">
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/all.css">
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/additions.css">
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/themes/lightness.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/all.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/additions.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
 	   
 	<!-- jQuery  -->
-	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/jquery-1.9.0.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.9.0.min.js"></script>
 		  
 	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
-	<script type="text/javascript" src="<% out.print(webappRoot); %>bootstrap/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bootstrap/bootstrap.min.js"></script>
 	  
 	<!-- Custom JavaScript -->
-	<script type="text/javascript" src="<% out.print(webappRoot); %>psd2html.jcf.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/psd2html.jcf.js"></script>
 	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 	
     <!-- JQuery UI -->
-	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/ui/themes/jquery-ui.min.css" ></link>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/ui/themes/jquery-ui.min.css" ></link>
 	
 	<!-- Localization -->	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/ui/js/jquery-ui-i18n.min.js"></script>	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
+	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
+	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	
 	
 	<!-- Color Picker -->
-	<script src="<% out.print(webappRoot); %>jquery-colorpicker/js/colpick.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery-colorpicker/css/colpick.css" type="text/css"/>
+	<script src="${pageContext.request.contextPath}/jquery-colorpicker/js/colpick.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-colorpicker/css/colpick.css" type="text/css"/>
 	
 	<!-- Map Dependencies -->
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet/leaflet.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
-	<script type="text/javascript" src="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>	
-	<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/DynamicMap.js"></script> 
+	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet/leaflet.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/DynamicMap.js"></script> 
 	<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 	
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>leaflet/leaflet.css">
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.css">
-	<link media="all" rel="stylesheet" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/css/map.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/leaflet/leaflet.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.css">
+	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/map.css">
 	  
 	<!-- include HTML5 IE enabling script for IE -->
 	<!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->

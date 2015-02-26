@@ -44,6 +44,7 @@ import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
 import com.runwaysdk.system.metadata.MdAttributeTermDTO;
+import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
@@ -153,21 +154,21 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
-    
+
     // Getting the lowest level universal in the tree (the leaf)
     TermDTO leaf = null;
-    for(TermDTO universal : universals)
+    for (TermDTO universal : universals)
     {
-    	TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
-	    if(descendants.length == 0)
-	    {
-	    	leaf = universal;
-	    }
+      TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
+      if (descendants.length == 0)
+      {
+        leaf = universal;
+      }
     }
-    
+
     req.setAttribute("universals", universals);
     req.setAttribute("universalLeafId", leaf.getId());
-    
+
 
     // selected attribute
     MdAttributeDTO mdAttr;
@@ -179,11 +180,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     { // edit
       mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
-    req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
+
     req.setAttribute("mdAttributeId", mdAttr.getId());
-    
-    MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
-    MdAttributeConcreteDTO mdAttrConcrete = mdAttributeVirtual.getMdAttributeConcrete();
+    req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
@@ -204,7 +203,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // filter out invalid layer types depending on attribute type
     // this is primarily to prevent creating gradients on date fields
-    if (! ( mdAttrConcrete instanceof MdAttributeDateDTO ))
+    MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
+
+    if (! ( mdAttributeConcrete instanceof MdAttributeDateDTO ))
     {
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
       layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
@@ -215,7 +216,8 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     List<String> activeLayerType = layer.getLayerTypeEnumNames();
     if (activeLayerType.size() > 0)
-    { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not new instances)
+    { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not
+      // new instances)
       req.setAttribute("activeLayerTypeName", activeLayerType.get(0));
     }
     else
@@ -253,8 +255,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       req.setAttribute("js", js);
       
      
-      ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
-//      ArrayList<String> rootsIds = new ArrayList<String>();     
+      ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());  
       JSONObject rootsIds = new JSONObject();
       JSONArray ids = new JSONArray();
       
@@ -273,30 +274,24 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     	  }
       }
       
-    try {
-		rootsIds.put("rootsIds", ids);
-	} catch (JSONException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	    try {
+			rootsIds.put("rootsIds", ids);
+		} 
+	    catch (JSONException e) 
+	    {
+	    	throw new RuntimeException(e);
+		}
       
       // Passing ontology root to layer form categories 
       req.setAttribute("roots", rootsIds);
-      req.setAttribute("selectableMap", selectableMap);
-      
-//      // TODO: Make sure this gets the direct parent to the attribute
-//      ClassifierDTO parent = roots[0];
-//      Boolean parentIsSelectable = ClassifierDTO.getAllClassifierAttributeRootsRelationships(clientRequest, parent.getId())//.get(0).getSelectable();
-//      
-//      // Passing ontology root to layer form categories 
-//  	  req.setAttribute("ontologyRootIsSelectable", parentIsSelectable);
-//      req.setAttribute("ontologyId", parent.getId());
-//      
+      req.setAttribute("selectableMap", selectableMap);     
     }
     else
     {
     	req.setAttribute("isOntologyAttribute", false);
     }
+    
+    req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
     
   }
 
@@ -317,6 +312,34 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
 
     return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
+  }
+
+  private String getCategoryType(MdAttributeDTO mdAttr)
+  {
+    MdAttributeConcreteDTO concrete = this.getMdAttributeConcrete(mdAttr);
+
+    if (concrete instanceof MdAttributeDateDTO)
+    {
+      return "date";
+    }
+    else if (concrete instanceof MdAttributeNumberDTO)
+    {
+      return "number";
+    }
+
+    return "text";
+  }
+
+  private MdAttributeConcreteDTO getMdAttributeConcrete(MdAttributeDTO mdAttr)
+  {
+    if (mdAttr instanceof MdAttributeVirtualDTO)
+    {
+      MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
+
+      return mdAttributeVirtual.getMdAttributeConcrete();
+    }
+
+    return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
   /**

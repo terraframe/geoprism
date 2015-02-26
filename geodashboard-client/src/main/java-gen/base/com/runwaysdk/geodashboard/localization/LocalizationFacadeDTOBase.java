@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.localization;
 
-@com.runwaysdk.business.ClassSignature(hash = 651615427)
+@com.runwaysdk.business.ClassSignature(hash = -808679369)
 public abstract class LocalizationFacadeDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.localization.LocalizationFacade";
-  private static final long serialVersionUID = 651615427;
+  private static final long serialVersionUID = -808679369;
   
   protected LocalizationFacadeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -17,11 +17,27 @@ public abstract class LocalizationFacadeDTOBase extends com.runwaysdk.business.U
   }
   
   public static java.lang.String ID = "id";
+  public static final java.lang.String getCLDRLocaleName(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO.CLASS, "getCLDRLocaleName", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final java.lang.String getCalendarLocale(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO.CLASS, "getCalendarLocale", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getConfigurationJSON(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO.CLASS, "getConfigurationJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
