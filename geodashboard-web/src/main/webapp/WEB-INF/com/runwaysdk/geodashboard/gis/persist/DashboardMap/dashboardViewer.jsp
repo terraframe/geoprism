@@ -47,6 +47,25 @@
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
 
+
+
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %> --%>
+<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
+
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierController" %> --%>
+<%-- <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %> --%>
+
 <%
   String webappRoot = request.getContextPath() + "/";
 %>
@@ -67,7 +86,24 @@
         DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
         DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
         DashboardDTO.CLASS, LocationConditionDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS,
-        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS
+        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS,
+        
+//       	GeoEntityDTO.CLASS, 
+//       	GeoEntityDisplayLabelDTO.CLASS, 
+//       	GeoEntityController.CLASS, 
+//       	UniversalDTO.CLASS, 
+//       	UniversalDisplayLabelDTO.CLASS, 
+//       	TermUtilDTO.CLASS, 
+//       	GeoEntityViewDTO.CLASS, 
+//       	SynonymDTO.CLASS, 
+//       	SynonymDisplayLabelDTO.CLASS, 
+//       	GeoEntityExportMenuDTO.CLASS, 
+      	
+//         ClassifierDTO.CLASS, 
+//         ClassifierIsARelationshipDTO.CLASS, 
+//         ClassifierDisplayLabelDTO.CLASS, 
+//         ClassifierController.CLASS, 
+//         ClassifierExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }

@@ -586,7 +586,10 @@
                       <c:choose>
                       	<c:when test="${'true' == isOntologyAttribute}">
                       		<!-- RENDER ONTOLOGY TREE DATA -->
-							<div id="ontology-tree"></div>
+                      		<div class="ontology-category-input-container">
+								<div id="ontology-tree"></div>
+								<input id="ontology-categories-input" type="hidden" class="color-input" name="style.styleOntologyCategoryies" value="">
+							</div>
                       	</c:when>
                       	<c:otherwise>
 		                        <div class="panel-group choice-color category-group">
@@ -766,38 +769,48 @@
     <script type="text/javascript">
 
 	$( document ).ready(function() {
+	      // This first if check prevents building duplicate trees when the javascript is being run twice.
+	      // This is a potential bug with a ticket reported #279
+	  	  // 	  
+    	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
+    		  var roots = '${roots}';
+        	  var rootsJSON = JSON.parse(roots);
+        	  var rootsArrJSON = rootsJSON.rootsIds;
+        	  
+    		  com.runwaysdk.ui.Manager.setFactory("JQuery");
+    		  for(var i=0; i<rootsArrJSON.length; i++){    
+    			  var thisRootId = rootsArrJSON[i];
+    			  
+    			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+    			      termType : <%="\"" + ClassifierDTO.CLASS + "\""%> ,
+    			      relationshipTypes : [ <%="\"" + ClassifierIsARelationshipDTO.CLASS + "\""%> ],
+    			      rootTerm : thisRootId,
+    			      editable : false,
+    			      slide : false,
+    			      selectable : false,
+    			      onCreateLi: function(node, $li) {
+    					  var nodeId = node.id;
 
-	  // This first if check prevents building duplicate trees when the javascript is being run twice.
-	  // This is a potential bug with a ticket reported #279
-	  // 
-	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
-		      com.runwaysdk.ui.Manager.setFactory("JQuery");
-			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-			      termType : <%="\"" + ClassifierDTO.CLASS + "\""%>,
-			      relationshipTypes : [ <%="\"" + ClassifierIsARelationshipDTO.CLASS + "\""%> ],
-			      rootTerm : '${ontologyId}',
-			      editable : false,
-			      slide : false,
-			      onCreateLi: function(node, $li) {
-			          // Add the color icon for category ontology nodes			        
-			          $li.find('> div').append(
-					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-	            			  '<span class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-	            			  '<input type="hidden" class="color-input" name="style.labelColor" value="#000000">' +
-	            			  '</a>')
-			      },
-			      /* checkable: true, */
-				  crud: {
-				      create: { // This configuration gets merged into the jquery create dialog.
-				        height: 320
-				      },
-				      update: {
-				        height: 320
-				      }
-				  }
-			  });
-			  tree.render("#ontology-tree");
-	  }
+    			          // Add the color icon for category ontology nodes			        
+    			          $li.find('> div').append(
+    					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+    	            			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+//     	            			  '<input type="hidden" class="color-input" name="temp" value="#000000">' +
+    	            			  '</a>')
+    			      },
+    			      /* checkable: true, */
+    				  crud: {
+    				      create: { // This configuration gets merged into the jquery create dialog.
+    				        height: 320
+    				      },
+    				      update: {
+    				        height: 320
+    				      }
+    				  }
+    			  });
+    			  tree.render("#ontology-tree");
+    		  }
+    	  } 
 	});
 	</script>
 

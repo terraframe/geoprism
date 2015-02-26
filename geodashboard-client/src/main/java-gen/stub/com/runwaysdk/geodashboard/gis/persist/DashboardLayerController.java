@@ -1,8 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,9 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ontology.TermDTO;
@@ -38,10 +43,7 @@ import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
-
-import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
 import com.runwaysdk.system.metadata.MdAttributeTermDTO;
-
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
@@ -252,14 +254,44 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       
      
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
-      // TODO: Make sure this gets the direct parent to the attribute
-      ClassifierDTO parent = roots[0];
-      Boolean parentIsSelectable = parent.getAllClassifierAttributeRootsRelationships(clientRequest, parent.getId()).get(0).getSelectable();
+//      ArrayList<String> rootsIds = new ArrayList<String>();     
+      JSONObject rootsIds = new JSONObject();
+      JSONArray ids = new JSONArray();
+      
+      Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
+      
+      for(ClassifierDTO root : roots)
+      {
+    	  ids.put(root.getId());
+    	  List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();   			  
+    	  for(ClassifierAttributeRootDTO relationship : relationships)
+    	  {
+    		  if(relationship.getParentId().equals(mtAttrConcrete.getId()))
+    		  {
+    			  selectableMap.put(root.getId(), relationship.getSelectable());			  
+    		  }
+    	  }
+      }
+      
+    try {
+		rootsIds.put("rootsIds", ids);
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       
       // Passing ontology root to layer form categories 
-  	  req.setAttribute("ontologyRootIsSelectable", parentIsSelectable);
-      req.setAttribute("ontologyId", parent.getId());
+      req.setAttribute("roots", rootsIds);
+      req.setAttribute("selectableMap", selectableMap);
       
+//      // TODO: Make sure this gets the direct parent to the attribute
+//      ClassifierDTO parent = roots[0];
+//      Boolean parentIsSelectable = ClassifierDTO.getAllClassifierAttributeRootsRelationships(clientRequest, parent.getId())//.get(0).getSelectable();
+//      
+//      // Passing ontology root to layer form categories 
+//  	  req.setAttribute("ontologyRootIsSelectable", parentIsSelectable);
+//      req.setAttribute("ontologyId", parent.getId());
+//      
     }
     else
     {

@@ -236,19 +236,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 	    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
 	    QueryFactory factory = new QueryFactory();
+
 	    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
-	    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-	    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
-
 	    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
-	    allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
-
-	    classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
-//	    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().LIKEi("%" + text + "%"));
-//	    classifierQuery.restrictRows(limit, 1);
+	    
+	    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+	    classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
 
 	    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
-//	    OIterator<? extends Classifier> iterator = rootQuery.getIterator();
 
 	    try
 	    {
