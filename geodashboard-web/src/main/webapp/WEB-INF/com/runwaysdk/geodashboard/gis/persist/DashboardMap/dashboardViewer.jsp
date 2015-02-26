@@ -120,15 +120,15 @@
 <!-- Runway Factory -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 <!-- JQuery -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
 
 <!-- Geodashboard -->
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
 <script type="text/javascript">
 
