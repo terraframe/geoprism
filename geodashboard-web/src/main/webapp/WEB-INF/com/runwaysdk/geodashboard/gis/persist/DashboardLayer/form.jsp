@@ -719,7 +719,7 @@
 	<!--                           </div> -->
 	<!--                         END OF ORIGINAL UI LIST ITEM DESIGN FOR ONTOLOGIES -->
 	
-	                        	</div>
+	                        		</div>
 	                        </c:otherwise>
 	                      </c:choose>
 
