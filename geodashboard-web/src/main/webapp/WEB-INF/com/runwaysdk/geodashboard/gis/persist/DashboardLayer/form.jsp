@@ -791,12 +791,24 @@
     			      onCreateLi: function(node, $li) {
     					  var nodeId = node.id;
 
-    			          // Add the color icon for category ontology nodes			        
-    			          $li.find('> div').append(
+    					  var thisLi = $.parseHTML(
     					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
     	            			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
 //     	            			  '<input type="hidden" class="color-input" name="temp" value="#000000">' +
-    	            			  '</a>')
+    	            			  '</a>');
+
+    			          // Add the color icon for category ontology nodes			        
+    			          $li.find('> div').append(thisLi)
+    			          
+            			  // ontology category layer type colors
+        			      $(thisLi).find("span").colpick({
+        			      		submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+        			           	onChange: function(hsb,hex,rgb,el,bySetColor) {
+        				            		var hexStr = '#'+hex;
+        				            		$(el).css('background', hexStr);
+        				            		$(el).next(".color-input").attr('value', hexStr);            			            		
+        				            	}
+        			       });
     			      },
     			      /* checkable: true, */
     				  crud: {

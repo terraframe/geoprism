@@ -1505,18 +1505,9 @@
     	        }
             });
             
-            // ontology category layer type colors
-            $(".ontology-category-color-icon").colpick({
-            	submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-            	onChange: Mojo.Util.bind(
-            		that,
-	            	function(hsb,hex,rgb,el,bySetColor) {
-	            		var hexStr = '#'+hex;
-	            		$(el).css('background', hexStr);
-	            		$(el).next(".color-input").attr('value', hexStr);            			            		
-	            	}
-	            	)
-            });
+            //
+            // See form.jsp in DashboardLayer for category color pickers event listener configuration
+            //
           },
           onFailure : function(e){
             that._closeLayerModal();
