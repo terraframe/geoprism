@@ -48,10 +48,6 @@
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
 
 <%
-  String webappRoot = request.getContextPath() + "/";
-%>
-
-<%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 %>
 
@@ -81,22 +77,22 @@
 </script>
 
 
-<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>
-<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/datatables/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables.css" ></link>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
 
 <!-- Runway Factory -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 <!-- JQuery -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
 
 <!-- Geodashboard -->
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
 <script type="text/javascript">
 
@@ -186,7 +182,9 @@ $(document).ready(function(){
 	        <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
 	      </div>	    
 	      <div class="geo">
-		    <input class="gdb-attr-filter filter-geo" id="filter-geo" type="text" placeholder="Geo entity"></input>
+	        <gdb:localize key="dashboard.entity.label" var="dashboardEntityLabel"/>
+	        
+		    <input class="gdb-attr-filter filter-geo" id="filter-geo" type="text" placeholder="${dashboardEntityLabel}"></input>
 		    <input id="filter-geo-hidden" type="hidden"></input>		    
 	      </div>	    
 		</div>
@@ -242,11 +240,13 @@ $(document).ready(function(){
 		                            </div>
 		                            <div class="text">
 		                              <label for=filter-number-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.number"/></label>
+		                              <gdb:localize key="dashboard.number.label" var="dashboardNumberLabel"/>
+		                              
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
-		                                <input class="gdb-attr-filter filter-number numbers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
+		                                <input class="gdb-attr-filter filter-number numbers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-		                                <input class="gdb-attr-filter filter-number integers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="Number"></input>
+		                                <input class="gdb-attr-filter filter-number integers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>
 		                            </div>
 								</c:when>
@@ -278,15 +278,19 @@ $(document).ready(function(){
 		                              </select>
 		                            </div>
 		                            <div class="text">
+		                              <gdb:localize key="dashboard.text.label" var="dashboardTextLabel"/>
+		                              
 		                              <label for=filter-char-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
-		                              <input class="gdb-attr-filter filter-char" id="filter-char-${attr.mdAttributeId}" type="text" placeholder="Text"></input>
+		                              <input class="gdb-attr-filter filter-char" id="filter-char-${attr.mdAttributeId}" type="text" placeholder="${dashboardTextLabel}"></input>
 		                            </div>
 								</c:when>
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeTerm'}">
+								    <gdb:localize key="dashboard.term.label" var="dashboardTermLabel"/>
+								    
 									<!-- Term attribute -->
 		                            <div class="text">
 		                              <label for=filter-term-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
-		                              <input class="gdb-attr-filter filter-term" id="filter-term-${attr.mdAttributeId}" type="text" placeholder="Term"></input>
+		                              <input class="gdb-attr-filter filter-term" id="filter-term-${attr.mdAttributeId}" type="text" placeholder="${dashboardTermLabel}"></input>
 		                              <input id="filter-hidden-${attr.mdAttributeId}" type="hidden"></input>
 		                            </div>
 								</c:when>
