@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1438097523)
+@com.runwaysdk.business.ClassSignature(hash = -571208042)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 1438097523;
+  private static final long serialVersionUID = -571208042;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -44,6 +44,7 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
   public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
+  public static java.lang.String STYLEONTOLOGYCATEGORYIES = "styleOntologyCategoryies";
   @SuppressWarnings("unchecked")
   public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
   {
@@ -704,6 +705,43 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getStyleConditionMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(STYLECONDITION).getAttributeMdDTO();
+  }
+  
+  public String getStyleOntologyCategoryies()
+  {
+    return getValue(STYLEONTOLOGYCATEGORYIES);
+  }
+  
+  public void setStyleOntologyCategoryies(String value)
+  {
+    if(value == null)
+    {
+      setValue(STYLEONTOLOGYCATEGORYIES, "");
+    }
+    else
+    {
+      setValue(STYLEONTOLOGYCATEGORYIES, value);
+    }
+  }
+  
+  public boolean isStyleOntologyCategoryiesWritable()
+  {
+    return isWritable(STYLEONTOLOGYCATEGORYIES);
+  }
+  
+  public boolean isStyleOntologyCategoryiesReadable()
+  {
+    return isReadable(STYLEONTOLOGYCATEGORYIES);
+  }
+  
+  public boolean isStyleOntologyCategoryiesModified()
+  {
+    return isModified(STYLEONTOLOGYCATEGORYIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleOntologyCategoryiesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLEONTOLOGYCATEGORYIES).getAttributeMdDTO();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

@@ -47,6 +47,25 @@
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
 
+
+
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %> --%>
+<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
+
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierController" %> --%>
+<%-- <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %> --%>
+<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %> --%>
+
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 %>
@@ -63,7 +82,24 @@
         DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
         DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
         DashboardDTO.CLASS, LocationConditionDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS,
-        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS
+        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS,
+        
+//       	GeoEntityDTO.CLASS, 
+//       	GeoEntityDisplayLabelDTO.CLASS, 
+//       	GeoEntityController.CLASS, 
+//       	UniversalDTO.CLASS, 
+//       	UniversalDisplayLabelDTO.CLASS, 
+//       	TermUtilDTO.CLASS, 
+//       	GeoEntityViewDTO.CLASS, 
+//       	SynonymDTO.CLASS, 
+//       	SynonymDisplayLabelDTO.CLASS, 
+//       	GeoEntityExportMenuDTO.CLASS, 
+      	
+//         ClassifierDTO.CLASS, 
+//         ClassifierIsARelationshipDTO.CLASS, 
+//         ClassifierDisplayLabelDTO.CLASS, 
+//         ClassifierController.CLASS, 
+//         ClassifierExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -84,15 +120,15 @@
 <!-- Runway Factory -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
 
 <!-- JQuery -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
 
 <!-- Geodashboard -->
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
 <script type="text/javascript">
 
@@ -206,17 +242,17 @@ $(document).ready(function(){
 	                <div class="panel">
 	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
 	                   		<%-- This <c:when> check is only needed until ontology and text attributes are supported in layer aggregation --%>
-                           	<c:choose>
-                            	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
+<%--                            	<c:choose> --%>
+<%--                             	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}"> --%>
                                 	<!-- When attribute any type other than Term or Text add the map it button -->
                                     <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
                                     	<!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
                                         <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
                                     </a>
-                                    	</c:when>
-                                	<c:otherwise>
-                            	</c:otherwise>
-                        	</c:choose>
+<%--                                     	</c:when> --%>
+<%--                                 	<c:otherwise> --%>
+<%--                             		</c:otherwise> --%>
+<%--                         	</c:choose> --%>
 						</h4>
 										
 	                  <!-- slide block -->

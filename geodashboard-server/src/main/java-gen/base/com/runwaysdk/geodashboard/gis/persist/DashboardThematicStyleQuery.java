@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -587702244)
+@com.runwaysdk.business.ClassSignature(hash = 116760653)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -345,6 +345,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies()
+  {
+    return getStyleOntologyCategoryies(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -460,6 +477,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies();
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle dashboardThematicStyle);
 
@@ -784,6 +804,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies()
+  {
+    return getStyleOntologyCategoryies(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -876,6 +913,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
     public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies();
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias);
+    public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle ... dashboardThematicStyle);
     public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle ... dashboardThematicStyle);
@@ -1247,6 +1287,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies()
+  {
+    return getStyleOntologyCategoryies(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getStyleOntologyCategoryies(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLEONTOLOGYCATEGORYIES, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)

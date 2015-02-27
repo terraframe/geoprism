@@ -83,8 +83,7 @@
         $(".gdb-dashboard").on("click", dashboardBound); 
         
         // Handler for the clone dashboard button
-        $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler)); 
-        
+        $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
@@ -104,6 +103,7 @@
       
       /**
        * Retrieves new data from the server and then refreshes everything on the map with the new data.
+       * 
        */
       fullRefresh : function() {
         var that = this;
@@ -121,6 +121,9 @@
       
       /**
        * Requests all map data again from the server (bounds, persisted layers, etc...) and updates our internal caches.
+       * 
+       * @fnSuccess - a function to be run on success of request for backend map configuration
+       * 
        */
       _updateCachedData : function(fnSuccess) {
         var that = this;
@@ -144,9 +147,55 @@
           , this._mapId, '{testKey:"TestValue"}');
       },
       
+      
+      /**
+      * Scrapes color icons from ontology categories on the layer creation/edit form
+      * 
+      */
+      _updateOntologyCategoriesJSON : function() {
+    	  
+	      	var ontTreeStyleArr = new Object();
+	      	ontTreeStyleArr.catLiElems = [];
+	      
+	  		var allElem = $(".ontology-category-color-icon");
+	  		for(var e=0; e<allElem.length; e++){
+	  			
+	  			var rwId = allElem[e].dataset.rwid;
+	  			// filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
+	  			if(rwId.indexOf("PHANTOM") === -1){
+	  				var theElem = allElem[e];
+	  				var theColor = rgb2hex($(theElem).css("background-color"));
+	  				
+	  	    		var liObj = new Object();
+	          		liObj.id = theElem.dataset.rwid;
+	          		liObj.color = theColor;
+	          		ontTreeStyleArr.catLiElems.push(liObj);           				
+	  			}
+	  		}
+	  		
+	  		// set the hidden input element in the layer creation/edit form 
+	  		$("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
+	  		
+	  		// javascript and jquery return css color values as rgb.  
+	  		// We want hex in this case
+	  		function rgb2hex(rgb) {
+	  		    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+
+	  		    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	  		    function hex(x) {
+	  		        return ("0" + parseInt(x).toString(16)).slice(-2);
+	  		    }
+	  		    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	  		}
+
+    	  return  ontTreeStyleArr;
+      },
+      
       /**
        * Creates "view" objects for each layer defined by the dashboardlayerview.java class
        * and builds the initial layer cache
+       * 
+       * @json - json obj returned from the server that contains map data and properties for map construction
        * 
        */
       _updateCacheFromJSONResponse : function(json) {
@@ -176,13 +225,13 @@
           view.setAggregationMethod(layer.aggregationMethod);
           view.setAggregationAttribute(layer.aggregationAttribute);
           
-          view.style = layer.styles[0];
+          view.style = layer.styles[0];          
           
           var oldLayer = this._layerCache.get(layer.layerId);
           if (oldLayer != null) {
             view.leafletLayer = oldLayer.leafletLayer;
           }
-          this._layerCache.put(layer.layerId, view);
+          this._layerCache.put(layer.layerId, view);        
         }
         
         if (json.bbox != null) {
@@ -192,6 +241,7 @@
            
       /**
        * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
+       * 
        */
       _renderMap : function() {
         if (this._map != null) {
@@ -223,6 +273,10 @@
       
       /**
        * Creates a new BIRT report. If one already exists the existing one will be cleaned up and removed.
+       * 
+       * @gedId
+       * @criteria
+       * 
        */
       _renderReport : function(geoId, criteria) {
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
@@ -238,10 +292,21 @@
         this._ReportController.run(request, this._dashboardId, geoId, JSON.stringify(criteria));        
       },
       
+      
+      /**
+       * Render the analytics report on screen
+       * 
+       * @html 
+       */
       _displayReport : function(html) {
         $( "#report-content" ).html(html);
       },      
-            
+        
+      
+      /**
+       * Set initial state of the map
+       * 
+       */
       _configureMap : function() {
         // Handle points (2 coord sets) & polygons (4 coord sets)
         if (this._bBox.length === 2){
@@ -260,6 +325,7 @@
       
       /**
        * Adds leaflet layers to the map and builds the base layer checkboxes
+       * 
        */
       _renderBaseLayers : function() {
         this._baseLayers.clear();
@@ -275,6 +341,7 @@
         }
       },
       
+      
       /**
        * Redraws the HTML representing the user-defined layers and adds the layers to Leaflet.
        */
@@ -283,10 +350,17 @@
         this._addUserLayersToMap(true);
       },
       
+      
       /**
        * Legend instance object
        * 
-       * this could be greatly improved to be more object oriented and encapsulate the event listeners better.
+       * @larerId - Id of the layer the legend represents
+       * @displayName - Label for the layer to be added to the legend
+       * @geoserverName - name of the geoserver service for the layer
+       * @legendXPosition - css based 'left' property
+       * @legendYPosition - css based 'top' property
+       * @groupedInLegend - boolean indicating if the legend item is grouped in the main legend or floating
+       * 
        */
       _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend) {
         this.legendId = "legend_" + layerId;
@@ -528,8 +602,11 @@
           });
       },
       
+      
       /**
        * Build HTML for user defined overlays
+       * 
+       * @htmlInfo
        * 
        */
       _drawUserLayersHMTL : function(htmlInfo) {
@@ -570,6 +647,7 @@
         }        
         this._drawLegendItems();
       },
+      
       
       /**
        * Adds all layers in the layerCache to leaflet, in the proper ordering.
@@ -618,6 +696,7 @@
         }
       },
       
+      
       /**
        * Callback handler when layers are reordered which persists index order of layers to db and
        * 
@@ -659,8 +738,11 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
       },
       
+      
       /**
        * Handler for when the user clicks on a dashboard on the dropdown.
+       * 
+       * @e
        */
       _dashboardClickHandler : function(e) {
 
@@ -671,6 +753,11 @@
         window.location = "?dashboard=" + dashboardId;
       },
       
+      
+      /**
+       * 
+       * @e
+       */
       _dashboardCloneHandler : function(e) {
         e.preventDefault();      
           
@@ -730,6 +817,7 @@
         
         this._DashboardController.newClone(request, this._dashboardId);
       },
+      
       
       /**
        * Opens the layer edit form for existing layers  
@@ -892,11 +980,13 @@
         });
       },
       
+      
       /**
        * Removes the Layer with the given object id (Runway Id)
        * from all caches, the sidebar, and the map itself.
        * 
-       * @param id
+       * @el
+       * @id
        */
       _removeLayer : function(el, id) {
         
@@ -917,6 +1007,7 @@
         $("li[data-parentlayerid='"+id+"']").remove();
       },
       
+      
       /**
        * Closes the overlay with the layer/style CRUD.
        * 
@@ -925,10 +1016,11 @@
         $(DynamicMap.LAYER_MODAL).modal('hide').html('');
       },
       
+      
       /**
        * Called when a user submits (creates/updates) a layer with styles.
        * 
-       * @param params
+       * @params
        */
       _applyWithStyleListener : function(params){
         
@@ -1004,9 +1096,13 @@
           });
         }
         
+        var  ontTreeStyleArr = this._updateOntologyCategoriesJSON();
+        params['style.styleOntologyCategoryies'] = JSON.stringify(ontTreeStyleArr);
+        
         return request;
       },
       
+
       _getCategoryType : function() {
         var categoryType = null;
         
@@ -1017,9 +1113,10 @@
         return categoryType;
       },
       
+      
       /**
        * 
-       * @param params
+       * @params
        */
       _cancelLayerListener : function(params){
         var that = this;
@@ -1046,6 +1143,7 @@
         }
       },
       
+      
       /**
        * Cancel a dashboard creation crud form
        * 
@@ -1053,6 +1151,7 @@
       _cancelDashboardListener : function(){        
           this._closeDashboardModal();
       },
+      
       
       /**
        * Return all allowable base maps.
@@ -1076,11 +1175,12 @@
         return base;
       },
       
+      
       /**
        * Renders each base layer as a checkable option in
        * the layer switcher.
        * 
-       * @param base - array of leaflet basemap layer objects
+       * @base - array of leaflet basemap layer objects
        */
       _renderBaseLayerSwitcher : function(base){
         
@@ -1138,10 +1238,11 @@
         }
       },
       
+      
       /**
        * Changes the base layer of the map.
        * 
-       * @param checkbox - Checkbox object
+       * @checkbox - Checkbox object
       */
       _toggleBaseLayer : function(checkBox) {
         var targetId = checkBox.getId();
@@ -1167,10 +1268,11 @@
         }
       },
       
+      
       /**
        * Toggles the overlay layers of the map.
        * 
-       * @param e
+       * @e
        */
       _toggleOverlayLayer : function(e){
         var cbox = e.getCheckBox();
@@ -1436,6 +1538,19 @@
                 minLength: 1
               });
             });
+            
+            // ontology category layer type colors
+            $(".category-color-icon").colpick({
+    	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+    	        onChange:function(hsb,hex,rgb,el,bySetColor) {
+    	          $(el).css('background','#'+hex);
+    	          $(el).find('.color-input').attr('value', '#'+hex);
+    	        }
+            });
+            
+            //
+            // See form.jsp in DashboardLayer for category color pickers event listener configuration
+            //
           },
           onFailure : function(e){
             that._closeLayerModal();
@@ -1569,7 +1684,7 @@
       _selectColor : function(){
         
         // color dropdown buttons
-        var total1 = $('.color-holder').colpick({
+        $('.color-holder').colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).find(".ico").css('background','#'+hex);
@@ -1578,13 +1693,23 @@
         }); 
         
         // category layer type colors
-        var total2 = $("#category-colors-container").find('.icon-color').colpick({
-        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-        onChange:function(hsb,hex,rgb,el,bySetColor) {
-          $(el).css('background','#'+hex);
-          $(el).find('.color-input').attr('value', '#'+hex);
-        }
+        $("#category-colors-container").find('.icon-color').colpick({
+	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+	        onChange:function(hsb,hex,rgb,el,bySetColor) {
+	          $(el).css('background','#'+hex);
+	          $(el).find('.color-input').attr('value', '#'+hex);          
+	        }
         });
+        
+        // ontology category layer type colors
+        $(".ontology-category-color-icon").colpick({
+        	submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+        	onChange:function(hsb,hex,rgb,el,bySetColor) {
+        		$(el).css('background','#'+hex);
+        		$(el).next(".color-input").attr('value', '#'+hex);
+        	}
+        });
+        
       },
       
       /**

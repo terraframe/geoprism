@@ -48,6 +48,10 @@
 <script src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
 <link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css">
 
+<!-- <script src="jquerytree/tree.jquery.js"></script> -->
+<!-- <link rel="stylesheet" href="jquerytree/jqtree.css"> -->
+
+
 <!-- Runway Factory -->
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
 <script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
@@ -118,6 +122,7 @@
       termType : <% out.print("\"" + ClassifierDTO.CLASS + "\""); %>,
       relationshipTypes : [ <% out.print("\"" + ClassifierIsARelationshipDTO.CLASS + "\""); %> ],
       rootTerm : "${requestScope.rootId}",
+      editable : true,
       /* checkable: true, */
       crud: {
         create: { // This configuration gets merged into the jquery create dialog.
