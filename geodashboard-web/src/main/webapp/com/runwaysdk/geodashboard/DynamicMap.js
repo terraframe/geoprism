@@ -289,7 +289,22 @@
           }
         }, $( "#report-content" )[0]);
         
-        this._ReportController.run(request, this._dashboardId, geoId, JSON.stringify(criteria));        
+        // Get the width of the reporting div, make sure to remove some pixels because of the side bar and some padding
+        var width = $('#report-content').width() - 20;// - $('#dashboardMetadata').outerWidth();
+        var height = $('#report-content').height(); 
+        
+        // Convert px to pt
+        var widthPt = Math.round(width * 72 / 96);
+        var heightPt = Math.round(height * 72 / 96);
+        
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+        configuration.parameters.push({'name' : 'width', 'value' : widthPt});
+        configuration.parameters.push({'name' : 'height', 'value' : heightPt});
+        
+        this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));        
       },
       
       
