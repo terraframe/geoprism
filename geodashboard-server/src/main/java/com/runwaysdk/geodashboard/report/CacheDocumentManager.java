@@ -6,12 +6,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.axis.encoding.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.util.FileIO;
 
 public class CacheDocumentManager implements Runnable
 {
+  private static final Log                      log           = LogFactory.getLog(CacheDocumentManager.class);
 
   /**
    * Executer responsible for running the cleanup thread
@@ -52,6 +55,7 @@ public class CacheDocumentManager implements Runnable
     }
     catch (Exception e)
     {
+      log.error(e);
     }
   }
 

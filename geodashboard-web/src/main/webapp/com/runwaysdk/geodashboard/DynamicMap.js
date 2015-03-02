@@ -289,13 +289,10 @@
           }
         }, $( "#report-content" )[0]);
         
-        // Get the width of the reporting div, make sure to remove some pixels because of the side bar and some padding
-        var width = $('#report-content').width() - 20;// - $('#dashboardMetadata').outerWidth();
-        var height = $('#report-content').height(); 
-        
-        // Convert px to pt
-        var widthPt = Math.round(width * 72 / 96);
-        var heightPt = Math.round(height * 72 / 96);
+        // Get the width of the reporting div, make sure to remove some pixels because of
+        // the side bar and some padding. convert px to pt
+        var widthPt = Math.round(($('#report-content').width() - 20) * 72 / 96);
+        var heightPt = Math.round($('#report-content').height() * 72 / 96);
         
         var configuration = {};
         configuration.parameters = [];
