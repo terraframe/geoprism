@@ -13,9 +13,10 @@
     
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
         <create>
-          <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" 
-            returnType="com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery">
+          <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery">
+          		<mdParameter name="thematicAttributeId" order="0" type="java.lang.String" label="Thematic Attribute Id" />
           </mdMethod>
+          
           <mdMethod name="getSortedFonts" static="true" label="Get Sorted Fonts" 
             returnType="java.lang.String[]">
           </mdMethod>

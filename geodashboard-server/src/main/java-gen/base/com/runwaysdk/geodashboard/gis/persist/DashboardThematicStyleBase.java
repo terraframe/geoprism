@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1235528982)
+@com.runwaysdk.business.ClassSignature(hash = 1509200371)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,8 +28,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
   public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  public static java.lang.String STYLEONTOLOGYCATEGORYIES = "styleOntologyCategoryies";
-  private static final long serialVersionUID = 1235528982;
+  private static final long serialVersionUID = 1509200371;
   
   public DashboardThematicStyleBase()
   {
@@ -543,34 +542,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(STYLECONDITION, value.getId());
-    }
-  }
-  
-  public String getStyleOntologyCategoryies()
-  {
-    return getValue(STYLEONTOLOGYCATEGORYIES);
-  }
-  
-  public void validateStyleOntologyCategoryies()
-  {
-    this.validateAttribute(STYLEONTOLOGYCATEGORYIES);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleOntologyCategoryiesMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLEONTOLOGYCATEGORYIES);
-  }
-  
-  public void setStyleOntologyCategoryies(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLEONTOLOGYCATEGORYIES, "");
-    }
-    else
-    {
-      setValue(STYLEONTOLOGYCATEGORYIES, value);
     }
   }
   

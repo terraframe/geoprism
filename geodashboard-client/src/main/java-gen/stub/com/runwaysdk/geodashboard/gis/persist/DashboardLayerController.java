@@ -185,7 +185,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
     // aggregations
-    List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
+    List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
     Collections.reverse(aggregations); // Simple solution for making SUM the default aggregation type
 
     // Filter out the invalid aggregation types based upon the

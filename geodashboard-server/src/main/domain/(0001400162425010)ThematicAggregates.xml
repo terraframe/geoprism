@@ -38,6 +38,30 @@
 					<attribute name="defaultLocale" value="Avg" />
 				</attributeStruct>
 			</object>
+			
+			<object key="MAJORITY"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="MAJORITY" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Majority" />
+				</attributeStruct>
+			</object>
+			
+			<object key="MINORITY"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="MINORITY" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Minority" />
+				</attributeStruct>
+			</object>
+			
+			<object key="DISTRIBUTION"
+				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+				<attribute name="enumName" value="DISTRIBUTION" />
+				<attributeStruct name="displayLabel">
+					<attribute name="defaultLocale" value="Distribution" />
+				</attributeStruct>
+			</object>
 
 			<mdEnumeration
 				name="com.runwaysdk.geodashboard.gis.persist.AllAggregationType"
