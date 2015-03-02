@@ -778,6 +778,7 @@
 	      // This first if check prevents building duplicate trees when the javascript is being run twice.
 	      // This is a potential bug with a ticket reported #279
 	  	  // 	  
+	      
     	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
     		  var roots = '${roots}';
         	  var rootsJSON = JSON.parse(roots);

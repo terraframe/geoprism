@@ -26,10 +26,9 @@ import com.runwaysdk.constants.ClientRequestIF;
 
 /**
  * Implementation class of IQuery for an ODA runtime driver. <br>
- * For demo purpose, the auto-generated method stubs have hard-coded
- * implementation that returns a pre-defined set of meta-data and query results.
- * A custom ODA driver is expected to implement own data source specific
- * behavior in its place.
+ * For demo purpose, the auto-generated method stubs have hard-coded implementation that returns a pre-defined set of
+ * meta-data and query results. A custom ODA driver is expected to implement own data source specific behavior in its
+ * place.
  */
 public class Query implements IQuery
 {
@@ -40,7 +39,7 @@ public class Query implements IQuery
 
   private IResultSet          resultSet;
 
-  private IParameterMetaData  metadata;
+  private IParameterMetaData  parameterMetadata;
 
   private Map<String, Object> parameters;
 
@@ -49,7 +48,7 @@ public class Query implements IQuery
   public Query(ClientRequestIF request)
   {
     this.request = request;
-    this.metadata = null;
+    this.parameterMetadata = null;
     this.parameters = new HashMap<String, Object>();
     this.properties = new HashMap<String, String>();
   }
@@ -60,19 +59,16 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
    */
   public void prepare(String queryText) throws OdaException
   {
     this.queryText = queryText;
-    this.metadata = null;
+    this.parameterMetadata = null;
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setAppContext(java.lang.Object
-   * )
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setAppContext(java.lang.Object )
    */
   public void setAppContext(Object context) throws OdaException
   {
@@ -93,12 +89,17 @@ public class Query implements IQuery
    */
   public IResultSetMetaData getMetaData() throws OdaException
   {
-    if (this.resultSet == null)
+    String queryId = new QueryFacade().getQueryId(this.queryText);
+
+    if (!MetadataManager.hasMetadata(queryId))
     {
-      this.executeQuery();
+      IResultSet resultSet = new QueryFacade().invoke(this.request, this.queryText, this.parameters, true);
+      IResultSetMetaData metadata = resultSet.getMetaData();
+
+      MetadataManager.putMetadata(queryId, metadata);
     }
 
-    return this.resultSet.getMetaData();
+    return MetadataManager.getMetadata(queryId);
   }
 
   /*
@@ -114,9 +115,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String,
-   * java.lang.String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
    */
   public void setProperty(String name, String value) throws OdaException
   {
@@ -148,8 +147,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(java.lang.String,
-   * int)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(java.lang.String, int)
    */
   public void setInt(String parameterName, int value) throws OdaException
   {
@@ -165,9 +163,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setDouble(java.lang.String,
-   * double)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(java.lang.String, double)
    */
   public void setDouble(String parameterName, double value) throws OdaException
   {
@@ -183,9 +179,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(java.lang.String
-   * , java.math.BigDecimal)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(java.lang.String , java.math.BigDecimal)
    */
   public void setBigDecimal(String parameterName, BigDecimal value) throws OdaException
   {
@@ -193,8 +187,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(int,
-   * java.math.BigDecimal)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(int, java.math.BigDecimal)
    */
   public void setBigDecimal(int parameterId, BigDecimal value) throws OdaException
   {
@@ -202,9 +195,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setString(java.lang.String,
-   * java.lang.String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(java.lang.String, java.lang.String)
    */
   public void setString(String parameterName, String value) throws OdaException
   {
@@ -212,8 +203,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(int,
-   * java.lang.String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(int, java.lang.String)
    */
   public void setString(int parameterId, String value) throws OdaException
   {
@@ -221,9 +211,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setDate(java.lang.String,
-   * java.sql.Date)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(java.lang.String, java.sql.Date)
    */
   public void setDate(String parameterName, Date value) throws OdaException
   {
@@ -231,8 +219,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(int,
-   * java.sql.Date)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(int, java.sql.Date)
    */
   public void setDate(int parameterId, Date value) throws OdaException
   {
@@ -240,9 +227,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setTime(java.lang.String,
-   * java.sql.Time)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(java.lang.String, java.sql.Time)
    */
   public void setTime(String parameterName, Time value) throws OdaException
   {
@@ -250,8 +235,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(int,
-   * java.sql.Time)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(int, java.sql.Time)
    */
   public void setTime(int parameterId, Time value) throws OdaException
   {
@@ -259,9 +243,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(java.lang.String
-   * , java.sql.Timestamp)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(java.lang.String , java.sql.Timestamp)
    */
   public void setTimestamp(String parameterName, Timestamp value) throws OdaException
   {
@@ -269,8 +251,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(int,
-   * java.sql.Timestamp)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(int, java.sql.Timestamp)
    */
   public void setTimestamp(int parameterId, Timestamp value) throws OdaException
   {
@@ -280,9 +261,7 @@ public class Query implements IQuery
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(java.lang.String,
-   * boolean)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(java.lang.String, boolean)
    */
   public void setBoolean(String parameterName, boolean value) throws OdaException
   {
@@ -302,9 +281,7 @@ public class Query implements IQuery
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setObject(java.lang.String,
-   * java.lang.Object)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(java.lang.String, java.lang.Object)
    */
   public void setObject(String parameterName, Object value) throws OdaException
   {
@@ -314,8 +291,7 @@ public class Query implements IQuery
   /*
    * (non-Javadoc)
    * 
-   * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(int,
-   * java.lang.Object)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(int, java.lang.Object)
    */
   public void setObject(int parameterId, Object value) throws OdaException
   {
@@ -325,8 +301,7 @@ public class Query implements IQuery
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setNull(java.lang.String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(java.lang.String)
    */
   public void setNull(String parameterName) throws OdaException
   {
@@ -344,9 +319,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang
-   * .String)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang .String)
    */
   public int findInParameter(String parameterName) throws OdaException
   {
@@ -358,9 +331,9 @@ public class Query implements IQuery
    */
   public IParameterMetaData getParameterMetaData() throws OdaException
   {
-    if (this.metadata != null)
+    if (this.parameterMetadata != null)
     {
-      return this.metadata;
+      return this.parameterMetadata;
     }
 
     if (this.queryText != null)
@@ -372,9 +345,7 @@ public class Query implements IQuery
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools
-   * .connectivity.oda.SortSpec)
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools .connectivity.oda.SortSpec)
    */
   public void setSortSpec(SortSpec sortBy) throws OdaException
   {
@@ -394,8 +365,7 @@ public class Query implements IQuery
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse
+   * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse
    * .datatools.connectivity.oda.spec.QuerySpecification)
    */
   public void setSpecification(QuerySpecification querySpec) throws OdaException, UnsupportedOperationException

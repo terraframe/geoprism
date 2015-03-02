@@ -1450,12 +1450,11 @@
           
           // Show the white background modal.
           var modal = $(DynamicMap.DASHBOARD_MODAL).first();
-          modal.modal('show');
           modal.html(html);
           
-          eval(Mojo.Util.extractScripts(html));
-          
           jcf.customForms.replaceAll(modal[0]);
+          
+          modal.modal('show');
         },
         
         /**
@@ -1587,10 +1586,7 @@
         
         // Show the white background modal.
         var modal = $(DynamicMap.LAYER_MODAL).first();
-        modal.modal('show');
         modal.html(html);
-        
-        eval(Mojo.Util.extractScripts(html));
         
         jcf.customForms.replaceAll(modal[0]);
         
@@ -1644,7 +1640,11 @@
             }
           }
           
-        });        
+        });    
+        
+        // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
+        //            It is better to finish all of the DOM modification before showing the modal to the user
+        modal.modal('show');
       },
       
       
