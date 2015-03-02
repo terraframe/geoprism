@@ -105,7 +105,7 @@ public class QueryFacade
 
           if (queryMetadata)
           {
-            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria);
+            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria, aggregation);
 
             return new ComponentQueryResultSet(results);
           }
@@ -142,6 +142,33 @@ public class QueryFacade
         String queryId = params.getString(QueryFacade.QUERY_ID);
 
         return queryId;
+      }
+
+      throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");
+    }
+    catch (JSONException e)
+    {
+      throw new OdaException(e);
+    }
+  }
+
+  public String getAggregation(String query) throws OdaException
+  {
+    try
+    {
+      JSONObject object = new JSONObject(query);
+      String action = object.getString(ACTION);
+
+      if (action.equals(QUERY))
+      {
+        JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
+
+        if (params.has(QueryFacade.AGGREGATION))
+        {
+          return params.getString(QueryFacade.AGGREGATION);
+        }
+
+        return null;
       }
 
       throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");

@@ -153,42 +153,42 @@
       * 
       */
       _updateOntologyCategoriesJSON : function() {
-    	  
-	      	var ontTreeStyleArr = new Object();
-	      	ontTreeStyleArr.catLiElems = [];
-	      
-	  		var allElem = $(".ontology-category-color-icon");
-	  		for(var e=0; e<allElem.length; e++){
-	  			
-	  			var rwId = allElem[e].dataset.rwid;
-	  			// filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
-	  			if(rwId.indexOf("PHANTOM") === -1){
-	  				var theElem = allElem[e];
-	  				var theColor = rgb2hex($(theElem).css("background-color"));
-	  				
-	  	    		var liObj = new Object();
-	          		liObj.id = theElem.dataset.rwid;
-	          		liObj.color = theColor;
-	          		ontTreeStyleArr.catLiElems.push(liObj);           				
-	  			}
-	  		}
-	  		
-	  		// set the hidden input element in the layer creation/edit form 
-	  		$("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
-	  		
-	  		// javascript and jquery return css color values as rgb.  
-	  		// We want hex in this case
-	  		function rgb2hex(rgb) {
-	  		    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+        
+          var ontTreeStyleArr = new Object();
+          ontTreeStyleArr.catLiElems = [];
+        
+        var allElem = $(".ontology-category-color-icon");
+        for(var e=0; e<allElem.length; e++){
+          
+          var rwId = allElem[e].dataset.rwid;
+          // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
+          if(rwId.indexOf("PHANTOM") === -1){
+            var theElem = allElem[e];
+            var theColor = rgb2hex($(theElem).css("background-color"));
+            
+              var liObj = new Object();
+                liObj.id = theElem.dataset.rwid;
+                liObj.color = theColor;
+                ontTreeStyleArr.catLiElems.push(liObj);                   
+          }
+        }
+        
+        // set the hidden input element in the layer creation/edit form 
+        $("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
+        
+        // javascript and jquery return css color values as rgb.  
+        // We want hex in this case
+        function rgb2hex(rgb) {
+            if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
 
-	  		    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-	  		    function hex(x) {
-	  		        return ("0" + parseInt(x).toString(16)).slice(-2);
-	  		    }
-	  		    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
-	  		}
+            rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            function hex(x) {
+                return ("0" + parseInt(x).toString(16)).slice(-2);
+            }
+            return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+        }
 
-    	  return  ontTreeStyleArr;
+        return  ontTreeStyleArr;
       },
       
       /**
@@ -810,7 +810,13 @@
                   }
                   else
                   {
-                    alert(com.runwaysdk.Localize.localize("dashboard", "Required"))
+                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");                    
+                    
+                    var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+                    dialog.appendContent(message);
+                    dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
+                    dialog.setStyle("z-index", 2001);
+                    dialog.render();    
                   }
                 }
               },
@@ -1552,11 +1558,11 @@
             
             // ontology category layer type colors
             $(".category-color-icon").colpick({
-    	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-    	        onChange:function(hsb,hex,rgb,el,bySetColor) {
-    	          $(el).css('background','#'+hex);
-    	          $(el).find('.color-input').attr('value', '#'+hex);
-    	        }
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onChange:function(hsb,hex,rgb,el,bySetColor) {
+                $(el).css('background','#'+hex);
+                $(el).find('.color-input').attr('value', '#'+hex);
+              }
             });
             
             //
@@ -1578,8 +1584,8 @@
        * @html
        */
       _displayLayerForm : function(html){
-    	  
-    	var that = this;
+        
+      var that = this;
         
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
@@ -1706,20 +1712,20 @@
         
         // category layer type colors
         $("#category-colors-container").find('.icon-color').colpick({
-	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-	        onChange:function(hsb,hex,rgb,el,bySetColor) {
-	          $(el).css('background','#'+hex);
-	          $(el).find('.color-input').attr('value', '#'+hex);          
-	        }
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);          
+          }
         });
         
         // ontology category layer type colors
         $(".ontology-category-color-icon").colpick({
-        	submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-        	onChange:function(hsb,hex,rgb,el,bySetColor) {
-        		$(el).css('background','#'+hex);
-        		$(el).next(".color-input").attr('value', '#'+hex);
-        	}
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).next(".color-input").attr('value', '#'+hex);
+          }
         });
         
       },

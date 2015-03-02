@@ -45,6 +45,7 @@
           <mdParameter name="queryId" label="queryId" order="0" type="java.lang.String" />
           <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
           <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
+          <mdParameter name="aggregation" label="Aggregation" order="3" type="java.lang.String" />
         </mdMethod>
         <mdMethod name="getReportItemForDashboard" label="Get report item" static="true" returnType="com.runwaysdk.geodashboard.report.ReportItem">
           <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />

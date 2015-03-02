@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
+import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class MetadataManager
 {
@@ -44,5 +45,20 @@ public class MetadataManager
   public static IResultSetMetaData putMetadata(String queryId, IResultSetMetaData metadata)
   {
     return getInstance().getCache().put(queryId, metadata);
+  }
+
+  public static String getKey(String queryText) throws OdaException
+  {
+    QueryFacade facade = new QueryFacade();
+
+    String queryId = facade.getQueryId(queryText);
+    String aggregation = new QueryFacade().getAggregation(queryText);
+
+    if (aggregation != null)
+    {
+      return queryId + "-" + aggregation;
+    }
+
+    return queryId;
   }
 }

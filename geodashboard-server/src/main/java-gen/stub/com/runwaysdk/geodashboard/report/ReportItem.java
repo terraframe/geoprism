@@ -771,9 +771,9 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
   }
 
-  public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria)
+  public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria, String aggregation)
   {
-    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, null);
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
     query.restrictRows(1, 1);
 
     return query;

@@ -89,17 +89,17 @@ public class Query implements IQuery
    */
   public IResultSetMetaData getMetaData() throws OdaException
   {
-    String queryId = new QueryFacade().getQueryId(this.queryText);
+    String key = MetadataManager.getKey(this.queryText);
 
-    if (!MetadataManager.hasMetadata(queryId))
+    if (!MetadataManager.hasMetadata(key))
     {
       IResultSet resultSet = new QueryFacade().invoke(this.request, this.queryText, this.parameters, true);
       IResultSetMetaData metadata = resultSet.getMetaData();
 
-      MetadataManager.putMetadata(queryId, metadata);
+      MetadataManager.putMetadata(key, metadata);
     }
 
-    return MetadataManager.getMetadata(queryId);
+    return MetadataManager.getMetadata(key);
   }
 
   /*
