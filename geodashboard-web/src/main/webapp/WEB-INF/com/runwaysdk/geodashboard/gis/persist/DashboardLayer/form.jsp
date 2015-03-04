@@ -491,7 +491,7 @@
                           </div>
                         </div>
                         <div class="cell">
-                          <label for="f74">${style.pointStrokeOpacityMd.name}</label>
+                          <label for="f74">${style.pointStrokeOpacityMd.displayLabel}</label>
                           <div class="text">
                              <select id="f74" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
                               <c:forEach step="5" begin="0" end="100" var="size">
