@@ -422,12 +422,10 @@
     Instance : {
       
       initialize : function(config, scheduler) {
-        
         this.$initialize("table");
         
         this._config = config;
-        this._scheduler = scheduler;
-        
+        this._scheduler = scheduler;        
       },
       
       getPollingRequest : function() {
@@ -469,10 +467,16 @@
             com.runwaysdk.system.scheduler.JobHistoryView.getJobHistories(clientRequest, this.getSortAttr(), this.isAscending(), this.getPageSize(), this.getPageNumber());
           },
           columns : [
-                     {queryAttr: "startTime", customFormatter: function(view) {
-                    	 var dateFormat = $.datepicker.regional.local.dateFormat;
-                    	 
-                    	 return  $.datepicker.formatDate(dateFormat, view.getStartTime()); 
+                     {
+                       queryAttr: "startTime",
+                       customFormatter: function(view) {
+                         if(that._formatter == null) {
+                           that._formatter = Globalize.dateFormatter({ datetime: "short" });                         
+                         }
+                       
+                         var dateTime = that._formatter(view.getStartTime());
+                       
+                         return  dateTime; 
                        }
                      },
                      {queryAttr: "status", customFormatter: function(view){ return view.getStatusLabel(); }},
@@ -495,7 +499,7 @@
         this._config.el = tableEl;        
         this._config["iDisplayLength"] = 20;
         if (this._config["oLanguage"] == null) {
-        	this._config["oLanguage"] = {};
+          this._config["oLanguage"] = {};
         }
         this._config.el = this;
         this._config.dataSource = ds;

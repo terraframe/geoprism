@@ -130,9 +130,13 @@ public class LocaleManager implements Reloadable
       List<String> paths = new LinkedList<String>();
       paths.add("/cldr/main/" + name + "/numbers.json");
       paths.add("/cldr/main/" + name + "/currencies.json");
+      paths.add("/cldr/main/" + name + "/ca-gregorian.json");
+      paths.add("/cldr/main/" + name + "/timeZoneNames.json");
       paths.add("/cldr/supplemental/likelySubtags.json");
       paths.add("/cldr/supplemental/numberingSystems.json");
-
+      paths.add("/cldr/supplemental/timeData.json");
+      paths.add("/cldr/supplemental/weekData.json");
+      
       try
       {
         JSONObject merged = new JSONObject();

@@ -13,18 +13,20 @@ String configuration = LocalizationFacadeDTO.getConfigurationJSON(clientRequest)
 String locale = LocalizationFacadeDTO.getCLDRLocaleName(clientRequest);
 %>
 
+/**
+ * Constants used for localization in javascript.
+ */
+com.runwaysdk.Localize.addLanguages(<%=LocalizationFacadeDTO.getJSON(clientRequest)%>, true);
+
+/*
+ * Setup of internationalized number widgets and paring
+ */      
+Globalize.load(<%=configuration%>);
+
+Globalize.locale('<%=locale%>');
+
+
 jQuery(function(){
-  /**
-   * Constants used for localization in javascript.
-   */
-  com.runwaysdk.Localize.addLanguages(<%=LocalizationFacadeDTO.getJSON(clientRequest)%>, true);
-
-  /*
-   * Setup of internationalized number widgets and paring
-   */      
-  Globalize.load(<%=configuration%>);
-
-  Globalize.locale('<%=locale%>');
 
   /*
    * Setup of internationalized date widgets

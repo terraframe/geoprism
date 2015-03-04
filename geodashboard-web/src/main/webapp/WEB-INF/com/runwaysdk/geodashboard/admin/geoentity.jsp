@@ -80,6 +80,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
 	
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
