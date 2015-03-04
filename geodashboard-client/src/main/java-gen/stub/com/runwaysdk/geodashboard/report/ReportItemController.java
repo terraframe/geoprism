@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -329,6 +330,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
         item.validatePermissions();
 
         String reportUrl = this.getReportURL();
+        String format = null;
 
         JSONObject json = new JSONObject(configuration);
 
@@ -344,6 +346,11 @@ public class ReportItemController extends ReportItemControllerBase implements co
           String value = object.getString("value");
 
           parameters.add(this.createReportParameter(name, value));
+
+          if (name.equals("format"))
+          {
+            format = value;
+          }
         }
 
         /*
@@ -363,9 +370,30 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
           item.render(rStream, parameters.toArray(new ReportParameterDTO[parameters.size()]), baseURL, reportUrl);
 
-          req.setAttribute("report", rStream.toString());
+          if (format == null || format.equalsIgnoreCase("html"))
+          {
+            req.setAttribute("report", rStream.toString());
 
-          req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
+          }
+          else
+          {
+            String fileName = item.getReportLabel().getValue().replaceAll("\\s", "_");
+            resp.setHeader("Content-Type", "application/" + format);
+            resp.setHeader("Content-Disposition", "attachment;filename=" + fileName + "." + format);
+
+            ServletOutputStream oStream = resp.getOutputStream();
+
+            try
+            {
+              oStream.write(rStream.toByteArray());
+            }
+            finally
+            {
+              oStream.flush();
+              oStream.close();
+            }
+          }
         }
         finally
         {

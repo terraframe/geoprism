@@ -389,7 +389,24 @@ $(document).ready(function(){
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
   	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
-    <div id="report-content"></div>
+    <div id="report-viewport">
+      <div id="report-menu-container" style="position: absolute;">
+        <a href="#" id="report-menu-button" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Export"><gdb:localize key="report.menu"/></a>      
+        <ul id="report-menu">
+          <li>
+            <a href="#"><gdb:localize key="report.export"/></a>                    
+            <ul>
+              <li ><a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a></li>
+              <li ><a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a></li>
+              <li ><a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a></li>
+            </ul>
+          </li>
+        </ul>    
+      </div>
+    
+      <div id="report-content">
+      </div>   
+    </div>
   </article>
   
   <!-- allow a user to go to the top of the page -->

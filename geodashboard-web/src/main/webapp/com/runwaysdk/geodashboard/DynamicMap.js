@@ -54,6 +54,7 @@
         
         // Default criteria for filtering
         this._conditionMap = {'conditions' : [], 'criteria' : []};
+        this._currGeoId = '';
         
         // Number localization setup
         this._parser = Globalize.numberParser();
@@ -287,7 +288,7 @@
           onFailure : function(e){
             this.that.handleException(e);
           }
-        }, $( "#report-content" )[0]);
+        }, $( "#report-viewport" )[0]);
         
         // Get the width of the reporting div, make sure to remove some pixels because of
         // the side bar and some padding. convert px to pt
@@ -304,6 +305,20 @@
         this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));        
       },
       
+      _exportReport : function(geoId, criteria, format) {
+           
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+        configuration.parameters.push({'name' : 'format', 'value' : format});
+        
+        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
+        url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(this._dashboardId);          
+        url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+        
+        window.location.href = url;
+      },
       
       /**
        * Render the analytics report on screen
@@ -987,7 +1002,9 @@
               
               if(currGeoId != null)
               {                 
-                that._renderReport(currGeoId, that._conditionMap['criteria']);
+            	that._currGeoId = currGeoId;
+            	
+                that._renderReport(that._currGeoId, that._conditionMap['criteria']);
               }
             
             }
@@ -1952,6 +1969,16 @@
         return {'conditions' : conditions, 'criteria' : criteria};
       },
       
+      _onClickExportReport : function(e) {
+        $( "#report-menu" ).hide();
+        
+      	var format = $(e.target).data('format');
+
+        var criteria = this._conditionMap['criteria']; 
+        
+        this._exportReport(this._currGeoId, criteria, format);
+      },
+      
       _onClickApplyFilters : function(e) {
         var that = this;
         
@@ -1992,8 +2019,10 @@
           });
             
           com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
+          
+          this._currGeoId = '';
             
-          this._renderReport('', criteria);
+          this._renderReport(this._currGeoId, criteria);
         }
       },
       
@@ -2029,6 +2058,15 @@
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         
+        // Events for exporting a report
+        $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
+        $('#report-menu-button').on('click', function(){$( "#report-menu" ).toggle();});        
+        
+        // Render the menu
+        $( "#report-menu" ).menu();
+        $( "#report-menu" ).hide();
+        
+        
         if(this._googleEnabled){
           this._addAutoComplete();
         }    
@@ -2037,7 +2075,7 @@
         // Chart panel slide toggle behavior
         //
         $("#reporting-toggle-button").on('click', function(){
-          var reportContentHeight = parseInt($("#report-content").css("height"));
+          var reportContentHeight = parseInt($("#report-viewport").css("height"));
           if($("#reporticng-container").hasClass("report-panel-closed"))
           {
             $("#reporticng-container").animate({ bottom: "+="+ reportContentHeight +"px" }, 1000, function() {
