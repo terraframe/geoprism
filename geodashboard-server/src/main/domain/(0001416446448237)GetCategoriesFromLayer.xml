@@ -2,11 +2,6 @@
   <doIt>
     <create></create>
     <update>
-    	<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
-    		<create>
-    			<mdMethod name="getThematicAttributeCategories" label="Get thematic attribute categories" returnType="java.lang.String" static="false" ></mdMethod>
-    		</create>
-    	</mdBusiness>
 
 		<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle">
 			<create>

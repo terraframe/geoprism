@@ -398,6 +398,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     QueryFactory factory = new QueryFactory();
     ValueQuery innerQuery1 = new ValueQuery(factory);
     ValueQuery innerQuery2 = new ValueQuery(factory);
+    ValueQuery innerQuery3 = new ValueQuery(factory);
 
     ValueQuery outerQuery = new ValueQuery(factory);
 
@@ -456,6 +457,14 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               // func = "AVG";
               thematicSel = F.AVG(thematicAttr);
             }
+//            else if (agg == AllAggregationType.MAJORITY){
+//              // func = "MAJORITY";
+//              thematicSel = F.SUM(thematicAttr);
+//            }
+//            else if (agg == AllAggregationType.MINORITY){
+//              // func = "MINORITY";
+//              thematicSel = F.COUNT(thematicAttr);
+//            }
 
             isAggregate = true;
           }
@@ -508,6 +517,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           thematicSel.setColumnAlias(attribute);
 
           innerQuery1.SELECT(thematicSel);
+          
 
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
@@ -789,98 +799,98 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     this.apply();
   }
 
-  @Override
-  public String getThematicAttributeCategories()
-  {
-    // This method relies on the existance of a saved layer and a related database view
-
-    String attribute = null;
-    MdAttributeDAOIF mdAttrC = null;
-    JSONArray categoriesJSON = new JSONArray();
-
-    QueryFactory f = new QueryFactory();
-    ValueQuery categoriesQuery = new ValueQuery(f);
-
-    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
-
-    try
-    {
-      while (iter.hasNext())
-      {
-        DashboardStyle style = iter.next();
-
-        if (style instanceof DashboardThematicStyle)
-        {
-          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
-          attribute = tStyle.getAttribute();
-          mdAttrC = tStyle.getMdAttributeDAO().getMdAttributeConcrete();
-        }
-      }
-
-      SelectableSQLPrimitive vAttributeId = null;
-
-      if (mdAttrC instanceof MdAttributeBooleanDAOIF)
-      {
-        vAttributeId = (SelectableSQLBoolean) categoriesQuery.aSQLBoolean("vAttributeId", attribute);
-      }
-      else if (mdAttrC instanceof MdAttributeIntDAOIF)
-      {
-        vAttributeId = (SelectableSQLInteger) categoriesQuery.aSQLInteger("vAttributeId", attribute);
-      }
-      else if (mdAttrC instanceof MdAttributeDoubleDAOIF)
-      {
-        vAttributeId = (SelectableSQLDouble) categoriesQuery.aSQLDouble("vAttributeId", attribute);
-      }
-      else if (mdAttrC instanceof MdAttributeFloatDAOIF)
-      {
-        vAttributeId = (SelectableSQLFloat) categoriesQuery.aSQLFloat("vAttributeId", attribute);
-      }
-      else if (mdAttrC instanceof MdAttributeCharacterDAOIF)
-      {
-        vAttributeId = (SelectableSQLChar) categoriesQuery.aSQLCharacter("vAttributeId", attribute);
-      }
-      else if (mdAttrC instanceof MdAttributeDateDAOIF)
-      {
-        vAttributeId = (SelectableSQLDate) categoriesQuery.aSQLDate("vAttributeId", attribute);
-      }
-
-      categoriesQuery.SELECT_DISTINCT((SelectablePrimitive) vAttributeId);
-      categoriesQuery.FROM(this.getViewName(), this.getViewName());
-      categoriesQuery.ORDER_BY_ASC((SelectablePrimitive) vAttributeId);
-
-      java.sql.ResultSet allUniqueCategories = Database.query(categoriesQuery.getSQL());
-
-      try
-      {
-        while (allUniqueCategories.next())
-        {
-          categoriesJSON.put(allUniqueCategories.getString(1));
-        }
-      }
-      catch (SQLException e)
-      {
-        Database.throwDatabaseException(e);
-      }
-      finally
-      {
-        try
-        {
-          allUniqueCategories.close();
-        }
-        catch (SQLException e)
-        {
-          Database.throwDatabaseException(e);
-        }
-      }
-    }
-    finally
-    {
-      iter.close();
-    }
-
-    return categoriesJSON.toString();
-  }
+//  @Override
+//  public String getThematicAttributeCategories()
+//  {
+//    // This method relies on the existance of a saved layer and a related database view
+//
+//    String attribute = null;
+//    MdAttributeDAOIF mdAttrC = null;
+//    JSONArray categoriesJSON = new JSONArray();
+//
+//    QueryFactory f = new QueryFactory();
+//    ValueQuery categoriesQuery = new ValueQuery(f);
+//
+//    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
+//
+//    try
+//    {
+//      while (iter.hasNext())
+//      {
+//        DashboardStyle style = iter.next();
+//
+//        if (style instanceof DashboardThematicStyle)
+//        {
+//          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
+//
+//          attribute = tStyle.getAttribute();
+//          mdAttrC = tStyle.getMdAttributeDAO().getMdAttributeConcrete();
+//        }
+//      }
+//
+//      SelectableSQLPrimitive vAttributeId = null;
+//
+//      if (mdAttrC instanceof MdAttributeBooleanDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLBoolean) categoriesQuery.aSQLBoolean("vAttributeId", attribute);
+//      }
+//      else if (mdAttrC instanceof MdAttributeIntDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLInteger) categoriesQuery.aSQLInteger("vAttributeId", attribute);
+//      }
+//      else if (mdAttrC instanceof MdAttributeDoubleDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLDouble) categoriesQuery.aSQLDouble("vAttributeId", attribute);
+//      }
+//      else if (mdAttrC instanceof MdAttributeFloatDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLFloat) categoriesQuery.aSQLFloat("vAttributeId", attribute);
+//      }
+//      else if (mdAttrC instanceof MdAttributeCharacterDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLChar) categoriesQuery.aSQLCharacter("vAttributeId", attribute);
+//      }
+//      else if (mdAttrC instanceof MdAttributeDateDAOIF)
+//      {
+//        vAttributeId = (SelectableSQLDate) categoriesQuery.aSQLDate("vAttributeId", attribute);
+//      }
+//
+//      categoriesQuery.SELECT_DISTINCT((SelectablePrimitive) vAttributeId);
+//      categoriesQuery.FROM(this.getViewName(), this.getViewName());
+//      categoriesQuery.ORDER_BY_ASC((SelectablePrimitive) vAttributeId);
+//
+//      java.sql.ResultSet allUniqueCategories = Database.query(categoriesQuery.getSQL());
+//
+//      try
+//      {
+//        while (allUniqueCategories.next())
+//        {
+//          categoriesJSON.put(allUniqueCategories.getString(1));
+//        }
+//      }
+//      catch (SQLException e)
+//      {
+//        Database.throwDatabaseException(e);
+//      }
+//      finally
+//      {
+//        try
+//        {
+//          allUniqueCategories.close();
+//        }
+//        catch (SQLException e)
+//        {
+//          Database.throwDatabaseException(e);
+//        }
+//      }
+//    }
+//    finally
+//    {
+//      iter.close();
+//    }
+//
+//    return categoriesJSON.toString();
+//  }
 
   public static String getSessionId(String viewName)
   {

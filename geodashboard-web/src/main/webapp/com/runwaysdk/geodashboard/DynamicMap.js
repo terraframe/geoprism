@@ -834,7 +834,7 @@
           this._LayerController.edit(new Mojo.ClientRequest({
             onSuccess : function(html){
               that._displayLayerForm(html);
-              that._addCategoryAutoComplete(id);
+              that._addCategoryAutoComplete();
             },
             onFailure : function(e){
               that.handleException(e);
@@ -1365,44 +1365,83 @@
        * This method is a little more acurate because the database view includes any filters
        * that might have been applied to the layer.
        */
-      _addCategoryAutoComplete : function(layerId){
+      _addCategoryAutoComplete : function(){
         
         var that = this;
         
-        var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(jsonCatData) {
+        // Hook up the auto-complete for category input options new layers
+        // existing layers have a seperate autocomplete hookup that queries 
+        // the layer database view directly. 
+        $('.category-input').each(function(){
+          var mdAttribute = $(this).data('mdattributeid');  
+          var categoryType = $(this).data('type');
           
-            var data = JSON.parse(jsonCatData);
-          
-            that._autocomplete = $('.category-input').autocomplete({
-                  minLength: 1,
-                  autoFocus: true,
-                  select : function(value, data){          
-                    
-                  // Set the field to this value
-                    
-                    that._suggestionCoords.clear();
-                  },
-                  source: function(request, response){
+          $(this).autocomplete({
+            source: function( request, response ) {
+              var req = new Mojo.ClientRequest({
+                onSuccess : function(results){
                   
-                    var result = $.grep(data, function (el) {
-                          return el.indexOf(request.term) === 0;
-                      });
-                      response(result);     
-                  },
-                  change: function (e, ui) {
-                      if (!(0 || ui.item)) e.target.value = "";
+                  // We need to localize the results for numbers
+                  if(categoryType == 'number') {
+                    for(var i = 0; i < results.length; i++) {
+                      var number = parseFloat(results[i]);
+                      var localized = that._formatter(number);
+                      
+                      results[i] = localized;
+                    }
                   }
                   
-                });
-        },
-        onFailure : function(e) {
-          that.handleException(e);
-        }
-      });
+                  response( results );
+                },
+                onFailure : function(e){
+                  that.handleException(e);
+                }
+              });
+              
+              // values are scraped from hidden input elements on the layer create form
+              var universalId = $("#f58").val();
+              var aggregationVal = $("#f59").val();
+              
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
+            },
+            minLength: 1
+          });
+        });
         
-        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getThematicAttributeCategories(clientRequest, layerId);
-//        var data = [11, 22, 33, 44, 55];  // just for testing
+        
+//        var clientRequest = new Mojo.ClientRequest({
+//          onSuccess : function(jsonCatData) {
+//          
+//            var data = JSON.parse(jsonCatData);
+//          
+//            that._autocomplete = $('.category-input').autocomplete({
+//                  minLength: 1,
+//                  autoFocus: true,
+//                  select : function(value, data){          
+//                    
+//                  // Set the field to this value
+//                    
+//                    that._suggestionCoords.clear();
+//                  },
+//                  source: function(request, response){
+//                  
+//                    var result = $.grep(data, function (el) {
+//                          return el.indexOf(request.term) === 0;
+//                      });
+//                      response(result);     
+//                  },
+//                  change: function (e, ui) {
+//                      if (!(0 || ui.item)) e.target.value = "";
+//                  }
+//                  
+//                });
+//        },
+//        onFailure : function(e) {
+//          that.handleException(e);
+//        }
+//      });
+//        
+//        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getThematicAttributeCategories(clientRequest, layerId);
         
       },
       
@@ -1500,44 +1539,46 @@
           onSuccess : function(html){
             that._displayLayerForm(html);
             
-            // Hook up the auto-complete for category input options new layers
-            // existing layers have a seperate autocomplete hookup that queries 
-            // the layer database view directly. 
-            $('.category-input').each(function(){
-              var mdAttribute = $(this).data('mdattributeid');  
-              var categoryType = $(this).data('type');
-              
-              $(this).autocomplete({
-                source: function( request, response ) {
-                  var req = new Mojo.ClientRequest({
-                    onSuccess : function(results){
-                      
-                      // We need to localize the results for numbers
-                      if(categoryType == 'number') {
-                        for(var i = 0; i < results.length; i++) {
-                          var number = parseFloat(results[i]);
-                          var localized = that._formatter(number);
-                          
-                          results[i] = localized;
-                        }
-                      }
-                      
-                      response( results );
-                    },
-                    onFailure : function(e){
-                      that.handleException(e);
-                    }
-                  });
-                  
-                  // values are scraped from hidden input elements on the layer create form
-                  var universalId = $("#f58").val();
-                  var aggregationVal = $("#f59").val();
-                  
-                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
-                },
-                minLength: 1
-              });
-            });
+            that._addCategoryAutoComplete();
+            
+//            // Hook up the auto-complete for category input options new layers
+//            // existing layers have a seperate autocomplete hookup that queries 
+//            // the layer database view directly. 
+//            $('.category-input').each(function(){
+//              var mdAttribute = $(this).data('mdattributeid');  
+//              var categoryType = $(this).data('type');
+//              
+//              $(this).autocomplete({
+//                source: function( request, response ) {
+//                  var req = new Mojo.ClientRequest({
+//                    onSuccess : function(results){
+//                      
+//                      // We need to localize the results for numbers
+//                      if(categoryType == 'number') {
+//                        for(var i = 0; i < results.length; i++) {
+//                          var number = parseFloat(results[i]);
+//                          var localized = that._formatter(number);
+//                          
+//                          results[i] = localized;
+//                        }
+//                      }
+//                      
+//                      response( results );
+//                    },
+//                    onFailure : function(e){
+//                      that.handleException(e);
+//                    }
+//                  });
+//                  
+//                  // values are scraped from hidden input elements on the layer create form
+//                  var universalId = $("#f58").val();
+//                  var aggregationVal = $("#f59").val();
+//                  
+//                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
+//                },
+//                minLength: 1
+//              });
+//            });
             
             // ontology category layer type colors
             $(".category-color-icon").colpick({

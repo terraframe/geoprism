@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 184515448)
+@com.runwaysdk.business.ClassSignature(hash = -1769819148)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -38,7 +38,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 184515448;
+  private static final long serialVersionUID = -1769819148;
   
   public DashboardLayerBase()
   {
@@ -826,18 +826,6 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public java.lang.String getThematicAttributeCategories()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final java.lang.String getThematicAttributeCategories(java.lang.String id)
-  {
-    DashboardLayer _instance = DashboardLayer.get(id);
-    return _instance.getThematicAttributeCategories();
   }
   
   public void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
