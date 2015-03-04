@@ -71,6 +71,10 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
   public static final String  RPTDOCUMENT_EXTENSION = "rptdoc";
 
+  public static final String  CATEGORY              = "category";
+
+  public static final String  CRITERIA              = "criteria";
+
   public static final String  BASE_URL              = "dss.vector.solutions.report.ReportController.generate.mojo?report=";
 
   public ReportItem()
@@ -388,8 +392,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(parameter.getParameterName(), parameter.getParameterValue());
     }
 
-    String CATEGORY = "category";
-
     if (map.containsKey(CATEGORY))
     {
       String geoId = map.get(CATEGORY);
@@ -406,6 +408,19 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
         {
           // Do nothing
         }
+      }
+    }
+
+    if (map.containsKey(CRITERIA))
+    {
+      String criteria = map.get(CRITERIA);
+
+      // Get the user friendly description of the criteria
+      if (criteria != null && criteria.length() > 0)
+      {
+        String information = ReportProviderUtil.getConditionInformation(criteria);
+
+        map.put("criteriaInfo", information);
       }
     }
 

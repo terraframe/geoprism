@@ -1885,7 +1885,7 @@
                 attrCond.setDefiningMdAttribute(mdAttribute);
                 
                 conditions.push(attrCond);
-                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':id});            
+                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':id});            
               }
             }
             else if($(this).hasClass('filter-date')) {
