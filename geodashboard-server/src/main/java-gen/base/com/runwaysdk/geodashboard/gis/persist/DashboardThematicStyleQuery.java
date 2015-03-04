@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -587702244)
+@com.runwaysdk.business.ClassSignature(hash = -1840700352)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -82,6 +82,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE);
 
     return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize()
+  {
+    return getPointFixedSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableInteger getPointMaxSize()
@@ -415,6 +432,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize();
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPointMaxSize();
     public com.runwaysdk.query.SelectableInteger getPointMaxSize(String alias);
     public com.runwaysdk.query.SelectableInteger getPointMaxSize(String alias, String displayLabel);
@@ -527,6 +547,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize()
+  {
+    return getPointFixedSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableInteger getPointMaxSize()
@@ -831,6 +868,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize();
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableInteger getPointMaxSize();
     public com.runwaysdk.query.SelectableInteger getPointMaxSize(String alias);
     public com.runwaysdk.query.SelectableInteger getPointMaxSize(String alias, String displayLabel);
@@ -992,6 +1032,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize()
+  {
+    return getPointFixedSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getPointFixedSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.POINTFIXEDSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableInteger getPointMaxSize()

@@ -261,22 +261,26 @@
 	              <div class="holder style04">
 	                <ul class="nav-tabs type-tabs">
 		                <c:forEach items="${layerTypeNames}" var="layerTypeName" varStatus="loop">
-		                  <li
-		                    class="${layerTypeName}  
-		                    <c:if test="${layerTypeName == activeLayerTypeName}">
-		                        active
-		                    </c:if>
-		                    ">
-		                    <a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}">
-		                      <input
-		                        <c:if test="${layerTypeName == activeLayerTypeName}">
-		                          checked="checked"
-		                        </c:if>
-		                        id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio">
-		                      </input>
-		                      <label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label>
-		                    </a>
-		                  </li>
+		                	<c:choose>
+			          			<c:when test="${'GRADIENT' != layerTypeName || 'false' == isOntologyAttribute && 'false' == isTextAttribute}">
+				                  <li
+				                    class="${layerTypeName}  
+				                    <c:if test="${layerTypeName == activeLayerTypeName}">
+				                        active
+				                    </c:if>
+				                    ">
+				                    <a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}">
+				                      <input
+				                        <c:if test="${layerTypeName == activeLayerTypeName}">
+				                          checked="checked"
+				                        </c:if>
+				                        id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio">
+				                      </input>
+				                      <label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label>
+				                    </a>
+				                  </li>
+				                </c:when>
+				             </c:choose>
 		                </c:forEach>
 	                </ul>
 	              </div>
@@ -503,22 +507,33 @@
 	                    <div class="fill-block">
 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardLayer.form.radius"/>${dl_form_radius}</strong>
 	                      <div class="cell-holder">
-	                        <div class="cell">
-	                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
-	                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
-	                        </div>
-	                        <div class="cell">
-	                          <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
-	                          <div class="text">
-	                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
-	                          </div>
-	                        </div>
+		                    <c:choose>
+			                    <c:when test="${'true' == isOntologyAttribute || 'true' == isTextAttribute}">
+			                    	<div class="cell">
+			                          <label for="f79">${style.pointFixedSizeMd.displayLabel}</label>
+			                          <div class="text"><input id="f79" name="style.${style.pointFixedSizeMd.name}" type="text" value="${style.pointFixedSize}"></div>
+			                        </div>
+		                        </c:when>
+		                        <c:otherwise>
+			                        <div class="cell">
+			                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
+			                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
+			                        </div>
+			                        <div class="cell">
+			                          <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
+			                          <div class="text">
+			                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
+			                          </div>
+			                        </div>
+		                        </c:otherwise>
+	                        </c:choose>
 	                      </div>
 	                    </div>
 	                  </div>
 	                  
 	                  
 	                  <!-- GRADIENT -->
+
 	                  <div
 	                    <c:choose>
 	                      <c:when test="${'GRADIENT' == activeLayerTypeName}">
@@ -565,7 +580,7 @@
 	                  </div>
 	                  
 	                  <gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
-	                 
+
 	                 
 	                  <!-- CATEGORIES -->
 	                  <div
