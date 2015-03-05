@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 997895574)
+@com.runwaysdk.business.ClassSignature(hash = 1003369120)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,7 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.DataBrowserUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 997895574;
+  private static final long serialVersionUID = 1003369120;
   
   public DataBrowserUtilBase()
   {
@@ -29,10 +29,10 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()
@@ -43,6 +43,12 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
   public static DataBrowserUtil get(String id)
   {
     return (DataBrowserUtil) com.runwaysdk.business.Util.get(id);
+  }
+  
+  public static com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery getDefaultTypes()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery getTypes(java.lang.String[] packages, java.lang.String[] types)
