@@ -130,6 +130,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
+
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -242,17 +243,17 @@ $(document).ready(function(){
 	                <div class="panel">
 	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
 	                   		<%-- This <c:when> check is only needed until ontology and text attributes are supported in layer aggregation --%>
-<%--                            	<c:choose> --%>
-<%--                             	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}"> --%>
+                           	<c:choose>
+                            	<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
                                 	<!-- When attribute any type other than Term or Text add the map it button -->
                                     <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
                                     	<!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
                                         <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
                                     </a>
-<%--                                     	</c:when> --%>
-<%--                                 	<c:otherwise> --%>
-<%--                             		</c:otherwise> --%>
-<%--                         	</c:choose> --%>
+                                    	</c:when>
+                                	<c:otherwise>
+                            		</c:otherwise>
+                        	</c:choose>
 						</h4>
 										
 	                  <!-- slide block -->
@@ -388,7 +389,24 @@ $(document).ready(function(){
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
   	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
-    <div id="report-content"></div>
+    <div id="report-viewport">
+      <div id="report-menu-container" style="position: absolute;">
+        <a href="#" id="report-menu-button" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Export"><gdb:localize key="report.menu"/></a>      
+        <ul id="report-menu">
+          <li>
+            <a href="#"><gdb:localize key="report.export"/></a>                    
+            <ul>
+              <li ><a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a></li>
+              <li ><a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a></li>
+              <li ><a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a></li>
+            </ul>
+          </li>
+        </ul>    
+      </div>
+    
+      <div id="report-content">
+      </div>   
+    </div>
   </article>
   
   <!-- allow a user to go to the top of the page -->

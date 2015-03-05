@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 @com.runwaysdk.business.ClassSignature(hash = 634803849)
+
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +30,9 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
   public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
+
   private static final long serialVersionUID = 634803849;
+
   
   public DashboardThematicStyleBase()
   {

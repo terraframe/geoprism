@@ -47,7 +47,17 @@
 <script type="text/javascript"> ${js} </script>
 
 
-<!-- Localization -->
+<!-- Localization -->	
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
+	
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
+	
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
 <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/default.css" />
@@ -289,6 +299,7 @@
             <!-- 
               End Layer Types
              -->
+
 			<mjl:component param="style" item="${style}">
 	            <div class="row-holder">
 	              <div class="label-holder">
@@ -533,7 +544,6 @@
 	                  
 	                  
 	                  <!-- GRADIENT -->
-
 	                  <div
 	                    <c:choose>
 	                      <c:when test="${'GRADIENT' == activeLayerTypeName}">
@@ -751,6 +761,7 @@
 	      // This first if check prevents building duplicate trees when the javascript is being run twice.
 	      // This is a potential bug with a ticket reported #279
 	  	  // 	  
+	      
     	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
     		  var roots = '${roots}';
         	  var rootsJSON = JSON.parse(roots);

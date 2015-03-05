@@ -18,13 +18,22 @@ String locale = LocalizationFacadeDTO.getCLDRLocaleName(clientRequest);
  */
 com.runwaysdk.Localize.addLanguages(<%=LocalizationFacadeDTO.getJSON(clientRequest)%>, true);
 
-
 /*
- * Setup of internationalized date widgets
+ * Setup of internationalized number widgets and paring
  */      
-$.datepicker.setDefaults($.datepicker.regional['<%=region%>']);
+Globalize.load(<%=configuration%>);
+
+Globalize.locale('<%=locale%>');
+
 
 jQuery(function(){
+
+  /*
+   * Setup of internationalized date widgets
+   */      
+  $.datepicker.setDefaults($.datepicker.regional['<%=region%>']);
+  $.datepicker.regional.local = $.datepicker.regional['<%=region%>'];
+  
   jQuery('div.datepicker').datepicker($.datepicker.regional['<%=region%>']);
   
   jQuery('.data-block').each(function(){
@@ -71,13 +80,6 @@ jQuery(function(){
   });
 });
 
-/*
- * Setup of internationalized number widgets and paring
- */      
-Globalize.load(<%=configuration%>);
-
-Globalize.locale('<%=locale%>');
- 
 
 /*! jQuery UI - v1.10.3 - 2013-12-13
 * http://jqueryui.com

@@ -54,6 +54,7 @@
         
         // Default criteria for filtering
         this._conditionMap = {'conditions' : [], 'criteria' : []};
+        this._currGeoId = '';
         
         // Number localization setup
         this._parser = Globalize.numberParser();
@@ -153,42 +154,42 @@
       * 
       */
       _updateOntologyCategoriesJSON : function() {
-    	  
-	      	var ontTreeStyleArr = new Object();
-	      	ontTreeStyleArr.catLiElems = [];
-	      
-	  		var allElem = $(".ontology-category-color-icon");
-	  		for(var e=0; e<allElem.length; e++){
-	  			
-	  			var rwId = allElem[e].dataset.rwid;
-	  			// filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
-	  			if(rwId.indexOf("PHANTOM") === -1){
-	  				var theElem = allElem[e];
-	  				var theColor = rgb2hex($(theElem).css("background-color"));
-	  				
-	  	    		var liObj = new Object();
-	          		liObj.id = theElem.dataset.rwid;
-	          		liObj.color = theColor;
-	          		ontTreeStyleArr.catLiElems.push(liObj);           				
-	  			}
-	  		}
-	  		
-	  		// set the hidden input element in the layer creation/edit form 
-	  		$("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
-	  		
-	  		// javascript and jquery return css color values as rgb.  
-	  		// We want hex in this case
-	  		function rgb2hex(rgb) {
-	  		    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+        
+          var ontTreeStyleArr = new Object();
+          ontTreeStyleArr.catLiElems = [];
+        
+        var allElem = $(".ontology-category-color-icon");
+        for(var e=0; e<allElem.length; e++){
+          
+          var rwId = allElem[e].dataset.rwid;
+          // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
+          if(rwId.indexOf("PHANTOM") === -1){
+            var theElem = allElem[e];
+            var theColor = rgb2hex($(theElem).css("background-color"));
+            
+              var liObj = new Object();
+                liObj.id = theElem.dataset.rwid;
+                liObj.color = theColor;
+                ontTreeStyleArr.catLiElems.push(liObj);                   
+          }
+        }
+        
+        // set the hidden input element in the layer creation/edit form 
+        $("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
+        
+        // javascript and jquery return css color values as rgb.  
+        // We want hex in this case
+        function rgb2hex(rgb) {
+            if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
 
-	  		    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-	  		    function hex(x) {
-	  		        return ("0" + parseInt(x).toString(16)).slice(-2);
-	  		    }
-	  		    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
-	  		}
+            rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            function hex(x) {
+                return ("0" + parseInt(x).toString(16)).slice(-2);
+            }
+            return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+        }
 
-    	  return  ontTreeStyleArr;
+        return  ontTreeStyleArr;
       },
       
       /**
@@ -287,11 +288,37 @@
           onFailure : function(e){
             this.that.handleException(e);
           }
-        }, $( "#report-content" )[0]);
+        }, $( "#report-viewport" )[0]);
         
-        this._ReportController.run(request, this._dashboardId, geoId, JSON.stringify(criteria));        
+        // Get the width of the reporting div, make sure to remove some pixels because of
+        // the side bar and some padding. convert px to pt
+        var widthPt = Math.round(($('#report-content').width() - 20) * 72 / 96);
+        var heightPt = Math.round($('#report-content').height() * 72 / 96);
+        
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+        configuration.parameters.push({'name' : 'width', 'value' : widthPt});
+        configuration.parameters.push({'name' : 'height', 'value' : heightPt});
+        
+        this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));        
       },
       
+      _exportReport : function(geoId, criteria, format) {
+           
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+        configuration.parameters.push({'name' : 'format', 'value' : format});
+        
+        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
+        url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(this._dashboardId);          
+        url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+        
+        window.location.href = url;
+      },
       
       /**
        * Render the analytics report on screen
@@ -798,7 +825,13 @@
                   }
                   else
                   {
-                    alert(com.runwaysdk.Localize.localize("dashboard", "Required"))
+                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");                    
+                    
+                    var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+                    dialog.appendContent(message);
+                    dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
+                    dialog.setStyle("z-index", 2001);
+                    dialog.render();    
                   }
                 }
               },
@@ -969,7 +1002,9 @@
               
               if(currGeoId != null)
               {                 
-                that._renderReport(currGeoId, that._conditionMap['criteria']);
+            	that._currGeoId = currGeoId;
+            	
+                that._renderReport(that._currGeoId, that._conditionMap['criteria']);
               }
             
             }
@@ -1477,12 +1512,11 @@
           
           // Show the white background modal.
           var modal = $(DynamicMap.DASHBOARD_MODAL).first();
-          modal.modal('show');
           modal.html(html);
           
-          eval(Mojo.Util.extractScripts(html));
-          
           jcf.customForms.replaceAll(modal[0]);
+          
+          modal.modal('show');
         },
         
         /**
@@ -1582,11 +1616,11 @@
             
             // ontology category layer type colors
             $(".category-color-icon").colpick({
-    	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-    	        onChange:function(hsb,hex,rgb,el,bySetColor) {
-    	          $(el).css('background','#'+hex);
-    	          $(el).find('.color-input').attr('value', '#'+hex);
-    	        }
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onChange:function(hsb,hex,rgb,el,bySetColor) {
+                $(el).css('background','#'+hex);
+                $(el).find('.color-input').attr('value', '#'+hex);
+              }
             });
             
             //
@@ -1608,18 +1642,15 @@
        * @html
        */
       _displayLayerForm : function(html){
-    	  
-    	var that = this;
+        
+      var that = this;
         
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
         
         // Show the white background modal.
         var modal = $(DynamicMap.LAYER_MODAL).first();
-        modal.modal('show');
         modal.html(html);
-        
-        eval(Mojo.Util.extractScripts(html));
         
         jcf.customForms.replaceAll(modal[0]);
         
@@ -1673,7 +1704,11 @@
             }
           }
           
-        });        
+        });    
+        
+        // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
+        //            It is better to finish all of the DOM modification before showing the modal to the user
+        modal.modal('show');
       },
       
       
@@ -1735,20 +1770,20 @@
         
         // category layer type colors
         $("#category-colors-container").find('.icon-color').colpick({
-	        submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-	        onChange:function(hsb,hex,rgb,el,bySetColor) {
-	          $(el).css('background','#'+hex);
-	          $(el).find('.color-input').attr('value', '#'+hex);          
-	        }
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);          
+          }
         });
         
         // ontology category layer type colors
         $(".ontology-category-color-icon").colpick({
-        	submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-        	onChange:function(hsb,hex,rgb,el,bySetColor) {
-        		$(el).css('background','#'+hex);
-        		$(el).next(".color-input").attr('value', '#'+hex);
-        	}
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).next(".color-input").attr('value', '#'+hex);
+          }
         });
         
       },
@@ -1908,7 +1943,7 @@
                 attrCond.setDefiningMdAttribute(mdAttribute);
                 
                 conditions.push(attrCond);
-                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':id});            
+                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':id});            
               }
             }
             else if($(this).hasClass('filter-date')) {
@@ -1975,6 +2010,16 @@
         return {'conditions' : conditions, 'criteria' : criteria};
       },
       
+      _onClickExportReport : function(e) {
+        $( "#report-menu" ).hide();
+        
+      	var format = $(e.target).data('format');
+
+        var criteria = this._conditionMap['criteria']; 
+        
+        this._exportReport(this._currGeoId, criteria, format);
+      },
+      
       _onClickApplyFilters : function(e) {
         var that = this;
         
@@ -2015,8 +2060,10 @@
           });
             
           com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
+          
+          this._currGeoId = '';
             
-          this._renderReport('', criteria);
+          this._renderReport(this._currGeoId, criteria);
         }
       },
       
@@ -2052,6 +2099,15 @@
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         
+        // Events for exporting a report
+        $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
+        $('#report-menu-button').on('click', function(){$( "#report-menu" ).toggle();});        
+        
+        // Render the menu
+        $( "#report-menu" ).menu();
+        $( "#report-menu" ).hide();
+        
+        
         if(this._googleEnabled){
           this._addAutoComplete();
         }    
@@ -2060,7 +2116,7 @@
         // Chart panel slide toggle behavior
         //
         $("#reporting-toggle-button").on('click', function(){
-          var reportContentHeight = parseInt($("#report-content").css("height"));
+          var reportContentHeight = parseInt($("#report-viewport").css("height"));
           if($("#reporticng-container").hasClass("report-panel-closed"))
           {
             $("#reporticng-container").animate({ bottom: "+="+ reportContentHeight +"px" }, 1000, function() {

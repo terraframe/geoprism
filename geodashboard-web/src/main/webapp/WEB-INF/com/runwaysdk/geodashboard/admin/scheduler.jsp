@@ -36,57 +36,67 @@
 <gdb:localize var="page_title" key="scheduler.title"/>
 
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
-<%
-  String webappRoot = request.getContextPath() + "/";
-%>
 
-<script type="text/javascript" src="<% out.print(webappRoot); %>jquery/datatables/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables.css" ></link>
-<link rel="stylesheet" href="<% out.print(webappRoot); %>jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/datatables/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables.css" ></link>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
 
 <!-- Runway Factory -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/list/List.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/form/Form.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/list/List.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/form/Form.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/button/Button.js"></script>
 
 <!-- Generic -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceIF.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/Events.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceFactory.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/BaseServerDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/datasource/ServerDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Column.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Events.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/Row.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceIF.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/datasource/Events.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/datasource/DataSourceFactory.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/datasource/BaseServerDataSource.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/datasource/ServerDataSource.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/DataTable.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/Column.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/Events.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/Row.js"></script>
 
 <!-- JQuery -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/TabPanel.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/ServerDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/datasource/DataSourceFactory.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/jquery/datatable/DataTable.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/TabPanel.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/datatable/datasource/ServerDataSource.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/datatable/datasource/DataSourceFactory.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/datatable/DataTable.js"></script>
+
+<!-- Localization -->	
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
+	
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
+	
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
 
 <!-- Runway Generic -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/ui/PollingRequest.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/datatable/datasource/InstanceQueryDataSource.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/datatable/datasource/MdMethodDataSource.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/PollingRequest.js"></script>
 
-<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/runway/default.css" />
-<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/default.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/generic/datatable/DataTable.css" />
 
 <!-- Geodashboard form -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Geodashboard.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Form.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Geodashboard.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Form.js"></script>
 
 <!-- Scheduler -->
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/Cron.js"></script>
-<script type="text/javascript" src="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/scheduler/Scheduler.js"></script>
-<link rel="stylesheet" type="text/css" href="<% out.print(webappRoot); %>com/runwaysdk/geodashboard/scheduler/Scheduler.css" />
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Cron.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/scheduler/Scheduler.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/scheduler/Scheduler.css" />
 
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>

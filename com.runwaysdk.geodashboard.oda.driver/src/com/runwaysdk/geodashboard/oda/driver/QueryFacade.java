@@ -11,8 +11,8 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.geodashboard.report.ReportItemDTO;
 import com.runwaysdk.geodashboard.report.PairViewDTO;
+import com.runwaysdk.geodashboard.report.ReportItemDTO;
 
 public class QueryFacade
 {
@@ -105,7 +105,7 @@ public class QueryFacade
 
           if (queryMetadata)
           {
-            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria);
+            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria, aggregation);
 
             return new ComponentQueryResultSet(results);
           }
@@ -126,6 +126,57 @@ public class QueryFacade
     }
 
     throw new OdaException("Unable to execute an empty query");
+  }
+
+  public String getQueryId(String query) throws OdaException
+  {
+    try
+    {
+      JSONObject object = new JSONObject(query);
+      String action = object.getString(ACTION);
+
+      if (action.equals(QUERY))
+      {
+        JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
+
+        String queryId = params.getString(QueryFacade.QUERY_ID);
+
+        return queryId;
+      }
+
+      throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");
+    }
+    catch (JSONException e)
+    {
+      throw new OdaException(e);
+    }
+  }
+
+  public String getAggregation(String query) throws OdaException
+  {
+    try
+    {
+      JSONObject object = new JSONObject(query);
+      String action = object.getString(ACTION);
+
+      if (action.equals(QUERY))
+      {
+        JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
+
+        if (params.has(QueryFacade.AGGREGATION))
+        {
+          return params.getString(QueryFacade.AGGREGATION);
+        }
+
+        return null;
+      }
+
+      throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");
+    }
+    catch (JSONException e)
+    {
+      throw new OdaException(e);
+    }
   }
 
   public IParameterMetaData getParameterMetaData(String query) throws OdaException
