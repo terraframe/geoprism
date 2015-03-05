@@ -612,6 +612,10 @@ public class GeoserverFacade implements Reloadable
 
       return bbox;
     }
+    catch(Exception e)
+    {
+      throw new ProgrammingErrorException("Can't convert map layer database view bbox values from String to Double. This is likely because the database view being referenced has no data.");
+    }
     finally
     {
       iter.close();
