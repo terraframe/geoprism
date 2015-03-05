@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1509200371)
+@com.runwaysdk.business.ClassSignature(hash = 634803849)
+
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,6 +14,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
@@ -28,7 +30,9 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
   public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 1509200371;
+
+  private static final long serialVersionUID = 634803849;
+
   
   public DashboardThematicStyleBase()
   {
@@ -110,6 +114,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(MDATTRIBUTE, value.getId());
+    }
+  }
+  
+  public Integer getPointFixedSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTFIXEDSIZE));
+  }
+  
+  public void validatePointFixedSize()
+  {
+    this.validateAttribute(POINTFIXEDSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointFixedSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTFIXEDSIZE);
+  }
+  
+  public void setPointFixedSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTFIXEDSIZE, "");
+    }
+    else
+    {
+      setValue(POINTFIXEDSIZE, java.lang.Integer.toString(value));
     }
   }
   

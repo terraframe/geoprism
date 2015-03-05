@@ -13,6 +13,15 @@ import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeChar;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeTerm;
+import com.runwaysdk.system.metadata.MdAttributeTermDTO;
+import com.runwaysdk.system.metadata.MdAttributeText;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
+import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 
 public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.generation.loader.Reloadable, Style
 {
@@ -118,26 +127,33 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     throw new UnsupportedOperationException();
   }
 
-  public static AggregationTypeQuery getSortedAggregations()
+  public static AggregationTypeQuery getSortedAggregations(String thematicAttributeId)
   {
-    QueryFactory f = new QueryFactory();
-    AggregationTypeQuery q = new AggregationTypeQuery(f);
+	AggregationTypeQuery q;
+	  
+	MdAttributeConcrete mdAttrConcrete = ((MdAttributeVirtual) MdAttribute.get(thematicAttributeId)).getMdAttributeConcrete();
+	if (mdAttrConcrete instanceof MdAttributeTerm || mdAttrConcrete instanceof MdAttributeText || mdAttrConcrete instanceof MdAttributeChar)
+	{
+	    QueryFactory f = new QueryFactory();
+	    q = new AggregationTypeQuery(f);
+	    q.WHERE(q.getEnumName().EQ(AllAggregationType.MINORITY.name()));
+	    q.OR(q.getEnumName().EQ(AllAggregationType.MAJORITY.name()));
+	    //// We are currently not supporting distribution but want to leave this hear for future implementation
+	    //q.OR(q.getEnumName().EQ(AllAggregationType.DISTRIBUTION.name()));
+	    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+	}
+	else
+	{
+	    QueryFactory f = new QueryFactory();
+	    q = new AggregationTypeQuery(f);
+	    q.WHERE(q.getEnumName().EQ(AllAggregationType.SUM.name()));
+	    q.OR(q.getEnumName().EQ(AllAggregationType.AVG.name()));
+	    q.OR(q.getEnumName().EQ(AllAggregationType.MIN.name()));
+	    q.OR(q.getEnumName().EQ(AllAggregationType.MAX.name()));
+	    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+	}
 
-    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
-
-    return q;
-
-    // AllAggregationType[] types = AllAggregationType.values();
-    // AggregationType[] aggs = new AggregationType[types.length];
-    //
-    // Arrays.sort(types); // sort alphabetically
-    //
-    // for(int i=0; i<types.length; i++)
-    // {
-    // aggs[i] = AggregationType.get(types[i].getId());
-    // }
-    //
-    // return aggs;
+	return q;
   }
 
 }

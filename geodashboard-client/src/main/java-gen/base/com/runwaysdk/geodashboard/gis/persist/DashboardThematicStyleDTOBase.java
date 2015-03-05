@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1438097523)
+@com.runwaysdk.business.ClassSignature(hash = 957085705)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 1438097523;
+  private static final long serialVersionUID = 957085705;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,6 +29,7 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
@@ -137,6 +138,43 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public Integer getPointFixedSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTFIXEDSIZE));
+  }
+  
+  public void setPointFixedSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(POINTFIXEDSIZE, "");
+    }
+    else
+    {
+      setValue(POINTFIXEDSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isPointFixedSizeWritable()
+  {
+    return isWritable(POINTFIXEDSIZE);
+  }
+  
+  public boolean isPointFixedSizeReadable()
+  {
+    return isReadable(POINTFIXEDSIZE);
+  }
+  
+  public boolean isPointFixedSizeModified()
+  {
+    return isModified(POINTFIXEDSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointFixedSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTFIXEDSIZE).getAttributeMdDTO();
   }
   
   public Integer getPointMaxSize()

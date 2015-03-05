@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1731394058)
+@com.runwaysdk.business.ClassSignature(hash = -2143368558)
+
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +12,8 @@ package com.runwaysdk.geodashboard.gis.persist;
 public class DashboardThematicStyleQueryDTO extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1731394058;
+
+private static final long serialVersionUID = -2143368558;
 
   protected DashboardThematicStyleQueryDTO(String type)
   {

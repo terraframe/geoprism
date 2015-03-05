@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1582870733)
+@com.runwaysdk.business.ClassSignature(hash = -2052589569)
 public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationType";
-  private static final long serialVersionUID = 1582870733;
+  private static final long serialVersionUID = -2052589569;
   
   protected AggregationTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

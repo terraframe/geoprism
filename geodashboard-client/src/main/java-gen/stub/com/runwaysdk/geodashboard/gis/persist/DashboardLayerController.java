@@ -40,11 +40,13 @@ import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
+import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
 import com.runwaysdk.system.metadata.MdAttributeTermDTO;
 import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
+import com.runwaysdk.system.metadata.MdAttributeTextDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
@@ -185,7 +187,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
     // aggregations
-    List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest).getResultSet();
+    List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
     Collections.reverse(aggregations); // Simple solution for making SUM the default aggregation type
 
     // Filter out the invalid aggregation types based upon the
@@ -230,6 +232,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     if (mtAttrConcrete instanceof MdAttributeTermDTO)
     {
       req.setAttribute("isOntologyAttribute", true);
+      req.setAttribute("isTextAttribute", false);
       
       String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] { 
       	GeoEntityDTO.CLASS, 
@@ -286,9 +289,15 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       req.setAttribute("roots", rootsIds);
       req.setAttribute("selectableMap", selectableMap);     
     }
+    else if (mtAttrConcrete instanceof MdAttributeCharacterDTO || mtAttrConcrete instanceof MdAttributeTextDTO )
+    {
+      req.setAttribute("isTextAttribute", true);
+      req.setAttribute("isOntologyAttribute", false);
+    }
     else
     {
     	req.setAttribute("isOntologyAttribute", false);
+    	req.setAttribute("isTextAttribute", false);
     }
     
     req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
