@@ -309,3 +309,8 @@ div.panel-group.choice-color.category-group{
 	z-index: 999999 !important;
 }
 
+div.alert.alertbox{
+	color: red;
+	font-weight: bold;
+}
+
