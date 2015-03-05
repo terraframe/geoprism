@@ -24,6 +24,7 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;

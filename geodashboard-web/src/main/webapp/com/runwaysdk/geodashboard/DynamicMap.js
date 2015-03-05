@@ -968,9 +968,12 @@
               var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
               var currLayerDisplayName = layerNameMap[currLayerId];
               var currFeatureDisplayName = currLayer.properties.displaylabel;
-              var currAttributeVal = currLayer.properties[aggregationAttr];
               var currAggMethod = layerAggMap[currLayerId];
+              var currAttributeVal = currLayer.properties[aggregationAttr];
               
+              if(typeof currAttributeVal === 'number'){
+            	  currAttributeVal = that._formatter(currAttributeVal);
+              }
               
               popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
               

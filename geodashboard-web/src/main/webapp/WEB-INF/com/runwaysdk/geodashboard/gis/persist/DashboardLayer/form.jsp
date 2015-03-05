@@ -208,27 +208,14 @@
 					<mjl:component param="layer" item="${layer}">
 	                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
 	                       <c:forEach items="${universals}" var="universal">
-	                         <c:choose>
-	                           <c:when test="${layer.universalId == universal.id}">
-			                         <option value="${universal.id}" selected="selected">
-			                           ${universal.displayLabel.value}
-			                         </option>
-	                           </c:when>
-	                           <c:otherwise>
-			                         <c:choose>
-				                         <c:when test="${universal.id == universalLeafId}">
-				                         	<option value="${universal.id}" class="method-slect universal-leaf">
-				                         		${universal.displayLabel.value}
-				                         	</option>
-				                         </c:when>
-				                         <c:otherwise>
-				                         	<option value="${universal.id}">
-			                           			${universal.displayLabel.value}
-			                         		</option>
-				                         </c:otherwise>
-				                     </c:choose>
-	                           </c:otherwise>
-	                         </c:choose>
+		                         <c:choose>
+		                           <c:when test="${layer.universalId == universal.id}">
+				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option>
+		                           </c:when>
+		                           <c:otherwise>
+		                           		<option value="${universal.id}">${universal.displayLabel.value}</option>
+		                           </c:otherwise>
+		                         </c:choose>
 	                      </c:forEach>
 	                    </select>
 					</mjl:component>
