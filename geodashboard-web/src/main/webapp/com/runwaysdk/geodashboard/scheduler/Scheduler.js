@@ -484,9 +484,7 @@
                      {header: this.localize("duration"), customFormatter: Mojo.Util.bind(that, that.formatDuration)},
                      {queryAttr: "description"},
                      {header: this.localize("problems"), customFormatter : function(view) {
-                       // This may be a workaround to a bug in runway, the value isn't getting set to the localized value.
                        return view.getAttributeDTO('historyInformation').getValue();
-//                       return view.getHistoryInformation().getLocalizedValue();
                      }}
                     ]
         });

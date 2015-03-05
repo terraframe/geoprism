@@ -23,7 +23,6 @@
   var Util = Mojo.Util;
   var ClassFramework = Mojo.Meta;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
-  var InstanceQueryDataSource = com.runwaysdk.ui.datatable.datasource.InstanceQueryDataSource;
   var GenericDataTable = com.runwaysdk.ui.factory.generic.datatable.DataTable;
   
   var dataBrowserName = "com.runwaysdk.geodashboard.databrowser.DataBrowser";
@@ -73,25 +72,32 @@
         
       },
       
-//      _makeButtons : function() {
-//        this._select = this.getFactory().newElement("select");
-//        var rawIn = this._select.getRawEl();
-//        for (var i = 0; i < this._config.types.length; ++i) {
-//          this._select.appendChild(this.getFactory().newElement("option", {innerHTML: this._config.types[i], value: this._config.types[i]}));
-//        }
-//        rawIn.selectedIndex = 0;
-//        this._select.addEventListener("change", Mojo.Util.bind(this, this._onSelectChange));
-//        this.appendChild(this._select);
-//        
-//        var newUser = this.getFactory().newButton(this.localize("newUser"), Mojo.Util.bind(this, this._onNewUser));
-//        this.appendChild(newUser);
-//        
-//        var editUser = this.getFactory().newButton(this.localize("editUser"), Mojo.Util.bind(this, this._onEditUser));
-//        this.appendChild(editUser);
-//        
-//        var deleteUser = this.getFactory().newButton(this.localize("deleteUser"), Mojo.Util.bind(this, this._onDeleteUser));
-//        this.appendChild(deleteUser);
-//      },
+      _formatDate : function(value) {
+        
+        if(this._dateFormatter == null) {
+          this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
+        }
+      
+        return this._dateFormatter(value);
+      },
+      
+      _formatDateTime : function(value) {
+        
+        if(this._dateTimeFormatter == null) {
+          this._dateTimeFormatter = Globalize.dateFormatter({ dateTime: "short" });                         
+        }
+        
+        return this._dateTimeFormatter(value);
+      },
+      
+      _formatTime : function(value) {
+        
+        if(this._timeFormatter == null) {
+          this._timeFormatter = Globalize.dateFormatter({ time: "short" });                         
+        }
+        
+        return this._timeFormatter(value);
+      },
       
       _onSelectTreeNode : function(event) {
         var selectedNode = event.node;
@@ -113,12 +119,15 @@
           this._tableHolder.setStyle("text-align", "left");
           
           tableCfg.el = tableEl;
-          tableCfg.dataSource = new InstanceQueryDataSource({
+          tableCfg.dataSource = new com.runwaysdk.geodashboard.databrowser.DataBrowserQueryDataSource({
             className: type,
             readColumnsFromMetadata: true,
-            columns: [
-//                      { queryAttr : "locale", customFormatter :  }
-                      ]
+            formatters:{
+              "com.runwaysdk.system.metadata.MdAttributeDate": Mojo.Util.bind(this, this._formatDate),
+              "com.runwaysdk.system.metadata.MdAttributeDateTime": Mojo.Util.bind(this, this._formatDateTime),
+              "com.runwaysdk.system.metadata.MdAttributeTime": Mojo.Util.bind(this, this._formatTime),
+            },
+            columns: []
           });
           
           // This config removes the search box.

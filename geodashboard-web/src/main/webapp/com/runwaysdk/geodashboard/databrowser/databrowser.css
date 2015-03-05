@@ -49,5 +49,9 @@ div#databrowser {
 
 .geodashboard-databrowser-table {
 	margin-top: 13px;
-	width: 770px;
+}
+
+.dataTables_wrapper{
+	overflow: auto;
+	max-height: 600px;
 }

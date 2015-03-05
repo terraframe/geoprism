@@ -4,7 +4,10 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO;
+import com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+import com.runwaysdk.web.json.JSONController;
 
 public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -78,46 +81,48 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
+
   @Override
   public void databrowser() throws IOException, ServletException
   {
-    req.setAttribute("packages", "['com.runwaysdk.system','com.runwaysdk.geodashboard', 'com.runwaysdk.geodashboard.report', 'com.runwaysdk.system.metadata']");
-    req.setAttribute("types", "['com.runwaysdk.system.gis.geo.Universal', 'com.runwaysdk.system.gis.geo.GeoEntity']");
-    databrowserRender();
-  }
+    String sessionId = this.getClientSession().getSessionId();
+    String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
+    String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
 
-  public void databrowserRender() throws IOException, ServletException
-  {
+    String js = JSONController.importTypes(sessionId, new String[] { DataBrowserUtilDTO.CLASS, MetadataTypeDTO.CLASS }, true);
+
+    req.setAttribute("response", response);
+    req.setAttribute("js", js);
+
     render("databrowser.jsp");
   }
-  
+
   @Override
   public void failDatabrowser() throws IOException, ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
+
   @Override
   public void account() throws IOException, ServletException
   {
     render("account.jsp");
   }
-  
+
   @Override
   public void failAccount() throws IOException, ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
+
   @Override
   public void ontologies() throws java.io.IOException, javax.servlet.ServletException
   {
     this.req.setAttribute("rootId", ClassifierDTO.getRoot(getClientRequest()).getId());
-    
+
     render("ontologies.jsp");
   }
-  
+
   @Override
   public void failOntologies() throws java.io.IOException, javax.servlet.ServletException
   {

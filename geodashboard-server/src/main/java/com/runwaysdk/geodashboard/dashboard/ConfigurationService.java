@@ -11,24 +11,24 @@ import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
 
-public class DashboardService implements Reloadable
+public class ConfigurationService implements Reloadable
 {
   /**
    * Retrieve all implementations of ReportProviderIF.
    */
-  public static List<DashboardBuilderIF> getDashboardBuilders()
+  public static List<ConfigurationIF> getConfigurations()
   {
-    List<DashboardBuilderIF> builders = new ArrayList<DashboardBuilderIF>();
+    List<ConfigurationIF> configurations = new ArrayList<ConfigurationIF>();
 
-    ServiceLoader<DashboardBuilderIF> loader = ServiceLoader.load(DashboardBuilderIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<ConfigurationIF> loader = ServiceLoader.load(ConfigurationIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
 
     try
     {
-      Iterator<DashboardBuilderIF> it = loader.iterator();
+      Iterator<ConfigurationIF> it = loader.iterator();
 
       while (it.hasNext())
       {
-        builders.add(it.next());
+        configurations.add(it.next());
       }
     }
     catch (ServiceConfigurationError serviceError)
@@ -36,6 +36,6 @@ public class DashboardService implements Reloadable
       throw new ProgrammingErrorException(serviceError);
     }
 
-    return builders;
+    return configurations;
   }
 }

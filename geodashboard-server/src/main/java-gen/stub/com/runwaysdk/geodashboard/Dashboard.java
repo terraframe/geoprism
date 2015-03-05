@@ -7,11 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.business.BusinessQuery;
-
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
-
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
@@ -23,15 +18,13 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.dashboard.DashboardBuilderIF;
-import com.runwaysdk.geodashboard.dashboard.DashboardService;
+import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTable;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.Attribute;
@@ -124,17 +117,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     dashboard.apply();
 
-    List<DashboardBuilderIF> builders = DashboardService.getDashboardBuilders();
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
 
     int i = 0;
 
-    for (DashboardBuilderIF builder : builders)
+    for (ConfigurationIF configuration : configurations)
     {
       dashboard.lock();
 
       try
       {
-        builder.initialize(dashboard, i++);
+        configuration.initialize(dashboard, i++);
       }
       finally
       {

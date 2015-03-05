@@ -10,15 +10,11 @@
           <char name="displayLabel" size="255"></char>
         </attributes>
       </mdView>
-      
+
       <mdUtil name="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil">
-        <mdMethod
-          name="getTypes"
-          label="getTypes"
-          returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery"
-          static="true">
-            <mdParameter name="packages" order="0" type="java.lang.String[]" />
-            <mdParameter name="types" order="1" type="java.lang.String[]" />
+        <mdMethod name="getTypes" label="getTypes" returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery" static="true">
+          <mdParameter name="packages" order="0" type="java.lang.String[]" />
+          <mdParameter name="types" order="1" type="java.lang.String[]" />
         </mdMethod>
       </mdUtil>
     </create>

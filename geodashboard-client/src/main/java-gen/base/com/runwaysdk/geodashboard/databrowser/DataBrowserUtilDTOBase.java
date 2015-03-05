@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 1048735510)
+@com.runwaysdk.business.ClassSignature(hash = -1539714016)
 public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.DataBrowserUtil";
-  private static final long serialVersionUID = 1048735510;
+  private static final long serialVersionUID = -1539714016;
   
   protected DataBrowserUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -17,6 +17,14 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   }
   
   public static java.lang.String ID = "id";
+  public static final com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO getDefaultTypes(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO.CLASS, "getDefaultTypes", _declaredTypes);
+    return (com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO getTypes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String[] packages, java.lang.String[] types)
   {
     String[] _declaredTypes = new String[]{"[Ljava.lang.String;", "[Ljava.lang.String;"};
