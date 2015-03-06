@@ -1,7 +1,8 @@
 /*
  * L.TileLayer is used for standard xyz-numbered tile layers.
  */
-//(function (ymaps, L) {
+
+/* global ymaps: true */
 
 L.Yandex = L.Class.extend({
 	includes: L.Mixin.Events,
@@ -14,11 +15,37 @@ L.Yandex = L.Class.extend({
 		traffic: false
 	},
 
-	// Possible types: map, satellite, hybrid, publicMap, publicMapHybrid
+	possibleShortMapTypes: {
+		schemaMap: 'map',
+		satelliteMap: 'satellite',
+		hybridMap: 'hybrid',
+		publicMap: 'publicMap',
+		publicMapInHybridView: 'publicMapHybrid'
+	},
+	
+	_getPossibleMapType: function (mapType) {
+		var result = 'yandex#map';
+		if (typeof mapType !== 'string') {
+			return result;
+		}
+		for (var key in this.possibleShortMapTypes) {
+			if (mapType === this.possibleShortMapTypes[key]) {
+				result = 'yandex#' + mapType;
+				break;
+			}
+			if (mapType === ('yandex#' + this.possibleShortMapTypes[key])) {
+				result = mapType;
+			}
+		}
+		return result;
+	},
+	
+	// Possible types: yandex#map, yandex#satellite, yandex#hybrid, yandex#publicMap, yandex#publicMapHybrid
+	// Or their short names: map, satellite, hybrid, publicMap, publicMapHybrid
 	initialize: function(type, options) {
 		L.Util.setOptions(this, options);
-
-		this._type = "yandex#" + (type || 'map');
+		//Assigning an initial map type for the Yandex layer
+		this._type = this._getPossibleMapType(type);
 	},
 
 	onAdd: function(map, insertAtTheBottom) {
@@ -35,7 +62,7 @@ L.Yandex = L.Class.extend({
 		this._limitedUpdate = L.Util.limitExecByInterval(this._update, 150, this);
 		map.on('move', this._update, this);
 
-		map._controlCorners['bottomright'].style.marginBottom = "3em";
+		map._controlCorners.bottomright.style.marginBottom = '3em';
 
 		this._reset();
 		this._update(true);
@@ -48,7 +75,7 @@ L.Yandex = L.Class.extend({
 
 		this._map.off('move', this._update, this);
 
-		map._controlCorners['bottomright'].style.marginBottom = "0em";
+		map._controlCorners.bottomright.style.marginBottom = '0em';
 	},
 
 	getAttribution: function() {
@@ -63,8 +90,8 @@ L.Yandex = L.Class.extend({
 	},
 
 	setElementSize: function(e, size) {
-		e.style.width = size.x + "px";
-		e.style.height = size.y + "px";
+		e.style.width = size.x + 'px';
+		e.style.height = size.y + 'px';
 	},
 
 	_initContainer: function() {
@@ -73,8 +100,8 @@ L.Yandex = L.Class.extend({
 
 		if (!this._container) {
 			this._container = L.DomUtil.create('div', 'leaflet-yandex-layer leaflet-top leaflet-left');
-			this._container.id = "_YMapContainer_" + L.Util.stamp(this);
-			this._container.style.zIndex = "auto";
+			this._container.id = '_YMapContainer_' + L.Util.stamp(this);
+			this._container.style.zIndex = 'auto';
 		}
 
 		if (this.options.overlay) {
@@ -82,7 +109,7 @@ L.Yandex = L.Class.extend({
 			first = first.nextSibling;
 			// XXX: Bug with layer order
 			if (L.Browser.opera)
-				this._container.className += " leaflet-objects-pane";
+				this._container.className += ' leaflet-objects-pane';
 		}
 		tilePane.insertBefore(this._container, first);
 
@@ -95,36 +122,33 @@ L.Yandex = L.Class.extend({
 
 		// Check that ymaps.Map is ready
 		if (ymaps.Map === undefined) {
-			if (console) {
-				console.debug("L.Yandex: Waiting on ymaps.load('package.map')");
-			}
-			return ymaps.load(["package.map"], this._initMapObject, this);
+			return ymaps.load(['package.map'], this._initMapObject, this);
 		}
 
 		// If traffic layer is requested check if control.TrafficControl is ready
 		if (this.options.traffic)
 			if (ymaps.control === undefined ||
 					ymaps.control.TrafficControl === undefined) {
-				if (console) {
-					console.debug("L.Yandex: loading traffic and controls");
-				}
-				return ymaps.load(["package.traffic", "package.controls"],
+				return ymaps.load(['package.traffic', 'package.controls'],
 					this._initMapObject, this);
 			}
-
-		var map = new ymaps.Map(this._container, {center: [0,0], zoom: 0, behaviors: []});
+		//Creating ymaps map-object without any default controls on it
+		var map = new ymaps.Map(this._container, { center: [0, 0], zoom: 0, behaviors: [], controls: [] });
 
 		if (this.options.traffic)
 			map.controls.add(new ymaps.control.TrafficControl({shown: true}));
 
-		if (this._type == "yandex#null") {
-			this._type = new ymaps.MapType("null", []);
-			map.container.getElement().style.background = "transparent";
+		if (this._type === 'yandex#null') {
+			this._type = new ymaps.MapType('null', []);
+			map.container.getElement().style.background = 'transparent';
 		}
 		map.setType(this._type);
 
 		this._yandex = map;
 		this._update(true);
+		
+		//Reporting that map-object was initialized
+		this.fire('MapObjectInitialized', { mapObject: map });
 	},
 
 	_resetCallback: function(e) {
@@ -143,19 +167,17 @@ L.Yandex = L.Class.extend({
 		var _center = [center.lat, center.lng];
 		var zoom = this._map.getZoom();
 
-		if (force || this._yandex.getZoom() != zoom)
+		if (force || this._yandex.getZoom() !== zoom)
 			this._yandex.setZoom(zoom);
 		this._yandex.panTo(_center, {duration: 0, delay: 0});
 	},
 
 	_resize: function(force) {
 		var size = this._map.getSize(), style = this._container.style;
-		if (style.width == size.x + "px" &&
-				style.height == size.y + "px")
-			if (force != true) return;
+		if (style.width === size.x + 'px' && style.height === size.y + 'px')
+			if (force !== true) return;
 		this.setElementSize(this._container, size);
 		var b = this._map.getBounds(), sw = b.getSouthWest(), ne = b.getNorthEast();
 		this._yandex.container.fitToViewport();
 	}
 });
-//})(ymaps, L)

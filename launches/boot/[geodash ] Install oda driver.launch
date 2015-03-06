@@ -7,10 +7,10 @@
 <stringAttribute key="M2_PROFILES" value=""/>
 <listAttribute key="M2_PROPERTIES">
 <listEntry value="packaging=jar"/>
-<listEntry value="version=1.0.1"/>
+<listEntry value="version=1.0.2"/>
 <listEntry value="artifactId=oda.driver"/>
 <listEntry value="groupId=com.runwaysdk.geodashboard"/>
-<listEntry value="file=geodashboard-server/lib/com.runwaysdk.geodashboard.oda.driver_1.0.1.jar"/>
+<listEntry value="file=geodashboard-server/lib/com.runwaysdk.geodashboard.oda.driver_1.0.2.jar"/>
 </listAttribute>
 <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
 <booleanAttribute key="M2_SKIP_TESTS" value="false"/>

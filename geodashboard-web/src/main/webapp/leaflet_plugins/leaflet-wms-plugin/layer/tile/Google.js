@@ -1,7 +1,8 @@
 /*
  * Google layer using Google Maps API
  */
-//(function (google, L) {
+
+/* global google: true */
 
 L.Google = L.Class.extend({
 	includes: L.Mixin.Events,
@@ -25,7 +26,7 @@ L.Google = L.Class.extend({
 	initialize: function(type, options) {
 		L.Util.setOptions(this, options);
 
-		this._ready = google.maps.Map != undefined;
+		this._ready = google.maps.Map !== undefined;
 		if (!this._ready) L.Google.asyncWait.push(this);
 
 		this._type = type || 'SATELLITE';
@@ -48,24 +49,22 @@ L.Google = L.Class.extend({
 		map.on('zoomanim', this._handleZoomAnim, this);
 
 		//20px instead of 1em to avoid a slight overlap with google's attribution
-		map._controlCorners['bottomright'].style.marginBottom = "20px";
+		map._controlCorners.bottomright.style.marginBottom = '20px';
 
 		this._reset();
 		this._update();
 	},
 
 	onRemove: function(map) {
-		this._map._container.removeChild(this._container);
-		//this._container = null;
+		map._container.removeChild(this._container);
 
-		this._map.off('viewreset', this._resetCallback, this);
+		map.off('viewreset', this._resetCallback, this);
 
-		this._map.off('move', this._update, this);
+		map.off('move', this._update, this);
 
-		this._map.off('zoomanim', this._handleZoomAnim, this);
+		map.off('zoomanim', this._handleZoomAnim, this);
 
-		map._controlCorners['bottomright'].style.marginBottom = "0em";
-		//this._map.off('moveend', this._update, this);
+		map._controlCorners.bottomright.style.marginBottom = '0em';
 	},
 
 	getAttribution: function() {
@@ -80,8 +79,8 @@ L.Google = L.Class.extend({
 	},
 
 	setElementSize: function(e, size) {
-		e.style.width = size.x + "px";
-		e.style.height = size.y + "px";
+		e.style.width = size.x + 'px';
+		e.style.height = size.y + 'px';
 	},
 
 	_initContainer: function() {
@@ -90,8 +89,8 @@ L.Google = L.Class.extend({
 
 		if (!this._container) {
 			this._container = L.DomUtil.create('div', 'leaflet-google-layer leaflet-top leaflet-left');
-			this._container.id = "_GMapContainer_" + L.Util.stamp(this);
-			this._container.style.zIndex = "auto";
+			this._container.id = '_GMapContainer_' + L.Util.stamp(this);
+			this._container.style.zIndex = 'auto';
 		}
 
 		tilePane.insertBefore(this._container, first);
@@ -104,27 +103,29 @@ L.Google = L.Class.extend({
 		if (!this._ready) return;
 		this._google_center = new google.maps.LatLng(0, 0);
 		var map = new google.maps.Map(this._container, {
-		    center: this._google_center,
-		    zoom: 0,
-		    tilt: 0,
-		    mapTypeId: google.maps.MapTypeId[this._type],
-		    disableDefaultUI: true,
-		    keyboardShortcuts: false,
-		    draggable: false,
-		    disableDoubleClickZoom: true,
-		    scrollwheel: false,
-		    streetViewControl: false,
-		    styles: this.options.mapOptions.styles,
-		    backgroundColor: this.options.mapOptions.backgroundColor
+			center: this._google_center,
+			zoom: 0,
+			tilt: 0,
+			mapTypeId: google.maps.MapTypeId[this._type],
+			disableDefaultUI: true,
+			keyboardShortcuts: false,
+			draggable: false,
+			disableDoubleClickZoom: true,
+			scrollwheel: false,
+			streetViewControl: false,
+			styles: this.options.mapOptions.styles,
+			backgroundColor: this.options.mapOptions.backgroundColor
 		});
 
 		var _this = this;
-		this._reposition = google.maps.event.addListenerOnce(map, "center_changed",
+		this._reposition = google.maps.event.addListenerOnce(map, 'center_changed',
 			function() { _this.onReposition(); });
 		this._google = map;
 
-		google.maps.event.addListenerOnce(map, "idle",
+		google.maps.event.addListenerOnce(map, 'idle',
 			function() { _this._checkZoomLevels(); });
+		//Reporting that map-object was initialized.
+		this.fire('MapObjectInitialized', { mapObject: map });
 	},
 
 	_checkZoomLevels: function() {
@@ -149,20 +150,19 @@ L.Google = L.Class.extend({
 		if (!this._google) return;
 		this._resize();
 
-		var center = e && e.latlng ? e.latlng : this._map.getCenter();
+		var center = this._map.getCenter();
 		var _center = new google.maps.LatLng(center.lat, center.lng);
 
 		this._google.setCenter(_center);
-		this._google.setZoom(this._map.getZoom());
+		this._google.setZoom(Math.round(this._map.getZoom()));
 
 		this._checkZoomLevels();
-		//this._google.fitBounds(google_bounds);
 	},
 
 	_resize: function() {
 		var size = this._map.getSize();
-		if (this._container.style.width == size.x &&
-		    this._container.style.height == size.y)
+		if (this._container.style.width === size.x &&
+				this._container.style.height === size.y)
 			return;
 		this.setElementSize(this._container, size);
 		this.onReposition();
@@ -174,13 +174,13 @@ L.Google = L.Class.extend({
 		var _center = new google.maps.LatLng(center.lat, center.lng);
 
 		this._google.setCenter(_center);
-		this._google.setZoom(e.zoom);
+		this._google.setZoom(Math.round(e.zoom));
 	},
 
 
 	onReposition: function() {
 		if (!this._google) return;
-		google.maps.event.trigger(this._google, "resize");
+		google.maps.event.trigger(this._google, 'resize');
 	}
 });
 
@@ -197,4 +197,3 @@ L.Google.asyncInitialize = function() {
 	}
 	L.Google.asyncWait = [];
 };
-//})(window.google, L)

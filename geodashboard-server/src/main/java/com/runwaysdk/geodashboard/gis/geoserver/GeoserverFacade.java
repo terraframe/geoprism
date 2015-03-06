@@ -24,6 +24,7 @@ import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
@@ -611,6 +612,10 @@ public class GeoserverFacade implements Reloadable
       bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
 
       return bbox;
+    }
+    catch(Exception e)
+    {
+      throw new ProgrammingErrorException("Can't convert map layer database view bbox values from String to Double. This is likely because the database view being referenced has no data.");
     }
     finally
     {

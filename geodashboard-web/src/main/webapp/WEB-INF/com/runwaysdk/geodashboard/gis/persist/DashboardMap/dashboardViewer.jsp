@@ -60,7 +60,6 @@
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 
-
 <script type="text/javascript">
 <%
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);

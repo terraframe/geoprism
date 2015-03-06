@@ -40,6 +40,7 @@ import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
+import com.runwaysdk.system.gis.mapping.LayerDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
@@ -141,6 +142,8 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    * Loads artifacts for layer/style CRUD.
    * 
    * @param layer
+   * @param style
+   * @param mdAttribute
    */
   @SuppressWarnings("unchecked")
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mdAttribute)
@@ -157,20 +160,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
 
-    // Getting the lowest level universal in the tree (the leaf)
-    TermDTO leaf = null;
-    for (TermDTO universal : universals)
-    {
-      TermDTO[] descendants = universal.getAllDescendants(new String[] { AllowedInDTO.CLASS });
-      if (descendants.length == 0)
-      {
-        leaf = universal;
-      }
-    }
-
     req.setAttribute("universals", universals);
-    req.setAttribute("universalLeafId", leaf.getId());
-
 
     // selected attribute
     MdAttributeDTO mdAttr;
@@ -264,27 +254,28 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
       
-      for(ClassifierDTO root : roots)
+      for (ClassifierDTO root : roots)
       {
-    	  ids.put(root.getId());
-    	  List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();   			  
-    	  for(ClassifierAttributeRootDTO relationship : relationships)
-    	  {
-    		  if(relationship.getParentId().equals(mtAttrConcrete.getId()))
-    		  {
-    			  selectableMap.put(root.getId(), relationship.getSelectable());			  
-    		  }
-    	  }
+        ids.put(root.getId());
+        List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
+        for (ClassifierAttributeRootDTO relationship : relationships)
+        {
+          if (relationship.getParentId().equals(mtAttrConcrete.getId()))
+          {
+            selectableMap.put(root.getId(), relationship.getSelectable());
+          }
+        }
       }
-      
-	    try {
-			rootsIds.put("rootsIds", ids);
-		} 
-	    catch (JSONException e) 
-	    {
-	    	throw new RuntimeException(e);
-		}
-      
+
+      try
+      {
+        rootsIds.put("rootsIds", ids);
+      }
+      catch (JSONException e)
+      {
+        throw new RuntimeException(e);
+      }
+
       // Passing ontology root to layer form categories 
       req.setAttribute("roots", rootsIds);
       req.setAttribute("selectableMap", selectableMap);     
@@ -351,25 +342,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
-  /**
-   * @deprecated
-   * 
-   *             Call newThematicInstance instead.
-   */
-  @Deprecated
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
-  {
-    // com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    // DashboardLayerDTO layer = new DashboardLayerDTO(
-    // clientRequest);
-    // DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
-    //
-    // this.loadLayerData(layer, style);
-    //
-    // render("createComponent.jsp");
-
-    throw new UnsupportedOperationException();
-  }
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
