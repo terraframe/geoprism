@@ -342,25 +342,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
-  /**
-   * @deprecated
-   * 
-   *             Call newThematicInstance instead.
-   */
-  @Deprecated
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
-  {
-    // com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    // DashboardLayerDTO layer = new DashboardLayerDTO(
-    // clientRequest);
-    // DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
-    //
-    // this.loadLayerData(layer, style);
-    //
-    // render("createComponent.jsp");
-
-    throw new UnsupportedOperationException();
-  }
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
