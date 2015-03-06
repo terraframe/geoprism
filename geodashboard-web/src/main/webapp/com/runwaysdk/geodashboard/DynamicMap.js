@@ -1297,6 +1297,11 @@
             else {
               var newBaselayer = this._baseLayers.get(targetId);
               this._map.addLayer(newBaselayer);
+              
+              // The osm tileLayer isnt set at the bottom by default so this sets it as so
+              if(newBaselayer._gdbcustomtype === "OSM"){
+            	newBaselayer.bringToBack();
+              }
             }
           }
         }
