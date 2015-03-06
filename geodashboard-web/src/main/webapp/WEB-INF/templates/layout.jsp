@@ -29,10 +29,9 @@
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 <%@page import="com.runwaysdk.constants.DeployProperties" %>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <%
   // This code must execute before the header is included because the inner HTML may overwrite 
@@ -55,72 +54,19 @@
 	<meta http-equiv="pragma" content="no-cache" />
 
 	<title>${page_title}</title>
-	 
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/log4js.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/errorcatch.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/Util.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ClassFramework.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/Structure.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_Core.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_DTO.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_GIS.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/RunwaySDK_Inspector.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwaySDK_UI.js"></script>
-	  
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Geodashboard.js"></script>
-	  
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/themes/lightness.css">
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/all.css">
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/additions.css">
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.css">
-	   
-	<!-- jQuery  -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.9.0.min.js"></script>
-		  
-	<!-- Bootstrap must be loaded before JQuery-UI or else jquery-ui gets screwy -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bootstrap/bootstrap.min.js"></script>
-	  
-	<!-- Custom JavaScript -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/psd2html.jcf.js"></script>
 	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
+	<!-- CSS imports -->
+	<jwr:style src="/bundles/main.css" useRandomParam="false" />
+	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 	
-    <!-- JQuery UI -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/ui/themes/jquery-ui.min.css" ></link>
+	<!-- Default imports -->
+	<jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+	<jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
+	<jwr:script src="/bundles/localization.js" useRandomParam="false"/>
 	
-	<!-- Localization -->	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
-	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
-	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
 	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
-	
-	
-	<!-- Color Picker -->
-	<script src="${pageContext.request.contextPath}/jquery-colorpicker/js/colpick.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-colorpicker/css/colpick.css" type="text/css"/>
-	
-	<!-- Map Dependencies -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet/leaflet.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet_plugins/leaflet-wms-plugin/layer/tile/Google.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.js"></script>	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/DynamicMap.js"></script> 
-	<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
-	
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/leaflet/leaflet.css">
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/leaflet_plugins/mouse-position-master/src/L.Control.MousePosition.css">
-	<link media="all" rel="stylesheet" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/css/map.css">
-	  
+		  
 	<!-- include HTML5 IE enabling script for IE -->
 	<!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
 	
@@ -138,12 +84,12 @@
 
 <body class="iFrameBody">
 
-<div class="pageContent">
-  <header id="header">
-    <h1>${page_title}</h1>
-  </header>
-  <%= innerHTML %>
-</div>
+  <div class="pageContent">
+    <header id="header">
+      <h1>${page_title}</h1>
+    </header>
+    <%= innerHTML %>
+  </div>
 
 </body>
 

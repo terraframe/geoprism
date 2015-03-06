@@ -18,11 +18,21 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
-<%@page import="com.runwaysdk.constants.DeployProperties"%>
+<head>
+
+<gdb:localize var="page_title" key="universal.title"/>
+
+<!-- Universal CSS -->
+<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
+
+<!-- Universal Javascript -->
+<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+<jwr:script src="/com/runwaysdk/geodashboard/ontology/UniversalTree.js" useRandomParam="false"/>
+
 <%@page import="com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
@@ -31,74 +41,16 @@
 <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
 <%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
 <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
-<%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
-<%@page import="com.runwaysdk.RunwayExceptionDTO" %>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 
-<%@page import="com.runwaysdk.business.BusinessDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
-<%@page import="com.runwaysdk.business.RelationshipDTO"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-  String webappRoot = request.getContextPath() + "/";
-%>
-
-<head>
-
-<gdb:localize var="page_title" key="universal.title"/>
-
-<%-- <script type="text/javascript" src="<%out.print(webappRoot);%>jstree/jstree.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jstree/style.css" ></link> --%>
-
-<script src="<%out.print(webappRoot);%>jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="<%out.print(webappRoot);%>jquerytree/jqtree.css">
-
-<!-- Runway Factory -->
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/form/Form.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/list/List.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/button/Button.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
-
-
-<!-- JQuery -->
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
-
-<!-- Runway Generic -->
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerForm.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
-<script type="text/javascript" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/Form.js"></script>
-
-<!-- Localization -->	
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
-	
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
-
-	
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
-
-<link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/ui/factory/runway/default.css" />
-<link rel="stylesheet" type="text/css" href="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/ontology/TermTree.css" />
 
 <script type="text/javascript">
-<%// use a try catch before printing out the definitions, otherwise, if an
+<%
+    ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
+
+    // use a try catch before printing out the definitions, otherwise, if an
 	// error occurs here, javascript spills onto the actual page (ugly!)
 	try
 	{

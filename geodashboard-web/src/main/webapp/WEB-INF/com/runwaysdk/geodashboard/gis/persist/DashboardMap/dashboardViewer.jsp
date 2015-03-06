@@ -18,14 +18,23 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO"%>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO"%>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<gdb:localize var="page_title" key="dashboardViewer.title"/>
+
+<!-- Dynamic map CSS -->
+<jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
+
+<!-- Dynamic map Javascript -->
+<jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
+
+<!-- Google maps API -->
+<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 
 <%@page import="com.runwaysdk.geodashboard.DashboardController"%>
 <%@page import="com.runwaysdk.geodashboard.DashboardDTO"%>
@@ -46,34 +55,17 @@
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
 <%@page import="com.runwaysdk.web.json.JSONController"%>
 <%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
-
-
-
-<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %> --%>
+<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO"%>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO"%>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 
-<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierController" %> --%>
-<%-- <%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %> --%>
-<%-- <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %> --%>
-
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-%>
-
-<gdb:localize var="page_title" key="dashboardViewer.title"/>
 
 <script type="text/javascript">
-<%// use a try catch before printing out the definitions, otherwise, if an
+<%
+  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
+
+  // use a try catch before printing out the definitions, otherwise, if an
   // error occurs here, javascript spills onto the actual page (ugly!)
   try
   {
@@ -83,23 +75,6 @@
         DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
         DashboardDTO.CLASS, LocationConditionDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS,
         ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS,
-        
-//       	GeoEntityDTO.CLASS, 
-//       	GeoEntityDisplayLabelDTO.CLASS, 
-//       	GeoEntityController.CLASS, 
-//       	UniversalDTO.CLASS, 
-//       	UniversalDisplayLabelDTO.CLASS, 
-//       	TermUtilDTO.CLASS, 
-//       	GeoEntityViewDTO.CLASS, 
-//       	SynonymDTO.CLASS, 
-//       	SynonymDisplayLabelDTO.CLASS, 
-//       	GeoEntityExportMenuDTO.CLASS, 
-      	
-//         ClassifierDTO.CLASS, 
-//         ClassifierIsARelationshipDTO.CLASS, 
-//         ClassifierDisplayLabelDTO.CLASS, 
-//         ClassifierController.CLASS, 
-//         ClassifierExportMenuDTO.CLASS
       }, true);
     out.print(js);
   }
@@ -109,26 +84,8 @@
     throw e;
   }
 
-  /* doIt(request, out); */%>
+%>
 </script>
-
-
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/datatables/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables.css" ></link>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/jquery/datatables/css/jquery.dataTables_themeroller.css" ></link>
-
-<!-- Runway Factory -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/checkbox/CheckBox.js"></script>
-
-<!-- JQuery -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
-
-<!-- Geodashboard -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/UniversalTree.js"></script>
 
 
 <script type="text/javascript">

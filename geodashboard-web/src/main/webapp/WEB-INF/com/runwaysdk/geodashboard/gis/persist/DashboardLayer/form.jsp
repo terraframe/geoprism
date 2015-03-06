@@ -4,66 +4,22 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<head>
-
-<%@page import="com.runwaysdk.constants.DeployProperties" %>
-
-
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/jstree/jstree.js"></script> --%>
-<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/jstree/style.css" ></link> --%>
-
-<script src="${pageContext.request.contextPath}/jquerytree/tree.jquery.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/jquerytree/jqtree.css">
-
-
-<!-- Runway Factory -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/runway.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/widget/Widget.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/form/Form.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/list/List.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/contextmenu/ContextMenu.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/button/Button.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/overlay/Overlay.js"></script>
-
-<!-- JQuery -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Factory.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/jquery/Dialog.js"></script>
-
-
-<!-- Runway Generic -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerForm.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerFormDialog.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/ui/RunwayControllerFormDialogDownloader.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/GeoEntityTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/OntologyTree.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Form.js"></script>
-
-<%-- <%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %> --%>
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>
+<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>    
+    
+<head>
+
+<!-- Ontologies CSS -->
+<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
+
+<!-- Ontologies Javascript -->
+<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+<jwr:script src="/com/runwaysdk/geodashboard/ontology/OntologyTree.js" useRandomParam="false"/>
 
 <script type="text/javascript"> ${js} </script>
 
-
-<!-- Localization -->	
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/event.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/cldrjs-0.4.0/dist/cldr/supplemental.js"></script>
-	
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/number.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/currency.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/globalize-1.0.0-alpha.17/dist/globalize/date.js"></script>
-	
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/js/jquery-ui-i18n.min.js"></script>	
-<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
-
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/ui/factory/runway/default.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/ontology/TermTree.css" />
 </head>
-
 
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}">
@@ -772,8 +728,8 @@
     			  var thisRootId = rootsArrJSON[i];
     			  
     			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-    			      termType : <%="\"" + ClassifierDTO.CLASS + "\""%> ,
-    			      relationshipTypes : [ <%="\"" + ClassifierIsARelationshipDTO.CLASS + "\""%> ],
+    			      termType : '<%=ClassifierDTO.CLASS%>' ,
+    			      relationshipTypes : [ '<%=ClassifierIsARelationshipDTO.CLASS%>' ],
     			      rootTerm : thisRootId,
     			      editable : false,
     			      slide : false,

@@ -899,35 +899,40 @@
        */
       _mapClickHandler : function(e) {
         
-        // Construct a GetFeatureInfo request URL given a point
-        var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
-        var size = this._map.getSize();
         var layers = this._layerCache.$values().reverse();
-        var mapBbox = this._map.getBounds().toBBoxString();
-        var map = this._map;
-        var layerNameMap = new Object();
-        var layerAggMap = new Object();
-        var layerStringList = '';
-        var aggregationAttr = '';
-        var popup = L.popup().setLatLng(e.latlng);
-        var that = this;
         
-        // Build a string of layers to query against but geoserver will only return the 
-        // first entry in the array if anything is found. Otherwise it will query the next layer
-        // until something is found.
-        var firstAdded = false;
-        for (var i = 0; i < layers.length; i++) { 
-          var layer = layers[i];
+        if(layers.length > 0) {
+        	
+          // Construct a GetFeatureInfo request URL given a point    	  
+          var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
+          var size = this._map.getSize();        
+          var mapBbox = this._map.getBounds().toBBoxString();
+          var map = this._map;
+          var layerNameMap = new Object();
+          var layerAggMap = new Object();
+          var layerStringList = '';
+          var aggregationAttr = '';
+          var popup = L.popup().setLatLng(e.latlng);
+          var that = this;
+        
+          // Build a string of layers to query against but geoserver will only return the 
+          // first entry in the array if anything is found. Otherwise it will query the next layer
+          // until something is found.
+          var firstAdded = false;
+          for (var i = 0; i < layers.length; i++) { 
+            var layer = layers[i];
           
-          if(layer.getLayerIsActive()){
+            if(layer.getLayerIsActive()){
               var layerId = layer.attributeMap.viewName.value;
               layerNameMap[layerId] = layer.getLayerName();
               layerAggMap[layerId] = layer.getAggregationMethod();
+                
               if(firstAdded){
                 layerStringList += "," + layerId;
               }
               else{
                 layerStringList += layerId;
+                  
                 // we currently only map against a single attribute for a map.  
                 // if we allow multiple attributes mapped in a map the assignment of
                 // aggregationAttr will need to be refactored to associate a layers
@@ -935,32 +940,33 @@
                 aggregationAttr = layer.getAggregationAttribute().toLowerCase();
                 firstAdded = true;
               }
+            }
           }
-        }
         
-      var requestURL = window.location.origin+"/geoserver/"+DynamicMap.GEOSERVER_WORKSPACE+"/wms?" +
-        "REQUEST=GetFeatureInfo" +
-        "&INFO_FORMAT=application/json" +
-        "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
-        "&SERVICE=WMS" +
-        "&SRS="+DynamicMap.SRID +
-        "&VERSION=1.1.1" +
+        var requestURL = window.location.origin+"/geoserver/"+DynamicMap.GEOSERVER_WORKSPACE+"/wms?" +
+          "REQUEST=GetFeatureInfo" +
+          "&INFO_FORMAT=application/json" +
+          "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
+          "&SERVICE=WMS" +
+          "&SRS="+DynamicMap.SRID +
+          "&VERSION=1.1.1" +
           "&height=" + size.y +
           "&width=" + size.x +
-        "&X="+ point.x +
-        "&Y="+ point.y +
-        "&BBOX="+ mapBbox +
-        "&LAYERS=geodashboard:"+ layerStringList +
-        "&QUERY_LAYERS=geodashboard:"+ layerStringList +
-        "&TYPENAME=geodashboard:"+ layerStringList +
-        "&propertyName=displaylabel,geoid,"+ aggregationAttr;
+          "&X="+ point.x +
+          "&Y="+ point.y +
+          "&BBOX="+ mapBbox +
+          "&LAYERS=geodashboard:"+ layerStringList +
+          "&QUERY_LAYERS=geodashboard:"+ layerStringList +
+          "&TYPENAME=geodashboard:"+ layerStringList +
+          "&propertyName=displaylabel,geoid,"+ aggregationAttr;
       
-      DynamicMap.that = this;
-         $.ajax({
-            url: requestURL,
-            context: document.body 
-        }).done(function(json) {
+        DynamicMap.that = this;
+          $.ajax({
+              url: requestURL,
+              context: document.body 
+          }).done(function(json) {
             var popupContent = '';
+            
             // The getfeatureinfo request will return only 1 feature
             for(var i = 0; i<json.features.length; i++){
               var currLayer = json.features[i];
@@ -991,11 +997,7 @@
               html += '</tr>';  
               html += '</tbody>';  
               html += '</table>';  
-        
-              
-//              popupContent += '<h4 class="popup-heading">'+currLayerDisplayName+'</h4>';
-//                popupContent += '<p class="popup-content">'+ currFeatureDisplayName + " "+ currAggMethod + " " +currAttributeVal+'</p>';
-              
+                      
               popupContent += html;
               
               var currGeoId = currLayer.properties.geoid;
@@ -1012,7 +1014,8 @@
             if(popupContent.length > 0){
               popup.setContent(popupContent).openOn(map);
             }
-        });
+          });
+        }
       },
       
       

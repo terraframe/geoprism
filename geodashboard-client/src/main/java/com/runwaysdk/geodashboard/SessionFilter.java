@@ -52,37 +52,45 @@ public class SessionFilter implements Filter, Reloadable
 
       // They're already logged in, but they're trying to login again? Redirect
       // to the index.
-//      if (uri.equals(httpReq.getContextPath() + "/login") || uri.equals(httpReq.getContextPath() + "/session/login"))
-//      {
-//        httpRes.sendRedirect(httpReq.getContextPath());
-//        return;
-//      }
+      // if (uri.equals(httpReq.getContextPath() + "/login") || uri.equals(httpReq.getContextPath() + "/session/login"))
+      // {
+      // httpRes.sendRedirect(httpReq.getContextPath());
+      // return;
+      // }
 
       try
       {
         req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
         chain.doFilter(req, res);
       }
-      catch (Throwable t) {
-        while (t.getCause() != null && !t.getCause().equals(t)) {
+      catch (Throwable t)
+      {
+        while (t.getCause() != null && !t.getCause().equals(t))
+        {
           t = t.getCause();
         }
-        
-        if (t instanceof InvalidSessionExceptionDTO) {
+
+        if (t instanceof InvalidSessionExceptionDTO)
+        {
           // If we're asynchronous, we want to return a serialized exception
-          if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
+          if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax"))
+          {
             ErrorUtility.prepareAjaxThrowable(t, httpRes);
           }
-          else {
+          else
+          {
             // Not an asynchronous request, redirect to the login page.
             httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
           }
         }
-        else {
-          if (t instanceof RuntimeException) {
-            throw (RuntimeException)t;
+        else
+        {
+          if (t instanceof RuntimeException)
+          {
+            throw (RuntimeException) t;
           }
-          else {
+          else
+          {
             throw new RuntimeException(t);
           }
         }
@@ -98,12 +106,14 @@ public class SessionFilter implements Filter, Reloadable
     else
     {
       // The user is not logged in
-      
+
       // If we're asynchronous, we want to return a serialized exception
-      if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax")) {
+      if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax"))
+      {
         ErrorUtility.prepareAjaxThrowable(new InvalidSessionExceptionDTO(), httpRes);
       }
-      else {
+      else
+      {
         // Not an asynchronous request, redirect to the login page.
         httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
       }
@@ -119,15 +129,15 @@ public class SessionFilter implements Filter, Reloadable
     {
       return true;
     }
-    
+
     // They're allowed to hit the login view page, otherwise its a redirect loop
     if (uri.equals(req.getContextPath() + "/loginRedirect"))
     {
       return true;
     }
-
+    
     // Allow direct hitting of all page resources in login directories.
-    if (uri.startsWith(req.getContextPath() + "/com/runwaysdk/geodashboard/login"))
+    if (uri.contains("/com/runwaysdk/geodashboard/login"))
     {
       return true;
     }

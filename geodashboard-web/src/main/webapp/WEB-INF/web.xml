@@ -26,88 +26,10 @@
        metadata-complete="true"
        version="3.0">
     
-  <display-name>A Runway SDK Project</display-name>
+  <display-name>Geodashboard</display-name>
   <description>
-	A Runway SDK Project
+	Geodashboard
   </description>
-<!-- 
-  <error-page>
-    <exception-type>java.lang.Exception</exception-type>
-    <location>/com/runwaysdk/geodashboard/error.jsp</location>
-  </error-page>
-  
-  <error-page>
-    <exception-type>com.runwaysdk.session.InvalidSessionExceptionDTO</exception-type>
-    <location>/com/runwaysdk/geodashboard/login/login.jsp</location>
-  </error-page>
-  
-  <error-page>
-    <error-code>404</error-code>
-    <location>/404.jsp</location>
-  </error-page>
-  
-  <error-page>
-    <error-code>500</error-code>
-    <location>/error.jsp</location>
-  </error-page>  
-  
-  <error-page>
-    <error-code>401</error-code>
-    <location>/error.jsp</location>
-  </error-page> 
- -->
-  
-  <servlet>
-    <servlet-name>SecureFileDownloadServlet</servlet-name>
-    <servlet-class>
-        com.runwaysdk.web.SecureFileDownloadServlet
-    </servlet-class>
-  </servlet>
-
-  <listener>
-    <listener-class>com.runwaysdk.web.UploadListener</listener-class>
-  </listener>
-  
-  <servlet>
-    <servlet-name>SecureFileUploadServlet</servlet-name>
-    <servlet-class>
-        com.runwaysdk.web.SecureFileUploadServlet
-    </servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>SecureFileDownloadServlet</servlet-name>
-    <url-pattern>/Runway/SecureFileDownloadServlet</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>SecureFileUploadServlet</servlet-name>
-    <url-pattern>/Runway/SecureFileUploadServlet</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
-    <servlet-name>WebFileDownloadServlet</servlet-name>
-    <servlet-class>
-        com.runwaysdk.web.WebFileDownloadServlet
-    </servlet-class>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>WebFileUploadServlet</servlet-name>
-    <servlet-class>
-        com.runwaysdk.web.WebFileUploadServlet
-    </servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>WebFileDownloadServlet</servlet-name>
-    <url-pattern>/Runway/WebFileDownloadServlet</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>WebFileUploadServlet</servlet-name>
-    <url-pattern>/Runway/WebFileUploadServlet</url-pattern>
-  </servlet-mapping>
   
   <listener>
    <listener-class>org.apache.axis.transport.http.AxisHTTPSessionListener</listener-class>
@@ -195,7 +117,7 @@
       /Mojo/JSONControllerServlet
     </url-pattern>
   </servlet-mapping>
-  
+<!-- 
     <filter>
     <filter-name>
       JavascriptFilter
@@ -213,6 +135,7 @@
       *.js
     </url-pattern>
   </filter-mapping>
+ -->  
   
   <!-- 
   <error-page>
@@ -222,7 +145,44 @@
    -->
 
 
-	<!-- Begin custom web.xml settings -->
+  <!-- Begin custom web.xml settings -->
+  <servlet>
+    <servlet-name>JavascriptServlet</servlet-name>
+    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+                
+    <!-- Location in classpath of the config file -->
+    <init-param>
+      <param-name>configLocation</param-name>
+      <param-value>/jawr.properties</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+        
+  <servlet>
+    <servlet-name>CSSServlet</servlet-name>
+    <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+                
+    <!-- Location in classpath of the config file -->
+    <init-param>
+      <param-name>configLocation</param-name>
+      <param-value>/jawr.properties</param-value>
+    </init-param>
+    <init-param>
+      <param-name>type</param-name>
+      <param-value>css</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+        
+  <servlet-mapping>
+    <servlet-name>JavascriptServlet</servlet-name>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping> 
+        
+  <servlet-mapping>
+    <servlet-name>CSSServlet</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>   
 	
 	<listener>
     <listener-class>
@@ -274,6 +234,8 @@
     <exception-type>com.runwaysdk.session.InvalidSessionExceptionDTO</exception-type>
     <location>/com/runwaysdk/geodashboard/login/login.jsp</location>
   </error-page>
+  
+  
   
 
 	<!-- End custom web.xml settings -->
