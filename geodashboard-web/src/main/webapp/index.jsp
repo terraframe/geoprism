@@ -36,7 +36,6 @@
   <title>${page_title}</title>
   
   <jwr:style src="/bundles/main.css" useRandomParam="false" />  
-  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
   
   <!-- include HTML5 IE enabling script for IE -->
