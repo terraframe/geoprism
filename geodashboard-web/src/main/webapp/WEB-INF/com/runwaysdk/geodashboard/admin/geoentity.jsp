@@ -86,7 +86,7 @@
 	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
 	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
 	    relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
-	    rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+	    rootTerms : [ { termId: <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %> } ],
 	    editable : true,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.

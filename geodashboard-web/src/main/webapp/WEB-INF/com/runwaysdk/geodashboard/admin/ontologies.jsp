@@ -78,7 +78,7 @@
     document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
       termType : <% out.print("\"" + ClassifierDTO.CLASS + "\""); %>,
       relationshipTypes : [ <% out.print("\"" + ClassifierIsARelationshipDTO.CLASS + "\""); %> ],
-      rootTerm : "${requestScope.rootId}",
+      rootTerms : [ {termId: "${requestScope.rootId}"} ],
       editable : true,
       /* checkable: true, */
       crud: {
