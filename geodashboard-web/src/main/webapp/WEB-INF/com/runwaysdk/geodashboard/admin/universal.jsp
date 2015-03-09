@@ -31,41 +31,7 @@
 
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/ontology/UniversalTree.js" useRandomParam="false"/>
-
-<%@page import="com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.AllowedInDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.IsARelationshipDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalController" %>
-<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-
-
-<script type="text/javascript">
-<%
-    ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-    // use a try catch before printing out the definitions, otherwise, if an
-	// error occurs here, javascript spills onto the actual page (ugly!)
-	try
-	{
-	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	    UniversalDTO.CLASS, AllowedInDTO.CLASS, UniversalDisplayLabelDTO.CLASS, UniversalController.CLASS, GeoEntityDTO.CLASS, IsARelationshipDTO.CLASS, TermUtilDTO.CLASS, UniversalExportMenuDTO.CLASS
-	    }, true);
-	  out.print(js);
-	}
-	catch(Exception e)
-	{
-	  // perform cleanup
-	  throw e;
-	}
-%>
-</script>
+<jwr:script src="/bundles/universal.js" useRandomParam="false"/>
 
 </head>
 
@@ -78,9 +44,9 @@
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
     document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
-      termType : <% out.print("\"" + UniversalDTO.CLASS + "\""); %>,
-      relationshipTypes : [ <% out.print("\"" + AllowedInDTO.CLASS + "\""); %>, <% out.print("\"" + IsARelationshipDTO.CLASS + "\""); %> ],
-      rootTerm : <% out.print("\"" + UniversalDTO.getRoot(clientRequest).getId() + "\""); %>,
+  	  termType : "${type}",
+	  relationshipTypes : [ "${allowedInType}", "${isARelationshipType}" ],
+      rootTerm : "${rootId}",
       editable : true,
       /* checkable: true, */
       crud: {

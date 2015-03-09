@@ -36,57 +36,6 @@
 <!-- Google maps API -->
 <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 
-<%@page import="com.runwaysdk.geodashboard.DashboardController"%>
-<%@page import="com.runwaysdk.geodashboard.DashboardDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqualDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqualDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO"%>
-<%@page import="com.runwaysdk.geodashboard.report.ReportItemController"%>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
-<%@page import="com.runwaysdk.constants.DeployProperties"%>
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO" %>
-<%@page import="com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO"%>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO"%>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO"%>
-<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
-
-<script type="text/javascript">
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-  // use a try catch before printing out the definitions, otherwise, if an
-  // error occurs here, javascript spills onto the actual page (ugly!)
-  try
-  {
-    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-        DashboardMapDTO.CLASS, DashboardLayerDTO.CLASS, DashboardLayerViewDTO.CLASS, DashboardLayerController.CLASS,
-        DashboardGreaterThanDTO.CLASS, DashboardGreaterThanOrEqualDTO.CLASS, DashboardLessThanDTO.CLASS,
-        DashboardLessThanOrEqualDTO.CLASS, DashboardEqualDTO.CLASS, DashboardNotEqualDTO.CLASS, DashboardController.CLASS,
-        DashboardDTO.CLASS, LocationConditionDTO.CLASS, GeoEntityDTO.CLASS, LocatedInDTO.CLASS, ReportItemController.CLASS,
-        ClassifierDTO.CLASS, ClassifierDisplayLabelDTO.CLASS,
-      }, true);
-    out.print(js);
-  }
-  catch(Exception e)
-  {
-    // perform cleanup
-    throw e;
-  }
-
-%>
-</script>
-
-
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -97,11 +46,11 @@ $(document).ready(function(){
   var map = new GDB.gis.DynamicMap({    
     mapDivId: "mapDivId",    
     mapId: '${mapId}',
-    dashboardId : '<%=request.getAttribute("dashboardId")%>',    
+    dashboardId : '${dashboardId}',    
     layerCategoriesTree: {
-      termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
-      relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
-      rootTerm : <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %>,
+      termType : '${type}',
+      relationshipTypes : [ '${relationType}' ],
+      rootTerm : '${rootId}',
       checkable: true
     }
     

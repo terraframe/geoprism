@@ -35,35 +35,6 @@
 <jwr:script src="/bundles/account.js" useRandomParam="false"/>
 
 
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.system.RolesDTO"%>
-<%@page import="com.runwaysdk.geodashboard.RoleViewDTO"%>
-<%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
-
-<script type="text/javascript">
-<%
-    ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-	// use a try catch before printing out the definitions, otherwise, if an
-	// error occurs here, javascript spills onto the actual page (ugly!)
-	try
-	{
-	  String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	      GeodashboardUserDTO.CLASS, RoleViewDTO.CLASS, RolesDTO.CLASS
-	    }, true);
-	  out.print(js);
-	  
-	}
-	catch(Exception e)
-	{
-	  // perform cleanup
-	  throw e;
-	}
-%>
-</script>
-
 </head>
 
 <div id="userForm"></div>

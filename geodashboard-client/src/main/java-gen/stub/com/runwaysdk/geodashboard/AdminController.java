@@ -7,6 +7,12 @@ import javax.servlet.ServletException;
 import com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO;
 import com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
+import com.runwaysdk.system.gis.geo.AllowedInDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
+import com.runwaysdk.system.gis.geo.LocatedInDTO;
+import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.web.json.JSONController;
 
 public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -37,6 +43,12 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void geoentity() throws IOException, ServletException
   {
+    GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
+
+    this.req.setAttribute("type", GeoEntityDTO.CLASS);
+    this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
+    this.req.setAttribute("rootId", root.getId());
+
     render("geoentity.jsp");
   }
 
@@ -61,6 +73,13 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void universal() throws IOException, ServletException
   {
+    UniversalDTO root = UniversalDTO.getRoot(this.getClientRequest());
+    
+    this.req.setAttribute("type", UniversalDTO.CLASS);
+    this.req.setAttribute("allowedInType", AllowedInDTO.CLASS);
+    this.req.setAttribute("isARelationshipType", IsARelationshipDTO.CLASS);
+    this.req.setAttribute("rootId", root.getId());
+
     render("universal.jsp");
   }
 
@@ -118,7 +137,11 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void ontologies() throws java.io.IOException, javax.servlet.ServletException
   {
-    this.req.setAttribute("rootId", ClassifierDTO.getRoot(getClientRequest()).getId());
+    ClassifierDTO root = ClassifierDTO.getRoot(getClientRequest());
+
+    this.req.setAttribute("type", ClassifierDTO.CLASS);
+    this.req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
+    this.req.setAttribute("rootId", root.getId());
 
     render("ontologies.jsp");
   }

@@ -35,41 +35,6 @@
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/scheduler.js" useRandomParam="false"/>
 
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.system.scheduler.ExecutableJobDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.QualifiedTypeJobDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.JobHistoryDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.JobSnapshotDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.JobHistoryViewDTO" %>
-<%@page import="com.runwaysdk.system.scheduler.JobHistoryHistoryInformationDTO" %>
-
-<script type="text/javascript">
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-  // use a try catch before printing out the definitions, otherwise, if an
-  // error occurs here, javascript spills onto the actual page (ugly!)
-  try
-  {
-    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      ExecutableJobDTO.CLASS, ExecutableJobDescriptionDTO.CLASS, QualifiedTypeJobDTO.CLASS, JobHistoryDTO.CLASS, JobSnapshotDTO.CLASS,
-      JobHistoryViewDTO.CLASS, JobHistoryHistoryInformationDTO.CLASS
-      }, true);
-    out.print(js);
-    
-  }
-  catch(Exception e)
-  {
-    // perform cleanup
-    throw e;
-  }
-%>
-</script>
-
 </head>
 
 <div id="scheduler"></div>

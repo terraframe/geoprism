@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.session.SessionIF;
 
 public class SessionParameterFacade implements Reloadable
 {
@@ -31,6 +32,7 @@ public class SessionParameterFacade implements Reloadable
   public static void put(String key, String value)
   {
     Map<String, String> session = getSession();
+
     session.put(key, value);
   }
 
@@ -57,7 +59,14 @@ public class SessionParameterFacade implements Reloadable
 
   private static String getSessionId()
   {
-    return Session.getCurrentSession().getId();
+    SessionIF session = Session.getCurrentSession();
+
+    if (session != null)
+    {
+      return session.getId();
+    }
+
+    return "";
   }
 
 }
