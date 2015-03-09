@@ -43,9 +43,9 @@
 	  com.runwaysdk.ui.Manager.setFactory("JQuery");
 	  
 	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
-	    termType : "${type}",
-	    relationshipTypes : [ "${relationshipType}" ],
-	    rootTerm : "${rootId}",
+		termType : "${type}",
+        relationshipTypes : [ "${relationshipType}" ],
+	    rootTerms : [ { termId : "${rootId}"} ],
 	    editable : true,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.

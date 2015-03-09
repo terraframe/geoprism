@@ -50,10 +50,13 @@
    * @class com.runwaysdk.geodashboard.ontology.TermTree A wrapper around JQuery widget jqTree to allow for integration with Term objects.
    * 
    * @constructs
-   * @param obj
-   *   @param String obj.nodeId The id of the div defined in html, specifying the location for the tree. The id is prefixed with #.
-   *   @param Object obj.data Optional, a properly formatted data object as documented by jqTree.
-   *   @param Boolean obj.dragDrop Optional, set to true to enable drag drop, false to disable. Default is false.
+   * @param Object config
+   *   @param String   config.termType The typename of the term this tree will act upon.
+   *   @param String   config.relationshipTypes The relationships this tree will act upon.
+   *   @param Object[] config.rootTerms An array of objects. Each object contains:
+   *     @param Boolean config.rootTerms[i].selectable This is the boolean flag defined on the AttributeRoot and it denotes whether or not to display the root in the tree.
+   *     @param TermDTO config.rootTerms[i].term Optional The root Term. If selectable is true then its recommended that you pass the DTO instead of the id (it avoids an extra unnecessary ajax request later).
+   *     @param String config.rootTerms[i].termId Optional The id of the root Term. If you don't provide the term then you must provide the termId. Its recommended to use this if you know that selectable is false. If you're unsure then give us the DTO.
    */
   var tree = Mojo.Meta.newClass(termTreeName, {
     
@@ -66,9 +69,8 @@
         config = config || {};
         this.requireParameter("termType", config.termType, "string");
         this.requireParameter("relationshipTypes", config.relationshipTypes, "array");
-        this.requireParameter("rootTerm", config.rootTerm, "string");
+        this.requireParameter("rootTerms", config.rootTerms, "array");
         this.requireParameter("exportMenuType", config.exportMenuType, "string");
-        this.requireParameter("editable", config.editable, "boolean");
         
         var defaultConfig = {
           el: "div",
@@ -76,6 +78,7 @@
           dragAndDrop: true,
           selectable: true,
           checkable: false,
+          editable: false,
           crud: {
             create: {
               width: 730,
@@ -96,8 +99,6 @@
         
         this.$initialize(this._config.el, this._config);
         
-        this.__setRootTerm(config.rootTerm);
-        
         this.termCache = {};
         
         // jqtree assumes that id's are unique. For our purposes the id may map to multiple nodes.
@@ -110,6 +111,80 @@
         this.deselectCallbacks = [];
       },
       
+      /**
+       * Loops over all the roots and loads either the root itself or the root's children into the tree (depending on rootTermConfig.selectable)
+       */
+      refreshRoots : function()
+      {
+        var that = this;
+        this.rootTermConfigs = new com.runwaysdk.structure.HashMap();
+        
+        if (this._config.rootTerms.length === 0) { throw new com.runwaysdk.Exception("Invalid TermTree configuration. You must provide at least one root term."); }
+        
+        for (var i = 0; i < this._config.rootTerms.length; ++i)
+        {
+          var rootTerm = this._config.rootTerms[i];
+          if (Mojo.Util.isObject(rootTerm))
+          {
+            if (rootTerm.term instanceof com.runwaysdk.business.TermDTO)
+            {
+              rootTerm.termId = rootTerm.term.getId();
+              this.rootTermConfigs.put(rootTerm.termId, rootTerm);
+              this.termCache[rootTerm.term.getId()] = rootTerm.term;
+              if (rootTerm.selectable)
+              {
+                that.__createTreeNode(rootTerm.termId, null, false);
+                that.refreshTerm(rootTerm.termId);
+              }
+              else
+              {
+                that.refreshTerm(rootTerm.termId);
+              }
+            }
+            else if (Mojo.Util.isString(rootTerm.termId))
+            {
+              // We have to have selectable terms in the cache because we need their display label.
+              if (rootTerm.selectable)
+              {
+                // Request node from server
+                var myCallback = {
+                  onSuccess : function(term) {
+                    that.termCache[term.getId()] = term;
+                    rootTerm.term = term;
+                    that.rootTermConfigs.put(rootTerm.termId, rootTerm);
+                    that.__createTreeNode(rootTerm.termId, null, false);
+                    that.refreshTerm(term.getId());
+                  },
+                  
+                  onFailure : function(err) {
+                    that.handleException(err);
+                  }
+                };
+                Mojo.Util.copy(new Mojo.ClientRequest(myCallback), myCallback);
+                
+                com.runwaysdk.Facade.get(myCallback, rootTerm.termId);
+              }
+              else
+              {
+                that.rootTermConfigs.put(rootTerm.termId, rootTerm);
+                that.refreshTerm(rootTerm.termId);
+              }
+            }
+            else
+            {
+              throw new com.runwaysdk.Exception("Invalid TermTree configuration. config.rootTerms[" + i + "] must provide either a TermDTO or a term id.");
+            }
+          }
+          else
+          {
+            throw new com.runwaysdk.Exception("Invalid TermTree configuration. config.rootTerms[" + i + "] must be an object.");
+          }
+        }
+      },
+      
+      /**
+       * Returns an array containing the id of every term in the tree which has been checked.
+       */
       getCheckedTerms : function(rootNode, appendArray) {
         appendArray = appendArray || [];
         rootNode = rootNode || $(this.getRawEl()).tree("getTree");
@@ -215,28 +290,6 @@
       },
       
       /**
-       * Sets the root term for the tree. The root term must be set before the tree can be used.
-       * 
-       * @param com.runwaysdk.business.TermDTO or String (Id) rootTerm The root term of the tree.
-       * @param Object callback Optional, a callback object with onSuccess and onFailure methods.
-       */
-      __setRootTerm : function(rootTerm, callback) {
-        this.requireParameter("rootTerm", rootTerm);
-        
-        if (rootTerm instanceof com.runwaysdk.business.TermDTO) {
-          this.rootTermId = rootTerm.getId();
-          this.termCache[this.rootTermId] = rootTerm;
-        }
-        else if (Mojo.Util.isString(rootTerm)) {
-          this.rootTermId = rootTerm;
-        }
-        else {
-          var ex = "Root term must be of type com.runwaysdk.business.TermDTO or String (an id).";
-          throw new com.runwaysdk.Exception(ex);
-        }
-      },
-      
-      /**
        * Registers a function to on term select.
        * 
        * @param Function callback A function with argument 'term', the selected term. 
@@ -294,25 +347,23 @@
         this.requireParameter("parent", parent);
         
         var term = this.termCache[termId]; 
-        var parentId = (parent instanceof Object) ? parent.getId() : parent;
-        
-//        var parentRecord = this.parentRelationshipCache.getRecordWithParentId(termId, parentId, this);
         
         var that = this;
         
         var deleteCallback = new Mojo.ClientRequest({
           onSuccess : function(retval) {
+            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false);});
             that.refreshTreeAfterDeleteTerm(termId);
           },
           
           onFailure : function(err) {
-            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false)});
+            that.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, false);});
             that.handleException(err);
             return;
           }
         });
         
-        this.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, true)});
+        this.doForTermAndAllChildren(termId, function(node){that.setNodeBusy(node, true);});
         
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
@@ -482,8 +533,8 @@
         var that = this;
         var dialog = null;
         
-        if (termId === this.rootTermId) {
-          var ex = new com.runwaysdk.Exception("You cannot delete the root node.");
+        if (this.rootTermConfigs.containsKey(termId)) {
+          var ex = new com.runwaysdk.Exception("You cannot delete a root node.");
           this.handleException(ex);
           return;
         }
@@ -495,18 +546,17 @@
           dialog.close();
         };
         var performDeleteRelHandler = function() {
+          var parentRecord = that.parentRelationshipCache.getRecordWithParentIdAndRelType(termId, parentId, relType);
+          
           var deleteRelCallback = {
             onSuccess : function() {
-              // Children of universals are appended to the root node, so refresh the root node.
-              that.refreshTerm(that.rootTermId);
-              
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
                 if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId && relType === that._getRelationshipForNode(nodes[i], nodes[i].parent)) {
                   $(that.getRawEl()).tree("removeNode", nodes[i]);
                 }
               }
-              that.parentRelationshipCache.removeRecordMatchingId(termId, parentId, that);
+              that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
             },
             onFailure : function(err) {
               that.handleException(err);
@@ -523,8 +573,9 @@
           dialog.close();
         };
         
-        this.__getTermFromId(termId, {
-          onSuccess: function(term) {
+        var term = this.termCache[termId];
+//        this.__getTermFromId(termId, {
+//          onSuccess: function(term) {
             var newType = eval("new " + that._config.termType + "()");
             var termMdLabel = newType.getMd().getDisplayLabel();
             var termLabel = term.getDisplayLabel().getLocalizedValue();
@@ -549,11 +600,11 @@
               dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
               dialog.render();
             }
-          },
-          onFailure: function(e) {
-            that.handleException(e);
-          }
-        });
+//          },
+//          onFailure: function(e) {
+//            that.handleException(e);
+//          }
+//        });
       },
       
       getImpl : function()
@@ -706,9 +757,9 @@
         var movedNodeId = this.__getRunwayIdFromNode(movedNode);
         var targetNodeId = this.__getRunwayIdFromNode(targetNode);
         
-        if (movedNodeId == this.rootTermId) {
+        if (this.rootTermConfigs.containsKey(movedNodeId)) {
           event.preventDefault();
-          var ex = new com.runwaysdk.Exception("You cannot move the root node.");
+          var ex = new com.runwaysdk.Exception("You cannot move a root node.");
           return;
         }
         
@@ -943,9 +994,14 @@
        * @returns jqtreeNode[] or null
        */
       __getNodesById : function(nodeId) {
-        if (nodeId === this.rootTermId) {
-          return [$(this.getRawEl()).tree("getTree")];
-        } 
+        if (this.rootTermConfigs.containsKey(nodeId)) {
+          var config = this.rootTermConfigs.get(nodeId);
+          
+          if (!config.selectable)
+          {
+            return [this.getImpl().tree("getTree")];
+          }
+        }
         
         if (this.duplicateMap.get(nodeId) != null) {
           $thisTree = $(this.getRawEl());
@@ -1076,15 +1132,23 @@
       
       __getRunwayIdFromNode : function(node) {
         if (node.parent == null) {
-          // We were passed the root node. Since we didn't create the root node (jqtree did) we can't set an id on it.
-          return this.rootTermId;
+          // We were passed jqTree's internal root node.
+          for (var i = 0; i < this.rootTermConfigs.keySet(); ++i)
+          {
+            if (!rootTermConfigs[i].selectable)
+            {
+              return rootTermConfigs.termId;
+            }
+          }
+          
+          // Throw an error here instead?
+          return null;
         }
         
         return node.runwayId;
       },
       
       render : function(parent) {
-        
         var that = this;
         
         this.$render(parent);
@@ -1097,8 +1161,8 @@
             Mojo.Util.bind(this, this.__onNodeOpen)
         );
         
-        if(this._config.editable){
-        	
+        if (this._config.editable)
+        {
         	this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
         	
 	        $tree.bind(
@@ -1121,7 +1185,7 @@
 	        );
         }
         
-        this.refreshTerm(this.rootTermId);
+        this.refreshRoots();
       },
       
       /**

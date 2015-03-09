@@ -46,7 +46,7 @@
     document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
   	  termType : "${type}",
 	  relationshipTypes : [ "${allowedInType}", "${isARelationshipType}" ],
-      rootTerm : "${rootId}",
+      rootTerms : [ { termId : "${rootId}" } ],
       editable : true,
       /* checkable: true, */
       crud: {
