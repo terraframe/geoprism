@@ -257,6 +257,41 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>write-javascript</id>
+      <activation>
+        <property>
+          <name>write-javascript</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>write-javascript</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <executable>java</executable>
+                  <mainClass>com.runwaysdk.geodashboard.JavascriptFileWriter</mainClass>
+                  <arguments>
+                    <argument>${project.basedir}/../geodashboard-web/src/main/webapp</argument>
+                    <argument>com.runwaysdk.geodashboard</argument>
+                    <argument>com.runwaysdk.system</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>

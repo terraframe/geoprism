@@ -32,48 +32,7 @@
 
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/ontology/GeoEntityTree.js" useRandomParam="false"/>
-
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.SynonymDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityViewDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.system.gis.geo.GeoEntityController" %>
-<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
-<%@page import="com.runwaysdk.business.ontology.OntologyStrategyIF" %>
-<%@page import="com.runwaysdk.RunwayExceptionDTO" %>
-
-
-<script type="text/javascript">
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-  // use a try catch before printing out the definitions, otherwise, if an
-  // error occurs here, javascript spills onto the actual page (ugly!)
-  try
-  {
-    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      GeoEntityDTO.CLASS, LocatedInDTO.CLASS, GeoEntityDisplayLabelDTO.CLASS, GeoEntityController.CLASS, UniversalDTO.CLASS, UniversalDisplayLabelDTO.CLASS, TermUtilDTO.CLASS,
-      GeoEntityViewDTO.CLASS, SynonymDTO.CLASS, SynonymDisplayLabelDTO.CLASS, GeoEntityExportMenuDTO.CLASS
-      }, true);
-    out.print(js);
-  }
-  catch(Exception e)
-  {
-    // perform cleanup
-    throw e;
-  }
-
-%>
-</script>
+<jwr:script src="/bundles/geoentity.js" useRandomParam="false"/>
 
 </head>
 
@@ -84,9 +43,9 @@
 	  com.runwaysdk.ui.Manager.setFactory("JQuery");
 	  
 	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
-	    termType : <% out.print("\"" + GeoEntityDTO.CLASS + "\""); %>,
-	    relationshipTypes : [ <% out.print("\"" + LocatedInDTO.CLASS + "\""); %> ],
-	    rootTerms : [ { termId: <% out.print("\"" + GeoEntityDTO.getRoot(clientRequest).getId() + "\""); %> } ],
+		termType : "${type}",
+        relationshipTypes : [ "${relationshipType}" ],
+	    rootTerms : [ { termId : "${rootId}"} ],
 	    editable : true,
 	    crud: {
 	      create: { // This configuration gets merged into the jquery create dialog.

@@ -1,107 +1,80 @@
-<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<doIt>
-		<create>
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
 
 
 
-			<mdBusiness name="com.runwaysdk.geodashboard.Dashboard"
-				label="Dashboard" cacheAlgorithm="everything">
-				<attributes>
-					<localChar name="displayLabel" required="true" />
-					<reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false"/>
-				</attributes>
-				<mdMethod name="getSortedDashboards" label="Get Sorted Dashboards"
-					static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery">
-				</mdMethod>
-				<mdMethod name="getSortedTypes" label="Get Sorted Types"
-					description="Returns a sorted list of de-referenced MdClasses stored by MetadataWrapper"
-					returnType="com.runwaysdk.system.metadata.MdClass[]">
-				</mdMethod>
-				<mdMethod static="true" description="Creates a new dashboard." name="create" label="create" returnType="com.runwaysdk.geodashboard.Dashboard">
-				  <mdParameter order="0" description="A Dashboard to create." name="dto" label="A Dashboard to apply." type="com.runwaysdk.geodashboard.Dashboard" />
-                </mdMethod>
-			</mdBusiness>
-
-			<mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata"
-				cacheAlgorithm="everything">
-				<attributes>
-				  <integer name="listOrder" required="true"/>
-				</attributes>
-				<parent cardinality="*" name="com.runwaysdk.geodashboard.Dashboard"
-					method="Dashboard" />
-				<child cardinality="*"
-					name="com.runwaysdk.geodashboard.MetadataWrapper" method="Metadata" />
-			</mdRelationship>
-
-			<mdBusiness name="com.runwaysdk.geodashboard.MetadataWrapper"
-				label="Dashboard Wrapper" cacheAlgorithm="everything">
-				<attributes>
-					<reference name="wrappedMdClass" type="com.runwaysdk.system.metadata.MdClass"
-						label="MdClass" required="true" />
-				</attributes>
-				<mdMethod name="getSortedAttributes" label="Get Sorted Attributes"
-          description="Returns a sorted list of de-referenced MdAttributes stored by MetadataAttribute"
-          returnType="com.runwaysdk.geodashboard.MdAttributeView[]">
-        </mdMethod>
-			</mdBusiness>
-			
-			<mdView name="com.runwaysdk.geodashboard.MdAttributeView" label="MdAttribute View">
-			  <attributes>
-			    <char name="mdClassId" required="true" label="MdClass " size="64"/>
-			    <char name="mdAttributeId" required="true" label="MdAttribute " size="64"/>
-			    <char name="displayLabel" required="true" label="Display Label" size="255"/>
-			  </attributes>
-			</mdView>
-			
-			<mdRelationship name="com.runwaysdk.geodashboard.DashboardAttributes" label="Dashboard Attributes"
-				cacheAlgorithm="everything">
-				<attributes>
-          <integer name="listOrder" required="true"/>
-        </attributes>
-				<parent cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper"
-					method="DashboardMetadata" />
-				<child cardinality="*"
-					name="com.runwaysdk.geodashboard.AttributeWrapper" method="AttributeWrapper" />
-			</mdRelationship>
-			
-			
-      <mdBusiness name="com.runwaysdk.geodashboard.AttributeWrapper"
-        label="Attribute Wrapper" cacheAlgorithm="everything">
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
         <attributes>
-          <reference name="wrappedMdAttribute" type="com.runwaysdk.system.metadata.MdAttribute"
-            label="MdAttribute" required="true" />
+          <localChar name="displayLabel" required="true" />
+          <reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false" />
+        </attributes>
+        <mdMethod name="getSortedDashboards" label="Get Sorted Dashboards" static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery">
+        </mdMethod>
+        <mdMethod name="getSortedTypes" label="Get Sorted Types" description="Returns a sorted list of de-referenced MdClasses stored by MetadataWrapper" returnType="com.runwaysdk.system.metadata.MdClass[]">
+        </mdMethod>
+        <mdMethod static="true" description="Creates a new dashboard." name="create" label="create" returnType="com.runwaysdk.geodashboard.Dashboard">
+          <mdParameter order="0" description="A Dashboard to create." name="dto" label="A Dashboard to apply." type="com.runwaysdk.geodashboard.Dashboard" />
+        </mdMethod>
+      </mdBusiness>
+
+      <mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata" cacheAlgorithm="everything">
+        <attributes>
+          <integer name="listOrder" required="true" />
+        </attributes>
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.Dashboard" method="Dashboard" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="Metadata" />
+      </mdRelationship>
+
+      <mdBusiness name="com.runwaysdk.geodashboard.MetadataWrapper" label="Dashboard Wrapper" cacheAlgorithm="everything">
+        <attributes>
+          <reference name="wrappedMdClass" type="com.runwaysdk.system.metadata.MdClass" label="MdClass" required="true" />
+        </attributes>
+        <mdMethod name="getSortedAttributes" label="Get Sorted Attributes" description="Returns a sorted list of de-referenced MdAttributes stored by MetadataAttribute" returnType="com.runwaysdk.geodashboard.MdAttributeView[]">
+        </mdMethod>
+      </mdBusiness>
+
+      <mdView name="com.runwaysdk.geodashboard.MdAttributeView" label="MdAttribute View">
+        <attributes>
+          <char name="mdClassId" required="true" label="MdClass " size="64" />
+          <char name="mdAttributeId" required="true" label="MdAttribute " size="64" />
+          <char name="displayLabel" required="true" label="Display Label" size="255" />
+        </attributes>
+      </mdView>
+
+      <mdRelationship name="com.runwaysdk.geodashboard.DashboardAttributes" label="Dashboard Attributes" cacheAlgorithm="everything">
+        <attributes>
+          <integer name="listOrder" required="true" />
+        </attributes>
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="DashboardMetadata" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.AttributeWrapper" method="AttributeWrapper" />
+      </mdRelationship>
+
+
+      <mdBusiness name="com.runwaysdk.geodashboard.AttributeWrapper" label="Attribute Wrapper" cacheAlgorithm="everything">
+        <attributes>
+          <reference name="wrappedMdAttribute" type="com.runwaysdk.system.metadata.MdAttribute" label="MdAttribute" required="true" />
         </attributes>
       </mdBusiness>
-      
-      <mdException
-        name="com.runwaysdk.geodashboard.gis.NoDashboardException"
-        label="No Dashboard Exception"
-        description="Thrown when a user tries to render a map without a dashboard."
-        message="You must first create a Dashboard before you can render a map.">
-      </mdException>
-      <mdException
-        name="com.runwaysdk.geodashboard.gis.DashboardHasNoMapException"
-        label="Dashboard Has No Map Exception"
-        description="Thrown when a user tries to render a dashboard that has no map."
-        message="This Dashboard has no map to display.">
-      </mdException>
-			
-		</create>
-		<update></update>
-	</doIt>
-	<undoIt>
-		<delete>
 
-			<object key="com.runwaysdk.geodashboard.AttributeWrapper" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.MetadataWrapper" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.DashboardAttributes"
-				type="com.runwaysdk.system.metadata.MdRelationship" />
-			<object key="com.runwaysdk.geodashboard.DashboardMetadata"
-				type="com.runwaysdk.system.metadata.MdRelationship" />
-			<object key="com.runwaysdk.geodashboard.Dashboard" type="com.runwaysdk.system.metadata.MdBusiness" />
-			<object key="com.runwaysdk.geodashboard.MdAttributeView" type="com.runwaysdk.system.metadata.MdView" />
+      <mdException name="com.runwaysdk.geodashboard.gis.NoDashboardException" label="No Dashboard Exception" description="Thrown when a user tries to render a map without a dashboard." message="You must first create a Dashboard before you can render a map.">
+      </mdException>
+      <mdException name="com.runwaysdk.geodashboard.gis.DashboardHasNoMapException" label="Dashboard Has No Map Exception" description="Thrown when a user tries to render a dashboard that has no map." message="This Dashboard has no map to display.">
+      </mdException>
 
-		</delete>
-	</undoIt>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete>
+
+      <object key="com.runwaysdk.geodashboard.AttributeWrapper" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.MetadataWrapper" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.DashboardAttributes" type="com.runwaysdk.system.metadata.MdRelationship" />
+      <object key="com.runwaysdk.geodashboard.DashboardMetadata" type="com.runwaysdk.system.metadata.MdRelationship" />
+      <object key="com.runwaysdk.geodashboard.Dashboard" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.MdAttributeView" type="com.runwaysdk.system.metadata.MdView" />
+
+    </delete>
+  </undoIt>
 </version>

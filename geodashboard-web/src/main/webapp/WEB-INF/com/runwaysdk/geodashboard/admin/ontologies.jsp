@@ -31,39 +31,7 @@
 
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/ontology/OntologyTree.js" useRandomParam="false"/>
-
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>
-<%@page import="com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierController" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
-<%@page import="com.runwaysdk.system.ontology.TermUtilDTO" %>
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.generation.loader.LoaderDecorator"%>
-
-<script type="text/javascript">
-<%
-  // use a try catch before printing out the definitions, otherwise, if an
-  // error occurs here, javascript spills onto the actual page (ugly!)
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-    
-  try
-  {
-    String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-      ClassifierDTO.CLASS, ClassifierIsARelationshipDTO.CLASS, ClassifierDisplayLabelDTO.CLASS, ClassifierController.CLASS, TermUtilDTO.CLASS, ClassifierExportMenuDTO.CLASS
-      }, true);
-    out.print(js);
-  }
-  catch(Exception e)
-  {
-    // perform cleanup
-    throw e;
-  }
-%>
-</script>
+<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
 
 </head>
 
@@ -76,9 +44,9 @@
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
     document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-      termType : <% out.print("\"" + ClassifierDTO.CLASS + "\""); %>,
-      relationshipTypes : [ <% out.print("\"" + ClassifierIsARelationshipDTO.CLASS + "\""); %> ],
-      rootTerms : [ {termId: "${requestScope.rootId}"} ],
+	  termType : "${type}",
+	  relationshipTypes : [ "${relationshipType}" ],
+\      rootTerms : [ {termId : "${rootId}"} ],
       editable : true,
       /* checkable: true, */
       crud: {

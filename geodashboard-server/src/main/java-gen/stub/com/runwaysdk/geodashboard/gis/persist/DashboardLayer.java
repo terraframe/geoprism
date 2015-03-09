@@ -1,7 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,13 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeFloatDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeIntDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -53,16 +46,9 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableDecimal;
 import com.runwaysdk.query.SelectableDouble;
 import com.runwaysdk.query.SelectableFloat;
-import com.runwaysdk.query.SelectablePrimitive;
-import com.runwaysdk.query.SelectableSQLBoolean;
-import com.runwaysdk.query.SelectableSQLChar;
-import com.runwaysdk.query.SelectableSQLDate;
-import com.runwaysdk.query.SelectableSQLDouble;
-import com.runwaysdk.query.SelectableSQLFloat;
-import com.runwaysdk.query.SelectableSQLInteger;
-import com.runwaysdk.query.SelectableSQLPrimitive;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -216,14 +202,21 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
   public String generateViewName()
   {
-    String sessionId = Session.getCurrentSession().getId();
+    SessionIF session = Session.getCurrentSession();
 
-    // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63
-    // as well.
+    if (session != null)
+    {
+      String sessionId = session.getId();
 
-    String vn = DB_VIEW_PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
+      // The max length for a postgres table name is 63 characters, and as a result our metadata is set at max length 63
+      // as well.
 
-    return vn;
+      String vn = DB_VIEW_PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
+
+      return vn;
+    }
+
+    return DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 10);
   }
 
   /**
@@ -368,25 +361,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   @Override
   public String getViewName()
   {
-    String sessionId = Session.getCurrentSession().getId();
-
-    String key = sessionId + "-" + this.getId();
-
-    if (!SessionParameterFacade.containsKey(key))
+    if (!SessionParameterFacade.containsKey(this.getId()))
     {
-      SessionParameterFacade.put(key, this.generateViewName());
+      SessionParameterFacade.put(this.getId(), this.generateViewName());
     }
 
-    return SessionParameterFacade.get(key);
+    return SessionParameterFacade.get(this.getId());
   }
 
   public void setViewName(String value)
   {
-    String sessionId = Session.getCurrentSession().getId();
-
-    String key = sessionId + "-" + this.getId();
-
-    SessionParameterFacade.put(key, value);
+    SessionParameterFacade.put(this.getId(), value);
   }
   
 
@@ -458,14 +443,14 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               // func = "AVG";
               thematicSel = F.AVG(thematicAttr);
             }
-//            else if (agg == AllAggregationType.MAJORITY){
-//              // func = "MAJORITY";
-//              thematicSel = F.SUM(thematicAttr);
-//            }
-//            else if (agg == AllAggregationType.MINORITY){
-//              // func = "MINORITY";
-//              thematicSel = F.COUNT(thematicAttr);
-//            }
+            // else if (agg == AllAggregationType.MAJORITY){
+            // // func = "MAJORITY";
+            // thematicSel = F.SUM(thematicAttr);
+            // }
+            // else if (agg == AllAggregationType.MINORITY){
+            // // func = "MINORITY";
+            // thematicSel = F.COUNT(thematicAttr);
+            // }
 
             isAggregate = true;
           }
@@ -518,7 +503,6 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           thematicSel.setColumnAlias(attribute);
 
           innerQuery1.SELECT(thematicSel);
-          
 
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
@@ -799,7 +783,6 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     this.getDashboardLegend().setGroupedInLegend(groupedInLegend);
     this.apply();
   }
-
 
   public static String getSessionId(String viewName)
   {
