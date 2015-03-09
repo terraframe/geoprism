@@ -159,7 +159,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // Get the universals, sorted by their ordering in the universal tree.
     List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
-
+    
     req.setAttribute("universals", universals);
 
     // selected attribute
@@ -173,6 +173,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
 
+    
     req.setAttribute("mdAttributeId", mdAttr.getId());
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
@@ -236,13 +237,11 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       	SynonymDTO.CLASS, 
       	SynonymDisplayLabelDTO.CLASS, 
       	GeoEntityExportMenuDTO.CLASS, 
-      	
         ClassifierDTO.CLASS, 
         ClassifierIsARelationshipDTO.CLASS, 
         ClassifierDisplayLabelDTO.CLASS, 
         ClassifierController.CLASS, 
         ClassifierExportMenuDTO.CLASS
-          
       }, true);
       
       req.setAttribute("js", js);
@@ -251,9 +250,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());  
       JSONObject rootsIds = new JSONObject();
       JSONArray ids = new JSONArray();
-      
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
-      
       for (ClassifierDTO root : roots)
       {
         ids.put(root.getId());
@@ -293,6 +290,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     
     req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
     
+    
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)
@@ -300,17 +298,13 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     if (mdAttr instanceof MdAttributeVirtualDTO)
     {
       MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
-
       String label = mdAttributeVirtual.getDisplayLabel().getValue();
-
       if (label == null || label.length() > 0)
       {
         return label;
       }
-
       return mdAttributeVirtual.getMdAttributeConcrete().getDisplayLabel().getValue();
     }
-
     return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
   }
 
