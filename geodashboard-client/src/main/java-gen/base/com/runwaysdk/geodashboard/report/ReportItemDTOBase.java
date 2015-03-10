@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -54549990)
+@com.runwaysdk.business.ClassSignature(hash = 1331685213)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = -54549990;
+  private static final long serialVersionUID = 1331685213;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -731,6 +731,14 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     Object[] _parameters = new Object[]{queryId, category, criteria, aggregation};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getValuesForReporting", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.geodashboard.report.ReportItemDTO lockOrCreateReport(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String dashboardId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{dashboardId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "lockOrCreateReport", _declaredTypes);
+    return (com.runwaysdk.geodashboard.report.ReportItemDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.Long render(java.io.OutputStream outputStream, com.runwaysdk.geodashboard.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)

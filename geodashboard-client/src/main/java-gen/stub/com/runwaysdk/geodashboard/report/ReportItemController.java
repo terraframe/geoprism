@@ -41,7 +41,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
   public void failCancel(ReportItemDTO dto) throws IOException, ServletException
   {
-    this.edit(dto);
+    this.edit(dto.getDashboardId());
   }
 
   @Override
@@ -99,39 +99,38 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
   public void failDelete(ReportItemDTO dto) throws IOException, ServletException
   {
-    this.edit(dto);
+    this.edit(dto.getDashboardId());
   }
 
-  public void edit(String id) throws IOException, ServletException
+  public void edit(String dashboardId) throws IOException, ServletException
   {
     try
     {
-      this.edit(ReportItemDTO.lock(super.getClientRequest(), id));
+      this.edit(dashboardId, ReportItemDTO.lockOrCreateReport(super.getClientRequest(), dashboardId));
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
-                                // req, resp, this.isAsynchronous());
+      boolean redirect = false;
       if (!redirect)
       {
-        this.failEdit(id);
+        this.failEdit(dashboardId);
       }
     }
   }
 
-  private void edit(ReportItemDTO dto) throws IOException, ServletException
+  private void edit(String dashboardId, ReportItemDTO dto) throws IOException, ServletException
   {
     try
     {
       req.setAttribute("item", dto);
-      req.setAttribute("dashboards", DashboardDTO.getSortedDashboards(this.getClientRequest()).getResultSet());
+      req.setAttribute("dashboardId", dashboardId);
 
       render("editComponent.jsp");
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
-                                // req, resp, this.isAsynchronous());
+      boolean redirect = false;
+
       if (!redirect)
       {
         this.failEdit(dto.getId());
@@ -213,9 +212,10 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
   }
 
-  public void failUpdate(ReportItemDTO dto) throws IOException, ServletException
+  @Override
+  public void failUpdate(ReportItemDTO dto, MultipartFileParameter design) throws IOException, ServletException
   {
-    this.edit(dto);
+    this.edit(dto.getDashboardId(), dto);
   }
 
   public void view(String id) throws IOException, ServletException
@@ -260,23 +260,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
   public void viewAll() throws IOException, ServletException
   {
-    try
-    {
-      ClientRequestIF clientRequest = super.getClientRequest();
-      ReportItemQueryDTO query = ReportItemDTO.getAllInstances(clientRequest, null, true, 20, 1);
-      req.setAttribute("query", query);
-
-      this.render("viewAllComponent.jsp");
-    }
-    catch (Throwable t)
-    {
-      boolean redirect = ErrorUtility.prepareThrowable(t, req, resp, this.isAsynchronous());
-
-      if (!redirect)
-      {
-        this.failViewAll();
-      }
-    }
+    this.req.getRequestDispatcher("/index.jsp").forward(this.req, this.resp);
   }
 
   public void failViewAll() throws IOException, ServletException

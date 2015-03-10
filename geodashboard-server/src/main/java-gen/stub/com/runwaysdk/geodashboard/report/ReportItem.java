@@ -43,6 +43,7 @@ import com.runwaysdk.constants.VaultFileInfo;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -201,6 +202,19 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
 
     this.apply();
+  }
+
+  @Override
+  public void apply()
+  {
+    Dashboard dashboard = this.getDashboard();
+
+    if (dashboard != null)
+    {
+      this.getReportLabel().setValue(dashboard.getDisplayLabel().getValue());
+    }
+
+    super.apply();
   }
 
   private void checkVaultPermissions(VaultFile entity, Operation operation)
@@ -802,6 +816,34 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static PairView[] getSupportedAggregation(String queryId)
   {
     return ReportProviderBridge.getSupportedAggregation(queryId);
+  }
+
+  public static ReportItem lockOrCreateReport(String dashboardId)
+  {
+    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(dashboardId));
+
+    OIterator<? extends ReportItem> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ReportItem item = iterator.next();
+        item.lock();
+
+        return item;
+      }
+      else
+      {
+        return new ReportItem();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
   }
 
 }

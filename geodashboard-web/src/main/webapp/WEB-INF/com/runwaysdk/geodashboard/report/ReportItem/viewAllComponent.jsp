@@ -33,41 +33,20 @@
 <!-- Report Javascript -->
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+
+<!-- 
 <jwr:script src="/bundles/report.js" useRandomParam="false"/>
 
-<%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page import="com.runwaysdk.web.json.JSONController"%>
-<%@page import="com.runwaysdk.geodashboard.report.ReportItemDTO"%>
-<%@page import="com.runwaysdk.geodashboard.report.ReportItemViewDTO"%>
+<jwr:script src="/com/runwaysdk/geodashboard/report/ReportItem.js" useRandomParam="false"/>
+<jwr:script src="/com/runwaysdk/geodashboard/report/ReportItemView.js" useRandomParam="false"/>
+ -->
 
-
-<script type="text/javascript">
-<%
-  ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
-
-  // use a try catch before printing out the definitions, otherwise, if an
-  // error occurs here, javascript spills onto the actual page (ugly!)
-  try
-  {
-	String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] {
-	  ReportItemDTO.CLASS, ReportItemViewDTO.CLASS
-	}, true);
-	out.print(js);
-	  
-  }
-  catch(Exception e)
-  {
-    // perform cleanup
-    throw e;
-  }
-%>
-</script>
 
 </head>
 
 <div id="reportTable"></div>
 
+<!-- 
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
@@ -76,3 +55,4 @@
   		ut.render("#reportTable");
   });  
 </script>
+ -->

@@ -902,8 +902,8 @@
         var layers = this._layerCache.$values().reverse();
         
         if(layers.length > 0) {
-        	
-          // Construct a GetFeatureInfo request URL given a point    	  
+          
+          // Construct a GetFeatureInfo request URL given a point        
           var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
           var size = this._map.getSize();        
           var mapBbox = this._map.getBounds().toBBoxString();
@@ -978,7 +978,7 @@
               var currAttributeVal = currLayer.properties[aggregationAttr];
               
               if(typeof currAttributeVal === 'number'){
-            	  currAttributeVal = that._formatter(currAttributeVal);
+                currAttributeVal = that._formatter(currAttributeVal);
               }
               
               popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
@@ -1007,8 +1007,8 @@
               
               if(currGeoId != null)
               {                 
-            	that._currGeoId = currGeoId;
-            	
+              that._currGeoId = currGeoId;
+              
                 that._renderReport(that._currGeoId, that._conditionMap['criteria']);
               }
             
@@ -1303,7 +1303,7 @@
               
               // The osm tileLayer isnt set at the bottom by default so this sets it as so
               if(newBaselayer._gdbcustomtype === "OSM"){
-            	newBaselayer.bringToBack();
+              newBaselayer.bringToBack();
               }
             }
           }
@@ -2022,13 +2022,30 @@
       },
       
       _onClickExportReport : function(e) {
-        $( "#report-menu" ).hide();
-        
-      	var format = $(e.target).data('format');
+        var format = $(e.target).data('format');
 
         var criteria = this._conditionMap['criteria']; 
         
         this._exportReport(this._currGeoId, criteria, format);
+      },
+      
+      _onClickUploadReport : function(e) {
+        var that = this;
+          
+        var config = {
+          type: 'com.runwaysdk.geodashboard.report.ReportItem',
+          action: "update",
+          viewAction: "edit",
+          viewParams: {id: this._dashboardId},          
+          width: 600,
+          onSuccess : function(dto) {
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+            
+        new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
       },
       
       _onClickApplyFilters : function(e) {
@@ -2097,6 +2114,32 @@
         return (value != '' && !$.isNumeric(number));        
       },
       
+      _setReportPanelHeight : function (height) {
+        var current = $("#reporticng-container").height();
+        
+        // Minimize
+        if(current > height)
+        {
+          var difference = (current - height);
+          
+          $("#reporticng-container").animate({ bottom: "-=" + difference + "px" }, 1000, function(){
+            $("#reporticng-container").css("bottom", "0px");                                                  
+            $("#report-viewport").height(height);
+            $("#reporticng-container").height(height);
+          });          
+        }
+        // Maximize
+        else if (current < height){
+          var difference = (height - current);
+          
+          $("#reporticng-container").height(height);
+          $("#report-viewport").height(height);
+          $("#reporticng-container").css("bottom", "-" + difference + "px");
+              
+          $("#reporticng-container").animate({ bottom: "+=" + difference + "px" }, 1000, null);
+        }          
+      },
+      
       /**
        * Renders the mapping widget, performing a full refresh.
        */
@@ -2110,37 +2153,35 @@
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         
-        // Events for exporting a report
+        // Reporting events
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
-        $('#report-menu-button').on('click', function(){$( "#report-menu" ).toggle();});        
+        $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
+        
+        // Max
+        $('#report-max').on('click', function(){
+          var height = $("#mapDivId").height();
+            
+          that._setReportPanelHeight(height);
+        });
+        
+        // Split
+        $('#report-split').on('click', function(){
+          var height = Math.floor($("#mapDivId").height() / 2);
+              
+          that._setReportPanelHeight(height);
+        });
+        
+        // Min
+        $('#report-min').on('click', function(){
+          that._setReportPanelHeight(0);
+        });
         
         // Render the menu
         $( "#report-menu" ).menu();
-        $( "#report-menu" ).hide();
-        
         
         if(this._googleEnabled){
           this._addAutoComplete();
         }    
-        
-        //
-        // Chart panel slide toggle behavior
-        //
-        $("#reporting-toggle-button").on('click', function(){
-          var reportContentHeight = parseInt($("#report-viewport").css("height"));
-          if($("#reporticng-container").hasClass("report-panel-closed"))
-          {
-            $("#reporticng-container").animate({ bottom: "+="+ reportContentHeight +"px" }, 1000, function() {
-                  $("#reporticng-container").removeClass("report-panel-closed");
-             });
-          }
-          else
-          {
-            $("#reporticng-container").animate({ bottom: "-="+ reportContentHeight +"px" }, 1000, function() {
-                  $("#reporticng-container").addClass("report-panel-closed");
-             });
-          }
-        });
         
         // Javascript to prevent input of non-number values in a number field
         $('.integers-only').keyup(function (event) {          
