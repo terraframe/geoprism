@@ -713,7 +713,6 @@
     		  var roots = '${roots}';
         	  var rootsJSON = JSON.parse(roots);
         	  var rootsArrJSON = rootsJSON.roots;
-//         	  var rootsArr = [];
         	  
     		  com.runwaysdk.ui.Manager.setFactory("JQuery");
     		  
