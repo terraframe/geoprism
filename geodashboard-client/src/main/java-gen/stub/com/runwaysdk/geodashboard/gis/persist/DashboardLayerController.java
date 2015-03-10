@@ -246,6 +246,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       
       req.setAttribute("js", js);
       
+      
+      String lowestUniversalId = DashboardDTO.getLowestMappableUniversalId(clientRequest, mdAttr.getId());
+      
      
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());  
       JSONObject rootsIds = new JSONObject();

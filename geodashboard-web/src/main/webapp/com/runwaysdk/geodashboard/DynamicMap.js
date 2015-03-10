@@ -373,7 +373,7 @@
        * Redraws the HTML representing the user-defined layers and adds the layers to Leaflet.
        */
       _renderUserLayers : function() {
-        this._drawUserLayersHMTL();
+        this._drawUserLayersHTML();
         this._addUserLayersToMap(true);
       },
       
@@ -402,12 +402,11 @@
                   $(".legend-item[data-parentlayerid='"+layerId+"']").remove();
                   
                   var html = '';
-                html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
-                html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName+'" alt="">'+ this.displayName;
-                html += '</li>';
+                  html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
+                  html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName+'" alt="">'+ this.displayName;
+                  html += '</li>';
               
                   $("#legend-list-group").append(html);  
-                  this.checkGroupedBackground();
               }
               else
               {
@@ -417,10 +416,10 @@
                   var html = '';              
                   html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ layerId +'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
                   html += '<div id="legend-items-container"><ul id="legend-list">';
-                html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
-                html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName +'" alt="">'+ this.displayName;
-                html += '</li>';
-                html += '</ul></div></div>';
+               	  html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
+                  html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName +'" alt="">'+ this.displayName;
+                  html += '</li>';
+                  html += '</ul></div></div>';
                   
                   $(".pageContent").append(html);  
             }
@@ -436,7 +435,6 @@
           
           if(this.groupedInLegend){
             $('*[data-parentlayerid="'+layerId+'"]').show();
-                this.checkGroupedBackground();
           }
           else{
             $("#"+this.legendId).show();
@@ -449,15 +447,13 @@
           else{
             $("#"+this.legendId).hide();
           }
-          
-              this.checkGroupedBackground();
         };
         this.unGroup = function(li){
-            var legendPos = $("#legend-container-group").position();
+            var legendPos = $("#legend-list-group").position();
             var legendXPosition = legendPos.left;
             var legendYPosition = legendPos.top;
             var liYPosition = legendYPosition;
-            var liXPosition = legendXPosition - 50;
+            var liXPosition = legendXPosition + 50;
               
             html = '';
             html += '<div class="info-box legend-container legend-snapable" id="'+this.legendId+'" data-parentLayerId="'+layerId+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
@@ -472,33 +468,15 @@
         };
         this.group = function(draggedElement){
             var draggedListItem = draggedElement.children().children().children();
-          var draggedLegendContainer = draggedElement;
+            var draggedLegendContainer = draggedElement;
           
             draggedListItem.appendTo("#legend-list-group");
-          draggedListItem.addClass("legend-grouped");
+            draggedListItem.addClass("legend-grouped");
             this.groupedInLegend = true;
-          draggedLegendContainer.remove();
-          
-          this.checkGroupedBackground();
-          
-        };
-        this.checkGroupedBackground = function(){
-              // Styling (visually hiding) the legend when all items are removed from legend group
-          var containsVisibleElement = false;
-          $.each($("#legend-list-group li"), function(k,v){
-            if($(v).is(":visible"))
-            {
-              containsVisibleElement = true;
-            }
-          });
-              if(!containsVisibleElement && $("#legend-container-group").hasClass("legend-container-group-active"))
-              {
-                $("#legend-container-group").removeClass("legend-container-group-active");
-              }
-              else if(containsVisibleElement && !$("#legend-container-group").hasClass("legend-container-group-active"))
-              {
-                $("#legend-container-group").addClass("legend-container-group-active");
-              }
+            draggedLegendContainer.remove();
+            
+//            $("#legend-opener-button").click();
+            
         };
       },
       
@@ -573,7 +551,7 @@
           //
           // Control for adding un-grouped legend items to the legend items container
           //
-          $("#legend-container-group").droppable({
+          $("#legend-collapse-container").droppable({
               tolerance: "touch",
               drop: function( event, ui ) {
                 var groupedInLegend = true;
@@ -613,7 +591,6 @@
             if($("#"+legendId).length === 0){
                 var parentLayer = that._layerCache.get(parentLayerId);
                 parentLayer.layerLegend.unGroup(li);
-                parentLayer.layerLegend.checkGroupedBackground();
                 
                 // Attache draggable event listener to the new element
                 $("#"+legendId).draggable({
@@ -636,7 +613,7 @@
        * @htmlInfo
        * 
        */
-      _drawUserLayersHMTL : function(htmlInfo) {
+      _drawUserLayersHTML : function(htmlInfo) {
         var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
         var onCheckHandler = Mojo.Util.bind(this, this._toggleOverlayLayer);
         var layers = this._layerCache.values();
@@ -659,7 +636,6 @@
         
         // 2) Render the HTML we just generated.
         container.html(html);
-//        jcf.customForms.replaceAll(container[0]);
         
         // 3) Add checkboxes and register click events
         for(var i = 0; i < layers.length; i++){
@@ -672,6 +648,12 @@
           checkbox.addOnCheckListener(onCheckHandler);
           checkbox.render();
         }        
+        
+        // open the overlay panel if there are layers and it is collapsed
+        if(layers.length > 0 && !$("#collapse-overlay").hasClass("in")){
+        	$("#overlay-opener-button").click();
+        }
+        
         this._drawLegendItems();
       },
       
@@ -758,7 +740,7 @@
             that.handleException(e);
             
             // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update leaflet because that ordering is still correct.
-            that._drawUserLayersHMTL();
+            that._drawUserLayersHTML();
           }
         });
         
@@ -1075,7 +1057,7 @@
               that._updateCacheFromJSONResponse({layers: [Mojo.Util.toObject(htmlOrJson)]});
               
               // Redraw the HTML and update leaflet.
-              that._drawUserLayersHMTL();
+              that._drawUserLayersHTML();
               that._addUserLayersToMap(true);            
               
               // TODO : Push this somewhere as a default handler.

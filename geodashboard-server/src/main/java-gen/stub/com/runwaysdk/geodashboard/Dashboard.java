@@ -46,6 +46,7 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
@@ -247,6 +248,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 	    {
 	      iterator.close();
 	    }	
+  }
+  
+  public static final String getLowestMappableUniversalId(String mdAttributeId)
+  {
+    MdAttribute attr = MdAttribute.get(mdAttributeId);
+    MdClassDAOIF attrClass = attr.getMdClass();
+    attrClass.getType();
+    
+    
+    return " ";
   }
   
 
