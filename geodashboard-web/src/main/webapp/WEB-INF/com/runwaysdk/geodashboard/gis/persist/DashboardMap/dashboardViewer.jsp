@@ -28,10 +28,13 @@
 <gdb:localize var="page_title" key="dashboardViewer.title"/>
 
 <!-- Dynamic map CSS -->
+<jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
 
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
+<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+
 
 <!-- Google maps API -->
 <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
@@ -90,7 +93,7 @@ $(document).ready(function(){
               </div>
             </div>
         </article>
- 
+        
 		<!-- Legend Panel -->       
         <article class="accordion info-box" id="legend-collapse-container">
         	<div class="accordion-group sales-accortion" id="legend-sub-container">
@@ -102,9 +105,26 @@ $(document).ready(function(){
 			    </div>
 		    </div>
 		 </article>
+
+        <article class="info-box" id="toolbar-container">
+          <h3><gdb:localize key="dashboardViewer.toolbar"/></h3>        
+          <ul class="toolbar-menu-item" id="report-menu" >
+            <li class="toolbar-menu-item"><a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a></li>
+            <li class="toolbar-menu-item"><a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a></li>
+            <li class="toolbar-menu-item"><a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a></li>
+            <li class="toolbar-menu-item"><a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a></li>
+            <li class="toolbar-menu-item">
+              <gdb:localize key="dashboardViewer.export"/>                    
+              <ul>
+                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a></li>
+                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a></li>
+                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a></li>
+              </ul>
+            </li>
+          </ul>    
+        </article>
       </fieldset>
     </form>
-    
     
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">
@@ -301,22 +321,10 @@ $(document).ready(function(){
   
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
+<!-- 
   	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
-    <div id="report-viewport">
-      <div id="report-menu-container" style="position: absolute;">
-        <a href="#" id="report-menu-button" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Export"><gdb:localize key="report.menu"/></a>      
-        <ul id="report-menu">
-          <li>
-            <a href="#"><gdb:localize key="report.export"/></a>                    
-            <ul>
-              <li ><a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a></li>
-              <li ><a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a></li>
-              <li ><a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a></li>
-            </ul>
-          </li>
-        </ul>    
-      </div>
-    
+ -->  
+    <div id="report-viewport">    
       <div id="report-content">
       </div>   
     </div>

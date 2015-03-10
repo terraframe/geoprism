@@ -24,14 +24,12 @@ import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.geodashboard.gis.persist.AggregationTypeQueryDTO;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
@@ -125,15 +123,15 @@ public class Sandbox
       UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
       req.put("universals", universals.getResultSet());
 
-      // aggregations
-      AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
-      req.put("aggregations", aggQuery.getResultSet());
-      Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
-      req.put("aggregationLabels", aggregations);
-
-      // feature types
-      Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
-      req.put("features", features);
+//      // aggregations
+//      AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
+//      req.put("aggregations", aggQuery.getResultSet());
+//      Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
+//      req.put("aggregationLabels", aggregations);
+//
+//      // feature types
+//      Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
+//      req.put("features", features);
   }
 
   @Request

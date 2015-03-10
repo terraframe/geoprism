@@ -5,19 +5,7 @@
 <fieldset class="com-runwaysdk-geodashboard-FormList">
   <section class="form-container">
     <mjl:component param="dto" item="${item}">
-      <div class="field-row clearfix">
-        <label for="reportLabel">* ${item.reportLabelMd.displayLabel}</label>
-        <mjl:input param="reportLabel" type="text" id="reportLabel" />
-        <div id="reportLabel-error" class="error-message"></div>
-      </div>
-      <div class="field-row clearfix">
-        <label for="dashboard">* ${item.dashboardMd.displayLabel}</label>
-        <mjl:select param="dashboard" items="${dashboards}" var="current" valueAttribute="id" id="dashboard">
-          <mjl:option selected="${(item.dashboardId != null && current.id == item.dashboardId) ? 'selected' : 'false'}">
-            ${current.displayLabel.value}
-          </mjl:option>
-        </mjl:select>
-      </div>      
+      <mjl:input param="dashboard" type="hidden" id="dashboard" value="${dashboardId}" />
       <c:if test="${!item.newInstance}">
         <div class="field-row clearfix">
           <label for="reportLabel">* ${item.reportNameMd.displayLabel}</label>

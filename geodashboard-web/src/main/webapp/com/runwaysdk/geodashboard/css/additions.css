@@ -67,7 +67,7 @@ div.standby-overlay {
 }
 
 #reporticng-container{
-	z-index: 999;
+	z-index: 0;
 }
 
 .submit-form .field-row {
