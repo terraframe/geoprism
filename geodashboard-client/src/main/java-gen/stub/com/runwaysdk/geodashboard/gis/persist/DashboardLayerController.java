@@ -144,9 +144,10 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    * @param layer
    * @param style
    * @param mdAttribute
+   * @throws JSONException 
    */
   @SuppressWarnings("unchecked")
-  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mdAttribute)
+  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mdAttribute) 
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
 
@@ -224,52 +225,50 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     {
       req.setAttribute("isOntologyAttribute", true);
       req.setAttribute("isTextAttribute", false);
+      req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
+      req.setAttribute("termType", ClassifierDTO.CLASS);
       
-      String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] { 
-      	GeoEntityDTO.CLASS, 
-      	LocatedInDTO.CLASS, 
-      	GeoEntityDisplayLabelDTO.CLASS, 
-      	GeoEntityController.CLASS, 
-      	UniversalDTO.CLASS, 
-      	UniversalDisplayLabelDTO.CLASS, 
-      	TermUtilDTO.CLASS, 
-      	GeoEntityViewDTO.CLASS, 
-      	SynonymDTO.CLASS, 
-      	SynonymDisplayLabelDTO.CLASS, 
-      	GeoEntityExportMenuDTO.CLASS, 
-        ClassifierDTO.CLASS, 
-        ClassifierIsARelationshipDTO.CLASS, 
-        ClassifierDisplayLabelDTO.CLASS, 
-        ClassifierController.CLASS, 
-        ClassifierExportMenuDTO.CLASS
-      }, true);
-      
-      req.setAttribute("js", js);
-      
-      
-      String lowestUniversalId = DashboardDTO.getLowestMappableUniversalId(clientRequest, mdAttr.getId());
       
      
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());  
-      JSONObject rootsIds = new JSONObject();
-      JSONArray ids = new JSONArray();
+      JSONObject rootsObj = new JSONObject();
+      JSONArray rootsObjEntries = new JSONArray();
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
       for (ClassifierDTO root : roots)
       {
-        ids.put(root.getId());
+        JSONObject newJSON = new JSONObject();
+        try
+        {
+          newJSON.put("termId", root.getId());
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+        
         List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
         for (ClassifierAttributeRootDTO relationship : relationships)
         {
           if (relationship.getParentId().equals(mtAttrConcrete.getId()))
           {
+            try
+            {
+              newJSON.put("selectable", relationship.getSelectable());
+            }
+            catch (JSONException e)
+            {
+              throw new RuntimeException(e);
+            }
             selectableMap.put(root.getId(), relationship.getSelectable());
           }
         }
+        
+        rootsObjEntries.put(newJSON);
       }
 
       try
       {
-        rootsIds.put("rootsIds", ids);
+        rootsObj.put("roots", rootsObjEntries);
       }
       catch (JSONException e)
       {
@@ -277,7 +276,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       }
 
       // Passing ontology root to layer form categories 
-      req.setAttribute("roots", rootsIds);
+      req.setAttribute("roots", rootsObj);
       req.setAttribute("selectableMap", selectableMap);     
     }
     else if (mtAttrConcrete instanceof MdAttributeCharacterDTO || mtAttrConcrete instanceof MdAttributeTextDTO )

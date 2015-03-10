@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
@@ -16,6 +17,9 @@
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/com/runwaysdk/geodashboard/ontology/OntologyTree.js" useRandomParam="false"/>
+<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
+<%-- <jwr:script src="/bundles/universal.js" useRandomParam="false"/> --%>
+
 
 <script type="text/javascript"> ${js} </script>
 
@@ -708,16 +712,21 @@
     	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
     		  var roots = '${roots}';
         	  var rootsJSON = JSON.parse(roots);
-        	  var rootsArrJSON = rootsJSON.rootsIds;
+        	  var rootsArrJSON = rootsJSON.roots;
+//         	  var rootsArr = [];
         	  
     		  com.runwaysdk.ui.Manager.setFactory("JQuery");
-    		  for(var i=0; i<rootsArrJSON.length; i++){    
-    			  var thisRootId = rootsArrJSON[i];
+    		  
+//     		  for(var i=0; i<rootsArrJSON.length; i++){    
+//     			  var thisRootId = rootsArrJSON[i];
+//     			  rootsArr.push({"termId" : thisRootId })
+//     		  }
+    		  junk = rootsArrJSON
     			  
     			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-    			      termType : '<%=ClassifierDTO.CLASS%>' ,
-    			      relationshipTypes : [ '<%=ClassifierIsARelationshipDTO.CLASS%>' ],
-    			      rootTerm : thisRootId,
+    			      termType : "${termType}" ,
+    			      relationshipTypes : [ "${relationshipType}" ],
+    			      rootTerms : rootsArrJSON,
     			      editable : false,
     			      slide : false,
     			      selectable : false,
@@ -754,7 +763,6 @@
     				  }
     			  });
     			  tree.render("#ontology-tree");
-    		  }
     	  } 
 	});
 	</script>
