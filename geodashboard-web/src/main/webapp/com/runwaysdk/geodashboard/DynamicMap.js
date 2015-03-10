@@ -473,7 +473,7 @@
             draggedListItem.appendTo("#legend-list-group");
             draggedListItem.addClass("legend-grouped");
             this.groupedInLegend = true;
-            draggedLegendContainer.remove();
+//            draggedLegendContainer.remove();
             
 //            $("#legend-opener-button").click();
             
@@ -544,7 +544,6 @@
               if(layer.getLayerIsActive() === false){
                 legendObj.hide();
               }
-              
             }
           }
           
