@@ -70,12 +70,19 @@ $(document).ready(function(){
         <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
         
-        <!-- This will eventually need to be collapsible -->
-        <article class="info-box">
-          <h3><gdb:localize key="dashboardViewer.mapLayers"/></h3>
-          <div id="overlayLayerContainer" class="holder"></div>
+		<!-- Overlay Layers Panel -->
+        <article class="accordion info-box" id="overlay-container">
+            <div class="accordion-group sales-accortion">
+              <div class="accordion-heading">
+                <a class="map-layers-opener opener" id="overlay-opener-button" data-toggle="collapse" data-parent="#overlay-container" href="#collapse-overlay"><gdb:localize key="dashboardViewer.mapLayers"/></a>
+              </div>
+              <div id="collapse-overlay" class="accordion-body" style="height: 0px;">
+                <div class="accordion-inner holder" id="overlayLayerContainer"></div>
+              </div>
+            </div>
         </article>
-        
+
+		<!-- Base Layers Panel -->     
         <article class="accordion info-box" id="base-map-container">
             <div class="accordion-group sales-accortion">
               <div class="accordion-heading">
@@ -86,7 +93,18 @@ $(document).ready(function(){
               </div>
             </div>
         </article>
-
+        
+		<!-- Legend Panel -->       
+        <article class="accordion info-box" id="legend-collapse-container">
+        	<div class="accordion-group sales-accortion" id="legend-sub-container">
+        		<div class="accordion-heading">
+        			<a class="legend-opener opener" id="legend-opener-button" data-toggle="collapse" data-parent="#legend-collapse-container" href="#collapse-legend"><gdb:localize key="dashboardViewer.legend"/></a>
+        		</div>	
+              	<div id="collapse-legend" class="accordion-body" style="height: 0px;">
+              		<ul id="legend-list-group"></ul> 
+			    </div>
+		    </div>
+		 </article>
 
         <article class="info-box" id="toolbar-container">
           <h3><gdb:localize key="dashboardViewer.toolbar"/></h3>        
@@ -107,12 +125,6 @@ $(document).ready(function(){
         </article>
       </fieldset>
     </form>
-    
-    <div class="info-box" id="legend-container-group">
-    	<div id="legend-items-container-group">
-    		<ul id="legend-list-group"></ul>
-    	</div>
-    </div>
     
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">

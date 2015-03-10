@@ -66,6 +66,10 @@ div.standby-overlay {
 .reporticng-container{
 }
 
+#reporticng-container{
+	z-index: 0;
+}
+
 .submit-form .field-row {
   padding: 0 0 5px 20px;
 }
@@ -137,6 +141,14 @@ a.map-layers-opener.opener {
     border-radius: 0px;
 }   
 
+#legend-container .accordion-group {
+    margin-bottom: 0px;
+    border:0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}  
+
 
 /* Color Picker */
 .colpick{
@@ -190,19 +202,24 @@ a.map-layers-opener.opener {
 /* 	margin: 5px 5px 5px auto; */
 }
 
-#legend-container-group {
-	z-index: 999;
-	position: absolute;
-	right: 300px;
-	bottom: 0px;
-/* 	background: none; */
-/* 	border: none; */
+#legend-collapse-container.accordion.info-box {
+	padding: 2px;
 }
 
-.legend-container-group-active {
-	background: rgba(0, 0, 0, 0.8);
-	border: solid black 1px;	
+#legend-container-group {
+	z-index: 999;
+	left: 0px;
+	bottom: 0px;
 }
+
+#legend-sub-container {
+	width: 100%;
+}
+
+/* .legend-container-group-active { */
+/* 	background: rgba(0, 0, 0, 0.8); */
+/* 	border: solid black 1px;	 */
+/* } */
 
 .legend-item{
 	padding: 3px;
@@ -224,8 +241,8 @@ ul#legend-list{
 
 ul#legend-list-group{
     list-style-type: none;
-    padding: 2px;
-    margin: 2px;
+    padding: 0px;
+    margin: 0px;
 }
 
 .legend-grouped{
@@ -239,7 +256,7 @@ a.legend-opener.opener{
 	color:#bababa;
 	margin:5px;
 	margin-top: 5px;
-	text-align: center;
+	text-align: left;
 	display: block;
 }
 
