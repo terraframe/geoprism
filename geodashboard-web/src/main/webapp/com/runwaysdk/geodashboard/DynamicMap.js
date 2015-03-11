@@ -473,9 +473,9 @@
             draggedListItem.appendTo("#legend-list-group");
             draggedListItem.addClass("legend-grouped");
             this.groupedInLegend = true;
-//            draggedLegendContainer.remove();
+            draggedLegendContainer.remove();
             
-//            $("#legend-opener-button").click();
+            $("#legend-opener-button").click();
             
         };
       },
