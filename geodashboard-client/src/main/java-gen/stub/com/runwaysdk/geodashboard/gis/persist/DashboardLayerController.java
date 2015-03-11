@@ -1,7 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,40 +17,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
-import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
-import com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO;
-import com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO;
+import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierController;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.util.Iterables;
-import com.runwaysdk.system.gis.geo.AllowedInDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityController;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
-import com.runwaysdk.system.gis.geo.LocatedInDTO;
-import com.runwaysdk.system.gis.geo.SynonymDTO;
-import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
-import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
-import com.runwaysdk.system.gis.mapping.LayerDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
-import com.runwaysdk.system.metadata.MdAttributeTermDTO;
 import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
+import com.runwaysdk.system.metadata.MdAttributeTermDTO;
 import com.runwaysdk.system.metadata.MdAttributeTextDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
-import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
-import com.runwaysdk.web.json.JSONController;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -61,13 +43,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
   private static final Log   log     = LogFactory.getLog(DashboardLayerController.class);
 
-  private static String      rootUniId;
-
   public DashboardLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
-
-    rootUniId = UniversalDTO.getRoot(this.getClientRequest()).getId();
   }
 
   public void cancel(DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -121,14 +99,17 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     render("editComponent.jsp");
   }
 
+  @Override
   public void edit(String id) throws java.io.IOException, javax.servlet.ServletException
   {
     DashboardLayerDTO layer = DashboardLayerDTO.lock(super.getClientRequest(), id);
 
-    // There will be one style only for this layer (for IDE)
+    DashboardMapDTO map = layer.getAllContainingMap().get(0);
+
+    // There will be one style only for this layer
     DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
 
-    this.loadLayerData(layer, style, null);
+    this.loadLayerData(layer, style, map.getId(), style.getMdAttributeId());
 
     render("editComponent.jsp");
   }
@@ -143,10 +124,12 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    * 
    * @param layer
    * @param style
-   * @param mdAttribute
+   * @param mapId
+   *          TODO
+   * @param mdAttributeId
    */
   @SuppressWarnings("unchecked")
-  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mdAttribute)
+  private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mapId, String mdAttributeId)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
 
@@ -158,22 +141,21 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     req.setAttribute("fonts", fonts);
 
     // Get the universals, sorted by their ordering in the universal tree.
-    List<TermDTO> universals = Arrays.asList(TermUtilDTO.getAllDescendants(this.getClientRequest(), rootUniId, new String[] { AllowedInDTO.CLASS }));
-    
+    List<UniversalDTO> universals = Arrays.asList(DashboardMapDTO.getUniversalAggregations(clientRequest, mapId, mdAttributeId));
+
     req.setAttribute("universals", universals);
 
     // selected attribute
     MdAttributeDTO mdAttr;
-    if (mdAttribute != null)
+    if (mdAttributeId != null)
     { // new instance
-      mdAttr = MdAttributeDTO.get(clientRequest, mdAttribute);
+      mdAttr = MdAttributeDTO.get(clientRequest, mdAttributeId);
     }
     else
     { // edit
       mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
     }
 
-    
     req.setAttribute("mdAttributeId", mdAttr.getId());
     req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
@@ -217,40 +199,15 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     {
       req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
     }
-    
+
     // Determine if the attribute is an ontology attribute
-    MdAttributeConcreteDTO mtAttrConcrete = ((MdAttributeVirtualDTO) mdAttr).getMdAttributeConcrete();
+    MdAttributeConcreteDTO mtAttrConcrete = ( (MdAttributeVirtualDTO) mdAttr ).getMdAttributeConcrete();
     if (mtAttrConcrete instanceof MdAttributeTermDTO)
     {
       req.setAttribute("isOntologyAttribute", true);
       req.setAttribute("isTextAttribute", false);
-      
-      String js = JSONController.importTypes(clientRequest.getSessionId(), new String[] { 
-      	GeoEntityDTO.CLASS, 
-      	LocatedInDTO.CLASS, 
-      	GeoEntityDisplayLabelDTO.CLASS, 
-      	GeoEntityController.CLASS, 
-      	UniversalDTO.CLASS, 
-      	UniversalDisplayLabelDTO.CLASS, 
-      	TermUtilDTO.CLASS, 
-      	GeoEntityViewDTO.CLASS, 
-      	SynonymDTO.CLASS, 
-      	SynonymDisplayLabelDTO.CLASS, 
-      	GeoEntityExportMenuDTO.CLASS, 
-        ClassifierDTO.CLASS, 
-        ClassifierIsARelationshipDTO.CLASS, 
-        ClassifierDisplayLabelDTO.CLASS, 
-        ClassifierController.CLASS, 
-        ClassifierExportMenuDTO.CLASS
-      }, true);
-      
-      req.setAttribute("js", js);
-      
-      
-      String lowestUniversalId = DashboardDTO.getLowestMappableUniversalId(clientRequest, mdAttr.getId());
-      
-     
-      ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());  
+
+      ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
       JSONObject rootsIds = new JSONObject();
       JSONArray ids = new JSONArray();
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
@@ -276,24 +233,25 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
         throw new RuntimeException(e);
       }
 
-      // Passing ontology root to layer form categories 
+      // Passing ontology root to layer form categories
       req.setAttribute("roots", rootsIds);
-      req.setAttribute("selectableMap", selectableMap);     
+      req.setAttribute("selectableMap", selectableMap);
+
+      JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
     }
-    else if (mtAttrConcrete instanceof MdAttributeCharacterDTO || mtAttrConcrete instanceof MdAttributeTextDTO )
+    else if (mtAttrConcrete instanceof MdAttributeCharacterDTO || mtAttrConcrete instanceof MdAttributeTextDTO)
     {
       req.setAttribute("isTextAttribute", true);
       req.setAttribute("isOntologyAttribute", false);
     }
     else
     {
-    	req.setAttribute("isOntologyAttribute", false);
-    	req.setAttribute("isTextAttribute", false);
+      req.setAttribute("isOntologyAttribute", false);
+      req.setAttribute("isTextAttribute", false);
     }
-    
+
     req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-    
-    
+
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)
@@ -338,7 +296,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
-
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -401,13 +358,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     resp.sendError(500);
   }
 
-  public void newThematicInstance(String mdAttribute) throws java.io.IOException, javax.servlet.ServletException
+  @Override
+  public void newThematicInstance(String mdAttribute, String mapId) throws IOException, ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     DashboardLayerDTO layer = new DashboardLayerDTO(clientRequest);
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
 
-    this.loadLayerData(layer, style, mdAttribute);
+    this.loadLayerData(layer, style, mapId, mdAttribute);
 
     render("createComponent.jsp");
   }
@@ -430,7 +388,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
     catch (Throwable t)
     {
-      this.loadLayerData(layer, (DashboardThematicStyleDTO) style, ( (DashboardThematicStyleDTO) style ).getMdAttributeId());
+      this.loadLayerData(layer, (DashboardThematicStyleDTO) style, mapId, ( (DashboardThematicStyleDTO) style ).getMdAttributeId());
 
       if (t instanceof ProblemExceptionDTO)
       {

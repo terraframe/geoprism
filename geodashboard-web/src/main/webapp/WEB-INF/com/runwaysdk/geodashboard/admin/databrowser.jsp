@@ -14,10 +14,7 @@
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/databrowser.js" useRandomParam="false"/>
 
-<!-- Runway Generic -->
-<script type="text/javascript">
-<%=request.getAttribute("js")%>
-</script>
+<script type="text/javascript">${js}</script>
 
 </head>
 

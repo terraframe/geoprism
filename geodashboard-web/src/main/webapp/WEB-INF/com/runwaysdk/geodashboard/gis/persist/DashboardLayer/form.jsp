@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
 <%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
@@ -15,9 +16,9 @@
 
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/ontology/OntologyTree.js" useRandomParam="false"/>
+<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
 
-<script type="text/javascript"> ${js} </script>
+<script type="text/javascript">${js}</script>
 
 </head>
 

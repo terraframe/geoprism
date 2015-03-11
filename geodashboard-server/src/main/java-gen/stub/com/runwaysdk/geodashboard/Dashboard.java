@@ -46,7 +46,6 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
@@ -223,43 +222,31 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return suggestions.toArray(new String[suggestions.size()]);
   }
-  
-  
+
   public static final com.runwaysdk.geodashboard.ontology.Classifier[] getClassifierRoots(String mdAttributeId)
   {
-	    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
-	    QueryFactory factory = new QueryFactory();
+    QueryFactory factory = new QueryFactory();
 
-	    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
-	    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
-	    
-	    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-	    classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
 
-	    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+    classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
 
-	    try
-	    {
-	      LinkedList<Classifier> roots = new LinkedList<Classifier>(iterator.getAll());
-	      return roots.toArray(new Classifier[roots.size()]);
-	    }
-	    finally
-	    {
-	      iterator.close();
-	    }	
+    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+
+    try
+    {
+      LinkedList<Classifier> roots = new LinkedList<Classifier>(iterator.getAll());
+      return roots.toArray(new Classifier[roots.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
-  
-  public static final String getLowestMappableUniversalId(String mdAttributeId)
-  {
-    MdAttribute attr = MdAttribute.get(mdAttributeId);
-    MdClassDAOIF attrClass = attr.getMdClass();
-    attrClass.getType();
-    
-    
-    return " ";
-  }
-  
 
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
   {

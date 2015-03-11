@@ -34,6 +34,7 @@
 <!-- Scheduler Javascript -->
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/scheduler.js" useRandomParam="false"/>
+<script type="text/javascript">${js}</script>
 
 </head>
 

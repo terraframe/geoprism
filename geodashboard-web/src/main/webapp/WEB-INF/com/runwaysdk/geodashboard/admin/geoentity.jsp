@@ -33,7 +33,7 @@
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/geoentity.js" useRandomParam="false"/>
-
+<script type="text/javascript">${js}</script>
 </head>
 
 <div id="tree"></div>

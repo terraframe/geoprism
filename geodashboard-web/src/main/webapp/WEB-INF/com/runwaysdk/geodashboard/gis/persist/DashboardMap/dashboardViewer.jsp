@@ -35,6 +35,7 @@
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 
+<script type="text/javascript">${js}</script>
 
 <!-- Google maps API -->
 <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>

@@ -1,0 +1,28 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+        <create>
+          <mdMethod name="getUniversalAggregations" label="Get universal aggregations" returnType="com.runwaysdk.system.gis.geo.Universal[]">
+            <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController">
+        <mdAction name="newThematicInstance">
+          <create>
+            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
+          </create>
+        </mdAction>
+      </mdController>
+
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.newThematicInstance.mapId" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.getUniversalAggregations" type="com.runwaysdk.system.metadata.MdMethod" />
+    </delete>
+  </undoIt>
+</version>

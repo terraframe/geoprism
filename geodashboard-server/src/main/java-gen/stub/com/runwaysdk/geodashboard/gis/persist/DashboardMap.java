@@ -1,6 +1,5 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,8 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.DashboardQuery;
+import com.runwaysdk.geodashboard.MetadataWrapper;
+import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -21,6 +27,8 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.Universal;
 
 public class DashboardMap extends DashboardMapBase implements com.runwaysdk.generation.loader.Reloadable, Map
 {
@@ -48,7 +56,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   /**
    * MdMethod
    * 
-   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the updated filter criteria conditions.
+   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the
+   * updated filter criteria conditions.
    */
   @Override
   public String updateConditions(DashboardCondition[] conditions)
@@ -218,145 +227,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
     JSONArray bboxArr = new JSONArray();
-    ResultSet resultSet = null;
-    String[] layerNames = null;
-
-    // TODO : Our dataset contains misplaced points, so, for now, this code is commented out and we'll always center on Cambodia.
-    // if (layers.length > 0)
-    // {
-    // layerNames = new String[layers.length];
-    // String sql;
-    //
-    // if (layers.length == 1)
-    // {
-    // // This needs to get the 1st (only) layer in the list and that layers
-    // // viewname and layername
-    // DashboardLayer layer = layers[0];
-    // String viewName = layer.getViewName();
-    // layerNames[0] = layer.getName();
-    //
-    // sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN
-    // + ")) AS bbox FROM " + viewName;
-    // }
-    // else
-    // {
-    // // More than one layer so union the geometry columns
-    // sql = "SELECT ST_AsText(ST_Extent(geo_v)) AS bbox FROM (\n";
-    //
-    // for (int i = 0; i < layers.length; i++)
-    // {
-    // DashboardLayer layer = layers[i];
-    // String viewName = layer.getViewName();
-    // layerNames[i] = layer.getName();
-    //
-    // sql += "(SELECT " + GeoserverFacade.GEOM_COLUMN + " AS geo_v FROM " + viewName + ") \n";
-    //
-    // if (i != layers.length - 1)
-    // {
-    // sql += "UNION ALL\n";
-    // }
-    // }
-    //
-    // sql += ") bbox_union";
-    // }
-    //
-    // resultSet = Database.query(sql);
-    //
-    // try
-    // {
-    // if (resultSet.next())
-    // {
-    // String bbox = resultSet.getString("bbox");
-    // if (bbox != null)
-    // {
-    // Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
-    // Matcher m = p.matcher(bbox);
-    //
-    // if (m.matches())
-    // {
-    // String coordinates = m.group(1);
-    // List<Coordinate> coords = new LinkedList<Coordinate>();
-    //
-    // for (String c : coordinates.split(","))
-    // {
-    // String[] xAndY = c.split(" ");
-    // double x = Double.valueOf(xAndY[0]);
-    // double y = Double.valueOf(xAndY[1]);
-    //
-    // coords.add(new Coordinate(x, y));
-    // }
-    //
-    // Envelope e = new Envelope(coords.get(0), coords.get(2));
-    //
-    // try
-    // {
-    // bboxArr.put(e.getMinX());
-    // bboxArr.put(e.getMinY());
-    // bboxArr.put(e.getMaxX());
-    // bboxArr.put(e.getMaxY());
-    // }
-    // catch (JSONException ex)
-    // {
-    // throw new ProgrammingErrorException(ex);
-    // }
-    // }
-    // else
-    // {
-    // // There will not be a match if there is a single point geo
-    // // entity.
-    // // In this case, return the x,y coordinates to OpenLayers.
-    //
-    // p = Pattern.compile("POINT\\((.*)\\)");
-    // m = p.matcher(bbox);
-    // if (m.matches())
-    // {
-    // String c = m.group(1);
-    // String[] xAndY = c.split(" ");
-    // double x = Double.valueOf(xAndY[0]);
-    // double y = Double.valueOf(xAndY[1]);
-    //
-    // try
-    // {
-    // bboxArr.put(x);
-    // bboxArr.put(y);
-    // }
-    // catch (JSONException ex)
-    // {
-    // throw new ProgrammingErrorException(ex);
-    // }
-    // }
-    // else
-    // {
-    // String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
-    // + "] could not be used to create a valid bounding box";
-    // throw new ProgrammingErrorException(error);
-    // }
-    // }
-    //
-    // if (bboxArr.length() > 0) {
-    // return bboxArr;
-    // }
-    // }
-    // }
-    // }
-    // catch (SQLException sqlEx1)
-    // {
-    // Database.throwDatabaseException(sqlEx1);
-    // }
-    // finally
-    // {
-    // try
-    // {
-    // java.sql.Statement statement = resultSet.getStatement();
-    // resultSet.close();
-    // statement.close();
-    // }
-    // catch (SQLException sqlEx2)
-    // {
-    // Database.throwDatabaseException(sqlEx2);
-    // }
-    // }
-    // }
 
     // There are no layers in the map (that contain data) so return the Cambodian defaults
     if (bboxArr.length() == 0)
@@ -394,15 +264,70 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return String.format("[%s] = %s", this.getClassDisplayLabel(), this.getName());
   }
 
-  /**
-   * Cleans old map artifacts.
-   * 
-   * TODO although it's not a problem to blindly remove layers/styles, there might be a better way to save unchanged resources and avoid costly regeneration.
-   */
-  public static void cleanup()
+  @Override
+  public Universal[] getUniversalAggregations(String mdAttributeId)
   {
-    // // Delete all generated views
-    // List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
-    // Database.dropViews(viewNames);
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
+    MdClassDAOIF mdClass = mdAttribute.definedByClass();
+
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery query = new MetadataWrapperQuery(factory);
+    DashboardQuery dQuery = new DashboardQuery(factory);
+
+    dQuery.WHERE(dQuery.getMap().EQ(this));
+
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+    query.AND(query.dashboard(dQuery));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        MetadataWrapper wrapper = iterator.next();
+        Universal lowest = wrapper.getUniversal();
+
+        Universal root = Universal.getRoot();
+
+        OIterator<Term> ancestors = lowest.getAllAncestors(AllowedIn.CLASS);
+
+        try
+        {
+          List<Term> results = ancestors.getAll();
+          List<Universal> universals = new LinkedList<Universal>();
+
+          for (Term result : results)
+          {
+            if (!result.getId().equals(root.getId()))
+            {
+              universals.add((Universal) result);
+            }
+          }
+
+          universals.add(lowest);
+
+          return universals.toArray(new Universal[universals.size()]);
+        }
+        finally
+        {
+          ancestors.close();
+        }
+
+      }
+      else
+      {
+        String message = "An unwrapped MdAttribute exists as part of a Dashboard.  This should never happen.";
+
+        throw new ProgrammingErrorException(message);
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
   }
+
 }

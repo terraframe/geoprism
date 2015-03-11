@@ -32,6 +32,7 @@
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/universal.js" useRandomParam="false"/>
+<script type="text/javascript">${js}</script>
 
 </head>
 
