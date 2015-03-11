@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
+import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
@@ -221,6 +222,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     this.req.setAttribute("type", GeoEntityDTO.CLASS);
     this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
     this.req.setAttribute("rootId", root.getId());
+
+    JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
     render("dashboardViewer.jsp");
   }

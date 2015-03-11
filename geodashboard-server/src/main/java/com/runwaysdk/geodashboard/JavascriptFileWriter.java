@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.commons.io.FileUtils;
+
 import com.runwaysdk.business.generation.json.JSONFacade;
 import com.runwaysdk.query.Condition;
 import com.runwaysdk.query.OIterator;
@@ -114,29 +116,31 @@ public class JavascriptFileWriter
     {
       String type = mdClass.definesType();
 
-      String javascript = JSONFacade.importTypes(sessionId, new String[] { type });
+//      String javascript = JSONFacade.importTypes(sessionId, new String[] { type });
       String path = destination + File.separator + type.replace(".", File.separator) + ".js";
 
-      try
-      {
+//      try
+//      {
         File file = new File(path);
-        file.getParentFile().mkdirs();
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
-        try
-        {
-          writer.write(javascript);
-        }
-        finally
-        {
-          writer.close();
-        }
-      }
-      catch (IOException e)
-      {
-        e.printStackTrace();
-      }
+        
+        FileUtils.deleteQuietly(file);
+//        file.getParentFile().mkdirs();
+//
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+//
+//        try
+//        {
+//          writer.write(javascript);
+//        }
+//        finally
+//        {
+//          writer.close();
+//        }
+//      }
+//      catch (IOException e)
+//      {
+//        e.printStackTrace();
+//      }
     }
   }
 

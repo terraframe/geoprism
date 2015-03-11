@@ -33,6 +33,8 @@
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
 
+<script type="text/javascript">${js}</script>
+
 </head>
 
 <div id="ontologies"></div>
@@ -46,7 +48,7 @@
     document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
 	  termType : "${type}",
 	  relationshipTypes : [ "${relationshipType}" ],
-\      rootTerms : [ {termId : "${rootId}"} ],
+      rootTerms : [ {termId : "${rootId}"} ],
       editable : true,
       /* checkable: true, */
       crud: {

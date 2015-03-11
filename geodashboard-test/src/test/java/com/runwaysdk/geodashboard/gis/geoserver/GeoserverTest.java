@@ -471,9 +471,6 @@ import com.runwaysdk.util.FileIO;
       
       stateInfoView.delete();
       
-      // Delete all generated views
-      DashboardMap.cleanup();
-
       MdBusiness.get(stateInfo.getId()).delete();
       Universal.get(country.getId()).delete();
       Universal.get(state.getId()).delete();

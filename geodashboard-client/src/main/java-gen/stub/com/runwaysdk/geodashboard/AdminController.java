@@ -4,8 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO;
-import com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO;
+import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
@@ -31,6 +30,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void users() throws IOException, ServletException
   {
+    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
+
     render("useraccounts.jsp");
   }
 
@@ -43,11 +44,14 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void geoentity() throws IOException, ServletException
   {
-    GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
+    ClientRequestIF request = this.getClientRequest();
+    GeoEntityDTO root = GeoEntityDTO.getRoot(request);
 
     this.req.setAttribute("type", GeoEntityDTO.CLASS);
     this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
     this.req.setAttribute("rootId", root.getId());
+
+    JavascriptUtil.loadGeoEntityBundle(request, this.req);
 
     render("geoentity.jsp");
   }
@@ -74,11 +78,13 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void universal() throws IOException, ServletException
   {
     UniversalDTO root = UniversalDTO.getRoot(this.getClientRequest());
-    
+
     this.req.setAttribute("type", UniversalDTO.CLASS);
     this.req.setAttribute("allowedInType", AllowedInDTO.CLASS);
     this.req.setAttribute("isARelationshipType", IsARelationshipDTO.CLASS);
     this.req.setAttribute("rootId", root.getId());
+
+    JavascriptUtil.loadUniversalBundle(this.getClientRequest(), this.req);
 
     render("universal.jsp");
   }
@@ -92,6 +98,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void scheduler() throws IOException, ServletException
   {
+    JavascriptUtil.loadSchedulerBundle(this.getClientRequest(), req);
+
     render("scheduler.jsp");
   }
 
@@ -108,10 +116,9 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
 
-    String js = JSONController.importTypes(sessionId, new String[] { DataBrowserUtilDTO.CLASS, MetadataTypeDTO.CLASS }, true);
+    this.req.setAttribute("response", response);
 
-    req.setAttribute("response", response);
-    req.setAttribute("js", js);
+    JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 
     render("databrowser.jsp");
   }
@@ -125,6 +132,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void account() throws IOException, ServletException
   {
+    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
+
     render("account.jsp");
   }
 
@@ -143,6 +152,8 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     this.req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
     this.req.setAttribute("rootId", root.getId());
 
+    JavascriptUtil.loadOntologyBundle(this.getClientRequest(), this.req);
+    
     render("ontologies.jsp");
   }
 

@@ -1625,7 +1625,7 @@
           }
         });
         
-        this._LayerController.newThematicInstance(request, this._currentAttributeId);
+        this._LayerController.newThematicInstance(request, this._currentAttributeId, this._mapId);
       },
       
       /**

@@ -33,6 +33,7 @@
 <!-- User account Javascript -->
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/account.js" useRandomParam="false"/>
+<script type="text/javascript">${js}</script>
 
 
 </head>

@@ -16,12 +16,9 @@
 
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/ontology/OntologyTree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
-<%-- <jwr:script src="/bundles/universal.js" useRandomParam="false"/> --%>
 
-
-<script type="text/javascript"> ${js} </script>
+<script type="text/javascript">${js}</script>
 
 </head>
 
