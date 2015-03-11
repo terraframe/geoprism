@@ -23,6 +23,7 @@ import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
@@ -127,6 +128,8 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    * @param mapId
    *          TODO
    * @param mdAttributeId
+   * @param mdAttribute
+   * @throws JSONException 
    */
   @SuppressWarnings("unchecked")
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mapId, String mdAttributeId)
@@ -206,27 +209,50 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     {
       req.setAttribute("isOntologyAttribute", true);
       req.setAttribute("isTextAttribute", false);
+      req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
+      req.setAttribute("termType", ClassifierDTO.CLASS);
 
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
       JSONObject rootsIds = new JSONObject();
       JSONArray ids = new JSONArray();
+      
+     
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
       for (ClassifierDTO root : roots)
       {
-        ids.put(root.getId());
+        JSONObject newJSON = new JSONObject();
+        try
+        {
+          newJSON.put("termId", root.getId());
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+        
         List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
         for (ClassifierAttributeRootDTO relationship : relationships)
         {
           if (relationship.getParentId().equals(mtAttrConcrete.getId()))
           {
+            try
+            {
+              newJSON.put("selectable", relationship.getSelectable());
+            }
+            catch (JSONException e)
+            {
+              throw new RuntimeException(e);
+            }
             selectableMap.put(root.getId(), relationship.getSelectable());
           }
         }
+        
+        ids.put(newJSON);
       }
 
       try
       {
-        rootsIds.put("rootsIds", ids);
+        rootsIds.put("roots", ids);
       }
       catch (JSONException e)
       {

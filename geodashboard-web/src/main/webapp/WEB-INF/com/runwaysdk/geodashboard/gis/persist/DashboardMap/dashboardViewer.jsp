@@ -184,9 +184,9 @@ $(document).ready(function(){
                                     	<!-- <span data-toggle="modal" data-target="#modal01">map it</span> -->  <!-- This code calls modal.show() on this element when its clicked on. We can't have it doing that because the modal needs to be shown after a controller request returns. -->
                                         <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
                                     </a>
-                                    	</c:when>
-                                	<c:otherwise>
-                            		</c:otherwise>
+                                </c:when>
+                                <c:otherwise>
+                            	</c:otherwise>
                         	</c:choose>
 						</h4>
 										

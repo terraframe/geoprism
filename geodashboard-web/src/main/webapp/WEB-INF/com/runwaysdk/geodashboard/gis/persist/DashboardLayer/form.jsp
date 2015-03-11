@@ -709,53 +709,49 @@
     	  if ('${isOntologyAttribute}' === 'true' && $("#ontology-tree").children().length === 0){
     		  var roots = '${roots}';
         	  var rootsJSON = JSON.parse(roots);
-        	  var rootsArrJSON = rootsJSON.rootsIds;
+        	  var rootsArrJSON = rootsJSON.roots;
         	  
     		  com.runwaysdk.ui.Manager.setFactory("JQuery");
-    		  for(var i=0; i<rootsArrJSON.length; i++){    
-    			  var thisRootId = rootsArrJSON[i];
-    			  
-    			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-    			      termType : '<%=ClassifierDTO.CLASS%>' ,
-    			      relationshipTypes : [ '<%=ClassifierIsARelationshipDTO.CLASS%>' ],
-    			      rootTerm : thisRootId,
-    			      editable : false,
-    			      slide : false,
-    			      selectable : false,
-    			      onCreateLi: function(node, $li) {
-    					  var nodeId = node.id;
+    		  
+   			  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+   			      termType : "${termType}" ,
+   			      relationshipTypes : [ "${relationshipType}" ],
+   			      rootTerms : rootsArrJSON,
+   			      editable : false,
+   			      slide : false,
+   			      selectable : false,
+   			      onCreateLi: function(node, $li) {
+   					  var nodeId = node.id;
 
-    					  var thisLi = $.parseHTML(
-    					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-    	            			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-//     	            			  '<input type="hidden" class="color-input" name="temp" value="#000000">' +
-    	            			  '</a>');
+   					  var thisLi = $.parseHTML(
+   					          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+   	            			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:#000000; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+   	            			  '</a>');
 
-    			          // Add the color icon for category ontology nodes			        
-    			          $li.find('> div').append(thisLi)
-    			          
-            			  // ontology category layer type colors
-        			      $(thisLi).find("span").colpick({
-        			      		submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-        			           	onChange: function(hsb,hex,rgb,el,bySetColor) {
-        				            		var hexStr = '#'+hex;
-        				            		$(el).css('background', hexStr);
-        				            		$(el).next(".color-input").attr('value', hexStr);            			            		
-        				            	}
-        			       });
-    			      },
-    			      /* checkable: true, */
-    				  crud: {
-    				      create: { // This configuration gets merged into the jquery create dialog.
-    				        height: 320
-    				      },
-    				      update: {
-    				        height: 320
-    				      }
-    				  }
-    			  });
-    			  tree.render("#ontology-tree");
-    		  }
+   			          // Add the color icon for category ontology nodes			        
+   			          $li.find('> div').append(thisLi)
+   			          
+           			  // ontology category layer type colors
+       			      $(thisLi).find("span").colpick({
+       			      		submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+       			           	onChange: function(hsb,hex,rgb,el,bySetColor) {
+       				            		var hexStr = '#'+hex;
+       				            		$(el).css('background', hexStr);
+       				            		$(el).next(".color-input").attr('value', hexStr);            			            		
+       				            	}
+       			       });
+   			      },
+   			      /* checkable: true, */
+   				  crud: {
+   				      create: { // This configuration gets merged into the jquery create dialog.
+   				        height: 320
+   				      },
+   				      update: {
+   				        height: 320
+   				      }
+   				  }
+   			  });
+   			  tree.render("#ontology-tree");
     	  } 
 	});
 	</script>
