@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 146177118)
+@com.runwaysdk.business.ClassSignature(hash = 562065960)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 146177118;
+  private static final long serialVersionUID = 562065960;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -641,14 +641,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoEntitySuggestions", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public static final java.lang.String getLowestMappableUniversalId(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{mdAttributeId};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getLowestMappableUniversalId", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.geodashboard.DashboardQueryDTO getSortedDashboards(com.runwaysdk.constants.ClientRequestIF clientRequest)
