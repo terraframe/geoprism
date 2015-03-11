@@ -106,24 +106,6 @@ $(document).ready(function(){
 			    </div>
 		    </div>
 		 </article>
-
-        <article class="info-box" id="toolbar-container">
-          <h3><gdb:localize key="dashboardViewer.toolbar"/></h3>        
-          <ul class="toolbar-menu-item" id="report-menu" >
-            <li class="toolbar-menu-item"><a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a></li>
-            <li class="toolbar-menu-item"><a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a></li>
-            <li class="toolbar-menu-item"><a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a></li>
-            <li class="toolbar-menu-item"><a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a></li>
-            <li class="toolbar-menu-item">
-              <gdb:localize key="dashboardViewer.export"/>                    
-              <ul>
-                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a></li>
-                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a></li>
-                <li class="toolbar-menu-item"><a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a></li>
-              </ul>
-            </li>
-          </ul>    
-        </article>
       </fieldset>
     </form>
     
@@ -325,6 +307,15 @@ $(document).ready(function(){
 <!-- 
   	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
  -->  
+    <div id="report-toolbar">
+      <span><a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
+      <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
+      <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
+      <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
+      <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
+      <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
+      <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+    </div>
     <div id="report-viewport">    
       <div id="report-content">
       </div>   
