@@ -250,16 +250,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 	    }	
   }
   
-  public static final String getLowestMappableUniversalId(String mdAttributeId)
-  {
-    MdAttribute attr = MdAttribute.get(mdAttributeId);
-    MdClassDAOIF attrClass = attr.getMdClass();
-    attrClass.getType();
-    
-    
-    return " ";
-  }
-  
 
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
   {
