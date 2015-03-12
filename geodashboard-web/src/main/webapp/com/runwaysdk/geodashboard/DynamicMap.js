@@ -2123,6 +2123,7 @@
       
       _setReportPanelHeight : function (height) {
         var current = $("#reporticng-container").height();
+        var toolbar = $("#report-toolbar").height();        
         
         // Minimize
         if(current > height)
@@ -2130,8 +2131,9 @@
           var difference = (current - height);
           
           $("#reporticng-container").animate({ bottom: "-=" + difference + "px" }, 1000, function(){
+        	  
             $("#reporticng-container").css("bottom", "0px");                                                  
-            $("#report-viewport").height(height);
+            $("#report-viewport").height(height-toolbar);
             $("#reporticng-container").height(height);
           });          
         }
@@ -2140,7 +2142,7 @@
           var difference = (height - current);
           
           $("#reporticng-container").height(height);
-          $("#report-viewport").height(height);
+          $("#report-viewport").height(height-toolbar);
           $("#reporticng-container").css("bottom", "-" + difference + "px");
               
           $("#reporticng-container").animate({ bottom: "+=" + difference + "px" }, 1000, null);
@@ -2180,7 +2182,7 @@
         
         // Min
         $('#report-min').on('click', function(){
-          that._setReportPanelHeight(0);
+          that._setReportPanelHeight(30);
         });
         
         // Render the menu

@@ -2128,7 +2128,7 @@ a.blueactive,
 .reporticng-container{
 	position:fixed;
 	left:0;
-	height:0px;   
+	height:30px;   
 	bottom:0px;   
 	width:100%;
 	background: none;
@@ -2214,4 +2214,21 @@ input:focus.gdb-attr-filter.field-error {
 
 .toolbar-menu-item a {
 	color: #BABABA;	
+}
+
+#report-toolbar {
+	border-top: 1px solid #000;
+	margin-right: 300px;
+	left: 0px;
+	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.8);
+	padding: 5px;
+	color: #000;
+	height: 30px;
+}
+
+#report-toolbar a {
+	color: #000;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-right: 1px solid rgb(0, 0, 0);
 }
