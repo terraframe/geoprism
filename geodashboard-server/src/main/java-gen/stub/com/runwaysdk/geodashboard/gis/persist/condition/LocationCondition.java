@@ -4,7 +4,6 @@ import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
@@ -24,7 +23,7 @@ public class LocationCondition extends LocationConditionBase implements com.runw
   }
 
   @Override
-  public void restrictQuery(QueryFactory factory, ValueQuery query, Attribute attr)
+  public void restrictQuery(ValueQuery query, Attribute attr)
   {
     if (this.getComparisonValue() != null && this.getComparisonValue().length() > 0)
     {
@@ -34,7 +33,7 @@ public class LocationCondition extends LocationConditionBase implements com.runw
 
       GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
 
-      query.WHERE(aptQuery.getParentTerm().EQ(entity));
+      query.AND(aptQuery.getParentTerm().EQ(entity));
       query.AND(attributeReference.EQ(aptQuery.getChildTerm()));
     }
   }

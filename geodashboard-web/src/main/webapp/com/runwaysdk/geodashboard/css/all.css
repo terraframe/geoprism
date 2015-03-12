@@ -2206,16 +2206,6 @@ input:focus.gdb-attr-filter.field-error {
     outline: medium none;	
 }
 
-.toolbar-menu-item {
-	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
-	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
-	color: #BABABA;	
-}
-
-.toolbar-menu-item a {
-	color: #BABABA;	
-}
-
 #report-toolbar {
 	border-top: 1px solid #000;
 	margin-right: 300px;
@@ -2231,4 +2221,8 @@ input:focus.gdb-attr-filter.field-error {
 	padding-left: 10px;
 	padding-right: 10px;
 	border-right: 1px solid rgb(0, 0, 0);
+}
+
+.gdb-attr-filter ul.jqtree-tree .jqtree-title {
+    color: #B9B9B9;
 }

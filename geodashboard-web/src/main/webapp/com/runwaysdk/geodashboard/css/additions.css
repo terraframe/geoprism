@@ -1,26 +1,25 @@
 /****** 
 **** All CSS below are additions to all.css
 *******/
-
-body{
+body {
 	overflow: hidden;
 }
 
 #main-content-frame {
-	float:right;
-	position:relative;
-	width:100%;
-	height:100%;
-  	border: none;
+	float: right;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	border: none;
 }
 
 body.iFrameBody {
-/*   overflow: auto; */
+	/*   overflow: auto; */
 	overflow: hidden;
 }
 
 div.pageContent {
-	padding:13px 25px 0 25px;
+	padding: 13px 25px 0 25px;
 	height: 100%;
 }
 
@@ -31,7 +30,9 @@ a.opener.apply-filters-button {
 }
 
 /* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
-textarea#description{float:left;}
+textarea#description {
+	float: left;
+}
 
 #usersTable {
 	margin-left: 0;
@@ -39,55 +40,57 @@ textarea#description{float:left;}
 	overflow-x: auto;
 }
 
-
-table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable {
-  margin-left: 0;
-  width: 100%;
-}  
-
+table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable
+	{
+	margin-left: 0;
+	width: 100%;
+}
 
 /* custom radio styles */
-div.row-holder .chk-area,
-div.row-holder .rad-area{
-  margin:0px 11px 0 0;
+div.row-holder .chk-area, div.row-holder .rad-area {
+	margin: 0px 11px 0 0;
 }
 
 div.standby-overlay {
-  background-color: #CCCCCC;
-  background-image:url('../images/transparent_spinner.gif');
-  background-repeat:no-repeat;
-  background-position:center center;
-  position: absolute; 
-  display: block;
-  opacity: 0.5
+	background-color: #CCCCCC;
+	background-image: url('../images/transparent_spinner.gif');
+	background-repeat: no-repeat;
+	background-position: center center;
+	position: absolute;
+	display: block;
+	opacity: 0.5
 }
 
-
-.reporticng-container{
+.reporticng-container {
+	
 }
 
-#reporticng-container{
-	z-index: 9999;
+#reporticng-container {
+	z-index: 15;
+}
+
+#dashboardMetadata {
+	z-index: 16;
 }
 
 .submit-form .field-row {
-  padding: 0 0 5px 20px;
+	padding: 0 0 5px 20px;
 }
 
 .submit-form .label-text, .submit-form label {
-  width: 225px;
+	width: 225px;
 }
 
 .submit-form h2 {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 .aside-nav .panel-collapse a.link-active {
-	color: #00bfff;	
+	color: #00bfff;
 }
-	
+
 a.link-active {
-	color: #00bfff;	
+	color: #00bfff;
 }
 
 /* Styles related to page loading busy spinner effect */
@@ -95,25 +98,24 @@ body.iFrameBody {
 	background-color: inherit;
 	overflow: hidden;
 }
-div.gdb-maincontent-busy {
-  background-color: #CCCCCC;
-  background-image:url('../images/transparent_spinner.gif');
-  background-repeat:no-repeat;
-  background-position:center center;
-  position: absolute; 
-  display: block;
-  top:0px;
-  left:275px;
-  right:0px;
-  height: 100%;
-  opacity: 0.5;
-}
 
+div.gdb-maincontent-busy {
+	background-color: #CCCCCC;
+	background-image: url('../images/transparent_spinner.gif');
+	background-repeat: no-repeat;
+	background-position: center center;
+	position: absolute;
+	display: block;
+	top: 0px;
+	left: 275px;
+	right: 0px;
+	height: 100%;
+	opacity: 0.5;
+}
 
 /* .aside-nav a:hover, */
 /* .aside-nav a:focus, */
 /* .aside-nav a:active{color:red;} */
-
 
 /*** 
 ** Accordion for map layer checkboxes
@@ -134,45 +136,46 @@ a.map-layers-opener.opener {
 }
 
 #base-map-container .accordion-group {
-    margin-bottom: 0px;
-    border:0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-}   
+	margin-bottom: 0px;
+	border: 0px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
 
 #legend-container .accordion-group {
-    margin-bottom: 0px;
-    border:0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-}  
-
+	margin-bottom: 0px;
+	border: 0px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
 
 /* Color Picker */
-.colpick{
+.colpick {
 	position: absolute;
 	z-index: 9999;
-} 
+}
 
-.checkbox-container{
+.checkbox-container {
 	display: block;
 	height: 20px;
 	margin-top: 7px;
 }
 
-.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked {
-	border-color:#02789e;
-	background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked
+	{
+	border-color: #02789e;
+	background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
 	float: left;
 	display: block;
-/* 	margin-right: 7px; */
+	/* 	margin-right: 7px; */
 	margin-top: 0 !important;
 }
 
-.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget {
-	border-color:#02789e;
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget
+	{
+	border-color: #02789e;
 	float: left;
 	display: block;
 	margin-right: 7px;
@@ -185,21 +188,18 @@ a.map-layers-opener.opener {
 	margin-left: 7px;
 }
 
-
-
 /*** 
 ** Legend
 ***/
-
 .legend-container {
 	position: absolute;
 	float: left;
 	left: 300px;
 	background: rgba(0, 0, 0, 0.8);
 	border: solid black 1px;
-	z-index: 999;	
+	z-index: 999;
 	cursor: move;
-/* 	margin: 5px 5px 5px auto; */
+	/* 	margin: 5px 5px 5px auto; */
 }
 
 #legend-collapse-container.accordion.info-box {
@@ -220,89 +220,89 @@ a.map-layers-opener.opener {
 /* 	background: rgba(0, 0, 0, 0.8); */
 /* 	border: solid black 1px;	 */
 /* } */
-
-.legend-item{
+.legend-item {
 	padding: 3px;
 	font-size: 13px;
 	line-height: 16px;
 	font-weight: normal;
 	color: #ececec;
-	background: rgba(255,255,255,0.05);
+	background: rgba(255, 255, 255, 0.05);
 	border: solid 2px rgba(0, 0, 0, 0.30);
 	border-bottom: solid 1px rgba(0, 0, 0, 0.30);
 	border-top: solid 1px rgba(0, 0, 0, 0.30);
 }
 
-ul#legend-list{
-    list-style-type: none;
-    padding: 2px;
-    margin: 2px;
+ul#legend-list {
+	list-style-type: none;
+	padding: 2px;
+	margin: 2px;
 }
 
-ul#legend-list-group{
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+ul#legend-list-group {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
 }
 
-.legend-grouped{
+.legend-grouped {
 	cursor: pointer;
 }
 
-a.legend-opener.opener{
-	font-size:15px;
-	line-height:15px;
-	font-weight:normal;
-	color:#bababa;
-	margin:5px;
+a.legend-opener.opener {
+	font-size: 15px;
+	line-height: 15px;
+	font-weight: normal;
+	color: #bababa;
+	margin: 5px;
 	margin-top: 5px;
 	text-align: left;
 	display: block;
 }
 
-.legend-image{
+.legend-image {
 	margin-right: 10px;
 }
 
-h3.popup-heading{
+h3.popup-heading {
 	margin: 0;
 	text-align: center;
 	color: #666666;
 	font-weight: bold;
 }
 
-.popup-table-heading{
+.popup-table-heading {
 	font-style: italic;
 }
 
-.leaflet-popup-content p{
+.leaflet-popup-content p {
 	margin: 0;
 }
 
-#new-dashboard-btn-container{
-    margin-bottom: 5px;
+#new-dashboard-btn-container {
+	margin-bottom: 5px;
 }
 
-.new-dashboard-btn{
-	color:white;
-	font-weight:bold;
+.new-dashboard-btn {
+	color: white;
+	font-weight: bold;
 }
 
-.new-dashboard-btn:hover{
-	color:#00bfff;
+.new-dashboard-btn:hover {
+	color: #00bfff;
 }
 
 .modal-form .category-block {
 	height: 200px;
 	overflow: auto;
-	-webkit-overflow-scrolling:touch;
+	-webkit-overflow-scrolling: touch;
 	padding: 0;
 }
 
 div.text.category-input-container {
 	width: 225px;
 }
-span.icon-color.category-icon{
+
+span.icon-color.category-icon {
 	background: #a6e53b;
 	width: 28px;
 	height: 28px;
@@ -311,14 +311,14 @@ span.icon-color.category-icon{
 	border: 1px solid #aaa;
 }
 
-div.category-container{
+div.category-container {
 	float: left;
 	position: relative;
 	width: 100%;
 	margin-bottom: 5px;
 }
 
-div.panel-group.choice-color.category-group{
+div.panel-group.choice-color.category-group {
 	width: 300px;
 }
 
@@ -326,8 +326,7 @@ div.panel-group.choice-color.category-group{
 	z-index: 999999 !important;
 }
 
-div.alert.alertbox{
+div.alert.alertbox {
 	color: red;
 	font-weight: bold;
 }
-

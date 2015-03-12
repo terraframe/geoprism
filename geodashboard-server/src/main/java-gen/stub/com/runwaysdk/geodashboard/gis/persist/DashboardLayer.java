@@ -543,12 +543,13 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
                 if (definedByClass.getId().equals(mdClass.getId()))
                 {
                   Attribute attr = QueryUtil.get(query, mdAttribute.definesAttribute());
-                  condition.restrictQuery(factory, innerQuery1, attr);
+
+                  condition.restrictQuery(innerQuery1, attr);
                 }
               }
               else if (condition instanceof LocationCondition)
               {
-                condition.restrictQuery(factory, innerQuery1, geoAttr);
+                condition.restrictQuery(innerQuery1, geoAttr);
               }
             }
           }

@@ -16,6 +16,7 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
+import com.runwaysdk.geodashboard.gis.persist.condition.ClassifierConditionDTO;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanDTO;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqualDTO;
@@ -136,6 +137,13 @@ public class JavascriptUtil implements Reloadable
 
   public static void loadOntologyBundle(ClientRequestIF request, HttpServletRequest req)
   {
+    Set<String> types = JavascriptUtil.getOntologyTypes();
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+
+  private static Set<String> getOntologyTypes()
+  {
     Set<String> types = new HashSet<String>();
     types.add(ClassifierDTO.CLASS);
     types.add(ClassifierIsARelationshipDTO.CLASS);
@@ -144,7 +152,7 @@ public class JavascriptUtil implements Reloadable
     types.add(TermUtilDTO.CLASS);
     types.add(ClassifierExportMenuDTO.CLASS);
 
-    JavascriptUtil.loadJavascript(request, req, types);
+    return types;
   }
 
   public static void loadDynamicMapBundle(ClientRequestIF request, HttpServletRequest req)
@@ -160,12 +168,14 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardLessThanOrEqualDTO.CLASS);
     types.add(DashboardEqualDTO.CLASS);
     types.add(DashboardNotEqualDTO.CLASS);
+    types.add(ClassifierConditionDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(DashboardDTO.CLASS);
     types.add(LocationConditionDTO.CLASS);
     types.add(ReportItemController.CLASS);
     types.add(ReportItemDTO.CLASS);
     types.add(ReportItemViewDTO.CLASS);
+    types.addAll(JavascriptUtil.getOntologyTypes());
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

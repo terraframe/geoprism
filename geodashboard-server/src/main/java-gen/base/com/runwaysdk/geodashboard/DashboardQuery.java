@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 45923359)
+@com.runwaysdk.business.ClassSignature(hash = 59691551)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -37,6 +37,29 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public String getClassType()
   {
     return com.runwaysdk.geodashboard.Dashboard.CLASS;
+  }
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry()
+  {
+    return getCountry(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.COUNTRY);
+
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.COUNTRY, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.COUNTRY);
+
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.COUNTRY, mdAttributeIF, this, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -379,7 +402,11 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.Dashboard.COUNTRY)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -577,6 +604,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public interface DashboardQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableReference
   {
 
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry();
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -691,6 +721,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
       return this.NE(dashboard.getId());
     }
 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry()
+  {
+    return getCountry(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.COUNTRY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.COUNTRY,  alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
     return getCreateDate(null);
@@ -1100,7 +1147,11 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.Dashboard.COUNTRY)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -1159,6 +1210,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public interface DashboardQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableMultiReference
   {
 
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry();
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -1293,6 +1347,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
       }
 
       return this.containsExactly(itemIdArray);
+  }
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry()
+  {
+    return getCountry(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.COUNTRY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getCountry(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.COUNTRY,  alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -1587,7 +1658,11 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.Dashboard.COUNTRY)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }

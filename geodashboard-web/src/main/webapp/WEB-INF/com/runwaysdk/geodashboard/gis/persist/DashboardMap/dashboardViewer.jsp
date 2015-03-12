@@ -29,11 +29,13 @@
 
 <!-- Dynamic map CSS -->
 <jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
+<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
 
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
 
 <script type="text/javascript">${js}</script>
 
@@ -238,14 +240,8 @@ $(document).ready(function(){
 		                            </div>
 								</c:when>
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeTerm'}">
-								    <gdb:localize key="dashboard.term.label" var="dashboardTermLabel"/>
-								    
 									<!-- Term attribute -->
-		                            <div class="text">
-		                              <label for=filter-term-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
-		                              <input class="gdb-attr-filter filter-term" id="filter-term-${attr.mdAttributeId}" type="text" placeholder="${dashboardTermLabel}"></input>
-		                              <input id="filter-hidden-${attr.mdAttributeId}" type="hidden"></input>
-		                            </div>
+                                    <div class="gdb-attr-filter filter-term" id="${attr.mdAttributeId}"></div>
 								</c:when>
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeBoolean'}">
 									<!-- Boolean attribute -->

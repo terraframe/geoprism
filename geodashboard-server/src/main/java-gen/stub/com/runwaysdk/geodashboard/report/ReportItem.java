@@ -406,24 +406,23 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(parameter.getParameterName(), parameter.getParameterValue());
     }
 
-    if (map.containsKey(CATEGORY))
+    /*
+     * Set the default category if one is not provided. The default category is the geo Id of the country of the
+     * dashboard.
+     */
+    String geoId = map.get(CATEGORY);
+
+    if (geoId == null || geoId.length() == 0)
     {
-      String geoId = map.get(CATEGORY);
+      Dashboard dashboard = this.getDashboard();
+      GeoEntity country = dashboard.getCountry();
 
-      if (geoId != null && geoId.length() > 0)
-      {
-        try
-        {
-          GeoEntity geoEntity = GeoEntity.getByKey(geoId);
-
-          map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
-        }
-        catch (Exception e)
-        {
-          // Do nothing
-        }
-      }
+      map.put(CATEGORY, country.getGeoId());
     }
+
+    GeoEntity geoEntity = GeoEntity.getByKey(map.get(CATEGORY));
+
+    map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
 
     if (map.containsKey(CRITERIA))
     {
