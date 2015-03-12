@@ -731,6 +731,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
       json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
       json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
+      json.put("featureStrategy", getFeatureStrategy());
 
       // Getting the aggregation method (i.e. avg, sum, min, max) and aggregation attribute
       // (i.e. numberofunits) for the style representation
