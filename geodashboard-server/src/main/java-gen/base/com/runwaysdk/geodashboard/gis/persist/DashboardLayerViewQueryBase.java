@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 559357041)
+@com.runwaysdk.business.ClassSignature(hash = 1988502718)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -94,6 +94,24 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
   public com.runwaysdk.query.SelectableBoolean getDisplayInLegend(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.DISPLAYINLEGEND, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getFeatureStrategy()
+  {
+    return getFeatureStrategy(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getFeatureStrategy(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.FEATURESTRATEGY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getFeatureStrategy(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.FEATURESTRATEGY, alias, displayLabel);
 
   }
  

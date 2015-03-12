@@ -345,37 +345,48 @@ public class SLDMapVisitor implements MapVisitor
 
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
       {
+        int numCategories;
+        double categoryLen;
+        
         // SLD generation
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
 
-        HashMap<Integer, Color> gradientColors = this.interpolateColor();
-
         HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
         double minAttrVal = minMaxMap.get("min");
         double maxAttrVal = minMaxMap.get("max");
 
-        int numCategories;
         if (minAttrVal == maxAttrVal)
         {
           // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
           numCategories = 1;
+          categoryLen = 1.0;
         }
         else
         {
           numCategories = 5;
+          categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
         }
-
-        double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
+        
+        HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
 
         for (int i = 0; i < numCategories; i++)
         {
 
-          double currentCatMin = minAttrVal + ( i * categoryLen );
+          double currentCatMin;
+          if(numCategories == 1)
+          {
+            currentCatMin = 0;
+          }
+          else
+          {
+            currentCatMin = minAttrVal + ( i * categoryLen );
+          }
           double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
 
           int currentColorPos = i + 1;
+          
           Color currentColor = gradientColors.get(currentColorPos);
           String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
 
@@ -540,7 +551,6 @@ public class SLDMapVisitor implements MapVisitor
       }
       else
       {
-
         Node ruleNode = node("Rule").build(root);
         node("Name").text("basic").build(ruleNode);
         node("Title").text("basic").build(ruleNode);
@@ -557,7 +567,7 @@ public class SLDMapVisitor implements MapVisitor
       return root;
     }
 
-    private HashMap<Integer, Color> interpolateColor()
+    private HashMap<Integer, Color> interpolateColor(int numCategories)
     {
       HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
@@ -571,7 +581,7 @@ public class SLDMapVisitor implements MapVisitor
         Color minFillRGB = Color.decode(minFill);
         Color maxFillRGB = Color.decode(maxFill);
         colorRGBList.put(1, minFillRGB);
-        colorRGBList.put(5, maxFillRGB);
+        colorRGBList.put(numCategories, maxFillRGB);
 
         // RGB color values
         int r1 = minFillRGB.getRed();
@@ -582,19 +592,19 @@ public class SLDMapVisitor implements MapVisitor
         int g2 = maxFillRGB.getGreen();
         int b2 = maxFillRGB.getBlue();
 
-        // Currently hard coded to 20% to fit 5 categories (i.e. 20% x 5 = 100%)
-        double stepIncrease = .2;
-        double stepVal = .2;
+        double stepIncrease = (100.0 / numCategories) / 100.0;
+        double stepVal = (100.0 / numCategories) / 100.0; 
 
-        // Build categories between min/max categories
-        for (int i = 0; i < 4; i++)
+        // Build category colors between min/max category values.
+        // If only 1 category the color value will be the max color set by the user
+        for (int i = 0; i < numCategories; i++)
         {
           int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );
           int green = (int) ( g1 + ( stepVal * ( g2 - g1 ) ) );
           int blue = (int) ( b1 + ( stepVal * ( b2 - b1 ) ) );
           Color newColor = new Color(red, green, blue);
           colorRGBList.put(i + 1, newColor);
-          stepVal = stepIncrease + stepVal;
+          stepVal = stepVal + stepIncrease; // reseting stepVal to the next color increment value (i.e. .20 becomes .40)
         }
       }
       return colorRGBList;

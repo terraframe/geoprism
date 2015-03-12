@@ -215,6 +215,7 @@
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
           view.setActiveByDefault(true);
+          view.setFeatureStrategy(layer.featureStrategy);
           // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
           // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
           if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
@@ -389,21 +390,35 @@
        * @groupedInLegend - boolean indicating if the legend item is grouped in the main legend or floating
        * 
        */
-      _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend) {
+      _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy) {
         this.legendId = "legend_" + layerId;
         this.displayName = displayName;
         this.geoserverName = geoserverName;
         this.legendXPosition = legendXPosition;
         this.legendYPosition = legendYPosition;
         this.groupedInLegend = groupedInLegend;
+        this.featureStrategy = featureStrategy;
         this.create = function(){
+        	  var src = window.location.origin; 
+        	  src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
+        	  src += 'VERSION=1.0.0' + '&amp;';
+        	  src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
+        	  src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
+        	  
+        	  // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
+        	  if(this.featureStrategy === "GRADIENT"){
+        		  src += 'forceLabels:on;';
+        	  }
+        	  src += '&amp;';
+        	  src += 'LAYER='+ this.geoserverName;
+        	  
               if(this.groupedInLegend){
                   // Remove any old grouped legend items before creating new updated items
                   $(".legend-item[data-parentlayerid='"+layerId+"']").remove();
                   
                   var html = '';
                   html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
-                  html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName+'" alt="">'+ this.displayName;
+                  html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
                   html += '</li>';
               
                   $("#legend-list-group").append(html);  
@@ -417,7 +432,7 @@
                   html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ layerId +'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
                   html += '<div id="legend-items-container"><ul id="legend-list">';
                	  html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
-                  html += '<img class="legend-image" src="'+window.location.origin+'/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25&amp;LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;&amp;LAYER='+ this.geoserverName +'" alt="">'+ this.displayName;
+                  html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
                   html += '</li>';
                   html += '</ul></div></div>';
                   
@@ -475,7 +490,16 @@
             this.groupedInLegend = true;
             draggedLegendContainer.remove();
             
-            $("#legend-opener-button").click();
+            // if the page was rendered with no grouped legends (but any floating) the bootstrap will not 
+            // assign the 'in' or 'collapse' classes to the div.  So we simulate the click event to open the 
+            // panel which results in bootstrap adding the 'in' class to #collapse-legend
+            if(!$("#collapse-legend").hasClass("in") && !$("#collapse-legend").hasClass("collapse") ){
+            	$("#legend-opener-button").click();
+            }
+            //else if the div is collapsed open it 
+            else if($("#collapse-legend").hasClass("collapse")){
+            	$("#legend-opener-button").click();
+            }
             
         };
       },
@@ -512,6 +536,7 @@
                 var legendXPosition = layer.getLegendXPosition();
                 var legendYPosition = layer.getLegendYPosition();
                 var groupedInLegend = layer.getGroupedInLegend();
+                var featureStrategy = layer.getFeatureStrategy();
                 
                 var legendObj = new this._Legend(
                     layerId, 
@@ -519,7 +544,8 @@
                     geoserverName, 
                     legendXPosition, 
                     legendYPosition, 
-                    groupedInLegend
+                    groupedInLegend,
+                    featureStrategy
                     );
                 
                 // render the legend

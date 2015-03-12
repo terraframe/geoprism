@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -761873720)
+@com.runwaysdk.business.ClassSignature(hash = -100356523)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -15,6 +15,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String AGGREGATIONATTRIBUTE = "aggregationAttribute";
   public static java.lang.String AGGREGATIONMETHOD = "aggregationMethod";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
+  public static java.lang.String FEATURESTRATEGY = "featureStrategy";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERID = "layerId";
@@ -24,7 +25,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = -761873720;
+  private static final long serialVersionUID = -100356523;
   
   public DashboardLayerViewBase()
   {
@@ -41,10 +42,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(ACTIVEBYDEFAULT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getActiveByDefaultMd()
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getActiveByDefaultMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(ACTIVEBYDEFAULT);
   }
   
   public void setActiveByDefault(Boolean value)
@@ -69,10 +70,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(AGGREGATIONATTRIBUTE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationAttributeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getAggregationAttributeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(AGGREGATIONATTRIBUTE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(AGGREGATIONATTRIBUTE);
   }
   
   public void setAggregationAttribute(String value)
@@ -97,10 +98,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(AGGREGATIONMETHOD);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAggregationMethodMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getAggregationMethodMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(AGGREGATIONMETHOD);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(AGGREGATIONMETHOD);
   }
   
   public void setAggregationMethod(String value)
@@ -125,10 +126,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(DISPLAYINLEGEND);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayInLegendMd()
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getDisplayInLegendMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(DISPLAYINLEGEND);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(DISPLAYINLEGEND);
   }
   
   public void setDisplayInLegend(Boolean value)
@@ -143,6 +144,34 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     }
   }
   
+  public String getFeatureStrategy()
+  {
+    return getValue(FEATURESTRATEGY);
+  }
+  
+  public void validateFeatureStrategy()
+  {
+    this.validateAttribute(FEATURESTRATEGY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getFeatureStrategyMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(FEATURESTRATEGY);
+  }
+  
+  public void setFeatureStrategy(String value)
+  {
+    if(value == null)
+    {
+      setValue(FEATURESTRATEGY, "");
+    }
+    else
+    {
+      setValue(FEATURESTRATEGY, value);
+    }
+  }
+  
   public Boolean getGroupedInLegend()
   {
     return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(GROUPEDINLEGEND));
@@ -153,10 +182,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(GROUPEDINLEGEND);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGroupedInLegendMd()
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getGroupedInLegendMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(GROUPEDINLEGEND);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(GROUPEDINLEGEND);
   }
   
   public void setGroupedInLegend(Boolean value)
@@ -181,10 +210,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getLayerId()
@@ -197,10 +226,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(LAYERID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getLayerIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(LAYERID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(LAYERID);
   }
   
   public void setLayerId(String value)
@@ -225,10 +254,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(LAYERISACTIVE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerIsActiveMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getLayerIsActiveMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(LAYERISACTIVE);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(LAYERISACTIVE);
   }
   
   public void setLayerIsActive(Boolean value)
@@ -253,10 +282,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(LAYERNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getLayerNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(LAYERNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(LAYERNAME);
   }
   
   public void setLayerName(String value)
@@ -281,10 +310,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(LEGENDXPOSITION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendXPositionMd()
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getLegendXPositionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(LEGENDXPOSITION);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(LEGENDXPOSITION);
   }
   
   public void setLegendXPosition(Integer value)
@@ -309,10 +338,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(LEGENDYPOSITION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendYPositionMd()
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getLegendYPositionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(LEGENDYPOSITION);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(LEGENDYPOSITION);
   }
   
   public void setLegendYPosition(Integer value)
@@ -337,10 +366,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(SLDNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSldNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSldNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(SLDNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SLDNAME);
   }
   
   public void setSldName(String value)
@@ -365,10 +394,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     this.validateAttribute(VIEWNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getViewNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getViewNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
-    return mdClassIF.definesAttribute(VIEWNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(VIEWNAME);
   }
   
   public void setViewName(String value)

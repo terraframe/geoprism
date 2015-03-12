@@ -49,6 +49,7 @@
           <char name="sldName" label="sldName" size="64" required="true" />
           <char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
           <char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
+          <char name="featureStrategy" label="Feature Strategy" size="50" required="true" />
         </attributes>
       </mdView>
 
