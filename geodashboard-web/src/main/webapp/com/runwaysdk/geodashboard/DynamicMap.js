@@ -2085,6 +2085,18 @@
           },
           onFailure : function(e) {
             that.handleException(e);
+          },
+          onCancel : function(e) {
+            var request = new Mojo.ClientRequest({
+              onSuccess : function () {
+                // Close the dialog ??
+              },
+              onFailure : function(e) {
+                that.handleException(e);
+              }
+            });
+            
+            com.runwaysdk.geodashboard.report.ReportItem.unlockByDashboard(request, that._dashboardId);
           }
         };
             

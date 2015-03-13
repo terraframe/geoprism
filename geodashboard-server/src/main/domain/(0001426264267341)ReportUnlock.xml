@@ -1,0 +1,16 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem">
+        <create>
+          <mdMethod name="unlockByDashboard" label="Unlock by dashboard" returnType="void" static="true">
+            <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

@@ -826,7 +826,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return ReportProviderBridge.getSupportedAggregation(queryId);
   }
 
-  public static ReportItem lockOrCreateReport(String dashboardId)
+  public static ReportItem getByDashboard(String dashboardId)
   {
     ReportItemQuery query = new ReportItemQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(dashboardId));
@@ -838,20 +838,43 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       if (iterator.hasNext())
       {
         ReportItem item = iterator.next();
-        item.lock();
 
         return item;
       }
-      else
-      {
-        return new ReportItem();
-      }
+
+      return null;
     }
     finally
     {
       iterator.close();
     }
 
+  }
+
+  public static ReportItem lockOrCreateReport(String dashboardId)
+  {
+    ReportItem report = ReportItem.getByDashboard(dashboardId);
+
+    if (report == null)
+    {
+      report = new ReportItem();
+    }
+    else
+    {
+      report.lock();
+    }
+
+    return report;
+  }
+
+  public static void unlockByDashboard(String dashboardId)
+  {
+    ReportItem report = ReportItem.getByDashboard(dashboardId);
+
+    if (report != null)
+    {
+      report.unlock();
+    }
   }
 
 }
