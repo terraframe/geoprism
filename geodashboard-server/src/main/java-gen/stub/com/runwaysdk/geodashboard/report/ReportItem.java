@@ -202,6 +202,15 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
 
     this.apply();
+
+    try
+    {
+      this.run(new HashMap<String, String>());
+    }
+    catch (Exception e)
+    {
+      throw new InvalidReportDefinitionException(e);
+    }
   }
 
   @Override

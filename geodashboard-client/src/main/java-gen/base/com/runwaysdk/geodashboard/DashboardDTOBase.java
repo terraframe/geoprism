@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1871192138)
+@com.runwaysdk.business.ClassSignature(hash = 706805436)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = -1871192138;
+  private static final long serialVersionUID = 706805436;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -723,6 +723,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{mdAttributeId, text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getTextSuggestions", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.Boolean hasReport()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "hasReport", _declaredTypes);
+    return (java.lang.Boolean) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.Boolean hasReport(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "hasReport", _declaredTypes);
+    return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   @SuppressWarnings("unchecked")

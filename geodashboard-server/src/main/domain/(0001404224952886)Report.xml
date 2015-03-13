@@ -94,7 +94,7 @@
         </attributes>
       </mdException>
 
-      <mdException name="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" label="Unknown report exception" message="Invalid drill through definition.  Has sub report has not been defined." />
+      <mdException name="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" label="Invalid report definition" message="Uploaded file is not a valid report definition" />
 
       <object type="com.runwaysdk.system.Vault" key="default" />
     </create>

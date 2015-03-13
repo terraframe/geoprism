@@ -1,0 +1,15 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <mdMethod name="hasReport" label="Has report" returnType="java.lang.Boolean" static="false" />
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

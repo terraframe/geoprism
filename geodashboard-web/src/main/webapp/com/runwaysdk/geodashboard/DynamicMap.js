@@ -218,7 +218,7 @@
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
           view.setActiveByDefault(true);
-          view.setFeatureStrategy(layer.featureStrategy);
+          //view.setFeatureStrategy(layer.featureStrategy);
           // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
           // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
           if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
@@ -310,18 +310,39 @@
       },
       
       _exportReport : function(geoId, criteria, format) {
-           
-        var configuration = {};
-        configuration.parameters = [];
-        configuration.parameters.push({'name' : 'category', 'value' : geoId});
-        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
-        configuration.parameters.push({'name' : 'format', 'value' : format});
         
-        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
-        url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(this._dashboardId);          
-        url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+        var that = this;
         
-        window.location.href = url;
+        var request = new Mojo.ClientRequest({
+          onSuccess : function (result) {
+          
+            if(result) {            
+              var configuration = {};
+              configuration.parameters = [];
+              configuration.parameters.push({'name' : 'category', 'value' : geoId});
+              configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+              configuration.parameters.push({'name' : 'format', 'value' : format});
+                
+              var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
+              url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(that._dashboardId);          
+              url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+                
+              window.location.href = url;
+            }
+            else {
+              var msg = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
+              
+              that._renderMessage(msg);
+            }
+          },
+          onFailure : function (exception) {
+            that.handleException(exception)
+          }
+          
+        });
+        
+        com.runwaysdk.geodashboard.Dashboard.hasReport(request, this._dashboardId);
+        
       },
       
       /**
@@ -402,19 +423,19 @@
         this.groupedInLegend = groupedInLegend;
         this.featureStrategy = featureStrategy;
         this.create = function(){
-        	  var src = window.location.origin; 
-        	  src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
-        	  src += 'VERSION=1.0.0' + '&amp;';
-        	  src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
-        	  src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
-        	  
-        	  // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-        	  if(this.featureStrategy === "GRADIENT"){
-        		  src += 'forceLabels:on;';
-        	  }
-        	  src += '&amp;';
-        	  src += 'LAYER='+ this.geoserverName;
-        	  
+            var src = window.location.origin; 
+            src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
+            src += 'VERSION=1.0.0' + '&amp;';
+            src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
+            src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
+            
+            // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
+            if(this.featureStrategy === "GRADIENT"){
+              src += 'forceLabels:on;';
+            }
+            src += '&amp;';
+            src += 'LAYER='+ this.geoserverName;
+            
               if(this.groupedInLegend){
                   // Remove any old grouped legend items before creating new updated items
                   $(".legend-item[data-parentlayerid='"+layerId+"']").remove();
@@ -434,7 +455,7 @@
                   var html = '';              
                   html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ layerId +'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
                   html += '<div id="legend-items-container"><ul id="legend-list">';
-               	  html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
+                   html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
                   html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
                   html += '</li>';
                   html += '</ul></div></div>';
@@ -497,11 +518,11 @@
             // assign the 'in' or 'collapse' classes to the div.  So we simulate the click event to open the 
             // panel which results in bootstrap adding the 'in' class to #collapse-legend
             if(!$("#collapse-legend").hasClass("in") && !$("#collapse-legend").hasClass("collapse") ){
-            	$("#legend-opener-button").click();
+              $("#legend-opener-button").click();
             }
             //else if the div is collapsed open it 
             else if($("#collapse-legend").hasClass("collapse")){
-            	$("#legend-opener-button").click();
+              $("#legend-opener-button").click();
             }
             
         };
@@ -539,7 +560,7 @@
                 var legendXPosition = layer.getLegendXPosition();
                 var legendYPosition = layer.getLegendYPosition();
                 var groupedInLegend = layer.getGroupedInLegend();
-                var featureStrategy = layer.getFeatureStrategy();
+//                var featureStrategy = layer.getFeatureStrategy();
                 
                 var legendObj = new this._Legend(
                     layerId, 
@@ -547,8 +568,8 @@
                     geoserverName, 
                     legendXPosition, 
                     legendYPosition, 
-                    groupedInLegend,
-                    featureStrategy
+                    groupedInLegend//,
+//                    featureStrategy
                     );
                 
                 // render the legend
@@ -837,11 +858,7 @@
                   {
                     var msg = com.runwaysdk.Localize.localize("dashboard", "Required");                    
                     
-                    var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-                    dialog.appendContent(message);
-                    dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
-                    dialog.setStyle("z-index", 2001);
-                    dialog.render();    
+                    that._renderMessage(msg);
                   }
                 }
               },
@@ -861,6 +878,13 @@
         this._DashboardController.newClone(request, this._dashboardId);
       },
       
+      _renderMessage : function(message) {
+        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
+        dialog.setStyle("z-index", 2001);
+        dialog.render();            
+      },
       
       /**
        * Opens the layer edit form for existing layers  
@@ -2009,8 +2033,8 @@
           var terms = config.tree.getCheckedTerms();
           
           if(terms.length > 0) {
-        	var value = JSON.stringify(terms);
-        	  
+            var value = JSON.stringify(terms);
+            
             var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();             
             attrCond.setComparisonValue(value);
             attrCond.setDefiningMdAttribute(mdAttribute);
@@ -2071,11 +2095,7 @@
         if(errorCount > 0) {
           var message = com.runwaysdk.Localize.localize("filter", "error");
           
-          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-          dialog.appendContent(message);
-          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
-          dialog.setStyle("z-index", 2001);
-          dialog.render();          
+          that._renderMessage(message);
         }
         else {
           this._conditionMap = this._buildConditionMap();
