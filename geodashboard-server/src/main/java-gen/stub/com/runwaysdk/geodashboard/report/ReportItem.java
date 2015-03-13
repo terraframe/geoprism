@@ -34,6 +34,7 @@ import org.eclipse.birt.report.engine.api.RenderOption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.ibm.icu.util.ULocale;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.Operation;
@@ -44,6 +45,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -202,6 +204,15 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
 
     this.apply();
+
+    try
+    {
+      this.run(new HashMap<String, String>());
+    }
+    catch (Exception e)
+    {
+      throw new InvalidReportDefinitionException(e);
+    }
   }
 
   @Override
@@ -362,16 +373,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       {
         task.setAppContext(contextMap);
         task.setRenderOption(this.getRenderOptions(outputStream, document, baseURL, reportURL, format));
-
-        if (task.getRenderOption() instanceof HTMLRenderOption)
-        {
-          // long pageNumber = this.getPageNumber(parameterMap);
-          //
-          // if (pageNumber > 0)
-          // {
-          // task.setPageNumber(pageNumber);
-          // }
-        }
+        task.setLocale(LocalizationFacade.getLocale());
 
         IReportRunnable design = engine.openReportDesign(document.getDesignStream());
 
@@ -406,24 +408,23 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(parameter.getParameterName(), parameter.getParameterValue());
     }
 
-    if (map.containsKey(CATEGORY))
+    /*
+     * Set the default category if one is not provided. The default category is the geo Id of the country of the
+     * dashboard.
+     */
+    String geoId = map.get(CATEGORY);
+
+    if (geoId == null || geoId.length() == 0)
     {
-      String geoId = map.get(CATEGORY);
+      Dashboard dashboard = this.getDashboard();
+      GeoEntity country = dashboard.getCountry();
 
-      if (geoId != null && geoId.length() > 0)
-      {
-        try
-        {
-          GeoEntity geoEntity = GeoEntity.getByKey(geoId);
-
-          map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
-        }
-        catch (Exception e)
-        {
-          // Do nothing
-        }
-      }
+      map.put(CATEGORY, country.getGeoId());
     }
+
+    GeoEntity geoEntity = GeoEntity.getByKey(map.get(CATEGORY));
+
+    map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
 
     if (map.containsKey(CRITERIA))
     {
@@ -554,6 +555,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
         task.setAppContext(contextMap);
         task.setParameterValues(convertedParameters);
         task.validateParameters();
+        task.setLocale(LocalizationFacade.getLocale());
 
         task.run(new FileArchiveWriter(file.getAbsolutePath()));
       }
@@ -818,7 +820,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return ReportProviderBridge.getSupportedAggregation(queryId);
   }
 
-  public static ReportItem lockOrCreateReport(String dashboardId)
+  public static ReportItem getByDashboard(String dashboardId)
   {
     ReportItemQuery query = new ReportItemQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(dashboardId));
@@ -830,20 +832,43 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       if (iterator.hasNext())
       {
         ReportItem item = iterator.next();
-        item.lock();
 
         return item;
       }
-      else
-      {
-        return new ReportItem();
-      }
+
+      return null;
     }
     finally
     {
       iterator.close();
     }
 
+  }
+
+  public static ReportItem lockOrCreateReport(String dashboardId)
+  {
+    ReportItem report = ReportItem.getByDashboard(dashboardId);
+
+    if (report == null)
+    {
+      report = new ReportItem();
+    }
+    else
+    {
+      report.lock();
+    }
+
+    return report;
+  }
+
+  public static void unlockByDashboard(String dashboardId)
+  {
+    ReportItem report = ReportItem.getByDashboard(dashboardId);
+
+    if (report != null)
+    {
+      report.unlock();
+    }
   }
 
 }

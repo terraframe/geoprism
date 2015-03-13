@@ -3,7 +3,6 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.geodashboard.gis.model.condition.Composite;
 import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardComposite extends DashboardCompositeBase implements
@@ -17,7 +16,7 @@ public abstract class DashboardComposite extends DashboardCompositeBase implemen
   }
   
   @Override
-  public void restrictQuery(QueryFactory factory, ValueQuery query, Attribute attr) {
+  public void restrictQuery(ValueQuery query, Attribute attr) {
     throw new UnsupportedOperationException();
   }
   

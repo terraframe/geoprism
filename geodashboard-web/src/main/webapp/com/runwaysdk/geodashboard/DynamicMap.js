@@ -56,6 +56,9 @@
         this._conditionMap = {'conditions' : [], 'criteria' : []};
         this._currGeoId = '';
         
+        // Filter trees
+        this._filterTrees = [];
+        
         // Number localization setup
         this._parser = Globalize.numberParser();
         this._formatter = Globalize.numberFormatter();
@@ -348,18 +351,39 @@
       },
       
       _exportReport : function(geoId, criteria, format) {
-           
-        var configuration = {};
-        configuration.parameters = [];
-        configuration.parameters.push({'name' : 'category', 'value' : geoId});
-        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
-        configuration.parameters.push({'name' : 'format', 'value' : format});
         
-        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
-        url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(this._dashboardId);          
-        url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+        var that = this;
         
-        window.location.href = url;
+        var request = new Mojo.ClientRequest({
+          onSuccess : function (result) {
+          
+            if(result) {            
+              var configuration = {};
+              configuration.parameters = [];
+              configuration.parameters.push({'name' : 'category', 'value' : geoId});
+              configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+              configuration.parameters.push({'name' : 'format', 'value' : format});
+                
+              var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo';
+              url += '?' + encodeURIComponent("report") + "=" + encodeURIComponent(that._dashboardId);          
+              url += '&' + encodeURIComponent("configuration") + "=" + encodeURIComponent(JSON.stringify(configuration));          
+                
+              window.location.href = url;
+            }
+            else {
+              var msg = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
+              
+              that._renderMessage(msg);
+            }
+          },
+          onFailure : function (exception) {
+            that.handleException(exception)
+          }
+          
+        });
+        
+        com.runwaysdk.geodashboard.Dashboard.hasReport(request, this._dashboardId);
+        
       },
       
       /**
@@ -440,19 +464,19 @@
         this.groupedInLegend = groupedInLegend;
         this.featureStrategy = featureStrategy;
         this.create = function(){
-        	  var src = window.location.origin; 
-        	  src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
-        	  src += 'VERSION=1.0.0' + '&amp;';
-        	  src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
-        	  src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
-        	  
-        	  // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-        	  if(this.featureStrategy === "GRADIENT"){
-        		  src += 'forceLabels:on;';
-        	  }
-        	  src += '&amp;';
-        	  src += 'LAYER='+ this.geoserverName;
-        	  
+            var src = window.location.origin; 
+            src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
+            src += 'VERSION=1.0.0' + '&amp;';
+            src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
+            src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
+            
+            // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
+            if(this.featureStrategy === "GRADIENT"){
+              src += 'forceLabels:on;';
+            }
+            src += '&amp;';
+            src += 'LAYER='+ this.geoserverName;
+            
               if(this.groupedInLegend){
                   // Remove any old grouped legend items before creating new updated items
                   $(".legend-item[data-parentlayerid='"+layerId+"']").remove();
@@ -472,7 +496,7 @@
                   var html = '';              
                   html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ layerId +'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
                   html += '<div id="legend-items-container"><ul id="legend-list">';
-               	  html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
+                   html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
                   html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
                   html += '</li>';
                   html += '</ul></div></div>';
@@ -535,11 +559,11 @@
             // assign the 'in' or 'collapse' classes to the div.  So we simulate the click event to open the 
             // panel which results in bootstrap adding the 'in' class to #collapse-legend
             if(!$("#collapse-legend").hasClass("in") && !$("#collapse-legend").hasClass("collapse") ){
-            	$("#legend-opener-button").click();
+              $("#legend-opener-button").click();
             }
             //else if the div is collapsed open it 
             else if($("#collapse-legend").hasClass("collapse")){
-            	$("#legend-opener-button").click();
+              $("#legend-opener-button").click();
             }
             
         };
@@ -717,7 +741,7 @@
         
         // open the overlay panel if there are layers and it is collapsed
         if(layers.length > 0 && !$("#collapse-overlay").hasClass("in")){
-        	$("#overlay-opener-button").click();
+          $("#overlay-opener-button").click();
         }
         
         this._drawLegendItems();
@@ -850,10 +874,11 @@
             $( "#clone-dialog" ).dialog({
               resizable: false,
               height:200,
-              width:400,
+              width:730,
               modal: true,
               buttons: [{
                 text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
+                "class": 'btn btn-primary',
                 click : function() {
                   var createRequest = new Mojo.ClientRequest({
                     onSuccess : function(dashboard){
@@ -873,18 +898,16 @@
                   }
                   else
                   {
-                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");                    
+                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");
                     
-                    var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-                    dialog.appendContent(message);
-                    dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
-                    dialog.setStyle("z-index", 2001);
-                    dialog.render();    
+                    $('#clone-label-error').html(msg);        
+                    $('#clone-label-field-row').addClass('field-error');                    
                   }
                 }
               },
               {
                 text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
+                "class": 'btn btn-default',
                 click : function() {
                    $( this ).dialog( "close" );
                 }
@@ -899,6 +922,15 @@
         this._DashboardController.newClone(request, this._dashboardId);
       },
       
+      _renderMessage : function(message) {
+        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+          dialog.close();
+        }, null, {primary: true});
+        dialog.setStyle("z-index", 2001);
+        dialog.render();            
+      },
       
       /**
        * Opens the layer edit form for existing layers  
@@ -1966,21 +1998,6 @@
               conditions.push(attrCond);
               criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
-            else if($(this).hasClass('filter-term')) {              
-              // Add term criterias
-              var mdAttribute = $(this).attr('id').replace('filter-term-', '');
-              var id = $('#filter-hidden-' + mdAttribute).val(); 
-              
-              if(id != null)
-              {
-                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();             
-                attrCond.setComparisonValue(id);
-                attrCond.setDefiningMdAttribute(mdAttribute);
-                
-                conditions.push(attrCond);
-                criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':id});            
-              }
-            }
             else if($(this).hasClass('filter-date')) {
               // Add the date criteria
               if($(this).hasClass('checkin')) {
@@ -2015,7 +2032,7 @@
           }          
         });
         
-        // Add the boolean
+        // Add boolean filters
         $( '.jcf-class-filter-boolean.rad-checked' ).each(function( index ) {          
           var input = $(this).siblings().first();
             var value = input.attr('value');
@@ -2029,6 +2046,25 @@
             conditions.push(attrCond);
             criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
         });
+        
+        // Add term filters
+        for(var index = 0; index < this._filterTrees.length; index++) {
+          var config = this._filterTrees[index];
+          
+          var mdAttribute = config.mdAttributeId;
+          var terms = config.tree.getCheckedTerms();
+          
+          if(terms.length > 0) {
+            var value = JSON.stringify(terms);
+            
+            var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();             
+            attrCond.setComparisonValue(value);
+            attrCond.setDefiningMdAttribute(mdAttribute);
+            
+            conditions.push(attrCond);
+            criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});
+          }
+        }
         
         // Add the geo entity filter
         var location = $('#filter-geo-hidden').val();
@@ -2066,6 +2102,18 @@
           },
           onFailure : function(e) {
             that.handleException(e);
+          },
+          onCancel : function(e) {
+            var request = new Mojo.ClientRequest({
+              onSuccess : function () {
+                // Close the dialog ??
+              },
+              onFailure : function(e) {
+                that.handleException(e);
+              }
+            });
+            
+            com.runwaysdk.geodashboard.report.ReportItem.unlockByDashboard(request, that._dashboardId);
           }
         };
             
@@ -2081,11 +2129,7 @@
         if(errorCount > 0) {
           var message = com.runwaysdk.Localize.localize("filter", "error");
           
-          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-          dialog.appendContent(message);
-          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
-          dialog.setStyle("z-index", 2001);
-          dialog.render();          
+          that._renderMessage(message);
         }
         else {
           this._conditionMap = this._buildConditionMap();
@@ -2148,7 +2192,7 @@
           var difference = (current - height);
           
           $("#reporticng-container").animate({ bottom: "-=" + difference + "px" }, 1000, function(){
-        	  
+            
             $("#reporticng-container").css("bottom", "0px");                                                  
             $("#report-viewport").height(height-toolbar);
             $("#reporticng-container").height(height);
@@ -2253,35 +2297,40 @@
         
         // Hook up the filter auto-complete for term attributes
         $('.filter-term').each(function(){
-          var mdAttribute = $(this).attr('id').replace('filter-term-', '');   
+          var mdAttributeId = $(this).attr('id');
           
-          $(this).autocomplete({
-            source: function( request, response ) {
-              var req = new Mojo.ClientRequest({
-                onSuccess : function(classifiers){
-                  var results = [];
-                  
-                  $.each(classifiers, function( index, classifier ) {
-                    var label = classifier.getDisplayLabel().getLocalizedValue();
-                    var id = classifier.getId();
-                    
-                    results.push({'label':label, 'value':label, 'id':id});
-                  });
-                  
-                  response( results );
-                },
-                onFailure : function(e){
-                  that.handleException(e);
-                }
+          // Get the term roots and setup the tree widget
+          var req = new Mojo.ClientRequest({
+            onSuccess : function(roots){
+              var rootTerms = [];
+              
+              for(var i = 0; i < roots.length; i++) {
+                rootTerms.push({termId : roots[i].getId()});
+              }
+              
+              var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+                termType : "com.runwaysdk.geodashboard.ontology.Classifier" ,
+                relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+                rootTerms : rootTerms,
+                editable : false,
+                slide : false,
+                selectable : true,
+                checkable : true
               });
               
-              com.runwaysdk.geodashboard.Dashboard.getClassifierSuggestions(req, mdAttribute, request.term, 10);
+              tree.render("#" + mdAttributeId);
+              
+              that._filterTrees.push({
+                "mdAttributeId" : mdAttributeId,
+                "tree" : tree
+              });
             },
-            select: function(event, ui) {
-                $('#filter-hidden-' + mdAttribute ).val(ui.item.id);
-            },           
-            minLength: 2
+            onFailure : function(e){
+              that.handleException(e);
+            }
           });
+          
+          com.runwaysdk.geodashboard.Dashboard.getClassifierRoots(req, mdAttributeId);
         });
         
         // Hook up the filter auto-complete for the global location filter

@@ -205,8 +205,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
 
     // Determine if the attribute is an ontology attribute
-    MdAttributeConcreteDTO mtAttrConcrete = ( (MdAttributeVirtualDTO) mdAttr ).getMdAttributeConcrete();
-    if (mtAttrConcrete instanceof MdAttributeTermDTO)
+    if (mdAttributeConcrete instanceof MdAttributeTermDTO)
     {
       req.setAttribute("isOntologyAttribute", true);
       req.setAttribute("isTextAttribute", false);
@@ -234,7 +233,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
         List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
         for (ClassifierAttributeRootDTO relationship : relationships)
         {
-          if (relationship.getParentId().equals(mtAttrConcrete.getId()))
+          if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
           {
             try
             {
@@ -266,7 +265,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
       JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
     }
-    else if (mtAttrConcrete instanceof MdAttributeCharacterDTO || mtAttrConcrete instanceof MdAttributeTextDTO)
+    else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
     {
       req.setAttribute("isTextAttribute", true);
       req.setAttribute("isOntologyAttribute", false);

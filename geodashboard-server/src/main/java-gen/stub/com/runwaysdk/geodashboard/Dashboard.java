@@ -27,6 +27,7 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
@@ -431,4 +432,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return query;
   }
 
+  @Override
+  public Boolean hasReport()
+  {
+    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+
+    return ( query.getCount() > 0 );
+  }
 }

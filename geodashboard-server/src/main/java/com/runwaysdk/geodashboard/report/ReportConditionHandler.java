@@ -2,6 +2,9 @@ package com.runwaysdk.geodashboard.report;
 
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
@@ -193,10 +196,26 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
     {
       if (_operation.equals(EQ))
       {
-        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
-        allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(_value));
 
-        vQuery.AND(_attribute.EQ(allPathQuery.getChildTerm()));
+        try
+        {
+          ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
+
+          JSONArray array = new JSONArray(_value);
+
+          for (int i = 0; i < array.length(); i++)
+          {
+            String termId = array.getString(i);
+
+            allPathQuery.OR(allPathQuery.getParentTerm().EQ(termId));
+          }
+
+          vQuery.AND(_attribute.EQ(allPathQuery.getChildTerm()));
+        }
+        catch (JSONException e)
+        {
+          throw new ProgrammingErrorException(e);
+        }
       }
       else
       {
@@ -221,4 +240,5 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
     vQuery.WHERE(aptQuery.getParentTerm().EQ(entity));
     vQuery.AND(_attribute.EQ(aptQuery.getChildTerm()));
   }
+
 }

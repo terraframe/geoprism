@@ -1,8 +1,12 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -13,10 +17,13 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
@@ -28,7 +35,10 @@ import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 
 public class DashboardMap extends DashboardMapBase implements com.runwaysdk.generation.loader.Reloadable, Map
 {
@@ -218,15 +228,101 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
   }
 
-  @Override
-  public String getName()
-  {
-    return super.getName();
-  }
-
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
     JSONArray bboxArr = new JSONArray();
+
+    Dashboard dashboard = this.getDashboard();
+
+    if (dashboard != null)
+    {
+      GeoEntity country = dashboard.getCountry();
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
+      MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
+
+      String tableName = mdClass.getTableName();
+      String geoColumnName = mdAttributeGeom.getColumnName();
+      String idColumnName = mdAttributeId.getColumnName();
+
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ST_AsText(ST_Extent(" + tableName + "." + geoColumnName + ")) AS bbox");
+      sql.append(" FROM " + tableName);
+      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      ResultSet resultSet = Database.query(sql.toString());
+
+      try
+      {
+        if (resultSet.next())
+        {
+          String bbox = resultSet.getString("bbox");
+          if (bbox != null)
+          {
+            Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
+            Matcher m = p.matcher(bbox);
+
+            if (m.matches())
+            {
+              String coordinates = m.group(1);
+              List<Coordinate> coords = new LinkedList<Coordinate>();
+
+              for (String c : coordinates.split(","))
+              {
+                String[] xAndY = c.split(" ");
+                double x = Double.valueOf(xAndY[0]);
+                double y = Double.valueOf(xAndY[1]);
+
+                coords.add(new Coordinate(x, y));
+              }
+
+              Envelope e = new Envelope(coords.get(0), coords.get(2));
+
+              try
+              {
+                bboxArr.put(e.getMinX());
+                bboxArr.put(e.getMinY());
+                bboxArr.put(e.getMaxX());
+                bboxArr.put(e.getMaxY());
+              }
+              catch (JSONException ex)
+              {
+                throw new ProgrammingErrorException(ex);
+              }
+            }
+            else
+            {
+              String label = country.getDisplayLabel().getValue();
+              String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
+
+              throw new ProgrammingErrorException(error);
+            }
+
+            if (bboxArr.length() > 0)
+            {
+              return bboxArr;
+            }
+          }
+        }
+      }
+      catch (SQLException sqlEx1)
+      {
+        Database.throwDatabaseException(sqlEx1);
+      }
+      finally
+      {
+        try
+        {
+          java.sql.Statement statement = resultSet.getStatement();
+          resultSet.close();
+          statement.close();
+        }
+        catch (SQLException sqlEx2)
+        {
+          Database.throwDatabaseException(sqlEx2);
+        }
+      }
+    }
 
     // There are no layers in the map (that contain data) so return the Cambodian defaults
     if (bboxArr.length() == 0)
@@ -262,6 +358,30 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   public String toString()
   {
     return String.format("[%s] = %s", this.getClassDisplayLabel(), this.getName());
+  }
+
+  public Dashboard getDashboard()
+  {
+    QueryFactory factory = new QueryFactory();
+
+    DashboardQuery query = new DashboardQuery(factory);
+    query.WHERE(query.getMap().EQ(this));
+
+    OIterator<? extends Dashboard> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
   @Override

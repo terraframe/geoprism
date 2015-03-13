@@ -1,0 +1,13 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Equals" generateController="false" />    
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition" type="com.runwaysdk.system.metadata.MdBusiness"/>
+    </delete>
+  </undoIt>
+</version>

@@ -10,9 +10,10 @@
     <input id="clone-dashboard-id" type="hidden" value="${dashboard.id}">
     <fieldset>
       <section class="form-container">
-        <div class="field-row clearfix">
-          <label for="clone-label">${dashboardLabel}</label>
+        <div class="field-row clearfix" id="clone-label-field-row" >
+          <label for="clone-label">${dashboardLabel} *</label>
           <input id="clone-label" type="text" placeholder="${dashboardLabel}">
+          <div class="error-message" id="clone-label-error" ></div>
         </div>
       </section>
     </fieldset>

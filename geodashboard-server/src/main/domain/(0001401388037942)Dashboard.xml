@@ -1,13 +1,11 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-
-
-
       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
         <attributes>
           <localChar name="displayLabel" required="true" />
           <reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false" />
+          <reference name="country" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" />
         </attributes>
         <mdMethod name="getSortedDashboards" label="Get Sorted Dashboards" static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery">
         </mdMethod>

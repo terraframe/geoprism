@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
@@ -63,12 +64,26 @@ public class ConditionInformationHandler implements Reloadable, ReportConditionH
       Locale locale = LocalizationFacade.getLocale();
 
       String localizedLabel = _mdAttribute.getDisplayLabel(locale);
-      String localizedOperation = this.getLocalizedOperation(_operation);
-      Classifier classifier = Classifier.get(_value);
+      String localizedOperation = LocalizationFacade.getFromBundles("classifier.operation");
 
-      String localizedValue = classifier.getDisplayLabel().getValue();
+      try
+      {
+        JSONArray array = new JSONArray(_value);
 
-      this.handleCondition(localizedLabel, localizedOperation, localizedValue);
+        for (int i = 0; i < array.length(); i++)
+        {
+          String termId = array.getString(i);
+          Classifier classifier = Classifier.get(termId);
+
+          String localizedValue = classifier.getDisplayLabel().getValue();
+
+          this.handleCondition(localizedLabel, localizedOperation, localizedValue);
+        }
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
     else
     {
@@ -186,5 +201,4 @@ public class ConditionInformationHandler implements Reloadable, ReportConditionH
   {
     return this.array.toString();
   }
-
 }

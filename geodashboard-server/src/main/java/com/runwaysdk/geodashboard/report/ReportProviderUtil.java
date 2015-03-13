@@ -126,7 +126,7 @@ public class ReportProviderUtil implements Reloadable
   public static Date parseDate(String source)
   {
     Locale locale = LocalizationFacade.getLocale();
-    SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy", locale);
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", locale);
 
     try
     {
