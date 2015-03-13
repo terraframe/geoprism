@@ -558,18 +558,17 @@
 	                      </div>
 	                    <div class="category-block" id="category-colors-container">
 	                      	  
-	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" type="hidden" class="category-input" name="style.styleCategories" value="" >
+	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${categories}' type="hidden" class="category-input" name="style.styleCategories" value='${categories}' >
 		                      
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="ontology-tree"></div>
-<!-- 										<input id="ontology-categories-input" type="hidden" class="color-input" name="style.styleOntologyCategoryies" value=""> -->
 									</div>
 		                      	</c:when>
 		                      	<c:otherwise>
-		                      		
+		                      		<!-- RENDER BASIC CATEGORIES -->
 			                        <div class="panel-group choice-color category-group">
 										<div class="panel">
 					                    	<div id="choice-color01" class="panel-collapse">
@@ -583,14 +582,13 @@
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
+								                              	<span id="cat1-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
 								                            	</a>
 								                          	</div>
 								                         </div>
 						                   	 		 </div>
 							                       </li>
-							                       
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
@@ -599,7 +597,7 @@
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
+								                              	<span id="cat2-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
 								                            	</a>
 								                          	</div>
@@ -614,7 +612,7 @@
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
+								                              	<span id="cat3-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
 								                            	</a>
 								                          	</div>
@@ -629,7 +627,7 @@
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
+								                              	<span id="cat4-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
 								                            	</a>
 								                          	</div>
@@ -644,7 +642,7 @@
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
+								                              	<span id="cat5-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
 								                            	</a>
 								                          	</div>

@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
@@ -277,9 +278,10 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     }
 
     req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-
+    req.setAttribute("categories", style.getStyleCategories());
   }
-
+  
+  
   private String getDisplayLabel(MdAttributeDTO mdAttr)
   {
     if (mdAttr instanceof MdAttributeVirtualDTO)

@@ -158,6 +158,9 @@
          styleArr.catLiElems = [];
          
          if($("#ontology-tree").length > 0) {
+        	 //
+        	 // TODO: TEST ONTOLOGY TREE SCRAPING CODE
+        	 //
              var allElem = $(".ontology-category-color-icon");
              for(var e=0; e<allElem.length; e++){
                var rwId = allElem[e].dataset.rwid;
@@ -178,10 +181,18 @@
 	         for(var i=0; i<allElemCont.length; i++){
 	           var catInputElem = $(allElemCont[i]).find(".category-input");
 	           var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
-	           var catVal = catInputElem.val();
 	           var catColor = rgb2hex($(catColorElem).css("background-color"));
+	           var catVal = catInputElem.val();
 	           
-	           // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
+	           // parse the formatted number to the format of the data so the SLD can apply categories by this value
+	           if(this._getCategoryType() == "number" ) {
+	        	   var thisNum = this._parser(catVal);
+	               if($.isNumeric(thisNum)) {
+	            	   catVal = thisNum;                
+	               }
+	           }
+	           
+	           // Filter out categories with no input values
 	           if(catVal !== ""){
 	               var liObj = new Object();
 	               liObj.val = catVal;
@@ -1159,21 +1170,6 @@
         });      
         
         
-        // Normalize any localized number category values
-        if(this._getCategoryType() == "number" ) {
-          var attributes = ['style.styleCategories'];
-          
-          $.each(attributes, function(index, attribute) {
-            if(params[attribute] != null && params[attribute].length > 0) {
-              var number = that._parser(params[attribute])
-              
-              if($.isNumeric(number)) {
-                params[attribute] = number;                
-              }
-            } 
-          });
-        }
-        
         var catStyleArr = this._updateCategoriesJSON();
         params['style.styleCategories'] = JSON.stringify(catStyleArr);
         
@@ -1697,6 +1693,9 @@
           }
         });
         
+        // Populate existing categories on saved layers for the layer create/edit form
+        this._addExistingCategoriesToUi();
+        
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
           
@@ -1718,6 +1717,33 @@
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
         modal.modal('show');
+      },
+      
+      
+      /**
+       * Adds the value and color setting for saved categories on the layer create/edit form.
+       * The categories data is appended to the #categories-input element as json.
+       * 
+       */
+      _addExistingCategoriesToUi : function() {
+    	  var catsJSONObj = $("#categories-input").data("categoriesstore");
+    	  if(catsJSONObj){
+    		  if($("#ontology-tree").length > 0){
+    			  //
+    			  // TODO: ADD ONTOLOGY TREE CODE
+    			  //
+    		  }
+    		  else{
+		    	  var catsJSONArr = catsJSONObj.catLiElems;
+		    	  for(var i=0; i<catsJSONArr.length; i++){
+		    		  var cat = catsJSONArr[i];
+		    		  var catInputId = "cat"+ (i+1);
+		    		  var catColorSelectorId = catInputId + "-color-selector";
+		    		  $("#"+catInputId).val(cat.val);
+		    		  $("#"+catColorSelectorId).css("background", cat.color);
+		    	  }
+    		  }
+    	  }
       },
       
       
