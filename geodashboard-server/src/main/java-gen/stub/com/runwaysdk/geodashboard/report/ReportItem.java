@@ -34,6 +34,7 @@ import org.eclipse.birt.report.engine.api.RenderOption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.ibm.icu.util.ULocale;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.Operation;
@@ -44,6 +45,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -371,16 +373,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       {
         task.setAppContext(contextMap);
         task.setRenderOption(this.getRenderOptions(outputStream, document, baseURL, reportURL, format));
-
-        if (task.getRenderOption() instanceof HTMLRenderOption)
-        {
-          // long pageNumber = this.getPageNumber(parameterMap);
-          //
-          // if (pageNumber > 0)
-          // {
-          // task.setPageNumber(pageNumber);
-          // }
-        }
+        task.setLocale(LocalizationFacade.getLocale());
 
         IReportRunnable design = engine.openReportDesign(document.getDesignStream());
 
@@ -562,6 +555,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
         task.setAppContext(contextMap);
         task.setParameterValues(convertedParameters);
         task.validateParameters();
+        task.setLocale(LocalizationFacade.getLocale());
 
         task.run(new FileArchiveWriter(file.getAbsolutePath()));
       }

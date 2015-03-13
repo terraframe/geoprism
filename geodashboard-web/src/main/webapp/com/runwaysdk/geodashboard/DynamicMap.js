@@ -218,7 +218,7 @@
           view.setLegendYPosition(layer.legendYPosition);
           view.setGroupedInLegend(layer.groupedInLegend);
           view.setActiveByDefault(true);
-          //view.setFeatureStrategy(layer.featureStrategy);
+          view.setFeatureStrategy(layer.featureStrategy);
           // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
           // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
           if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
@@ -560,7 +560,7 @@
                 var legendXPosition = layer.getLegendXPosition();
                 var legendYPosition = layer.getLegendYPosition();
                 var groupedInLegend = layer.getGroupedInLegend();
-//                var featureStrategy = layer.getFeatureStrategy();
+                var featureStrategy = layer.getFeatureStrategy();
                 
                 var legendObj = new this._Legend(
                     layerId, 
@@ -568,8 +568,8 @@
                     geoserverName, 
                     legendXPosition, 
                     legendYPosition, 
-                    groupedInLegend//,
-//                    featureStrategy
+                    groupedInLegend,
+                    featureStrategy
                     );
                 
                 // render the legend

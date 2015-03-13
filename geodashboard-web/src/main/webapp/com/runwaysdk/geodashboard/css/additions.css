@@ -330,3 +330,7 @@ div.alert.alertbox {
 	color: red;
 	font-weight: bold;
 }
+
+.gdb-attr-filter ul.jqtree-tree .jqtree-toggler {
+    color: rgb(255, 255, 255);
+}
