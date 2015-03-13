@@ -556,16 +556,20 @@
 	                        <span><gdb:localize var="dl_form_color" key="DashboardLayer.form.color"/>${dl_form_color}</span>
 	                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardLayer.form.catInputPlaceholder"/></span>
 	                      </div>
-	                      <div class="category-block" id="category-colors-container">
-		                      <c:choose>
+	                    <div class="category-block" id="category-colors-container">
+	                      	  
+	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" type="hidden" class="category-input" name="style.styleCategories" value="" >
+		                      
+		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="ontology-tree"></div>
-										<input id="ontology-categories-input" type="hidden" class="color-input" name="style.styleOntologyCategoryies" value="">
+<!-- 										<input id="ontology-categories-input" type="hidden" class="color-input" name="style.styleOntologyCategoryies" value=""> -->
 									</div>
 		                      	</c:when>
 		                      	<c:otherwise>
+		                      		
 			                        <div class="panel-group choice-color category-group">
 										<div class="panel">
 					                    	<div id="choice-color01" class="panel-collapse">
@@ -574,14 +578,13 @@
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">		
 								                       	 	<gdb:localize var="dl_form_fill" key="DashboardLayer.form.fill"/>
-								                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory1" type="text" value="${style.styleCategory1}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico" style="background:${style.styleCategoryFill1};">icon</span>
+								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
-								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill1" value="${style.styleCategoryFill1}" />
 								                            	</a>
 								                          	</div>
 								                         </div>
@@ -591,14 +594,13 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" class="category-input" name="style.styleCategory2" type="text" value="${style.styleCategory2}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico" style="background:${style.styleCategoryFill2};">icon</span>
+								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
-								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill2" value="${style.styleCategoryFill2}" />
 								                            	</a>
 								                          	</div>
 								                         </div>
@@ -607,14 +609,13 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory3" type="text" value="${style.styleCategory3}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico" style="background:${style.styleCategoryFill3};">icon</span>
+								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
-								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill3" value="${style.styleCategoryFill3}" />
 								                            	</a>
 								                          	</div>
 								                         </div>
@@ -623,14 +624,13 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory4" type="text" value="${style.styleCategory4}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico" style="background:${style.styleCategoryFill4};">icon</span>
+								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
-								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill4" value="${style.styleCategoryFill4}" />
 								                            	</a>
 								                          	</div>
 								                         </div>
@@ -639,14 +639,13 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="style.styleCategory5" type="text" value="${style.styleCategory5}" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
+								                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">
 								                            	<a href="#" class="color-choice">
-								                              	<span class="ico" style="background:${style.styleCategoryFill5};">icon</span>
+								                              	<span class="ico cat-color-selector" style="background:#000000">icon</span>
 								                              	<span class="arrow">arrow</span>
-								                              	<input type="hidden" class="color-input" name="style.styleCategoryFill5" value="${style.styleCategoryFill5}" />
 								                            	</a>
 								                          	</div>
 								                         </div>

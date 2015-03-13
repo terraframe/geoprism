@@ -6,17 +6,19 @@
 		<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle">
 			<create>
 				<attributes>
-					<char name="styleCategory1" label="Category Value for the 1st category" size="150" required="false"/>
-					<char name="styleCategory2" label="Category Value for the 2nd category" size="150" required="false"/>
-					<char name="styleCategory3" label="Category Value for the 3rd category" size="150" required="false"/>
-					<char name="styleCategory4" label="Category Value for the 4th category" size="150" required="false"/>
-					<char name="styleCategory5" label="Category Value for the 5th category" size="150" required="false"/>
+<!-- 					<char name="styleCategory1" label="Category Value for the 1st category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategory2" label="Category Value for the 2nd category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategory3" label="Category Value for the 3rd category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategory4" label="Category Value for the 4th category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategory5" label="Category Value for the 5th category" size="150" required="false"/> -->
 					
-					<char name="styleCategoryFill1" label="Category Fill for the 1st category" size="150" required="false"/>
-					<char name="styleCategoryFill2" label="Category Fill for the 2nd category" size="150" required="false"/>
-					<char name="styleCategoryFill3" label="Category Fill for the 3rd category" size="150" required="false"/>
-					<char name="styleCategoryFill4" label="Category Fill for the 4th category" size="150" required="false"/>
-					<char name="styleCategoryFill5" label="Category Fill for the 5th category" size="150" required="false"/>
+<!-- 					<char name="styleCategoryFill1" label="Category Fill for the 1st category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategoryFill2" label="Category Fill for the 2nd category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategoryFill3" label="Category Fill for the 3rd category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategoryFill4" label="Category Fill for the 4th category" size="150" required="false"/> -->
+<!-- 					<char name="styleCategoryFill5" label="Category Fill for the 5th category" size="150" required="false"/> -->
+
+					<char name="styleCategories" label="Category styling for layers" size="4000" required="false" />
 				</attributes>
 			</create>
 		</mdBusiness>

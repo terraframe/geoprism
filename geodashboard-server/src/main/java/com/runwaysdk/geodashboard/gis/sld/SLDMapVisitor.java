@@ -21,6 +21,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -50,15 +53,21 @@ import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.NotEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
 import com.runwaysdk.geodashboard.gis.model.condition.Primitive;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeDTO;
+import com.runwaysdk.system.metadata.MdAttributeTerm;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.transport.conversion.ConversionException;
 
 /**
  * Traverses an object graph of map Component objects and creates an SLD document.
  */
-public class SLDMapVisitor implements MapVisitor
+public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loader.Reloadable
 {
-  private static class Provider
+  private static class Provider implements com.runwaysdk.generation.loader.Reloadable
   {
     protected SLDMapVisitor visitor;
 
@@ -88,7 +97,7 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
-  private static abstract class Symbolizer extends Provider
+  private static abstract class Symbolizer extends Provider implements com.runwaysdk.generation.loader.Reloadable
   {
     protected Style style;
 
@@ -106,7 +115,7 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
-  private static class PointSymbolizer extends Symbolizer
+  private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
     private PointSymbolizer(SLDMapVisitor visitor, Style style)
     {
@@ -315,7 +324,7 @@ public class SLDMapVisitor implements MapVisitor
    * Build <PolygonSymbolizer> tag and contents a <PolygonSymbolizer> encloses the styling params and the geometry field used for rendering features
    * 
    */
-  private static class PolygonSymbolizer extends Symbolizer
+  private static class PolygonSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
     private PolygonSymbolizer(SLDMapVisitor visitor, Style style)
     {
@@ -350,6 +359,7 @@ public class SLDMapVisitor implements MapVisitor
         
         // SLD generation
         ThematicStyle tStyle = (ThematicStyle) style;
+        
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
 
@@ -373,8 +383,8 @@ public class SLDMapVisitor implements MapVisitor
 
         for (int i = 0; i < numCategories; i++)
         {
-
           double currentCatMin;
+          
           if(numCategories == 1)
           {
             currentCatMin = 0;
@@ -453,38 +463,50 @@ public class SLDMapVisitor implements MapVisitor
             TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
             ruleNode.appendChild(text.getSLD());
           }
-
         }
-        ;
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
       {
+        String catVal;
+        String catColor;
+        DashboardThematicStyle dTStyle = null;
+        JSONArray catsArrJSON;
+        
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
 
-        // build a hashmap of categories
-        HashMap<String, String> categories = new HashMap<String, String>();
-        categories.put(tStyle.getStyleCategory1(), tStyle.getStyleCategoryFill1());
-        categories.put(tStyle.getStyleCategory2(), tStyle.getStyleCategoryFill2());
-        categories.put(tStyle.getStyleCategory3(), tStyle.getStyleCategoryFill3());
-        categories.put(tStyle.getStyleCategory4(), tStyle.getStyleCategoryFill4());
-        categories.put(tStyle.getStyleCategory5(), tStyle.getStyleCategoryFill5());
-
-        // remove entries where the user defined category is empty
-        Iterator<Entry<String, String>> iter = categories.entrySet().iterator();
-        while (iter.hasNext())
+        if(style instanceof DashboardThematicStyle)
         {
-          Entry<String, String> entry = iter.next();
-          if (entry.getKey().isEmpty())
-          {
-            iter.remove();
-          }
+          dTStyle = (DashboardThematicStyle) tStyle;
         }
 
-        for (String catVal : categories.keySet())
+        // ontology logic
+        String cats = dTStyle.getStyleCategories();
+        
+        try
         {
-          String catFill = categories.get(catVal);
+          JSONObject catsJSON = new JSONObject(cats);
+          catsArrJSON = catsJSON.getJSONArray("catLiElems");
+        }
+        catch (JSONException e)
+        {
+          throw new ProgrammingErrorException(e);
+        }
+        
+        // SLD for all the categories scraped from the client
+        for(int i=0; i<catsArrJSON.length(); i++)
+        {
+          try
+          {
+            JSONObject thisObj = catsArrJSON.getJSONObject(i);
+            catVal = thisObj.getString("val");
+            catColor = thisObj.getString("color");
+          }
+          catch (JSONException e)
+          {
+            throw new ProgrammingErrorException(e);
+          }
 
           Node ruleNode = node("Rule").build(root);
           node("Name").text(catVal).build(ruleNode);
@@ -515,7 +537,7 @@ public class SLDMapVisitor implements MapVisitor
           Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
           node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
           Node geomFillNode = node("Fill").build(polySymbolNode);
-          css("fill", catFill).build(geomFillNode);
+          css("fill", catColor).build(geomFillNode);
           css("fill-opacity", fillOpacity).build(geomFillNode);
 
           node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
@@ -546,11 +568,12 @@ public class SLDMapVisitor implements MapVisitor
             TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
             ruleNode.appendChild(text.getSLD());
           }
-
         }
       }
-      else
+      else  // basic polygon
       {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        
         Node ruleNode = node("Rule").build(root);
         node("Name").text("basic").build(ruleNode);
         node("Title").text("basic").build(ruleNode);
@@ -563,7 +586,35 @@ public class SLDMapVisitor implements MapVisitor
         css("fill-opacity", fillOpacity).build(geomFillNode);
 
         node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
+     
+        //
+        // Adding labels
+        //
+        boolean thematic = style instanceof ThematicStyle;
+
+        if (thematic && style.getEnableLabel() && style.getEnableValue())
+        {
+          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+          ruleNode.appendChild(text.getSLD());
+        }
+        else if (style.getEnableLabel())
+        {
+          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+
+          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+          ruleNode.appendChild(text.getSLD());
+        }
+        else if (thematic && style.getEnableValue())
+        {
+          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
+
+          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
+          ruleNode.appendChild(text.getSLD());
+        }
       }
+      
       return root;
     }
 
@@ -611,7 +662,7 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
-  private static class LineSymbolizer extends Symbolizer
+  private static class LineSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
     private LineSymbolizer(SLDMapVisitor visitor, Style style)
     {
@@ -633,7 +684,7 @@ public class SLDMapVisitor implements MapVisitor
     }
   }
 
-  private static class TextSymbolizer extends Symbolizer
+  private static class TextSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
     private Node[]  nodes;
 
@@ -697,7 +748,7 @@ public class SLDMapVisitor implements MapVisitor
   /**
    * Builder class to simplify node creation.
    */
-  private static class NodeBuilder
+  private static class NodeBuilder implements com.runwaysdk.generation.loader.Reloadable
   {
     private SLDMapVisitor visitor;
 
@@ -715,7 +766,6 @@ public class SLDMapVisitor implements MapVisitor
     private NodeBuilder(NodeBuilder parentBuilder, SLDMapVisitor visitor, String ns, String node)
     {
       this.parentBuilder = parentBuilder;
-
       this.visitor = visitor;
       this.doc = visitor.doc;
 
@@ -1122,21 +1172,6 @@ public class SLDMapVisitor implements MapVisitor
     {
       throw new ProgrammingErrorException("Geometry type [" + this.featureType + "] is not supported for SLD generation.");
     }
-
-    // START - Thematic filter
-    // Condition cond = style.getCondition();
-    // if (cond != null)
-    // {
-    // Node filter = this.node(OGC, "Filter").build(rule);
-    //
-    // this.parents.push(filter);
-    //
-    // cond.accepts(this);
-    //
-    // // pop the filter as the conditions tree has been added by now
-    // this.parents.pop();
-    // }
-    // END - Thematic filter
 
     // append the rule to user styles
     this.parents.pop().appendChild(symbolizer.getSLD());

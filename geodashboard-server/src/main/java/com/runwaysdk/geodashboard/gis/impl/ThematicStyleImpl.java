@@ -18,25 +18,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 
   private Integer   pointMaxSize;
   
-  private String    styleCategory1;
-  
-  private String    styleCategory2;
-
-  private String    styleCategory3;
-  
-  private String    styleCategory4;
-  
-  private String    styleCategory5;
-  
-  private String    styleCategoryFill1;
-  
-  private String    styleCategoryFill2;
-
-  private String    styleCategoryFill3;
-  
-  private String    styleCategoryFill4;
-  
-  private String    styleCategoryFill5;
+  private String    styleCategories;
 
   public ThematicStyleImpl()
   {
@@ -123,62 +105,8 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   }
 
   @Override
-  public String getStyleCategory1()
+  public String getStyleCategories()
   {
-    return styleCategory1;
-  }
-
-  @Override
-  public String getStyleCategoryFill1()
-  {
-    return styleCategoryFill1;
-  }
-
-  @Override
-  public String getStyleCategory2()
-  {
-    return styleCategory2;
-  }
-
-  @Override
-  public String getStyleCategoryFill2()
-  {
-    return styleCategoryFill2;
-  }
-
-  @Override
-  public String getStyleCategory3()
-  {
-    return styleCategory3;
-  }
-
-  @Override
-  public String getStyleCategoryFill3()
-  {
-    return styleCategoryFill3;
-  }
-
-  @Override
-  public String getStyleCategory4()
-  {
-    return styleCategory4;
-  }
-
-  @Override
-  public String getStyleCategoryFill4()
-  {
-    return styleCategoryFill4;
-  }
-
-  @Override
-  public String getStyleCategory5()
-  {
-    return styleCategory5;
-  }
-
-  @Override
-  public String getStyleCategoryFill5()
-  {
-    return styleCategoryFill5;
+    return styleCategories;
   }
 }

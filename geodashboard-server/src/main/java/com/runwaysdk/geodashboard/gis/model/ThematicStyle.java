@@ -25,19 +25,6 @@ public interface ThematicStyle extends Style
 
   public void setPolygonMaxFill(String fill);
   
-  public String getStyleCategory1();
-  public String getStyleCategoryFill1();
-  
-  public String getStyleCategory2();
-  public String getStyleCategoryFill2();
-  
-  public String getStyleCategory3();
-  public String getStyleCategoryFill3();
-  
-  public String getStyleCategory4();
-  public String getStyleCategoryFill4();
-  
-  public String getStyleCategory5();
-  public String getStyleCategoryFill5();
+  public String getStyleCategories();
   
 }
