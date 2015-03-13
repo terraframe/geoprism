@@ -833,10 +833,11 @@
             $( "#clone-dialog" ).dialog({
               resizable: false,
               height:200,
-              width:400,
+              width:730,
               modal: true,
               buttons: [{
                 text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
+                "class": 'btn btn-primary',
                 click : function() {
                   var createRequest = new Mojo.ClientRequest({
                     onSuccess : function(dashboard){
@@ -856,14 +857,16 @@
                   }
                   else
                   {
-                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");                    
+                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");
                     
-                    that._renderMessage(msg);
+                    $('#clone-label-error').html(msg);        
+                    $('#clone-label-field-row').addClass('field-error');                    
                   }
                 }
               },
               {
                 text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
+                "class": 'btn btn-default',
                 click : function() {
                    $( this ).dialog( "close" );
                 }
@@ -881,7 +884,9 @@
       _renderMessage : function(message) {
         var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
         dialog.appendContent(message);
-        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {primary: true});
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+          dialog.close();
+        }, null, {primary: true});
         dialog.setStyle("z-index", 2001);
         dialog.render();            
       },
