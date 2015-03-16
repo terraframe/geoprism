@@ -331,6 +331,12 @@ div.alert.alertbox {
 	font-weight: bold;
 }
 
-.gdb-attr-filter ul.jqtree-tree .jqtree-toggler {
-    color: rgb(255, 255, 255);
+#collapse002 {
+	overflow: auto;
+    max-height: 200px;
 }
+
+#collapse002 .panel-body{
+	width: 300px;
+}
+

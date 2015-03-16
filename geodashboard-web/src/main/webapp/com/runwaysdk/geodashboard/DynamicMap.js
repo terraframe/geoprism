@@ -2314,7 +2314,7 @@
                 rootTerms : rootTerms,
                 editable : false,
                 slide : false,
-                selectable : true,
+                selectable : false,
                 checkable : true
               });
               

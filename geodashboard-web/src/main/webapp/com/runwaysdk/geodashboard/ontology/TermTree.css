@@ -58,49 +58,37 @@
 	background-position: -43px -20px;
 	border-color: #019edc;
 }
- 
- /*
- div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.jqtree-checkbox {
-  margin: 1px;
-  margin-left: 5px;
-  margin-right: 8px;
-  display: table-cell;
-  padding-right: 5px;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked {
-  border-color:#02789e;
-  background:#00bfff url(../images/sprite.png) no-repeat -43px -20px;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused {border-color:#019edc;}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.focused.checked {border-color:#02789e;}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.disabled {
-  border:1px solid #dbdbdb;
-  background:#f8f8f8;
-}
-div.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.checked.disabled {
-  border:1px solid #b3b3b3;
-  background:#b3b3b3 url(../images/sprite.png) no-repeat -65px -20px;
+
+.jqtree-checkbox.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget{
+/* 	  margin-right: 10px; */
+/* 	  width: auto; */
+/* 	  display: inline-block; */
 }
 
-.jstree-default .jstree-container-ul .jstree-node {
-	display: table;
+span.jqtree_common.jqtree-title {
+/*   display: inline-block; */
 }
-.jstree-default .jstree-container-ul .jstree-node > .jstree-icon {
-  display: table-cell;
-  float: left;
-  padding-left: 5px;
-  padding-right: 5px;
+
+.jqtree_common.jqtree-toggler{
+/* 	display: inline-block; */
 }
-.jstree-default .jstree-container-ul .jstree-node > .jstree-anchor {
-	display: table-cell;
-	padding-left: 5px;
-	padding-right: 5px;
+
+.jqtree-element.jqtree_common{
+	width: auto !important;
 }
-*/
-/* End Checkbox */
+ 
+ .jqtree-checkbox.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget{
+/*  	width: 18px; */
+/*  	height: 18px; */
+	margin-top: 2px !important;
+ }
+ 
+.gdb-attr-filter ul.jqtree-tree .jqtree-toggler {
+    color: rgb(255, 255, 255);
+}
 
 /* Hide jsTrees context menu */
-ul.vakata-context.jstree-contextmenu.jstree-default-contextmenu {
-	visibility: hidden;
-}
+/* ul.vakata-context.jstree-contextmenu.jstree-default-contextmenu { */
+/* 	visibility: hidden; */
+/* } */
 /* Hide jsTrees context menu */
