@@ -153,47 +153,88 @@
       
       
       /**
-      * Scrapes color icons from ontology categories on the layer creation/edit form
-      * 
-      */
-      _updateOntologyCategoriesJSON : function() {
-        
-          var ontTreeStyleArr = new Object();
-          ontTreeStyleArr.catLiElems = [];
-        
-        var allElem = $(".ontology-category-color-icon");
-        for(var e=0; e<allElem.length; e++){
-          
-          var rwId = allElem[e].dataset.rwid;
-          // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
-          if(rwId.indexOf("PHANTOM") === -1){
-            var theElem = allElem[e];
-            var theColor = rgb2hex($(theElem).css("background-color"));
-            
-              var liObj = new Object();
-                liObj.id = theElem.dataset.rwid;
-                liObj.color = theColor;
-                ontTreeStyleArr.catLiElems.push(liObj);                   
-          }
-        }
-        
-        // set the hidden input element in the layer creation/edit form 
-        $("#ontology-categories-input").val(JSON.stringify(ontTreeStyleArr));
-        
-        // javascript and jquery return css color values as rgb.  
-        // We want hex in this case
-        function rgb2hex(rgb) {
-            if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+       * Scrapes categories on the layer creation/edit form
+       * 
+       */
+       _updateCategoriesJSON : function() {
+         var styleArr = new Object();
+         styleArr.catLiElems = [];
+         
+         if($("#ontology-tree").length > 0) {
+        	 //
+        	 // TODO: TEST ONTOLOGY TREE SCRAPING CODE
+        	 //
+             var allElem = $(".ontology-category-color-icon");
+             for(var e=0; e<allElem.length; e++){
+               var rwId = allElem[e].dataset.rwid;
+               // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
+               if(rwId.indexOf("PHANTOM") === -1){
+                 var theElem = allElem[e];
+                 var theColor = rgb2hex($(theElem).css("background-color"));
+                 
+                 var liObj = new Object();
+                 liObj.id = theElem.dataset.rwid;
+                 liObj.color = theColor;
+                 ontTreeStyleArr.catLiElems.push(liObj);                   
+               }
+             }
+         }
+         else {        	 
+	         var allElemCont = $(".category-container");
+	         for(var i=0; i<allElemCont.length; i++){
+	           var catInputElem = $(allElemCont[i]).find(".category-input");
+	           var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
+	           var catColor = rgb2hex($(catColorElem).css("background-color"));
+	           var catVal = catInputElem.val();
+	           
+	           // parse the formatted number to the format of the data so the SLD can apply categories by this value
+	           if(this._getCategoryType() == "number" ) {
+	        	   var thisNum = this._parser(catVal);
+	               if($.isNumeric(thisNum)) {
+	            	   catVal = thisNum;                
+	               }
+	           }
+	           
+	           // Filter out categories with no input values
+	           if(catVal !== ""){
+	               var liObj = new Object();
+	               liObj.val = catVal;
+	               liObj.color = catColor;
+	               styleArr.catLiElems.push(liObj);                   
+	           }
+	         }
+         }
+         
+         // set the hidden input element in the layer creation/edit form 
+         $("#categories-input").val(JSON.stringify(styleArr));
+         
+         // javascript and jquery return css color values as rgb.  
+         // We want to pass hex to the backend
+         function rgb2hex(rgb) {
+             if (/^#[0-9A-F]{6}$/i.test(rgb)){
+            	 return rgb;
+             }
 
-            rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-            function hex(x) {
-                return ("0" + parseInt(x).toString(16)).slice(-2);
-            }
-            return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
-        }
+             var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+             if(rgbMatch){
+            	 function hex(x) {
+            		 return ("0" + parseInt(x).toString(16)).slice(-2);
+            	 }
+            	 return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+             }
+             
+             var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+             if(rgbaMatch){
+            	 return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+            			("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+            			("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+            			("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+             }
+         }
 
-        return  ontTreeStyleArr;
-      },
+         return  styleArr;
+       },
+      
       
       /**
        * Creates "view" objects for each layer defined by the dashboardlayerview.java class
@@ -1161,23 +1202,8 @@
         });      
         
         
-        // Normalize any localized number category values
-        if(this._getCategoryType() == "number" ) {
-          var attributes = ['style.styleCategory1', 'style.styleCategory2', 'style.styleCategory3', 'style.styleCategory4', 'style.styleCategory5'];
-          
-          $.each(attributes, function(index, attribute) {
-            if(params[attribute] != null && params[attribute].length > 0) {
-              var number = that._parser(params[attribute])
-              
-              if($.isNumeric(number)) {
-                params[attribute] = number;                
-              }
-            } 
-          });
-        }
-        
-        var  ontTreeStyleArr = this._updateOntologyCategoriesJSON();
-        params['style.styleOntologyCategoryies'] = JSON.stringify(ontTreeStyleArr);
+        var catStyleArr = this._updateCategoriesJSON();
+        params['style.styleCategories'] = JSON.stringify(catStyleArr);
         
         return request;
       },
@@ -1625,45 +1651,6 @@
             
             that._addCategoryAutoComplete();
             
-//            // Hook up the auto-complete for category input options new layers
-//            // existing layers have a seperate autocomplete hookup that queries 
-//            // the layer database view directly. 
-//            $('.category-input').each(function(){
-//              var mdAttribute = $(this).data('mdattributeid');  
-//              var categoryType = $(this).data('type');
-//              
-//              $(this).autocomplete({
-//                source: function( request, response ) {
-//                  var req = new Mojo.ClientRequest({
-//                    onSuccess : function(results){
-//                      
-//                      // We need to localize the results for numbers
-//                      if(categoryType == 'number') {
-//                        for(var i = 0; i < results.length; i++) {
-//                          var number = parseFloat(results[i]);
-//                          var localized = that._formatter(number);
-//                          
-//                          results[i] = localized;
-//                        }
-//                      }
-//                      
-//                      response( results );
-//                    },
-//                    onFailure : function(e){
-//                      that.handleException(e);
-//                    }
-//                  });
-//                  
-//                  // values are scraped from hidden input elements on the layer create form
-//                  var universalId = $("#f58").val();
-//                  var aggregationVal = $("#f59").val();
-//                  
-//                  com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
-//                },
-//                minLength: 1
-//              });
-//            });
-            
             // ontology category layer type colors
             $(".category-color-icon").colpick({
               submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
@@ -1693,7 +1680,7 @@
        */
       _displayLayerForm : function(html){
         
-      var that = this;
+        var that = this;
         
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
@@ -1738,6 +1725,9 @@
           }
         });
         
+        // Populate existing categories on saved layers for the layer create/edit form
+        this._addExistingCategoriesToUi();
+        
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
           
@@ -1759,6 +1749,33 @@
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
         modal.modal('show');
+      },
+      
+      
+      /**
+       * Adds the value and color setting for saved categories on the layer create/edit form.
+       * The categories data is appended to the #categories-input element as json.
+       * 
+       */
+      _addExistingCategoriesToUi : function() {
+    	  var catsJSONObj = $("#categories-input").data("categoriesstore");
+    	  if(catsJSONObj){
+    		  if($("#ontology-tree").length > 0){
+    			  //
+    			  // TODO: ADD ONTOLOGY TREE CODE
+    			  //
+    		  }
+    		  else{
+		    	  var catsJSONArr = catsJSONObj.catLiElems;
+		    	  for(var i=0; i<catsJSONArr.length; i++){
+		    		  var cat = catsJSONArr[i];
+		    		  var catInputId = "cat"+ (i+1);
+		    		  var catColorSelectorId = catInputId + "-color-selector";
+		    		  $("#"+catInputId).val(cat.val);
+		    		  $("#"+catColorSelectorId).css("background", cat.color);
+		    	  }
+    		  }
+    	  }
       },
       
       
@@ -2297,7 +2314,7 @@
                 rootTerms : rootTerms,
                 editable : false,
                 slide : false,
-                selectable : true,
+                selectable : false,
                 checkable : true
               });
               

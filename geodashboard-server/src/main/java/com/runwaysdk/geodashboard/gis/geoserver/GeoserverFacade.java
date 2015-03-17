@@ -350,11 +350,6 @@ public class GeoserverFacade implements Reloadable
 
         publishLayer(layer.getViewName(), layer.getViewName());
       }
-
-      // GeoServer will cache old tiles if we've changed a style.
-      // if (layersToDrop.size() > 0) {
-      // refresh();
-      // }
     }
     finally
     {

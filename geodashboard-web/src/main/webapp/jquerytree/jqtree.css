@@ -1,52 +1,5 @@
-/*
-THESE STYLES ARE ADDED CUSTOM TO FIX A BUG I ENCOUNTERED IN JQTREE WHEN USING BOOTSTRAP:
-*/
-ul.jqtree-tree.jqtree_common,
-ul.jqtree_common {
-  margin-left: 0 !important;
-  padding-left: 16px !important;
-  font-size: 14px; /* This font size was added to stop jumpiness when setting a term to busy. */
-}
-ul.jqtree_common > li.jqtree-loading > div.jqtree-element > span.jqtree-title:after,
-.jqtree-node-busy {
-  content: url(busy.gif);
-  margin-left: 8px;
-}
-
-/* These styles add support for grid lines */
-div.jqtree-element.jqtree_common {
-	display: table;
-}
-div.jqtree-element > a.jqtree_common.jqtree-toggler {
-	position: relative;
-	display: table-cell;
-	text-align: center;
-	vertical-align: middle;
-	width: 20px;
-	height: 20px;
-	margin-bottom: 0px;
-	padding-bottom: 0px;
-	padding-right: 5px;
-	left: 0px;
-	/*
-	background-image: url(32px.png);
-	background-color: transparent;
-	background-position: -68px -4px;
-	background-repeat: no-repeat;
-	*/
-}
-span.jqtree_common.jqtree-title {
-	display: table-cell;
-	padding-left: 5px;
-}
-
-/*
-END CUSTOM STYLES
-*/
-
-
 ul.jqtree-tree {
-    margin-left: 12px;
+    margin-left: 0;
 }
 
 ul.jqtree-tree,
@@ -70,29 +23,30 @@ ul.jqtree-tree li.jqtree_common {
     list-style-type: none;
 }
 ul.jqtree-tree .jqtree-toggler {
-    display: block;
-    position: absolute;
-    left: -1.5em;
-    top: 30%;
-    *top: 0;  /* fix for ie7 */
-    font-size: 12px;
-    line-height: 12px;
-    font-family: arial;  /* fix for ie9 */
     border-bottom: none;
     color: #333;
+    text-decoration: none;
+    margin-right: 0.5em;
+    vertical-align: middle;
 }
 
 ul.jqtree-tree .jqtree-toggler:hover {
     color: #000;
+    text-decoration: none;
 }
 
 ul.jqtree-tree .jqtree-element {
     cursor: pointer;
 }
 
-ul.jqtree-tree .jqtree-title {
+.jqtree-tree .jqtree-title {
     color: #1C4257;
     vertical-align: middle;
+    margin-left: 1.5em;
+}
+
+.jqtree-tree .jqtree-title.jqtree-title-folder {
+    margin-left: 0;
 }
 
 ul.jqtree-tree li.jqtree-folder {
@@ -101,10 +55,6 @@ ul.jqtree-tree li.jqtree-folder {
 
 ul.jqtree-tree li.jqtree-folder.jqtree-closed {
     margin-bottom: 1px;
-}
-
-ul.jqtree-tree li.jqtree-folder .jqtree-title {
-    margin-left: 0;
 }
 
 ul.jqtree-tree .jqtree-toggler.jqtree-closed {
@@ -130,13 +80,23 @@ ul.jqtree-tree li.jqtree-ghost span {
 }
 
 ul.jqtree-tree li.jqtree-ghost span.jqtree-circle {
-    background-image: url(jqtree-circle.png);
-    background-repeat: no-repeat;
+    border: solid 2px #0000ff;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
     height: 8px;
     width: 8px;
     position: absolute;
     top: -4px;
-    left: 2px;
+    left: -6px;
+}
+
+/* IE 6, 7, 8 */
+@media \0screen\,screen\9  {
+    ul.jqtree-tree li.jqtree-ghost span.jqtree-circle {
+        background: url(jqtree-circle.png) no-repeat;
+        border: 0 none;
+    }
 }
 
 ul.jqtree-tree li.jqtree-ghost span.jqtree-line {
@@ -145,7 +105,7 @@ ul.jqtree-tree li.jqtree-ghost span.jqtree-line {
     padding: 0;
     position: absolute;
     top: -1px;
-    left: 10px;
+    left: 2px;
     width: 100%;
 }
 
@@ -159,15 +119,12 @@ ul.jqtree-tree span.jqtree-border {
     left: -2px;
     top: 0;
     border: solid 2px #0000ff;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
     border-radius: 6px;
     margin: 0;
+    box-sizing: content-box;
 }
 
 ul.jqtree-tree .jqtree-element {
-    width: 100%; /* todo: why is this in here? */
-    *width: auto; /* ie7 fix; issue 41 */
     position: relative;
 }
 

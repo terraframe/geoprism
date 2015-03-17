@@ -1,7 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 634803849)
-
+@com.runwaysdk.business.ClassSignature(hash = -1874129917)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -19,20 +18,9 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
-  public static java.lang.String STYLECATEGORY1 = "styleCategory1";
-  public static java.lang.String STYLECATEGORY2 = "styleCategory2";
-  public static java.lang.String STYLECATEGORY3 = "styleCategory3";
-  public static java.lang.String STYLECATEGORY4 = "styleCategory4";
-  public static java.lang.String STYLECATEGORY5 = "styleCategory5";
-  public static java.lang.String STYLECATEGORYFILL1 = "styleCategoryFill1";
-  public static java.lang.String STYLECATEGORYFILL2 = "styleCategoryFill2";
-  public static java.lang.String STYLECATEGORYFILL3 = "styleCategoryFill3";
-  public static java.lang.String STYLECATEGORYFILL4 = "styleCategoryFill4";
-  public static java.lang.String STYLECATEGORYFILL5 = "styleCategoryFill5";
+  public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-
-  private static final long serialVersionUID = 634803849;
-
+  private static final long serialVersionUID = -1874129917;
   
   public DashboardThematicStyleBase()
   {
@@ -257,283 +245,31 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     }
   }
   
-  public String getStyleCategory1()
+  public String getStyleCategories()
   {
-    return getValue(STYLECATEGORY1);
+    return getValue(STYLECATEGORIES);
   }
   
-  public void validateStyleCategory1()
+  public void validateStyleCategories()
   {
-    this.validateAttribute(STYLECATEGORY1);
+    this.validateAttribute(STYLECATEGORIES);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory1Md()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoriesMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY1);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORIES);
   }
   
-  public void setStyleCategory1(String value)
+  public void setStyleCategories(String value)
   {
     if(value == null)
     {
-      setValue(STYLECATEGORY1, "");
+      setValue(STYLECATEGORIES, "");
     }
     else
     {
-      setValue(STYLECATEGORY1, value);
-    }
-  }
-  
-  public String getStyleCategory2()
-  {
-    return getValue(STYLECATEGORY2);
-  }
-  
-  public void validateStyleCategory2()
-  {
-    this.validateAttribute(STYLECATEGORY2);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory2Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY2);
-  }
-  
-  public void setStyleCategory2(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORY2, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORY2, value);
-    }
-  }
-  
-  public String getStyleCategory3()
-  {
-    return getValue(STYLECATEGORY3);
-  }
-  
-  public void validateStyleCategory3()
-  {
-    this.validateAttribute(STYLECATEGORY3);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory3Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY3);
-  }
-  
-  public void setStyleCategory3(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORY3, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORY3, value);
-    }
-  }
-  
-  public String getStyleCategory4()
-  {
-    return getValue(STYLECATEGORY4);
-  }
-  
-  public void validateStyleCategory4()
-  {
-    this.validateAttribute(STYLECATEGORY4);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory4Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY4);
-  }
-  
-  public void setStyleCategory4(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORY4, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORY4, value);
-    }
-  }
-  
-  public String getStyleCategory5()
-  {
-    return getValue(STYLECATEGORY5);
-  }
-  
-  public void validateStyleCategory5()
-  {
-    this.validateAttribute(STYLECATEGORY5);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategory5Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORY5);
-  }
-  
-  public void setStyleCategory5(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORY5, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORY5, value);
-    }
-  }
-  
-  public String getStyleCategoryFill1()
-  {
-    return getValue(STYLECATEGORYFILL1);
-  }
-  
-  public void validateStyleCategoryFill1()
-  {
-    this.validateAttribute(STYLECATEGORYFILL1);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill1Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL1);
-  }
-  
-  public void setStyleCategoryFill1(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORYFILL1, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORYFILL1, value);
-    }
-  }
-  
-  public String getStyleCategoryFill2()
-  {
-    return getValue(STYLECATEGORYFILL2);
-  }
-  
-  public void validateStyleCategoryFill2()
-  {
-    this.validateAttribute(STYLECATEGORYFILL2);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill2Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL2);
-  }
-  
-  public void setStyleCategoryFill2(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORYFILL2, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORYFILL2, value);
-    }
-  }
-  
-  public String getStyleCategoryFill3()
-  {
-    return getValue(STYLECATEGORYFILL3);
-  }
-  
-  public void validateStyleCategoryFill3()
-  {
-    this.validateAttribute(STYLECATEGORYFILL3);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill3Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL3);
-  }
-  
-  public void setStyleCategoryFill3(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORYFILL3, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORYFILL3, value);
-    }
-  }
-  
-  public String getStyleCategoryFill4()
-  {
-    return getValue(STYLECATEGORYFILL4);
-  }
-  
-  public void validateStyleCategoryFill4()
-  {
-    this.validateAttribute(STYLECATEGORYFILL4);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill4Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL4);
-  }
-  
-  public void setStyleCategoryFill4(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORYFILL4, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORYFILL4, value);
-    }
-  }
-  
-  public String getStyleCategoryFill5()
-  {
-    return getValue(STYLECATEGORYFILL5);
-  }
-  
-  public void validateStyleCategoryFill5()
-  {
-    this.validateAttribute(STYLECATEGORYFILL5);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoryFill5Md()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORYFILL5);
-  }
-  
-  public void setStyleCategoryFill5(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORYFILL5, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORYFILL5, value);
+      setValue(STYLECATEGORIES, value);
     }
   }
   
