@@ -163,6 +163,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
+    clone.setCountry(this.getCountry());
     clone.apply();
 
     OIterator<? extends DashboardMetadata> allMetadata = this.getAllMetadataRel();

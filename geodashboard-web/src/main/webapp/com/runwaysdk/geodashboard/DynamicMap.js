@@ -24,7 +24,6 @@
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
       OVERLAY_LAYER_CONTAINER : 'overlayLayerContainer',
-      GEOSERVER_WORKSPACE : 'geodashboard',
       GEOCODE : 'geocode',
       GEOCODE_LABEL : 'geocodeLabel',
       LAYER_MODAL : '#modal01',
@@ -51,6 +50,7 @@
         this._mapDivId = config.mapDivId;
         this._mapId = config.mapId;
         this._dashboardId = config.dashboardId;
+        this._workspace = config.workspace;
         
         // Default criteria for filtering
         this._conditionMap = {'conditions' : [], 'criteria' : []};
@@ -556,7 +556,7 @@
             {
                 var layerId = layer.getLayerId();
                 var displayName = layer.getLayerName() || "N/A";
-                var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + layer.getViewName();
+                var geoserverName = this._workspace + ":" + layer.getViewName();
                 var legendXPosition = layer.getLegendXPosition();
                 var legendYPosition = layer.getLegendYPosition();
                 var groupedInLegend = layer.getGroupedInLegend();
@@ -734,7 +734,7 @@
           if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
             var viewName = layer.getViewName();
             var displayName = layer.getLayerName() || "N/A";
-            var geoserverName = DynamicMap.GEOSERVER_WORKSPACE + ":" + viewName;
+            var geoserverName = this._workspace + ":" + viewName;
             var mapBounds = this._map.getBounds();
             var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
               
@@ -982,7 +982,7 @@
             }
           }
         
-        var requestURL = window.location.origin+"/geoserver/"+DynamicMap.GEOSERVER_WORKSPACE+"/wms?" +
+        var requestURL = window.location.origin+"/geoserver/" + this._workspace +"/wms?" +
           "REQUEST=GetFeatureInfo" +
           "&INFO_FORMAT=application/json" +
           "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
