@@ -52,7 +52,8 @@ $(document).ready(function(){
   var map = new GDB.gis.DynamicMap({    
     mapDivId: "mapDivId",    
     mapId: '${mapId}',
-    dashboardId : '${dashboardId}',    
+    dashboardId : '${dashboardId}',
+    workspace : '${workspace}',
     layerCategoriesTree: {
       termType : '${type}',
       relationshipTypes : [ '${relationType}' ],

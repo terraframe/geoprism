@@ -16,8 +16,10 @@ import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.NoDashboardExceptionDTO;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
+import com.runwaysdk.system.gis.mapping.GeoserverFacadeDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -186,6 +188,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     }
     req.setAttribute("activeDashboard", activeDashboard);
     req.setAttribute("dashboardId", activeDashboard.getId());
+    req.setAttribute("workspace", GeoserverProperties.getWorkspace());
 
     // Dashboards does not include the active dashboard.
     dashboards.remove(activeDashboard);
