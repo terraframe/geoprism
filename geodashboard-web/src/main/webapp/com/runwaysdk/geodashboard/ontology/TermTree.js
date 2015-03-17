@@ -79,6 +79,8 @@
           selectable: true,
           checkable: false,
           editable: false,
+          onCanMove: this.canMove,
+          onCanMoveTo: this.canMoveTo,
           crud: {
             create: {
               width: 730,
@@ -110,6 +112,31 @@
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
       },
+      
+      /*
+       * Controls whether a node can be moved
+       */
+      canMove : function(node)
+      {
+    	  // restrict the ability to move the root node
+    	  if(! node.parent.parent){
+    		  return false;
+    	  }
+    	  else{
+    		  return true;
+    	  }
+      },
+      
+      
+      /*
+       *  Controls whether a node can be moved to a specific parent.
+       *  Allow all by default
+       */
+      canMoveTo : function(moved_node, target_node, position)
+      {
+    	  return true;
+      },
+      
       
       /**
        * Loops over all the roots and loads either the root itself or the root's children into the tree (depending on rootTermConfig.selectable)

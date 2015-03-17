@@ -297,24 +297,75 @@
 //      },
       
       // @Override
-//      _check_callback : function(operation, node, node_parent, node_position, more) {
-//        if (operation === "move_node") {
-//          // You can't drag synonymContainer nodes.
-//          if (node.data != null && node.data.isSynonymContainer) {
-//            return false;
-//          }
-//          // You can't drag synonyms, either
-//          else if (node.data.isSynonym) {
-//            return false;
-//          }
-//          // And you can't drag GeoEntities into synonyms
-//          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
-//            return false;
-//          }
-//        }
-//        
-//        return true;
-//      },
+      _check_callback : function(operation, node, node_parent, node_position, more) {
+        if (operation === "move_node") {
+          // You can't drag synonymContainer nodes.
+          if (node.data != null && node.data.isSynonymContainer) {
+            return false;
+          }
+          // You can't drag synonyms, either
+          else if (node.data.isSynonym) {
+            return false;
+          }
+          // And you can't drag GeoEntities into synonyms
+          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
+            return false;
+          }
+        }
+        
+        return true;
+      },
+      
+      /**
+       * Override
+       * 
+       * is binded to jqtree's node move event.s
+       */
+      __onNodeMove : function(event) {
+    	  var $thisTree = $(this.getRawEl());
+          var movedNode = event.move_info.moved_node;
+          var targetNode = event.move_info.target_node;
+          var previousParent = event.move_info.previous_parent;
+          var previousParentId = this.__getRunwayIdFromNode(previousParent);
+          
+          var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+          var targetNodeId = this.__getRunwayIdFromNode(targetNode);
+
+          this.$__onNodeMove;
+
+      },
+      
+      /**
+       * Override
+       * 
+       */
+      canMove : function(node)
+      {
+    	  if(! node.parent.parent){
+    		  return false;
+    	  }
+    	  else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
+    		  return false;
+    	  }
+    	  else{
+    		  return true;
+    	  }
+      },
+      
+      
+      /**
+       * Override
+       * 
+       */
+      canMoveTo : function(moved_node, target_node, position)
+      {
+    	  if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
+              return false;
+          }
+    	  else{
+    		  return true;
+    	  }
+      },
       
       /**
        * Override
