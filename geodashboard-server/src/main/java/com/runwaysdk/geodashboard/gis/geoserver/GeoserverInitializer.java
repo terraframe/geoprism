@@ -56,8 +56,13 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
   public static class CleanupRunnable implements Runnable, Reloadable
   {
     @Override
-    @Request
     public void run()
+    {
+      runInRequest();
+    }
+
+    @Request
+    private void runInRequest()
     {
       try
       {
