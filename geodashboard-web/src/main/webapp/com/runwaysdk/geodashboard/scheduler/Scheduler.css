@@ -32,3 +32,7 @@ table.com-runwaysdk-ui-scheduler-Scheduler tr.com-runwaysdk-ui-factory-runway-Wi
 .submit-form .field-row {
   float: left;
 }
+
+textarea#description {
+	float: left;
+}
