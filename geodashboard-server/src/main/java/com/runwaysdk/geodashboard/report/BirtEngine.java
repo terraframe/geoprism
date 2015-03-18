@@ -35,7 +35,7 @@ public class BirtEngine implements Reloadable
     if (engine == null)
     {
       EngineConfig config = new EngineConfig();
-      config.setLogConfig(logDirectory, LogLevel.FINER.getLevel());
+      config.setLogConfig(logDirectory, LogLevel.SEVERE.getLevel());
 
       Platform.startup(config);
 
