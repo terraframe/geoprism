@@ -302,17 +302,6 @@
         this._map.attributionControl.setPrefix('');
         //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         
-        // Hide mouse position coordinate display when outside of map
-        this._map.on('mouseover', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").show();
-        });
-        
-        this._map.on('mouseout', function(e) {
-          $(".leaflet-control-mouseposition.leaflet-control").hide();
-        });
-        
-        L.control.mousePosition({emptyString:"",position:"bottomleft",prefix:"Lat: ",separator:" Long: "}).addTo(this._map);
-        
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
         this._map.on("click", mapClickHandlerBound);
       },

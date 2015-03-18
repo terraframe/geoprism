@@ -267,54 +267,38 @@
         }
       },
       
-      // @Override
-//      __findInsertIndex : function(label, newParent) {
-//        var children = this.getChildren(newParent);
-//        
-//        children.sort(function(nodeA,nodeB){
-//          if (newParent.data != null && nodeA === newParent.data.synonymNode) {
-//            return -1;
-//          }
-//          else if (newParent.data != null && nodeB === newParent.data.synonymNode) {
-//            return 1;
-//          }
-//          
-//          return nodeA.text.localeCompare(nodeB.text);
-//        });
-//        
-//        var i = 0;
-//        if (newParent.data != null && newParent.data.synonymNode != null) {
-//          i = 1;
-//        }
-//        
-//        for (; i < children.length; ++i) {
-//          if (children[i].text.localeCompare(label) > 0) {
-//            break;
-//          }
-//        }
-//        
-//        return i;
-//      },
       
-      // @Override
-//      _check_callback : function(operation, node, node_parent, node_position, more) {
-//        if (operation === "move_node") {
-//          // You can't drag synonymContainer nodes.
-//          if (node.data != null && node.data.isSynonymContainer) {
-//            return false;
-//          }
-//          // You can't drag synonyms, either
-//          else if (node.data.isSynonym) {
-//            return false;
-//          }
-//          // And you can't drag GeoEntities into synonyms
-//          else if (node_parent.data.isSynonym || node_parent.data.isSynonymContainer) {
-//            return false;
-//          }
-//        }
-//        
-//        return true;
-//      },
+      /**
+       * Override
+       * 
+       */
+      canMove : function(node)
+      {
+    	  if(! node.parent.parent){
+    		  return false;
+    	  }
+    	  else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
+    		  return false;
+    	  }
+    	  else{
+    		  return true;
+    	  }
+      },
+      
+      
+      /**
+       * Override
+       * 
+       */
+      canMoveTo : function(moved_node, target_node, position)
+      {
+    	  if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
+              return false;
+          }
+    	  else{
+    		  return true;
+    	  }
+      },
       
       /**
        * Override
