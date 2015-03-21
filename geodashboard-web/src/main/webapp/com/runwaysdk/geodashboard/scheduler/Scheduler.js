@@ -24,8 +24,6 @@
   var Util = Mojo.Util;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var InstanceQueryDataSource = com.runwaysdk.ui.datatable.datasource.InstanceQueryDataSource;
-  var FormEntry = com.runwaysdk.geodashboard.FormEntry;
-  var Form = com.runwaysdk.geodashboard.Form;
   
   // In miliseconds
   var JOBS_POLLING_INTERVAL = 600;
@@ -209,11 +207,11 @@
           row.removeClassName("row_selected");
         });
 
-        var form = new Form();
+        var form = this.getFactory().newForm();
                     
         if(job.isDescriptionWritable())
         {
-          var descriptionInput = FormEntry.newInput('textarea', 'description', {attributes:{type:'text', id:'description'}});
+          var descriptionInput = this.getFactory().newFormControl('textarea', 'description', {attributes:{type:'text', id:'description'}});
           descriptionInput.setValue(job.getDescription().getLocalizedValue());
           form.addFormEntry(job.getDescriptionMd(), descriptionInput);          
         }
@@ -450,6 +448,20 @@
         }));
       },
       
+      createClearHistoryButton : function()
+      {
+        var container = this.getFactory().newElement("div");
+        
+        var but = this.getFactory().newButton(this.localize("clearHistory"), Mojo.Util.bind(this, this._onClickClearHistory));
+        but.setStyle("margin-bottom", "20px");
+        container.appendChild(but);
+        
+        this._clearHistoryBusy = this.getFactory().newElement("div");
+        container.appendChild(this._clearHistoryBusy);
+        
+        this.appendChild(container);
+      },
+      
       formatDuration : function(view)
       {
         var end = view.getEndTime() == null ? new Date() : view.getEndTime();
@@ -457,34 +469,37 @@
         var duration = ((end - view.getStartTime()) / 1000);
         
         return duration + " " + this.localize("seconds") + ".";
-      },      
+      },
+      
+      startTimeFormatter : function(view) {
+         if(this._formatter == null) {
+           this._formatter = Globalize.dateFormatter({ datetime: "short" });                         
+         }
+       
+         var dateTime = this._formatter(view.getStartTime());
+       
+         return  dateTime; 
+      },
       
       render : function(parent) {
         var that = this;
+        
+        this.createClearHistoryButton();
         
         var ds = new com.runwaysdk.ui.datatable.datasource.MdMethodDataSource({
           method : function(clientRequest) {
             com.runwaysdk.system.scheduler.JobHistoryView.getJobHistories(clientRequest, this.getSortAttr(), this.isAscending(), this.getPageSize(), this.getPageNumber());
           },
           columns : [
-                     {
-                       queryAttr: "startTime",
-                       customFormatter: function(view) {
-                         if(that._formatter == null) {
-                           that._formatter = Globalize.dateFormatter({ datetime: "short" });                         
-                         }
-                       
-                         var dateTime = that._formatter(view.getStartTime());
-                       
-                         return  dateTime; 
-                       }
-                     },
+                     { queryAttr: "startTime", customFormatter: Mojo.Util.bind(that, that.startTimeFormatter) },
                      {queryAttr: "status", customFormatter: function(view){ return view.getStatusLabel(); }},
                      {queryAttr: "jobId"},
                      {header: this.localize("duration"), customFormatter: Mojo.Util.bind(that, that.formatDuration)},
                      {queryAttr: "description"},
                      {header: this.localize("problems"), customFormatter : function(view) {
+                       // This is a workaround to a bug in runway, the value isn't getting set to the localized value.
                        return view.getAttributeDTO('historyInformation').getValue();
+                       // return view.getHistoryInformation().getLocalizedValue();
                      }}
                     ]
         });
@@ -499,9 +514,8 @@
         if (this._config["oLanguage"] == null) {
           this._config["oLanguage"] = {};
         }
-        this._config.el = this;
         this._config.dataSource = ds;
-        this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">';
+        this._config.sDom = '<"top"i>rt<"bottom"lp><"clear">'; // This statement hides a (datatables.net) search bar that isn't hooked up yet.
         this._config.bLengthChange = false;
         // Localize the datatable widget
         
