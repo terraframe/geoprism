@@ -24,6 +24,7 @@
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
       OVERLAY_LAYER_CONTAINER : 'overlayLayerContainer',
+      REFERENCE_LAYER_CONTAINER : 'refLayerContainer',
       GEOCODE : 'geocode',
       GEOCODE_LABEL : 'geocodeLabel',
       LAYER_MODAL : '#modal01',

@@ -112,6 +112,8 @@
           editable: false,
           onCanMove: this.canMove,
           onCanMoveTo: this.canMoveTo,
+          autoOpen: false,
+          openFolderDelay: 5000,
           crud: {
             create: {
               width: 730,
@@ -767,10 +769,12 @@
           if (bool) {
             node.termBusy = true;
             el.addClass("jqtree-loading");
+            el.find(".jqtree-toggler").css("color", "transparent"); // hide the arrow toggle when the busy spinner is present
           }
           else {
             node.termBusy = false;
             el.removeClass("jqtree-loading");
+            el.find(".jqtree-toggler").css("color", "black");
           }
         }
       },

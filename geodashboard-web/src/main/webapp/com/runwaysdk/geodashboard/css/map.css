@@ -56,6 +56,21 @@ a.leaflet-control-zoom-out:hover, a.leaflet-control-zoom-in:hover {
 	background-color: #fff;
 }
 
+h3.popup-heading {
+	margin: 0;
+	text-align: center;
+	color: #666666;
+	font-weight: bold;
+}
+
+.popup-table-heading {
+	font-style: italic;
+}
+
+.leaflet-popup-content p {
+	margin: 0;
+}
+
 /***** 
 **** UX team delivery overrides (relevant to map page)
 ******/
