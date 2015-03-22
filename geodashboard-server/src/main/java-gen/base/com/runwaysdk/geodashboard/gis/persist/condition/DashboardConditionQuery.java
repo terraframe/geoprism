@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -1572114462)
+@com.runwaysdk.business.ClassSignature(hash = 956670310)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -78,6 +78,29 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  {
+    return getDashboard(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD);
+
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD);
+
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD, mdAttributeIF, this, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -99,6 +122,29 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN);
 
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser()
+  {
+    return getGeodashboardUser(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER);
+
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER);
+
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -221,52 +267,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition()
-  {
-    return getParentCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION);
-
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION);
-
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION, mdAttributeIF, this, alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition()
-  {
-    return getRootCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION);
-
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION);
-
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION, mdAttributeIF, this, alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -326,9 +326,17 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD)) 
+    {
+       return new com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER)) 
+    {
+       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.LASTUPDATEDBY)) 
     {
@@ -341,14 +349,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -395,9 +395,15 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser();
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias);
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
@@ -416,12 +422,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition();
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition();
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -500,6 +500,23 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CREATEDBY,  alias, displayLabel);
 
   }
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  {
+    return getDashboard(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  {
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD,  alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -515,6 +532,23 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser()
+  {
+    return getGeodashboardUser(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias)
+  {
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -619,40 +653,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition()
-  {
-    return getParentCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition()
-  {
-    return getRootCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION,  alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -712,9 +712,17 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD)) 
+    {
+       return new com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER)) 
+    {
+       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.LASTUPDATEDBY)) 
     {
@@ -727,14 +735,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -758,9 +758,15 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser();
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias);
+    public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
@@ -779,12 +785,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition();
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias, String displayLabel);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition();
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias);
-    public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -912,6 +912,23 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CREATEDBY,  alias, displayLabel);
 
   }
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  {
+    return getDashboard(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  {
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD,  alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -927,6 +944,23 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser()
+  {
+    return getGeodashboardUser(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias)
+  {
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF getGeodashboardUser(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -1031,40 +1065,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition()
-  {
-    return getParentCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getParentCondition(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition()
-  {
-    return getRootCondition(null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION, alias, null);
-
-  }
- 
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getRootCondition(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION,  alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -1124,9 +1124,17 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.DASHBOARD)) 
+    {
+       return new com.runwaysdk.geodashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.GEODASHBOARDUSER)) 
+    {
+       return new com.runwaysdk.geodashboard.GeodashboardUserQuery.GeodashboardUserQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.LASTUPDATEDBY)) 
     {
@@ -1139,14 +1147,6 @@ public  class DashboardConditionQuery extends com.runwaysdk.query.GeneratedBusin
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.PARENTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.ROOTCONDITION)) 
-    {
-       return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

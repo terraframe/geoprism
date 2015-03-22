@@ -23,12 +23,6 @@ div.pageContent {
 	height: 100%;
 }
 
-a.opener.apply-filters-button {
-	position: absolute;
-	bottom: 20px;
-	left: 40%;
-}
-
 /* TODO : This is a scheduler CSS override, it should be put in a separate file maybe. */
 textarea#description {
 	float: left;
@@ -333,10 +327,9 @@ div.alert.alertbox {
 
 #collapse002 {
 	overflow: auto;
-    max-height: 200px;
+	max-height: 200px;
 }
 
-#collapse002 .panel-body{
+#collapse002 .panel-body {
 	width: 300px;
 }
-

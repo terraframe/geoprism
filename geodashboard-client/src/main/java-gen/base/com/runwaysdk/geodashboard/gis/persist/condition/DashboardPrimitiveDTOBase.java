@@ -1,7 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
 @com.runwaysdk.business.ClassSignature(hash = -105137317)
-public abstract class DashboardPrimitiveDTOBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardPrimitiveDTOBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive";
   private static final long serialVersionUID = -105137317;

@@ -14,6 +14,10 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.GeneratedBusinessQuery;
@@ -22,37 +26,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ReportProviderUtil implements Reloadable
 {
-  private static Log          log                 = LogFactory.getLog(ReportProviderUtil.class);
-
-  /**
-   * Condition type for restricting on global location
-   */
-  private static final String LOCATION_CONDITION  = "LOCATION_CONDITION";
-
-  /**
-   * Condition type for restricting on an attribute
-   */
-  private static final String ATTRIBUTE_CONDITION = "ATTRIBUTE_CONDITION";
-
-  /**
-   * Magic value for the json attribute name which specifies the id of the MdAttribute
-   */
-  private static final String MD_ATTRIBUTE        = "mdAttribute";
-
-  /**
-   * Magic value for the json attribute name which specifies the operation type
-   */
-  private static final String OPERATION           = "operation";
-
-  /**
-   * Magic value for the json attribute name which specifies the value
-   */
-  private static final String VALUE               = "value";
-
-  /**
-   * Magic value for the json attribute name which specifies the value
-   */
-  private static final String TYPE                = "type";
+  private static Log log = LogFactory.getLog(ReportProviderUtil.class);
 
   public static GeoEntity getGeoEntity(String category, String defaultGeoId)
   {
@@ -84,18 +58,18 @@ public class ReportProviderUtil implements Reloadable
         for (int i = 0; i < length; i++)
         {
           JSONObject condition = conditions.getJSONObject(i);
-          String operation = condition.getString(OPERATION);
-          String value = condition.getString(VALUE);
-          String conditionType = condition.getString(TYPE);
+          String operation = condition.getString(DashboardCondition.OPERATION_KEY);
+          String value = condition.getString(DashboardCondition.VALUE_KEY);
+          String conditionType = condition.getString(DashboardCondition.TYPE_KEY);
 
-          if (conditionType.equals(ATTRIBUTE_CONDITION))
+          if (conditionType.equals(DashboardAttributeCondition.CONDITION_TYPE) || conditionType.equals(ClassifierCondition.CONDITION_TYPE))
           {
-            String mdAttributeId = condition.getString(MD_ATTRIBUTE);
+            String mdAttributeId = condition.getString(DashboardAttributeCondition.MD_ATTRIBUTE_KEY);
             MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
             _handler.handleAttributeCondition(mdAttribute, operation, value);
           }
-          else if (conditionType.equals(LOCATION_CONDITION))
+          else if (conditionType.equals(LocationCondition.CONDITION_TYPE))
           {
             _handler.handleLocationCondition(value);
           }

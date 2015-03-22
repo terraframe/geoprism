@@ -2227,3 +2227,19 @@ input:focus.gdb-attr-filter.field-error {
 .gdb-attr-filter ul.jqtree-tree .jqtree-title {
     color: #B9B9B9;
 }
+
+#filter-buttons {
+	position: absolute;
+	bottom: 20px;
+}
+
+a.filters-button {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+a.save-filters-button {
+	border-left: solid 1px white;	
+}
+
+

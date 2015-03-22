@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -79570503)
+@com.runwaysdk.business.ClassSignature(hash = -799717891)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,19 +13,19 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEODASHBOARDUSER = "geodashboardUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
-  public static java.lang.String PARENTCONDITION = "parentCondition";
-  public static java.lang.String ROOTCONDITION = "rootCondition";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -79570503;
+  private static final long serialVersionUID = -799717891;
   
   public DashboardConditionBase()
   {
@@ -76,6 +76,46 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
+  public com.runwaysdk.geodashboard.Dashboard getDashboard()
+  {
+    if (getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.Dashboard.get(getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void validateDashboard()
+  {
+    this.validateAttribute(DASHBOARD);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.Dashboard value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
+  }
+  
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
   {
     if (getValue(ENTITYDOMAIN).trim().equals(""))
@@ -113,6 +153,46 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public com.runwaysdk.geodashboard.GeodashboardUser getGeodashboardUser()
+  {
+    if (getValue(GEODASHBOARDUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.GeodashboardUser.get(getValue(GEODASHBOARDUSER));
+    }
+  }
+  
+  public String getGeodashboardUserId()
+  {
+    return getValue(GEODASHBOARDUSER);
+  }
+  
+  public void validateGeodashboardUser()
+  {
+    this.validateAttribute(GEODASHBOARDUSER);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeodashboardUserMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEODASHBOARDUSER);
+  }
+  
+  public void setGeodashboardUser(com.runwaysdk.geodashboard.GeodashboardUser value)
+  {
+    if(value == null)
+    {
+      setValue(GEODASHBOARDUSER, "");
+    }
+    else
+    {
+      setValue(GEODASHBOARDUSER, value.getId());
     }
   }
   
@@ -269,86 +349,6 @@ public abstract class DashboardConditionBase extends com.runwaysdk.business.Busi
     else
     {
       setValue(OWNER, value.getId());
-    }
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition getParentCondition()
-  {
-    if (getValue(PARENTCONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.get(getValue(PARENTCONDITION));
-    }
-  }
-  
-  public String getParentConditionId()
-  {
-    return getValue(PARENTCONDITION);
-  }
-  
-  public void validateParentCondition()
-  {
-    this.validateAttribute(PARENTCONDITION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getParentConditionMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(PARENTCONDITION);
-  }
-  
-  public void setParentCondition(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition value)
-  {
-    if(value == null)
-    {
-      setValue(PARENTCONDITION, "");
-    }
-    else
-    {
-      setValue(PARENTCONDITION, value.getId());
-    }
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition getRootCondition()
-  {
-    if (getValue(ROOTCONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.get(getValue(ROOTCONDITION));
-    }
-  }
-  
-  public String getRootConditionId()
-  {
-    return getValue(ROOTCONDITION);
-  }
-  
-  public void validateRootCondition()
-  {
-    this.validateAttribute(ROOTCONDITION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getRootConditionMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ROOTCONDITION);
-  }
-  
-  public void setRootCondition(com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition value)
-  {
-    if(value == null)
-    {
-      setValue(ROOTCONDITION, "");
-    }
-    else
-    {
-      setValue(ROOTCONDITION, value.getId());
     }
   }
   

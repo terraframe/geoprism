@@ -10,7 +10,12 @@ import com.runwaysdk.query.ValueQuery;
 
 public class DashboardLessThan extends DashboardLessThanBase implements com.runwaysdk.generation.loader.Reloadable, LessThan
 {
-  private static final long serialVersionUID = -1060927779;
+  /**
+   * Less than comparison
+   */
+  public static final String OPERATION        = "lt";
+
+  private static final long  serialVersionUID = -1060927779;
 
   public DashboardLessThan()
   {
@@ -40,4 +45,9 @@ public class DashboardLessThan extends DashboardLessThanBase implements com.runw
     visitor.visit(this);
   }
 
+  @Override
+  public String getOperation()
+  {
+    return OPERATION;
+  }
 }

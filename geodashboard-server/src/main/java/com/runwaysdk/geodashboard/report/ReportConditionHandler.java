@@ -13,6 +13,12 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.QueryUtil;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.query.Attribute;
@@ -91,7 +97,7 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
   {
     Boolean bool = new Boolean(_value);
 
-    if (_operation.equals(EQ))
+    if (_operation.equals(DashboardEqual.OPERATION))
     {
       vQuery.AND(_attribute.EQ(bool));
     }
@@ -108,23 +114,23 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
   {
     Date date = ReportProviderUtil.parseDate(_value);
 
-    if (_operation.equals(GT))
+    if (_operation.equals(DashboardGreaterThan.OPERATION))
     {
       vQuery.AND(_attribute.GT(date));
     }
-    else if (_operation.equals(GE))
+    else if (_operation.equals(DashboardGreaterThanOrEqual.OPERATION))
     {
       vQuery.AND(_attribute.GE(date));
     }
-    else if (_operation.equals(LT))
+    else if (_operation.equals(DashboardLessThan.OPERATION))
     {
       vQuery.AND(_attribute.LT(date));
     }
-    else if (_operation.equals(LE))
+    else if (_operation.equals(DashboardLessThanOrEqual.OPERATION))
     {
       vQuery.AND(_attribute.LE(date));
     }
-    else if (_operation.equals(EQ))
+    else if (_operation.equals(DashboardEqual.OPERATION))
     {
       vQuery.AND(_attribute.EQ(date));
     }
@@ -139,23 +145,23 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
 
   private void addNumberCondition(String _operation, String _value, AttributeNumber _attribute)
   {
-    if (_operation.equals(GT))
+    if (_operation.equals(DashboardGreaterThan.OPERATION))
     {
       vQuery.AND(_attribute.GT(_value));
     }
-    else if (_operation.equals(GE))
+    else if (_operation.equals(DashboardGreaterThanOrEqual.OPERATION))
     {
       vQuery.AND(_attribute.GE(_value));
     }
-    else if (_operation.equals(LT))
+    else if (_operation.equals(DashboardLessThan.OPERATION))
     {
       vQuery.AND(_attribute.LT(_value));
     }
-    else if (_operation.equals(LE))
+    else if (_operation.equals(DashboardLessThanOrEqual.OPERATION))
     {
       vQuery.AND(_attribute.LE(_value));
     }
-    else if (_operation.equals(EQ))
+    else if (_operation.equals(DashboardEqual.OPERATION))
     {
       vQuery.AND(_attribute.EQ(_value));
     }
@@ -170,11 +176,11 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
 
   private void addCharacterCondition(String _operation, String _value, AttributeCharacter _attribute)
   {
-    if (_operation.equals(EQ))
+    if (_operation.equals(DashboardEqual.OPERATION))
     {
       vQuery.AND(_attribute.EQ(_value));
     }
-    else if (_operation.equals(NEQ))
+    else if (_operation.equals(DashboardNotEqual.OPERATION))
     {
       vQuery.AND(_attribute.NE(_value));
     }
@@ -194,7 +200,7 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
 
     if (mdBusinessDAO.definesType().equals(Classifier.CLASS))
     {
-      if (_operation.equals(EQ))
+      if (_operation.equals(DashboardEqual.OPERATION))
       {
 
         try

@@ -128,10 +128,10 @@
         
       },
       
-      render : function(parent) {
+      render : function(parent, nodes) {
         this._wrapperDiv.render(parent);
         
-        this.$render(this._wrapperDiv);
+        this.$render(this._wrapperDiv, nodes);
       }
     }
   });

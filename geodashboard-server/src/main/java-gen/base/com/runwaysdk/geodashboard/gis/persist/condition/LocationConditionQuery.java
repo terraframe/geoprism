@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 1368408211)
+@com.runwaysdk.business.ClassSignature(hash = -191479149)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -38,23 +38,43 @@ public  class LocationConditionQuery extends com.runwaysdk.geodashboard.gis.pers
   {
     return com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.CLASS;
   }
-  public com.runwaysdk.query.SelectableChar getComparisonValue()
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue()
   {
     return getComparisonValue(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, null);
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE);
+
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias, String displayLabel)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, displayLabel);
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE);
+
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, mdAttributeIF, this, alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   /**  
    * Returns an iterator of Business objects that match the query criteria specified
    * on this query object. 
@@ -87,9 +107,9 @@ public  class LocationConditionQuery extends com.runwaysdk.geodashboard.gis.pers
   public interface LocationConditionQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getComparisonValue();
-    public com.runwaysdk.query.SelectableChar getComparisonValue(String alias);
-    public com.runwaysdk.query.SelectableChar getComparisonValue(String alias, String displayLabel);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue();
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition locationCondition);
 
@@ -125,23 +145,37 @@ public  class LocationConditionQuery extends com.runwaysdk.geodashboard.gis.pers
       return this.NE(locationCondition.getId());
     }
 
-  public com.runwaysdk.query.SelectableChar getComparisonValue()
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue()
   {
     return getComparisonValue(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, null);
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias, String displayLabel)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, displayLabel);
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE,  alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   }
 
 /**
@@ -151,9 +185,9 @@ public  class LocationConditionQuery extends com.runwaysdk.geodashboard.gis.pers
   public interface LocationConditionQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryMultiReferenceIF
   {
 
-    public com.runwaysdk.query.SelectableChar getComparisonValue();
-    public com.runwaysdk.query.SelectableChar getComparisonValue(String alias);
-    public com.runwaysdk.query.SelectableChar getComparisonValue(String alias, String displayLabel);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue();
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias);
+    public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition ... locationCondition);
     public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition ... locationCondition);
@@ -238,22 +272,36 @@ public  class LocationConditionQuery extends com.runwaysdk.geodashboard.gis.pers
 
       return this.containsExactly(itemIdArray);
   }
-  public com.runwaysdk.query.SelectableChar getComparisonValue()
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue()
   {
     return getComparisonValue(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, null);
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getComparisonValue(String alias, String displayLabel)
+  public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getComparisonValue(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE, alias, displayLabel);
+    return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE,  alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.COMPARISONVALUE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   }
 }

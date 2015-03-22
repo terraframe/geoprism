@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
+import org.json.JSONObject;
+
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
@@ -12,71 +14,66 @@ import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardCondition extends DashboardConditionBase implements com.runwaysdk.generation.loader.Reloadable, Condition
 {
-  private static final long serialVersionUID = -1287604192;
-  
+  private static final long  serialVersionUID = -1287604192;
+
+  /**
+   * Magic value for the json attribute name which specifies the operation type
+   */
+  public static final String OPERATION_KEY    = "operation";
+
+  /**
+   * Magic value for the json attribute name which specifies the value
+   */
+  public static final String VALUE_KEY        = "value";
+
+  /**
+   * Magic value for the json attribute name which specifies the value
+   */
+  public static final String TYPE_KEY         = "type";
+
+  public abstract void restrictQuery(ValueQuery query, Attribute attr);
+
+  public abstract JSONObject getJSON();
+
+  public abstract String getJSONKey();
+
   public DashboardCondition()
   {
     super();
   }
-  
+
   @Override
   public String getName()
   {
     return this.getClass().getSimpleName();
   }
-  
+
   @Override
   public String toString()
   {
-    return "["+getName()+"] - "+this.getId();
+    return "[" + getName() + "] - " + this.getId();
   }
-  
-  abstract public void restrictQuery(ValueQuery query, Attribute attr);
-  
-  @Override
-  public void setParentCondition(DashboardCondition value)
-  {
-    if(this.equals(value))
-    {
-      throw new ProgrammingErrorException("Condition ["+getName()+"] cannot be its own parent condition.");
-    }
 
-    super.setParentCondition(value);
-  }
-  
-  @Override
-  public void setRootCondition(DashboardCondition value)
-  {
-    if(this.equals(value))
-    {
-      throw new ProgrammingErrorException("Condition ["+getName()+"] cannot be its own root condition.");
-    }
-
-    super.setRootCondition(value);
-  }
-  
   @Override
   public ThematicStyle getThematicStyle()
   {
     QueryFactory f = new QueryFactory();
     DashboardThematicStyleQuery q = new DashboardThematicStyleQuery(f);
-    
-    DashboardCondition root = this.getRootCondition();
-    DashboardCondition cond = root != null ? root : this;
-    q.WHERE(q.getStyleCondition().EQ(cond));
-    
+
+    q.WHERE(q.getStyleCondition().EQ(this));
+
     OIterator<? extends DashboardThematicStyle> iter = q.getIterator();
-    
+
     try
     {
       // There should be one result
-      if(iter.hasNext())
+      if (iter.hasNext())
       {
         return iter.next();
       }
       else
       {
-        String msg = "The condition ["+this.getName()+"] with root condition ["+root+"] is not referenced by a style.";
+        String msg = "The condition [" + this.getName() + "] with condition [" + this + "] is not referenced by a style.";
         throw new ProgrammingErrorException(msg);
       }
     }
@@ -85,4 +82,5 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
       iter.close();
     }
   }
+
 }

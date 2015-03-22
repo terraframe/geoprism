@@ -12,7 +12,13 @@ import com.runwaysdk.query.ValueQuery;
 
 public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.generation.loader.Reloadable, Equal
 {
-  private static final long serialVersionUID = 1213634698;
+
+  /**
+   * Equal comparison
+   */
+  public static final String OPERATION        = "eq";
+
+  private static final long  serialVersionUID = 1213634698;
 
   public DashboardEqual()
   {
@@ -49,6 +55,12 @@ public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
+  }
+
+  @Override
+  public String getOperation()
+  {
+    return OPERATION;
   }
 
 }

@@ -65,7 +65,7 @@
        */
       __dropAll : function(termId) {
         var that = this;
-        var nodes = this.__getNodesById(termId);
+        var nodes = this.getNodesById(termId);
         
         // Children of universals are appended to the root node
         // The children are repeated under the copies, so its okay to grab node[0]
@@ -103,7 +103,7 @@
       
       // @Override
       refreshTreeAfterDeleteTerm : function(termId) {
-        var nodes = this.__getNodesById(termId);
+        var nodes = this.getNodesById(termId);
         var $tree = this.getImpl();
         var shouldRefresh = !(that.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
         
@@ -247,7 +247,7 @@
               termAndRels.push(that.__responseToTNR(objArray[i]));
             }
             
-            var nodes = that.__getNodesById(termId);
+            var nodes = that.getNodesById(termId);
             
             // Remove existing children
             for (var iNode = 0; iNode < nodes.length; ++iNode) {

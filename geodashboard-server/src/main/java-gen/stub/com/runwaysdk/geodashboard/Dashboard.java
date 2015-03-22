@@ -6,11 +6,16 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
@@ -23,9 +28,13 @@ import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.Attribute;
@@ -140,21 +149,23 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
+  @Transaction
   public void apply()
   {
-
     boolean isNew = isNew();
+
+    super.apply();
 
     if (isNew && this.getMap() == null)
     {
       DashboardMap map = new DashboardMap();
       map.setName(this.getDisplayLabel().getValue());
+      map.setDashboard(this);
       map.apply();
 
       this.setMap(map);
+      super.apply();
     }
-
-    super.apply();
   }
 
   @Override
@@ -247,6 +258,66 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     finally
     {
       iterator.close();
+    }
+  }
+
+  public static String getClassifierTree(String mdAttributeId)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(new QueryFactory());
+
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+
+    OIterator<? extends ClassifierAttributeRoot> iterator = null;
+
+    try
+    {
+      iterator = rootQuery.getIterator();
+
+      JSONArray nodes = new JSONArray();
+
+      while (iterator.hasNext())
+      {
+        ClassifierAttributeRoot relationship = iterator.next();
+        Classifier classifier = relationship.getChild();
+
+        if (relationship.getSelectable())
+        {
+          nodes.put(classifier.getJSONObject());
+        }
+        else
+        {
+          OIterator<Term> children = null;
+
+          try
+          {
+            children = classifier.getDirectDescendants(ClassifierIsARelationship.CLASS);
+
+            while (children.hasNext())
+            {
+              Classifier child = (Classifier) children.next();
+
+              nodes.put(child.getJSONObject());
+            }
+          }
+          finally
+          {
+            if (children != null)
+            {
+              children.close();
+            }
+          }
+        }
+      }
+
+      return nodes.toString();
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
     }
   }
 
@@ -440,5 +511,77 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     query.WHERE(query.getDashboard().EQ(this));
 
     return ( query.getCount() > 0 );
+  }
+
+  @Override
+  public DashboardCondition[] getConditions()
+  {
+    DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+    query.AND(query.getGeodashboardUser().EQ(GeodashboardUser.getCurrentUser()));
+
+    OIterator<? extends DashboardCondition> iterator = null;
+
+    try
+    {
+      iterator = query.getIterator();
+
+      List<? extends DashboardCondition> list = iterator.getAll();
+
+      DashboardCondition[] conditions = list.toArray(new DashboardCondition[list.size()]);
+
+      return conditions;
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
+  }
+
+  @Override
+  @Transaction
+  public void applyConditions(DashboardCondition[] conditions)
+  {
+    /*
+     * First delete any conditions which exist
+     */
+    this.deleteConditions();
+
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    for (DashboardCondition condition : conditions)
+    {
+      condition.setDashboard(this);
+      condition.setGeodashboardUser(user);
+      condition.apply();
+    }
+  }
+
+  public void deleteConditions()
+  {
+    DashboardCondition[] conditions = this.getConditions();
+
+    for (DashboardCondition condition : conditions)
+    {
+      condition.delete();
+    }
+  }
+
+  @Override
+  public String getConditionsJSON()
+  {
+    JSONArray array = new JSONArray();
+
+    DashboardCondition[] conditions = this.getConditions();
+
+    for (DashboardCondition condition : conditions)
+    {
+      array.put(condition.getJSON());
+    }
+
+    return array.toString();
   }
 }
