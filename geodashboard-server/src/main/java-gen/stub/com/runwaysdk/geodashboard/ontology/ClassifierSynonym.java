@@ -1,6 +1,5 @@
 package com.runwaysdk.geodashboard.ontology;
 
-import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;

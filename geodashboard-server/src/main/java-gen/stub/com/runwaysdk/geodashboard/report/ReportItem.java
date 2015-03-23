@@ -665,7 +665,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       option.setOption(IRenderOption.EMITTER_ID, "org.eclipse.birt.report.engine.emitter.docx");
       return option;
     }
-    else if (format.equalsIgnoreCase(OutputFormat.PDF.name()))
+    else if (format.equalsIgnoreCase("pdf"))
     {
       // set output options
       PDFRenderOption options = new PDFRenderOption();
@@ -676,7 +676,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
       return options;
     }
-    else if (format.equalsIgnoreCase(OutputFormat.HTML.name()))
+    else if (format.equalsIgnoreCase("html"))
     {
       String folderName = this.getCacheFolderName();
 
