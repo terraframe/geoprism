@@ -2000,11 +2000,11 @@
         // Add boolean filters
         $( '.jcf-class-filter-boolean.rad-checked' ).each(function( index ) {          
           var input = $(this).siblings().first();
-            var value = input.attr('value');
+          var value = input.attr('value');
             
-            var mdAttribute = input.attr('name').replace('filter-', '');   
+          var mdAttribute = input.attr('name').replace('filter-', '');   
             
-            criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
+          criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
         });
         
         // Add term filters
@@ -2457,6 +2457,22 @@
               $(this).removeClass( "rad-checked" );
             }
           });
+          
+          // Load saved boolean values
+          var input = $(this).siblings().first();
+          var inputValue = input.attr('value');
+            
+          var mdAttributeId = input.attr('name').replace('filter-', '');   
+          
+          if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+            var condition = conditions["ATTRIBUTE_CONDITION"][mdAttributeId][0];
+            var value = condition.value;
+            
+            
+            if(inputValue ==  value) {
+              $(this).addClass( "rad-checked" );
+            }
+          }          
         });
         
         // Load saved date values
