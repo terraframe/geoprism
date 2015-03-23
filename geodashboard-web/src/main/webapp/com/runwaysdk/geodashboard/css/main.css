@@ -475,25 +475,6 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 		margin-top: 7px;
 	}
 	
-	.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked
-	{
-		border-color: #02789e;
-		background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
-		float: left;
-		display: block;
-		/* 	margin-right: 7px; */
-		margin-top: 0 !important;
-	}
-	
-	.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget
-		{
-		border-color: #02789e;
-		float: left;
-		display: block;
-		margin-right: 7px;
-		margin-top: 0 !important;
-	}
-	
 	.checkbox-label {
 		float: left;
 		display: block;
@@ -977,23 +958,41 @@ a.blueactive,
 	margin:7px 0 0;
 }
 .control-form .info-box .row-holder:first-child{margin-top:0;}
-.control-form .info-box input[type="checkbox"]{
-	float:left;
-	width:15px;
-	height:15px;
-	margin:0 10px 0 0;
-}
-.control-form .info-box .chk-area{
-	margin:0 9px 0 0;
-	border-color:rgba(0,0,0,0.35);
-	background:#fff;
-	-webkit-background-clip:padding-box;
-	background-clip:padding-box;
-}
-.control-form .info-box .chk-checked{
-	border-color:#006080;
-	background:url(../images/sprite.png) no-repeat -43px -20px;
-}
+	
+	.control-form .info-box input[type="checkbox"]{
+		float:left;
+		width:15px;
+		height:15px;
+		margin:0 10px 0 0;
+	}
+	.control-form .info-box .chk-area{
+		margin:0 9px 0 0;
+		border-color:rgba(0,0,0,0.35);
+		background:#fff;
+		-webkit-background-clip:padding-box;
+		background-clip:padding-box;
+	}
+	.control-form .info-box .chk-checked{
+		border-color:#006080;
+		background:url(../images/sprite.png) no-repeat -43px -20px;
+	}
+	.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked {
+		border-color: #02789e;
+		background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
+		float: left;
+		display: block;
+		/* 	margin-right: 7px; */
+		margin-top: 0 !important;
+	}
+	.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget {
+		border-color: #02789e;
+		float: left;
+		display: block;
+		margin-right: 7px;
+		margin-top: 0 !important;
+	}
+	
+	
 .control-form h3{
 	font-size:12px;
 	line-height:15px;
