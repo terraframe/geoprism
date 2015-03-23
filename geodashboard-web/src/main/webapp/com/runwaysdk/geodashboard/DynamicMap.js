@@ -122,10 +122,10 @@
             that._updateCacheFromJSONResponse(jsonObj);
             that._configureMap();
             
-            that._renderBaseLayers();              
-            that._addUserLayersToMap(true);
-              
-            that._drawLegendItems()
+            that._renderBaseLayers();
+            that._renderUserLayers();
+            
+            that._drawLegendItems();
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -1094,7 +1094,7 @@
               {                 
                 that._currGeoId = currGeoId;
               
-                that._renderReport(that._currGeoId, this._criteria);
+                that._renderReport(that._currGeoId, that._criteria);
               }
             
             }

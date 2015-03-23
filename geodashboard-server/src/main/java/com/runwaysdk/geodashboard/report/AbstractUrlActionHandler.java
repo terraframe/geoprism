@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import org.eclipse.birt.report.engine.api.HTMLActionHandler;
 import org.eclipse.birt.report.engine.api.IAction;
 import org.eclipse.birt.report.engine.api.IReportDocument;
-import org.eclipse.birt.report.engine.api.RenderOption;
 import org.eclipse.birt.report.engine.api.script.IReportContext;
 
 import com.runwaysdk.constants.CommonProperties;
@@ -204,23 +203,6 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
 
       throw e;
     }
-  }
-
-  public OutputFormat getOutputFormat(String format)
-  {
-    if (format.equals(RenderOption.OUTPUT_FORMAT_PDF))
-    {
-      return OutputFormat.PDF;
-    }
-    else if (format.equals(RenderOption.OUTPUT_FORMAT_HTML))
-    {
-      return OutputFormat.HTML;
-    }
-
-    UnsupportedOutputFormatException e = new UnsupportedOutputFormatException("Unknown output format type");
-    e.apply();
-
-    throw e;
   }
 
   /**

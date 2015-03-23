@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.ontology.Term;
@@ -15,7 +14,6 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;

@@ -137,8 +137,6 @@
       <object key="com.runwaysdk.geodashboard.report.ReportItemException" type="com.runwaysdk.system.metadata.MdException" />
       <object key="com.runwaysdk.geodashboard.report.ReportItem" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.report.ReportParameter" type="com.runwaysdk.system.metadata.MdView" />
-      <object key="com.runwaysdk.geodashboard.report.OutputFormat" type="com.runwaysdk.system.metadata.MdEnumeration" />
-      <object key="com.runwaysdk.geodashboard.report.OutputFormatMaster" type="com.runwaysdk.system.metadata.MdBusiness" />
     </delete>
   </undoIt>
 </version>
