@@ -36,3 +36,14 @@ table.com-runwaysdk-ui-scheduler-Scheduler tr.com-runwaysdk-ui-factory-runway-Wi
 textarea#description {
 	float: left;
 }
+
+div.scheduler_small_busy_spinner
+{
+  background-image:url('../../../../com/runwaysdk/geodashboard/images/busy.gif');
+  background-repeat:no-repeat;
+  background-position:center center;
+  opacity: 0.5;
+  width:25px;
+  height:25px;
+  float: right;
+}

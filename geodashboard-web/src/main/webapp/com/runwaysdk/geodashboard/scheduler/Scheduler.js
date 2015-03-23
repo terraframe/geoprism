@@ -31,9 +31,9 @@
 
   var JOB_QUERY_TYPE = "com.runwaysdk.system.scheduler.ExecutableJob";
   
-  var schedulerName = 'com.runwaysdk.geodashboard.scheduler.Scheduler';
-  var jobTableName = 'com.runwaysdk.geodashboard.scheduler.JobTable';
-  var jobHistoryTableName = "com.runwaysdk.geodashboard.scheduler.JobHistoryTable";
+  var schedulerName = 'com.runwaysdk.ui.scheduler.Scheduler';
+  var jobTableName = 'com.runwaysdk.ui.scheduler.JobTable';
+  var jobHistoryTableName = "com.runwaysdk.ui.scheduler.JobHistoryTable";
 
   /**
    * LANGUAGE
