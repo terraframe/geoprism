@@ -40,12 +40,6 @@ div.pageContent {
 		background-color:transparent;
 	}
 	
-	a.opener.apply-filters-button {
-		position: absolute;
-		bottom: 20px;
-		left: 40%;
-	}
-	
 	.aside-nav .panel-collapse a.link-active {
 		color: #00bfff;
 	}
@@ -2611,3 +2605,18 @@ div.alert.alertbox {
 	color: red;
 	font-weight: bold;
 }
+
+#filter-buttons {
+	position: absolute;
+	bottom: 20px;
+}
+
+a.filters-button {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+a.save-filters-button {
+	border-left: solid 1px white;	
+}
+

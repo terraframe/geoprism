@@ -52,7 +52,6 @@ import com.runwaysdk.geodashboard.gis.persist.HasStyle;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr;
 import com.runwaysdk.geodashboard.gis.shapefile.ShapeFileImporter;
 import com.runwaysdk.geodashboard.gis.sld.SLDMapVisitor;
 import com.runwaysdk.geodashboard.gis.sld.SLDValidator;
@@ -79,106 +78,98 @@ import com.runwaysdk.system.metadata.MdView;
 import com.runwaysdk.system.metadata.Metadata;
 import com.runwaysdk.util.FileIO;
 
+/**
+ * Simple class to be run as a way to load test data into the system.
+ * 
+ * @author justin
+ * 
+ */
+public class GeoserverTest
+{
+  protected static final String         TEST_PACKAGE   = "com.test.geodashboard";
 
+  protected static final String         TYPE_NAME      = "StateInfo";
 
+  protected static final String         VIEW_NAME      = "StateInfoView";
 
-  /**
-   * Simple class to be run as a way to load test data into the system.
-   * 
-   * @author justin
-   * 
-   */
-  public class GeoserverTest
+  protected static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
+
+  protected static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
+
+  protected static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
+
+  protected static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
+
+  protected static int                  stateCount     = 0;
+
+  protected static boolean              GEOSERVER_RUNNING;
+
+  protected static final File           xsd            = new File(SLD_SCHEMA);
+
+  protected static final boolean        consoleDebug   = true;
+
+  protected static Universal            state;
+
+  protected static Universal            country;
+
+  protected static GeoEntity            usa;
+
+  protected static MdBusiness           stateInfo;
+
+  protected static MdView               stateInfoView;
+
+  protected static String               stateInfoId;
+
+  protected static MdAttributeInteger   rank;
+
+  protected static MdAttributeDate      date;
+
+  protected static MdAttributeDouble    ratio;
+
+  protected static MdAttributeReference geoentityRef;
+
+  protected static Dashboard            dashboard;
+
+  private static boolean                keepData       = true;
+
+  protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
+
+  static
   {
-    protected static final String         TEST_PACKAGE   = "com.test.geodashboard";
-
-    protected static final String         TYPE_NAME      = "StateInfo";
-
-    protected static final String         VIEW_NAME      = "StateInfoView";
-
-    protected static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
-
-    protected static final String         TEST_SHAPEFILE = "src/test/resources/shapefile/states.shp";
-
-    protected static final String         SLD_SCHEMA     = "src/test/resources/StyledLayerDescriptor.xsd";
-
-    protected static final String         USA_WKT        = "src/test/resources/USA_WKT.txt";
-
-    protected static int                  stateCount     = 0;
-
-    protected static boolean              GEOSERVER_RUNNING;
-
-    protected static final File           xsd            = new File(SLD_SCHEMA);
-
-    protected static final boolean        consoleDebug   = true;
-
-    protected static Universal            state;
-
-    protected static Universal            country;
-
-    protected static GeoEntity            usa;
-
-    protected static MdBusiness           stateInfo;
-
-    protected static MdView               stateInfoView;
-
-    protected static String               stateInfoId;
-
-    protected static MdAttributeInteger   rank;
-    
-    protected static MdAttributeDate date;
-
-    protected static MdAttributeDouble    ratio;
-
-    protected static MdAttributeReference geoentityRef;
-    
-    protected static Dashboard dashboard;
-    
-    private static boolean keepData = true;
-
-    protected static final Log            log            = LogFactory.getLog(GeoserverTest.class);
-
-    static
+    if (consoleDebug)
     {
-      if (consoleDebug)
-      {
-        BasicConfigurator.configure();
-        RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
-      }
+      BasicConfigurator.configure();
+      RunwayLogUtil.convertLogLevelToLevel(LogLevel.ERROR);
     }
+  }
 
-    public static void main(String[] args) throws Throwable
+  public static void main(String[] args) throws Throwable
+  {
+    try
     {
-      try
-      {
-        log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
+      log.debug("Executing GeoserverTest.main() to load test data (no teardown)");
 
-        GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
+      GEOSERVER_RUNNING = GeoserverFacade.geoserverExists();
 
-        metadataSetup();
-        dataSetup();
-      }
-      catch (Throwable t)
-      {
-        log.error("Unable to invoke classSetup()", t);
-        throw new RuntimeException(t);
-      }
+      metadataSetup();
+      dataSetup();
     }
+    catch (Throwable t)
+    {
+      log.error("Unable to invoke classSetup()", t);
+      throw new RuntimeException(t);
+    }
+  }
 
-
-  public
-  @Rule
-   TestName                     name           = new TestName();
+  public @Rule TestName name = new TestName();
 
   /*
    * static {
    * 
-   * javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new
-   * javax.net.ssl.HostnameVerifier() {
+   * javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
    * 
-   * public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession)
-   * { if (hostname.equals("localhost")) { return true; } else if
-   * (hostname.equals("127.0.0.1")) { return true; } return false; } }); }
+   * public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) { if (hostname.equals("localhost")) {
+   * return true; } else if (hostname.equals("127.0.0.1")) { return true; } return false; } }); }
    */
 
   @Request
@@ -190,8 +181,7 @@ import com.runwaysdk.util.FileIO;
 
     con.setRequestMethod("GET");
 
-    con.setRequestProperty("User-Agent",
-        "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
     int responseCode = con.getResponseCode();
     System.out.println("\nSending 'GET' request to URL : " + url);
@@ -238,14 +228,14 @@ import com.runwaysdk.util.FileIO;
     rank.setAttributeName("rank");
     rank.getDisplayLabel().setDefaultValue("Alphabetic Rank");
     rank.apply();
-    
+
     date = new MdAttributeDate();
     date.setDefiningMdClass(stateInfo);
     date.setAttributeName("studyDate");
     date.getDisplayLabel().setDefaultValue("Study Date");
     date.apply();
-    
-    // ratio = rank/total (linear relationship...higher rank = 
+
+    // ratio = rank/total (linear relationship...higher rank =
     ratio = new MdAttributeDouble();
     ratio.setDefiningMdClass(stateInfo);
     ratio.setAttributeName("ratio");
@@ -267,9 +257,9 @@ import com.runwaysdk.util.FileIO;
     country.getDescription().setDefaultValue("Country");
     country.setUniversalId("country");
     country.apply();
-    
+
     country.addLink(Universal.getRoot(), AllowedIn.CLASS);
-    
+
     state = new Universal();
     state.getDisplayLabel().setDefaultValue("State");
     state.getDescription().setDefaultValue("State");
@@ -302,7 +292,7 @@ import com.runwaysdk.util.FileIO;
     stateInfoView.getDisplayLabel().setDefaultValue("State Statistics");
     stateInfoView.setPackageName(TEST_PACKAGE);
     stateInfoView.apply();
-    
+
     MdAttributeVirtual virtualRank = new MdAttributeVirtual();
     virtualRank.setAttributeName("viewRank");
     virtualRank.setMdAttributeConcrete(rank);
@@ -323,25 +313,24 @@ import com.runwaysdk.util.FileIO;
     virtualDate.setDefiningMdView(stateInfoView);
     virtualDate.getDisplayLabel().setDefaultValue("Study Date");
     virtualDate.apply();
-    
+
     dashboard = new Dashboard();
     dashboard.getDisplayLabel().setDefaultValue("Test Dashboard");
     dashboard.apply();
-    
-    
+
     MetadataWrapper mWrapper = new MetadataWrapper();
     mWrapper.setWrappedMdClass(stateInfoView);
     mWrapper.apply();
-    
+
     DashboardMetadata dm = dashboard.addMetadata(mWrapper);
     dm.setListOrder(0);
     dm.apply();
-    
+
     // rank
     AttributeWrapper aWrapper = new AttributeWrapper();
     aWrapper.setWrappedMdAttribute(virtualRank);
     aWrapper.apply();
-    
+
     DashboardAttributes da = mWrapper.addAttributeWrapper(aWrapper);
     da.setListOrder(0);
     da.apply();
@@ -354,16 +343,16 @@ import com.runwaysdk.util.FileIO;
     DashboardAttributes da2 = mWrapper.addAttributeWrapper(aWrapper2);
     da2.setListOrder(1);
     da2.apply();
-    
+
     // date
     AttributeWrapper aWrapper3 = new AttributeWrapper();
     aWrapper3.setWrappedMdAttribute(virtualDate);
     aWrapper3.apply();
-    
+
     DashboardAttributes da3 = mWrapper.addAttributeWrapper(aWrapper3);
     da3.setListOrder(2);
     da3.apply();
-    
+
   }
 
   private static void dataSetup()
@@ -388,10 +377,9 @@ import com.runwaysdk.util.FileIO;
       q.ORDER_BY_ASC(q.getDisplayLabel().getDefaultLocale());
 
       OIterator<? extends GeoEntity> iter = q.getIterator();
-      
+
       double total = q.getCount();
-      
-      
+
       try
       {
         int count = 0;
@@ -422,10 +410,10 @@ import com.runwaysdk.util.FileIO;
           cal.roll(Calendar.DATE, true);
           Date current = cal.getTime();
           String dateStr = MdAttributeDateUtil.getTypeUnsafeValue(current);
-          
+
           Integer rankI = ++count; // 1-based starting index
-          Double ratioD = rankI/total;
-          
+          Double ratioD = rankI / total;
+
           Business si = BusinessFacade.newBusiness(STATE_INFO);
           si.setValue(rank.getAttributeName(), rankI.toString());
           si.setValue(ratio.getAttributeName(), ratioD.toString());
@@ -451,12 +439,13 @@ import com.runwaysdk.util.FileIO;
   @Request
   public static void classTeardown()
   {
-    if(keepData){
-      log.debug("Skipping teardown process.");      
+    if (keepData)
+    {
+      log.debug("Skipping teardown process.");
     }
     else
     {
-      log.debug("Starting teardown process.");      
+      log.debug("Starting teardown process.");
       metadataTeardown();
       StrategyInitializer.shutDown();
     }
@@ -468,9 +457,9 @@ import com.runwaysdk.util.FileIO;
     try
     {
       dashboard.delete();
-      
+
       stateInfoView.delete();
-      
+
       MdBusiness.get(stateInfo.getId()).delete();
       Universal.get(country.getId()).delete();
       Universal.get(state.getId()).delete();
@@ -482,14 +471,14 @@ import com.runwaysdk.util.FileIO;
       throw new RuntimeException(t);
     }
   }
-  
+
   private void validate(String sld)
   {
     try
     {
       new SLDValidator().validate(sld);
     }
-    catch(Throwable t)
+    catch (Throwable t)
     {
       log.error(sld);
       Assert.fail(t.getLocalizedMessage());
@@ -499,7 +488,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates styling for a point layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createPointSLD()
@@ -560,7 +549,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates styling for a polygon layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createPolygonSLD()
@@ -622,7 +611,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Tests creating a composite condition.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createCompositePointSLD()
@@ -653,15 +642,9 @@ import com.runwaysdk.util.FileIO;
       lte.setComparisonValue("10");
       lte.apply();
 
-      DashboardOr or = new DashboardOr();
-      or.setLeftCondition(gte);
-      or.setRightCondition(lte);
-      or.apply();
-
       DashboardThematicStyle style = new DashboardThematicStyle();
       style.setMdAttribute(rank);
       style.setName("Style 1");
-      style.setStyleCondition(or);
       style.apply();
 
       HasStyle hasStyle = layer.addHasStyle(style);
@@ -696,7 +679,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates thematic styling for a point layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createThematicPointSLD()
@@ -724,8 +707,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -765,7 +746,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates thematic styling for a polygon layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createThematicPolygonSLD()
@@ -793,8 +774,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -833,10 +812,9 @@ import com.runwaysdk.util.FileIO;
   }
 
   /**
-   * Tests that a Layer can only reference an MdAttributeReference that points
-   * to GeoEntity.
+   * Tests that a Layer can only reference an MdAttributeReference that points to GeoEntity.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void testInvalidLayerGeoEntityReference()
@@ -845,8 +823,7 @@ import com.runwaysdk.util.FileIO;
     try
     {
       MdBusinessDAOIF md = MdBusinessDAO.get(stateInfoId);
-      MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md
-          .definesAttribute(Metadata.CREATEDBY);
+      MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md.definesAttribute(Metadata.CREATEDBY);
 
       layer = new DashboardLayer();
       layer.setName("Layer 1");
@@ -874,7 +851,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates a point layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createPointLayer()
@@ -903,8 +880,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -940,11 +915,9 @@ import com.runwaysdk.util.FileIO;
           if (GeoserverFacade.publishLayer(viewName, sldName))
           {
             // geoserver purportedly added the layer but query it just in case
-            if (!GeoserverFacade.layerExists(viewName)
-                || !GeoserverFacade.getLayers().contains(viewName))
+            if (!GeoserverFacade.layerExists(viewName) || !GeoserverFacade.getLayers().contains(viewName))
             {
-              Assert.fail("Published the view [" + viewName + "] with style [" + sldName
-                  + "] but it could not be found.");
+              Assert.fail("Published the view [" + viewName + "] with style [" + sldName + "] but it could not be found.");
             }
           }
           else
@@ -969,7 +942,7 @@ import com.runwaysdk.util.FileIO;
     }
   }
 
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createPointLayerHigherUniversal()
@@ -997,8 +970,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -1033,7 +1004,6 @@ import com.runwaysdk.util.FileIO;
     }
   }
 
- 
   /**
    * Tests the interpolate SLD code for a bubble map.
    */
@@ -1044,9 +1014,9 @@ import com.runwaysdk.util.FileIO;
     DashboardMap map = new DashboardMap();
     map.setName("Test Map");
     map.apply();
-    
+
     try
-    {    
+    {
       createGraduentSldTransaction(map);
     }
     finally
@@ -1057,7 +1027,7 @@ import com.runwaysdk.util.FileIO;
 
   @Transaction
   private void createGraduentSldTransaction(DashboardMap map)
-  {       
+  {
     DashboardLayer layer = new DashboardLayer();
     layer.setName("Layer 1");
     layer.setUniversal(state);
@@ -1065,33 +1035,31 @@ import com.runwaysdk.util.FileIO;
     layer.setVirtual(true);
     layer.setGeoEntity(geoentityRef);
     layer.apply();
-      
+
     HasLayer hasLayer = map.addHasLayer(layer);
     hasLayer.setLayerIndex(0);
     hasLayer.apply();
-      
+
     DashboardEqual eq = new DashboardEqual();
     eq.setComparisonValue("5");
-    eq.setParentCondition(null);
-    eq.setRootCondition(null);
     eq.apply();
-      
+
     DashboardThematicStyle style = new DashboardThematicStyle();
     style.setMdAttribute(rank);
     style.setName("Style 1");
     style.setStyleCondition(eq);
     style.apply();
-      
+
     HasStyle hasStyle = layer.addHasStyle(style);
     hasStyle.apply();
-    
+
     SLDMapVisitor visitor = new SLDMapVisitor();
     map.accepts(visitor);
     String sld = visitor.getSLD(layer);
-    
+
     validate(sld);
   }
-  
+
   /**
    * Tests the interpolate SLD code for a bubble map.
    */
@@ -1122,8 +1090,6 @@ import com.runwaysdk.util.FileIO;
 
     DashboardEqual eq = new DashboardEqual();
     eq.setComparisonValue("5");
-    eq.setParentCondition(null);
-    eq.setRootCondition(null);
     eq.apply();
 
     DashboardThematicStyle style = new DashboardThematicStyle();
@@ -1145,7 +1111,7 @@ import com.runwaysdk.util.FileIO;
   /**
    * Creates a polygon layer.
    */
-  //@Test
+  // @Test
   @Request
   @Transaction
   public void createPolygonLayer()
@@ -1174,8 +1140,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -1200,7 +1164,7 @@ import com.runwaysdk.util.FileIO;
       viewName = layer.getViewName();
       String sldName = layer.getSLDName();
       boolean dbViewCreated = false;
-      
+
       try
       {
         Database.createView(viewName, v.getSQL());
@@ -1211,11 +1175,9 @@ import com.runwaysdk.util.FileIO;
           if (GeoserverFacade.publishLayer(viewName, sldName))
           {
             // geoserver purportedly added the layer but query it just in case
-            if (!GeoserverFacade.layerExists(viewName)
-                || !GeoserverFacade.getLayers().contains(viewName))
+            if (!GeoserverFacade.layerExists(viewName) || !GeoserverFacade.getLayers().contains(viewName))
             {
-              Assert.fail("Published the view [" + viewName + "] with style [" + sldName
-                  + "] but it could not be found.");
+              Assert.fail("Published the view [" + viewName + "] with style [" + sldName + "] but it could not be found.");
             }
           }
           else
@@ -1237,32 +1199,31 @@ import com.runwaysdk.util.FileIO;
     finally
     {
       map.delete();
-    }  
+    }
   }
-  
+
   /**
    * Ensures that a dashboard retrieves the proper metadata
    */
-  //@Test
+  // @Test
   @Request
   public void testDashboardMetadata()
   {
     DashboardQuery q = Dashboard.getSortedDashboards();
-    
+
     Assert.assertEquals(1, q.getCount());
 
     OIterator<? extends Dashboard> iter = q.getIterator();
-    
+
     try
     {
       Dashboard dashboard = iter.next();
-      
+
       MdClass[] mds = dashboard.getSortedTypes();
       Assert.assertEquals(1, mds.length);
-      
+
       MdView fetched = (MdView) mds[0];
 
-      
       Assert.assertEquals(stateInfoView.getId(), fetched.getId());
     }
     finally
@@ -1270,8 +1231,8 @@ import com.runwaysdk.util.FileIO;
       iter.close();
     }
   }
-  
-  //@Test
+
+  // @Test
   @Request
   public void testMapJSON() throws JSONException
   {
@@ -1282,14 +1243,14 @@ import com.runwaysdk.util.FileIO;
     DashboardMap map = null;
 
     try
-    {     
+    {
 
       map = new DashboardMap();
       map.setName("Test Map");
       map.apply();
-      
-//      session.addDashboardMap(map).apply();
-//      map.addSessionEntry(session).apply();
+
+      // session.addDashboardMap(map).apply();
+      // map.addSessionEntry(session).apply();
 
       DashboardLayer layer = new DashboardLayer();
       layer.setName("Layer 1");
@@ -1317,8 +1278,6 @@ import com.runwaysdk.util.FileIO;
 
       DashboardEqual eq = new DashboardEqual();
       eq.setComparisonValue("5");
-      eq.setParentCondition(null);
-      eq.setRootCondition(null);
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
@@ -1349,8 +1308,8 @@ import com.runwaysdk.util.FileIO;
       checkGE.WHERE(checkGE.getUniversal().EQ(layer.getUniversal()));
 
       Database.createView(layer.getViewName(), v.getSQL());
-      Database.createView(layer2.getViewName(), v2.getSQL());   
-      
+      Database.createView(layer2.getViewName(), v2.getSQL());
+
       // just for demo... remove all geoserverfacade code before commit
       GeoserverFacade.publishWorkspace();
       GeoserverFacade.publishStore();
@@ -1359,23 +1318,22 @@ import com.runwaysdk.util.FileIO;
 
       String json = map.getMapJSON("");
       JSONObject mapJsonObj = new JSONObject(json);
-      
+
       System.out.println(json);
 
-      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers")
-          .length());
+      Assert.assertEquals(map.getAllHasLayer().getAll().size(), mapJsonObj.getJSONArray("layers").length());
       Assert.assertEquals(mapJsonObj.getString("mapName"), "Test Map");
 
       DashboardLayer[] fetched = map.getOrderedLayers();
-      
+
       System.out.println(fetched.length);
-      
-//      if (GEOSERVER_RUNNING)
-//      {
-////        Assert.fail("Not implemented.");
-//      }
+
+      // if (GEOSERVER_RUNNING)
+      // {
+      // // Assert.fail("Not implemented.");
+      // }
     }
-    catch(JSONException ex)
+    catch (JSONException ex)
     {
       log.error(name.getMethodName(), ex);
       Assert.fail(ex.getLocalizedMessage());
@@ -1385,14 +1343,14 @@ import com.runwaysdk.util.FileIO;
       map.delete();
     }
   }
-  
+
   @Transaction
   private DashboardMap testNoLayerException_trans()
   {
     DashboardMap map = new DashboardMap();
     map.setName("broken test");
     map.apply();
-    
+
     return map;
   }
 }

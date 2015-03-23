@@ -12,7 +12,12 @@ import com.runwaysdk.query.ValueQuery;
 
 public class DashboardNotEqual extends DashboardNotEqualBase implements Reloadable, NotEqual
 {
-  private static final long serialVersionUID = -2096281098;
+  /**
+   * Not Equal comparison
+   */
+  public static final String OPERATION        = "neq";
+
+  private static final long  serialVersionUID = -2096281098;
 
   public DashboardNotEqual()
   {
@@ -45,6 +50,12 @@ public class DashboardNotEqual extends DashboardNotEqualBase implements Reloadab
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
+  }
+
+  @Override
+  public String getOperation()
+  {
+    return OPERATION;
   }
 
 }

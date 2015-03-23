@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -692524999)
+@com.runwaysdk.business.ClassSignature(hash = -375688067)
 public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition";
-  private static final long serialVersionUID = -692524999;
+  private static final long serialVersionUID = -375688067;
   
   protected DashboardConditionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,15 +29,15 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEODASHBOARDUSER = "geodashboardUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
-  public static java.lang.String PARENTCONDITION = "parentCondition";
-  public static java.lang.String ROOTCONDITION = "rootCondition";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
@@ -103,6 +103,55 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
   }
   
+  public com.runwaysdk.geodashboard.DashboardDTO getDashboard()
+  {
+    if(getValue(DASHBOARD) == null || getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.DashboardDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
+  }
+  
+  public boolean isDashboardWritable()
+  {
+    return isWritable(DASHBOARD);
+  }
+  
+  public boolean isDashboardReadable()
+  {
+    return isReadable(DASHBOARD);
+  }
+  
+  public boolean isDashboardModified()
+  {
+    return isModified(DASHBOARD);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARD).getAttributeMdDTO();
+  }
+  
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()
   {
     if(getValue(ENTITYDOMAIN) == null || getValue(ENTITYDOMAIN).trim().equals(""))
@@ -150,6 +199,55 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.GeodashboardUserDTO getGeodashboardUser()
+  {
+    if(getValue(GEODASHBOARDUSER) == null || getValue(GEODASHBOARDUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.GeodashboardUserDTO.get(getRequest(), getValue(GEODASHBOARDUSER));
+    }
+  }
+  
+  public String getGeodashboardUserId()
+  {
+    return getValue(GEODASHBOARDUSER);
+  }
+  
+  public void setGeodashboardUser(com.runwaysdk.geodashboard.GeodashboardUserDTO value)
+  {
+    if(value == null)
+    {
+      setValue(GEODASHBOARDUSER, "");
+    }
+    else
+    {
+      setValue(GEODASHBOARDUSER, value.getId());
+    }
+  }
+  
+  public boolean isGeodashboardUserWritable()
+  {
+    return isWritable(GEODASHBOARDUSER);
+  }
+  
+  public boolean isGeodashboardUserReadable()
+  {
+    return isReadable(GEODASHBOARDUSER);
+  }
+  
+  public boolean isGeodashboardUserModified()
+  {
+    return isModified(GEODASHBOARDUSER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeodashboardUserMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEODASHBOARDUSER).getAttributeMdDTO();
   }
   
   public String getKeyName()
@@ -335,104 +433,6 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getOwnerMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(OWNER).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO getParentCondition()
-  {
-    if(getValue(PARENTCONDITION) == null || getValue(PARENTCONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.get(getRequest(), getValue(PARENTCONDITION));
-    }
-  }
-  
-  public String getParentConditionId()
-  {
-    return getValue(PARENTCONDITION);
-  }
-  
-  public void setParentCondition(com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO value)
-  {
-    if(value == null)
-    {
-      setValue(PARENTCONDITION, "");
-    }
-    else
-    {
-      setValue(PARENTCONDITION, value.getId());
-    }
-  }
-  
-  public boolean isParentConditionWritable()
-  {
-    return isWritable(PARENTCONDITION);
-  }
-  
-  public boolean isParentConditionReadable()
-  {
-    return isReadable(PARENTCONDITION);
-  }
-  
-  public boolean isParentConditionModified()
-  {
-    return isModified(PARENTCONDITION);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getParentConditionMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(PARENTCONDITION).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO getRootCondition()
-  {
-    if(getValue(ROOTCONDITION) == null || getValue(ROOTCONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.get(getRequest(), getValue(ROOTCONDITION));
-    }
-  }
-  
-  public String getRootConditionId()
-  {
-    return getValue(ROOTCONDITION);
-  }
-  
-  public void setRootCondition(com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO value)
-  {
-    if(value == null)
-    {
-      setValue(ROOTCONDITION, "");
-    }
-    else
-    {
-      setValue(ROOTCONDITION, value.getId());
-    }
-  }
-  
-  public boolean isRootConditionWritable()
-  {
-    return isWritable(ROOTCONDITION);
-  }
-  
-  public boolean isRootConditionReadable()
-  {
-    return isReadable(ROOTCONDITION);
-  }
-  
-  public boolean isRootConditionModified()
-  {
-    return isModified(ROOTCONDITION);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getRootConditionMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ROOTCONDITION).getAttributeMdDTO();
   }
   
   public Long getSeq()

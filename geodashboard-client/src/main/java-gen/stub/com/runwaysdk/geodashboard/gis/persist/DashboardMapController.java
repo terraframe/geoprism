@@ -19,7 +19,6 @@ import com.runwaysdk.geodashboard.gis.NoDashboardExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
-import com.runwaysdk.system.gis.mapping.GeoserverFacadeDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -227,6 +226,11 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     this.req.setAttribute("rootId", root.getId());
 
     JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
+
+    /*
+     * Load the conditions information
+     */
+    req.setAttribute("conditions", activeDashboard.getConditionsJSON());
 
     render("dashboardViewer.jsp");
   }

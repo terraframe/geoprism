@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 1166431914)
+@com.runwaysdk.business.ClassSignature(hash = 1358228764)
 public abstract class LocationConditionDTOBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition";
-  private static final long serialVersionUID = 1166431914;
+  private static final long serialVersionUID = 1358228764;
   
   protected LocationConditionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -28,12 +28,24 @@ public abstract class LocationConditionDTOBase extends com.runwaysdk.geodashboar
   }
   
   public static java.lang.String COMPARISONVALUE = "comparisonValue";
-  public String getComparisonValue()
+  public com.runwaysdk.system.gis.geo.GeoEntityDTO getComparisonValue()
+  {
+    if(getValue(COMPARISONVALUE) == null || getValue(COMPARISONVALUE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.GeoEntityDTO.get(getRequest(), getValue(COMPARISONVALUE));
+    }
+  }
+  
+  public String getComparisonValueId()
   {
     return getValue(COMPARISONVALUE);
   }
   
-  public void setComparisonValue(String value)
+  public void setComparisonValue(com.runwaysdk.system.gis.geo.GeoEntityDTO value)
   {
     if(value == null)
     {
@@ -41,7 +53,7 @@ public abstract class LocationConditionDTOBase extends com.runwaysdk.geodashboar
     }
     else
     {
-      setValue(COMPARISONVALUE, value);
+      setValue(COMPARISONVALUE, value.getId());
     }
   }
   
@@ -60,9 +72,25 @@ public abstract class LocationConditionDTOBase extends com.runwaysdk.geodashboar
     return isModified(COMPARISONVALUE);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getComparisonValueMd()
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getComparisonValueMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(COMPARISONVALUE).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(COMPARISONVALUE).getAttributeMdDTO();
+  }
+  
+  public final java.lang.String getComparisonLabel()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO.CLASS, "getComparisonLabel", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getComparisonLabel(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO.CLASS, "getComparisonLabel", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

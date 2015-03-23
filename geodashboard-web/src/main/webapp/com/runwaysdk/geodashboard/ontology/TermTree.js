@@ -46,6 +46,37 @@
     "export" : "Export"
   });
   
+  var tree = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.TermNodeLabel', {
+    Instance : {
+      initialize : function(label) {
+        this._label = label;
+      },      
+      getLocalizedValue : function() {
+        return this._label;
+      },
+      getValue : function() {
+        return this._label;
+      }
+    }    
+  });
+  
+  var tree = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.TermNode', {
+    Instance : {
+      initialize : function(id, label) {
+        this._id = id;
+        this._label = new com.runwaysdk.geodashboard.ontology.TermNodeLabel(label);
+      },
+        
+      getId : function() {
+        return this._id;
+      },
+        
+      getDisplayLabel : function() {
+        return this._label;
+      }
+    }    
+  });
+  
   /**
    * @class com.runwaysdk.geodashboard.ontology.TermTree A wrapper around JQuery widget jqTree to allow for integration with Term objects.
    * 
@@ -120,13 +151,13 @@
        */
       canMove : function(node)
       {
-    	  // restrict the ability to move the root node
-    	  if(! node.parent.parent){
-    		  return false;
-    	  }
-    	  else{
-    		  return true;
-    	  }
+        // restrict the ability to move the root node
+        if(! node.parent.parent){
+          return false;
+        }
+        else{
+          return true;
+        }
       },
       
       
@@ -136,7 +167,7 @@
        */
       canMoveTo : function(moved_node, target_node, position)
       {
-    	  return true;
+        return true;
       },
       
       
@@ -155,11 +186,14 @@
           var rootTerm = this._config.rootTerms[i];
           if (Mojo.Util.isObject(rootTerm))
           {
-            if (rootTerm.term instanceof com.runwaysdk.business.TermDTO)
+            var term = rootTerm.term;
+          
+            if (term instanceof com.runwaysdk.business.TermDTO || term instanceof com.runwaysdk.geodashboard.ontology.TermNode)
             {
-              rootTerm.termId = rootTerm.term.getId();
+              rootTerm.termId = term.getId();
               this.rootTermConfigs.put(rootTerm.termId, rootTerm);
-              this.termCache[rootTerm.term.getId()] = rootTerm.term;
+              this.termCache[term.getId()] = term;
+              
               if (rootTerm.selectable)
               {
                 that.__createTreeNode(rootTerm.termId, null, false);
@@ -222,46 +256,64 @@
           var child = rootNode.children[i];
           
           if (!child.phantom && child.checkBox != null) {
-            if (child.checkBox.isChecked()) {
-              appendArray.push(this.__getRunwayIdFromNode(child));
-            }
             
-            this.getCheckedTerms(child, appendArray);
+            // If a node is checked then we do not need to check its children nodes, because they are implicitly checked
+            if (child.checkBox.isChecked()) {
+              var termId = this.__getRunwayIdFromNode(child);
+              
+              appendArray.push(termId);
+            }
+            else {
+              this.getCheckedTerms(child, appendArray);              
+            }            
           }
         }
         
         return appendArray;
       },
       
-      __onCheck : function(event) {
-        var checkBox = event.getCheckBox();
-        var node = checkBox.node;
-        var termId = this.__getRunwayIdFromNode(node);
-        
+      setCheckedTerms : function(termIds) {
+        for(var i = 0; i< termIds.length; i++) {        	
+          var termId = termIds[i];          
+          var nodes = this.__getNodesById(termId);
+          
+          if(nodes != null) {        	  
+            for(var j = 0; j < nodes.length; j++) {
+              var node = nodes[j];
+              node.skipCheckParent = false;
+              node.checkBox.setChecked(true);
+              
+              this.__setCheck(nodes[j], true);
+            }          
+          }
+        }
+      },
+      
+      __setCheck : function (node, checked) {
         if (!node.skipCheckChildren) {
           this.doForNodeAndAllChildren(node, function(childNode) {
             if (childNode != node) {
               childNode.skipCheckParent = true;
-              childNode.checkBox.setChecked(checkBox.isChecked());
+              childNode.checkBox.setChecked(checked);
               childNode.skipCheckParent = false;
-            }
-          });
-        }
-        
-        if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
-          var checkedCount = 0;
-          var partialChecked = 0;
-          
-          var siblings = node.parent.children;
-          for (var i = 0; i < siblings.length; ++i) {
-            if (siblings[i].checkBox.isChecked()) {
-              checkedCount++;
-            }
+              }
+            });
+          }
+            
+          if (node.parent != null && node.parent.checkBox != null && !node.skipCheckParent) {
+            var checkedCount = 0;
+            var partialChecked = 0;
+              
+            var siblings = node.parent.children;
+            for (var i = 0; i < siblings.length; ++i) {
+              if (siblings[i].checkBox.isChecked()) {
+                checkedCount++;
+              }
             else if (siblings[i].checkBox.isPartialChecked()) {
               partialChecked++;
             }
           }
-          
+              
           if (node.parent.children.length === checkedCount) {
             node.parent.checkBox.setChecked(true);
           }
@@ -278,20 +330,28 @@
             }
           }
         }
-        
+            
         if (node.checkBox.hasClassName("partialcheck")) {
           var checkedCount = 0;
-          
+              
           for (var i = 0; i < node.children.length; ++i) {
             if (node.children[i].checkBox.isChecked() || node.children[i].checkBox.isPartialChecked()) {
               checkedCount++;
             }
           }
-          
+              
           if (checkedCount == 0) {
             node.checkBox.removeClassName("partialcheck");
           }
         }
+      },
+      
+      __onCheck : function(event) {
+        var checkBox = event.getCheckBox();
+        var checked = checkBox.isChecked();
+        var node = checkBox.node;
+        
+        this.__setCheck(node, checked);
       },
       
       __onCreateLi : function(node, $li) {
@@ -1083,10 +1143,34 @@
         return this._config.relationshipTypes[0];
       },
       
+      _createNodes : function (parentNode, nodes) {
+       
+        for(var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          
+          // Create the cached term
+          var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label);
+          
+          // Populate the caches
+          this.termCache[term.getId()] = term;
+          
+          if(parentNode == null) { 
+            
+            // Create the cached root term
+            var rootTerm = {term:term, termId: term.getId(), selectable:true};
+            this.rootTermConfigs.put(term.getId(), rootTerm);
+          }
+          
+          var createdNode = this.__createTreeNode(term.getId(), parentNode, true, false, true);
+          
+          this._createNodes(createdNode, node.children);          
+        }
+      },
+      
       /**
        * creates a new jqTree node and appends it to the tree. This method will request the term from the server, to get the display label, if the term is not in the cache.
        */
-      __createTreeNode : function(childId, parentNode, hasFetched, config) {
+      __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
         var that = this;
         
 //        return this.__getTermFromId(childId, {
@@ -1145,13 +1229,13 @@
                 );
                 node.phantomChild = phantom;
               }
-              else {
-                node.hasFetched = true;
-              }
               
-              $thisTree.tree("openNode", parentNode);
+              if(hide == null || !hide ) {                  
+                $thisTree.tree("openNode", parentNode);                
+              }
             }
             
+            node.hasFetched = hasFetched;
             return node;
 //          },
 //          onFailure : function(err) {
@@ -1179,7 +1263,7 @@
         return node.runwayId;
       },
       
-      render : function(parent) {
+      render : function(parent, nodes) {
         var that = this;
         
         this.$render(parent);
@@ -1194,29 +1278,36 @@
         
         if (this._config.editable)
         {
-        	this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
-        	
-	        $tree.bind(
-	            'tree.move',
-	            Mojo.Util.bind(this, this.__onNodeMove)
-	        );
-	        $tree.bind(
-	            'tree.contextmenu',
-	            function(event) {
-	              that._boundedRightClick(event);
-	              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
-	            }
-	        );
-	        $tree.bind(
-	          'tree.click',
-	          function(event) {
-	            that._boundedRightClick(event);
-	            event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
-	          }
-	        );
+          this._boundedRightClick = Mojo.Util.bind(this, this.__onNodeRightClick);
+          
+          $tree.bind(
+              'tree.move',
+              Mojo.Util.bind(this, this.__onNodeMove)
+          );
+          $tree.bind(
+              'tree.contextmenu',
+              function(event) {
+                that._boundedRightClick(event);
+                event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+              }
+          );
+          $tree.bind(
+            'tree.click',
+            function(event) {
+              that._boundedRightClick(event);
+              event.preventDefault(); // This stops nodes from being selected when clicked on (which currently has no use)
+            }
+          );
         }
         
-        this.refreshRoots();
+        if(nodes == null) {
+          this.refreshRoots();          
+        }
+        else {
+          this.rootTermConfigs = new com.runwaysdk.structure.HashMap();        
+          
+          this._createNodes(null, nodes);
+        }
       },
       
       /**

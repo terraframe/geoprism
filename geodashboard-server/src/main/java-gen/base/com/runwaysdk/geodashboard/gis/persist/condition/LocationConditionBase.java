@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 132098090)
+@com.runwaysdk.business.ClassSignature(hash = -1777980516)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,14 +12,26 @@ public abstract class LocationConditionBase extends com.runwaysdk.geodashboard.g
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition";
   public static java.lang.String COMPARISONVALUE = "comparisonValue";
-  private static final long serialVersionUID = 132098090;
+  private static final long serialVersionUID = -1777980516;
   
   public LocationConditionBase()
   {
     super();
   }
   
-  public String getComparisonValue()
+  public com.runwaysdk.system.gis.geo.GeoEntity getComparisonValue()
+  {
+    if (getValue(COMPARISONVALUE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.GeoEntity.get(getValue(COMPARISONVALUE));
+    }
+  }
+  
+  public String getComparisonValueId()
   {
     return getValue(COMPARISONVALUE);
   }
@@ -29,13 +41,13 @@ public abstract class LocationConditionBase extends com.runwaysdk.geodashboard.g
     this.validateAttribute(COMPARISONVALUE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getComparisonValueMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getComparisonValueMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(COMPARISONVALUE);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(COMPARISONVALUE);
   }
   
-  public void setComparisonValue(String value)
+  public void setComparisonValue(com.runwaysdk.system.gis.geo.GeoEntity value)
   {
     if(value == null)
     {
@@ -43,7 +55,7 @@ public abstract class LocationConditionBase extends com.runwaysdk.geodashboard.g
     }
     else
     {
-      setValue(COMPARISONVALUE, value);
+      setValue(COMPARISONVALUE, value.getId());
     }
   }
   
@@ -67,6 +79,18 @@ public abstract class LocationConditionBase extends com.runwaysdk.geodashboard.g
   public static LocationCondition getByKey(String key)
   {
     return (LocationCondition) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public java.lang.String getComparisonLabel()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getComparisonLabel(java.lang.String id)
+  {
+    LocationCondition _instance = LocationCondition.get(id);
+    return _instance.getComparisonLabel();
   }
   
   public static LocationCondition lock(java.lang.String id)

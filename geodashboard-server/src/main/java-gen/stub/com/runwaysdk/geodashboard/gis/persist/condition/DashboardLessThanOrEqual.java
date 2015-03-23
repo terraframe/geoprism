@@ -10,7 +10,13 @@ import com.runwaysdk.query.ValueQuery;
 
 public class DashboardLessThanOrEqual extends DashboardLessThanOrEqualBase implements com.runwaysdk.generation.loader.Reloadable, LessThanOrEqual
 {
-  private static final long serialVersionUID = 1496821676;
+
+  /**
+   * Less than or equal comparison
+   */
+  public static final String OPERATION        = "le";
+
+  private static final long  serialVersionUID = 1496821676;
 
   public DashboardLessThanOrEqual()
   {
@@ -40,4 +46,9 @@ public class DashboardLessThanOrEqual extends DashboardLessThanOrEqualBase imple
     visitor.visit(this);
   }
 
+  @Override
+  public String getOperation()
+  {
+    return OPERATION;
+  }
 }

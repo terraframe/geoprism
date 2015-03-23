@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1733998443)
+@com.runwaysdk.business.ClassSignature(hash = -773256999)
 public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = -1733998443;
+  private static final long serialVersionUID = -773256999;
   
   protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,6 +29,7 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -100,6 +101,55 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.DashboardDTO getDashboard()
+  {
+    if(getValue(DASHBOARD) == null || getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.DashboardDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
+  }
+  
+  public boolean isDashboardWritable()
+  {
+    return isWritable(DASHBOARD);
+  }
+  
+  public boolean isDashboardReadable()
+  {
+    return isReadable(DASHBOARD);
+  }
+  
+  public boolean isDashboardModified()
+  {
+    return isModified(DASHBOARD);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARD).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()

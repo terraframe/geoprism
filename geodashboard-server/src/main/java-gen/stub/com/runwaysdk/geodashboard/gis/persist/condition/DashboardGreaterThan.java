@@ -10,7 +10,12 @@ import com.runwaysdk.query.ValueQuery;
 
 public class DashboardGreaterThan extends DashboardGreaterThanBase implements com.runwaysdk.generation.loader.Reloadable, GreaterThan
 {
-  private static final long serialVersionUID = 815122248;
+  /**
+   * Greater than comparison
+   */
+  public static final String OPERATION        = "gt";
+
+  private static final long  serialVersionUID = 815122248;
 
   public DashboardGreaterThan()
   {
@@ -38,5 +43,11 @@ public class DashboardGreaterThan extends DashboardGreaterThanBase implements co
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
+  }
+
+  @Override
+  public String getOperation()
+  {
+    return OPERATION;
   }
 }

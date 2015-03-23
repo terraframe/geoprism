@@ -5,6 +5,7 @@
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
         <attributes>
           <char name="name" label="Name" size="64" required="true" indexType="unique index" />
+          <reference name="dashboard" type="com.runwaysdk.geodashboard.Dashboard" required="true" indexType="unique index" />
         </attributes>
         <mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
         <mdMethod name="orderLayers" static="false" label="Order Layers" returnType="java.lang.String">
@@ -27,6 +28,7 @@
           <reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
           <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
           <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+
         </attributes>
         <mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
           <mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer" />
@@ -160,55 +162,6 @@
         <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
       </mdRelationship>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true" generateController="false">
-        <attributes>
-
-          <!-- <reference name="styleReference" required="false" label="Style" description="Back-reference to the Style that points to this condition." type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" /> -->
-
-          <reference name="parentCondition" required="false" label="Parent Condition" description="Reference to the parent of this condition if one exists." type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-          <reference name="rootCondition" required="false" label="Root Condition" description="Reference to the root of this condition if one exists." type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Attribute condition" isAbstract="true" generateController="false">
-        <attributes>
-          <reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Location condition" isAbstract="false" generateController="false">
-        <attributes>
-          <char name="comparisonValue" size="255" required="true" label="Value" />        
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" label="Primitive" isAbstract="true" generateController="false">
-        <attributes>
-          <char name="comparisonValue" size="255" required="true" label="Value" />
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Equals" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than Or Equal" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than Or Equal" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" label="Composite" isAbstract="true" generateController="false">
-        <attributes>
-          <reference name="leftCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-          <reference name="rightCondition" required="true" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-        </attributes>
-      </mdBusiness>
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" label="And" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="false" />
-
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" label="Or" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" generateController="false" />
-
       <mdException name="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" label="Duplicate Map Data Exception" description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
       </mdException>
       <mdInformation name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation" label="Empty Layer Information" description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
@@ -218,29 +171,25 @@
       </mdInformation>
 
     </create>
-    <update></update>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <attributes>
+            <reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false" />
+          </attributes>
+        </create>
+      </mdBusiness>
+    </update>
   </doIt>
   <undoIt>
     <delete>
-
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.condition.DashboardOr" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
-
     </delete>
   </undoIt>
 </version>

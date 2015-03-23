@@ -185,7 +185,7 @@
           onSuccess : function(syn) {
             that.termCache[syn.getId()] = syn;
             
-            var nodes = that.__getNodesById(targetId);
+            var nodes = that.getNodesById(targetId);
             for (var i = 0; i < nodes.length; ++i) {
               $(that.getRawEl()).tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(syn), id: syn.getId(), runwayId: syn.getId()});
             }
@@ -311,7 +311,7 @@
         
         this.setTermBusy(termId, true);
         
-        var nodes = that.__getNodesById(termId);
+        var nodes = that.getNodesById(termId);
         var parent = nodes[0];
         
         // Special case for synonyms.

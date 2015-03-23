@@ -34,8 +34,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
   public void failCreate(com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
@@ -54,8 +53,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
   public void failDelete(com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -63,8 +61,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
   {
     com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO dto = com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO.lock(super.getClientRequest(), id);
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -77,8 +74,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO dto = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO(clientRequest);
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
@@ -101,8 +97,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
   public void failUpdate(com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -110,8 +105,7 @@ public class DashboardNotEqualController extends DashboardNotEqualControllerBase
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     req.setAttribute("_definingMdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_parentCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_rootCondition", com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
+    req.setAttribute("_geodashboardUser", com.runwaysdk.geodashboard.GeodashboardUserDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }

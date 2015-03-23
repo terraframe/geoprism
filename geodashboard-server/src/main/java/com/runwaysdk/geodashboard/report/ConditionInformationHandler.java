@@ -17,6 +17,12 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -152,28 +158,28 @@ public class ConditionInformationHandler implements Reloadable, ReportConditionH
 
   private String getLocalizedOperation(String _operation)
   {
-    if (_operation.equals(GT))
+    if (_operation.equals(DashboardGreaterThan.OPERATION))
     {
-      return LocalizationFacade.getFromBundles(GT);
+      return LocalizationFacade.getFromBundles(DashboardGreaterThan.OPERATION);
     }
-    else if (_operation.equals(GE))
+    else if (_operation.equals(DashboardGreaterThanOrEqual.OPERATION))
     {
-      return LocalizationFacade.getFromBundles(GE);
+      return LocalizationFacade.getFromBundles(DashboardGreaterThanOrEqual.OPERATION);
     }
-    else if (_operation.equals(LT))
+    else if (_operation.equals(DashboardLessThan.OPERATION))
     {
-      return LocalizationFacade.getFromBundles(LT);
+      return LocalizationFacade.getFromBundles(DashboardLessThan.OPERATION);
     }
-    else if (_operation.equals(LE))
+    else if (_operation.equals(DashboardLessThanOrEqual.OPERATION))
     {
-      return LocalizationFacade.getFromBundles(LE);
+      return LocalizationFacade.getFromBundles(DashboardLessThanOrEqual.OPERATION);
     }
-    else if (_operation.equals(NEQ))
+    else if (_operation.equals(DashboardNotEqual.OPERATION))
     {
-      return LocalizationFacade.getFromBundles(NEQ);
+      return LocalizationFacade.getFromBundles(DashboardNotEqual.OPERATION);
     }
 
-    return LocalizationFacade.getFromBundles(EQ);
+    return LocalizationFacade.getFromBundles(DashboardEqual.OPERATION);
   }
 
   private void handleCondition(String localizedLabel, String localizedOperation, String localizedValue)

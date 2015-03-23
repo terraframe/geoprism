@@ -360,30 +360,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return String.format("[%s] = %s", this.getClassDisplayLabel(), this.getName());
   }
 
-  public Dashboard getDashboard()
-  {
-    QueryFactory factory = new QueryFactory();
-
-    DashboardQuery query = new DashboardQuery(factory);
-    query.WHERE(query.getMap().EQ(this));
-
-    OIterator<? extends Dashboard> iterator = query.getIterator();
-
-    try
-    {
-      if (iterator.hasNext())
-      {
-        return iterator.next();
-      }
-
-      return null;
-    }
-    finally
-    {
-      iterator.close();
-    }
-  }
-
   @Override
   public Universal[] getUniversalAggregations(String mdAttributeId)
   {
@@ -393,9 +369,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     QueryFactory factory = new QueryFactory();
 
     MetadataWrapperQuery query = new MetadataWrapperQuery(factory);
-    DashboardQuery dQuery = new DashboardQuery(factory);
 
-    dQuery.WHERE(dQuery.getMap().EQ(this));
+    DashboardQuery dQuery = new DashboardQuery(factory);
+    dQuery.WHERE(dQuery.getId().EQ(this.getDashboardId()));
 
     query.WHERE(query.getWrappedMdClass().EQ(mdClass));
     query.AND(query.dashboard(dQuery));

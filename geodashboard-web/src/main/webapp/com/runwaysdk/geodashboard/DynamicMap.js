@@ -54,7 +54,7 @@
         this._workspace = config.workspace;
         
         // Default criteria for filtering
-        this._conditionMap = {'conditions' : [], 'criteria' : []};
+        this._criteria = config.criteria;
         this._currGeoId = '';
         
         // Filter trees
@@ -113,15 +113,30 @@
       fullRefresh : function() {
         var that = this;
         
-        that._renderMap();
+        this._renderMap();
         
-        this._updateCachedData(function(){
-          that._configureMap();
-          that._renderBaseLayers();
-          that._renderUserLayers();
+        var clientRequest = new Mojo.ClientRequest({
+          onSuccess : function(json, calledObj, response) {
+            var jsonObj = Mojo.Util.toObject(json);
+             
+            that._updateCacheFromJSONResponse(jsonObj);
+            that._configureMap();
+            
+            that._renderBaseLayers();              
+            that._addUserLayersToMap(true);
+              
+            that._drawLegendItems()
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
         });
         
-        that._renderReport('', that._conditionMap['criteria']);
+        var conditions = this._getConditionsFromCriteria(this._criteria);
+          
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
+        
+        this._renderReport('', this._criteria);
       },
       
       /**
@@ -162,9 +177,9 @@
          styleArr.catLiElems = [];
          
          if($("#ontology-tree").length > 0) {
-        	 //
-        	 // TODO: TEST ONTOLOGY TREE SCRAPING CODE
-        	 //
+           //
+           // TODO: TEST ONTOLOGY TREE SCRAPING CODE
+           //
              var allElem = $(".ontology-category-color-icon");
              for(var e=0; e<allElem.length; e++){
                var rwId = allElem[e].dataset.rwid;
@@ -180,30 +195,30 @@
                }
              }
          }
-         else {        	 
-	         var allElemCont = $(".category-container");
-	         for(var i=0; i<allElemCont.length; i++){
-	           var catInputElem = $(allElemCont[i]).find(".category-input");
-	           var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
-	           var catColor = rgb2hex($(catColorElem).css("background-color"));
-	           var catVal = catInputElem.val();
-	           
-	           // parse the formatted number to the format of the data so the SLD can apply categories by this value
-	           if(this._getCategoryType() == "number" ) {
-	        	   var thisNum = this._parser(catVal);
-	               if($.isNumeric(thisNum)) {
-	            	   catVal = thisNum;                
-	               }
-	           }
-	           
-	           // Filter out categories with no input values
-	           if(catVal !== ""){
-	               var liObj = new Object();
-	               liObj.val = catVal;
-	               liObj.color = catColor;
-	               styleArr.catLiElems.push(liObj);                   
-	           }
-	         }
+         else {           
+           var allElemCont = $(".category-container");
+           for(var i=0; i<allElemCont.length; i++){
+             var catInputElem = $(allElemCont[i]).find(".category-input");
+             var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
+             var catColor = rgb2hex($(catColorElem).css("background-color"));
+             var catVal = catInputElem.val();
+             
+             // parse the formatted number to the format of the data so the SLD can apply categories by this value
+             if(this._getCategoryType() == "number" ) {
+               var thisNum = this._parser(catVal);
+                 if($.isNumeric(thisNum)) {
+                   catVal = thisNum;                
+                 }
+             }
+             
+             // Filter out categories with no input values
+             if(catVal !== ""){
+                 var liObj = new Object();
+                 liObj.val = catVal;
+                 liObj.color = catColor;
+                 styleArr.catLiElems.push(liObj);                   
+             }
+           }
          }
          
          // set the hidden input element in the layer creation/edit form 
@@ -213,23 +228,23 @@
          // We want to pass hex to the backend
          function rgb2hex(rgb) {
              if (/^#[0-9A-F]{6}$/i.test(rgb)){
-            	 return rgb;
+               return rgb;
              }
 
              var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
              if(rgbMatch){
-            	 function hex(x) {
-            		 return ("0" + parseInt(x).toString(16)).slice(-2);
-            	 }
-            	 return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+               function hex(x) {
+                 return ("0" + parseInt(x).toString(16)).slice(-2);
+               }
+               return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
              }
              
              var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
              if(rgbaMatch){
-            	 return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-            			("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-            			("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-            			("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+               return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+                  ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+                  ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+                  ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
              }
          }
 
@@ -1077,9 +1092,9 @@
               
               if(currGeoId != null)
               {                 
-              that._currGeoId = currGeoId;
+                that._currGeoId = currGeoId;
               
-                that._renderReport(that._currGeoId, that._conditionMap['criteria']);
+                that._renderReport(that._currGeoId, this._criteria);
               }
             
             }
@@ -1182,13 +1197,16 @@
         params['style.enableValue'] = params['style.enableValue'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
-        var conditions = this._conditionMap['conditions'];
+        var conditions = this._getConditionsFromCriteria(this._criteria);
         
         $.each(conditions, function( index, condition ) {
-          params["conditions_" + index + ".comparisonValue"] = condition.getComparisonValue();
-          params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');
+          params["conditions_" + index + ".comparisonValue"] = condition.getValue('comparisonValue');
           params["conditions_" + index + ".isNew"] = "true";
           params["#conditions_" + index + ".actualType"] = condition.getType();
+          
+          if(condition instanceof com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition) {
+            params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');  
+          }
         });      
         
         
@@ -1748,24 +1766,24 @@
        * 
        */
       _addExistingCategoriesToUi : function() {
-    	  var catsJSONObj = $("#categories-input").data("categoriesstore");
-    	  if(catsJSONObj){
-    		  if($("#ontology-tree").length > 0){
-    			  //
-    			  // TODO: ADD ONTOLOGY TREE CODE
-    			  //
-    		  }
-    		  else{
-		    	  var catsJSONArr = catsJSONObj.catLiElems;
-		    	  for(var i=0; i<catsJSONArr.length; i++){
-		    		  var cat = catsJSONArr[i];
-		    		  var catInputId = "cat"+ (i+1);
-		    		  var catColorSelectorId = catInputId + "-color-selector";
-		    		  $("#"+catInputId).val(cat.val);
-		    		  $("#"+catColorSelectorId).css("background", cat.color);
-		    	  }
-    		  }
-    	  }
+        var catsJSONObj = $("#categories-input").data("categoriesstore");
+        if(catsJSONObj){
+          if($("#ontology-tree").length > 0){
+            //
+            // TODO: ADD ONTOLOGY TREE CODE
+            //
+          }
+          else{
+            var catsJSONArr = catsJSONObj.catLiElems;
+            for(var i=0; i<catsJSONArr.length; i++){
+              var cat = catsJSONArr[i];
+              var catInputId = "cat"+ (i+1);
+              var catColorSelectorId = catInputId + "-color-selector";
+              $("#"+catInputId).val(cat.val);
+              $("#"+catColorSelectorId).css("background", cat.color);
+            }
+          }
+        }
       },
       
       
@@ -1928,9 +1946,8 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
       },
       
-      _buildConditionMap : function () {
+      _reloadCriteria : function () {
         var that = this;
-        var conditions = [];
         var criteria = [];
           
         $( "input.gdb-attr-filter" ).each(function( index ) {
@@ -1940,82 +1957,40 @@
           if (textValue != null && textValue !== "") {
             if($(this).hasClass('filter-number')) {              
               // Add number criterias
-              var mdAttribute = $(this).attr('id').replace('filter-number-', '');   
+              var mdAttribute = $(this).data().mdattributeid;
                 
               var select = $("#filter-opts-" + mdAttribute).val();
-                
-              var attrCond = null;
-                
-              if (select === "gt") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
-              }
-              else if (select === "ge") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
-              }
-              else if (select === "lt") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
-              }
-              else if (select === "le") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-              }
 
               var number = that._parser( textValue );
 
-              attrCond.setComparisonValue(number);
-              attrCond.setDefiningMdAttribute(mdAttribute);
-                
-              conditions.push(attrCond);
               criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':number});            
             }
             else if($(this).hasClass('filter-char')) {              
               // Add character criterias
-              var mdAttribute = $(this).attr('id').replace('filter-char-', '');   
+              var mdAttribute = $(this).data().mdattributeid;
               
               var select = $("#filter-opts-" + mdAttribute).val();
               
-              var attrCond = null;
-              
-              if (select === "eq") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();
-              }
-              else if(select === "neq") {
-                attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual();
-              }
-              
-              attrCond.setComparisonValue(textValue);
-              attrCond.setDefiningMdAttribute(mdAttribute);
-              
-              conditions.push(attrCond);
               criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':select, 'value':textValue});            
             }
             else if($(this).hasClass('filter-date')) {
               // Add the date criteria
               if($(this).hasClass('checkin')) {
-                var mdAttribute = $(this).attr('id').replace('filter-from-', '');                 
+                var mdAttribute = $(this).data().mdattributeid;                 
                 var date = $(this).datepicker('getDate')
                 
                 // Normalize the incoming date to a standard format regardless of the locale
                 var value =  $.datepicker.formatDate('dd/mm/yy', date);
 
-                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
-                attrCond.setComparisonValue(value);
-                attrCond.setDefiningMdAttribute(mdAttribute);
-                      
-                conditions.push(attrCond);
                 criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'ge', 'value':value});
               }
               else if($(this).hasClass('checkout')) {
-                var mdAttribute = $(this).attr('id').replace('filter-to-', '');   
+                var mdAttribute = $(this).data().mdattributeid;
                 var date = $(this).datepicker('getDate')
                 
                 // Normalize the incoming date to a standard format regardless of the locale                
                 var value =  $.datepicker.formatDate('dd/mm/yy', date);
-                    
-                var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-                attrCond.setComparisonValue(value);
-                attrCond.setDefiningMdAttribute(mdAttribute);
-                    
-                conditions.push(attrCond);
+                
                 criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'le', 'value':value});
               }                          
             }
@@ -2025,16 +2000,11 @@
         // Add boolean filters
         $( '.jcf-class-filter-boolean.rad-checked' ).each(function( index ) {          
           var input = $(this).siblings().first();
-            var value = input.attr('value');
+          var value = input.attr('value');
             
-            var mdAttribute = input.attr('name').replace('filter-', '');   
+          var mdAttribute = input.attr('name').replace('filter-', '');   
             
-            var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();
-            attrCond.setComparisonValue(value);
-            attrCond.setDefiningMdAttribute(mdAttribute);
-            
-            conditions.push(attrCond);
-            criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
+          criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});                
         });
         
         // Add term filters
@@ -2047,12 +2017,7 @@
           if(terms.length > 0) {
             var value = JSON.stringify(terms);
             
-            var attrCond = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();             
-            attrCond.setComparisonValue(value);
-            attrCond.setDefiningMdAttribute(mdAttribute);
-            
-            conditions.push(attrCond);
-            criteria.push({'type':'ATTRIBUTE_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});
+            criteria.push({'type':'CLASSIFIER_CONDITION', 'mdAttribute':mdAttribute, 'operation':'eq', 'value':value});
           }
         }
         
@@ -2061,22 +2026,67 @@
         
         if(location != null && location.length > 0)
         {
-          var condition = new com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition();
-          condition.setComparisonValue(location);
-            
-          conditions.push(condition);          
           criteria.push({'type':'LOCATION_CONDITION', 'operation':'eq', 'value':location});                          
         }
         
-        return {'conditions' : conditions, 'criteria' : criteria};
+        return criteria;
+      },
+      
+      _getConditionsFromCriteria : function(criteria) {
+         
+        var conditions = [];
+        
+        for(var i = 0; i < criteria.length; i++) {
+          
+          var type = criteria[i].type;
+          var operation = criteria[i].operation;
+          var value = criteria[i].value;
+          
+          var condition = null;
+            
+          if(type == 'LOCATION_CONDITION') {
+            condition = new com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition();              
+          }            
+          else if(type == 'CLASSIFIER_CONDITION') {
+            condition = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();
+            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
+          }            
+          else if (type == 'ATTRIBUTE_CONDITION') {
+              
+            if (operation === "gt") {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
+            }
+            else if (operation === "ge") {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+            }
+            else if (operation === "lt") {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
+            }
+            else if (operation === "le") {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
+            }
+            else if(operation === "neq") {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual();
+            }              
+            else {
+              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();                
+            }
+              
+            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
+          }
+            
+          condition.setComparisonValue(value);
+          
+          conditions.push(condition);
+        }     
+        
+        return conditions;
       },
       
       _onClickExportReport : function(e) {
         var format = $(e.target).data('format');
 
-        var criteria = this._conditionMap['criteria']; 
-        
-        this._exportReport(this._currGeoId, criteria, format);
+        this._exportReport(this._currGeoId, this._criteria, format);
       },
       
       _onClickUploadReport : function(e) {
@@ -2122,11 +2132,9 @@
           that._renderMessage(message);
         }
         else {
-          this._conditionMap = this._buildConditionMap();
+          this._criteria = this._reloadCriteria();
+          var conditions = this._getConditionsFromCriteria(this._criteria);
             
-          var criteria = this._conditionMap['criteria']; 
-          var conditions = this._conditionMap['conditions'];
-                    
           var clientRequest = new Mojo.ClientRequest({
             onSuccess : function(json, calledObj, response) {
               var jsonObj = Mojo.Util.toObject(json);
@@ -2149,7 +2157,34 @@
           
           this._currGeoId = '';
             
-          this._renderReport(this._currGeoId, criteria);
+          this._renderReport(this._currGeoId, this._criteria);
+        }
+      },
+      
+      _onClickSaveFilters : function(e) {
+        var that = this;
+        
+        // Validate there are no existing errors
+        var errorCount = $('.gdb-attr-filter.field-error').length
+        
+        if(errorCount > 0) {
+          var message = com.runwaysdk.Localize.localize("filter", "error");
+          
+          that._renderMessage(message);
+        }
+        else {
+          var criteria = this._reloadCriteria();
+          var conditions = this._getConditionsFromCriteria(criteria);          
+          
+          var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function() {
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+            }
+          });
+          
+          com.runwaysdk.geodashboard.Dashboard.applyConditions(clientRequest, this._dashboardId, conditions);
         }
       },
       
@@ -2206,12 +2241,35 @@
       render : function(){
         var that = this;
         
-        this.fullRefresh();
+        var conditions = {};
+        
+        if(this._criteria != null){
+          for(var i = 0; i < this._criteria.length; i++) {
+            var condition = this._criteria[i];
+            
+            if(condition.type == 'ATTRIBUTE_CONDITION' || condition.type == 'CLASSIFIER_CONDITION') {
+              if(conditions["ATTRIBUTE_CONDITION"] == null) {
+                conditions["ATTRIBUTE_CONDITION"] = {};              
+              }
+              
+              if(conditions["ATTRIBUTE_CONDITION"][condition.mdAttribute] == null) {
+                conditions["ATTRIBUTE_CONDITION"][condition.mdAttribute] = [];
+              }
+              
+              conditions["ATTRIBUTE_CONDITION"][condition.mdAttribute].push(condition);
+            }
+            else if(condition.type == 'LOCATION_CONDITION') {
+              conditions['LOCATION_CONDITION'] = condition;
+            }
+            
+          }
+        }
         
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
+        $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
         
         // Reporting events
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
@@ -2266,7 +2324,7 @@
         // Hook up the filter auto-complete for character attributes
         $('.filter-char').each(function(){
           
-          var mdAttribute = $(this).attr('id').replace('filter-char-', '');   
+          var mdAttributeId = $(this).data().mdattributeid;
           
           $(this).autocomplete({
             source: function( request, response ) {
@@ -2279,23 +2337,37 @@
                 }
               });
               
-              com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(req, mdAttribute, request.term, 10);
+              com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(req, mdAttributeId, request.term, 10);
             },
             minLength: 2
           });
+          
+          // Load the values
+          if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+            var condition = conditions["ATTRIBUTE_CONDITION"][mdAttributeId][0];
+            
+            $('#filter-opts-' + mdAttributeId).val(condition.operation);
+            $(this).val(condition.value);
+            
+            if (jcf != null && jcf.customForms != null) {
+              jcf.customForms.refreshElement($('#filter-opts-' + mdAttributeId).get(0));
+            }
+          }          
         });
         
-        // Hook up the filter auto-complete for term attributes
+        // Hook up the filter auto-complete for term attributes and load saved values        
         $('.filter-term').each(function(){
           var mdAttributeId = $(this).attr('id');
           
           // Get the term roots and setup the tree widget
           var req = new Mojo.ClientRequest({
-            onSuccess : function(roots){
+            onSuccess : function(results){
+              var nodes = JSON.parse(results);
               var rootTerms = [];
               
-              for(var i = 0; i < roots.length; i++) {
-                rootTerms.push({termId : roots[i].getId()});
+              for(var i = 0; i < nodes.length; i++) {
+                var id = nodes[i].id;              
+                rootTerms.push({termId : id});
               }
               
               var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
@@ -2308,7 +2380,14 @@
                 checkable : true
               });
               
-              tree.render("#" + mdAttributeId);
+              tree.render("#" + mdAttributeId, nodes);
+              
+              // Load the values
+              if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+                var condition = conditions["ATTRIBUTE_CONDITION"][mdAttributeId][0];
+                
+                tree.setCheckedTerms(JSON.parse(condition.value));
+              }          
               
               that._filterTrees.push({
                 "mdAttributeId" : mdAttributeId,
@@ -2320,10 +2399,17 @@
             }
           });
           
-          com.runwaysdk.geodashboard.Dashboard.getClassifierRoots(req, mdAttributeId);
+          com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);
         });
         
-        // Hook up the filter auto-complete for the global location filter
+        // Hook up the filter auto-complete for the global location filter and load saved values        
+        if(conditions["LOCATION_CONDITION"] != null) {
+          var condition = conditions["LOCATION_CONDITION"];
+          
+          $('#filter-geo').val(condition.label);
+          $('#filter-geo-hidden').val(condition.value);
+        }
+        
         $('#filter-geo').autocomplete({
           source: function( request, response ) {  
             var req = new Mojo.ClientRequest({
@@ -2371,10 +2457,77 @@
               $(this).removeClass( "rad-checked" );
             }
           });
+          
+          // Load saved boolean values
+          var input = $(this).siblings().first();
+          var inputValue = input.attr('value');
+            
+          var mdAttributeId = input.attr('name').replace('filter-', '');   
+          
+          if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+            var condition = conditions["ATTRIBUTE_CONDITION"][mdAttributeId][0];
+            var value = condition.value;
+            
+            
+            if(inputValue ==  value) {
+              $(this).addClass( "rad-checked" );
+            }
+          }          
         });
+        
+        // Load saved date values
+        $('.filter-date').each(function(){
+          var mdAttributeId = $(this).data().mdattributeid;
+          
+          if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+            var array = conditions["ATTRIBUTE_CONDITION"][mdAttributeId];
+            
+            for(var i = 0; i < array.length; i++) {
+              var condition = array[i];
+              
+              if($(this).hasClass('checkin') && condition.operation == 'ge') {
+                
+                // Normalize the incoming date to a standard format regardless of the locale
+                var date =  $.datepicker.parseDate('dd/mm/yy', condition.value);                
+                
+                $(this).datepicker( "setDate", date );
+              }
+              else if($(this).hasClass('checkout') && condition.operation == 'le') {
+                
+                // Normalize the incoming date to a standard format regardless of the locale
+                var date =  $.datepicker.parseDate('dd/mm/yy', condition.value);                
+                
+                $(this).datepicker( "setDate", date );
+              }
+            }            
+          }                
+        });        
+        
+        // Load saved number values
+        $('.filter-number').each(function(){
+          var mdAttributeId = $(this).data().mdattributeid;
+          
+          if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
+            var array = conditions["ATTRIBUTE_CONDITION"][mdAttributeId];
+            var condition = array[0];
+            
+            var value = that._formatter(parseFloat(condition.value));
+            
+            $(this).val(value);
+            $('#filter-opts-' + mdAttributeId).val(condition.operation);
+            
+            if (jcf != null && jcf.customForms != null) {
+              var element = $('#filter-opts-' + mdAttributeId).get(0);
+              
+              jcf.customForms.refreshElement(element);
+            }
+          }                
+        }); 
+        
+        
+        this.fullRefresh();
       },
-    }
-   
+    }   
   });
   
   var DataType = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DataType', {

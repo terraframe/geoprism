@@ -54,17 +54,16 @@ $(document).ready(function(){
     mapId: '${mapId}',
     dashboardId : '${dashboardId}',
     workspace : '${workspace}',
+    criteria : ${conditions},    
     layerCategoriesTree: {
       termType : '${type}',
       relationshipTypes : [ '${relationType}' ],
       rootTerm : '${rootId}',
       checkable: true
-    }
-    
+    }    
   });
   
-  map.render();
-  
+  map.render();  
 });
 
 </script>
@@ -207,14 +206,14 @@ $(document).ready(function(){
 		                              </select>
 		                            </div>
 		                            <div class="text">
-		                              <label for=filter-number-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.number"/></label>
+		                              <label class="none"><gdb:localize key="dashboardViewer.number"/></label>
 		                              <gdb:localize key="dashboard.number.label" var="dashboardNumberLabel"/>
 		                              
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
-		                                <input class="gdb-attr-filter filter-number numbers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
+		                                <input class="gdb-attr-filter filter-number numbers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-		                                <input class="gdb-attr-filter filter-number integers-only" id="filter-number-${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
+		                                <input class="gdb-attr-filter filter-number integers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>
 		                            </div>
 								</c:when>
@@ -222,16 +221,16 @@ $(document).ready(function(){
 									<!-- Date attribute -->
 									<div class="data-block">
 										<div class="col">
-											<label for="filter-from-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.from" /></label>
+											<label><gdb:localize key="dashboardViewer.dates.from" /></label>
 											<span class="data-text"> 
-												<input class="checkin gdb-attr-filter filter-date" id="filter-from-${attr.mdAttributeId}" type="text" placeholder="" />
+												<input class="checkin gdb-attr-filter filter-date" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
 										</div>
 										<div class="col">
-											<label for="filter-to-${attr.mdAttributeId}"><gdb:localize key="dashboardViewer.dates.to" /></label>
+											<label><gdb:localize key="dashboardViewer.dates.to" /></label>
 											<span class="data-text"> 
-												<input class="checkout gdb-attr-filter filter-date" id="filter-to-${attr.mdAttributeId}" type="text" placeholder="" />
+												<input class="checkout gdb-attr-filter filter-date" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="" />
 												<a href="#" class="datapicker-opener"></a>
 											</span>
 										</div>
@@ -248,8 +247,8 @@ $(document).ready(function(){
 		                            <div class="text">
 		                              <gdb:localize key="dashboard.text.label" var="dashboardTextLabel"/>
 		                              
-		                              <label for=filter-char-${attr.mdAttributeId} class="none"><gdb:localize key="dashboardViewer.text"/></label>
-		                              <input class="gdb-attr-filter filter-char" id="filter-char-${attr.mdAttributeId}" type="text" placeholder="${dashboardTextLabel}"></input>
+		                              <label class="none"><gdb:localize key="dashboardViewer.text"/></label>
+		                              <input class="gdb-attr-filter filter-char" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardTextLabel}"></input>
 		                            </div>
 								</c:when>
 								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeTerm'}">
@@ -290,9 +289,14 @@ $(document).ready(function(){
 	        </c:forEach>
        </div> <!-- END sales-accortion panel-group -->
     
-    <a href="#" class="opener apply-filters-button" data-toggle="tooltip" data-placement="left"">
-      <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span>
-    </a>
+    <span id="filter-buttons">
+      <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left"">
+        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span>
+      </a>
+      <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left"">
+        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span>
+      </a>
+    </span>
   </aside>
   
   <!-- modal -->
