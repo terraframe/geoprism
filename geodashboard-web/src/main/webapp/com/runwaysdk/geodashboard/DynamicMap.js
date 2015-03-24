@@ -476,7 +476,7 @@
             src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
             
             // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-            if(this.featureStrategy === "GRADIENT"){
+            if(this.featureStrategy === "GRADIENT" || this.featureStrategy === "CATEGORY"){
               src += 'forceLabels:on;';
             }
             src += '&amp;';
