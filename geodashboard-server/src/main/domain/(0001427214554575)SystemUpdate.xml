@@ -1,0 +1,12 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <object key="Users.SYSTEM" type="com.runwaysdk.system.Users">
+        <attribute name="password" value="#fkQs3_nXhK$huE8Q@sN" />
+      </object>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
