@@ -13,8 +13,4 @@
   </item>
   
   <item name="Job_Scheduler" uri="admin/scheduler"/>   
-  
-  <!--
-  <item name="Sales Force Import Manager" uri="admin/importer"/>
-  -->
 </sidebar>

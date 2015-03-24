@@ -9,64 +9,78 @@ import com.runwaysdk.controller.URLConfigurationManager;
 
 public class ActivePageWriter
 {
-  String uri;
-  JspWriter out;
-  String context;
-  
-  // If we've already redirected to a jsp, then we need to 
+  String                  uri;
+
+  JspWriter               out;
+
+  String                  context;
+
+  // If we've already redirected to a jsp, then we need to
   URLConfigurationManager mapper;
-  
-  public ActivePageWriter(HttpServletRequest request, JspWriter out) {
+
+  public ActivePageWriter(HttpServletRequest request, JspWriter out)
+  {
     this.uri = request.getRequestURI();
     this.out = out;
     this.context = request.getContextPath();
   }
-  
-  public String getActiveClass(MenuItem item) {
-    if (item.handlesUri(this.uri, this.context)) {
+
+  public String getActiveClass(MenuItem item)
+  {
+    if (item.handlesUri(this.uri, this.context))
+    {
       return "class=\"blueactive\"";
     }
-    else {
+    else
+    {
       return "";
     }
   }
-  
-  public void writeLiA(MenuItem item, String classes, boolean isSync) throws IOException {
+
+  public void writeLiA(MenuItem item, String classes, boolean isSync) throws IOException
+  {
     String href = "";
     String url = item.getURL();
     String title = item.getName();
-    
-    if (url.equals("#")) {
+
+    if (url.equals("#"))
+    {
       href = "#";
     }
-    else {
-    	if (isSync) {
-    		href = context + "/" + url;
-    	}
-    	else {
-    		href = context + "/#" + url;
-    	}
+    else
+    {
+      if (isSync)
+      {
+        href = context + "/" + url;
+      }
+      else
+      {
+        href = context + "/#" + url;
+      }
     }
-    
+
     String clazz = "";
-    if (classes != null) {
+    if (classes != null)
+    {
       clazz = "class=\"" + classes + "\"";
     }
-    
+
     String html = "<li><a " + clazz + " " + this.getActiveClass(item) + " href=\"" + href + "\">";
-    
+
     html = html + title;
-    
+
     html = html + "</a></li>";
-    
+
     out.print(html);
   }
-  
-  public void writeLiA(String title, String url, boolean isSync) throws IOException {
+
+  public void writeLiA(String title, String url, boolean isSync) throws IOException
+  {
     this.writeLiA(new MenuItem(title, url, null), null, isSync);
   }
-  
-  public void writeLiA(String title, String url, String classes, boolean isSync) throws IOException {
+
+  public void writeLiA(String title, String url, String classes, boolean isSync) throws IOException
+  {
     this.writeLiA(new MenuItem(title, url, null), classes, isSync);
   }
 }

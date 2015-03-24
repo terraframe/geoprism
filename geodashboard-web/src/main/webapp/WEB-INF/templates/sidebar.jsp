@@ -20,10 +20,8 @@
 --%>
 
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
-<%@page
-	import="com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO"%>
-<%@page
-	import="com.runwaysdk.geodashboard.localization.LocalizationFacade"%>
+<%@page import="com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO"%>
+<%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.runwaysdk.web.WebClientSession"%>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
@@ -57,7 +55,7 @@
 		<ul class="links-list">
 			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Log_out"), "session/logout", true); %>
 			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Account"), "admin/account", false); %>
-			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Dashboard_Viewer"), "DashboardViewer", "link-viewer", true); %>
+			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Dashboard_Viewer"), "DashboardViewer", "link-viewer", true); %>			
 		</ul>
 	</div>
 	<!-- Generated from MenuItems List -->
@@ -69,35 +67,76 @@
       int num = 100;
       
       for (MenuItem item : items) {
-        if (item.hasChildren()) {
-          String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
-          out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
-          out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
-          
-          if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
-            out.print("in");
+        
+        if(item.getRoles() != null && item.getRoles().length() > 0)
+        {
+          // Ensure the user is a member of the role, if not then do not create the link
+          if(GeodashboardUserDTO.isRoleMemeber(clientRequest, item.getRoles()))
+          {
+            if (item.hasChildren()) {
+              String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
+              out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
+              out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
+              
+              if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
+                out.print("in");
+              }
+              else {
+                out.print("collapse");
+              }
+              out.print("\">");
+              
+              out.print("<ul>");
+              
+              List<MenuItem> children = item.getChildren();
+              for (MenuItem child : children) {
+                String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
+                writer.writeLiA(childName, child.getURL(), false);
+              }
+              
+              out.print("</ul>");
+              out.print("</div>");
+              out.print("</li>");
+              
+            }
+            else {              
+                String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+                writer.writeLiA(menuName, item.getURL(), false);            
+            }
           }
-          else {
-            out.print("collapse");
-          }
-          out.print("\">");
-          
-          out.print("<ul>");
-          
-          List<MenuItem> children = item.getChildren();
-          for (MenuItem child : children) {
-            String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
-            writer.writeLiA(childName, child.getURL(), false);
-          }
-          
-          out.print("</ul>");
-          out.print("</div>");
-          out.print("</li>");
-          
         }
-        else {
-          String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
-          writer.writeLiA(menuName, item.getURL(), false);
+        else
+        {
+            if (item.hasChildren()) {
+              String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
+              out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
+              out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
+              
+              if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
+                out.print("in");
+              }
+              else {
+                out.print("collapse");
+              }
+              out.print("\">");
+              
+              out.print("<ul>");
+              
+              List<MenuItem> children = item.getChildren();
+              for (MenuItem child : children) {
+                String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
+                writer.writeLiA(childName, child.getURL(), false);
+              }
+              
+              out.print("</ul>");
+              out.print("</div>");
+              out.print("</li>");
+              
+            }
+            else {              
+                String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+                writer.writeLiA(menuName, item.getURL(), false);            
+            }          
         }
         
         num++;
@@ -181,5 +220,3 @@
 		activateLinks($(this));
 	});
 </script>
-
-
