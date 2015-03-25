@@ -105,7 +105,7 @@
       refreshTreeAfterDeleteTerm : function(termId) {
         var nodes = this.__getNodesById(termId);
         var $tree = this.getImpl();
-        var shouldRefresh = !(that.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
+        var shouldRefresh = !(this.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
         
         this.parentRelationshipCache.removeAll(termId);
         
@@ -120,7 +120,9 @@
         
         if (shouldRefresh) {
           // We don't have the relationship id of the new relationship between the children and the root node. 
-          this.refreshTerm(this.rootTermId);
+          var rootTermId = this._getRootTermId();        	
+          
+          this.refreshTerm(rootTermId);
         }
       },
       
@@ -315,8 +317,16 @@
         Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, myCallback);
       },
       
+      _getRootTermId : function() {
+      	var rootTermId = this.rootTermConfigs.keySet()[0];
+      	
+      	return rootTermId;    	  
+      },
+      
       _onClickNewCountry : function() {
-        this.createTerm(this.rootTermId);
+    	var rootTermId = this._getRootTermId();
+    	
+        this.createTerm(rootTermId);
       },
       
       createCountryButton : function() {
