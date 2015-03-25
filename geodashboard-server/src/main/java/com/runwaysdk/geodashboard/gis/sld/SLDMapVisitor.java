@@ -3,12 +3,12 @@ package com.runwaysdk.geodashboard.gis.sld;
 import java.awt.Color;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,6 +31,7 @@ import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
@@ -54,12 +55,8 @@ import com.runwaysdk.geodashboard.gis.model.condition.NotEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
 import com.runwaysdk.geodashboard.gis.model.condition.Primitive;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDTO;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
-import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.transport.conversion.ConversionException;
 
 /**
@@ -90,11 +87,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       return this.visitor.css(name, value);
     }
-
-    protected NodeBuilder css(String name)
-    {
-      return this.visitor.css(name);
-    }
   }
 
   private static abstract class Symbolizer extends Provider implements com.runwaysdk.generation.loader.Reloadable
@@ -113,6 +105,110 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       return node(this.getSymbolizerName()).build();
     }
+
+    protected Node getPropertyValueNode(ThematicStyle tStyle)
+    {
+      AttributeType type = tStyle.getAttributeType();
+
+      if (type.equals(AttributeType.NUMBER))
+      {
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getNumberInstance(LocalizationFacade.getLocale());
+        String pattern = decimalFormat.toPattern();
+        DecimalFormatSymbols symbols = decimalFormat.getDecimalFormatSymbols();
+
+        Node format = node(OGC, "Literal").text(pattern).build();
+        Node property = this.getBasicPropertyValueNode(tStyle);
+        Node minus = node(OGC, "Literal").text(symbols.getMinusSign()).build();
+        Node decimal = node(OGC, "Literal").text(symbols.getDecimalSeparator()).build();
+        Node separator = node(OGC, "Literal").text(symbols.getGroupingSeparator()).build();
+
+        Node function = node(OGC, "Function").attr("name", "numberFormat2").build();
+        function.appendChild(format);
+        function.appendChild(property);
+        function.appendChild(minus);
+        function.appendChild(decimal);
+        function.appendChild(separator);
+
+        return function;
+      }
+      else if (type.equals(AttributeType.DATE))
+      {
+        SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
+        String pattern = dateFormat.toLocalizedPattern();
+
+        return this.getMomentNode(tStyle, pattern);
+      }
+      else if (type.equals(AttributeType.DATETIME))
+      {
+        SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
+        String pattern = dateFormat.toLocalizedPattern();
+
+        return this.getMomentNode(tStyle, pattern);
+      }
+      else if (type.equals(AttributeType.TIME))
+      {
+        SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
+        String pattern = dateFormat.toLocalizedPattern();
+
+        return this.getMomentNode(tStyle, pattern);
+      }
+      else
+      {
+        return this.getBasicPropertyValueNode(tStyle);
+      }
+    }
+
+    protected Node getMomentNode(ThematicStyle tStyle, String pattern)
+    {
+      Node format = node(OGC, "Literal").text(pattern).build();
+      Node property = this.getBasicPropertyValueNode(tStyle);
+
+      Node function = node(OGC, "Function").attr("name", "dateFormat").build();
+      function.appendChild(format);
+      function.appendChild(property);
+
+      return function;
+    }
+
+    protected Node getBasicPropertyValueNode(ThematicStyle tStyle)
+    {
+      return node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build();
+    }
+
+    protected void addLabelSymbolizer(Node parent)
+    {
+      TextSymbolizer text = this.getLabelSymbolizer();
+      parent.appendChild(text.getSLD());
+    }
+
+    protected TextSymbolizer getLabelSymbolizer()
+    {
+      boolean thematic = style instanceof ThematicStyle;
+
+      if (thematic && style.getEnableLabel() && style.getEnableValue())
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), this.getPropertyValueNode(tStyle) };
+
+        return new TextSymbolizer(visitor, style, nodes);
+      }
+      else if (style.getEnableLabel())
+      {
+        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+
+        return new TextSymbolizer(visitor, style, nodes);
+      }
+      else if (thematic && style.getEnableValue())
+      {
+        ThematicStyle tStyle = (ThematicStyle) style;
+        Node[] nodes = new Node[] { this.getPropertyValueNode(tStyle) };
+
+        return new TextSymbolizer(visitor, style, nodes);
+      }
+
+      return null;
+    }
+
   }
 
   private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -138,8 +234,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       String stroke = this.style.getPointStroke();
       Integer width = this.style.getPointStrokeWidth();
       Double strokeOpacity = this.style.getPointStrokeOpacity();
-      String wkn = this.style.getPointWellKnownName();
-      Integer rotation = this.style.getPointRotation();
 
       node("FeatureTypeName").text(style.getName()).build(root);
 
@@ -228,100 +322,17 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           node("Size").text(currentPointSize).build(graphicNode);
 
           // Adding labels
-          boolean thematic = style instanceof ThematicStyle;
-
-          if (thematic && style.getEnableLabel() && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (style.getEnableLabel())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (thematic && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-
+          this.addLabelSymbolizer(ruleNode);
         }
       }
 
-      // NodeBuilder sizeNode = interpolateSize();
-      //
-      //
-      // node("FeatureTypeName").text(style.getName()).build(root);
-      //
-      // Node ruleNode = node("Rule").build(root);
-      // node("Name").text("point").build(ruleNode);
-      // node("Title").text("point").build(ruleNode);
-      //
-      // // Polygon styles
-      // Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-      // node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(pointSymbolNode);
-      //
-      // node("Graphic").child(
-      // node("Mark").child(node("WellKnownName").text(wkn),
-      // node("Fill").child(css("fill", fill), css("fill-opacity", opacity)),
-      // node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))),
-      // sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
-      //
-      // // Adding labels
-      // ThematicStyle tStyle = (ThematicStyle) style;
-      // boolean thematic = style instanceof ThematicStyle;
-      //
-      // if (thematic && style.getEnableLabel() && style.getEnableValue())
-      // {
-      // Node[] nodes = new Node[] {
-      // node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-      // node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-      //
-      // TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-      // ruleNode.appendChild(text.getSLD());
-      // }
-      // else if (style.getEnableLabel())
-      // {
-      // Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-      //
-      // TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-      // ruleNode.appendChild(text.getSLD());
-      // }
-      // else if (thematic && style.getEnableValue())
-      // {
-      // Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-      //
-      // TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-      // ruleNode.appendChild(text.getSLD());
-      // }
-
       return root;
-    }
-
-    private HashMap<Integer, Integer> interpolateColorRange()
-    {
-      HashMap<Integer, Integer> pointSizeRange = new HashMap<Integer, Integer>();
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
-      {
-        ThematicStyle tStyle = (ThematicStyle) style;
-        // attribute must be lowercase to work with postgres
-        String attribute = tStyle.getAttribute().toLowerCase();
-
-        String minFill = tStyle.getPointFill();
-      }
-      return pointSizeRange;
     }
   }
 
   /**
-   * Build <PolygonSymbolizer> tag and contents a <PolygonSymbolizer> encloses the styling params and the geometry field used for rendering features
+   * Build <PolygonSymbolizer> tag and contents a <PolygonSymbolizer> encloses the styling params and the geometry field
+   * used for rendering features
    * 
    */
   private static class PolygonSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -356,10 +367,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         int numCategories;
         double categoryLen;
-        
+
         // SLD generation
         ThematicStyle tStyle = (ThematicStyle) style;
-        
+
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
 
@@ -378,14 +389,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           numCategories = 5;
           categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
         }
-        
+
         HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
 
         for (int i = 0; i < numCategories; i++)
         {
           double currentCatMin;
-          
-          if(numCategories == 1)
+
+          if (numCategories == 1)
           {
             currentCatMin = 0;
           }
@@ -396,7 +407,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
 
           int currentColorPos = i + 1;
-          
+
           Color currentColor = gradientColors.get(currentColorPos);
           String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
 
@@ -440,29 +451,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
 
           // Adding labels
-          boolean thematic = style instanceof ThematicStyle;
-
-          if (thematic && style.getEnableLabel() && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (style.getEnableLabel())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (thematic && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
+          this.addLabelSymbolizer(ruleNode);
         }
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
@@ -471,19 +460,19 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String catColor;
         DashboardThematicStyle dTStyle = null;
         JSONArray catsArrJSON;
-        
+
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
 
-        if(style instanceof DashboardThematicStyle)
+        if (style instanceof DashboardThematicStyle)
         {
           dTStyle = (DashboardThematicStyle) tStyle;
         }
 
         // ontology logic
         String cats = dTStyle.getStyleCategories();
-        
+
         try
         {
           JSONObject catsJSON = new JSONObject(cats);
@@ -493,9 +482,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         {
           throw new ProgrammingErrorException(e);
         }
-        
+
         // SLD for all the categories scraped from the client
-        for(int i=0; i<catsArrJSON.length(); i++)
+        for (int i = 0; i < catsArrJSON.length(); i++)
         {
           try
           {
@@ -545,35 +534,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           //
           // Adding labels
           //
-          boolean thematic = style instanceof ThematicStyle;
-
-          if (thematic && style.getEnableLabel() && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (style.getEnableLabel())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
-          else if (thematic && style.getEnableValue())
-          {
-            Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-            TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-            ruleNode.appendChild(text.getSLD());
-          }
+          this.addLabelSymbolizer(ruleNode);
         }
       }
-      else  // basic polygon
+      else
+      // basic polygon
       {
         ThematicStyle tStyle = (ThematicStyle) style;
-        
+
         Node ruleNode = node("Rule").build(root);
         node("Name").text("basic").build(ruleNode);
         node("Title").text("basic").build(ruleNode);
@@ -586,35 +554,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         css("fill-opacity", fillOpacity).build(geomFillNode);
 
         node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
-     
+
         //
         // Adding labels
         //
-        boolean thematic = style instanceof ThematicStyle;
-
-        if (thematic && style.getEnableLabel() && style.getEnableValue())
-        {
-          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-          ruleNode.appendChild(text.getSLD());
-        }
-        else if (style.getEnableLabel())
-        {
-          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-
-          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-          ruleNode.appendChild(text.getSLD());
-        }
-        else if (thematic && style.getEnableValue())
-        {
-          Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-          TextSymbolizer text = new TextSymbolizer(visitor, style, nodes);
-          ruleNode.appendChild(text.getSLD());
-        }
+        this.addLabelSymbolizer(ruleNode);
       }
-      
+
       return root;
     }
 
@@ -643,8 +589,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         int g2 = maxFillRGB.getGreen();
         int b2 = maxFillRGB.getBlue();
 
-        double stepIncrease = (100.0 / numCategories) / 100.0;
-        double stepVal = (100.0 / numCategories) / 100.0; 
+        double stepIncrease = ( 100.0 / numCategories ) / 100.0;
+        double stepVal = ( 100.0 / numCategories ) / 100.0;
 
         // Build category colors between min/max category values.
         // If only 1 category the color value will be the max color set by the user
@@ -750,23 +696,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
    */
   private static class NodeBuilder implements com.runwaysdk.generation.loader.Reloadable
   {
-    private SLDMapVisitor visitor;
+    private Document doc;
 
-    private Document      doc;
-
-    private Node          el;
-
-    private NodeBuilder   parentBuilder;
+    private Node     el;
 
     private NodeBuilder(SLDMapVisitor visitor, String ns, String node)
     {
-      this(null, visitor, ns, node);
-    }
-
-    private NodeBuilder(NodeBuilder parentBuilder, SLDMapVisitor visitor, String ns, String node)
-    {
-      this.parentBuilder = parentBuilder;
-      this.visitor = visitor;
       this.doc = visitor.doc;
 
       if (ns != null)
@@ -862,8 +797,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private Stack<Node>                                       parents;
 
-  private Node                                              currentLayerNode;
-
   private java.util.Map<String, Node>                       layerToNodeMap;
 
   private java.util.Map<Node, LinkedList<DocumentFragment>> layers;
@@ -899,7 +832,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     this.doc.setStrictErrorChecking(false);
     this.doc.setXmlStandalone(true);
 
-    this.currentLayerNode = null;
     this.layerToNodeMap = new HashMap<String, Node>();
     this.parents = new Stack<Node>();
     this.layers = new LinkedHashMap<Node, LinkedList<DocumentFragment>>();
@@ -922,11 +854,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   private NodeBuilder css(String name, Object value)
   {
     return new NodeBuilder(this, null, "CssParameter").attr("name", name).text(value);
-  }
-
-  private NodeBuilder css(String name)
-  {
-    return new NodeBuilder(this, null, "CssParameter").attr("name", name);
   }
 
   private NodeBuilder node(String node)
@@ -1016,7 +943,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     parents.push(userStyle);
 
     this.currentLayer = layer;
-    this.currentLayerNode = layerNode;
     layerToNodeMap.put(layer.getId(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
 
@@ -1024,87 +950,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       style.accepts(this);
     }
-  }
-
-  private void style(Style style, Condition cond)
-  {
-    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
-
-    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
-
-    if (this.virtual)
-    {
-      Node fts = this.node("FeatureTypeStyle").child(rule).build();
-      rulesFragment.appendChild(fts);
-    }
-    else
-    {
-      rulesFragment.appendChild(rule);
-    }
-
-    Symbolizer symbolizer;
-    if (this.featureType == FeatureType.POINT)
-    {
-      symbolizer = new PointSymbolizer(this, style);
-    }
-    else if (this.featureType == FeatureType.POLYGON)
-    {
-      symbolizer = new PolygonSymbolizer(this, style);
-    }
-    else if (this.featureType == FeatureType.LINE)
-    {
-      symbolizer = new LineSymbolizer(this, style);
-    }
-    // TODO text symbolizer
-    else
-    {
-      throw new ProgrammingErrorException("Geometry type [" + this.featureType + "] is not supported for SLD generation.");
-    }
-
-    // START - Thematic filter
-    if (cond != null)
-    {
-      Node filter = this.node(OGC, "Filter").build(rule);
-
-      this.parents.push(filter);
-
-      cond.accepts(this);
-
-      // pop the filter as the conditions tree has been added by now
-      this.parents.pop();
-    }
-    // END - Thematic filter
-
-    rule.appendChild(symbolizer.getSLD());
-
-    boolean thematic = style instanceof ThematicStyle;
-
-    if (thematic && style.getEnableLabel() && style.getEnableValue())
-    {
-      ThematicStyle tStyle = (ThematicStyle) style;
-      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), this.doc.createTextNode(" - "), node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-    else if (style.getEnableLabel())
-    {
-      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
-
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-    else if (thematic && style.getEnableValue())
-    {
-      ThematicStyle tStyle = (ThematicStyle) style;
-      Node[] nodes = new Node[] { node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build() };
-
-      TextSymbolizer text = new TextSymbolizer(this, style, nodes);
-      rule.appendChild(text.getSLD());
-    }
-
-    // append the rule to user styles
-    this.parents.pop().appendChild(rulesFragment);
   }
 
   /**

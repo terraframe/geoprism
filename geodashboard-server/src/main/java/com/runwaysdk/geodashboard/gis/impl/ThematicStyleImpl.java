@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 
@@ -17,8 +18,10 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Integer   pointMinSize;
 
   private Integer   pointMaxSize;
-  
+
   private String    styleCategories;
+
+  private AttributeType attributeType;
 
   public ThematicStyleImpl()
   {
@@ -67,46 +70,57 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   {
     this.pointMinSize = pointMinSize;
   }
-  
+
   @Override
   public Integer getPointMaxSize()
   {
     return pointMaxSize;
   }
-  
+
   @Override
   public void setPointMaxSize(Integer pointMaxSize)
   {
     this.pointMaxSize = pointMaxSize;
   }
-  
+
   @Override
   public String getPolygonMinFill()
   {
     return this.polygonMinFill;
   }
-  
+
   @Override
   public void setPolygonMinFill(String polygonMinFill)
   {
     this.polygonMinFill = polygonMinFill;
   }
-  
+
   @Override
   public String getPolygonMaxFill()
   {
     return polygonMaxFill;
   }
-  
+
   @Override
   public void setPolygonMaxFill(String fill)
   {
-    this.polygonMaxFill = fill;    
+    this.polygonMaxFill = fill;
   }
 
   @Override
   public String getStyleCategories()
   {
     return styleCategories;
+  }
+
+  @Override
+  public AttributeType getAttributeType()
+  {
+    return this.attributeType;
+  }
+
+  public void setAttributeType(AttributeType attributeType)
+  {
+    this.attributeType = attributeType;
   }
 }

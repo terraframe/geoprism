@@ -105,7 +105,7 @@
       refreshTreeAfterDeleteTerm : function(termId) {
         var nodes = this.__getNodesById(termId);
         var $tree = this.getImpl();
-        var shouldRefresh = !(that.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
+        var shouldRefresh = !(this.hasLoadedNode(nodes[0]) && (nodes[0].children.length <= 0));
         
         this.parentRelationshipCache.removeAll(termId);
         
