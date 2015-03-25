@@ -433,7 +433,6 @@
        */
       deleteTerm : function(termId, parent) {
         this.requireParameter("termId", termId, "string");
-        this.requireParameter("parent", parent);
         
         var term = this.termCache[termId]; 
         
