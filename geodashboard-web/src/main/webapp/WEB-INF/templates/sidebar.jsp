@@ -36,118 +36,95 @@
   ClientRequestIF clientRequest = (ClientRequestIF) request.getAttribute(ClientConstants.CLIENTREQUEST);
 
   ActivePageWriter writer = new ActivePageWriter(request, out);
+  XMLMenuProvider provider = new XMLMenuProvider();
 %>
 
 <!-- BEGIN Generated Bootstrap Sidebar Menu BEGIN -->
 <aside id="sidebar">
-	<!-- Account Info -->
-	<div class="widget">
-		<h3>
-			<% 
-	  try {
-	    out.print(((WebClientSession)session.getAttribute(ClientConstants.CLIENTSESSION)).getRequest().getSessionUser().getValue("username"));
-	  }
-	  catch (Throwable t) {
-	    out.print("Anonymous");
-	  }
-	  %>
-		</h3>
-		<ul class="links-list">
-			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Log_out"), "session/logout", true); %>
-			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Account"), "admin/account", false); %>
-			<% writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, "Dashboard_Viewer"), "DashboardViewer", "link-viewer", true); %>			
-		</ul>
-	</div>
-	<!-- Generated from MenuItems List -->
-	<nav class="aside-nav">
-		<ul>
-			<% 
-      List<MenuItem> items = new XMLMenuProvider().getMenu();
+  <!-- Account Info -->
+  <div class="widget">
+    <h3>
+<% 
+    try {
+      out.print(((WebClientSession)session.getAttribute(ClientConstants.CLIENTSESSION)).getRequest().getSessionUser().getValue("username"));
+    }
+    catch (Throwable t) {
+      out.print("Anonymous");
+    }
+%>
+    </h3>
+    <ul class="links-list">
+<% 
+      List<MenuItem> links = provider.getLinks();
+
+      for (MenuItem item : links)
+      { 
+        if(item.hasAccess(clientRequest))
+        {
+          writer.writeLiA(LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName()), item.getURL(), item.getClasses(), item.isSynch());  
+        }
+      }
+%>
+    </ul>
+  </div>
+  <!-- Generated from MenuItems List -->
+  <nav class="aside-nav">
+    <ul>
+<% 
+      List<MenuItem> items = provider.getMenu();
       
       int num = 100;
       
       for (MenuItem item : items) {
         
-        if(item.getRoles() != null && item.getRoles().length() > 0)
+        if(item.hasAccess(clientRequest))
         {
-          // Ensure the user is a member of the role, if not then do not create the link
-          if(GeodashboardUserDTO.isRoleMemeber(clientRequest, item.getRoles()))
+          if (item.hasChildren())
           {
-            if (item.hasChildren()) {
-              String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
-              out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
-              out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
+            String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+
+            out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
+            out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
               
-              if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
-                out.print("in");
-              }
-              else {
-                out.print("collapse");
-              }
-              out.print("\">");
-              
-              out.print("<ul>");
-              
-              List<MenuItem> children = item.getChildren();
-              for (MenuItem child : children) {
-                String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
-                writer.writeLiA(childName, child.getURL(), false);
-              }
-              
-              out.print("</ul>");
-              out.print("</div>");
-              out.print("</li>");
-              
+            if (item.handlesUri(request.getRequestURI(), request.getContextPath()))
+            {
+              out.print("in");
             }
-            else {              
-                String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
-                writer.writeLiA(menuName, item.getURL(), false);            
+            else
+            {
+              out.print("collapse");
             }
+            out.print("\">");
+              
+            out.print("<ul>");
+              
+            List<MenuItem> children = item.getChildren();
+            for (MenuItem child : children)
+            {
+              String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
+              writer.writeLiA(childName, child.getURL(), false);
+            }
+              
+            out.print("</ul>");
+            out.print("</div>");
+            out.print("</li>");              
           }
-        }
-        else
-        {
-            if (item.hasChildren()) {
-              String rootName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());            
-              out.print("<li><a data-toggle=\"collapse\" id=\"expander" + num + "\" class=\"gdb-links-expander\" href=\"#collapse" + num + "\">" + rootName + "</a>");
-              out.print("<div id=\"collapse" + num + "\" class=\"panel-collapse gdb-link-container ");
-              
-              if (item.handlesUri(request.getRequestURI(), request.getContextPath())) {
-                out.print("in");
-              }
-              else {
-                out.print("collapse");
-              }
-              out.print("\">");
-              
-              out.print("<ul>");
-              
-              List<MenuItem> children = item.getChildren();
-              for (MenuItem child : children) {
-                String childName = LocalizationFacadeDTO.getFromBundles(clientRequest, child.getName());            
-                writer.writeLiA(childName, child.getURL(), false);
-              }
-              
-              out.print("</ul>");
-              out.print("</div>");
-              out.print("</li>");
-              
-            }
-            else {              
-                String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
-                writer.writeLiA(menuName, item.getURL(), false);            
-            }          
+          else
+          {              
+              String menuName = LocalizationFacadeDTO.getFromBundles(clientRequest, item.getName());
+              writer.writeLiA(menuName, item.getURL(), false);            
+          }
         }
         
         num++;
       }
       %>
-		</ul>
-	</nav>
+    </ul>
+  </nav>
 
-	<!-- element with tooltip -->
-	<a class="btn-tooltip" data-placement="top" data-toggle="tooltip"
-		data-original-title="New map layer" href="#">tooltip</a>
+  <!-- element with tooltip -->
+  <a class="btn-tooltip" data-placement="top" data-toggle="tooltip"
+    data-original-title="New map layer" href="#">tooltip</a>
 </aside>
 <!-- END Generated Bootstrap Sidebar Menu END -->
 
@@ -155,68 +132,68 @@
 <script type="text/javascript">
   activeLink = null;
 
-	function activateLinks(clickedLink) {
-	    if (clickedLink != null && activeLink != null && clickedLink[0] === activeLink[0]) {
-	    	return;
-	    }
-	    activeLink = clickedLink;
-	
-		// deactivate any active links to start fresh	
-		clearLinks();
-		clearBusySpinner()
-	
-		if (clickedLink.hasClass("gdb-links-expander")) {
-			if (clickedLink.next(".gdb-link-container") && window.location.hash) {
-				$(".gdb-link-container a").each(function() {
-					if ($(this).attr("href") === window.location.pathname + window.location.hash) {
-						$(this).addClass("link-active");
-						clearBusySpinner()
-					}
-				});
-			}
-		} else {
-			clickedLink.addClass("link-active");	
-			$("section#main").append("<div class=\"gdb-maincontent-busy\"></div>");
-		}
-	
-		var thisParentContainer = clickedLink.parents(".gdb-link-container");
-	
-		if (thisParentContainer) {
-			// expand the dropdown if not expanded already
-			if (!thisParentContainer.hasClass("in")) {
-				thisParentContainer.addClass("in");
-			}
-		}
-	}
+  function activateLinks(clickedLink) {
+      if (clickedLink != null && activeLink != null && clickedLink[0] === activeLink[0]) {
+        return;
+      }
+      activeLink = clickedLink;
+  
+    // deactivate any active links to start fresh  
+    clearLinks();
+    clearBusySpinner()
+  
+    if (clickedLink.hasClass("gdb-links-expander")) {
+      if (clickedLink.next(".gdb-link-container") && window.location.hash) {
+        $(".gdb-link-container a").each(function() {
+          if ($(this).attr("href") === window.location.pathname + window.location.hash) {
+            $(this).addClass("link-active");
+            clearBusySpinner()
+          }
+        });
+      }
+    } else {
+      clickedLink.addClass("link-active");  
+      $("section#main").append("<div class=\"gdb-maincontent-busy\"></div>");
+    }
+  
+    var thisParentContainer = clickedLink.parents(".gdb-link-container");
+  
+    if (thisParentContainer) {
+      // expand the dropdown if not expanded already
+      if (!thisParentContainer.hasClass("in")) {
+        thisParentContainer.addClass("in");
+      }
+    }
+  }
 
-	function clearLinks() {
-		$("a.link-active").each(function() {
-			$(this).removeClass("link-active");
-		});
-	}
+  function clearLinks() {
+    $("a.link-active").each(function() {
+      $(this).removeClass("link-active");
+    });
+  }
 
-	function clearBusySpinner() {
-		$(".gdb-maincontent-busy").each(function() {
-			  $(this).remove();
-		});
-	}
+  function clearBusySpinner() {
+    $(".gdb-maincontent-busy").each(function() {
+        $(this).remove();
+    });
+  }
 
-	function activateLinksOnLoad() {
-		// check for hash because only the home page has no hash
-		// if hash exists set the active link relative to the current
-		if (window.location.hash) {
-			$("a").each(function() {
-				if ($(this).attr("href") === window.location.pathname + window.location.hash) {
-					activateLinks($(this));
-				}
-			});
-		}
-	}
+  function activateLinksOnLoad() {
+    // check for hash because only the home page has no hash
+    // if hash exists set the active link relative to the current
+    if (window.location.hash) {
+      $("a").each(function() {
+        if ($(this).attr("href") === window.location.pathname + window.location.hash) {
+          activateLinks($(this));
+        }
+      });
+    }
+  }
 
-	activateLinksOnLoad();
-	
-	// Keep the element styled like the hover when dropdown is expanded
-	$("a").click(function() {
-		activateLinks($(this));
-	});
+  activateLinksOnLoad();
+  
+  // Keep the element styled like the hover when dropdown is expanded
+  $("a").click(function() {
+    activateLinks($(this));
+  });
 </script>

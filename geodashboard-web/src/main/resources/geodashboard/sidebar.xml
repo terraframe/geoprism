@@ -1,16 +1,23 @@
 <?xml version="1.0"?>
 <sidebar>
-  <item name="Account_Management" uri="admin/users"/>
-  
-  <item name="GIS_Management">
-    <item name="Manage_Universals" uri="admin/universal"/>
-    <item name="Manage_Geoentities" uri="admin/geoentity"/>
-  </item>
-  
-  <item name="Datatype_Management">
-    <item name="Term_Ontology_Admin" uri="admin/ontologies"/>
-    <item name="Data_Browser" uri="admin/databrowser"/> 
-  </item>
-  
-  <item name="Job_Scheduler" uri="admin/scheduler"/>   
+  <link-list>
+      <item name="Log_out" uri="session/logout" synch="true" />
+      <item name="Account" uri="admin/account" synch="false" />
+      <item name="Dashboard_Viewer" uri="DashboardViewer" synch="true" classes="link-viewer" />
+  </link-list>
+  <nav-list>
+    <item name="Account_Management" uri="admin/users" />
+
+    <item name="GIS_Management">
+      <item name="Manage_Universals" uri="admin/universal" />
+      <item name="Manage_Geoentities" uri="admin/geoentity" />
+    </item>
+
+    <item name="Datatype_Management">
+      <item name="Term_Ontology_Admin" uri="admin/ontologies" />
+      <item name="Data_Browser" uri="admin/databrowser" />
+    </item>
+
+    <item name="Job_Scheduler" uri="admin/scheduler" />
+  </nav-list>
 </sidebar>

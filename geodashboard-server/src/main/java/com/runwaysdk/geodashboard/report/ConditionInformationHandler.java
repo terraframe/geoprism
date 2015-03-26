@@ -16,6 +16,7 @@ import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan;
@@ -79,11 +80,20 @@ public class ConditionInformationHandler implements Reloadable, ReportConditionH
         for (int i = 0; i < array.length(); i++)
         {
           String termId = array.getString(i);
-          Classifier classifier = Classifier.get(termId);
 
-          String localizedValue = classifier.getDisplayLabel().getValue();
+          try
+          {
+            Classifier classifier = Classifier.get(termId);
 
-          this.handleCondition(localizedLabel, localizedOperation, localizedValue);
+            String localizedValue = classifier.getDisplayLabel().getValue();
+
+            this.handleCondition(localizedLabel, localizedOperation, localizedValue);
+          }
+          catch (DataNotFoundException e)
+          {
+            // Do nothing. There was criteria specified on a classifier which no longer exists or the id of the
+            // classifier was changed.
+          }
         }
       }
       catch (JSONException e)

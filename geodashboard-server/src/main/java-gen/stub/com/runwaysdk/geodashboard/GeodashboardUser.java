@@ -115,14 +115,20 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
   public static Boolean isRoleMemeber(String roles)
   {
-    // TODO roles should actually be a ',' delimited list of role names
-    // isRoleMember should return true if the user is a member of any of the roles
-    // specified in the role name list.
-    
     Map<String, String> map = Session.getCurrentSession().getUserRoles();
     Set<String> keySet = map.keySet();
 
-    return keySet.contains(roles);
+    String[] roleNames = roles.split(",");
+
+    for (String roleName : roleNames)
+    {
+      if (keySet.contains(roleName))
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

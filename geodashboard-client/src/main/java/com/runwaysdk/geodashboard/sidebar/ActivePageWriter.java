@@ -60,7 +60,7 @@ public class ActivePageWriter
     }
 
     String clazz = "";
-    if (classes != null)
+    if (classes != null && classes.length() > 0)
     {
       clazz = "class=\"" + classes + "\"";
     }
