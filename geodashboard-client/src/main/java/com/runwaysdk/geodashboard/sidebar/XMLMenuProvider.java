@@ -3,6 +3,7 @@ package com.runwaysdk.geodashboard.sidebar;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,6 +26,8 @@ public class XMLMenuProvider
 
   private static ArrayList<MenuItem> menu;
 
+  private static ArrayList<MenuItem> links;
+
   public XMLMenuProvider()
   {
     String exMsg = "An exception occurred while reading the geodashboard sidebar configuration file.";
@@ -44,6 +47,11 @@ public class XMLMenuProvider
     return menu;
   }
 
+  public ArrayList<MenuItem> getLinks()
+  {
+    return links;
+  }
+
   public void readMenu() throws ParserConfigurationException, SAXException, IOException
   {
 
@@ -55,6 +63,7 @@ public class XMLMenuProvider
       }
 
       menu = new ArrayList<MenuItem>();
+      links = new ArrayList<MenuItem>();
     }
 
     InputStream stream = ConfigurationManager.getResourceAsStream(ConfigurationManager.ConfigGroup.ROOT, fileName);
@@ -65,7 +74,22 @@ public class XMLMenuProvider
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.parse(stream);
 
-      Element xmlMappings = doc.getDocumentElement();
+      this.populateMenuItems(doc, "link-list", links);
+      this.populateMenuItems(doc, "nav-list", menu);
+    }
+    else
+    {
+      throw new RunwayConfigurationException("Expected the geodashboard sidebar configuration file on the classpath at [" + fileName + "].");
+    }
+  }
+
+  private void populateMenuItems(Document doc, String tagName, List<MenuItem> collection)
+  {
+    NodeList roots = doc.getElementsByTagName(tagName);
+
+    for (int j = 0; j < roots.getLength(); j++)
+    {
+      Node xmlMappings = roots.item(j);
 
       NodeList children = xmlMappings.getChildNodes();
       for (int i = 0; i < children.getLength(); ++i)
@@ -74,47 +98,51 @@ public class XMLMenuProvider
 
         if (n.getNodeType() == Node.ELEMENT_NODE)
         {
-          Element el = (Element) n;
-
-          String name = el.getAttribute("name");
-          String uri = null;
-          if (el.hasAttribute("uri"))
-          {
-            uri = el.getAttribute("uri");
-          }
-
-          String roles = null;
-          if (el.hasAttribute("roles"))
-          {
-            roles = el.getAttribute("roles");
-          }
-
-          MenuItem item = new MenuItem(name, uri, roles);
-
-          NodeList itemChildren = el.getChildNodes();
-          for (int iChild = 0; iChild < itemChildren.getLength(); ++iChild)
-          {
-            Node nodeItem = itemChildren.item(iChild);
-
-            if (nodeItem.getNodeType() == Node.ELEMENT_NODE)
-            {
-              Element elChild = (Element) nodeItem;
-
-              String name2 = elChild.getAttribute("name");
-              String uri2 = elChild.getAttribute("uri");
-              String roles2 = elChild.getAttribute("roles");
-
-              item.addChild(new MenuItem(name2, uri2, roles2));
-            }
-          }
-
-          menu.add(item);
+          this.creteMenuItem(collection, (Element) n);
         }
       }
     }
-    else
+  }
+
+  private void creteMenuItem(List<MenuItem> collection, Element el)
+  {
+    MenuItem item = this.createMenuItem(el);
+
+    NodeList children = el.getChildNodes();
+
+    for (int i = 0; i < children.getLength(); ++i)
     {
-      throw new RunwayConfigurationException("Expected the geodashboard sidebar configuration file on the classpath at [" + fileName + "].");
+      Node nodeItem = children.item(i);
+
+      if (nodeItem.getNodeType() == Node.ELEMENT_NODE)
+      {
+        Element childElement = (Element) nodeItem;
+        MenuItem child = this.createMenuItem(childElement);
+
+        item.addChild(child);
+      }
     }
+
+    collection.add(item);
+  }
+
+  private MenuItem createMenuItem(Element el)
+  {
+    String name = el.getAttribute("name");
+    String uri = el.hasAttribute("uri") ? el.getAttribute("uri") : null;
+    String roles = el.hasAttribute("roles") ? el.getAttribute("roles") : null;
+
+    MenuItem item = new MenuItem(name, uri, roles);
+
+    if (el.hasAttribute("synch"))
+    {
+      item.setSynch(el.getAttribute("synch"));
+    }
+
+    if (el.hasAttribute("classes"))
+    {
+      item.setClasses(el.getAttribute("classes"));
+    }
+    return item;
   }
 }

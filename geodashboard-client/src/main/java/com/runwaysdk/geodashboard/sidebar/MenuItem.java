@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.URLConfigurationManager;
 import com.runwaysdk.controller.URLConfigurationManager.UriForwardMapping;
 import com.runwaysdk.controller.URLConfigurationManager.UriMapping;
+import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 
 public class MenuItem
 {
@@ -18,6 +20,10 @@ public class MenuItem
 
   private String                         roles;
 
+  private Boolean                        synch;
+
+  private String                         classes;
+
   private ArrayList<MenuItem>            children = new ArrayList<MenuItem>();
 
   private static URLConfigurationManager mapper   = new URLConfigurationManager();
@@ -27,6 +33,8 @@ public class MenuItem
     this.name = name;
     this.url = URL;
     this.roles = roles;
+    this.synch = false;
+    this.classes = "";
 
     if (URL != null)
     {
@@ -46,6 +54,16 @@ public class MenuItem
   public void addChildren(ArrayList<MenuItem> children)
   {
     this.children.addAll(children);
+  }
+
+  public boolean hasAccess(ClientRequestIF request)
+  {
+    if (this.getRoles() != null && this.getRoles().length() > 0)
+    {
+      return GeodashboardUserDTO.isRoleMemeber(request, this.getRoles());
+    }
+
+    return true;
   }
 
   public boolean handlesUri(String uri, String context)
@@ -77,6 +95,32 @@ public class MenuItem
   public String getName()
   {
     return this.name;
+  }
+
+  public boolean isSynch()
+  {
+    return this.synch;
+  }
+
+  public String getClasses()
+  {
+    return this.classes;
+  }
+
+  public void setSynch(String synch)
+  {
+    try
+    {
+      this.synch = new Boolean(synch);
+    }
+    catch (Throwable t)
+    {
+    }
+  }
+
+  public void setClasses(String classes)
+  {
+    this.classes = classes;
   }
 
   public String getURL()
