@@ -27,10 +27,12 @@
 <gdb:localize var="page_title" key="universal.title"/>
 
 <!-- Universal CSS -->
-<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
+<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/universal.js" useRandomParam="false"/>
 <script type="text/javascript">${js}</script>
 

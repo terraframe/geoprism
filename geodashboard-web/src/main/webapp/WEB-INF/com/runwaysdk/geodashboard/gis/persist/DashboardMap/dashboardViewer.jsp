@@ -29,10 +29,12 @@
 
 <!-- Dynamic map CSS -->
 <jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
+<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
 <!-- Dynamic map Javascript -->
+<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
