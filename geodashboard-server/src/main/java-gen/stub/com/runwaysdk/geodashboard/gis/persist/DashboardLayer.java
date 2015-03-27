@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.RunwayException;
+import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -253,10 +255,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
       // Ensure there is a valid bounding box
       GeoserverFacade.getBBOX(this.getViewName());
     }
+    catch (RunwayException e)
+    {
+      throw e;
+    }
+    catch (SmartException e)
+    {
+      throw e;
+    }
     catch (Exception e)
     {
       // If this happens it means the SQL generated wrong and coding will be required to fix.
-
       throw new ProgrammingErrorException(e);
     }
   }

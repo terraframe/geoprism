@@ -1,0 +1,12 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdException name="com.runwaysdk.geodashboard.gis.geoserver.MapLayerException" label="Map layer exception" message="The map has no layers" />
+      <mdException name="com.runwaysdk.geodashboard.gis.geoserver.NoLayerDataException" label="No layer data exception" message="Unable to compute layer bounding box. This is likely because the filtering criteria is too restrictive and the layer has no data." />
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
