@@ -8,10 +8,13 @@
 
 <!-- Databrowser CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 <jwr:style src="/com/runwaysdk/geodashboard/databrowser/databrowser.css" useRandomParam="false"/>  
+
 
 <!-- Databrowser Javascript -->
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/databrowser.js" useRandomParam="false"/>
 
 <script type="text/javascript">${js}</script>
