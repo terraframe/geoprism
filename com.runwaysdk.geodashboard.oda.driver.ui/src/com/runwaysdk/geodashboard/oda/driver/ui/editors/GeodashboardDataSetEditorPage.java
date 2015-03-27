@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 import com.runwaysdk.geodashboard.oda.driver.Driver;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
@@ -176,7 +177,11 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     }
     catch (Exception ex)
     {
-      ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("dataset.error"), ex.getLocalizedMessage(), ex);
+      String label = GeodashboardPlugin.getResourceString("dataset.error");
+      String message = ex.getLocalizedMessage();
+      Shell shell = parent.getShell();
+
+      ExceptionHandler.showException(shell, label, message, ex);
 
       this.setPageComplete(false);
     }
@@ -319,11 +324,14 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   {
     LabelValuePair[] pairs = (LabelValuePair[]) comboViewer.getInput();
 
-    for (LabelValuePair pair : pairs)
+    if (pairs != null)
     {
-      if (pair.getValue().equals(value))
+      for (LabelValuePair pair : pairs)
       {
-        comboViewer.setSelection(new StructuredSelection(pair));
+        if (pair.getValue().equals(value))
+        {
+          comboViewer.setSelection(new StructuredSelection(pair));
+        }
       }
     }
   }
