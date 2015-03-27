@@ -953,6 +953,7 @@
             onSuccess : function(html){
               that._displayLayerForm(html);
               that._addCategoryAutoComplete();
+              that._addLayerFormControls();
             },
             onFailure : function(e){
               that.handleException(e);
@@ -1195,6 +1196,7 @@
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
+        params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
@@ -1564,6 +1566,18 @@
         
       },
       
+      _addLayerFormControls : function(){
+    	  
+          // ontology category layer type colors
+          $(".category-color-icon").colpick({
+            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+              $(el).css('background','#'+hex);
+              $(el).find('.color-input').attr('value', '#'+hex);
+            }
+          });
+      },
+      
       /**
        * Gets the html for and calls the new dashboard creation form 
        * 
@@ -1658,15 +1672,7 @@
             that._displayLayerForm(html);
             
             that._addCategoryAutoComplete();
-            
-            // ontology category layer type colors
-            $(".category-color-icon").colpick({
-              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onChange:function(hsb,hex,rgb,el,bySetColor) {
-                $(el).css('background','#'+hex);
-                $(el).find('.color-input').attr('value', '#'+hex);
-              }
-            });
+            that._addLayerFormControls();
             
             //
             // See form.jsp in DashboardLayer for category color pickers event listener configuration

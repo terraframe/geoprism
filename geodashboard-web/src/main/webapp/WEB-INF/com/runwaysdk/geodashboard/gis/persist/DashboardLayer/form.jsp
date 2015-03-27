@@ -470,6 +470,8 @@
 			                        </div>
 		                        </c:when>
 		                        <c:otherwise>
+		                        
+					                
 			                        <div class="cell">
 			                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
 			                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
@@ -480,6 +482,14 @@
 			                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
 			                          </div>
 			                        </div>
+			                        
+			                        <div class="check-block">
+					                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize">
+					                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label>
+					                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message">
+					                      <mjl:message />
+					                    </mjl:messages>
+					                </div>
 		                        </c:otherwise>
 	                        </c:choose>
 	                      </div>

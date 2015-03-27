@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1985112774)
+@com.runwaysdk.business.ClassSignature(hash = -949689497)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -59,6 +59,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE);
 
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize()
+  {
+    return getBubbleContinuousSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
@@ -276,6 +293,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize();
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias);
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -350,6 +370,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize()
+  {
+    return getBubbleContinuousSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
@@ -532,6 +569,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize();
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias);
+    public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -655,6 +695,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize()
+  {
+    return getBubbleContinuousSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()

@@ -20,6 +20,8 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Integer   pointMaxSize;
 
   private String    styleCategories;
+  
+  private Boolean   bubbleContinuousSize;
 
   private AttributeType attributeType;
 
@@ -122,5 +124,11 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void setAttributeType(AttributeType attributeType)
   {
     this.attributeType = attributeType;
+  }
+  
+  @Override
+  public Boolean getBubbleContinuousSize()
+  {
+    return this.bubbleContinuousSize;
   }
 }
