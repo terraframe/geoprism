@@ -77,8 +77,12 @@
         if(this._dateFormatter == null) {
           this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
         }
-      
-        return this._dateFormatter(value);
+        
+        if(value != null) {
+          return this._dateFormatter(value);          
+        }
+        
+        return null;
       },
       
       _formatDateTime : function(value) {
@@ -87,7 +91,11 @@
           this._dateTimeFormatter = Globalize.dateFormatter({ dateTime: "short" });                         
         }
         
-        return this._dateTimeFormatter(value);
+        if(value != null) {        
+          return this._dateTimeFormatter(value);
+        }
+        
+        return null;          
       },
       
       _formatTime : function(value) {
@@ -96,7 +104,11 @@
           this._timeFormatter = Globalize.dateFormatter({ time: "short" });                         
         }
         
-        return this._timeFormatter(value);
+        if(value != null) {                
+          return this._timeFormatter(value);
+        }
+      
+        return null;
       },
       
       _onSelectTreeNode : function(event) {
