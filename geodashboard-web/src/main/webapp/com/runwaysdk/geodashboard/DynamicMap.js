@@ -1478,13 +1478,7 @@
       /**
        * Hooks the auto-complete functionality to the category field input fields
        * 
-       * A similar functionality is implemented for creating new layers with categories in the
-       * _openLayerForAttribute method. The difference being that this method queries the existing 
-       * database view which the layer is built on while the other queries the database from the Dashboard
-       * class to determine the possible values for a layer. 
        * 
-       * This method is a little more acurate because the database view includes any filters
-       * that might have been applied to the layer.
        */
       _addCategoryAutoComplete : function(){
         
@@ -1522,8 +1516,10 @@
               // values are scraped from hidden input elements on the layer create form
               var universalId = $("#f58").val();
               var aggregationVal = $("#f59").val();
+              var criteria = that._reloadCriteria();
+              var conditions = that._getConditionsFromCriteria(criteria);
               
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
             },
             minLength: 1
           });
@@ -1952,6 +1948,10 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
       },
       
+      /*
+       * Scrape filters for values and meta information
+       * 
+       */
       _reloadCriteria : function () {
         var that = this;
         var criteria = [];
@@ -2038,6 +2038,12 @@
         return criteria;
       },
       
+      /*
+       * Construct Runway condition objects from filter criteria
+       * 
+       * @param criteria - array of objects that describe current filter settings
+       * 
+       */
       _getConditionsFromCriteria : function(criteria) {
          
         var conditions = [];

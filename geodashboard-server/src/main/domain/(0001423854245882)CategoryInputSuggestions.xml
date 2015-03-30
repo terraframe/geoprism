@@ -10,6 +10,7 @@
             <mdParameter name="aggregationVal" order="2" type="java.lang.String" label="Aggregation value" />
             <mdParameter name="text" order="3" type="java.lang.String" label="Text" />
             <mdParameter name="limit" order="4" type="java.lang.Integer" label="Limit" />
+            <mdParameter name="conditions" order="5" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" label="Dashboard Conditions" />
           </mdMethod>
         </create>
       </mdBusiness>
