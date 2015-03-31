@@ -216,6 +216,12 @@
                  var liObj = new Object();
                  liObj.val = catVal;
                  liObj.color = catColor;
+                 if(catInputElem[0].id === "cat-other"){
+                	 liObj.otherCat = true;
+                 }
+                 else{
+                	 liObj.otherCat = false;
+                 }
                  styleArr.catLiElems.push(liObj);                   
              }
            }
@@ -473,7 +479,7 @@
             src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
             src += 'VERSION=1.0.0' + '&amp;';
             src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
-            src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
+            src += '&TRANSPARENT=true&LEGEND_OPTIONS=fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
             
             // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
             if(this.featureStrategy === "GRADIENT" || this.featureStrategy === "CATEGORY"){
@@ -1776,10 +1782,19 @@
             //
           }
           else{
+        	var catInputId;
             var catsJSONArr = catsJSONObj.catLiElems;
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
-              var catInputId = "cat"+ (i+1);
+              
+              // Controlling for 'other' category 
+              if(cat.otherCat){
+            	  catInputId = "cat-other";
+              }
+              else{
+            	  catInputId = "cat"+ (i+1);
+              }
+              
               var catColorSelectorId = catInputId + "-color-selector";
               $("#"+catInputId).val(cat.val);
               $("#"+catColorSelectorId).css("background", cat.color);
