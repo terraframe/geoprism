@@ -404,8 +404,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       NumberFormat formatter = this.getRuleNumberFormatter();
 
-      // supers up to Symbolizer to getSymbolizerName() and builds the node from the return
-      // i.e. builds the <PolygonSymbolizer> node in this case
       Node root = super.getSLD();
 
       Integer width = this.style.getPolygonStrokeWidth();
@@ -512,6 +510,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String catVal;
         String catTitle;
         String catColor;
+        String catOtherCat;
 
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
@@ -520,6 +519,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle dTStyle = (DashboardThematicStyle) tStyle;
+          NodeBuilder otherOrNode = node(OGC, "Or");
+          NodeBuilder otherPolySymbolNode = node("PolygonSymbolizer");
 
           // ontology logic
           String cats = dTStyle.getStyleCategories();
@@ -543,80 +544,162 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               catVal = thisObj.getString("val");
               catTitle = catVal;
               catColor = thisObj.getString("color");
+              catOtherCat = thisObj.getString("otherCat");
             }
             catch (JSONException e)
             {
               throw new ProgrammingErrorException(e);
             }
 
-            if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+            if (catOtherCat == "false")
             {
-              try
+              if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
               {
-                catTitle = formatter.format(new Double(catVal));
+                try
+                {
+                  catTitle = formatter.format(new Double(catVal));
+                }
+                catch (Exception e)
+                {
+                  // The category isn't actually a number so it can't be localized
+                }
               }
-              catch (Exception e)
-              {
-                // The category isn't actually a number so it can't be localized
-              }
+  
+              Node ruleNode = node("Rule").child(
+                  node("Name").text(catVal),
+                  node("Title").text(catTitle),
+                  node(OGC, "Filter").child(
+                      node(OGC, "And").child(
+                          node(OGC, "PropertyIsEqualTo").child(
+                              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                          ),
+                          node(OGC, "And").child(
+                              node(OGC, "Not").child(
+                                  node(OGC, "Or").child(
+                                      node(OGC, "PropertyIsNull").child(
+                                          node(OGC, "PropertyName").text(attribute)
+                                      ),
+                                      node(OGC, "PropertyIsEqualTo").child(
+                                          node(OGC, "Literal").text("NEVER"),
+                                          node(OGC, "Literal").text("TRUE")
+                                      )
+                                  )
+                              ),
+                              node(OGC, "PropertyIsEqualTo").child(
+                                  node(OGC, "PropertyName").text(attribute),
+                                  node(OGC, "Literal").text(catVal)
+                              )
+                          )
+                      )
+                  ),
+                  node("PolygonSymbolizer").child(
+                      node("Geometry").child(
+                          node(OGC, "PropertyName").text("geom")
+                      ),
+                      node("Fill").child(
+                          css("fill", catColor),
+                          css("fill-opacity", fillOpacity)
+                      ),
+                      node("Stroke").child(
+                           css("stroke", stroke), 
+                           css("stroke-width", width), 
+                           css("stroke-opacity", strokeOpacity)
+                      )
+                  )
+              ).build(root);
+  
+              //
+              // Adding labels
+              //
+              this.addLabelSymbolizer(ruleNode);
+              
+              // Build 'OTHER' exclusion fragments
+              otherOrNode.child(
+                  node(OGC, "PropertyIsEqualTo").child(
+                      node(OGC, "PropertyName").text(attribute),
+                      node(OGC, "Literal").text(catVal)
+              ));
             }
-
-            Node ruleNode = node("Rule").build(root);
-            node("Name").text(catVal).build(ruleNode);
-            node("Title").text(catTitle).build(ruleNode);
-
-            Node filterNode = node(OGC, "Filter").build(ruleNode);
-            Node firstAndNode = node(OGC, "And").build(filterNode);
-
-            Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(firstAndNode);
-            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-
-            Node secondAndNode = node(OGC, "And").build(firstAndNode);
-            Node notNode = node(OGC, "Not").build(secondAndNode);
-            Node orNode = node(OGC, "Or").build(notNode);
-
-            Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
-            node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-            Node secondPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
-            node(OGC, "Literal").text("NEVER").build(secondPropEqualToNode);
-            node(OGC, "Literal").text("TRUE").build(secondPropEqualToNode);
-
-            Node thirdPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
-            node(OGC, "PropertyName").text(attribute).build(thirdPropEqualToNode);
-            node(OGC, "Literal").text(catVal).build(thirdPropEqualToNode);
-
-            // Polygon styles
-            Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
-            node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
-            Node geomFillNode = node("Fill").build(polySymbolNode);
-            css("fill", catColor).build(geomFillNode);
-            css("fill-opacity", fillOpacity).build(geomFillNode);
-
-            node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
-
-            //
-            // Adding labels
-            //
-            this.addLabelSymbolizer(ruleNode);
+            else
+            {
+              // 'OTHER' Polygon styles
+              otherPolySymbolNode.child(
+                  node("Geometry").child(
+                      node(OGC, "PropertyName").text("geom")
+                  ),
+                  node("Fill").child(
+                      css("fill", catColor),  
+                      css("fill-opacity", fillOpacity)
+                  ),
+                  node("Stroke").child(
+                      css("stroke", stroke), 
+                      css("stroke-width", width), 
+                      css("stroke-opacity", strokeOpacity)
+                  )
+               );
+            }
           }
+          
+          //
+          // Build the 'OTHER' rule 
+          //
+          node("Rule").child(
+              node("Name").text("OTHER"),
+              node("Title").text("OTHER"),
+              otherPolySymbolNode.child(
+                  node("Stroke").child(
+                      css("stroke", stroke), 
+                      css("stroke-width", width), 
+                      css("stroke-opacity", strokeOpacity)
+                  )
+               ),
+               node(OGC, "Filter").child(
+                   node(OGC, "And").child(
+                       node(OGC, "PropertyIsEqualTo").child(
+                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                       ),
+                       node(OGC, "Not").child(
+                           otherOrNode.child(
+                               node(OGC, "Or").child(
+                                   node(OGC, "PropertyIsNull").child(
+                                       node(OGC, "PropertyName").text(attribute)
+                                   )
+//                                   ,
+//                                   node(OGC, "PropertyIsEqualTo").child(
+//                                       node(OGC, "PropertyName").text(attribute),
+//                                       node(OGC, "Literal").text("")
+//                                   )
+                               )
+                           )
+                       )
+                   )
+               )
+          ).build(root);
+          
         }
       }
       else
-      // basic polygon
-      {
-        Node ruleNode = node("Rule").build(root);
-        node("Name").text("basic").build(ruleNode);
-        node("Title").text("basic").build(ruleNode);
-
-        // Polygon styles
-        Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
-        node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
-        Node geomFillNode = node("Fill").build(polySymbolNode);
-        css("fill", fill).build(geomFillNode);
-        css("fill-opacity", fillOpacity).build(geomFillNode);
-
-        node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
+      {  // Basic polygon
+        Node ruleNode = node("Rule").child(
+            node("Name").text("basic"),
+            node("Title").text("basic"),
+            node("PolygonSymbolizer").child(
+                node("Geometry").child(
+                    node(OGC, "PropertyName").text("geom")
+                ),
+                node("Fill").child(
+                    css("fill", fill),
+                    css("fill-opacity", fillOpacity)
+                ),
+                node("Stroke").child(
+                    css("stroke", stroke), 
+                    css("stroke-width", width), 
+                    css("stroke-opacity", strokeOpacity)
+                )
+            )
+        ).build(root);
 
         //
         // Adding labels

@@ -2557,7 +2557,7 @@ span.select-area span.center {
 *
 */
 	.modal-form .category-block {
-		height: 200px;
+		height: 210px;
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		padding: 0;

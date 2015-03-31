@@ -204,7 +204,7 @@
              var catVal = catInputElem.val();
              
              // parse the formatted number to the format of the data so the SLD can apply categories by this value
-             if(this._getCategoryType() == "number" ) {
+             if(catInputElem.data("type") == "number" ) {
                var thisNum = this._parser(catVal);
                  if($.isNumeric(thisNum)) {
                    catVal = thisNum;                
@@ -464,6 +464,7 @@
        * @legendXPosition - css based 'left' property
        * @legendYPosition - css based 'top' property
        * @groupedInLegend - boolean indicating if the legend item is grouped in the main legend or floating
+       * @featureStrategy - strategy descriptor used to define the strategy for mapping layers (BASIC, BUBBLE, GRADIENT, CATEGORY)
        * 
        */
       _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy) {

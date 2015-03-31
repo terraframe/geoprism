@@ -658,7 +658,23 @@
 								                          	</div>
 								                         </div>
 						                   	 		 </div>
-							                       </li>		                       
+							                       </li>	
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+<!-- 								                       	 		<p id="cat-other-label">OTHER</p> -->
+															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="OTHER" placeholder="OTHER" autocomplete="off" disabled> 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span id="cat-other-color-selector" class="ico cat-color-selector" style="background:#737678">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>	                       
 							                     </ul>
 							                   </div>
 							                 </div>
