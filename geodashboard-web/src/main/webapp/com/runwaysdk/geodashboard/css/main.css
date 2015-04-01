@@ -2048,7 +2048,7 @@ a.blueactive,
 	float:left;
 	position:relative;
 	width:204px;
-	margin:0 0 0 33px;
+	margin:0 0 0 0;
 }
 .select-tab-select.select-area{
 	width:100% !important;
@@ -2570,7 +2570,7 @@ span.select-area span.center {
 *
 */
 	.modal-form .category-block {
-		height: 210px;
+		height: 240px;
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		padding: 0;
