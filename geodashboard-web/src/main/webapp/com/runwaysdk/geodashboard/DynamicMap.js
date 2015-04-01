@@ -204,7 +204,7 @@
              var catVal = catInputElem.val();
              
              // parse the formatted number to the format of the data so the SLD can apply categories by this value
-             if(this._getCategoryType() == "number" ) {
+             if(catInputElem.data("type") == "number" ) {
                var thisNum = this._parser(catVal);
                  if($.isNumeric(thisNum)) {
                    catVal = thisNum;                
@@ -216,6 +216,13 @@
                  var liObj = new Object();
                  liObj.val = catVal;
                  liObj.color = catColor;
+                 liObj.otherEnabled = $("#f53").prop("checked");
+                 if(catInputElem[0].id === "cat-other"){
+                	 liObj.otherCat = true;
+                 }
+                 else{
+                	 liObj.otherCat = false;
+                 }
                  styleArr.catLiElems.push(liObj);                   
              }
            }
@@ -458,6 +465,7 @@
        * @legendXPosition - css based 'left' property
        * @legendYPosition - css based 'top' property
        * @groupedInLegend - boolean indicating if the legend item is grouped in the main legend or floating
+       * @featureStrategy - strategy descriptor used to define the strategy for mapping layers (BASIC, BUBBLE, GRADIENT, CATEGORY)
        * 
        */
       _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy) {
@@ -473,10 +481,10 @@
             src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
             src += 'VERSION=1.0.0' + '&amp;';
             src += 'FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25' + '&amp;';
-            src += 'LEGEND_OPTIONS=bgColor:0x302822;fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
+            src += '&TRANSPARENT=true&LEGEND_OPTIONS=fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
             
             // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-            if(this.featureStrategy === "GRADIENT" || this.featureStrategy === "CATEGORY"){
+            if(this.featureStrategy !== "BASIC"){
               src += 'forceLabels:on;';
             }
             src += '&amp;';
@@ -953,6 +961,7 @@
             onSuccess : function(html){
               that._displayLayerForm(html);
               that._addCategoryAutoComplete();
+              that._addLayerFormControls();
             },
             onFailure : function(e){
               that.handleException(e);
@@ -1195,6 +1204,7 @@
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
+        params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
@@ -1476,13 +1486,7 @@
       /**
        * Hooks the auto-complete functionality to the category field input fields
        * 
-       * A similar functionality is implemented for creating new layers with categories in the
-       * _openLayerForAttribute method. The difference being that this method queries the existing 
-       * database view which the layer is built on while the other queries the database from the Dashboard
-       * class to determine the possible values for a layer. 
        * 
-       * This method is a little more acurate because the database view includes any filters
-       * that might have been applied to the layer.
        */
       _addCategoryAutoComplete : function(){
         
@@ -1520,8 +1524,10 @@
               // values are scraped from hidden input elements on the layer create form
               var universalId = $("#f58").val();
               var aggregationVal = $("#f59").val();
+              var criteria = that._reloadCriteria();
+              var conditions = that._getConditionsFromCriteria(criteria);
               
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10);
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
             },
             minLength: 1
           });
@@ -1562,6 +1568,28 @@
 //        
 //        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getThematicAttributeCategories(clientRequest, layerId);
         
+      },
+      
+      _addLayerFormControls : function(){
+    	  
+          // ontology category layer type colors
+          $(".category-color-icon").colpick({
+            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+              $(el).css('background','#'+hex);
+              $(el).find('.color-input').attr('value', '#'+hex);
+            }
+          });
+          
+          // category 'other' option
+          $("#f53").change(function() {
+              if($(this).is(":checked")) {
+            	  $("#cat-other").parent().parent().show();
+              }
+              else{
+            	  $("#cat-other").parent().parent().hide();
+              }     
+          });
       },
       
       /**
@@ -1658,15 +1686,7 @@
             that._displayLayerForm(html);
             
             that._addCategoryAutoComplete();
-            
-            // ontology category layer type colors
-            $(".category-color-icon").colpick({
-              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onChange:function(hsb,hex,rgb,el,bySetColor) {
-                $(el).css('background','#'+hex);
-                $(el).find('.color-input').attr('value', '#'+hex);
-              }
-            });
+            that._addLayerFormControls();
             
             //
             // See form.jsp in DashboardLayer for category color pickers event listener configuration
@@ -1738,12 +1758,9 @@
         
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
-          
           var value = $(this).val();
-          
           if(value != null && value.length > 0) {
             var categoryType = $(this).data("type");
-            
             if(categoryType == "number") {
               var number = parseFloat(value);
               var localized = that._formatter(number);
@@ -1751,7 +1768,6 @@
               $(this).val(localized);
             }
           }
-          
         });    
         
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
@@ -1774,13 +1790,31 @@
             //
           }
           else{
+        	var catInputId;
             var catsJSONArr = catsJSONObj.catLiElems;
+            var catOtherEnabled = true;
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
-              var catInputId = "cat"+ (i+1);
+              
+              // Controlling for 'other' category 
+              if(cat.otherCat){
+            	  catInputId = "cat-other";
+              }
+              else{
+            	  catInputId = "cat"+ (i+1);
+              }
+              
               var catColorSelectorId = catInputId + "-color-selector";
               $("#"+catInputId).val(cat.val);
               $("#"+catColorSelectorId).css("background", cat.color);
+              catOtherEnabled = cat.otherEnabled;
+            }
+            
+            // Simulate a checkbox click to turn off the checkbox if the other option is disabled
+            // The other option is checked by default making this a valid sequence
+            if(!catOtherEnabled){
+            	$("#f53").click();
+            	$("#cat-other").parent().parent().hide();
             }
           }
         }
@@ -1946,6 +1980,10 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
       },
       
+      /*
+       * Scrape filters for values and meta information
+       * 
+       */
       _reloadCriteria : function () {
         var that = this;
         var criteria = [];
@@ -2032,6 +2070,12 @@
         return criteria;
       },
       
+      /*
+       * Construct Runway condition objects from filter criteria
+       * 
+       * @param criteria - array of objects that describe current filter settings
+       * 
+       */
       _getConditionsFromCriteria : function(criteria) {
          
         var conditions = [];

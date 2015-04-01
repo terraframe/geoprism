@@ -26,8 +26,10 @@ import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
+import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
@@ -348,12 +350,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  public static String[] getCategoryInputSuggestions(String mdAttributeId, String universalId, String aggregationVal, String text, Integer limit)
+  public static String[] getCategoryInputSuggestions(String mdAttributeId, String universalId, String aggregationVal, String text, Integer limit, DashboardCondition[] conditions)
   {
     OIterator<ValueObject> iterator = null;
     List<String> suggestions = new LinkedList<String>();
 
-    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+    MdAttributeDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId);
     MdClassDAOIF mdClass = mdAttributeConcrete.definedByClass();
     QueryFactory factory = new QueryFactory();
 
@@ -443,6 +445,30 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // the entity's GeoEntity should match the all path's child
     GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
     innerQuery1.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
+    
+    // Attribute condition filtering (i.e. sales unit is greater than 50)
+    if (conditions != null)
+    {
+      for (DashboardCondition condition : conditions)
+      {
+        if (condition instanceof DashboardAttributeCondition)
+        {
+          String condAttributeId = ( (DashboardAttributeCondition) condition ).getDefiningMdAttributeId();
+
+          MdAttributeDAOIF condAttribute = MdAttributeDAO.get(condAttributeId);
+          MdClassDAOIF definedByClass = condAttribute.definedByClass();
+
+          if (definedByClass.getId().equals(mdClass.getId()))
+          {
+            condition.restrictQuery(innerQuery1, thematicAttr);
+          }
+        }
+        else if (condition instanceof LocationCondition)
+        {
+          condition.restrictQuery(innerQuery1, geoAttr);
+        }
+      }
+    }
 
     // the displayed GeoEntity should match the all path's parent
     innerQuery1.AND(geAllPathsQ.getParentTerm().EQ(geQ1));
@@ -451,7 +477,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Universal universal = Universal.get(universalId);
     innerQuery1.AND(geQ1.getUniversal().EQ(universal));
     innerQuery1.ORDER_BY_ASC((SelectablePrimitive) thematicSel);
-
+    
     iterator = innerQuery1.getIterator();
 
     try

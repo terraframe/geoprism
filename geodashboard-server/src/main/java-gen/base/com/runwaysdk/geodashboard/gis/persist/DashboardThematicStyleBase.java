@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1874129917)
+@com.runwaysdk.business.ClassSignature(hash = 545466174)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,6 +12,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
+  public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
@@ -20,7 +21,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = -1874129917;
+  private static final long serialVersionUID = 545466174;
   
   public DashboardThematicStyleBase()
   {
@@ -63,6 +64,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdClassIF.definesAttribute(AGGREGATIONTYPE);
+  }
+  
+  public Boolean getBubbleContinuousSize()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BUBBLECONTINUOUSSIZE));
+  }
+  
+  public void validateBubbleContinuousSize()
+  {
+    this.validateAttribute(BUBBLECONTINUOUSSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getBubbleContinuousSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(BUBBLECONTINUOUSSIZE);
+  }
+  
+  public void setBubbleContinuousSize(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(BUBBLECONTINUOUSSIZE, "");
+    }
+    else
+    {
+      setValue(BUBBLECONTINUOUSSIZE, java.lang.Boolean.toString(value));
+    }
   }
   
   public com.runwaysdk.system.metadata.MdAttribute getMdAttribute()

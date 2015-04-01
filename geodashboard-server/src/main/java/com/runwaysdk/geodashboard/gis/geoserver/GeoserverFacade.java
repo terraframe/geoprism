@@ -21,10 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.constants.DatabaseProperties;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
@@ -582,8 +580,7 @@ public class GeoserverFacade implements Reloadable
     }
     else
     {
-      // TODO throw better exception or a message
-      throw new ProgrammingErrorException("The map has no layers");
+      throw new MapLayerException("The map has no layers");
     }
 
     ValueQuery collected = new ValueQuery(union.getQueryFactory());
@@ -608,9 +605,9 @@ public class GeoserverFacade implements Reloadable
 
       return bbox;
     }
-    catch(Exception e)
+    catch (Exception e)
     {
-      throw new ProgrammingErrorException("Can't convert map layer database view bbox values from String to Double. This is likely because the database view being referenced has no data.");
+      throw new NoLayerDataException();
     }
     finally
     {

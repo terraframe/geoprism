@@ -32,6 +32,7 @@
 <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 
 <!-- User account Javascript -->
+<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/account.js" useRandomParam="false"/>
 <script type="text/javascript">${js}</script>

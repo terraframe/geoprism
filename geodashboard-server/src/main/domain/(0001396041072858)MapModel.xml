@@ -154,6 +154,7 @@
         <attributes>
           <reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          <boolean name="bubbleContinuousSize" label="Continuous Size" required="false" defaultValue="true" />
         </attributes>
       </mdBusiness>
 

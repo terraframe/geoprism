@@ -470,6 +470,8 @@
 			                        </div>
 		                        </c:when>
 		                        <c:otherwise>
+		                        
+					                
 			                        <div class="cell">
 			                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
 			                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
@@ -480,6 +482,14 @@
 			                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
 			                          </div>
 			                        </div>
+			                        
+			                        <div class="check-block">
+					                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize">
+					                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label>
+					                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message">
+					                      <mjl:message />
+					                    </mjl:messages>
+					                </div>
 		                        </c:otherwise>
 	                        </c:choose>
 	                      </div>
@@ -648,10 +658,33 @@
 								                          	</div>
 								                         </div>
 						                   	 		 </div>
-							                       </li>		                       
+							                       </li>	
+							                       <li>
+							                         <div class="category-container">
+								                       	 <div class="text category-input-container">
+<!-- 								                       	 		<p id="cat-other-label">OTHER</p> -->
+															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="OTHER" placeholder="OTHER" autocomplete="off" disabled> 
+								                       	 </div>
+						                   	 		 	 <div class="cell">
+										                  	<div class="color-holder">
+								                            	<a href="#" class="color-choice">
+								                              	<span id="cat-other-color-selector" class="ico cat-color-selector" style="background:#737678">icon</span>
+								                              	<span class="arrow">arrow</span>
+								                            	</a>
+								                          	</div>
+								                         </div>
+						                   	 		 </div>
+							                       </li>	                       
 							                     </ul>
 							                   </div>
 							                 </div>
+							                 <div class="style-options-block">
+<%-- 						                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
+											  	<div class="check-block">
+										      		<input id="f53" type="checkbox" name="" checked>
+										        	<label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+										      	</div>
+						                     </div>
 			                        	</div>
 		                      		</c:otherwise>
 		                      </c:choose>
@@ -664,7 +697,14 @@
 							 <%-- Dynamically inserted with javascript--%>
 	                      </div>
 	                    </div>
-	                  </div>
+	                    
+<!-- 	                    <div class="style-options-block"> -->
+<%-- 	                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
+<!-- 						  <div class="check-block"> -->
+<!-- 					      	<input id="f53" type="checkbox" name="" checked> -->
+<%-- 					        <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
+<!-- 					      </div> -->
+<!-- 	                    </div> -->
 	                  
 	                </div>
 	              </div>

@@ -31,6 +31,7 @@
 <jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
 
 <!-- Report Javascript -->
+<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 

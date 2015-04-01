@@ -138,19 +138,26 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
         int index = reportName.lastIndexOf('.');
 
-        String filename = reportName.substring(0, index);
-        String extension = reportName.substring(index + 1);
-
-        if (extension != null && extension.equals(RPTDESIGN_EXTENSION))
+        if (index != -1)
         {
-          entity.setValue(VaultFileInfo.FILE_NAME, filename);
-          entity.setValue(VaultFileInfo.EXTENSION, extension);
+          String filename = reportName.substring(0, index);
+          String extension = reportName.substring(index + 1);
 
-          file.setSize(0);
-          entity.apply();
-          file.putFile(fileStream);
+          if (extension != null && extension.equals(RPTDESIGN_EXTENSION))
+          {
+            entity.setValue(VaultFileInfo.FILE_NAME, filename);
+            entity.setValue(VaultFileInfo.EXTENSION, extension);
 
-          this.setDesign(entity.getId());
+            file.setSize(0);
+            entity.apply();
+            file.putFile(fileStream);
+
+            this.setDesign(entity.getId());
+          }
+          else
+          {
+            throw new ReportItemException("Report design must have the rptdesign extension");
+          }
         }
         else
         {
