@@ -251,8 +251,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
-
-        // SLD generation
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tStyle.getAttribute().toLowerCase();
@@ -264,9 +262,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         if (tStyle.getBubbleContinuousSize() == true)
         {
           NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
-
           Node ruleNode = node("Rule").build(root);
-          
           String currentCatMinDisplay = formatter.format(minAttrVal);
           String currentCatMaxDisplay = formatter.format(maxAttrVal);
           
@@ -275,14 +271,28 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
 
-          node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(css("fill", fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
+          node("Graphic").child(
+              node("Mark").child(
+                  node("WellKnownName").text(wkn), 
+                  node("Fill").child(
+                      css("fill", fill), 
+                      css("fill-opacity", opacity)
+                  ), 
+                  node("Stroke").child(
+                      css("stroke", stroke), 
+                      css("stroke-width", width), 
+                      css("stroke-opacity", strokeOpacity)
+                  )
+              ), 
+              sizeNode, 
+              node("Rotation").text(rotation)
+           ).build(pointSymbolNode);
 
           // Adding labels
           this.addLabelSymbolizer(ruleNode);
         }
         else
         {
-
           HashMap<Integer, Integer> pointSizeRange = new HashMap<Integer, Integer>();
           int minSize = tStyle.getPointMinSize();
           int maxSize = tStyle.getPointMaxSize();
@@ -373,11 +383,18 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String attribute = tStyle.getAttribute().toLowerCase();
 
         // thematic interpolation
-        return node("Size").child(node(OGC, "Function").attr("name", "Interpolate").child(
-        // property to interpolate
-            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getPointMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getPointMaxSize()),
-            // interpolation method
-            node(OGC, "Literal").text("numeric")));
+        return node("Size").child(
+            node(OGC, "Function").attr("name", "Interpolate").child(
+                // property to interpolate
+                node(OGC, "PropertyName").text(attribute), 
+                node(OGC, "Literal").text(minAttrVal), 
+                node(OGC, "Literal").text(tStyle.getPointMinSize()), 
+                node(OGC, "Literal").text(maxAttrVal), 
+                node(OGC, "Literal").text(tStyle.getPointMaxSize()),
+                // interpolation method
+                node(OGC, "Literal").text("numeric")
+            )
+         );
       }
       else
       {
