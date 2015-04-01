@@ -180,7 +180,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     protected void addLabelSymbolizer(Node parent)
     {
       TextSymbolizer text = this.getLabelSymbolizer();
-      parent.appendChild(text.getSLD());
+      if(text != null)
+      {
+        parent.appendChild(text.getSLD());
+      }
     }
 
     protected TextSymbolizer getLabelSymbolizer()
@@ -274,6 +277,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(css("fill", fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
 
+          // Adding labels
+          this.addLabelSymbolizer(ruleNode);
         }
         else
         {
@@ -840,8 +845,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       node("Label").child(nodes).build(root);
       node("Font").child(css("font-size", size), css("font-family", font)).build(root);
-      node("Halo").child(node("Radius").text(haloWidth), node("Fill").child(css("fill", halo))).build(root);
-      node("Fill").child(css("fill", color)).build(root);
 
       // Label Positioning
       if (this.visitor.currentLayer.getFeatureType().compareTo(FeatureType.POINT) == 0)
@@ -852,6 +855,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         node("LabelPlacement").child(node("PointPlacement").child(node("AnchorPoint").child(node("AnchorPointX").text("0.5"), node("AnchorPointY").text("0.5")))).build(root);
       }
+      
+      node("Halo").child(node("Radius").text(haloWidth), node("Fill").child(css("fill", halo))).build(root);
+      node("Fill").child(css("fill", color)).build(root);
 
       // vendor options
       node("VendorOption").attr("name", "group").text(GeoserverProperties.getLabelGroup()).build(root);
