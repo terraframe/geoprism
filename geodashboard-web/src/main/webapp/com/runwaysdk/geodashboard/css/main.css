@@ -1710,6 +1710,7 @@ a.blueactive,
 	margin:0 7px 0 0;
 	padding:0 0 0 2px;
 	min-width: 150px;
+	white-space: nowrap;
 }
 .modal-form .check-block .chk-area{margin:25px 10px 0 0;}
 .modal-form .check-block label{
@@ -2043,6 +2044,12 @@ a.blueactive,
 	width:204px;
 	margin:0 0 0 33px;
 }
+.modal-form .style-options-block{
+	float:left;
+	position:relative;
+	width:204px;
+	margin:0 0 0 33px;
+}
 .select-tab-select.select-area{
 	width:100% !important;
 	height:28px;
@@ -2091,6 +2098,7 @@ a.blueactive,
 	float:left;
 }
 .modal-form .color-section+.stroke-block{margin:0 0 0 22px;}
+.modal-form .stroke-block+.style-options-block{margin:50px 0 0 22px;}
 .modal-form .color-block{
 	height:242px;
 	overflow:auto;
@@ -2381,7 +2389,12 @@ span.select-area span.center {
 	    color: #B9B9B9;
 	}
 
-
+	.style-options-block > .check-block > .chk-area {
+		margin-top: 10px;
+	}
+	.modal-form .check-block label[for=f53] {
+		margin-top: 10px;
+	}
 /**
 *
 * JQTree

@@ -216,6 +216,7 @@
                  var liObj = new Object();
                  liObj.val = catVal;
                  liObj.color = catColor;
+                 liObj.otherEnabled = $("#f53").prop("checked");
                  if(catInputElem[0].id === "cat-other"){
                 	 liObj.otherCat = true;
                  }
@@ -1579,6 +1580,16 @@
               $(el).find('.color-input').attr('value', '#'+hex);
             }
           });
+          
+          // category 'other' option
+          $("#f53").change(function() {
+              if($(this).is(":checked")) {
+            	  $("#cat-other").parent().parent().show();
+              }
+              else{
+            	  $("#cat-other").parent().parent().hide();
+              }     
+          });
       },
       
       /**
@@ -1747,12 +1758,9 @@
         
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
-          
           var value = $(this).val();
-          
           if(value != null && value.length > 0) {
             var categoryType = $(this).data("type");
-            
             if(categoryType == "number") {
               var number = parseFloat(value);
               var localized = that._formatter(number);
@@ -1760,7 +1768,6 @@
               $(this).val(localized);
             }
           }
-          
         });    
         
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
@@ -1785,6 +1792,7 @@
           else{
         	var catInputId;
             var catsJSONArr = catsJSONObj.catLiElems;
+            var catOtherEnabled = true;
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
               
@@ -1799,6 +1807,14 @@
               var catColorSelectorId = catInputId + "-color-selector";
               $("#"+catInputId).val(cat.val);
               $("#"+catColorSelectorId).css("background", cat.color);
+              catOtherEnabled = cat.otherEnabled;
+            }
+            
+            // Simulate a checkbox click to turn off the checkbox if the other option is disabled
+            // The other option is checked by default making this a valid sequence
+            if(!catOtherEnabled){
+            	$("#f53").click();
+            	$("#cat-other").parent().parent().hide();
             }
           }
         }

@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -464,41 +465,50 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           String currentCatMinDisplay = formatter.format(currentCatMin);
           String currentCatMaxDisplay = formatter.format(currentCatMax);
-
-          Node ruleNode = node("Rule").build(root);
-          node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-          node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-
-          Node filterNode = node(OGC, "Filter").build(ruleNode);
-          Node firstAndNode = node(OGC, "And").build(filterNode);
-          Node notNode = node(OGC, "Not").build(firstAndNode);
-          Node secondAndNode = node(OGC, "And").build(notNode);
-
-          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-
-          Node orNode = node(OGC, "Or").build(secondAndNode);
-          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
-          node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-
-          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
-          node(OGC, "Literal").text("NEVER").build(propEqualToNode);
-          node(OGC, "Literal").text("TRUE").build(propEqualToNode);
-
-          Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
-          node(OGC, "PropertyName").text(attribute).build(propIsBetween);
-          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
-          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
-
-          // Polygon styles
-          Node polySymbolNode = node("PolygonSymbolizer").build(ruleNode);
-          node("Geometry").child(node(OGC, "PropertyName").text("geom")).build(polySymbolNode);
-          Node geomFillNode = node("Fill").build(polySymbolNode);
-          css("fill", currentColorHex).build(geomFillNode);
-          css("fill-opacity", fillOpacity).build(geomFillNode);
-
-          node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(polySymbolNode);
+          
+          Node ruleNode = node("Rule").child(
+              node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+              node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+              node(OGC, "Filter").child(
+                  node(OGC, "And").child(
+                      node(OGC, "Not").child(
+                          node(OGC, "And").child(
+                              node(OGC, "PropertyIsEqualTo").child(
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                              ),
+                              node(OGC, "Or").child(
+                                  node(OGC, "PropertyIsNull").child(
+                                      node(OGC, "PropertyName").text(attribute)
+                                  ),
+                                  node(OGC, "PropertyIsEqualTo").child(
+                                      node(OGC, "Literal").text("NEVER"),
+                                      node(OGC, "Literal").text("TRUE")
+                                  )
+                              )
+                          )
+                      ),
+                      node(OGC, "PropertyIsBetween").child(
+                          node(OGC, "PropertyName").text(attribute),
+                          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
+                          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))
+                      )
+                  )
+              ),
+              node("PolygonSymbolizer").child(
+                  node("Geometry").child(
+                      node(OGC, "PropertyName").text("geom")
+                  ),
+                  node("Fill").child(
+                      css("fill", currentColorHex),
+                      css("fill-opacity", fillOpacity)
+                  ),
+                  node("Stroke").child(
+                      css("stroke", stroke), 
+                      css("stroke-width", width), 
+                      css("stroke-opacity", strokeOpacity))
+              )
+          ).build(root);
 
           // Adding labels
           this.addLabelSymbolizer(ruleNode);
@@ -511,6 +521,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String catTitle;
         String catColor;
         String catOtherCat;
+        String catOtherEnabled = "true";
+        ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
@@ -519,7 +531,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle dTStyle = (DashboardThematicStyle) tStyle;
-          NodeBuilder otherOrNode = node(OGC, "Or");
           NodeBuilder otherPolySymbolNode = node("PolygonSymbolizer");
 
           // ontology logic
@@ -545,12 +556,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               catTitle = catVal;
               catColor = thisObj.getString("color");
               catOtherCat = thisObj.getString("otherCat");
+              catOtherEnabled = thisObj.getString("otherEnabled");
             }
             catch (JSONException e)
             {
               throw new ProgrammingErrorException(e);
             }
 
+            // If not the 'OTHER' category 
             if (catOtherCat == "false")
             {
               if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
@@ -614,69 +627,82 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               //
               this.addLabelSymbolizer(ruleNode);
               
-              // Build 'OTHER' exclusion fragments
-              otherOrNode.child(
-                  node(OGC, "PropertyIsEqualTo").child(
-                      node(OGC, "PropertyName").text(attribute),
-                      node(OGC, "Literal").text(catVal)
-              ));
+              catValTracking.add(catVal);
             }
             else
             {
               // 'OTHER' Polygon styles
-              otherPolySymbolNode.child(
-                  node("Geometry").child(
-                      node(OGC, "PropertyName").text("geom")
-                  ),
-                  node("Fill").child(
-                      css("fill", catColor),  
-                      css("fill-opacity", fillOpacity)
-                  ),
-                  node("Stroke").child(
-                      css("stroke", stroke), 
-                      css("stroke-width", width), 
-                      css("stroke-opacity", strokeOpacity)
-                  )
-               );
+              if(catOtherEnabled == "true")
+              {
+                otherPolySymbolNode.child(
+                    node("Geometry").child(
+                        node(OGC, "PropertyName").text("geom")
+                    ),
+                    node("Fill").child(
+                        css("fill", catColor),  
+                        css("fill-opacity", fillOpacity)
+                    ),
+                    node("Stroke").child(
+                        css("stroke", stroke), 
+                        css("stroke-width", width), 
+                        css("stroke-opacity", strokeOpacity)
+                    )
+                 );
+              }
             }
           }
           
           //
           // Build the 'OTHER' rule 
           //
-          node("Rule").child(
-              node("Name").text("OTHER"),
-              node("Title").text("OTHER"),
-              otherPolySymbolNode.child(
-                  node("Stroke").child(
-                      css("stroke", stroke), 
-                      css("stroke-width", width), 
-                      css("stroke-opacity", strokeOpacity)
-                  )
-               ),
-               node(OGC, "Filter").child(
-                   node(OGC, "And").child(
-                       node(OGC, "PropertyIsEqualTo").child(
-                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                       ),
-                       node(OGC, "Not").child(
-                           otherOrNode.child(
-                               node(OGC, "Or").child(
-                                   node(OGC, "PropertyIsNull").child(
-                                       node(OGC, "PropertyName").text(attribute)
-                                   )
-//                                   ,
-//                                   node(OGC, "PropertyIsEqualTo").child(
-//                                       node(OGC, "PropertyName").text(attribute),
-//                                       node(OGC, "Literal").text("")
-//                                   )
-                               )
-                           )
-                       )
-                   )
-               )
-          ).build(root);
+          if(catOtherEnabled == "true")
+          {
+            NodeBuilder otherOrNode = node(OGC, "Or");
+            
+            // Build 'OTHER' exclusion fragments
+            for(String otherCatVal : catValTracking)
+            {
+              otherOrNode.child(
+                  node(OGC, "PropertyIsEqualTo").child(
+                      node(OGC, "PropertyName").text(attribute),
+                      node(OGC, "Literal").text(otherCatVal)
+              ));
+            }
+          
+            node("Rule").child(
+                node("Name").text("OTHER"),
+                node("Title").text("OTHER"),
+                otherPolySymbolNode.child(
+                    node("Stroke").child(
+                        css("stroke", stroke), 
+                        css("stroke-width", width), 
+                        css("stroke-opacity", strokeOpacity)
+                    )
+                 ),
+                 node(OGC, "Filter").child(
+                     node(OGC, "And").child(
+                         node(OGC, "PropertyIsEqualTo").child(
+                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                         ),
+                         node(OGC, "Not").child(
+                             otherOrNode.child(
+                                 node(OGC, "Or").child(
+                                     node(OGC, "PropertyIsNull").child(
+                                         node(OGC, "PropertyName").text(attribute)
+                                     )
+  //                                   ,
+  //                                   node(OGC, "PropertyIsEqualTo").child(
+  //                                       node(OGC, "PropertyName").text(attribute),
+  //                                       node(OGC, "Literal").text("")
+  //                                   )
+                                 )
+                             )
+                         )
+                     )
+                 )
+            ).build(root);
+          }
           
         }
       }

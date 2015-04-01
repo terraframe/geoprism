@@ -689,8 +689,22 @@
 	                      <div id="gdb-reusable-categories-stroke-cell-holder" class="cell-holder">
 							 <%-- Dynamically inserted with javascript--%>
 	                      </div>
+<!-- 	                      <div class="check-block"> -->
+<%-- 					      	<input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize"> --%>
+<%-- 					        <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label> --%>
+<%-- 					        <mjl:messages attribute="bubbleContinuousSize" classes="error-message"> --%>
+<%-- 					        	<mjl:message /> --%>
+<%-- 					        </mjl:messages> --%>
+<!-- 					      </div> -->
 	                    </div>
-	                  </div>
+	                    <div class="style-options-block">
+	                    
+	                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong>
+						  <div class="check-block">
+					      	<input id="f53" type="checkbox" name="" checked>
+					        <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+					      </div>
+	                    </div>
 	                  
 	                </div>
 	              </div>
