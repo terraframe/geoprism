@@ -1204,8 +1204,12 @@
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         params['style.enableValue'] = params['style.enableValue'].length > 0;
-        params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
+        
+        // Check for existense of dynamic settings which may not exist 
+        if(params['style.bubbleContinuousSize']){
+        	params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+        }
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
         
@@ -1220,8 +1224,10 @@
         });      
         
         
-        var catStyleArr = this._updateCategoriesJSON();
-        params['style.styleCategories'] = JSON.stringify(catStyleArr);
+        if($("#ontology-tree").is(":visible")){
+        	var catStyleArr = this._updateCategoriesJSON();
+        	params['style.styleCategories'] = JSON.stringify(catStyleArr);
+        }
         
         return request;
       },

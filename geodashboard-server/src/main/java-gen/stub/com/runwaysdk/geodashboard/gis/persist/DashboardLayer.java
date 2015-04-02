@@ -45,11 +45,8 @@ import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OrderBy;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.RANK;
 import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.SelectableDecimal;
-import com.runwaysdk.query.SelectableDouble;
-import com.runwaysdk.query.SelectableFloat;
+import com.runwaysdk.query.SelectableNumber;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
@@ -469,7 +466,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
           boolean isAggregate = false;
           
-          if (thematicSel instanceof SelectableDouble || thematicSel instanceof SelectableDecimal || thematicSel instanceof SelectableFloat)
+          if (thematicSel instanceof SelectableNumber)
           {
             if (allAgg.size() == 1)
             {
@@ -546,7 +543,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               
               thematicSel = F.COUNT(thematicAttr, "COUNT");
               AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
-              AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicSel), OrderBy.SortOrder.DESC));
+              AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicAttr), sortOrder));
               
               winFuncQuery.SELECT_DISTINCT(thematicSel);  
               winFuncQuery.SELECT_DISTINCT(stringAgg);
@@ -573,7 +570,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
               innerQuery1.SELECT(outerThematicSel);
               innerQuery1.SELECT(outerLabel);
               innerQuery1.SELECT(outerGeoId);
-              innerQuery1.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", "RANK").EQ(1));
+              innerQuery1.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", rank.getColumnAlias()).EQ(1));
             }
             
             // Assumes isAggregate is true
