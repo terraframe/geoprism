@@ -17,6 +17,7 @@ import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
@@ -37,9 +38,12 @@ import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
+import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
@@ -411,17 +415,17 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
         {
           DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
           String attribute = tStyle.getAttribute();
-          MdAttributeDAOIF mdAttributeDAO = tStyle.getMdAttributeDAO();
+          MdAttributeDAOIF mdAttributeDAOIF = tStyle.getMdAttributeDAO();
 
-          MdClassDAOIF mdClass = mdAttributeDAO.definedByClass();
+          MdClassDAOIF mdClass = mdAttributeDAOIF.definedByClass();
 
           GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, factory);
 
           // thematic attribute
-          String attributeName = mdAttributeDAO.definesAttribute();
-          String displayLabel = mdAttributeDAO.getDisplayLabel(Session.getCurrentLocale());
+          String attributeName = mdAttributeDAOIF.definesAttribute();
+          String displayLabel = mdAttributeDAOIF.getDisplayLabel(Session.getCurrentLocale());
 
-          Attribute thematicAttr = QueryUtil.get(query, attributeName);
+          SelectableSingle thematicAttr = QueryUtil.get(query, attributeName);
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
 
@@ -536,10 +540,23 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
                 // func = "MINORITY";
                 sortOrder = OrderBy.SortOrder.ASC;
               }
-
+              
               isAggregate = true;
               
               ValueQuery winFuncQuery = new ValueQuery(factory);
+              
+              if (mdAttributeDAOIF.getMdAttributeConcrete() instanceof MdAttributeTermDAOIF)
+              {
+                MdAttributeTermDAOIF mdAttributeTermDAOIF = (MdAttributeTermDAOIF)mdAttributeDAOIF.getMdAttributeConcrete();
+                if (mdAttributeTermDAOIF.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
+                {
+                  AttributeReference thematicTerm = (AttributeReference)thematicAttr;
+                  
+                  ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
+                  winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
+                  thematicAttr = classifierQ.getDisplayLabel().localize();
+                }
+              }
               
               thematicSel = F.COUNT(thematicAttr, "COUNT");
               AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
