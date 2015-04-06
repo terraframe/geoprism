@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/base"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java-gen/stub"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
         <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/com/runwaysdk/runwaysdk-gis-web/1.8.1-SNAPSHOT/runwaysdk-gis-web-1.8.1-SNAPSHOT.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
             <dependency-type>consumes</dependency-type>
         </dependent-module>
