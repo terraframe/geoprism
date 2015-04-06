@@ -138,6 +138,15 @@ public class GeoserverProperties implements Reloadable
   }
   
   /**
+   * Labeling VendorOption
+   * autoWrap
+   * http://docs.geoserver.org/latest/en/user/styling/sld-reference/labeling.html
+   */
+  public static String getLabelAutoWrap() {
+    return getBundle().getString("geoserver.labeling.autoWrap");
+  }
+  
+  /**
    * Returns the Geoserver REST publisher.
    * 
    * @return

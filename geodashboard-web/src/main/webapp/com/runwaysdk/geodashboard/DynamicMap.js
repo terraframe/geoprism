@@ -177,21 +177,20 @@
          styleArr.catLiElems = [];
          
          if($("#ontology-tree").length > 0) {
-           //
-           // TODO: TEST ONTOLOGY TREE SCRAPING CODE
-           //
              var allElem = $(".ontology-category-color-icon");
              for(var e=0; e<allElem.length; e++){
                var rwId = allElem[e].dataset.rwid;
                // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
                if(rwId.indexOf("PHANTOM") === -1){
                  var theElem = allElem[e];
-                 var theColor = rgb2hex($(theElem).css("background-color"));
                  
                  var liObj = new Object();
-                 liObj.id = theElem.dataset.rwid;
-                 liObj.color = theColor;
-                 ontTreeStyleArr.catLiElems.push(liObj);                   
+                 liObj.id = theElem.dataset.rwid; 
+                 liObj.val = theElem.parentElement.previousSibling.textContent;
+                 liObj.color = rgb2hex($(theElem).css("background-color"));
+                 liObj.isOntologyCat = true;
+                 
+                 styleArr.catLiElems.push(liObj);     
                }
              }
          }
@@ -223,6 +222,8 @@
                  else{
                 	 liObj.otherCat = false;
                  }
+                 liObj.isOntologyCat = false;
+                 
                  styleArr.catLiElems.push(liObj);                   
              }
            }
@@ -960,7 +961,6 @@
           this._LayerController.edit(new Mojo.ClientRequest({
             onSuccess : function(html){
               that._displayLayerForm(html);
-              that._addCategoryAutoComplete();
               that._addLayerFormControls();
             },
             onFailure : function(e){
@@ -1179,6 +1179,7 @@
               // we got html back, meaning there was an error
               
               that._displayLayerForm(htmlOrJson);
+              that._addLayerFormControls();
               $(DynamicMap.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
             }
           },
@@ -1223,8 +1224,7 @@
           }
         });      
         
-        
-        if($("#ontology-tree").is(":visible")){
+        if($("#tab004categories").is(":visible")){
         	var catStyleArr = this._updateCategoriesJSON();
         	params['style.styleCategories'] = JSON.stringify(catStyleArr);
         }
@@ -1292,7 +1292,8 @@
         // the SATELLITE layer has all 22 zoom level, so we add it first to
         // become the internal base layer that determines the zoom levels of the
         // map.
-        var gsat = new L.Google('SATELLITE');         
+    	  
+        //var gsat = new L.Google('SATELLITE');         
         var gphy = new L.Google('TERRAIN');       
         var gmap = new L.Google('ROADMAP');       
         var ghyb = new L.Google('HYBRID');
@@ -1300,7 +1301,7 @@
         var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
         osm._gdbcustomtype = 'OSM';
         
-        var base = [gmap, gsat, ghyb, gphy, osm];
+        var base = [osm, gmap, ghyb, gphy];
         
         return base;
       },
@@ -1578,6 +1579,26 @@
       
       _addLayerFormControls : function(){
     	  
+//          if($("#tab004categories").is(":visible")){
+              if($("#ontology-tree").length > 0){
+            	  this._renderLayerTermTree();
+              }
+              else{
+            	  this._addCategoryAutoComplete();
+            	  
+                  // category 'other' option
+                  $("#f53").change(function() {
+                      if($(this).is(":checked")) {
+                    	  $("#cat-other").parent().parent().show();
+                      }
+                      else{
+                    	  $("#cat-other").parent().parent().hide();
+                      }     
+                  });
+              }
+              this._addExistingCategoriesToUi();
+//          }
+    	  
           // ontology category layer type colors
           $(".category-color-icon").colpick({
             submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
@@ -1585,16 +1606,6 @@
               $(el).css('background','#'+hex);
               $(el).find('.color-input').attr('value', '#'+hex);
             }
-          });
-          
-          // category 'other' option
-          $("#f53").change(function() {
-              if($(this).is(":checked")) {
-            	  $("#cat-other").parent().parent().show();
-              }
-              else{
-            	  $("#cat-other").parent().parent().hide();
-              }     
           });
       },
       
@@ -1690,8 +1701,6 @@
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
-            
-            that._addCategoryAutoComplete();
             that._addLayerFormControls();
             
             //
@@ -1759,9 +1768,6 @@
           }
         });
         
-        // Populate existing categories on saved layers for the layer create/edit form
-        this._addExistingCategoriesToUi();
-        
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
           var value = $(this).val();
@@ -1781,6 +1787,80 @@
         modal.modal('show');
       },
       
+      /**
+       * Renders the term tree on the layer form for ontology categories
+       * 
+       */
+      _renderLayerTermTree : function() {
+    	  var that = this;
+    	  
+	  	  var rootsJSON = $("#ontology-tree").data("roots");
+		  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+		      termType : $("#ontology-tree").data("termtype"),
+		      relationshipTypes : [ $("#ontology-tree").data("reltype") ],
+		      rootTerms : rootsJSON.roots,
+		      editable : false,
+		      slide : false,
+		      selectable : false,
+		      onCreateLi: function(node, $li) {
+				  var nodeId = node.id;
+
+				  var catColor = that._getCategoryColor(nodeId);
+				  
+				  var thisLi = $.parseHTML(
+				          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+           			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+           			  '</a>');
+
+		          // Add the color icon for category ontology nodes			        
+		          $li.find('> div').append(thisLi)
+		          
+		          // ontology category layer type colors
+			      $(thisLi).find("span").colpick({
+			      		submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+			           	onChange: function(hsb,hex,rgb,el,bySetColor) {
+				            		var hexStr = '#'+hex;
+				            		$(el).css('background', hexStr);
+				            		$(el).next(".color-input").attr('value', hexStr);            			            		
+				            	}
+			       });
+		      },
+		      /* checkable: true, */
+			  crud: {
+			      create: { // This configuration gets merged into the jquery create dialog.
+			        height: 320
+			      },
+			      update: {
+			        height: 320
+			      }
+			  }
+		  });
+		  tree.render("#ontology-tree");
+      },
+      
+      /**
+       * Gets the hex color code for an ontology category based on the node id 
+       * 
+       * @paarm nodeId - id of the node in the ui to get the color for.
+       */
+      _getCategoryColor : function(nodeId) {
+    	  	var catsJSONObj = $("#categories-input").data("categoriesstore");
+	        if(catsJSONObj){
+	          var catsJSONArr = catsJSONObj.catLiElems;
+	          if($("#ontology-tree").length > 0){
+		    	  for(var i=0; i<catsJSONArr.length; i++){
+		              var cat = catsJSONArr[i];
+		              var catId = cat.id;
+		              if(catId === nodeId){
+		            	  return cat.color;
+		              }
+		    	  }
+	          }
+	        }
+	        // if no match is found return the default
+	    	return "#00bfff";
+      },
+      
       
       /**
        * Adds the value and color setting for saved categories on the layer create/edit form.
@@ -1789,15 +1869,11 @@
        */
       _addExistingCategoriesToUi : function() {
         var catsJSONObj = $("#categories-input").data("categoriesstore");
+        var catsJSONArr = catsJSONObj.catLiElems;
+        
         if(catsJSONObj){
-          if($("#ontology-tree").length > 0){
-            //
-            // TODO: ADD ONTOLOGY TREE CODE
-            //
-          }
-          else{
+          if($("#ontology-tree").length === 0){
         	var catInputId;
-            var catsJSONArr = catsJSONObj.catLiElems;
             var catOtherEnabled = true;
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
@@ -1816,8 +1892,8 @@
               catOtherEnabled = cat.otherEnabled;
             }
             
-            // Simulate a checkbox click to turn off the checkbox if the other option is disabled
-            // The other option is checked by default making this a valid sequence
+            // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
+            // The 'other' option is checked by default making this a valid sequence
             if(!catOtherEnabled){
             	$("#f53").click();
             	$("#cat-other").parent().parent().hide();

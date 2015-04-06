@@ -2325,7 +2325,7 @@ otherwise they will overrun the page when there's too many options.
 This MUST override the inline styles on the DOM hence !important.
 */
 div.drop-holder {
-	height: 100px;
+	max-height: 100px;
 	overflow: auto !important;
 }
 
@@ -2505,6 +2505,7 @@ span.select-area span.center {
 	
 	#legend-collapse-container.accordion.info-box {
 		padding: 2px;
+		max-width: 235px;
 	}
 	
 	#legend-container-group {
@@ -2570,7 +2571,7 @@ span.select-area span.center {
 *
 */
 	.modal-form .category-block {
-		height: 240px;
+/* 		height: 240px; */
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		padding: 0;

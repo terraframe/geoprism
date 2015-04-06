@@ -429,35 +429,6 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           // use the basic Selectable if no aggregate is selected
           Selectable thematicSel = thematicAttr;
 
-          // If we doing a bubble/gradient map with a min/max add window aggregations
-          // to provide the min and max of the attribute.
-          // AllLayerType layerType = this.getLayerType().get(0);
-          // if(layerType == AllLayerType.BUBBLE)
-          // {
-          // String minCol = SLDConstants.getMinProperty(attribute);
-          // String maxCol = SLDConstants.getMaxProperty(attribute);
-          //
-          // Selectable min = v.aSQLAggregateDouble(minCol, "MIN("+thematicSel.getDbQualifiedName()+") OVER()", minCol);
-          // min.setColumnAlias(minCol);
-          //
-          // Selectable max = v.aSQLAggregateDouble(maxCol, "MAX("+thematicSel.getDbQualifiedName()+") OVER()", maxCol);
-          // max.setColumnAlias(maxCol);
-          //
-          // v.SELECT(min, max);
-          //
-          // // Because we're using the window functions we must group by the thematic variable, or rather an alias to
-          // it
-          // SelectableSingle groupBy = v.aSQLDouble(thematicSel.getResultAttributeName()+"_GROUP_BY",
-          // thematicSel.getDbQualifiedName());
-          // groupBy.setColumnAlias(thematicSel.getDbQualifiedName());
-          // v.GROUP_BY(groupBy);
-          //
-          // // Don't include null values in bubble/gradient maps as it throws errors in geoserver (maybe there's an SLD
-          // trick for this)
-          // v.WHERE(v.aSQLCharacter("null_check", thematicAttr.getDbQualifiedName()+" IS NOT NULL").EQ("true"));
-          // }
-
-
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
           SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);

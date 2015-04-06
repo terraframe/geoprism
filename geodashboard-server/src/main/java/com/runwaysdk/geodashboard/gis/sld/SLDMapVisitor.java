@@ -528,7 +528,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   node("Stroke").child(
                       css("stroke", stroke), 
                       css("stroke-width", width), 
-                      css("stroke-opacity", strokeOpacity))
+                      css("stroke-opacity", strokeOpacity)
+                  )
               )
           ).build(root);
 
@@ -542,8 +543,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String catVal;
         String catTitle;
         String catColor;
-        String catOtherCat;
-        String catOtherEnabled = "true";
+        boolean catOtherCat = false;
+        boolean catOtherEnabled = true;
+        boolean isOntologyCat;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicStyle tStyle = (ThematicStyle) style;
@@ -557,179 +559,215 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           // ontology logic
           String cats = dTStyle.getStyleCategories();
-
-          try
-          {
-            JSONObject catsJSON = new JSONObject(cats);
-            catsArrJSON = catsJSON.getJSONArray("catLiElems");
-          }
-          catch (JSONException e)
-          {
-            throw new ProgrammingErrorException(e);
-          }
-
-          // SLD for all the categories scraped from the client
-          for (int i = 0; i < catsArrJSON.length(); i++)
+          if(cats.length() > 0)
           {
             try
             {
-              JSONObject thisObj = catsArrJSON.getJSONObject(i);
-              catVal = thisObj.getString("val");
-              catTitle = catVal;
-              catColor = thisObj.getString("color");
-              catOtherCat = thisObj.getString("otherCat");
-              catOtherEnabled = thisObj.getString("otherEnabled");
+              JSONObject catsJSON = new JSONObject(cats);
+              catsArrJSON = catsJSON.getJSONArray("catLiElems");
             }
             catch (JSONException e)
             {
-              throw new ProgrammingErrorException(e);
+              throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
             }
-
-            // If not the 'OTHER' category 
-            if (catOtherCat == "false")
+  
+            // SLD for all the categories scraped from the client
+            for (int i = 0; i < catsArrJSON.length(); i++)
             {
-              if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+              try
               {
-                try
+                JSONObject thisObj = catsArrJSON.getJSONObject(i);
+                catVal = thisObj.getString("val");
+                catTitle = catVal;
+                catColor = thisObj.getString("color");
+                isOntologyCat = thisObj.getBoolean("isOntologyCat");
+                
+                if(isOntologyCat == false)
                 {
-                  catTitle = formatter.format(new Double(catVal));
-                }
-                catch (Exception e)
-                {
-                  // The category isn't actually a number so it can't be localized
+                  // 'other' attributes only relevant for non-ontology categories
+                  catOtherCat = thisObj.getBoolean("otherCat");
+                  catOtherEnabled = thisObj.getBoolean("otherEnabled");
                 }
               }
+              catch (JSONException e)
+              {
+                String msg = "Can not parse JSON during SLD generation.";
+                throw new ProgrammingErrorException(msg, e);
+              }
   
-              Node ruleNode = node("Rule").child(
-                  node("Name").text(catVal),
-                  node("Title").text(catTitle),
-                  node(OGC, "Filter").child(
-                      node(OGC, "And").child(
-                          node(OGC, "PropertyIsEqualTo").child(
-                              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                          ),
-                          node(OGC, "And").child(
-                              node(OGC, "Not").child(
-                                  node(OGC, "Or").child(
-                                      node(OGC, "PropertyIsNull").child(
-                                          node(OGC, "PropertyName").text(attribute)
-                                      ),
-                                      node(OGC, "PropertyIsEqualTo").child(
-                                          node(OGC, "Literal").text("NEVER"),
-                                          node(OGC, "Literal").text("TRUE")
-                                      )
-                                  )
-                              ),
-                              node(OGC, "PropertyIsEqualTo").child(
-                                  node(OGC, "PropertyName").text(attribute),
-                                  node(OGC, "Literal").text(catVal)
-                              )
-                          )
-                      )
-                  ),
-                  node("PolygonSymbolizer").child(
+              // If not the 'OTHER' category 
+              if (catOtherCat == false)
+              {
+                if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+                {
+                  try
+                  {
+                    catTitle = formatter.format(new Double(catVal));
+                  }
+                  catch (Exception e)
+                  {
+                    // The category isn't actually a number so it can't be localized
+                  }
+                }
+    
+                Node ruleNode = node("Rule").child(
+                    node("Name").text(catVal),
+                    node("Title").text(catTitle),
+                    node(OGC, "Filter").child(
+                        node(OGC, "And").child(
+                            node(OGC, "PropertyIsEqualTo").child(
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                            ),
+                            node(OGC, "And").child(
+                                node(OGC, "Not").child(
+                                    node(OGC, "Or").child(
+                                        node(OGC, "PropertyIsNull").child(
+                                            node(OGC, "PropertyName").text(attribute)
+                                        ),
+                                        node(OGC, "PropertyIsEqualTo").child(
+                                            node(OGC, "Literal").text("NEVER"),
+                                            node(OGC, "Literal").text("TRUE")
+                                        )
+                                    )
+                                ),
+                                node(OGC, "PropertyIsEqualTo").child(
+                                    node(OGC, "PropertyName").text(attribute),
+                                    node(OGC, "Literal").text(catVal)
+                                )
+                            )
+                        )
+                    ),
+                    node("PolygonSymbolizer").child(
+                        node("Geometry").child(
+                            node(OGC, "PropertyName").text("geom")
+                        ),
+                        node("Fill").child(
+                            css("fill", catColor),
+                            css("fill-opacity", fillOpacity)
+                        ),
+                        node("Stroke").child(
+                             css("stroke", stroke), 
+                             css("stroke-width", width), 
+                             css("stroke-opacity", strokeOpacity)
+                        )
+                    )
+                ).build(root);
+    
+                //
+                // Adding labels
+                //
+                this.addLabelSymbolizer(ruleNode);
+                
+                catValTracking.add(catVal);
+              }
+              else
+              {
+                // 'OTHER' Polygon styles
+                if(catOtherEnabled == true)
+                {
+                  otherPolySymbolNode.child(
                       node("Geometry").child(
                           node(OGC, "PropertyName").text("geom")
                       ),
                       node("Fill").child(
-                          css("fill", catColor),
+                          css("fill", catColor),  
                           css("fill-opacity", fillOpacity)
                       ),
                       node("Stroke").child(
-                           css("stroke", stroke), 
-                           css("stroke-width", width), 
-                           css("stroke-opacity", strokeOpacity)
+                          css("stroke", stroke), 
+                          css("stroke-width", width), 
+                          css("stroke-opacity", strokeOpacity)
                       )
-                  )
-              ).build(root);
-  
-              //
-              // Adding labels
-              //
-              this.addLabelSymbolizer(ruleNode);
-              
-              catValTracking.add(catVal);
+                   );
+                }
+              }
             }
-            else
+            
+            //
+            // Build the 'OTHER' rule 
+            //
+            if(catOtherEnabled == true)
             {
-              // 'OTHER' Polygon styles
-              if(catOtherEnabled == "true")
+              NodeBuilder otherOrNode = node(OGC, "Or");
+              
+              // Build 'OTHER' exclusion fragments
+              for(String otherCatVal : catValTracking)
               {
-                otherPolySymbolNode.child(
+                otherOrNode.child(
+                    node(OGC, "PropertyIsEqualTo").child(
+                        node(OGC, "PropertyName").text(attribute),
+                        node(OGC, "Literal").text(otherCatVal)
+                ));
+              }
+            
+              node("Rule").child(
+                  node("Name").text("OTHER"),
+                  node("Title").text("OTHER"),
+                  otherPolySymbolNode.child(
+                      node("Stroke").child(
+                          css("stroke", stroke), 
+                          css("stroke-width", width), 
+                          css("stroke-opacity", strokeOpacity)
+                      )
+                   ),
+                   node(OGC, "Filter").child(
+                       node(OGC, "And").child(
+                           node(OGC, "PropertyIsEqualTo").child(
+                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                           ),
+                           node(OGC, "Not").child(
+                               otherOrNode.child(
+                                   node(OGC, "Or").child(
+                                       node(OGC, "PropertyIsNull").child(
+                                           node(OGC, "PropertyName").text(attribute)
+                                       )
+    //                                   ,
+    //                                   node(OGC, "PropertyIsEqualTo").child(
+    //                                       node(OGC, "PropertyName").text(attribute),
+    //                                       node(OGC, "Literal").text("")
+    //                                   )
+                                   )
+                               )
+                           )
+                       )
+                   )
+              ).build(root);
+            }
+          }
+          else
+          {
+            //
+            // The categories data does not exist.  Rather than throwing an error which will make the map unusable
+            // and prevent the user from fixing the issue without help from a developer we will render basic polygons.
+            // This isn't the prettiest ways to handle this but helps to maintain app uptime in obscure situations.
+            //
+            Node ruleNode = node("Rule").child(
+                node("Name").text("basic"),
+                node("Title").text("basic"),
+                node("PolygonSymbolizer").child(
                     node("Geometry").child(
                         node(OGC, "PropertyName").text("geom")
                     ),
                     node("Fill").child(
-                        css("fill", catColor),  
-                        css("fill-opacity", fillOpacity)
+                        css("fill", "#E60000"),
+                        css("fill-opacity", "0.6")
                     ),
                     node("Stroke").child(
-                        css("stroke", stroke), 
-                        css("stroke-width", width), 
-                        css("stroke-opacity", strokeOpacity)
+                        css("stroke", "#8A0000"), 
+                        css("stroke-width", "1"), 
+                        css("stroke-opacity", "0.6")
                     )
-                 );
-              }
-            }
-          }
-          
-          //
-          // Build the 'OTHER' rule 
-          //
-          if(catOtherEnabled == "true")
-          {
-            NodeBuilder otherOrNode = node(OGC, "Or");
-            
-            // Build 'OTHER' exclusion fragments
-            for(String otherCatVal : catValTracking)
-            {
-              otherOrNode.child(
-                  node(OGC, "PropertyIsEqualTo").child(
-                      node(OGC, "PropertyName").text(attribute),
-                      node(OGC, "Literal").text(otherCatVal)
-              ));
-            }
-          
-            node("Rule").child(
-                node("Name").text("OTHER"),
-                node("Title").text("OTHER"),
-                otherPolySymbolNode.child(
-                    node("Stroke").child(
-                        css("stroke", stroke), 
-                        css("stroke-width", width), 
-                        css("stroke-opacity", strokeOpacity)
-                    )
-                 ),
-                 node(OGC, "Filter").child(
-                     node(OGC, "And").child(
-                         node(OGC, "PropertyIsEqualTo").child(
-                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                         ),
-                         node(OGC, "Not").child(
-                             otherOrNode.child(
-                                 node(OGC, "Or").child(
-                                     node(OGC, "PropertyIsNull").child(
-                                         node(OGC, "PropertyName").text(attribute)
-                                     )
-  //                                   ,
-  //                                   node(OGC, "PropertyIsEqualTo").child(
-  //                                       node(OGC, "PropertyName").text(attribute),
-  //                                       node(OGC, "Literal").text("")
-  //                                   )
-                                 )
-                             )
-                         )
-                     )
-                 )
+                )
             ).build(root);
+            
           }
-          
         }
       }
       else
-      {  // Basic polygon
+      {  
+        // Basic polygon
         Node ruleNode = node("Rule").child(
             node("Name").text("basic"),
             node("Title").text("basic"),
@@ -881,6 +919,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       node("VendorOption").attr("name", "conflict-resolution").text(GeoserverProperties.getLabelConflictResolution()).build(root);
       node("VendorOption").attr("name", "spaceAround").text(GeoserverProperties.getLabelSpaceAround()).build(root);
       node("VendorOption").attr("name", "goodnessOfFit").text(GeoserverProperties.getLabelGoodnessOfFit()).build(root);
+      node("VendorOption").attr("name", "autoWrap").text(GeoserverProperties.getLabelAutoWrap()).build(root);
 
       return root;
     }
