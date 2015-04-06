@@ -165,9 +165,18 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       Node format = node(OGC, "Literal").text(pattern).build();
       Node property = this.getBasicPropertyValueNode(tStyle);
 
-      Node function = node(OGC, "Function").attr("name", "dateFormat").build();
-      function.appendChild(format);
-      function.appendChild(property);
+      Node function = node(OGC, "Function").attr("name", "if_then_else").child(
+          node(OGC, "Function").attr("name", "isNull").child(
+              this.getBasicPropertyValueNode(tStyle)
+          ),
+          node(OGC, "Literal").text(""),
+          node(OGC, "Function").attr("name", "dateFormat").child(
+              format, 
+              property
+          )
+      ).build();
+//      function.appendChild(format);
+//      function.appendChild(property);
 
       return function;
     }
