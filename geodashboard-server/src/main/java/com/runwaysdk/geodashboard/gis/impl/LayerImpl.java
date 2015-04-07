@@ -25,6 +25,10 @@ public class LayerImpl extends ComponentImpl implements Layer
   private Boolean                 displayInLegend;
 
   private FeatureStrategy         featureStrategy;
+  
+  private Integer                 pointFixedSize;
+  
+  private Boolean                 pointFixed;
 
   public LayerImpl()
   {

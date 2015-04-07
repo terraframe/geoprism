@@ -18,6 +18,10 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Integer   pointMinSize;
 
   private Integer   pointMaxSize;
+  
+  private Integer   pointFixedSize;
+  
+  private Boolean   pointFixed;
 
   private String    styleCategories;
   
@@ -130,5 +134,17 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public Boolean getBubbleContinuousSize()
   {
     return this.bubbleContinuousSize;
+  }
+  
+  @Override
+  public Integer getPointFixedSize()
+  {
+    return this.pointFixedSize;
+  }
+  
+  @Override
+  public Boolean getPointFixed()
+  {
+    return this.pointFixed;
   }
 }

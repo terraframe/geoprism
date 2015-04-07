@@ -466,7 +466,10 @@
 			                    <c:when test="${'true' == isOntologyAttribute || 'true' == isTextAttribute}">
 			                    	<div class="cell">
 			                          <label for="f79">${style.pointFixedSizeMd.displayLabel}</label>
-			                          <div class="text"><input id="f79" name="style.${style.pointFixedSizeMd.name}" type="text" value="${style.pointFixedSize}"></div>
+			                          <div class="text">
+			                          	<input id="f79" name="style.${style.pointFixedSizeMd.name}" type="text" value="${style.pointFixedSize}">
+			                          </div>
+			                          <input type="hidden" class="" name="style.${style.pointFixedMd.name}" value="${style.pointFixed}" />
 			                        </div>
 		                        </c:when>
 		                        <c:otherwise>
@@ -495,6 +498,9 @@
 	                      </div>
 	                    </div>
 	                  </div>
+	                  
+	                  
+	                  
 	                  
 	                  
 	                  <!-- GRADIENT -->

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1312213570)
+@com.runwaysdk.business.ClassSignature(hash = 1221631593)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = -1312213570;
+  private static final long serialVersionUID = 1221631593;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -30,6 +30,7 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTFIXED = "pointFixed";
   public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
   public static java.lang.String POINTMINSIZE = "pointMinSize";
@@ -167,6 +168,43 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public Boolean getPointFixed()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(POINTFIXED));
+  }
+  
+  public void setPointFixed(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(POINTFIXED, "");
+    }
+    else
+    {
+      setValue(POINTFIXED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isPointFixedWritable()
+  {
+    return isWritable(POINTFIXED);
+  }
+  
+  public boolean isPointFixedReadable()
+  {
+    return isReadable(POINTFIXED);
+  }
+  
+  public boolean isPointFixedModified()
+  {
+    return isModified(POINTFIXED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getPointFixedMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(POINTFIXED).getAttributeMdDTO();
   }
   
   public Integer getPointFixedSize()

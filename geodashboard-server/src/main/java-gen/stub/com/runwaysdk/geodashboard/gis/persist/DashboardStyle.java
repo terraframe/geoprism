@@ -117,11 +117,11 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     {
       QueryFactory f = new QueryFactory();
       q = new AggregationTypeQuery(f);
-      q.WHERE(q.getEnumName().EQ(AllAggregationType.MINORITY.name()));
-      q.OR(q.getEnumName().EQ(AllAggregationType.MAJORITY.name()));
+      q.WHERE(q.getEnumName().EQ(AllAggregationType.MAJORITY.name()));
+      q.OR(q.getEnumName().EQ(AllAggregationType.MINORITY.name()));
       // // We are currently not supporting distribution but want to leave this hear for future implementation
       // q.OR(q.getEnumName().EQ(AllAggregationType.DISTRIBUTION.name()));
-      q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+      //q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     }
     else
     {
@@ -131,7 +131,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       q.OR(q.getEnumName().EQ(AllAggregationType.AVG.name()));
       q.OR(q.getEnumName().EQ(AllAggregationType.MIN.name()));
       q.OR(q.getEnumName().EQ(AllAggregationType.MAX.name()));
-      q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+      //q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     }
 
     return q;

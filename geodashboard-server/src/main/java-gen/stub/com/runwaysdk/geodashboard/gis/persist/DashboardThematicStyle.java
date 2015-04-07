@@ -50,6 +50,8 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
     {
       JSONObject json = new JSONObject();
       json.put("mdAttribute", this.getMdAttribute().getId());
+      json.put("bubbleContinuousSize", this.getBubbleContinuousSize());
+      json.put("attributeType", this.getAttributeType());
 
       return json;
     }
