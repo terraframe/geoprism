@@ -999,6 +999,58 @@
         }
       },
       
+      /*
+       * Format dates
+       * 
+       */
+      _formatDate : function(value) {
+          
+          if(this._dateFormatter == null) {
+            this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
+          }
+          
+          if(value != null) {
+            return this._dateFormatter(value);          
+          }
+          
+          return null;
+        },
+        
+        /*
+         * Format date/times
+         * 
+         */
+        _formatDateTime : function(value) {
+          
+          if(this._dateTimeFormatter == null) {
+            this._dateTimeFormatter = Globalize.dateFormatter({ dateTime: "short" });                         
+          }
+          
+          if(value != null) {        
+            return this._dateTimeFormatter(value);
+          }
+          
+          return null;          
+        },
+        
+        /*
+         * Format time
+         * 
+         */
+        _formatTime : function(value) {
+          
+          if(this._timeFormatter == null) {
+            this._timeFormatter = Globalize.dateFormatter({ time: "short" });                         
+          }
+          
+          if(value != null) {                
+            return this._timeFormatter(value);
+          }
+        
+          return null;
+        },
+
+      
       /**
        * Performs the identify request when a user clicks on the map
        * 
@@ -1043,15 +1095,8 @@
               }
               else{
                 layerStringList += layerId;
-                  
-                // we currently only map against a single attribute for a map.  
-                // if we allow multiple attributes mapped in a map the assignment of
-                // aggregationAttr will need to be refactored to associate a layers
-                // identify request with the appropriate aggregationAttr for that layer
-//                aggregationAttr = layer.getAggregationAttribute().toLowerCase();
                 firstAdded = true;
               }
-//              aggregationAttr = layer.getAggregationAttribute().toLowerCase();
               aggregationAttrArr.push(layer.getAggregationAttribute().toLowerCase());
 
             }
@@ -1100,6 +1145,11 @@
               
               if(typeof currAttributeVal === 'number'){
                 currAttributeVal = that._formatter(currAttributeVal);
+              }
+              else if(!isNaN(Date.parse(currAttributeVal))){
+            	  var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
+            	  var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
+            	  currAttributeVal = that._formatDate(parsedAttr);
               }
               
               popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
