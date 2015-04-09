@@ -343,12 +343,21 @@ public class GeodashboardSelectionPageHelper
             {
               monitor.beginTask(GeodashboardPlugin.getResourceString("connection.testing"), IProgressMonitor.UNKNOWN);
 
-              DriverLoader.testConnection(connectionUrl, userid, passwd, collectSpecifiedProperties());
+              try
+              {
+                DriverLoader.testConnection(connectionUrl, userid, passwd, collectSpecifiedProperties());
+              }
+              catch (OdaException e)
+              {
+                ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
+                    GeodashboardPlugin.getResourceString("connection.failed"), e);
+              }
             }
           });
 
           MessageDialog.openInformation(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
               GeodashboardPlugin.getResourceString("connection.success"));//$NON-NLS-1$
+
         }
         catch (Exception e)
         {
@@ -418,8 +427,8 @@ public class GeodashboardSelectionPageHelper
   }
 
   /**
-   * This method should be called in the following occations: 1. The value of
-   * inputed URL, username is changed 2. When the control is created.
+   * This method should be called in the following occations: 1. The value of inputed URL, username is changed 2. When
+   * the control is created.
    */
   private void updateTestButton()
   {

@@ -61,7 +61,6 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.util.IDGenerator;
-// import org.hsqldb.lib.HashMap;
 
 public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
