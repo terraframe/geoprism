@@ -2516,7 +2516,7 @@ span.select-area span.center {
 		/* 	margin: 5px 5px 5px auto; */
 	}
 	
-	#collapse-legend{
+	#collapse-legend.accordion-body.in{
   		overflow-y: auto;
   		overflow-x: hidden;
   		max-height: 300px;

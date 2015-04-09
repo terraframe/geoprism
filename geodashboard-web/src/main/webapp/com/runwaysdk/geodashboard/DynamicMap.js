@@ -323,7 +323,7 @@
         this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
         
         // Add attribution to the map
-        this._map.attributionControl.setPrefix('');
+        this._map.attributionControl.setPrefix("");
         //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
@@ -806,17 +806,28 @@
             var viewName = layer.getViewName();
             var displayName = layer.getLayerName() || "N/A";
             var geoserverName = this._workspace + ":" + viewName;
-            var mapBounds = this._map.getBounds();
-            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
               
-            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-              layers: geoserverName,
-              format: 'image/png',
-              transparent: true,
-              tiled: true,
-              tilesorigin: mapSWOrigin,
-              styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
-            });
+            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
+                layers: geoserverName,
+                format: 'image/png',
+                transparent: true,
+                styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+              });
+            
+            // This tiling formt (tileLayer) is the preferred way to render wms due to performance gains. 
+            // However, since bubbles are clipped by the differences between tiles we must render layers as a single tile. 
+            // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
+            //var mapBounds = this._map.getBounds();
+            //var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+            //var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+              //layers: geoserverName,
+              //format: 'image/png',
+              //transparent: true,
+              //tiled: true,
+              //tileSize: 256,
+              //tilesorigin: mapSWOrigin,
+              //styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+            //});
             
             this._map.addLayer(leafletLayer);
                      
@@ -1146,7 +1157,7 @@
               if(typeof currAttributeVal === 'number'){
                 currAttributeVal = that._formatter(currAttributeVal);
               }
-              else if(!isNaN(Date.parse(currAttributeVal))){
+              else if(!isNaN(Date.parse(currAttributeVal.substring(0, currAttributeVal.length - 1)))){
             	  var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
             	  var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
             	  currAttributeVal = that._formatDate(parsedAttr);
