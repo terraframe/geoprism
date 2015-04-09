@@ -29,5 +29,9 @@ public interface ThematicStyle extends Style
   public AttributeType getAttributeType();
   
   public Boolean getBubbleContinuousSize();
+  
+  public Integer getPointFixedSize();
+  
+  public Boolean getPointFixed();
 
 }

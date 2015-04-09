@@ -469,7 +469,7 @@
        * @featureStrategy - strategy descriptor used to define the strategy for mapping layers (BASIC, BUBBLE, GRADIENT, CATEGORY)
        * 
        */
-      _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy) {
+      _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy, showFeatureLabels) {
         this.legendId = "legend_" + layerId;
         this.displayName = displayName;
         this.geoserverName = geoserverName;
@@ -477,6 +477,7 @@
         this.legendYPosition = legendYPosition;
         this.groupedInLegend = groupedInLegend;
         this.featureStrategy = featureStrategy;
+        this.showFeatureLabels = showFeatureLabels
         this.create = function(){
             var src = window.location.origin; 
             src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
@@ -485,7 +486,7 @@
             src += '&TRANSPARENT=true&LEGEND_OPTIONS=fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;';
             
             // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-            if(this.featureStrategy !== "BASIC"){
+            if(this.showFeatureLabels){
               src += 'forceLabels:on;';
             }
             src += '&amp;';
@@ -616,6 +617,20 @@
                 var legendYPosition = layer.getLegendYPosition();
                 var groupedInLegend = layer.getGroupedInLegend();
                 var featureStrategy = layer.getFeatureStrategy();
+                if(featureStrategy === "BASIC"){
+                	var showFeatureLabels = false;
+                }
+                else if(featureStrategy === "BUBBLE" && layer.style.attributeType === "BASIC"){
+                	// The label should be hidden when mapping bubbles against a text or term attribute.
+                	var showFeatureLabels = false;
+                }
+                else if(featureStrategy === "BUBBLE" && layer.style.bubbleContinuousSize && layer.style.attributeType !== "BASIC"){
+                	// The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
+                	var showFeatureLabels = true;
+                }
+                else{
+                	var showFeatureLabels = true;
+                }
                 
                 var legendObj = new this._Legend(
                     layerId, 
@@ -624,7 +639,8 @@
                     legendXPosition, 
                     legendYPosition, 
                     groupedInLegend,
-                    featureStrategy
+                    featureStrategy,
+                    showFeatureLabels
                     );
                 
                 // render the legend
@@ -983,6 +999,58 @@
         }
       },
       
+      /*
+       * Format dates
+       * 
+       */
+      _formatDate : function(value) {
+          
+          if(this._dateFormatter == null) {
+            this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
+          }
+          
+          if(value != null) {
+            return this._dateFormatter(value);          
+          }
+          
+          return null;
+        },
+        
+        /*
+         * Format date/times
+         * 
+         */
+        _formatDateTime : function(value) {
+          
+          if(this._dateTimeFormatter == null) {
+            this._dateTimeFormatter = Globalize.dateFormatter({ dateTime: "short" });                         
+          }
+          
+          if(value != null) {        
+            return this._dateTimeFormatter(value);
+          }
+          
+          return null;          
+        },
+        
+        /*
+         * Format time
+         * 
+         */
+        _formatTime : function(value) {
+          
+          if(this._timeFormatter == null) {
+            this._timeFormatter = Globalize.dateFormatter({ time: "short" });                         
+          }
+          
+          if(value != null) {                
+            return this._timeFormatter(value);
+          }
+        
+          return null;
+        },
+
+      
       /**
        * Performs the identify request when a user clicks on the map
        * 
@@ -1006,6 +1074,7 @@
           var layerAggMap = new Object();
           var layerStringList = '';
           var aggregationAttr = '';
+          var aggregationAttrArr = [];
           var popup = L.popup().setLatLng(e.latlng);
           var that = this;
         
@@ -1026,14 +1095,10 @@
               }
               else{
                 layerStringList += layerId;
-                  
-                // we currently only map against a single attribute for a map.  
-                // if we allow multiple attributes mapped in a map the assignment of
-                // aggregationAttr will need to be refactored to associate a layers
-                // identify request with the appropriate aggregationAttr for that layer
-                aggregationAttr = layer.getAggregationAttribute().toLowerCase();
                 firstAdded = true;
               }
+              aggregationAttrArr.push(layer.getAggregationAttribute().toLowerCase());
+
             }
           }
         
@@ -1051,8 +1116,7 @@
           "&BBOX="+ mapBbox +
           "&LAYERS=geodashboard:"+ layerStringList +
           "&QUERY_LAYERS=geodashboard:"+ layerStringList +
-          "&TYPENAME=geodashboard:"+ layerStringList +
-          "&propertyName=displaylabel,geoid,"+ aggregationAttr;
+          "&TYPENAME=geodashboard:"+ layerStringList;
       
         DynamicMap.that = this;
           $.ajax({
@@ -1064,15 +1128,28 @@
             // The getfeatureinfo request will return only 1 feature
             for(var i = 0; i<json.features.length; i++){
               var currLayer = json.features[i];
+              var currProperties = currLayer.properties;
               var currLayerIdReturn = currLayer.id;
               var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
               var currLayerDisplayName = layerNameMap[currLayerId];
               var currFeatureDisplayName = currLayer.properties.displaylabel;
               var currAggMethod = layerAggMap[currLayerId];
+              for (var currProperty in currProperties) {
+            	  if (currProperties.hasOwnProperty(currProperty)) {
+            		  if(aggregationAttrArr.indexOf(currProperty.toLowerCase()) >= 0 ){
+                		  aggregationAttr = currProperty.toLowerCase();
+                	  }
+            	  }
+            	}
               var currAttributeVal = currLayer.properties[aggregationAttr];
               
               if(typeof currAttributeVal === 'number'){
                 currAttributeVal = that._formatter(currAttributeVal);
+              }
+              else if(!isNaN(Date.parse(currAttributeVal))){
+            	  var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
+            	  var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
+            	  currAttributeVal = that._formatDate(parsedAttr);
               }
               
               popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
@@ -1210,6 +1287,11 @@
         // Check for existense of dynamic settings which may not exist 
         if(params['style.bubbleContinuousSize']){
         	params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+        }
+        
+        if($("#f79").is(":visible")){
+        	params['style.pointFixedSize'] = params['style.pointFixedSize'];
+        	params['style.pointFixed'] = true;
         }
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
@@ -1940,6 +2022,10 @@
         else if (type === "CATEGORY") {
           $("#tab004categories").show();
           this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+        }
+        else if (type === "FIXEDBUBBLE") {
+            $("#tab005bubble").show();
+            this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
         }
       },
       

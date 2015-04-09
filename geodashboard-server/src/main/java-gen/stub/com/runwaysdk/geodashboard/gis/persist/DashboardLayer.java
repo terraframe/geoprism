@@ -50,6 +50,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OrderBy;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableMoment;
 import com.runwaysdk.query.SelectableNumber;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
@@ -322,7 +323,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
 
     Database.createView(this.getViewName(), sql);
   }
-
+  
   public HashMap<String, Double> getLayerMinMax(String _attribute)
   {
 
@@ -440,7 +441,7 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
           List<AllAggregationType> allAgg = tStyle.getAggregationType();
           boolean isAggregate = false;
           
-          if (thematicSel instanceof SelectableNumber)
+          if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment)
           {
             if (allAgg.size() == 1)
             {
@@ -472,7 +473,15 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
             Integer length = GeoserverProperties.getDecimalLength();
             Integer precision = GeoserverProperties.getDecimalPrecision();
 
-            String sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
+            String sql;
+            if (thematicSel instanceof SelectableMoment)
+            {
+              sql = thematicSel.getSQL();
+            }
+            else
+            {
+              sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
+            }
 
             if (isAggregate)
             {

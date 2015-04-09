@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 545466174)
+@com.runwaysdk.business.ClassSignature(hash = -420397847)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public static java.lang.String POINTFIXED = "pointFixed";
   public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
   public static java.lang.String POINTMINSIZE = "pointMinSize";
@@ -21,7 +22,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 545466174;
+  private static final long serialVersionUID = -420397847;
   
   public DashboardThematicStyleBase()
   {
@@ -131,6 +132,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(MDATTRIBUTE, value.getId());
+    }
+  }
+  
+  public Boolean getPointFixed()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(POINTFIXED));
+  }
+  
+  public void validatePointFixed()
+  {
+    this.validateAttribute(POINTFIXED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getPointFixedMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(POINTFIXED);
+  }
+  
+  public void setPointFixed(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(POINTFIXED, "");
+    }
+    else
+    {
+      setValue(POINTFIXED, java.lang.Boolean.toString(value));
     }
   }
   

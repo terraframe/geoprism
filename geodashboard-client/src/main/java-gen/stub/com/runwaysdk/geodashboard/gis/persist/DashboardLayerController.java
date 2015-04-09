@@ -165,7 +165,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     // aggregations
     List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
-    Collections.reverse(aggregations); // Simple solution for making SUM the default aggregation type
 
     // Filter out the invalid aggregation types based upon the
     new Iterables<AggregationTypeDTO>().remove(aggregations, new AggregationPredicate(mdAttr));
@@ -178,7 +177,6 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     Map<String, String> layerTypes = new LinkedHashMap<String, String>();
     layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-    layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
 
     // filter out invalid layer types depending on attribute type
     // this is primarily to prevent creating gradients on date fields
@@ -186,6 +184,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     if (! ( mdAttributeConcrete instanceof MdAttributeDateDTO ))
     {
+      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
       layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
       layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
     }
