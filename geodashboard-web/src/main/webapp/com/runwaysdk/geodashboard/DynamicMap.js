@@ -187,7 +187,7 @@
                  var liObj = new Object();
                  liObj.id = theElem.dataset.rwid; 
                  liObj.val = theElem.parentElement.previousSibling.textContent;
-                 liObj.color = rgb2hex($(theElem).css("background-color"));
+                 liObj.color = GDB.gis.DynamicMap.prototype.rgb2hex($(theElem).css("background-color"));
                  liObj.isOntologyCat = true;
                  
                  styleArr.catLiElems.push(liObj);     
@@ -199,7 +199,7 @@
            for(var i=0; i<allElemCont.length; i++){
              var catInputElem = $(allElemCont[i]).find(".category-input");
              var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
-             var catColor = rgb2hex($(catColorElem).css("background-color"));
+             var catColor = GDB.gis.DynamicMap.prototype.rgb2hex($(catColorElem).css("background-color"));
              var catVal = catInputElem.val();
              
              // parse the formatted number to the format of the data so the SLD can apply categories by this value
@@ -232,30 +232,6 @@
          // set the hidden input element in the layer creation/edit form 
          $("#categories-input").val(JSON.stringify(styleArr));
          
-         // javascript and jquery return css color values as rgb.  
-         // We want to pass hex to the backend
-         function rgb2hex(rgb) {
-             if (/^#[0-9A-F]{6}$/i.test(rgb)){
-               return rgb;
-             }
-
-             var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-             if(rgbMatch){
-               function hex(x) {
-                 return ("0" + parseInt(x).toString(16)).slice(-2);
-               }
-               return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-             }
-             
-             var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-             if(rgbaMatch){
-               return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-                  ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-                  ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-                  ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-             }
-         }
-
          return  styleArr;
        },
       
@@ -1672,25 +1648,23 @@
       
       _addLayerFormControls : function(){
     	  
-//          if($("#tab004categories").is(":visible")){
-              if($("#ontology-tree").length > 0){
-            	  this._renderLayerTermTree();
-              }
-              else{
-            	  this._addCategoryAutoComplete();
-            	  
-                  // category 'other' option
-                  $("#f53").change(function() {
-                      if($(this).is(":checked")) {
-                    	  $("#cat-other").parent().parent().show();
-                      }
-                      else{
-                    	  $("#cat-other").parent().parent().hide();
-                      }     
-                  });
-              }
-              this._addExistingCategoriesToUi();
-//          }
+          if($("#ontology-tree").length > 0){
+        	  this._renderLayerTermTree();
+          }
+          else{
+        	  this._addCategoryAutoComplete();
+        	  
+              // category 'other' option
+              $("#f53").change(function() {
+                  if($(this).is(":checked")) {
+                	  $("#cat-other").parent().parent().show();
+                  }
+                  else{
+                	  $("#cat-other").parent().parent().hide();
+                  }     
+              });
+          }
+          this._addExistingCategoriesToUi();
     	  
           // ontology category layer type colors
           $(".category-color-icon").colpick({
@@ -2041,15 +2015,45 @@
       },
       
       /**
+       * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
+       * 
+       */
+      rgb2hex : function(rgb) {
+          if (/^#[0-9A-F]{6}$/i.test(rgb)){
+            return rgb;
+          }
+
+          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          if(rgbMatch){
+            function hex(x) {
+              return ("0" + parseInt(x).toString(16)).slice(-2);
+            }
+            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+          }
+          
+          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+          if(rgbaMatch){
+            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+          }
+      },
+      
+      /**
        * Handles the selection of colors from the color picker 
        * 
        * 
        */
       _selectColor : function(){
-        
+        var that = this;
         // color dropdown buttons
         $('.color-holder').colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj) {
+        	var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).find(".ico").css("background-color"));
+          	$(this).colpickSetColor(currColor,false);
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).find(".ico").css('background','#'+hex);
             $(el).find('.color-input').attr('value', '#'+hex);

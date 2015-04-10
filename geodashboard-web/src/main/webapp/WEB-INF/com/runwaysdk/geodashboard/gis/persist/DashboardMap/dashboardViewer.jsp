@@ -294,7 +294,8 @@ $(document).ready(function(){
   </aside>
   
   <!-- modal -->
-  <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <!-- <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false"> -->
+  <div class="modal fade" id="modal01" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <!-- Filled in by ajax call to create/edit layer -->
   </div>
   
