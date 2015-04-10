@@ -3,34 +3,27 @@ package com.runwaysdk.geodashboard.gis.geoserver;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
-import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.geodashboard.util.Predicate;
-import com.runwaysdk.session.Request;
 import com.runwaysdk.session.SessionFacade;
 
 public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadable
 {
-  private static boolean                        initialized = false;
+  private static boolean               initialized = false;
 
-  private static final ReentrantLock            lock        = new ReentrantLock();
+  private static final ReentrantLock   lock        = new ReentrantLock();
 
-  private static final Log                      initLog     = LogFactory.getLog(GeoserverInitializer.class);
+  private static final Log             initLog     = LogFactory.getLog(GeoserverInitializer.class);
 
-  private static final ScheduledExecutorService scheduler   = Executors.newScheduledThreadPool(1);
+  private static final CleanupRunnable cleanup     = new CleanupRunnable();
+
+  // private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
   public static class SessionPredicate implements Predicate<String>, Reloadable
   {
@@ -153,7 +146,12 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
     }
 
     // Start the mapping database view cleanup thread
-    scheduler.scheduleWithFixedDelay(new CleanupRunnable(), 1, 5, TimeUnit.MINUTES);
+    Thread t = new Thread(cleanup);
+    t.setUncaughtExceptionHandler(init);
+    t.setDaemon(true);
+    t.start();
+
+    // scheduler.scheduleWithFixedDelay(new CleanupRunnable(), 1, 5, TimeUnit.MINUTES);
   }
 
   /**
@@ -168,6 +166,7 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
   public static void shutdown()
   {
     // Shutdown the mapping database view cleanup thread
-    scheduler.shutdownNow();
+    cleanup.shutdown();
   }
+
 }
