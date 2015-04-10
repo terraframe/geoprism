@@ -53,50 +53,6 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
 
   }
 
-  public static class CleanupRunnable implements Runnable, Reloadable
-  {
-    @Override
-    public void run()
-    {
-      runInRequest();
-    }
-
-    @Request
-    private void runInRequest()
-    {
-      try
-      {
-        runInTransaction();
-      }
-      catch (Exception e)
-      {
-        initLog.error(e.getMessage(), e);
-      }
-    }
-
-    @Transaction
-    private void runInTransaction()
-    {
-      List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
-
-      new Iterables<String>().remove(viewNames, new SessionPredicate());
-
-      for (String viewName : viewNames)
-      {
-        // First remove the geoserver layer
-        GeoserverFacade.removeLayer(viewName);
-
-        // Clear the session map
-        String sessionId = DashboardLayer.getSessionId(viewName);
-        SessionParameterFacade.clear(sessionId);
-      }
-
-      // Second delete the database views
-      Database.dropViews(viewNames);
-
-    }
-  }
-
   public static class CheckThread implements Runnable, Reloadable
   {
 

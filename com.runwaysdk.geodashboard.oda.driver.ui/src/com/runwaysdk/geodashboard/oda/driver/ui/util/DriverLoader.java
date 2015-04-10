@@ -21,23 +21,14 @@ public class DriverLoader
     return connection;
   }
 
-  public static boolean testConnection(String url, String userName, String password, Properties props)
+  public static void testConnection(String url, String userName, String password, Properties props) throws OdaException
   {
     props.setProperty(Constants.ODAURL, url);
     props.setProperty(Constants.ODAUser, userName);
     props.setProperty(Constants.ODAPassword, password);
 
-    try
-    {
-      Connection connection = DriverLoader.getConnection(props);
-      connection.close();
-
-      return true;
-    }
-    catch (Exception e)
-    {
-      return false;
-    }
+    Connection connection = DriverLoader.getConnection(props);
+    connection.close();
   }
 
 }
