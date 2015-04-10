@@ -2498,9 +2498,8 @@ span.select-area span.center {
 */
 	.colpick {
 		position: absolute;
-		z-index: 9999;
+		z-index: 9999999999999;
 	}
-	
 	
 /*** 
 ** Legend
@@ -2516,7 +2515,7 @@ span.select-area span.center {
 		/* 	margin: 5px 5px 5px auto; */
 	}
 	
-	#collapse-legend{
+	#collapse-legend.accordion-body.in{
   		overflow-y: auto;
   		overflow-x: hidden;
   		max-height: 300px;

@@ -187,7 +187,7 @@
                  var liObj = new Object();
                  liObj.id = theElem.dataset.rwid; 
                  liObj.val = theElem.parentElement.previousSibling.textContent;
-                 liObj.color = rgb2hex($(theElem).css("background-color"));
+                 liObj.color = GDB.gis.DynamicMap.prototype.rgb2hex($(theElem).css("background-color"));
                  liObj.isOntologyCat = true;
                  
                  styleArr.catLiElems.push(liObj);     
@@ -199,7 +199,7 @@
            for(var i=0; i<allElemCont.length; i++){
              var catInputElem = $(allElemCont[i]).find(".category-input");
              var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
-             var catColor = rgb2hex($(catColorElem).css("background-color"));
+             var catColor = GDB.gis.DynamicMap.prototype.rgb2hex($(catColorElem).css("background-color"));
              var catVal = catInputElem.val();
              
              // parse the formatted number to the format of the data so the SLD can apply categories by this value
@@ -232,30 +232,6 @@
          // set the hidden input element in the layer creation/edit form 
          $("#categories-input").val(JSON.stringify(styleArr));
          
-         // javascript and jquery return css color values as rgb.  
-         // We want to pass hex to the backend
-         function rgb2hex(rgb) {
-             if (/^#[0-9A-F]{6}$/i.test(rgb)){
-               return rgb;
-             }
-
-             var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-             if(rgbMatch){
-               function hex(x) {
-                 return ("0" + parseInt(x).toString(16)).slice(-2);
-               }
-               return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-             }
-             
-             var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-             if(rgbaMatch){
-               return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-                  ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-                  ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-                  ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-             }
-         }
-
          return  styleArr;
        },
       
@@ -323,7 +299,7 @@
         this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
         
         // Add attribution to the map
-        this._map.attributionControl.setPrefix('');
+        this._map.attributionControl.setPrefix("");
         //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
         
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
@@ -806,17 +782,28 @@
             var viewName = layer.getViewName();
             var displayName = layer.getLayerName() || "N/A";
             var geoserverName = this._workspace + ":" + viewName;
-            var mapBounds = this._map.getBounds();
-            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
               
-            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-              layers: geoserverName,
-              format: 'image/png',
-              transparent: true,
-              tiled: true,
-              tilesorigin: mapSWOrigin,
-              styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
-            });
+            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
+                layers: geoserverName,
+                format: 'image/png',
+                transparent: true,
+                styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+              });
+            
+            // This tiling formt (tileLayer) is the preferred way to render wms due to performance gains. 
+            // However, since bubbles are clipped by the differences between tiles we must render layers as a single tile. 
+            // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
+            //var mapBounds = this._map.getBounds();
+            //var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+            //var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+              //layers: geoserverName,
+              //format: 'image/png',
+              //transparent: true,
+              //tiled: true,
+              //tileSize: 256,
+              //tilesorigin: mapSWOrigin,
+              //styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+            //});
             
             this._map.addLayer(leafletLayer);
                      
@@ -1146,7 +1133,7 @@
               if(typeof currAttributeVal === 'number'){
                 currAttributeVal = that._formatter(currAttributeVal);
               }
-              else if(!isNaN(Date.parse(currAttributeVal))){
+              else if(!isNaN(Date.parse(currAttributeVal.substring(0, currAttributeVal.length - 1)))){
             	  var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
             	  var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
             	  currAttributeVal = that._formatDate(parsedAttr);
@@ -1661,25 +1648,23 @@
       
       _addLayerFormControls : function(){
     	  
-//          if($("#tab004categories").is(":visible")){
-              if($("#ontology-tree").length > 0){
-            	  this._renderLayerTermTree();
-              }
-              else{
-            	  this._addCategoryAutoComplete();
-            	  
-                  // category 'other' option
-                  $("#f53").change(function() {
-                      if($(this).is(":checked")) {
-                    	  $("#cat-other").parent().parent().show();
-                      }
-                      else{
-                    	  $("#cat-other").parent().parent().hide();
-                      }     
-                  });
-              }
-              this._addExistingCategoriesToUi();
-//          }
+          if($("#ontology-tree").length > 0){
+        	  this._renderLayerTermTree();
+          }
+          else{
+        	  this._addCategoryAutoComplete();
+        	  
+              // category 'other' option
+              $("#f53").change(function() {
+                  if($(this).is(":checked")) {
+                	  $("#cat-other").parent().parent().show();
+                  }
+                  else{
+                	  $("#cat-other").parent().parent().hide();
+                  }     
+              });
+          }
+          this._addExistingCategoriesToUi();
     	  
           // ontology category layer type colors
           $(".category-color-icon").colpick({
@@ -2030,15 +2015,45 @@
       },
       
       /**
+       * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
+       * 
+       */
+      rgb2hex : function(rgb) {
+          if (/^#[0-9A-F]{6}$/i.test(rgb)){
+            return rgb;
+          }
+
+          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          if(rgbMatch){
+            function hex(x) {
+              return ("0" + parseInt(x).toString(16)).slice(-2);
+            }
+            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+          }
+          
+          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+          if(rgbaMatch){
+            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+          }
+      },
+      
+      /**
        * Handles the selection of colors from the color picker 
        * 
        * 
        */
       _selectColor : function(){
-        
+        var that = this;
         // color dropdown buttons
         $('.color-holder').colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj) {
+        	var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).find(".ico").css("background-color"));
+          	$(this).colpickSetColor(currColor,false);
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).find(".ico").css('background','#'+hex);
             $(el).find('.color-input').attr('value', '#'+hex);
