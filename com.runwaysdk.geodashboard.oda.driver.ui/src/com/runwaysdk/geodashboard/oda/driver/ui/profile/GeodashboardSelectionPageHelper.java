@@ -64,19 +64,19 @@ public class GeodashboardSelectionPageHelper
 
   private Map<String, String> databaseProperties = new HashMap<String, String>();
 
-  GeodashboardSelectionPageHelper(WizardPage page)
+  public GeodashboardSelectionPageHelper(WizardPage page)
   {
     DEFAULT_MESSAGE = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
     m_wizardPage = page;
   }
 
-  GeodashboardSelectionPageHelper(PreferencePage page)
+  public GeodashboardSelectionPageHelper(PreferencePage page)
   {
     DEFAULT_MESSAGE = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
     m_propertyPage = page;
   }
 
-  Composite createCustomControl(Composite parent)
+  public Composite createCustomControl(Composite parent)
   {
     ScrolledComposite scrollContent = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 
@@ -139,9 +139,6 @@ public class GeodashboardSelectionPageHelper
     updateTestButton();
     verifyConnectionProperties();
 
-    // Utility.setSystemHelp(getControl(),
-    // IHelpConstants.CONEXT_ID_DATASOURCE_JDBC);
-
     return content;
   }
 
@@ -177,7 +174,7 @@ public class GeodashboardSelectionPageHelper
    */
   void initCustomControl(Properties profileProps)
   {
-    if (profileProps != null && profileProps.isEmpty())
+    if (profileProps != null && !profileProps.isEmpty())
     {
       String odaUrl = profileProps.getProperty(Constants.ODAURL);
 
@@ -191,25 +188,27 @@ public class GeodashboardSelectionPageHelper
       String odaUser = profileProps.getProperty(Constants.ODAUser);
       if (odaUser == null)
       {
-        // odaUser = EMPTY_STRING;
         odaUrl = "admin";
-
       }
       userName.setText(odaUser);
 
       String odaPassword = profileProps.getProperty(Constants.ODAPassword);
-      if (odaPassword == null)
+      if (odaPassword != null && odaPassword.length() > 0)
       {
-        // odaPassword = EMPTY_STRING;
-        odaPassword = "admin";
+        String decrypted = CryptographySingleton.decrypt(odaPassword);
+
+        password.setText(decrypted);
       }
-      password.setText(odaPassword);
+      else
+      {
+        password.setText(EMPTY_STRING);
+      }
     }
     else
     {
       url.setText("//localhost:1199/");
       userName.setText("admin");
-      password.setText("admin");
+      password.setText(EMPTY_STRING);
     }
 
     updateTestButton();
@@ -230,9 +229,9 @@ public class GeodashboardSelectionPageHelper
     }
 
     // set custom driver specific properties
-    props.setProperty(Constants.ODAURL, getDriverURL());
-    props.setProperty(Constants.ODAUser, getODAUser());
-    props.setProperty(Constants.ODAPassword, getODAPassword());
+    props.setProperty(Constants.ODAURL, this.getDriverURL());
+    props.setProperty(Constants.ODAUser, this.getODAUser());
+    props.setProperty(Constants.ODAPassword, this.getEncryptedODAPassword());
     props.putAll(databaseProperties);
 
     return props;
@@ -251,6 +250,14 @@ public class GeodashboardSelectionPageHelper
     }
 
     return getTrimedString(userName.getText());
+  }
+
+  private String getEncryptedODAPassword()
+  {
+    String password = this.getODAPassword();
+    String encrypted = CryptographySingleton.encrypt(password);
+
+    return encrypted;
   }
 
   /**
