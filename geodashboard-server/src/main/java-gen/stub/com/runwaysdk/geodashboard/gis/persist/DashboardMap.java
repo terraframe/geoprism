@@ -27,6 +27,7 @@ import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
+import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -72,6 +73,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   @Override
   public String updateConditions(DashboardCondition[] conditions)
   {
+    GeoserverBatch batch = new GeoserverBatch();
+
     List<? extends DashboardLayer> layers = this.getLayers();
 
     for (DashboardLayer layer : layers)
@@ -80,10 +83,10 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       generateSessionViewName(layer);
 
-      layer.publish(true);
+      layer.publish(batch, true);
     }
 
-    GeoserverFacade.pushUpdates();
+    GeoserverFacade.pushUpdates(batch);
 
     return getMapJSON("republish=false");
   }
@@ -176,14 +179,16 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
    */
   public void publishAllLayers(DashboardLayer[] orderedLayers)
   {
+    GeoserverBatch batch = new GeoserverBatch();
+
     for (DashboardLayer layer : orderedLayers)
     {
       this.generateSessionViewName(layer);
 
-      layer.publish(true);
+      layer.publish(batch, true);
     }
 
-    GeoserverFacade.pushUpdates();
+    GeoserverFacade.pushUpdates(batch);
   }
 
   /**
