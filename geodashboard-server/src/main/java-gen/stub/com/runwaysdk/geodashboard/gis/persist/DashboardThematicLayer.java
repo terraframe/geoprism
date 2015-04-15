@@ -1,7 +1,5 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,15 +8,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.RunwayException;
-import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -55,205 +50,37 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class DashboardThematicLayer extends DashboardThematicLayerBase implements com.runwaysdk.generation.loader.Reloadable, ThematicLayer
+public class DashboardThematicLayer extends DashboardThematicLayerBase implements
+    com.runwaysdk.generation.loader.Reloadable, ThematicLayer
 {
   private static final long serialVersionUID = -810007054;
-  
-  private List<DashboardCondition> conditions       = null;
 
   public DashboardThematicLayer()
   {
     super();
   }
-  
-  public void setConditions(List<DashboardCondition> conditions)
-  {
-    this.conditions = conditions;
-  }
 
-  public List<DashboardCondition> getConditions()
-  {
-    return this.conditions;
-  }
-  
-  @Override
-  public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
-  {
-    this.applyWithStyleInTransaction(style, mapId, conditions);
-
-    // We have to make sure that the transaction has ended before we can publish to geoserver,
-    // otherwise our database view won't exist yet.
-    //
-    // The false flag is set in publish(createDBView) to allow for running the createDatabaseView
-    // method inside the applyWithStyleInTransaction method so that incorrect SQL for view
-    // creation is caught before database object are created. Originally noticed on text attribute
-    // layer creation
-    this.publish(true);
-    GeoserverFacade.pushUpdates();
-
-    try
-    {
-      JSONObject json = this.toJSON();
-
-      JSONArray jsonArray = new JSONArray();
-      List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i)
-      {
-        DashboardStyle stile = styles.get(i);
-        jsonArray.put(stile.toJSON());
-      }
-      json.put("styles", jsonArray);
-
-      return json.toString();
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-  }
-  
-  
   @Transaction
-  public void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId,
+      DashboardCondition[] conditions)
   {
+
     boolean isNew = this.isNew();
 
-    // Find (and set) the GeoEntity reference attribute
-    // FIXME UI needs to allow for picking of the geo entity attribute
+    super.applyWithStyleInTransaction(style, mapId, conditions);
+
     if (isNew && style instanceof DashboardThematicStyle)
     {
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(tStyle.getMdAttributeId());
-      MdClassDAOIF mdClass = mdAttribute.definedByClass();
-      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
-      
-      System.out.println(this.getMdAttributeId());
-      
+
       MdAttribute md = MdAttribute.get(tStyle.getMdAttributeId());
       this.setMdAttribute(md);
-
-      if (attr != null)
-      {
-        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
-      }
-      else
-      {
-        throw new ProgrammingErrorException("Class [" + mdClass.definesType() + "] does not reference a [" + GeoEntity.CLASS + "].");
-      }
     }
-
-    // We have to generate a new viewName for us on every apply because otherwise there's browser-side caching that
-    // won't show the new style update.
-    String vn = generateViewName();
-    this.setViewName(vn);
-    this.setDashboardMap(DashboardMap.get(mapId));
-    this.setVirtual(true);
-
-    style.setName(this.getViewName());
-
-    if (conditions != null)
-    {
-      this.conditions = Arrays.asList(conditions);
-    }
-
-    style.apply();
-
-    this.apply();
-
-    // Create hasLayer and hasStyle relationships
-    if (isNew)
-    {
-      QueryFactory f = new QueryFactory();
-      DashboardLayerQuery q = new DashboardLayerQuery(f);
-      DashboardMapQuery mQ = new DashboardMapQuery(f);
-
-      mQ.WHERE(mQ.getId().EQ(mapId));
-      q.WHERE(q.containingMap(mQ));
-
-      int count = (int) q.getCount();
-      count++;
-
-      DashboardMap map = DashboardMap.get(mapId);
-      HasLayer hasLayer = map.addHasLayer(this);
-      hasLayer.setLayerIndex(count);
-      hasLayer.apply();
-
-      HasStyle hasStyle = this.addHasStyle(style);
-      hasStyle.apply();
-    }
-
-    this.validate();
   }
-  
-  
-  public void createDatabaseView(boolean force)
-  {
-    String sql = this.getViewQuery().getSQL();
 
-    Database.dropView(this.getViewName(), sql, false);
-
-    Database.createView(this.getViewName(), sql);
-  }
-  
-  
   /**
-   * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
-   * does not exist yet.
-   */
-  public void publish(boolean createDBView)
-  {
-    this.drop();
-
-    if (createDBView)
-    {
-      createDatabaseView(true);
-    }
-
-    if (viewHasData)
-    {
-      GeoserverFacade.publishLayerOnUpdate(this);
-    }
-
-    this.appLock();
-    this.setLastPublishDate(new Date());
-    this.apply();
-    this.unlock();
-  }
-  
-  
-  /**
-   * Validate the layer data
-   */
-  public void validate()
-  {
-    try
-    {
-      // Ensure the generated query is valid and executes
-      Database.query(this.getViewQuery().getSQL());
-
-      // Create the database view
-      createDatabaseView(true);
-
-      // Ensure there is a valid bounding box
-      GeoserverFacade.getBBOX(this.getViewName());
-    }
-    catch (RunwayException e)
-    {
-      throw e;
-    }
-    catch (SmartException e)
-    {
-      throw e;
-    }
-    catch (Exception e)
-    {
-      // If this happens it means the SQL generated wrong and coding will be required to fix.
-      throw new ProgrammingErrorException(e);
-    }
-  }
-  
-  /**
-   * Gets the min and max values of a data set to be used for styling based data distributions
+   * Gets the min and max values of a data set to be used for styling based data
+   * distributions
    */
   public HashMap<String, Double> getLayerMinMax(String _attribute)
   {
@@ -295,11 +122,71 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       iter.close();
     }
   }
-  
+
+  public JSONObject toJSON()
+  {
+    try
+    {
+      JSONObject json = new JSONObject();
+      json.put("viewName", getViewName());
+      json.put("sldName", getSLDName());
+      json.put("layerName", getName());
+      json.put("layerId", getId());
+      json.put("inLegend", this.getDisplayInLegend());
+      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
+      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
+      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
+      json.put("featureStrategy", getFeatureStrategy());
+      json.put("mdAttributeId", this.getMdAttributeId());
+
+      // Getting the aggregation method (i.e. avg, sum, min, max) and
+      // aggregation attribute
+      // (i.e. numberofunits) for the style representation
+      OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
+      try
+      {
+        while (iter.hasNext())
+        {
+          DashboardStyle style = iter.next();
+          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
+          String aggregationAttribute = tStyle.getAttribute();
+          List<AllAggregationType> allAgg = this.getAggregationType();
+          AllAggregationType aggregationMethod = allAgg.get(0);
+
+          json.put("aggregationMethod", aggregationMethod);
+          json.put("aggregationAttribute", aggregationAttribute);
+        }
+      }
+      finally
+      {
+        iter.close();
+      }
+
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i)
+      {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+
+      return json;
+    }
+    catch (JSONException ex)
+    {
+      log.error("Could not properly form DashboardLayer [" + this.toString()
+          + "] into valid JSON to send back to the client.");
+      throw new ProgrammingErrorException(ex);
+    }
+  }
+
   /**
-   * @prerequisite conditions is populated with any DashboardConditions necessary for restricting the view dataset.
+   * @prerequisite conditions is populated with any DashboardConditions
+   *               necessary for restricting the view dataset.
    * 
-   * @return A ValueQuery for use in creating/dropping the database view which will be used with GeoServer.
+   * @return A ValueQuery for use in creating/dropping the database view which
+   *         will be used with GeoServer.
    */
   public ValueQuery getViewQuery()
   {
@@ -318,7 +205,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
         // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
         // but we need to define a non-thematic's behavior or even finalize
-        // on the semantics of a layer without a thematic attribute...which might
+        // on the semantics of a layer without a thematic attribute...which
+        // might
         // not even exist!
         if (style instanceof DashboardThematicStyle)
         {
@@ -349,7 +237,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
           List<AllAggregationType> allAgg = this.getAggregationType();
           boolean isAggregate = false;
-          
+
           if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment)
           {
             if (allAgg.size() == 1)
@@ -394,90 +282,97 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
             if (isAggregate)
             {
-              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
+              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql,
+                  attributeName, displayLabel);
             }
             else
             {
-              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
+              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql,
+                  attributeName, displayLabel);
             }
 
             thematicSel.setColumnAlias(attribute);
-            
+
             this.setCriteriaOnInnerQuery(innerQuery1, mdClass, query, geQ1);
-            
+
             innerQuery1.SELECT(thematicSel);
             innerQuery1.SELECT(label);
             innerQuery1.SELECT(geoId1);
-            
+
           }
           else
           {
             if (allAgg.size() == 1)
             {
               AllAggregationType agg = allAgg.get(0);
-              
+
               OrderBy.SortOrder sortOrder;
-              
+
               if (agg == AllAggregationType.MAJORITY)
               {
                 // func = "MAJORITY";
                 sortOrder = OrderBy.SortOrder.DESC;
               }
-              else // (agg == AllAggregationType.MINORITY)
+              else
+              // (agg == AllAggregationType.MINORITY)
               {
                 // func = "MINORITY";
                 sortOrder = OrderBy.SortOrder.ASC;
               }
-              
+
               isAggregate = true;
-              
+
               ValueQuery winFuncQuery = new ValueQuery(factory);
-              
+
               if (mdAttributeDAOIF.getMdAttributeConcrete() instanceof MdAttributeTermDAOIF)
               {
-                MdAttributeTermDAOIF mdAttributeTermDAOIF = (MdAttributeTermDAOIF)mdAttributeDAOIF.getMdAttributeConcrete();
-                if (mdAttributeTermDAOIF.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
+                MdAttributeTermDAOIF mdAttributeTermDAOIF = (MdAttributeTermDAOIF) mdAttributeDAOIF
+                    .getMdAttributeConcrete();
+                if (mdAttributeTermDAOIF.getReferenceMdBusinessDAO().definesType()
+                    .equals(Classifier.CLASS))
                 {
-                  AttributeReference thematicTerm = (AttributeReference)thematicAttr;
-                  
+                  AttributeReference thematicTerm = (AttributeReference) thematicAttr;
+
                   ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
                   winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
                   thematicAttr = classifierQ.getDisplayLabel().localize();
                 }
               }
-              
+
               thematicSel = F.COUNT(thematicAttr, "COUNT");
-              AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
-              AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicAttr), sortOrder));
-              
-              winFuncQuery.SELECT_DISTINCT(thematicSel);  
+              AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(
+                  F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
+              AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1),
+                  new OrderBy(F.COUNT(thematicAttr), sortOrder));
+
+              winFuncQuery.SELECT_DISTINCT(thematicSel);
               winFuncQuery.SELECT_DISTINCT(stringAgg);
               winFuncQuery.SELECT_DISTINCT(label);
               winFuncQuery.SELECT_DISTINCT(rank);
               winFuncQuery.SELECT_DISTINCT(geoId1);
-              winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle)geoId1);
+              winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle) geoId1);
               winFuncQuery.ORDER_BY(thematicSel, sortOrder);
 
               this.setCriteriaOnInnerQuery(winFuncQuery, mdClass, query, geQ1);
-              
+
               Selectable outerThematicSel = winFuncQuery.get("AGG");
               outerThematicSel.setUserDefinedAlias("AGG");
               outerThematicSel.setColumnAlias(attribute);
-              
+
               Selectable outerLabel = winFuncQuery.get(GeoEntity.DISPLAYLABEL);
               outerLabel.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
               outerLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
-              
+
               Selectable outerGeoId = winFuncQuery.get(GeoEntity.GEOID);
               outerGeoId.setColumnAlias(GeoEntity.GEOID);
               outerGeoId.setUserDefinedAlias(GeoEntity.GEOID);
-           
+
               innerQuery1.SELECT(outerThematicSel);
               innerQuery1.SELECT(outerLabel);
               innerQuery1.SELECT(outerGeoId);
               innerQuery1.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", rank.getColumnAlias()).EQ(1));
             }
-            
+
             // Assumes isAggregate is true
           }
 
@@ -538,7 +433,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     Attribute geomAttribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
     geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     outerQuery.SELECT(geomAttribute);
-    outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
+    outerQuery
+        .WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
 
     return outerQuery;
   }
@@ -562,9 +458,11 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     innerQuery1.AND(geQ1.getUniversal().EQ(universal));
 
     // Attribute condition filtering (i.e. sales unit is greater than 50)
-    if (this.conditions != null)
+    List<DashboardCondition> conditions = this.getConditions();
+
+    if (conditions != null)
     {
-      for (DashboardCondition condition : this.conditions)
+      for (DashboardCondition condition : conditions)
       {
         if (condition instanceof DashboardAttributeCondition)
         {
@@ -587,68 +485,11 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
     }
   }
-  
-  
-  public JSONObject toJSON()
-  {
-    try
-    {
-      JSONObject json = new JSONObject();
-      json.put("viewName", getViewName());
-      json.put("sldName", getSLDName());
-      json.put("layerName", getName());
-      json.put("layerId", getId());
-      json.put("inLegend", this.getDisplayInLegend());
-      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
-      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
-      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
-      json.put("featureStrategy", getFeatureStrategy());
-      json.put("mdAttributeId", this.getMdAttributeId());
 
-      // Getting the aggregation method (i.e. avg, sum, min, max) and aggregation attribute
-      // (i.e. numberofunits) for the style representation
-      OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
-      try
-      {
-        while (iter.hasNext())
-        {
-          DashboardStyle style = iter.next();
-          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-          String aggregationAttribute = tStyle.getAttribute();
-          List<AllAggregationType> allAgg = this.getAggregationType();
-          AllAggregationType aggregationMethod = allAgg.get(0);
-
-          json.put("aggregationMethod", aggregationMethod);
-          json.put("aggregationAttribute", aggregationAttribute);
-        }
-      }
-      finally
-      {
-        iter.close();
-      }
-
-      JSONArray jsonStyles = new JSONArray();
-      List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i)
-      {
-        DashboardStyle style = styles.get(i);
-        jsonStyles.put(style.toJSON());
-      }
-      json.put("styles", jsonStyles);
-
-      return json;
-    }
-    catch (JSONException ex)
-    {
-      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
-      throw new ProgrammingErrorException(ex);
-    }
-  }
-  
   @Override
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
   }
-  
+
 }

@@ -72,6 +72,18 @@
         
       },
       
+      _formatNumber : function(value) {
+        if(this._numberFormatter == null) {
+          this._numberFormatter = Globalize.numberFormatter();
+        }
+        
+        if(value != null) {
+          return this._numberFormatter(value);          
+        }
+        
+        return null;
+      },
+      
       _formatDate : function(value) {
         
         if(this._dateFormatter == null) {
@@ -138,6 +150,9 @@
               "com.runwaysdk.system.metadata.MdAttributeDate": Mojo.Util.bind(this, this._formatDate),
               "com.runwaysdk.system.metadata.MdAttributeDateTime": Mojo.Util.bind(this, this._formatDateTime),
               "com.runwaysdk.system.metadata.MdAttributeTime": Mojo.Util.bind(this, this._formatTime),
+              "com.runwaysdk.system.metadata.MdAttributeFloat": Mojo.Util.bind(this, this._formatNumber),
+              "com.runwaysdk.system.metadata.MdAttributeDouble": Mojo.Util.bind(this, this._formatNumber),
+              "com.runwaysdk.system.metadata.MdAttributeDecimal": Mojo.Util.bind(this, this._formatNumber),
             },
             columns: []
           });

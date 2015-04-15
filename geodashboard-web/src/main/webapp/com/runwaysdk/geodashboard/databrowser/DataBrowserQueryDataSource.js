@@ -135,7 +135,8 @@
                   return;
                 }
                 
-                colArr.push(attrDTO.getAttributeMdDTO().getDisplayLabel());
+                var label = attrDTO.getAttributeMdDTO().getDisplayLabel();
+                colArr.push(label);
               }
               else {
                 var ex = new com.runwaysdk.Exception("Configuration error, all column objects must provide either a header or a queryAttr or both.");
@@ -154,7 +155,9 @@
                 that._config.columns[i].displayLabel = colArr[i];
               }
               
-              colArr.sort();
+              colArr.sort(function(a,b){
+                return a.localeCompare(b);
+              });
               
               that._config.columns.sort(function(a,b){
                 return a.displayLabel.localeCompare(b.displayLabel);

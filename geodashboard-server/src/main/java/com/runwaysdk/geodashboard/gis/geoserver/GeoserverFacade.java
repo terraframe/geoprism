@@ -34,30 +34,21 @@ import com.runwaysdk.util.FileIO;
 
 public class GeoserverFacade implements Reloadable
 {
-  public static final int                  SRS_CODE        = 4326;
+  public static final int    SRS_CODE    = 4326;
 
-  public static final String               SRS             = "EPSG:" + SRS_CODE;
+  public static final String SRS         = "EPSG:" + SRS_CODE;
 
-  public static final String               GEOM_COLUMN     = "geom";
+  public static final String GEOM_COLUMN = "geom";
 
-  public static int                        MINX_INDEX      = 0;
+  public static int          MINX_INDEX  = 0;
 
-  public static int                        MINY_INDEX      = 1;
+  public static int          MINY_INDEX  = 1;
 
-  public static int                        MAXX_INDEX      = 2;
+  public static int          MAXX_INDEX  = 2;
 
-  public static int                        MAXY_INDEX      = 3;
+  public static int          MAXY_INDEX  = 3;
 
-  private static Log                       log             = LogFactory.getLog(GeoserverFacade.class);
-
-  /**
-   * These are for storing mass publish/deletes which can be pushArrayList<E> once for maximum efficiency.
-   */
-  private static ArrayList<DashboardLayer> layersToPublish = new ArrayList<DashboardLayer>();
-
-  private static ArrayList<String>         layersToDrop    = new ArrayList<String>();
-
-  private static ArrayList<String>         stylesToDrop    = new ArrayList<String>();
+  private static Log         log         = LogFactory.getLog(GeoserverFacade.class);
 
   /**
    * Checks if a given File is a cache directory for the workspace.
@@ -317,64 +308,39 @@ public class GeoserverFacade implements Reloadable
     return publishStyle(styleName, body, true);
   }
 
-  public static void pushUpdates()
+  public static void pushUpdates(GeoserverBatch batch)
   {
-    try
+    ArrayList<String> layersToDrop = batch.getLayersToDrop();
+    ArrayList<String> stylesToDrop = batch.getStylesToDrop();
+    ArrayList<DashboardLayer> layersToPublish = batch.getLayersToPublish();
+
+    for (String layerName : layersToDrop)
     {
-      for (String layerName : layersToDrop)
-      {
-        removeLayer(layerName);
-      }
-
-      for (String styleName : stylesToDrop)
-      {
-        removeStyle(styleName);
-      }
-
-      // GeoServer will say these layers already exist if we don't refresh here.
-      if (layersToDrop.size() > 0 && layersToPublish.size() > 0)
-      {
-        refresh();
-      }
-
-      for (DashboardLayer layer : layersToPublish)
-      {
-        List<? extends DashboardStyle> styles = layer.getStyles();
-        for (int i = 0; i < styles.size(); ++i)
-        {
-          DashboardStyle style = styles.get(i);
-          publishStyle(style.getName(), style.generateSLD(), false);
-        }
-
-        publishLayer(layer.getViewName(), layer.getViewName());
-      }
-    }
-    finally
-    {
-      layersToDrop.clear();
-      stylesToDrop.clear();
-      layersToPublish.clear();
-    }
-  }
-
-  public static void publishLayerOnUpdate(DashboardLayer layer)
-  {
-    layersToPublish.add(layer);
-  }
-
-  public static void dropLayerOnUpdate(DashboardLayer layer)
-  {
-    layersToDrop.add(layer.getViewName());
-
-    List<? extends DashboardStyle> styles = layer.getStyles();
-
-    for (int i = 0; i < styles.size(); ++i)
-    {
-      DashboardStyle style = styles.get(i);
-
-      stylesToDrop.add(style.getName());
+      removeLayer(layerName);
     }
 
+    for (String styleName : stylesToDrop)
+    {
+      removeStyle(styleName);
+    }
+
+    // GeoServer will say these layers already exist if we don't refresh here.
+    if (layersToDrop.size() > 0 && layersToPublish.size() > 0)
+    {
+      refresh();
+    }
+
+    for (DashboardLayer layer : layersToPublish)
+    {
+      List<? extends DashboardStyle> styles = layer.getStyles();
+      for (int i = 0; i < styles.size(); ++i)
+      {
+        DashboardStyle style = styles.get(i);
+        publishStyle(style.getName(), style.generateSLD(), false);
+      }
+
+      publishLayer(layer.getViewName(), layer.getViewName());
+    }
   }
 
   /**
