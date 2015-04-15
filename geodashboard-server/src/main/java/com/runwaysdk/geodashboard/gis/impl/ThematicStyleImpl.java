@@ -1,31 +1,32 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
-import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
+import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 
 public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 {
-  private String    attribute;
+  private String        attribute;
 
-  private Condition condition;
+  private Condition     condition;
 
-  private String    polygonMinFill;
+  private String        polygonMinFill;
 
-  private String    polygonMaxFill;
+  private String        polygonMaxFill;
 
-  private Integer   pointMinSize;
+  private Integer       pointMinSize;
 
-  private Integer   pointMaxSize;
-  
-  private Integer   pointFixedSize;
-  
-  private Boolean   pointFixed;
+  private Integer       pointMaxSize;
 
-  private String    styleCategories;
-  
-  private Boolean   bubbleContinuousSize;
+  private Integer       pointFixedSize;
+
+  private Boolean       pointFixed;
+
+  private String        styleCategories;
+
+  private Boolean       bubbleContinuousSize;
 
   private AttributeType attributeType;
 
@@ -129,22 +130,28 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   {
     this.attributeType = attributeType;
   }
-  
+
   @Override
   public Boolean getBubbleContinuousSize()
   {
     return this.bubbleContinuousSize;
   }
-  
+
   @Override
   public Integer getPointFixedSize()
   {
     return this.pointFixedSize;
   }
-  
+
   @Override
   public Boolean getPointFixed()
   {
     return this.pointFixed;
+  }
+
+  @Override
+  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
+  {
+    return null;
   }
 }

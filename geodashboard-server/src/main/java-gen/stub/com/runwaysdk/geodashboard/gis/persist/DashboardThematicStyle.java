@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
@@ -111,5 +114,23 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
     }
 
     return AttributeType.BASIC;
+  }
+
+  public AllAggregationType getSingleAggregationType()
+  {
+    List<AllAggregationType> allAgg = this.getAggregationType();
+
+    if (allAgg.size() > 0)
+    {
+      return allAgg.get(0);
+    }
+
+    return null;
+  }
+
+  @Override
+  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
+  {
+    return SecondaryAttributeStyle.getSecondaryAttributeStyleIF(this.getId());
   }
 }

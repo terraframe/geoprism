@@ -36,6 +36,7 @@ import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
@@ -44,6 +45,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.GeneratedComponentQuery;
@@ -392,191 +394,11 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
   public ValueQuery getViewQuery()
   {
     QueryFactory factory = new QueryFactory();
-    ValueQuery innerQuery1 = new ValueQuery(factory);
     ValueQuery innerQuery2 = new ValueQuery(factory);
 
     ValueQuery outerQuery = new ValueQuery(factory);
 
-    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
-    try
-    {
-      while (iter.hasNext())
-      {
-        DashboardStyle style = iter.next();
-
-        // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
-        // but we need to define a non-thematic's behavior or even finalize
-        // on the semantics of a layer without a thematic attribute...which might
-        // not even exist!
-        if (style instanceof DashboardThematicStyle)
-        {
-          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-          String attribute = tStyle.getAttribute();
-          MdAttributeDAOIF mdAttributeDAOIF = tStyle.getMdAttributeDAO();
-
-          MdClassDAOIF mdClass = mdAttributeDAOIF.definedByClass();
-
-          GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, factory);
-
-          // thematic attribute
-          String attributeName = mdAttributeDAOIF.definesAttribute();
-          String displayLabel = mdAttributeDAOIF.getDisplayLabel(Session.getCurrentLocale());
-
-          SelectableSingle thematicAttr = QueryUtil.get(query, attributeName);
-          // use the basic Selectable if no aggregate is selected
-          Selectable thematicSel = thematicAttr;
-
-          // geoentity label
-          GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
-          SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
-          label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-
-          // geo id (for uniqueness)
-          Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
-          geoId1.setColumnAlias(GeoEntity.GEOID);
-
-          List<AllAggregationType> allAgg = tStyle.getAggregationType();
-          boolean isAggregate = false;
-
-          if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment)
-          {
-            if (allAgg.size() == 1)
-            {
-              AllAggregationType agg = allAgg.get(0);
-              // String func = null;
-              if (agg == AllAggregationType.SUM)
-              {
-                // func = "SUM";
-                thematicSel = F.SUM(thematicAttr);
-              }
-              else if (agg == AllAggregationType.MIN)
-              {
-                // func = "MIN";
-                thematicSel = F.MIN(thematicAttr);
-              }
-              else if (agg == AllAggregationType.MAX)
-              {
-                // func = "MAX";
-                thematicSel = F.MAX(thematicAttr);
-              }
-              else if (agg == AllAggregationType.AVG)
-              {
-                // func = "AVG";
-                thematicSel = F.AVG(thematicAttr);
-              }
-              isAggregate = true;
-            }
-
-            Integer length = GeoserverProperties.getDecimalLength();
-            Integer precision = GeoserverProperties.getDecimalPrecision();
-
-            String sql;
-            if (thematicSel instanceof SelectableMoment)
-            {
-              sql = thematicSel.getSQL();
-            }
-            else
-            {
-              sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
-            }
-
-            if (isAggregate)
-            {
-              thematicSel = innerQuery1.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
-            }
-            else
-            {
-              thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
-            }
-
-            thematicSel.setColumnAlias(attribute);
-
-            this.setCriteriaOnInnerQuery(innerQuery1, mdClass, query, geQ1);
-
-            innerQuery1.SELECT(thematicSel);
-            innerQuery1.SELECT(label);
-            innerQuery1.SELECT(geoId1);
-
-          }
-          else
-          {
-            if (allAgg.size() == 1)
-            {
-              AllAggregationType agg = allAgg.get(0);
-
-              OrderBy.SortOrder sortOrder;
-
-              if (agg == AllAggregationType.MAJORITY)
-              {
-                // func = "MAJORITY";
-                sortOrder = OrderBy.SortOrder.DESC;
-              }
-              else
-              // (agg == AllAggregationType.MINORITY)
-              {
-                // func = "MINORITY";
-                sortOrder = OrderBy.SortOrder.ASC;
-              }
-
-              isAggregate = true;
-
-              ValueQuery winFuncQuery = new ValueQuery(factory);
-
-              if (mdAttributeDAOIF.getMdAttributeConcrete() instanceof MdAttributeTermDAOIF)
-              {
-                MdAttributeTermDAOIF mdAttributeTermDAOIF = (MdAttributeTermDAOIF) mdAttributeDAOIF.getMdAttributeConcrete();
-                if (mdAttributeTermDAOIF.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
-                {
-                  AttributeReference thematicTerm = (AttributeReference) thematicAttr;
-
-                  ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
-                  winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
-                  thematicAttr = classifierQ.getDisplayLabel().localize();
-                }
-              }
-
-              thematicSel = F.COUNT(thematicAttr, "COUNT");
-              AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
-              AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicAttr), sortOrder));
-
-              winFuncQuery.SELECT_DISTINCT(thematicSel);
-              winFuncQuery.SELECT_DISTINCT(stringAgg);
-              winFuncQuery.SELECT_DISTINCT(label);
-              winFuncQuery.SELECT_DISTINCT(rank);
-              winFuncQuery.SELECT_DISTINCT(geoId1);
-              winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle) geoId1);
-              winFuncQuery.ORDER_BY(thematicSel, sortOrder);
-
-              this.setCriteriaOnInnerQuery(winFuncQuery, mdClass, query, geQ1);
-
-              Selectable outerThematicSel = winFuncQuery.get("AGG");
-              outerThematicSel.setUserDefinedAlias("AGG");
-              outerThematicSel.setColumnAlias(attribute);
-
-              Selectable outerLabel = winFuncQuery.get(GeoEntity.DISPLAYLABEL);
-              outerLabel.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
-              outerLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
-
-              Selectable outerGeoId = winFuncQuery.get(GeoEntity.GEOID);
-              outerGeoId.setColumnAlias(GeoEntity.GEOID);
-              outerGeoId.setUserDefinedAlias(GeoEntity.GEOID);
-
-              innerQuery1.SELECT(outerThematicSel);
-              innerQuery1.SELECT(outerLabel);
-              innerQuery1.SELECT(outerGeoId);
-              innerQuery1.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", rank.getColumnAlias()).EQ(1));
-            }
-
-            // Assumes isAggregate is true
-          }
-
-        } // if (style instanceof DashboardThematicStyle)
-      } // while (iter.hasNext())
-    }
-    finally
-    {
-      iter.close();
-    }
+    ValueQuery innerQuery1 = this.getInnerQuery(factory);
 
     if (log.isDebugEnabled())
     {
@@ -630,6 +452,247 @@ public class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.
     outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
 
     return outerQuery;
+  }
+
+  private ValueQuery getInnerQuery(QueryFactory factory)
+  {
+    DashboardStyle style = this.getStyle();
+
+    // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
+    // but we need to define a non-thematic's behavior or even finalize
+    // on the semantics of a layer without a thematic attribute...which might
+    // not even exist!
+    if (style instanceof DashboardThematicStyle)
+    {
+      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
+
+      MdAttributeDAOIF thematicMdAttribute = tStyle.getMdAttributeDAO();
+      AllAggregationType thematicAggregation = tStyle.getSingleAggregationType();
+
+      ValueQuery thematicQuery = this.getValueQuery(factory, thematicMdAttribute, thematicAggregation);
+
+      SecondaryAttributeStyleIF sStyle = SecondaryAttributeStyle.getSecondaryAttributeStyleIF(tStyle.getId());
+
+      if (sStyle != null)
+      {
+        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
+        thematicGeoId.setColumnAlias(GeoEntity.GEOID);
+
+        AttributeCharacter thematicLabel = thematicQuery.aCharacter(GeoEntity.DISPLAYLABEL);
+        thematicLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
+
+        Attribute thematicAttribute = thematicQuery.get(thematicMdAttribute.definesAttribute());
+        thematicAttribute.setColumnAlias(thematicMdAttribute.definesAttribute());
+
+        ValueQuery innerQuery = new ValueQuery(factory);
+        innerQuery.SELECT(thematicGeoId, thematicLabel, thematicAttribute);
+
+        MdAttributeDAOIF secondaryMdAttribute = sStyle.getMdAttributeDAO();
+
+        if (!secondaryMdAttribute.getId().equals(thematicMdAttribute.getId()))
+        {
+          ValueQuery secondaryQuery = this.getValueQuery(factory, secondaryMdAttribute, sStyle.getSingleAggregationType());
+
+          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
+          secondaryGeoId.setColumnAlias(GeoEntity.GEOID);
+
+          Attribute secondaryAttribute = secondaryQuery.get(secondaryMdAttribute.definesAttribute());
+          secondaryAttribute.setColumnAlias(secondaryMdAttribute.definesAttribute());
+
+          innerQuery.SELECT(secondaryAttribute);
+          innerQuery.WHERE(thematicGeoId.LEFT_JOIN_EQ(secondaryGeoId));
+        }
+
+        return innerQuery;
+      }
+      else
+      {
+        return thematicQuery;
+      }
+    }
+    else
+    {
+      return new ValueQuery(factory);
+    }
+
+  }
+
+  private DashboardStyle getStyle()
+  {
+    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
+
+    try
+    {
+      while (iter.hasNext())
+      {
+        return iter.next();
+
+      }
+    }
+    finally
+    {
+      iter.close();
+    }
+
+    throw new ProgrammingErrorException("Dashboard layer exists without a style");
+  }
+
+  private ValueQuery getValueQuery(QueryFactory factory, MdAttributeDAOIF mdAttribute, AllAggregationType agg)
+  {
+    ValueQuery vQuery = new ValueQuery(factory);
+
+    MdClassDAOIF mdClass = mdAttribute.definedByClass();
+
+    GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, factory);
+
+    // thematic attribute
+    String attributeName = mdAttribute.definesAttribute();
+    String displayLabel = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
+
+    SelectableSingle thematicAttr = QueryUtil.get(query, attributeName);
+    // use the basic Selectable if no aggregate is selected
+    Selectable thematicSel = thematicAttr;
+
+    // geoentity label
+    GeoEntityQuery geQ1 = new GeoEntityQuery(vQuery);
+    SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
+    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+
+    // geo id (for uniqueness)
+    Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
+    geoId1.setColumnAlias(GeoEntity.GEOID);
+
+    if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment)
+    {
+      boolean isAggregate = false;
+
+      if (agg != null)
+      {
+        // String func = null;
+        if (agg == AllAggregationType.SUM)
+        {
+          // func = "SUM";
+          thematicSel = F.SUM(thematicAttr);
+        }
+        else if (agg == AllAggregationType.MIN)
+        {
+          // func = "MIN";
+          thematicSel = F.MIN(thematicAttr);
+        }
+        else if (agg == AllAggregationType.MAX)
+        {
+          // func = "MAX";
+          thematicSel = F.MAX(thematicAttr);
+        }
+        else if (agg == AllAggregationType.AVG)
+        {
+          // func = "AVG";
+          thematicSel = F.AVG(thematicAttr);
+        }
+        isAggregate = true;
+      }
+
+      Integer length = GeoserverProperties.getDecimalLength();
+      Integer precision = GeoserverProperties.getDecimalPrecision();
+
+      String sql;
+
+      if (thematicSel instanceof SelectableMoment)
+      {
+        sql = thematicSel.getSQL();
+      }
+      else
+      {
+        sql = thematicSel.getSQL() + "::decimal(" + length + "," + precision + ")";
+      }
+
+      if (isAggregate)
+      {
+        thematicSel = vQuery.aSQLAggregateDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
+      }
+      else
+      {
+        thematicSel = vQuery.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
+      }
+
+      thematicSel.setColumnAlias(attributeName);
+
+      this.setCriteriaOnInnerQuery(vQuery, mdClass, query, geQ1);
+
+      vQuery.SELECT(thematicSel);
+      vQuery.SELECT(label);
+      vQuery.SELECT(geoId1);
+
+    }
+    else
+    {
+      if (agg != null)
+      {
+        OrderBy.SortOrder sortOrder;
+
+        if (agg == AllAggregationType.MAJORITY)
+        {
+          // func = "MAJORITY";
+          sortOrder = OrderBy.SortOrder.DESC;
+        }
+        else
+        // (agg == AllAggregationType.MINORITY)
+        {
+          // func = "MINORITY";
+          sortOrder = OrderBy.SortOrder.ASC;
+        }
+
+        ValueQuery winFuncQuery = new ValueQuery(factory);
+
+        if (mdAttribute.getMdAttributeConcrete() instanceof MdAttributeTermDAOIF)
+        {
+          MdAttributeTermDAOIF mdAttributeTermDAOIF = (MdAttributeTermDAOIF) mdAttribute.getMdAttributeConcrete();
+          if (mdAttributeTermDAOIF.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
+          {
+            AttributeReference thematicTerm = (AttributeReference) thematicAttr;
+
+            ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
+            winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
+            thematicAttr = classifierQ.getDisplayLabel().localize();
+          }
+        }
+
+        thematicSel = F.COUNT(thematicAttr, "COUNT");
+        AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
+        AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicAttr), sortOrder));
+
+        winFuncQuery.SELECT_DISTINCT(thematicSel);
+        winFuncQuery.SELECT_DISTINCT(stringAgg);
+        winFuncQuery.SELECT_DISTINCT(label);
+        winFuncQuery.SELECT_DISTINCT(rank);
+        winFuncQuery.SELECT_DISTINCT(geoId1);
+        winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle) geoId1);
+        winFuncQuery.ORDER_BY(thematicSel, sortOrder);
+
+        this.setCriteriaOnInnerQuery(winFuncQuery, mdClass, query, geQ1);
+
+        Selectable outerThematicSel = winFuncQuery.get("AGG");
+        outerThematicSel.setUserDefinedAlias(attributeName);
+        outerThematicSel.setColumnAlias(attributeName);
+
+        Selectable outerLabel = winFuncQuery.get(GeoEntity.DISPLAYLABEL);
+        outerLabel.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+        outerLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
+
+        Selectable outerGeoId = winFuncQuery.get(GeoEntity.GEOID);
+        outerGeoId.setColumnAlias(GeoEntity.GEOID);
+        outerGeoId.setUserDefinedAlias(GeoEntity.GEOID);
+
+        vQuery.SELECT(outerThematicSel);
+        vQuery.SELECT(outerLabel);
+        vQuery.SELECT(outerGeoId);
+        vQuery.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", rank.getColumnAlias()).EQ(1));
+      }
+
+      // Assumes isAggregate is true
+    }
+
+    return vQuery;
   }
 
   private void setCriteriaOnInnerQuery(ValueQuery innerQuery1, MdClassDAOIF mdClass, GeneratedComponentQuery query, GeoEntityQuery geQ1)

@@ -2,7 +2,6 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
-import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
@@ -130,7 +128,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
    *          TODO
    * @param mdAttributeId
    * @param mdAttribute
-   * @throws JSONException 
+   * @throws JSONException
    */
   @SuppressWarnings("unchecked")
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mapId, String mdAttributeId)
@@ -214,8 +212,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
       ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
       JSONObject rootsIds = new JSONObject();
       JSONArray ids = new JSONArray();
-      
-     
+
       Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
       for (ClassifierDTO root : roots)
       {
@@ -228,7 +225,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
         {
           throw new RuntimeException(e);
         }
-        
+
         List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
         for (ClassifierAttributeRootDTO relationship : relationships)
         {
@@ -245,7 +242,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
             selectableMap.put(root.getId(), relationship.getSelectable());
           }
         }
-        
+
         ids.put(newJSON);
       }
 
@@ -277,9 +274,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
     req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
     req.setAttribute("categories", style.getStyleCategories());
+    req.setAttribute("secondaryAttributes", DashboardMapDTO.getSecondaryAttributes(this.getClientRequest(), mapId, mdAttributeId));
   }
-  
-  
+
   private String getDisplayLabel(MdAttributeDTO mdAttr)
   {
     if (mdAttr instanceof MdAttributeVirtualDTO)

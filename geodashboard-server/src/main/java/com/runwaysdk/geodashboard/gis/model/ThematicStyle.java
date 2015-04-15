@@ -27,11 +27,13 @@ public interface ThematicStyle extends Style
   public String getStyleCategories();
 
   public AttributeType getAttributeType();
-  
+
   public Boolean getBubbleContinuousSize();
-  
+
   public Integer getPointFixedSize();
-  
+
   public Boolean getPointFixed();
+
+  public SecondaryAttributeStyleIF getSecondaryAttributeStyle();
 
 }

@@ -25,6 +25,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardQuery;
+import com.runwaysdk.geodashboard.MdAttributeView;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
@@ -32,6 +33,7 @@ import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -429,6 +431,41 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       iterator.close();
     }
 
+  }
+
+  public static MdAttributeView[] getSecondaryAttributes(String mapId, String mdAttributeId)
+  {
+    DashboardMap dashboardMap = DashboardMap.get(mapId);
+    Dashboard dashboard = dashboardMap.getDashboard();
+
+    MdAttributeDAOIF mdAttributeDAOIF = MdAttributeDAO.get(mdAttributeId);
+    MdClassDAOIF mdClass = mdAttributeDAOIF.definedByClass();
+    MdAttributeViewPredicate predicate = new MdAttributeViewPredicate(mdAttributeDAOIF);
+
+    OIterator<? extends MetadataWrapper> iterator = dashboard.getAllMetadata();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        MetadataWrapper wrapper = iterator.next();
+
+        if (mdClass.getId().equals(wrapper.getWrappedMdClassId()))
+        {
+          List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper.getSortedAttributes()));
+
+          new Iterables<MdAttributeView>().remove(attributes, predicate);
+
+          return attributes.toArray(new MdAttributeView[attributes.size()]);
+        }
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return new MdAttributeView[] {};
   }
 
 }

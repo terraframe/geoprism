@@ -497,11 +497,21 @@
 	                        </c:choose>
 	                      </div>
 	                    </div>
+	                    <div class="secondary-box">
+	                      <strong class="title"><gdb:localize key="DashboardLayer.form.secondaryAttributeStyle"/></strong>
+	                      <div class="cell-holder">	                    
+	                        <label for="ss58"><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
+  	                        <div id="secondary-select-box" class="select-box">
+	                          <select id="ss58" class="method-slect" name="secondaryAttribute">
+	                            <option value=""><gdb:localize key="DashboardLayer.form.none"/></option>
+	                            <c:forEach items="${secondaryAttributes}" var="secondaryAttribute">
+		                          <option value="${secondaryAttribute.mdAttributeId}">${secondaryAttribute.displayLabel}</option>
+		                        </c:forEach>
+		                      </select>
+	                        </div>
+	                      </div>
+                        </div>
 	                  </div>
-	                  
-	                  
-	                  
-	                  
 	                  
 	                  <!-- GRADIENT -->
 	                  <div
