@@ -619,10 +619,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   
           if (definedByClass.getId().equals(mdClass.getId()))
           {
-            if(thematicAttr instanceof Attribute)
-            {
-              condition.restrictQuery(innerQuery1, (Attribute) thematicAttr);
-            }
+            Attribute attr = QueryUtil.get(query, condAttribute.definesAttribute());
+
+            condition.restrictQuery(innerQuery1, attr);
           }
         }
         else if (condition instanceof LocationCondition)

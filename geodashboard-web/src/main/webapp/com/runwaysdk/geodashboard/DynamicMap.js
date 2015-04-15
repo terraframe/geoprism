@@ -90,7 +90,7 @@
         // Handler for the clone dashboard button
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         
-        this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
+        this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
@@ -270,6 +270,7 @@
           }
           view.setAggregationMethod(layer.aggregationMethod);
           view.setAggregationAttribute(layer.aggregationAttribute);
+          view.setMdAttribute(layer.mdAttributeId);
           
           view.style = layer.styles[0];          
           
@@ -1265,6 +1266,7 @@
         
         params['mapId'] = this._mapId;
         params['style.mdAttribute'] = mdAttribute;
+        params['layer.mdAttribute'] = mdAttribute;
         
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
@@ -1338,7 +1340,7 @@
           
           //return request;
           var id = params['layer.componentId'];
-          com.runwaysdk.geodashboard.gis.persist.DashboardLayer.unlock(request, id);
+          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.unlock(request, id);
         }
       },
       
@@ -1782,7 +1784,7 @@
         
         this._LayerController.newThematicInstance(request, this._currentAttributeId, this._mapId);
       },
-      
+      	
       /**
        * Renders the layer creation/edit form
        * 

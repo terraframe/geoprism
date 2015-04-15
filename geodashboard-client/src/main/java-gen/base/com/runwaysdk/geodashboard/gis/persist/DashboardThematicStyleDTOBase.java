@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1221631593)
+@com.runwaysdk.business.ClassSignature(hash = 1023558866)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 1221631593;
+  private static final long serialVersionUID = 1023558866;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,7 +27,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
     return CLASS;
   }
   
-  public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String POINTFIXED = "pointFixed";
@@ -38,52 +37,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  @SuppressWarnings("unchecked")
-  public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
-  {
-    return (java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO>) com.runwaysdk.transport.conversion.ConversionFacade.convertEnumDTOsFromEnumNames(getRequest(), com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO.CLASS, getEnumNames(AGGREGATIONTYPE));
-  }
-  
-  public java.util.List<String> getAggregationTypeEnumNames()
-  {
-    return getEnumNames(AGGREGATIONTYPE);
-  }
-  
-  public void addAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO enumDTO)
-  {
-    addEnumItem(AGGREGATIONTYPE, enumDTO.toString());
-  }
-  
-  public void removeAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO enumDTO)
-  {
-    removeEnumItem(AGGREGATIONTYPE, enumDTO.toString());
-  }
-  
-  public void clearAggregationType()
-  {
-    clearEnum(AGGREGATIONTYPE);
-  }
-  
-  public boolean isAggregationTypeWritable()
-  {
-    return isWritable(AGGREGATIONTYPE);
-  }
-  
-  public boolean isAggregationTypeReadable()
-  {
-    return isReadable(AGGREGATIONTYPE);
-  }
-  
-  public boolean isAggregationTypeModified()
-  {
-    return isModified(AGGREGATIONTYPE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO getAggregationTypeMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO) getAttributeDTO(AGGREGATIONTYPE).getAttributeMdDTO();
-  }
-  
   public Boolean getBubbleContinuousSize()
   {
     return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BUBBLECONTINUOUSSIZE));

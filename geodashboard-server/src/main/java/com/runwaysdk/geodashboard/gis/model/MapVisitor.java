@@ -18,7 +18,9 @@ public interface MapVisitor
 {
   public void visit(Map component);
 
-  public void visit(Layer component);
+  public void visit(ThematicLayer component);
+  
+  public void visit(ReferenceLayer component);
 
   public void visit(Style style);
 

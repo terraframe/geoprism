@@ -1,19 +1,21 @@
-import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
-import com.runwaysdk.dataaccess.metadata.MdRelationshipDAO;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
-import com.runwaysdk.session.Request;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+import org.eclipse.emf.ecore.xml.type.internal.DataValue.Base64;
 
 public class Sandbox
 {
-  @Request
-  public static void main(String[] args)
+  public static void main(String[] args) throws NoSuchAlgorithmException
   {
-    MdRelationshipDAOIF mdRelationshipDAOIF = MdRelationshipDAO.getMdRelationshipDAO(ClassifierAttributeRoot.CLASS);
-    
-    mdRelationshipDAOIF.printAttributes();
-    
-//    NoLayersExceptionDTO ex = new NoLayersExceptionDTO(this.getClientRequest(), this.req.getLocale());
-//    String msg = ex.getLocalizedMessage();
+    KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+    keyGenerator.init(128);
+
+    SecretKey key = keyGenerator.generateKey();
+
+    byte[] bytes = key.getEncoded();
+
+    System.out.println(Base64.encode(bytes));
   }
 }

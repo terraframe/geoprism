@@ -1504,6 +1504,11 @@ a.blueactive,
   		overflow-y: auto;
 	}
 	
+	#collapse-ref-layer.accordion-body.in{
+	  	max-height: 400px;
+  		overflow-y: auto;
+	}
+	
 	#legend-container .accordion-group {
 		margin-bottom: 0px;
 		border: 0px;

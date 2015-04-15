@@ -1,22 +1,20 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
 
-public class LayerImpl extends ComponentImpl implements Layer
+public abstract class LayerImpl extends ComponentImpl implements Layer
 {
   private List<Style>             styles;
 
   private String                  name;
 
-  private HashMap<String, Double> layerMinMax;
+//  private HashMap<String, Double> layerMinMax;
 
   private Boolean                 virtual;
 
@@ -72,11 +70,6 @@ public class LayerImpl extends ComponentImpl implements Layer
     return this.virtual;
   }
 
-  @Override
-  public void accepts(MapVisitor visitor)
-  {
-    visitor.visit(this);
-  }
 
   public void setFeatureType(FeatureType featureType)
   {
@@ -111,9 +104,9 @@ public class LayerImpl extends ComponentImpl implements Layer
     this.featureStrategy = featureStrategy;
   }
 
-  public HashMap<String, Double> getLayerMinMax(String attribute)
-  {
-    return layerMinMax;
-  }
+//  public HashMap<String, Double> getLayerMinMax(String attribute)
+//  {
+//    return layerMinMax;
+//  }
 
 }

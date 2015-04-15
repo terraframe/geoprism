@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1988502718)
+@com.runwaysdk.business.ClassSignature(hash = 974138896)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -241,6 +241,25 @@ public  abstract  class DashboardLayerViewQueryBase extends com.runwaysdk.query.
 
   }
  
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
+  {
+    return getMdAttribute(null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias)
+  {
+
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.MDATTRIBUTE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
+  {
+
+    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.MDATTRIBUTE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getSldName()
   {
     return getSldName(null);
