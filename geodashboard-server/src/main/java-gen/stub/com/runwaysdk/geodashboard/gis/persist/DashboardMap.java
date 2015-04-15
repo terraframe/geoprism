@@ -62,6 +62,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     return this.getAllHasLayer().getAll();
   }
+  
 
   /**
    * MdMethod
@@ -76,11 +77,15 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : layers)
     {
-      layer.setConditions(Arrays.asList(conditions));
-
-      generateSessionViewName(layer);
-
-      layer.publish(true);
+      if(layer instanceof DashboardThematicLayer)
+      {
+        DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
+        tLayer.setConditions(Arrays.asList(conditions));
+  
+        generateSessionViewName(tLayer);
+  
+        tLayer.publish(true);
+      }
     }
 
     GeoserverFacade.pushUpdates();
@@ -178,9 +183,13 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     for (DashboardLayer layer : orderedLayers)
     {
-      this.generateSessionViewName(layer);
+      if(layer instanceof DashboardThematicLayer)
+      {
+        DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
+        this.generateSessionViewName(tLayer);
 
-      layer.publish(true);
+        tLayer.publish(true);
+      }
     }
 
     GeoserverFacade.pushUpdates();
@@ -195,30 +204,41 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       DashboardLayer[] orderedLayers = this.getOrderedLayers();
-
+      
       JSONObject mapJSON = new JSONObject();
+      JSONArray layers = new JSONArray();
+      
       mapJSON.put("mapName", this.getName());
+        
+      DashboardThematicLayer[] orderedTLayers = new DashboardThematicLayer[orderedLayers.length];
+      for(int i=0; i<orderedLayers.length; i++)
+      {
+        if(orderedLayers[i] instanceof DashboardThematicLayer)
+        {
+          DashboardThematicLayer tLayer = (DashboardThematicLayer) orderedLayers[i];
+          orderedTLayers[i] = tLayer;
+        }
+      }
 
       if (config == null || !config.equals("republish=false"))
       {
-        publishAllLayers(orderedLayers);
+        publishAllLayers(orderedTLayers);
       }
 
-      JSONArray layers = new JSONArray();
-      for (int i = 0; i < orderedLayers.length; i++)
+      for (int i = 0; i < orderedTLayers.length; i++)
       {
-        layers.put(orderedLayers[i].toJSON());
+        layers.put(orderedTLayers[i].toJSON());
       }
       mapJSON.put("layers", layers);
 
-      JSONArray mapBBox = getMapLayersBBox(orderedLayers);
+      JSONArray mapBBox = getMapLayersBBox(orderedTLayers);
       mapJSON.put("bbox", mapBBox);
 
       if (log.isDebugEnabled())
       {
         log.debug("JSON for map [" + this + "]:\n" + mapJSON.toString(4));
       }
-
+      
       return mapJSON.toString();
     }
     catch (JSONException ex)

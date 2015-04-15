@@ -39,7 +39,9 @@ import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
+import com.runwaysdk.geodashboard.gis.model.ReferenceLayer;
 import com.runwaysdk.geodashboard.gis.model.Style;
+import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.And;
 import com.runwaysdk.geodashboard.gis.model.condition.Category;
@@ -1085,7 +1087,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private Node                                              root;
 
-  private Layer                                             currentLayer;
+  private ThematicLayer                                             currentLayer;
 
   public SLDMapVisitor()
   {
@@ -1201,7 +1203,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   }
 
   @Override
-  public void visit(Layer layer)
+  public void visit(ThematicLayer layer)
   {
     this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
 
@@ -1226,6 +1228,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       style.accepts(this);
     }
+  }
+  
+  @Override
+  public void visit(ReferenceLayer layer)
+  {
+    
   }
 
   /**

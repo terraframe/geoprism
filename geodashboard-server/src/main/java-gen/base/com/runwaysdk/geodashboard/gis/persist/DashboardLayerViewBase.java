@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -100356523)
+@com.runwaysdk.business.ClassSignature(hash = 360232039)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -23,9 +23,10 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String LAYERNAME = "layerName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
+  public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = -100356523;
+  private static final long serialVersionUID = 360232039;
   
   public DashboardLayerViewBase()
   {
@@ -353,6 +354,46 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     else
     {
       setValue(LEGENDYPOSITION, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttribute getMdAttribute()
+  {
+    if (getValue(MDATTRIBUTE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttribute.get(getValue(MDATTRIBUTE));
+    }
+  }
+  
+  public String getMdAttributeId()
+  {
+    return getValue(MDATTRIBUTE);
+  }
+  
+  public void validateMdAttribute()
+  {
+    this.validateAttribute(MDATTRIBUTE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF getMdAttributeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF)mdClassIF.definesAttribute(MDATTRIBUTE);
+  }
+  
+  public void setMdAttribute(com.runwaysdk.system.metadata.MdAttribute value)
+  {
+    if(value == null)
+    {
+      setValue(MDATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(MDATTRIBUTE, value.getId());
     }
   }
   

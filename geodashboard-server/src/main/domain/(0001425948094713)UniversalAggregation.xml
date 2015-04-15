@@ -9,14 +9,6 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController">
-        <mdAction name="newThematicInstance">
-          <create>
-            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
-          </create>
-        </mdAction>
-      </mdController>
-
     </update>
   </doIt>
   <undoIt>

@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.condition.GreaterThan;
 import com.runwaysdk.query.Attribute;
@@ -33,9 +34,10 @@ public class DashboardGreaterThan extends DashboardGreaterThanBase implements co
     {
       query.AND( ( (AttributeDate) attr ).GT(this.getComparisonValueAsDate()));
     }
-    else if (attr instanceof AttributeCharacter)
+    else
     {
-      query.AND( ( (AttributeDate) attr ).EQ(this.getComparisonValue()));
+      // Unsupported
+      throw new ProgrammingErrorException("Unsupported condition attribute type [" + attr.getClass().getName() + "]");
     }
   }
 

@@ -24,18 +24,6 @@
 		</create>
 
 		<update>
-
-			<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
-				<create>
-					<attributes>
-						<boolean name="layerEnabled" required="true" defaultValue="true"
-							label="Layer Enabled" />
-						<boolean name="BBoxIncluded" required="true" defaultValue="true"
-							label="BBox Inluded" />
-					</attributes>
-				</create>
-			</mdBusiness>
-
 		</update>
 	</doIt>
 	<undoIt>

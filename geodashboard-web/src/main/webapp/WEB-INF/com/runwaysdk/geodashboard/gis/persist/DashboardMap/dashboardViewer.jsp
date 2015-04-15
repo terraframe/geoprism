@@ -88,15 +88,15 @@ $(document).ready(function(){
         </article>
         
        	<!-- Reference Layer Panel -->       
-<!--         <article class="accordion info-box" id="ref-layer-container"> -->
-<!--         	<div class="accordion-group sales-accortion" id="ref-layer-sub-container"> -->
-<!--         		<div class="accordion-heading"> -->
-<%--         			<a class="map-layers-opener opener" id="ref-layer-opener-button" data-toggle="collapse" data-parent="#ref-layer-container" href="#collapse-ref-layer"><gdb:localize key="dashboardViewer.refLayer"/></a> --%>
-<!--         		</div>	 -->
-<!--               	<div id="collapse-ref-layer" class="accordion-body" style="height: 0px;"> -->
-<!--               		<div class="accordion-inner holder" id="refLayerContainer"></div> -->
-<!-- 			    </div> -->
-<!-- 		    </div> -->
+        <article class="accordion info-box" id="ref-layer-container">
+        	<div class="accordion-group sales-accortion" id="ref-layer-sub-container">
+        		<div class="accordion-heading">
+        			<a class="map-layers-opener opener" id="ref-layer-opener-button" data-toggle="collapse" data-parent="#ref-layer-container" href="#collapse-ref-layer"><gdb:localize key="dashboardViewer.refLayer"/></a>
+        		</div>	
+              	<div id="collapse-ref-layer" class="accordion-body" style="height: 0px;">
+              		<div class="accordion-inner holder" id="refLayerContainer"></div>
+			    </div>
+		    </div>
 		 </article>
 
 		<!-- Base Layers Panel -->     

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1845910741)
+@com.runwaysdk.business.ClassSignature(hash = 9732839)
 public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
-  private static final long serialVersionUID = 1845910741;
+  private static final long serialVersionUID = 9732839;
   
   protected DashboardLayerViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -28,6 +28,7 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public static java.lang.String LAYERNAME = "layerName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
+  public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
   public Boolean getActiveByDefault()
@@ -435,6 +436,55 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getLegendYPositionMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LEGENDYPOSITION).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeDTO getMdAttribute()
+  {
+    if(getValue(MDATTRIBUTE) == null || getValue(MDATTRIBUTE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeDTO.get(getRequest(), getValue(MDATTRIBUTE));
+    }
+  }
+  
+  public String getMdAttributeId()
+  {
+    return getValue(MDATTRIBUTE);
+  }
+  
+  public void setMdAttribute(com.runwaysdk.system.metadata.MdAttributeDTO value)
+  {
+    if(value == null)
+    {
+      setValue(MDATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(MDATTRIBUTE, value.getId());
+    }
+  }
+  
+  public boolean isMdAttributeWritable()
+  {
+    return isWritable(MDATTRIBUTE);
+  }
+  
+  public boolean isMdAttributeReadable()
+  {
+    return isReadable(MDATTRIBUTE);
+  }
+  
+  public boolean isMdAttributeModified()
+  {
+    return isModified(MDATTRIBUTE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
   }
   
   public String getSldName()
