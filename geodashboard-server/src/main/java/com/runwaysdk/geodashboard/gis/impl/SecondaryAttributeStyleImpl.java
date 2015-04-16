@@ -36,7 +36,7 @@ public class SecondaryAttributeStyleImpl implements Reloadable, SecondaryAttribu
   }
 
   @Override
-  public AllAggregationType getSingleAggregationType()
+  public AllAggregationType getAggregationMethod()
   {
     return this.aggregation;
   }

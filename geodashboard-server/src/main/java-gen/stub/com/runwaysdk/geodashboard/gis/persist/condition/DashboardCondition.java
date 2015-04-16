@@ -3,13 +3,9 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
+import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleQuery;
 import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardCondition extends DashboardConditionBase implements com.runwaysdk.generation.loader.Reloadable, Condition
@@ -55,32 +51,10 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
   }
 
   @Override
-  public ThematicStyle getThematicStyle()
+  public ThematicLayer getThematicLayer()
   {
-    QueryFactory f = new QueryFactory();
-    DashboardThematicStyleQuery q = new DashboardThematicStyleQuery(f);
-
-    q.WHERE(q.getStyleCondition().EQ(this));
-
-    OIterator<? extends DashboardThematicStyle> iter = q.getIterator();
-
-    try
-    {
-      // There should be one result
-      if (iter.hasNext())
-      {
-        return iter.next();
-      }
-      else
-      {
-        String msg = "The condition [" + this.getName() + "] with condition [" + this + "] is not referenced by a style.";
-        throw new ProgrammingErrorException(msg);
-      }
-    }
-    finally
-    {
-      iter.close();
-    }
+    String msg = "The condition [" + this.getName() + "] with condition [" + this + "] is not referenced by a layer.";
+    throw new ProgrammingErrorException(msg);
   }
 
 }

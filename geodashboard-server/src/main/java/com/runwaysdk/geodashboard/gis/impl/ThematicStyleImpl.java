@@ -1,52 +1,34 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
-import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 
 public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 {
-  private String        attribute;
+  private Condition condition;
 
-  private Condition     condition;
+  private String    polygonMinFill;
 
-  private String        polygonMinFill;
+  private String    polygonMaxFill;
 
-  private String        polygonMaxFill;
+  private Integer   pointMinSize;
 
-  private Integer       pointMinSize;
+  private Integer   pointMaxSize;
 
-  private Integer       pointMaxSize;
+  private Integer   pointFixedSize;
 
-  private Integer       pointFixedSize;
+  private Boolean   pointFixed;
 
-  private Boolean       pointFixed;
+  private String    styleCategories;
 
-  private String        styleCategories;
-
-  private Boolean       bubbleContinuousSize;
-
-  private AttributeType attributeType;
+  private Boolean   bubbleContinuousSize;
 
   public ThematicStyleImpl()
   {
     super();
 
-    this.attribute = null;
     this.condition = null;
-  }
-
-  @Override
-  public String getAttribute()
-  {
-    return this.attribute;
-  }
-
-  public void setAttribute(String attribute)
-  {
-    this.attribute = attribute;
   }
 
   @Override
@@ -121,17 +103,6 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   }
 
   @Override
-  public AttributeType getAttributeType()
-  {
-    return this.attributeType;
-  }
-
-  public void setAttributeType(AttributeType attributeType)
-  {
-    this.attributeType = attributeType;
-  }
-
-  @Override
   public Boolean getBubbleContinuousSize()
   {
     return this.bubbleContinuousSize;
@@ -147,11 +118,5 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public Boolean getPointFixed()
   {
     return this.pointFixed;
-  }
-
-  @Override
-  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
-  {
-    return null;
   }
 }

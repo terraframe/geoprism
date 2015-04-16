@@ -9,8 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
@@ -18,10 +22,12 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
@@ -52,7 +58,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class DashboardThematicLayer extends DashboardThematicLayerBase implements com.runwaysdk.generation.loader.Reloadable, ThematicLayer
+public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
   private static final long serialVersionUID = -810007054;
 
@@ -64,18 +70,32 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   @Transaction
   protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
-
     boolean isNew = this.isNew();
 
-    super.applyWithStyleInTransaction(style, mapId, conditions);
-
+    // Find (and set) the GeoEntity reference attribute
+    // FIXME UI needs to allow for picking of the geo entity attribute
     if (isNew && style instanceof DashboardThematicStyle)
     {
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
 
+      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(tStyle.getMdAttributeId());
+      MdClassDAOIF mdClass = mdAttribute.definedByClass();
+      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
+
       MdAttribute md = MdAttribute.get(tStyle.getMdAttributeId());
       this.setMdAttribute(md);
+
+      if (attr != null)
+      {
+        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
+      }
+      else
+      {
+        throw new ProgrammingErrorException("Class [" + mdClass.definesType() + "] does not reference a [" + GeoEntity.CLASS + "].");
+      }
     }
+
+    super.applyWithStyleInTransaction(style, mapId, conditions);
   }
 
   /**
@@ -137,29 +157,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
       json.put("featureStrategy", getFeatureStrategy());
       json.put("mdAttributeId", this.getMdAttributeId());
-
-      // Getting the aggregation method (i.e. avg, sum, min, max) and
-      // aggregation attribute
-      // (i.e. numberofunits) for the style representation
-      OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
-      try
-      {
-        while (iter.hasNext())
-        {
-          DashboardStyle style = iter.next();
-          DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-          String aggregationAttribute = tStyle.getAttribute();
-          List<AllAggregationType> allAgg = this.getAggregationType();
-          AllAggregationType aggregationMethod = allAgg.get(0);
-
-          json.put("aggregationMethod", aggregationMethod);
-          json.put("aggregationAttribute", aggregationAttribute);
-        }
-      }
-      finally
-      {
-        iter.close();
-      }
+      json.put("attributeType", this.getAttributeType());
+      json.put("aggregationMethod", this.getAggregationMethod());
+      json.put("aggregationAttribute", this.getAttribute());
 
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -249,8 +249,10 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
   private ValueQuery getInnerQuery(QueryFactory factory)
   {
-    DashboardStyle style = this.getStyle();
+    MdAttributeDAOIF thematicMdAttribute = this.getMdAttributeDAO();
+    AllAggregationType thematicAggregation = this.getAggregationMethod();
 
+    DashboardStyle style = this.getStyle();
     // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
     // but we need to define a non-thematic's behavior or even finalize
     // on the semantics of a layer without a thematic attribute...which might
@@ -258,9 +260,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     if (style instanceof DashboardThematicStyle)
     {
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
-      MdAttributeDAOIF thematicMdAttribute = tStyle.getMdAttributeDAO();
-      AllAggregationType thematicAggregation = tStyle.getSingleAggregationType();
 
       ValueQuery thematicQuery = this.getValueQuery(factory, thematicMdAttribute, thematicAggregation);
 
@@ -284,7 +283,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
         if (!secondaryMdAttribute.getId().equals(thematicMdAttribute.getId()))
         {
-          ValueQuery secondaryQuery = this.getValueQuery(factory, secondaryMdAttribute, sStyle.getSingleAggregationType());
+          ValueQuery secondaryQuery = this.getValueQuery(factory, secondaryMdAttribute, sStyle.getAggregationMethod());
 
           AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
           secondaryGeoId.setColumnAlias(GeoEntity.GEOID);
@@ -538,6 +537,67 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
+  }
+
+  public AllAggregationType getAggregationMethod()
+  {
+    List<AllAggregationType> allAgg = this.getAggregationType();
+
+    if (allAgg.size() > 0)
+    {
+      return allAgg.get(0);
+    }
+
+    return null;
+  }
+
+  public MdAttributeDAOIF getMdAttributeDAO()
+  {
+    String mdAttributeId = this.getMdAttributeId();
+
+    if (mdAttributeId != null && mdAttributeId.length() > 0)
+    {
+      return MdAttributeDAO.get(mdAttributeId);
+    }
+
+    return null;
+  }
+
+  @Override
+  public AttributeType getAttributeType()
+  {
+    MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO().getMdAttributeConcrete();
+
+    if (mdAttribute instanceof MdAttributeDateDAOIF)
+    {
+      return AttributeType.DATE;
+    }
+    else if (mdAttribute instanceof MdAttributeDateTimeDAOIF)
+    {
+      return AttributeType.DATETIME;
+    }
+    else if (mdAttribute instanceof MdAttributeTimeDAOIF)
+    {
+      return AttributeType.TIME;
+    }
+    else if (mdAttribute instanceof MdAttributeNumberDAOIF)
+    {
+      return AttributeType.NUMBER;
+    }
+
+    return AttributeType.BASIC;
+  }
+
+  @Override
+  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
+  {
+    return SecondaryAttributeStyle.getSecondaryAttributeStyleIF(this.getId());
+  }
+
+  @Override
+  public String getAttribute()
+  {
+    return MdAttributeDAO.get(this.getMdAttributeId()).definesAttribute();
   }
 
 }

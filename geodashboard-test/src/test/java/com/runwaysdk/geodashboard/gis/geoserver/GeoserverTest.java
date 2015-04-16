@@ -46,6 +46,7 @@ import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
@@ -502,7 +503,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -563,7 +564,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
@@ -622,7 +623,7 @@ public class GeoserverTest
 
     try
     {
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -693,7 +694,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -760,7 +761,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
@@ -825,7 +826,7 @@ public class GeoserverTest
       MdBusinessDAOIF md = MdBusinessDAO.get(stateInfoId);
       MdAttributeReferenceDAOIF createdBy = (MdAttributeReferenceDAOIF) md.definesAttribute(Metadata.CREATEDBY);
 
-      layer = new DashboardLayer();
+      layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
@@ -866,7 +867,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -956,7 +957,8 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardThematicLayer layer = new DashboardThematicLayer();
+      layer.addAggregationType(AllAggregationType.SUM);
       layer.setName("Layer 1");
       layer.setUniversal(country);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -974,7 +976,6 @@ public class GeoserverTest
 
       DashboardThematicStyle style = new DashboardThematicStyle();
       style.setMdAttribute(rank);
-      style.addAggregationType(AllAggregationType.SUM);
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -1028,7 +1029,7 @@ public class GeoserverTest
   @Transaction
   private void createGraduentSldTransaction(DashboardMap map)
   {
-    DashboardLayer layer = new DashboardLayer();
+    DashboardLayer layer = new DashboardThematicLayer();
     layer.setName("Layer 1");
     layer.setUniversal(state);
     layer.addLayerType(AllLayerType.GRADIENT);
@@ -1076,7 +1077,7 @@ public class GeoserverTest
   @Transaction
   private void createBubbleSldTransaction(DashboardMap map)
   {
-    DashboardLayer layer = new DashboardLayer();
+    DashboardLayer layer = new DashboardThematicLayer();
     layer.setName("Layer 1");
     layer.setUniversal(state);
     layer.addLayerType(AllLayerType.BUBBLE);
@@ -1126,7 +1127,7 @@ public class GeoserverTest
       map.setName("Test Map");
       map.apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
@@ -1252,7 +1253,7 @@ public class GeoserverTest
       // session.addDashboardMap(map).apply();
       // map.addSessionEntry(session).apply();
 
-      DashboardLayer layer = new DashboardLayer();
+      DashboardLayer layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
@@ -1260,7 +1261,7 @@ public class GeoserverTest
       layer.setGeoEntity(geoentityRef);
       layer.apply();
 
-      DashboardLayer layer2 = new DashboardLayer();
+      DashboardLayer layer2 = new DashboardThematicLayer();
       layer2.setName("Layer 2");
       layer2.setUniversal(state);
       layer2.addLayerType(AllLayerType.BASIC);

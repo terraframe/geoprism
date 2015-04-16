@@ -597,11 +597,11 @@
                 if(featureStrategy === "BASIC"){
                 	var showFeatureLabels = false;
                 }
-                else if(featureStrategy === "BUBBLE" && layer.style.attributeType === "BASIC"){
+               else if(featureStrategy === "BUBBLE" && layer.attributeType === "BASIC"){
                 	// The label should be hidden when mapping bubbles against a text or term attribute.
                 	var showFeatureLabels = false;
                 }
-                else if(featureStrategy === "BUBBLE" && layer.style.bubbleContinuousSize && layer.style.attributeType !== "BASIC"){
+                else if(featureStrategy === "BUBBLE" && layer.style.bubbleContinuousSize && layer.attributeType !== "BASIC"){
                 	// The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
                 	var showFeatureLabels = true;
                 }
@@ -1257,7 +1257,7 @@
         var mdAttribute = null;
         if (layer != null) 
         {
-          mdAttribute = layer.style.mdAttribute;
+          mdAttribute = layer.getValue('mdAttribute');
         }
         else 
         {

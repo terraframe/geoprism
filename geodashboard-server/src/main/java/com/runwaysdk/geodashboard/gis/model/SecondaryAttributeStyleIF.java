@@ -15,7 +15,7 @@ public interface SecondaryAttributeStyleIF extends Reloadable
 
   public MdAttributeDAOIF getMdAttributeDAO();
 
-  public AllAggregationType getSingleAggregationType();
+  public AllAggregationType getAggregationMethod();
 
   public JSONArray getCategoriesAsJSON() throws JSONException;
 }

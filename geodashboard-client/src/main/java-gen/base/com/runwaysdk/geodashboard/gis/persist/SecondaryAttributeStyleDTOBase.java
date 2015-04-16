@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -472922324)
+@com.runwaysdk.business.ClassSignature(hash = 1172370508)
 public abstract class SecondaryAttributeStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle";
-  private static final long serialVersionUID = -472922324;
+  private static final long serialVersionUID = 1172370508;
   
   protected SecondaryAttributeStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -41,7 +41,7 @@ public abstract class SecondaryAttributeStyleDTOBase extends com.runwaysdk.busin
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String THEMATICSTYLE = "thematicStyle";
+  public static java.lang.String THEMATICLAYER = "thematicLayer";
   public static java.lang.String TYPE = "type";
   @SuppressWarnings("unchecked")
   public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
@@ -521,59 +521,59 @@ public abstract class SecondaryAttributeStyleDTOBase extends com.runwaysdk.busin
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO getThematicStyle()
+  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO getThematicLayer()
   {
-    if(getValue(THEMATICSTYLE) == null || getValue(THEMATICSTYLE).trim().equals(""))
+    if(getValue(THEMATICLAYER) == null || getValue(THEMATICLAYER).trim().equals(""))
     {
       return null;
     }
     else
     {
-      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO.get(getRequest(), getValue(THEMATICSTYLE));
+      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO.get(getRequest(), getValue(THEMATICLAYER));
     }
   }
   
-  public String getThematicStyleId()
+  public String getThematicLayerId()
   {
-    return getValue(THEMATICSTYLE);
+    return getValue(THEMATICLAYER);
   }
   
-  public void setThematicStyle(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO value)
+  public void setThematicLayer(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO value)
   {
     if(value == null)
     {
-      setValue(THEMATICSTYLE, "");
+      setValue(THEMATICLAYER, "");
     }
     else
     {
-      setValue(THEMATICSTYLE, value.getId());
+      setValue(THEMATICLAYER, value.getId());
     }
   }
   
-  public boolean isThematicStyleWritable()
+  public boolean isThematicLayerWritable()
   {
-    return isWritable(THEMATICSTYLE);
+    return isWritable(THEMATICLAYER);
   }
   
-  public boolean isThematicStyleReadable()
+  public boolean isThematicLayerReadable()
   {
-    return isReadable(THEMATICSTYLE);
+    return isReadable(THEMATICLAYER);
   }
   
-  public boolean isThematicStyleModified()
+  public boolean isThematicLayerModified()
   {
-    return isModified(THEMATICSTYLE);
+    return isModified(THEMATICLAYER);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getThematicStyleMd()
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getThematicLayerMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(THEMATICSTYLE).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(THEMATICLAYER).getAttributeMdDTO();
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyleDTO getSecondaryAttributeStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String thematicStyleId)
+  public static final com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyleDTO getSecondaryAttributeStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String thematicLayerId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{thematicStyleId};
+    Object[] _parameters = new Object[]{thematicLayerId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyleDTO.CLASS, "getSecondaryAttributeStyle", _declaredTypes);
     return (com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

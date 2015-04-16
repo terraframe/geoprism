@@ -4,8 +4,6 @@ import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 
 public interface ThematicStyle extends Style
 {
-  public String getAttribute();
-
   public Condition getCondition();
 
   public Integer getPointMinSize();
@@ -26,14 +24,9 @@ public interface ThematicStyle extends Style
 
   public String getStyleCategories();
 
-  public AttributeType getAttributeType();
-
   public Boolean getBubbleContinuousSize();
 
   public Integer getPointFixedSize();
 
   public Boolean getPointFixed();
-
-  public SecondaryAttributeStyleIF getSecondaryAttributeStyle();
-
 }

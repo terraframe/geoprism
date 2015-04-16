@@ -24,7 +24,7 @@ public class SecondaryAttributeStyle extends SecondaryAttributeStyleBase impleme
     super();
   }
 
-  public AllAggregationType getSingleAggregationType()
+  public AllAggregationType getAggregationMethod()
   {
     List<AllAggregationType> aggregations = this.getAggregationType();
 
@@ -59,10 +59,10 @@ public class SecondaryAttributeStyle extends SecondaryAttributeStyleBase impleme
     return null;
   }
 
-  public static SecondaryAttributeStyle getSecondaryAttributeStyle(String thematicStyleId)
+  public static SecondaryAttributeStyle getSecondaryAttributeStyle(String thematicLayerId)
   {
     SecondaryAttributeStyleQuery query = new SecondaryAttributeStyleQuery(new QueryFactory());
-    query.WHERE(query.getThematicStyle().EQ(thematicStyleId));
+    query.WHERE(query.getThematicLayer().EQ(thematicLayerId));
 
     OIterator<? extends SecondaryAttributeStyle> iterator = query.getIterator();
 
@@ -81,7 +81,7 @@ public class SecondaryAttributeStyle extends SecondaryAttributeStyleBase impleme
     return null;
   }
 
-  public static SecondaryAttributeStyleIF getSecondaryAttributeStyleIF(String thematicStyleId)
+  public static SecondaryAttributeStyleIF getSecondaryAttributeStyleIF(String thematicLayerId)
   {
     // return getSecondaryAttributeStyles(thematicStyleId);
 

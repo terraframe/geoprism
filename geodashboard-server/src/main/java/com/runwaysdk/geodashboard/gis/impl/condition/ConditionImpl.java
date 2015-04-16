@@ -1,28 +1,27 @@
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
 import com.runwaysdk.geodashboard.gis.impl.ComponentImpl;
-import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
+import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 
 public abstract class ConditionImpl extends ComponentImpl implements Condition
 {
-  private ThematicStyle thematicStyle;
+  private ThematicLayer thematicLayer;
 
   public ConditionImpl()
   {
     super();
-    this.thematicStyle = null;
   }
 
-  public void setThematicStyle(ThematicStyle thematicStyle)
+  public void setThematicLayer(ThematicLayer thematicLayer)
   {
-    this.thematicStyle = thematicStyle;
+    this.thematicLayer = thematicLayer;
   }
 
   @Override
-  public ThematicStyle getThematicStyle()
+  public ThematicLayer getThematicLayer()
   {
-    return this.thematicStyle;
+    return this.thematicLayer;
   }
 
 }

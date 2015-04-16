@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -270673748)
+@com.runwaysdk.business.ClassSignature(hash = 1374619084)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,9 +25,9 @@ public abstract class SecondaryAttributeStyleBase extends com.runwaysdk.business
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String THEMATICSTYLE = "thematicStyle";
+  public static java.lang.String THEMATICLAYER = "thematicLayer";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -270673748;
+  private static final long serialVersionUID = 1374619084;
   
   public SecondaryAttributeStyleBase()
   {
@@ -412,43 +412,43 @@ public abstract class SecondaryAttributeStyleBase extends com.runwaysdk.business
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
-  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle getThematicStyle()
+  public com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer getThematicLayer()
   {
-    if (getValue(THEMATICSTYLE).trim().equals(""))
+    if (getValue(THEMATICLAYER).trim().equals(""))
     {
       return null;
     }
     else
     {
-      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.get(getValue(THEMATICSTYLE));
+      return com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.get(getValue(THEMATICLAYER));
     }
   }
   
-  public String getThematicStyleId()
+  public String getThematicLayerId()
   {
-    return getValue(THEMATICSTYLE);
+    return getValue(THEMATICLAYER);
   }
   
-  public void validateThematicStyle()
+  public void validateThematicLayer()
   {
-    this.validateAttribute(THEMATICSTYLE);
+    this.validateAttribute(THEMATICLAYER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getThematicStyleMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getThematicLayerMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(THEMATICSTYLE);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(THEMATICLAYER);
   }
   
-  public void setThematicStyle(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle value)
+  public void setThematicLayer(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer value)
   {
     if(value == null)
     {
-      setValue(THEMATICSTYLE, "");
+      setValue(THEMATICLAYER, "");
     }
     else
     {
-      setValue(THEMATICSTYLE, value.getId());
+      setValue(THEMATICLAYER, value.getId());
     }
   }
   
@@ -490,7 +490,7 @@ public abstract class SecondaryAttributeStyleBase extends com.runwaysdk.business
     return (SecondaryAttributeStyle) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public static com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle getSecondaryAttributeStyle(java.lang.String thematicStyleId)
+  public static com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle getSecondaryAttributeStyle(java.lang.String thematicLayerId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
