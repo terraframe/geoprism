@@ -644,7 +644,7 @@ public class GeoserverTest
       lte.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.apply();
 
@@ -711,7 +711,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -778,7 +778,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -884,7 +884,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -975,7 +975,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -1046,7 +1046,7 @@ public class GeoserverTest
     eq.apply();
 
     DashboardThematicStyle style = new DashboardThematicStyle();
-    style.setMdAttribute(rank);
+
     style.setName("Style 1");
     style.setStyleCondition(eq);
     style.apply();
@@ -1094,7 +1094,7 @@ public class GeoserverTest
     eq.apply();
 
     DashboardThematicStyle style = new DashboardThematicStyle();
-    style.setMdAttribute(rank);
+
     style.setName("Style 1");
     style.setStyleCondition(eq);
     style.apply();
@@ -1144,7 +1144,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -1282,13 +1282,13 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
 
       DashboardThematicStyle style2 = new DashboardThematicStyle();
-      style2.setMdAttribute(rank);
+
       style2.setName("demo2");
       style2.setStyleCondition(eq);
       style2.setPolygonFill("#FF0000");

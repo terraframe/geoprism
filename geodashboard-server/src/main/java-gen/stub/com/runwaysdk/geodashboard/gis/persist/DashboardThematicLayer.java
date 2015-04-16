@@ -56,7 +56,6 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
@@ -72,18 +71,11 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     boolean isNew = this.isNew();
 
-    // Find (and set) the GeoEntity reference attribute
-    // FIXME UI needs to allow for picking of the geo entity attribute
-    if (isNew && style instanceof DashboardThematicStyle)
+    if (isNew)
     {
-      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
-      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(tStyle.getMdAttributeId());
+      MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO();
       MdClassDAOIF mdClass = mdAttribute.definedByClass();
       MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
-
-      MdAttribute md = MdAttribute.get(tStyle.getMdAttributeId());
-      this.setMdAttribute(md);
 
       if (attr != null)
       {

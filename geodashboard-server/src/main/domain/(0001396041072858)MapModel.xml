@@ -250,16 +250,15 @@
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" label="Thematic Attribute" generateController="true" extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
         <attributes>
-          <reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
           <boolean name="bubbleContinuousSize" label="Continuous Size" required="false" defaultValue="true" />
-          <char name="styleCategories" label="Category styling for layers" size="4000" required="false" />
           <integer name="pointMinSize" label="Min" required="true" defaultValue="1" rejectNegative="true" />
           <integer name="pointMaxSize" label="Max" required="true" defaultValue="10" rejectNegative="true" />
           <integer name="pointFixedSize" label="Fixed Radius" required="true" defaultValue="5" rejectNegative="true" />
           <boolean name="pointFixed" label="Fixed Point Size" required="true" defaultValue="false" />
           <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
           <char name="polygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
+          <text name="styleCategories" label="Category styling for layers" required="false" />
         </attributes>
       </mdBusiness>
 

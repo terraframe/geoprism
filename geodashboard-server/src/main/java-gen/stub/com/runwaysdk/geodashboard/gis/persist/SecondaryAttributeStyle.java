@@ -6,11 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.impl.SecondaryAttributeStyleImpl;
 import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -83,20 +80,6 @@ public class SecondaryAttributeStyle extends SecondaryAttributeStyleBase impleme
 
   public static SecondaryAttributeStyleIF getSecondaryAttributeStyleIF(String thematicLayerId)
   {
-    // return getSecondaryAttributeStyles(thematicStyleId);
-
-    /*
-     * Spoof SecondaryAttributeStyle
-     */
-    MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO("org.ideorg.iq.cambodia.KhDeliverySummary");
-
-    JSONArray categories = new JSONArray();
-    categories.put(SecondaryAttributeStyleImpl.createCategory("Active", "#F4A460"));
-    categories.put(SecondaryAttributeStyleImpl.createCategory("Inactive", "#A4A460"));
-    categories.put(SecondaryAttributeStyleImpl.createCategory("Active, Inactive", "#C4A460"));
-
-    SecondaryAttributeStyleImpl style = new SecondaryAttributeStyleImpl(mdClass, "sanitationTeacherStatus", AllAggregationType.MAJORITY, categories);
-
-    return style;
+    return getSecondaryAttributeStyle(thematicLayerId);
   }
 }

@@ -38,15 +38,16 @@ import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 public class DashboardThematicLayerController extends DashboardThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardThematicLayer/";
-  public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
-  
+
+  public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
+
   private static final Log   log     = LogFactory.getLog(DashboardThematicLayerController.class);
-  
+
   public DashboardThematicLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
-  
+
   public void create(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
@@ -54,18 +55,18 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       dto.apply();
       this.view(dto.getId());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failCreate(dto);
     }
   }
-  
+
   public void failCreate(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  
+
   public void delete(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
@@ -73,23 +74,23 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       dto.delete();
       this.viewAll();
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failDelete(dto);
     }
   }
-  
+
   public void failDelete(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  
+
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.view(id);
   }
-  
+
   public void update(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
@@ -97,7 +98,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       dto.apply();
       this.view(dto.getId());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failUpdate(dto);
     }
@@ -115,12 +116,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     req.setAttribute("layer", DashboardThematicLayerDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
-  
+
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
-  
+
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
@@ -128,10 +129,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
+
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
+
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
@@ -139,12 +142,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
+
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
-  
-  
+
   /**
    * Loads artifacts for layer/style CRUD.
    * 
@@ -154,73 +157,74 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
    *          TODO
    * @param mdAttributeId
    * @param mdAttribute
-   * @throws JSONException 
+   * @throws JSONException
    */
   @SuppressWarnings("unchecked")
   private void loadLayerData(DashboardLayerDTO layer, DashboardThematicStyleDTO style, String mapId, String mdAttributeId)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
 
-    if(layer instanceof DashboardThematicLayerDTO)
+    if (layer instanceof DashboardThematicLayerDTO)
     {
-      
+
       DashboardThematicLayerDTO tLayer = (DashboardThematicLayerDTO) layer;
       req.setAttribute("layer", tLayer);
-  
+
       req.setAttribute("style", style);
-  
+
       String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
       req.setAttribute("fonts", fonts);
-  
+
       // Get the universals, sorted by their ordering in the universal tree.
       List<UniversalDTO> universals = Arrays.asList(DashboardMapDTO.getUniversalAggregations(clientRequest, mapId, mdAttributeId));
-  
+
       req.setAttribute("universals", universals);
-  
+
       // selected attribute
       MdAttributeDTO mdAttr;
+
       if (mdAttributeId != null)
       { // new instance
         mdAttr = MdAttributeDTO.get(clientRequest, mdAttributeId);
       }
       else
       { // edit
-        mdAttr = ( (MdAttributeDTO) style.getMdAttribute() );
+        mdAttr = ( (MdAttributeDTO) tLayer.getMdAttribute() );
       }
-  
+
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
-  
+
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
-  
+
       // Filter out the invalid aggregation types based upon the
       new Iterables<AggregationTypeDTO>().remove(aggregations, new AggregationPredicate(mdAttr));
-  
+
       req.setAttribute("aggregations", aggregations);
-  //    req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
+      // req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
-  
+
       // layer types
       Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
-  
+
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
       layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-  
+
       // filter out invalid layer types depending on attribute type
       // this is primarily to prevent creating gradients on date fields
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
-  
+
       if (! ( mdAttributeConcrete instanceof MdAttributeDateDTO ))
       {
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
       }
-  
+
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-  
+
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)
       { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not
@@ -231,7 +235,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       {
         req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
       }
-  
+
       // Determine if the attribute is an ontology attribute
       if (mdAttributeConcrete instanceof MdAttributeTermDTO)
       {
@@ -239,12 +243,11 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
         req.setAttribute("isTextAttribute", false);
         req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
         req.setAttribute("termType", ClassifierDTO.CLASS);
-  
+
         ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
         JSONObject rootsIds = new JSONObject();
         JSONArray ids = new JSONArray();
-        
-       
+
         Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
         for (ClassifierDTO root : roots)
         {
@@ -257,7 +260,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
           {
             throw new RuntimeException(e);
           }
-          
+
           List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
           for (ClassifierAttributeRootDTO relationship : relationships)
           {
@@ -274,10 +277,10 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
               selectableMap.put(root.getId(), relationship.getSelectable());
             }
           }
-          
+
           ids.put(newJSON);
         }
-  
+
         try
         {
           rootsIds.put("roots", ids);
@@ -286,11 +289,11 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
         {
           throw new RuntimeException(e);
         }
-  
+
         // Passing ontology root to layer form categories
         req.setAttribute("roots", rootsIds);
         req.setAttribute("selectableMap", selectableMap);
-  
+
         JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
       }
       else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
@@ -303,13 +306,13 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
         req.setAttribute("isOntologyAttribute", false);
         req.setAttribute("isTextAttribute", false);
       }
-  
+
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
       req.setAttribute("categories", style.getStyleCategories());
       req.setAttribute("secondaryAttributes", DashboardMapDTO.getSecondaryAttributes(this.getClientRequest(), mapId, mdAttributeId));
     }
   }
-  
+
   private String getDisplayLabel(MdAttributeDTO mdAttr)
   {
     if (mdAttr instanceof MdAttributeVirtualDTO)
@@ -324,7 +327,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     }
     return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
   }
-  
+
   private String getCategoryType(MdAttributeDTO mdAttr)
   {
     MdAttributeConcreteDTO concrete = this.getMdAttributeConcrete(mdAttr);
@@ -340,7 +343,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
     return "text";
   }
-  
+
   private MdAttributeConcreteDTO getMdAttributeConcrete(MdAttributeDTO mdAttr)
   {
     if (mdAttr instanceof MdAttributeVirtualDTO)
@@ -352,7 +355,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
-  
+
   @Override
   public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO[] conditions) throws IOException, ServletException
   {
@@ -371,7 +374,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     }
     catch (Throwable t)
     {
-      this.loadLayerData(layer, (DashboardThematicStyleDTO) style, mapId, ( (DashboardThematicStyleDTO) style ).getMdAttributeId());
+      DashboardThematicLayerDTO tLayer = (DashboardThematicLayerDTO) layer;
+      this.loadLayerData(layer, (DashboardThematicStyleDTO) style, mapId, tLayer.getMdAttributeId());
 
       if (t instanceof ProblemExceptionDTO)
       {
@@ -397,7 +401,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
     }
   }
-  
+
   @Override
   public void newThematicInstance(String mdAttribute, String mapId) throws IOException, ServletException
   {
@@ -409,7 +413,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
     render("createComponent.jsp");
   }
-  
+
   @Override
   public void edit(String id) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -418,13 +422,14 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     DashboardMapDTO map = layer.getAllContainingMap().get(0);
 
     // There will be one style only for this layer
+    DashboardThematicLayerDTO tLayer = (DashboardThematicLayerDTO) layer;
     DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
 
-    this.loadLayerData(layer, style, map.getId(), style.getMdAttributeId());
+    this.loadLayerData(layer, style, map.getId(), tLayer.getMdAttributeId());
 
     render("editComponent.jsp");
   }
-  
+
   public void cancel(DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     if (!dto.isNewInstance())
@@ -437,5 +442,5 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
   {
     this.edit(dto.getId());
   }
-  
+
 }
