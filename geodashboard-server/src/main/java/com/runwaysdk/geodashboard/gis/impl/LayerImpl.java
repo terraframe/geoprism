@@ -14,8 +14,6 @@ public abstract class LayerImpl extends ComponentImpl implements Layer
 
   private String                  name;
 
-//  private HashMap<String, Double> layerMinMax;
-
   private Boolean                 virtual;
 
   private FeatureType             featureType;
@@ -103,10 +101,5 @@ public abstract class LayerImpl extends ComponentImpl implements Layer
   {
     this.featureStrategy = featureStrategy;
   }
-
-//  public HashMap<String, Double> getLayerMinMax(String attribute)
-//  {
-//    return layerMinMax;
-//  }
 
 }

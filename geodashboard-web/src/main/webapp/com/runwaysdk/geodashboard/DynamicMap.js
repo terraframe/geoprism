@@ -794,17 +794,17 @@
             // This tiling formt (tileLayer) is the preferred way to render wms due to performance gains. 
             // However, since bubbles are clipped by the differences between tiles we must render layers as a single tile. 
             // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
-            //var mapBounds = this._map.getBounds();
-            //var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-            //var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-              //layers: geoserverName,
-              //format: 'image/png',
-              //transparent: true,
-              //tiled: true,
-              //tileSize: 256,
-              //tilesorigin: mapSWOrigin,
-              //styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
-            //});
+//            var mapBounds = this._map.getBounds();
+//            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+//            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+//              layers: geoserverName,
+//              format: 'image/png',
+//              transparent: true,
+//              tiled: true,
+//              tileSize: 256,
+//              tilesorigin: mapSWOrigin,
+//              styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+//            });
             
             this._map.addLayer(leafletLayer);
                      
