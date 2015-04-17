@@ -41,6 +41,7 @@ import com.runwaysdk.geodashboard.DashboardQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
+import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -643,7 +644,7 @@ public class GeoserverTest
       lte.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.apply();
 
@@ -710,7 +711,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -777,7 +778,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -883,7 +884,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -957,6 +958,7 @@ public class GeoserverTest
       map.apply();
 
       DashboardThematicLayer layer = new DashboardThematicLayer();
+      layer.addAggregationType(AllAggregationType.SUM);
       layer.setName("Layer 1");
       layer.setUniversal(country);
       layer.addLayerType(AllLayerType.BUBBLE);
@@ -973,7 +975,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+//      style.setMdAttribute(rank);
 //      style.addAggregationType(AllAggregationType.SUM);
       style.setName("Style 1");
       style.setStyleCondition(eq);
@@ -1045,7 +1047,7 @@ public class GeoserverTest
     eq.apply();
 
     DashboardThematicStyle style = new DashboardThematicStyle();
-    style.setMdAttribute(rank);
+
     style.setName("Style 1");
     style.setStyleCondition(eq);
     style.apply();
@@ -1093,7 +1095,7 @@ public class GeoserverTest
     eq.apply();
 
     DashboardThematicStyle style = new DashboardThematicStyle();
-    style.setMdAttribute(rank);
+
     style.setName("Style 1");
     style.setStyleCondition(eq);
     style.apply();
@@ -1143,7 +1145,7 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -1281,13 +1283,13 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-      style.setMdAttribute(rank);
+
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
 
       DashboardThematicStyle style2 = new DashboardThematicStyle();
-      style2.setMdAttribute(rank);
+
       style2.setName("demo2");
       style2.setStyleCondition(eq);
       style2.setPolygonFill("#FF0000");

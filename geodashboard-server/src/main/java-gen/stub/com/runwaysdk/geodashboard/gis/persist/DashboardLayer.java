@@ -12,13 +12,9 @@ import org.json.JSONObject;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
@@ -37,8 +33,7 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.util.IDGenerator;
 
-public abstract class DashboardLayer extends DashboardLayerBase implements
-    com.runwaysdk.generation.loader.Reloadable, Layer
+public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long        serialVersionUID = 1992575686;
 
@@ -141,30 +136,9 @@ public abstract class DashboardLayer extends DashboardLayerBase implements
   }
 
   @Transaction
-  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId,
-      DashboardCondition[] conditions)
+  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
-
-    // Find (and set) the GeoEntity reference attribute
-    // FIXME UI needs to allow for picking of the geo entity attribute
-    if (isNew && style instanceof DashboardThematicStyle)
-    {
-      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(tStyle.getMdAttributeId());
-      MdClassDAOIF mdClass = mdAttribute.definedByClass();
-      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
-
-      if (attr != null)
-      {
-        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
-      }
-      else
-      {
-        throw new ProgrammingErrorException("Class [" + mdClass.definesType()
-            + "] does not reference a [" + GeoEntity.CLASS + "].");
-      }
-    }
 
     // We have to generate a new viewName for us on every apply because
     // otherwise there's browser-side caching that
@@ -252,8 +226,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements
   }
 
   /**
-   * Publishes the layer and all its styles to GeoServer, creating a new
-   * database view that GeoServer will read, if it does not exist yet.
+   * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
+   * does not exist yet.
    */
   public void publish(GeoserverBatch batch, boolean createDBView)
   {
@@ -271,8 +245,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements
   }
 
   /**
-   * For easy reference, the name of the SLD is the same as the db view name.
-   * The .sld extension is automatically added
+   * For easy reference, the name of the SLD is the same as the db view name. The .sld extension is automatically added
    * 
    * @return
    */
@@ -323,9 +296,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements
     }
 
     /*
-     * The apply will fail because dashboard map is a required field. However,
-     * in order to give the user a better error message we still need to
-     * populate the key with value.
+     * The apply will fail because dashboard map is a required field. However, in order to give the user a better error
+     * message we still need to populate the key with value.
      */
     return this.getId();
   }
@@ -339,8 +311,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements
     }
     else
     {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY
-          + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
     }
   }
 

@@ -46,32 +46,33 @@ public class Sandbox
   @Request
   public static void main(String[] args) throws Throwable
   {
-    //StrategyInitializer.tearDown();
+    // StrategyInitializer.tearDown();
     StrategyInitializer.startUp();
-//    System.out.println(DashboardMap.getMapJSON("sxt2uo8qxyil66jmlk6h7l965h38m2da1w3bn55ecea1siqb7qj7vnuivq3gync2"));
+    // System.out.println(DashboardMap.getMapJSON("sxt2uo8qxyil66jmlk6h7l965h38m2da1w3bn55ecea1siqb7qj7vnuivq3gync2"));
   }
-  
+
   private static void runONE(HashMap<String, Object> req, ClientRequestIF clientRequest)
   {
     long oneS = System.currentTimeMillis();
     one(new HashMap<String, Object>(), clientRequest);
-    System.out.println("ONE: "+ Long.toString(System.currentTimeMillis()-oneS));
-    
+    System.out.println("ONE: " + Long.toString(System.currentTimeMillis() - oneS));
+
     long twoS = System.currentTimeMillis();
     two(new HashMap<String, Object>(), clientRequest);
-    System.out.println("TWO: "+ Long.toString(System.currentTimeMillis()-twoS));
-    
+    System.out.println("TWO: " + Long.toString(System.currentTimeMillis() - twoS));
+
   }
+
   private static void runTWO(HashMap<String, Object> req, ClientRequestIF clientRequest)
   {
     long oneS = System.currentTimeMillis();
     one(new HashMap<String, Object>(), clientRequest);
-    System.out.println("ONE: "+ Long.toString(System.currentTimeMillis()-oneS));
-    
+    System.out.println("ONE: " + Long.toString(System.currentTimeMillis() - oneS));
+
     long twoS = System.currentTimeMillis();
     two(new HashMap<String, Object>(), clientRequest);
-    System.out.println("TWO: "+ Long.toString(System.currentTimeMillis()-twoS));
-    
+    System.out.println("TWO: " + Long.toString(System.currentTimeMillis() - twoS));
+
   }
 
   private static void one(HashMap<String, Object> req, ClientRequestIF clientRequest)
@@ -109,29 +110,29 @@ public class Sandbox
 
   private static void two(HashMap<String, Object> req, ClientRequestIF clientRequest)
   {
-      com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
-      DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
-      
-      req.put("layer", layer);
+    com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO(clientRequest);
+    DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
 
-      req.put("style", style);
-      
-      String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
-      req.put("fonts", fonts);
-      
-      // get the universals
-      UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
-      req.put("universals", universals.getResultSet());
+    req.put("layer", layer);
 
-//      // aggregations
-//      AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
-//      req.put("aggregations", aggQuery.getResultSet());
-//      Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
-//      req.put("aggregationLabels", aggregations);
-//
-//      // feature types
-//      Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
-//      req.put("features", features);
+    req.put("style", style);
+
+    String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
+    req.put("fonts", fonts);
+
+    // get the universals
+    UniversalQueryDTO universals = DashboardLayerDTO.getSortedUniversals(clientRequest);
+    req.put("universals", universals.getResultSet());
+
+    // // aggregations
+    // AggregationTypeQueryDTO aggQuery = DashboardStyleDTO.getSortedAggregations(clientRequest);
+    // req.put("aggregations", aggQuery.getResultSet());
+    // Map<String, String> aggregations = style.getAggregationTypeMd().getEnumItems();
+    // req.put("aggregationLabels", aggregations);
+    //
+    // // feature types
+    // Map<String, String> features = layer.getLayerTypeMd().getEnumItems();
+    // req.put("features", features);
   }
 
   @Request
@@ -209,8 +210,7 @@ public class Sandbox
 
         String viewName = "aa_test_data_view";
 
-        sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN
-            + ")) AS bbox FROM " + viewName;
+        sql = "SELECT ST_AsText(ST_Extent(" + viewName + "." + GeoserverFacade.GEOM_COLUMN + ")) AS bbox FROM " + viewName;
       }
       else
       {
@@ -302,8 +302,7 @@ public class Sandbox
             }
             else
             {
-              String error = "The database view(s) [" + StringUtils.join(layerNames, ",")
-                  + "] could not be used to create a valid bounding box";
+              String error = "The database view(s) [" + StringUtils.join(layerNames, ",") + "] could not be used to create a valid bounding box";
               // throw new GeoServerReloadException(error);
             }
           }

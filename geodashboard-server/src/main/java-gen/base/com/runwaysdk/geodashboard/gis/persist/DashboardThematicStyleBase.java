@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1476887378)
+@com.runwaysdk.business.ClassSignature(hash = 1836967091)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
-  public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String POINTFIXED = "pointFixed";
   public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
@@ -21,7 +20,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 1476887378;
+  private static final long serialVersionUID = 1836967091;
   
   public DashboardThematicStyleBase()
   {
@@ -53,46 +52,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(BUBBLECONTINUOUSSIZE, java.lang.Boolean.toString(value));
-    }
-  }
-  
-  public com.runwaysdk.system.metadata.MdAttribute getMdAttribute()
-  {
-    if (getValue(MDATTRIBUTE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdAttribute.get(getValue(MDATTRIBUTE));
-    }
-  }
-  
-  public String getMdAttributeId()
-  {
-    return getValue(MDATTRIBUTE);
-  }
-  
-  public void validateMdAttribute()
-  {
-    this.validateAttribute(MDATTRIBUTE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getMdAttributeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(MDATTRIBUTE);
-  }
-  
-  public void setMdAttribute(com.runwaysdk.system.metadata.MdAttribute value)
-  {
-    if(value == null)
-    {
-      setValue(MDATTRIBUTE, "");
-    }
-    else
-    {
-      setValue(MDATTRIBUTE, value.getId());
     }
   }
   
@@ -274,10 +233,10 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     this.validateAttribute(STYLECATEGORIES);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getStyleCategoriesMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getStyleCategoriesMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(STYLECATEGORIES);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(STYLECATEGORIES);
   }
   
   public void setStyleCategories(String value)

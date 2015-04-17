@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1023558866)
+@com.runwaysdk.business.ClassSignature(hash = 1686172467)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 1023558866;
+  private static final long serialVersionUID = 1686172467;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -28,7 +28,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   }
   
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
-  public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String POINTFIXED = "pointFixed";
   public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
   public static java.lang.String POINTMAXSIZE = "pointMaxSize";
@@ -72,55 +71,6 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getBubbleContinuousSizeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(BUBBLECONTINUOUSSIZE).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.system.metadata.MdAttributeDTO getMdAttribute()
-  {
-    if(getValue(MDATTRIBUTE) == null || getValue(MDATTRIBUTE).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdAttributeDTO.get(getRequest(), getValue(MDATTRIBUTE));
-    }
-  }
-  
-  public String getMdAttributeId()
-  {
-    return getValue(MDATTRIBUTE);
-  }
-  
-  public void setMdAttribute(com.runwaysdk.system.metadata.MdAttributeDTO value)
-  {
-    if(value == null)
-    {
-      setValue(MDATTRIBUTE, "");
-    }
-    else
-    {
-      setValue(MDATTRIBUTE, value.getId());
-    }
-  }
-  
-  public boolean isMdAttributeWritable()
-  {
-    return isWritable(MDATTRIBUTE);
-  }
-  
-  public boolean isMdAttributeReadable()
-  {
-    return isReadable(MDATTRIBUTE);
-  }
-  
-  public boolean isMdAttributeModified()
-  {
-    return isModified(MDATTRIBUTE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
   }
   
   public Boolean getPointFixed()
@@ -377,9 +327,9 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
     return isModified(STYLECATEGORIES);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getStyleCategoriesMd()
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getStyleCategoriesMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(STYLECATEGORIES).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(STYLECATEGORIES).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO getStyleCondition()

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -773256999)
+@com.runwaysdk.business.ClassSignature(hash = 2043890274)
 public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = -773256999;
+  private static final long serialVersionUID = 2043890274;
   
   protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -487,6 +487,14 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     Object[] _parameters = new Object[]{id, config};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "getMapJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.geodashboard.MdAttributeViewDTO[] getSecondaryAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mapId, java.lang.String mdAttributeId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{mapId, mdAttributeId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "getSecondaryAttributes", _declaredTypes);
+    return (com.runwaysdk.geodashboard.MdAttributeViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final com.runwaysdk.system.gis.geo.UniversalDTO[] getUniversalAggregations(java.lang.String mdAttributeId)

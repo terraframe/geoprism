@@ -40,6 +40,7 @@ import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ReferenceLayer;
+import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
@@ -91,16 +92,25 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       return this.visitor.css(name, value);
     }
+
+    protected NodeBuilder css(String name)
+    {
+      return this.visitor.css(name);
+    }
   }
 
   private static abstract class Symbolizer extends Provider implements com.runwaysdk.generation.loader.Reloadable
   {
+    protected Layer layer;
+
     protected Style style;
 
-    private Symbolizer(SLDMapVisitor visitor, Style style)
+    private Symbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
       super(visitor);
+
       this.style = style;
+      this.layer = layer;
     }
 
     protected abstract String getSymbolizerName();
@@ -110,9 +120,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return node(this.getSymbolizerName()).build();
     }
 
-    protected Node getPropertyValueNode(ThematicStyle tStyle)
+    protected Node getPropertyValueNode(ThematicLayer tLayer)
     {
-      AttributeType type = tStyle.getAttributeType();
+      AttributeType type = tLayer.getAttributeType();
 
       if (type.equals(AttributeType.NUMBER))
       {
@@ -121,7 +131,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         DecimalFormatSymbols symbols = decimalFormat.getDecimalFormatSymbols();
 
         Node format = node(OGC, "Literal").text(pattern).build();
-        Node property = this.getBasicPropertyValueNode(tStyle);
+        Node property = this.getBasicPropertyValueNode(tLayer);
         Node minus = node(OGC, "Literal").text(symbols.getMinusSign()).build();
         Node decimal = node(OGC, "Literal").text(symbols.getDecimalSeparator()).build();
         Node separator = node(OGC, "Literal").text(symbols.getGroupingSeparator()).build();
@@ -140,58 +150,49 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
         String pattern = dateFormat.toLocalizedPattern();
 
-        return this.getMomentNode(tStyle, pattern);
+        return this.getMomentNode(tLayer, pattern);
       }
       else if (type.equals(AttributeType.DATETIME))
       {
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
         String pattern = dateFormat.toLocalizedPattern();
 
-        return this.getMomentNode(tStyle, pattern);
+        return this.getMomentNode(tLayer, pattern);
       }
       else if (type.equals(AttributeType.TIME))
       {
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, LocalizationFacade.getLocale());
         String pattern = dateFormat.toLocalizedPattern();
 
-        return this.getMomentNode(tStyle, pattern);
+        return this.getMomentNode(tLayer, pattern);
       }
       else
       {
-        return this.getBasicPropertyValueNode(tStyle);
+        return this.getBasicPropertyValueNode(tLayer);
       }
     }
 
-    protected Node getMomentNode(ThematicStyle tStyle, String pattern)
+    protected Node getMomentNode(ThematicLayer tLayer, String pattern)
     {
       Node format = node(OGC, "Literal").text(pattern).build();
-      Node property = this.getBasicPropertyValueNode(tStyle);
+      Node property = this.getBasicPropertyValueNode(tLayer);
 
-      Node function = node(OGC, "Function").attr("name", "if_then_else").child(
-          node(OGC, "Function").attr("name", "isNull").child(
-              this.getBasicPropertyValueNode(tStyle)
-          ),
-          node(OGC, "Literal").text(""),
-          node(OGC, "Function").attr("name", "dateFormat").child(
-              format, 
-              property
-          )
-      ).build();
-//      function.appendChild(format);
-//      function.appendChild(property);
+      Node function = node(OGC, "Function").attr("name", "if_then_else").child(node(OGC, "Function").attr("name", "isNull").child(this.getBasicPropertyValueNode(tLayer)), node(OGC, "Literal").text(""), node(OGC, "Function").attr("name", "dateFormat").child(format, property)).build();
+      // function.appendChild(format);
+      // function.appendChild(property);
 
       return function;
     }
 
-    protected Node getBasicPropertyValueNode(ThematicStyle tStyle)
+    protected Node getBasicPropertyValueNode(ThematicLayer tLayer)
     {
-      return node(OGC, "PropertyName").text(tStyle.getAttribute().toLowerCase()).build();
+      return node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase()).build();
     }
 
     protected void addLabelSymbolizer(Node parent)
     {
       TextSymbolizer text = this.getLabelSymbolizer();
-      if(text != null)
+      if (text != null)
       {
         parent.appendChild(text.getSLD());
       }
@@ -199,27 +200,28 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
     protected TextSymbolizer getLabelSymbolizer()
     {
-      boolean thematic = style instanceof ThematicStyle;
+      boolean thematic = layer instanceof ThematicLayer;
 
       if (thematic && style.getEnableLabel() && style.getEnableValue())
       {
-        ThematicStyle tStyle = (ThematicStyle) style;
-        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), this.getPropertyValueNode(tStyle) };
+        ThematicLayer tLayer = (ThematicLayer) layer;
 
-        return new TextSymbolizer(visitor, style, nodes);
+        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), this.getPropertyValueNode(tLayer) };
+
+        return new TextSymbolizer(visitor, layer, style, nodes);
       }
       else if (style.getEnableLabel())
       {
         Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
 
-        return new TextSymbolizer(visitor, style, nodes);
+        return new TextSymbolizer(visitor, layer, style, nodes);
       }
       else if (thematic && style.getEnableValue())
       {
-        ThematicStyle tStyle = (ThematicStyle) style;
-        Node[] nodes = new Node[] { this.getPropertyValueNode(tStyle) };
+        ThematicLayer tLayer = (ThematicLayer) layer;
+        Node[] nodes = new Node[] { this.getPropertyValueNode(tLayer) };
 
-        return new TextSymbolizer(visitor, style, nodes);
+        return new TextSymbolizer(visitor, layer, style, nodes);
       }
 
       return null;
@@ -233,9 +235,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
-    private PointSymbolizer(SLDMapVisitor visitor, Style style)
+    private PointSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
-      super(visitor, style);
+      super(visitor, layer, style);
     }
 
     @Override
@@ -267,11 +269,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         double maxAttrVal = 0;
         int minSize = 0;
         int maxSize = 0;
+        ThematicLayer tLayer = (ThematicLayer) layer;
         ThematicStyle tStyle = (ThematicStyle) style;
-        // attribute must be lowercase to work with postgres
-        String attribute = tStyle.getAttribute().toLowerCase();
 
-        if( tStyle.getPointFixed() )
+        // attribute must be lowercase to work with postgres
+        String attribute = tLayer.getAttribute().toLowerCase();
+
+        if (tStyle.getPointFixed())
         {
           int radius = tStyle.getPointFixedSize();
           minSize = radius;
@@ -282,138 +286,162 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
           minAttrVal = minMaxMap.get("min");
           maxAttrVal = minMaxMap.get("max");
-          
+
           minSize = tStyle.getPointMinSize();
           maxSize = tStyle.getPointMaxSize();
         }
-  
-          if (tStyle.getBubbleContinuousSize() == true && !tStyle.getPointFixed())
+
+        if (tStyle.getBubbleContinuousSize() == true && !tStyle.getPointFixed())
+        {
+          NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
+          Node ruleNode = node("Rule").build(root);
+          String currentCatMinDisplay = formatter.format(minAttrVal);
+          String currentCatMaxDisplay = formatter.format(maxAttrVal);
+
+          node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
+          node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
+
+          Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+
+          node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
+
+          // Adding labels
+          this.addLabelSymbolizer(ruleNode);
+        }
+        else if (tStyle.getPointFixed())
+        {
+
+          Node ruleNode = node("Rule").build(root);
+          node("Name").text(currentLayerName).build(ruleNode);
+          node("Title").text(currentLayerName).build(ruleNode);
+
+          // Point styles
+          Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+          Node graphicNode = node("Graphic").build(pointSymbolNode);
+          Node markNode = node("Mark").build(graphicNode);
+          node("WellKnownName").text("circle").build(markNode);
+          node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)).build(markNode);
+          node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
+          node("Size").text(tStyle.getPointFixedSize()).build(graphicNode);
+
+          // Adding labels
+          this.addLabelSymbolizer(ruleNode);
+        }
+        else
+        {
+          int numCategories;
+          if (minSize == maxSize || minAttrVal == maxAttrVal)
           {
-            NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
-            Node ruleNode = node("Rule").build(root);
-            String currentCatMinDisplay = formatter.format(minAttrVal);
-            String currentCatMaxDisplay = formatter.format(maxAttrVal);
-            
-            node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-            node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-  
-            Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-  
-            node("Graphic").child(
-                node("Mark").child(
-                    node("WellKnownName").text(wkn), 
-                    node("Fill").child(
-                        css("fill", fill), 
-                        css("fill-opacity", opacity)
-                    ), 
-                    node("Stroke").child(
-                        css("stroke", stroke), 
-                        css("stroke-width", width), 
-                        css("stroke-opacity", strokeOpacity)
-                    )
-                ), 
-                sizeNode, 
-                node("Rotation").text(rotation)
-             ).build(pointSymbolNode);
-  
-            // Adding labels
-            this.addLabelSymbolizer(ruleNode);
+            // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+            numCategories = 1;
           }
-          else if(tStyle.getPointFixed())
+          else
+          {
+            numCategories = 5;
+          }
+
+          double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
+          int pointSizeCatLen = ( maxSize - minSize ) / numCategories;
+
+          for (int i = 0; i < numCategories; i++)
           {
 
+            double currentCatMin = minAttrVal + ( i * categoryLen );
+            double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+
+            double currentPointSizeRaw = minSize + ( ( i + 1 ) * pointSizeCatLen );
+            int currentPointSize = (int) Math.round(currentPointSizeRaw);
+
+            String currentCatMinDisplay = formatter.format(currentCatMin);
+            String currentCatMaxDisplay = formatter.format(currentCatMax);
+
             Node ruleNode = node("Rule").build(root);
-            node("Name").text(currentLayerName).build(ruleNode);
-            node("Title").text(currentLayerName).build(ruleNode);
+            node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
+            node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
+
+            Node filterNode = node(OGC, "Filter").build(ruleNode);
+            Node firstAndNode = node(OGC, "And").build(filterNode);
+            Node notNode = node(OGC, "Not").build(firstAndNode);
+            Node secondAndNode = node(OGC, "And").build(notNode);
+
+            Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+
+            Node orNode = node(OGC, "Or").build(secondAndNode);
+            Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+            node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
+
+            Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
+            node(OGC, "Literal").text("NEVER").build(propEqualToNode);
+            node(OGC, "Literal").text("TRUE").build(propEqualToNode);
+
+            Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
+            node(OGC, "PropertyName").text(attribute).build(propIsBetween);
+            node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
+            node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
 
             // Point styles
             Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
             Node graphicNode = node("Graphic").build(pointSymbolNode);
             Node markNode = node("Mark").build(graphicNode);
             node("WellKnownName").text("circle").build(markNode);
-            Node fillNode = node("Fill").build(markNode);
-            css("Fill", fill).build(fillNode);
-            css("fill-opacity", opacity).build(fillNode);
+            node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)).build(markNode);
 
             node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
-            node("Size").text(tStyle.getPointFixedSize()).build(graphicNode);
+            node("Size").text(currentPointSize).build(graphicNode);
 
             // Adding labels
             this.addLabelSymbolizer(ruleNode);
           }
-          else
-          {
-            int numCategories;
-            if (minSize == maxSize || minAttrVal == maxAttrVal)
-            {
-              // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
-              numCategories = 1;
-            }
-            else
-            {
-              numCategories = 5;
-            }
-  
-            double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
-            int pointSizeCatLen = ( maxSize - minSize ) / numCategories;
-  
-            for (int i = 0; i < numCategories; i++)
-            {
-  
-              double currentCatMin = minAttrVal + ( i * categoryLen );
-              double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
-  
-              double currentPointSizeRaw = minSize + ( ( i + 1 ) * pointSizeCatLen );
-              int currentPointSize = (int) Math.round(currentPointSizeRaw);
-  
-              String currentCatMinDisplay = formatter.format(currentCatMin);
-              String currentCatMaxDisplay = formatter.format(currentCatMax);
-  
-              Node ruleNode = node("Rule").build(root);
-              node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-              node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay).build(ruleNode);
-  
-              Node filterNode = node(OGC, "Filter").build(ruleNode);
-              Node firstAndNode = node(OGC, "And").build(filterNode);
-              Node notNode = node(OGC, "Not").build(firstAndNode);
-              Node secondAndNode = node(OGC, "And").build(notNode);
-  
-              Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
-              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-              node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-  
-              Node orNode = node(OGC, "Or").build(secondAndNode);
-              Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
-              node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-  
-              Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
-              node(OGC, "Literal").text("NEVER").build(propEqualToNode);
-              node(OGC, "Literal").text("TRUE").build(propEqualToNode);
-  
-              Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
-              node(OGC, "PropertyName").text(attribute).build(propIsBetween);
-              node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
-              node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
-  
-              // Point styles
-              Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-              Node graphicNode = node("Graphic").build(pointSymbolNode);
-              Node markNode = node("Mark").build(graphicNode);
-              node("WellKnownName").text("circle").build(markNode);
-              Node fillNode = node("Fill").build(markNode);
-              css("Fill", fill).build(fillNode);
-              css("fill-opacity", opacity).build(fillNode);
-  
-              node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
-              node("Size").text(currentPointSize).build(graphicNode);
-  
-              // Adding labels
-              this.addLabelSymbolizer(ruleNode);
-            }
-          }
         }
+      }
 
       return root;
+    }
+
+    private NodeBuilder getFillNode(ThematicLayer tLayer, String fill)
+    {
+      SecondaryAttributeStyleIF sStyle = tLayer.getSecondaryAttributeStyle();
+
+      if (sStyle != null)
+      {
+        NodeBuilder node = css("fill").child(node(OGC, "Function").attr("name", "if_then_else").child(node(OGC, "Function").attr("name", "isNull").child(this.getRecodeNode(sStyle)), node("ogc:Literal").text(fill), this.getRecodeNode(sStyle)));
+
+        return node;
+      }
+
+      return css("Fill", fill);
+    }
+
+    private NodeBuilder getRecodeNode(SecondaryAttributeStyleIF sStyle)
+    {
+      try
+      {
+        String attributeName = sStyle.getMdAttributeDAO().definesAttribute().toLowerCase();
+
+        List<NodeBuilder> children = new LinkedList<NodeBuilder>();
+        children.add(node(OGC, "PropertyName").text(attributeName));
+
+        JSONArray array = sStyle.getCategoriesAsJSON();
+        for (int i = 0; i < array.length(); i++)
+        {
+          JSONObject category = array.getJSONObject(i);
+          String key = category.getString(SecondaryAttributeStyleIF.KEY);
+          String color = category.getString(SecondaryAttributeStyleIF.COLOR);
+
+          children.add(node(OGC, "Literal").text(key));
+          children.add(node(OGC, "Literal").text(color));
+        }
+
+        NodeBuilder recode = node(OGC, "Function").attr("name", "Recode").child(children.toArray(new NodeBuilder[children.size()]));
+
+        return recode;
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
 
     private NodeBuilder interpolateSize(double minAttrVal, double maxAttrVal)
@@ -421,22 +449,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicStyle tStyle = (ThematicStyle) style;
+        ThematicLayer tLayer = (ThematicLayer) layer;
         // attribute must be lowercase to work with postgres
-        String attribute = tStyle.getAttribute().toLowerCase();
+        String attribute = tLayer.getAttribute().toLowerCase();
 
         // thematic interpolation
-        return node("Size").child(
-            node(OGC, "Function").attr("name", "Interpolate").child(
-                // property to interpolate
-                node(OGC, "PropertyName").text(attribute), 
-                node(OGC, "Literal").text(minAttrVal), 
-                node(OGC, "Literal").text(tStyle.getPointMinSize()), 
-                node(OGC, "Literal").text(maxAttrVal), 
-                node(OGC, "Literal").text(tStyle.getPointMaxSize()),
-                // interpolation method
-                node(OGC, "Literal").text("numeric")
-            )
-         );
+        return node("Size").child(node(OGC, "Function").attr("name", "Interpolate").child(
+        // property to interpolate
+            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getPointMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getPointMaxSize()),
+            // interpolation method
+            node(OGC, "Literal").text("numeric")));
       }
       else
       {
@@ -453,9 +475,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
    */
   private static class PolygonSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
-    private PolygonSymbolizer(SLDMapVisitor visitor, Style style)
+    private PolygonSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
-      super(visitor, style);
+      super(visitor, layer, style);
     }
 
     @Override
@@ -476,7 +498,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       String stroke = this.style.getPolygonStroke();
       Double strokeOpacity = this.style.getPolygonStrokeOpacity();
       String fill = this.style.getPolygonFill();
-      
+
       String currentLayerName = this.visitor.currentLayer.getName();
 
       node("FeatureTypeName").text(style.getName()).build(root);
@@ -487,10 +509,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         double categoryLen;
 
         // SLD generation
-        ThematicStyle tStyle = (ThematicStyle) style;
+        ThematicLayer tLayer = (ThematicLayer) layer;
 
         // attribute must be lowercase to work with postgres
-        String attribute = tStyle.getAttribute().toLowerCase();
+        String attribute = tLayer.getAttribute().toLowerCase();
 
         HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
         double minAttrVal = minMaxMap.get("min");
@@ -531,51 +553,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           String currentCatMinDisplay = formatter.format(currentCatMin);
           String currentCatMaxDisplay = formatter.format(currentCatMax);
-          
-          Node ruleNode = node("Rule").child(
-              node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
-              node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
-              node(OGC, "Filter").child(
-                  node(OGC, "And").child(
-                      node(OGC, "Not").child(
-                          node(OGC, "And").child(
-                              node(OGC, "PropertyIsEqualTo").child(
-                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                              ),
-                              node(OGC, "Or").child(
-                                  node(OGC, "PropertyIsNull").child(
-                                      node(OGC, "PropertyName").text(attribute)
-                                  ),
-                                  node(OGC, "PropertyIsEqualTo").child(
-                                      node(OGC, "Literal").text("NEVER"),
-                                      node(OGC, "Literal").text("TRUE")
-                                  )
-                              )
-                          )
-                      ),
-                      node(OGC, "PropertyIsBetween").child(
-                          node(OGC, "PropertyName").text(attribute),
-                          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
-                          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))
-                      )
-                  )
-              ),
-              node("PolygonSymbolizer").child(
-                  node("Geometry").child(
-                      node(OGC, "PropertyName").text("geom")
-                  ),
-                  node("Fill").child(
-                      css("fill", currentColorHex),
-                      css("fill-opacity", fillOpacity)
-                  ),
-                  node("Stroke").child(
-                      css("stroke", stroke), 
-                      css("stroke-width", width), 
-                      css("stroke-opacity", strokeOpacity)
-                  )
-              )
-          ).build(root);
+
+          Node ruleNode = node("Rule").child(node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay), node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+              node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE"))))), node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute), node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)), node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
+              node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", currentColorHex), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
 
           // Adding labels
           this.addLabelSymbolizer(ruleNode);
@@ -592,9 +573,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         boolean isOntologyCat;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
+        ThematicLayer tLayer = (ThematicLayer) layer;
         ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
-        String attribute = tStyle.getAttribute().toLowerCase();
+        String attribute = tLayer.getAttribute().toLowerCase();
 
         if (style instanceof DashboardThematicStyle)
         {
@@ -603,7 +585,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           // ontology logic
           String cats = dTStyle.getStyleCategories();
-          if(cats.length() > 0)
+          if (cats.length() > 0)
           {
             try
             {
@@ -614,7 +596,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             {
               throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
             }
-  
+
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
             {
@@ -625,8 +607,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 catTitle = catVal;
                 catColor = thisObj.getString("color");
                 isOntologyCat = thisObj.getBoolean("isOntologyCat");
-                
-                if(isOntologyCat == false)
+
+                if (isOntologyCat == false)
                 {
                   // 'other' attributes only relevant for non-ontology categories
                   catOtherCat = thisObj.getBoolean("otherCat");
@@ -638,11 +620,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 String msg = "Can not parse JSON during SLD generation.";
                 throw new ProgrammingErrorException(msg, e);
               }
-  
-              // If not the 'OTHER' category 
+
+              // If not the 'OTHER' category
               if (catOtherCat == false)
               {
-                if (dTStyle.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+                if (tLayer.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
                 {
                   try
                   {
@@ -653,183 +635,65 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                     // The category isn't actually a number so it can't be localized
                   }
                 }
-    
-                Node ruleNode = node("Rule").child(
-                    node("Name").text(catVal),
-                    node("Title").text(catTitle),
-                    node(OGC, "Filter").child(
-                        node(OGC, "And").child(
-                            node(OGC, "PropertyIsEqualTo").child(
-                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                            ),
-                            node(OGC, "And").child(
-                                node(OGC, "Not").child(
-                                    node(OGC, "Or").child(
-                                        node(OGC, "PropertyIsNull").child(
-                                            node(OGC, "PropertyName").text(attribute)
-                                        ),
-                                        node(OGC, "PropertyIsEqualTo").child(
-                                            node(OGC, "Literal").text("NEVER"),
-                                            node(OGC, "Literal").text("TRUE")
-                                        )
-                                    )
-                                ),
-                                node(OGC, "PropertyIsEqualTo").child(
-                                    node(OGC, "PropertyName").text(attribute),
-                                    node(OGC, "Literal").text(catVal)
-                                )
-                            )
-                        )
-                    ),
-                    node("PolygonSymbolizer").child(
-                        node("Geometry").child(
-                            node(OGC, "PropertyName").text("geom")
-                        ),
-                        node("Fill").child(
-                            css("fill", catColor),
-                            css("fill-opacity", fillOpacity)
-                        ),
-                        node("Stroke").child(
-                             css("stroke", stroke), 
-                             css("stroke-width", width), 
-                             css("stroke-opacity", strokeOpacity)
-                        )
-                    )
-                ).build(root);
-    
+
+                Node ruleNode = node("Rule").child(node("Name").text(catVal), node("Title").text(catTitle), node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(catVal))))),
+                    node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", catColor), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
+
                 //
                 // Adding labels
                 //
                 this.addLabelSymbolizer(ruleNode);
-                
+
                 catValTracking.add(catVal);
               }
               else
               {
                 // 'OTHER' Polygon styles
-                if(catOtherEnabled == true)
+                if (catOtherEnabled == true)
                 {
-                  otherPolySymbolNode.child(
-                      node("Geometry").child(
-                          node(OGC, "PropertyName").text("geom")
-                      ),
-                      node("Fill").child(
-                          css("fill", catColor),  
-                          css("fill-opacity", fillOpacity)
-                      ),
-                      node("Stroke").child(
-                          css("stroke", stroke), 
-                          css("stroke-width", width), 
-                          css("stroke-opacity", strokeOpacity)
-                      )
-                   );
+                  otherPolySymbolNode.child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", catColor), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)));
                 }
               }
             }
-            
+
             //
-            // Build the 'OTHER' rule 
+            // Build the 'OTHER' rule
             //
-            if(catOtherEnabled == true)
+            if (catOtherEnabled == true)
             {
               NodeBuilder otherOrNode = node(OGC, "Or");
-              
+
               // Build 'OTHER' exclusion fragments
-              for(String otherCatVal : catValTracking)
+              for (String otherCatVal : catValTracking)
               {
-                otherOrNode.child(
-                    node(OGC, "PropertyIsEqualTo").child(
-                        node(OGC, "PropertyName").text(attribute),
-                        node(OGC, "Literal").text(otherCatVal)
-                ));
+                otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
               }
-            
-              node("Rule").child(
-                  node("Name").text("OTHER"),
-                  node("Title").text("OTHER"),
-                  otherPolySymbolNode.child(
-                      node("Stroke").child(
-                          css("stroke", stroke), 
-                          css("stroke-width", width), 
-                          css("stroke-opacity", strokeOpacity)
-                      )
-                   ),
-                   node(OGC, "Filter").child(
-                       node(OGC, "And").child(
-                           node(OGC, "PropertyIsEqualTo").child(
-                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                           ),
-                           node(OGC, "Not").child(
-                               otherOrNode.child(
-                                   node(OGC, "Or").child(
-                                       node(OGC, "PropertyIsNull").child(
-                                           node(OGC, "PropertyName").text(attribute)
-                                       )
-    //                                   ,
-    //                                   node(OGC, "PropertyIsEqualTo").child(
-    //                                       node(OGC, "PropertyName").text(attribute),
-    //                                       node(OGC, "Literal").text("")
-    //                                   )
-                                   )
-                               )
-                           )
-                       )
-                   )
-              ).build(root);
+
+              node("Rule").child(node("Name").text("OTHER"), node("Title").text("OTHER"), otherPolySymbolNode.child(node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Not").child(otherOrNode.child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute))
+              // ,
+              // node(OGC, "PropertyIsEqualTo").child(
+              // node(OGC, "PropertyName").text(attribute),
+              // node(OGC, "Literal").text("")
+              // )
+                  )))))).build(root);
             }
           }
           else
           {
             //
-            // The categories data does not exist.  Rather than throwing an error which will make the map unusable
+            // The categories data does not exist. Rather than throwing an error which will make the map unusable
             // and prevent the user from fixing the issue without help from a developer we will render basic polygons.
             // This isn't the prettiest ways to handle this but helps to maintain app uptime in obscure situations.
             //
-            Node ruleNode = node("Rule").child(
-                node("Name").text(currentLayerName),
-                node("Title").text(currentLayerName),
-                node("PolygonSymbolizer").child(
-                    node("Geometry").child(
-                        node(OGC, "PropertyName").text("geom")
-                    ),
-                    node("Fill").child(
-                        css("fill", "#E60000"),
-                        css("fill-opacity", "0.6")
-                    ),
-                    node("Stroke").child(
-                        css("stroke", "#8A0000"), 
-                        css("stroke-width", "1"), 
-                        css("stroke-opacity", "0.6")
-                    )
-                )
-            ).build(root);
-            
+            node("Rule").child(node("Name").text(currentLayerName), node("Title").text(currentLayerName), node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", "#E60000"), css("fill-opacity", "0.6")), node("Stroke").child(css("stroke", "#8A0000"), css("stroke-width", "1"), css("stroke-opacity", "0.6")))).build(root);
+
           }
         }
       }
       else
-      {  
+      {
         // Basic polygon
-        Node ruleNode = node("Rule").child(
-            node("Name").text("basic"),
-            node("Title").text("basic"),
-            node("PolygonSymbolizer").child(
-                node("Geometry").child(
-                    node(OGC, "PropertyName").text("geom")
-                ),
-                node("Fill").child(
-                    css("fill", fill),
-                    css("fill-opacity", fillOpacity)
-                ),
-                node("Stroke").child(
-                    css("stroke", stroke), 
-                    css("stroke-width", width), 
-                    css("stroke-opacity", strokeOpacity)
-                )
-            )
-        ).build(root);
+        Node ruleNode = node("Rule").child(node("Name").text("basic"), node("Title").text("basic"), node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", fill), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
 
         //
         // Adding labels
@@ -886,9 +750,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private static class LineSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
   {
-    private LineSymbolizer(SLDMapVisitor visitor, Style style)
+    private LineSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
-      super(visitor, style);
+      super(visitor, layer, style);
     }
 
     @Override
@@ -920,9 +784,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
     private Integer size;
 
-    private TextSymbolizer(SLDMapVisitor visitor, Style style, Node... nodes)
+    private TextSymbolizer(SLDMapVisitor visitor, Layer layer, Style style, Node... nodes)
     {
-      super(visitor, style);
+      super(visitor, layer, style);
       this.nodes = nodes;
       this.color = style.getLabelColor();
       this.font = style.getLabelFont();
@@ -954,7 +818,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         node("LabelPlacement").child(node("PointPlacement").child(node("AnchorPoint").child(node("AnchorPointX").text("0.5"), node("AnchorPointY").text("0.5")))).build(root);
       }
-      
+
       node("Halo").child(node("Radius").text(haloWidth), node("Fill").child(css("fill", halo))).build(root);
       node("Fill").child(css("fill", color)).build(root);
 
@@ -1087,7 +951,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private Node                                              root;
 
-  private ThematicLayer                                             currentLayer;
+  private ThematicLayer                                     currentLayer;
 
   public SLDMapVisitor()
   {
@@ -1132,6 +996,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   private NodeBuilder css(String name, Object value)
   {
     return new NodeBuilder(this, null, "CssParameter").attr("name", name).text(value);
+  }
+
+  private NodeBuilder css(String name)
+  {
+    return new NodeBuilder(this, null, "CssParameter").attr("name", name);
   }
 
   private NodeBuilder node(String node)
@@ -1229,11 +1098,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       style.accepts(this);
     }
   }
-  
+
   @Override
   public void visit(ReferenceLayer layer)
   {
-    
+
   }
 
   /**
@@ -1259,15 +1128,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     Symbolizer symbolizer;
     if (this.featureType == FeatureType.POINT)
     {
-      symbolizer = new PointSymbolizer(this, style);
+      symbolizer = new PointSymbolizer(this, this.currentLayer, style);
     }
     else if (this.featureType == FeatureType.POLYGON)
     {
-      symbolizer = new PolygonSymbolizer(this, style);
+      symbolizer = new PolygonSymbolizer(this, this.currentLayer, style);
     }
     else if (this.featureType == FeatureType.LINE)
     {
-      symbolizer = new LineSymbolizer(this, style);
+      symbolizer = new LineSymbolizer(this, this.currentLayer, style);
     }
     // TODO text symbolizer
     else
@@ -1286,15 +1155,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     Symbolizer symbolizer;
     if (this.featureType == FeatureType.POINT)
     {
-      symbolizer = new PointSymbolizer(this, style);
+      symbolizer = new PointSymbolizer(this, this.currentLayer, style);
     }
     else if (this.featureType == FeatureType.POLYGON)
     {
-      symbolizer = new PolygonSymbolizer(this, style);
+      symbolizer = new PolygonSymbolizer(this, this.currentLayer, style);
     }
     else if (this.featureType == FeatureType.LINE)
     {
-      symbolizer = new LineSymbolizer(this, style);
+      symbolizer = new LineSymbolizer(this, this.currentLayer, style);
     }
     // TODO text symbolizer
     else
@@ -1342,7 +1211,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   {
     Node parent = this.parents.peek();
 
-    node(OGC, name).child(node(OGC, "PropertyName").text(cond.getThematicStyle().getAttribute()), node(OGC, "Literal").text(cond.getValue())).build(parent);
+    node(OGC, name).child(node(OGC, "PropertyName").text(cond.getThematicLayer().getAttribute()), node(OGC, "Literal").text(cond.getValue())).build(parent);
   }
 
   @Override
@@ -1384,7 +1253,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   @Override
   public void visit(IsBetween cond)
   {
-    node("PropertyIsBetween").child(node("PropertyName").text(cond.getThematicStyle().getAttribute()), node("LowerBoundary").text(cond.getLowerBound()), node("UpperBoundary").text(cond.getUpperBound())).build(this.parents.peek());
+    node("PropertyIsBetween").child(node("PropertyName").text(cond.getThematicLayer().getAttribute()), node("LowerBoundary").text(cond.getLowerBound()), node("UpperBoundary").text(cond.getUpperBound())).build(this.parents.peek());
   }
 
   @Override
@@ -1396,7 +1265,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   @Override
   public void visit(IsNull component)
   {
-    node("PropertyIsNull").child(node("PropertyName").text(component.getThematicStyle().getAttribute())).build(this.parents.peek());
+    node("PropertyIsNull").child(node("PropertyName").text(component.getThematicLayer().getAttribute())).build(this.parents.peek());
   }
 
   @Override

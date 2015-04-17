@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1259819593)
+@com.runwaysdk.business.ClassSignature(hash = -1092734244)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -53,29 +53,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
-  {
-    return getMdAttribute(null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE);
-
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE);
-
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getPointFixed()
@@ -224,11 +201,7 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE)) 
-    {
-       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
     {
        return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -273,9 +246,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize();
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias);
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel);
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getPointFixed();
     public com.runwaysdk.query.SelectableBoolean getPointFixed(String alias);
     public com.runwaysdk.query.SelectableBoolean getPointFixed(String alias, String displayLabel);
@@ -350,23 +320,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
-
-  }
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
-  {
-    return getMdAttribute(null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias)
-  {
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getPointFixed()
@@ -509,11 +462,7 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE)) 
-    {
-       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
     {
        return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -535,9 +484,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize();
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias);
     public com.runwaysdk.query.SelectableBoolean getBubbleContinuousSize(String alias, String displayLabel);
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
-    public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getPointFixed();
     public com.runwaysdk.query.SelectableBoolean getPointFixed(String alias);
     public com.runwaysdk.query.SelectableBoolean getPointFixed(String alias, String displayLabel);
@@ -663,23 +609,6 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLECONTINUOUSSIZE, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
-  {
-    return getMdAttribute(null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias)
-  {
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE,  alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableBoolean getPointFixed()
   {
     return getPointFixed(null);
@@ -820,11 +749,7 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.MDATTRIBUTE)) 
-    {
-       return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.STYLECONDITION)) 
     {
        return new com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }

@@ -1,49 +1,11 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.runwaysdk.ProblemExceptionDTO;
-import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
-import com.runwaysdk.geodashboard.DashboardDTO;
-import com.runwaysdk.geodashboard.GDBErrorUtility;
-import com.runwaysdk.geodashboard.JavascriptUtil;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
-import com.runwaysdk.geodashboard.util.Iterables;
-import com.runwaysdk.system.gis.geo.UniversalDTO;
-import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
-import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
-import com.runwaysdk.system.metadata.MdAttributeDTO;
-import com.runwaysdk.system.metadata.MdAttributeDateDTO;
-import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
-import com.runwaysdk.system.metadata.MdAttributeTermDTO;
-import com.runwaysdk.system.metadata.MdAttributeTextDTO;
-import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
-import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLayer/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
-
-  private static final Log   log     = LogFactory.getLog(DashboardLayerController.class);
 
   public DashboardLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, Boolean isAsynchronous)
   {
@@ -101,54 +63,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     render("editComponent.jsp");
   }
 
-
   public void failEdit(String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.view(id);
-  }
-
-  
-  private String getDisplayLabel(MdAttributeDTO mdAttr)
-  {
-    if (mdAttr instanceof MdAttributeVirtualDTO)
-    {
-      MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
-      String label = mdAttributeVirtual.getDisplayLabel().getValue();
-      if (label == null || label.length() > 0)
-      {
-        return label;
-      }
-      return mdAttributeVirtual.getMdAttributeConcrete().getDisplayLabel().getValue();
-    }
-    return ( (MdAttributeConcreteDTO) mdAttr ).getDisplayLabel().getValue();
-  }
-
-  private String getCategoryType(MdAttributeDTO mdAttr)
-  {
-    MdAttributeConcreteDTO concrete = this.getMdAttributeConcrete(mdAttr);
-
-    if (concrete instanceof MdAttributeDateDTO)
-    {
-      return "date";
-    }
-    else if (concrete instanceof MdAttributeNumberDTO)
-    {
-      return "number";
-    }
-
-    return "text";
-  }
-
-  private MdAttributeConcreteDTO getMdAttributeConcrete(MdAttributeDTO mdAttr)
-  {
-    if (mdAttr instanceof MdAttributeVirtualDTO)
-    {
-      MdAttributeVirtualDTO mdAttributeVirtual = (MdAttributeVirtualDTO) mdAttr;
-
-      return mdAttributeVirtual.getMdAttributeConcrete();
-    }
-
-    return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException

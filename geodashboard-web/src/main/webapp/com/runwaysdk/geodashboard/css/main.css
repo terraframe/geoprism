@@ -2658,3 +2658,16 @@ a.save-filters-button {
 	border-left: solid 1px white;	
 }
 
+div.secondary-box label {
+	float: left;
+	font-size: 13px;
+	line-height: 16px;
+	font-weight: normal;
+	color: #333;
+	margin: 7px 19px 0px 0px;
+}
+
+#secondary-select-box {
+    width: 300px;
+}
+
