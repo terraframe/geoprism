@@ -25,11 +25,11 @@ import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.persist.AllLayerType;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.HasLayer;
 import com.runwaysdk.geodashboard.gis.persist.HasStyle;
@@ -151,7 +151,7 @@ public class Sandbox
     map.setName("Test Map");
     map.apply();
 
-    DashboardLayer layer = new DashboardLayer();
+    DashboardThematicLayer layer = new DashboardThematicLayer();
     layer.setName("aa_test_data");
     layer.addLayerType(AllLayerType.BASIC);
     layer.setDisplayInLegend(false);

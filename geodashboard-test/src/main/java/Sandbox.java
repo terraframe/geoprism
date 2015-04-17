@@ -9,11 +9,6 @@ public class Sandbox
   @Request
   public static void main(String[] args)
   {
-    MdRelationshipDAOIF mdRelationshipDAOIF = MdRelationshipDAO.getMdRelationshipDAO(ClassifierAttributeRoot.CLASS);
-    
-    mdRelationshipDAOIF.printAttributes();
-    
-//    NoLayersExceptionDTO ex = new NoLayersExceptionDTO(this.getClientRequest(), this.req.getLocale());
-//    String msg = ex.getLocalizedMessage();
+   System.out.println("test");
   }
 }

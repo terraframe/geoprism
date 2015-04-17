@@ -12,7 +12,9 @@ import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.MockTaskListener;
 import com.runwaysdk.geodashboard.gis.Task;
 import com.runwaysdk.geodashboard.gis.TransactionExecuter;
+import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean;
 import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean.BuildTypes;
+import com.runwaysdk.geodashboard.localization.LocaleManager;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -87,7 +89,7 @@ public class BuildLocatedInTest
 
     for (Task task : tasks)
     {
-      Assert.assertFalse(Localizer.getMessage("DELETE_EXISTING").equals(task.getTaskName()));
+      Assert.assertFalse(LocaleManager.getMessage("DELETE_EXISTING").equals(task.getTaskName()));
     }
 
 //    Assert.assertFalse(logger.hasLogged());
