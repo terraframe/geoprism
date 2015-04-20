@@ -1863,7 +1863,7 @@
           });
         }
         
-        this._loadExistingCategories("#categories-input", "cat", "#ontology-tree");
+        this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
         
         // ontology category layer type colors
         $(".category-color-icon").colpick({
@@ -1888,7 +1888,7 @@
           else {
             this._renderSecondaryCategoryGroup(secondaryAttribute, type);
           
-            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree");
+            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
 
           }
         }
@@ -2168,7 +2168,7 @@
        * The categories data is appended to the #categories-input element as json.
        * 
        */
-      _loadExistingCategories : function(storeElement, prefix, treeElement) {
+      _loadExistingCategories : function(storeElement, prefix, treeElement, checkOther) {
         
         var catsJSONObj = $(storeElement).data("categoriesstore");
         
@@ -2203,7 +2203,7 @@
             
             // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
             // The 'other' option is checked by default making this a valid sequence
-            if(!catOtherEnabled){
+            if(checkOther && !catOtherEnabled){
               $("#f53").click();
               $("#" + prefix + "-other").parent().parent().hide();
             }
