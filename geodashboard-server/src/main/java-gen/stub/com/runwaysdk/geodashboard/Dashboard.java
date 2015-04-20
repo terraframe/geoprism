@@ -23,6 +23,7 @@ import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
+import com.runwaysdk.geodashboard.dashboard.TermComparator;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -295,9 +296,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
           {
             children = classifier.getDirectDescendants(ClassifierIsARelationship.CLASS);
 
-            while (children.hasNext())
+            List<Term> list = children.getAll();
+
+            Collections.sort(list, new TermComparator());
+
+            for (Term term : list)
             {
-              Classifier child = (Classifier) children.next();
+              Classifier child = (Classifier) term;
 
               nodes.put(child.getJSONObject());
             }
@@ -365,7 +370,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     ValueQuery innerQuery1 = new ValueQuery(factory);
     ValueQuery innerQuery2 = new ValueQuery(factory);
     ValueQuery outerQuery = new ValueQuery(factory);
-    
+
     GeneratedComponentQuery query1 = QueryUtil.getQuery(mdClass, factory);
 
     // thematic attribute
@@ -376,7 +381,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     // use the basic Selectable if no aggregate is selected
     Selectable thematicSel = thematicAttr;
-    
+
     // geoentity label
     GeoEntityQuery geQ1 = new GeoEntityQuery(innerQuery1);
     Selectable label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
@@ -385,14 +390,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // geo id (for uniqueness)
     Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
     geoId1.setColumnAlias(GeoEntity.GEOID);
-    
+
     Universal universal = Universal.get(universalId);
-    
+
     String aggregationId = AllAggregationType.valueOf(aggregationVal).getId();
     AllAggregationType aggregationType = AllAggregationType.get(aggregationId);
-    
+
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
-    
+
     MdClassDAO md = (MdClassDAO) mdAttribute.definedByClass();
     MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(md);
 
@@ -438,28 +443,28 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         thematicSel = innerQuery1.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
       }
-  
+
       thematicSel.setColumnAlias(attributeName);
-  
+
       innerQuery1.SELECT(thematicSel);
       innerQuery1.SELECT(label);
       innerQuery1.SELECT(geoId1);
-      
+
       // Join the entity's GeoEntity reference with the all paths table
       MdAttributeReferenceDAOIF geoRef = MdAttributeReferenceDAO.get(attr.getId());
       Attribute geoAttr = QueryUtil.get(query1, geoRef.definesAttribute());
-  
+
       // the entity's GeoEntity should match the all path's child
       GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
       innerQuery1.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
-      
+
       // the displayed GeoEntity should match the all path's parent
       innerQuery1.AND(geAllPathsQ.getParentTerm().EQ(geQ1));
-  
+
       // make sure the parent GeoEntity is of the proper Universal
       innerQuery1.AND(geQ1.getUniversal().EQ(universal));
       innerQuery1.ORDER_BY_ASC((SelectablePrimitive) thematicSel);
-      
+
       iterator = innerQuery1.getIterator();
 
       try
@@ -487,52 +492,53 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       if (aggregationType != null)
       {
         OrderBy.SortOrder sortOrder;
-        
+
         if (aggregationType == AllAggregationType.MAJORITY)
         {
           // func = "MAJORITY";
           sortOrder = OrderBy.SortOrder.DESC;
         }
-        else // (agg == AllAggregationType.MINORITY)
+        else
+        // (agg == AllAggregationType.MINORITY)
         {
           // func = "MINORITY";
           sortOrder = OrderBy.SortOrder.ASC;
         }
         isAggregate = true;
-        
+
         ValueQuery winFuncQuery = new ValueQuery(factory);
-        
+
         thematicSel = F.COUNT(thematicAttr, "COUNT");
         AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), geoId1));
         AggregateFunction rank = query1.RANK("RANK").OVER(F.PARTITION_BY(geoId1), new OrderBy(F.COUNT(thematicAttr), sortOrder));
-        
-        winFuncQuery.SELECT_DISTINCT(thematicSel);  
+
+        winFuncQuery.SELECT_DISTINCT(thematicSel);
         winFuncQuery.SELECT_DISTINCT(stringAgg);
         winFuncQuery.SELECT_DISTINCT(label);
         winFuncQuery.SELECT_DISTINCT(rank);
         winFuncQuery.SELECT_DISTINCT(geoId1);
-        winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle)geoId1);
+        winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle) geoId1);
         winFuncQuery.ORDER_BY(thematicSel, sortOrder);
 
         setCriteriaOnInnerQuery(winFuncQuery, mdClass, query1, geQ1, universal, attr.getId(), thematicAttr, conditions);
-        
+
         outerThematicSel = winFuncQuery.get("AGG");
         outerThematicSel.setUserDefinedAlias("AGG");
         outerThematicSel.setColumnAlias(attributeName);
-        
+
         Selectable outerLabel = winFuncQuery.get(GeoEntity.DISPLAYLABEL);
         outerLabel.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
         outerLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
-        
+
         Selectable outerGeoId = winFuncQuery.get(GeoEntity.GEOID);
         outerGeoId.setColumnAlias(GeoEntity.GEOID);
         outerGeoId.setUserDefinedAlias(GeoEntity.GEOID);
-     
+
         innerQuery1.SELECT(outerThematicSel);
         innerQuery1.SELECT(outerLabel);
         innerQuery1.SELECT(outerGeoId);
         innerQuery1.WHERE(winFuncQuery.aSQLAggregateInteger("RANK", rank.getColumnAlias()).EQ(1));
-        
+
         // Set the GeoID and the Geometry attribute for the second query
         GeoEntityQuery geQ2 = new GeoEntityQuery(innerQuery2);
         Selectable geoId2 = geQ2.getGeoId(GeoEntity.GEOID);
@@ -540,7 +546,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         innerQuery2.SELECT(geoId2);
         // geometry
         Selectable geom;
-        geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON);  // This will always be polygon because categories are only a feature of polygon
+        geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON); // This will always be polygon because categories are only a feature
+                                                    // of polygon
 
         geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
         geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
@@ -553,14 +560,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
           outerQuery.SELECT(attribute);
         }
-        
+
         Attribute geomAttribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
         geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
         outerQuery.SELECT(geomAttribute);
         outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
         outerQuery.ORDER_BY_ASC(outerThematicSel);
       }
-      
+
       iterator = outerQuery.getIterator();
       try
       {
@@ -583,28 +590,26 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         iterator.close();
       }
     }
-    
+
     return suggestions.toArray(new String[suggestions.size()]);
   }
 
-  private static void setCriteriaOnInnerQuery(ValueQuery innerQuery1, MdClassDAOIF mdClass, GeneratedComponentQuery query, 
-      GeoEntityQuery geQ1, Universal universal, String geoEntId, SelectableSingle thematicAttr, DashboardCondition[] conditions)
+  private static void setCriteriaOnInnerQuery(ValueQuery innerQuery1, MdClassDAOIF mdClass, GeneratedComponentQuery query, GeoEntityQuery geQ1, Universal universal, String geoEntId, SelectableSingle thematicAttr, DashboardCondition[] conditions)
   {
     // Join the entity's GeoEntity reference with the all paths table
     MdAttributeReferenceDAOIF geoRef = MdAttributeReferenceDAO.get(geoEntId);
     Attribute geoAttr = QueryUtil.get(query, geoRef.definesAttribute());
-  
+
     // the entity's GeoEntity should match the all path's child
     GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(innerQuery1);
     innerQuery1.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
-  
+
     // the displayed GeoEntity should match the all path's parent
     innerQuery1.AND(geAllPathsQ.getParentTerm().EQ(geQ1));
-  
+
     // make sure the parent GeoEntity is of the proper Universal
     innerQuery1.AND(geQ1.getUniversal().EQ(universal));
-    
-    
+
     // Attribute condition filtering (i.e. sales unit is greater than 50)
     if (conditions != null)
     {
@@ -613,10 +618,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         if (condition instanceof DashboardAttributeCondition)
         {
           String condAttributeId = ( (DashboardAttributeCondition) condition ).getDefiningMdAttributeId();
-  
+
           MdAttributeDAOIF condAttribute = MdAttributeDAO.get(condAttributeId);
           MdClassDAOIF definedByClass = condAttribute.definedByClass();
-  
+
           if (definedByClass.getId().equals(mdClass.getId()))
           {
             Attribute attr = QueryUtil.get(query, condAttribute.definesAttribute());

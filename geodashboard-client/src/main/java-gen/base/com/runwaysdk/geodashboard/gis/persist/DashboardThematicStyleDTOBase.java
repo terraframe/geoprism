@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1686172467)
+@com.runwaysdk.business.ClassSignature(hash = -1981151188)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 1686172467;
+  private static final long serialVersionUID = -1981151188;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -34,6 +34,9 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
+  public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
+  public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
+  public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
   public Boolean getBubbleContinuousSize()
@@ -293,6 +296,138 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPolygonMinFillMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(POLYGONMINFILL).getAttributeMdDTO();
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getSecondaryAggregationType()
+  {
+    return (java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO>) com.runwaysdk.transport.conversion.ConversionFacade.convertEnumDTOsFromEnumNames(getRequest(), com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO.CLASS, getEnumNames(SECONDARYAGGREGATIONTYPE));
+  }
+  
+  public java.util.List<String> getSecondaryAggregationTypeEnumNames()
+  {
+    return getEnumNames(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public void addSecondaryAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO enumDTO)
+  {
+    addEnumItem(SECONDARYAGGREGATIONTYPE, enumDTO.toString());
+  }
+  
+  public void removeSecondaryAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO enumDTO)
+  {
+    removeEnumItem(SECONDARYAGGREGATIONTYPE, enumDTO.toString());
+  }
+  
+  public void clearSecondaryAggregationType()
+  {
+    clearEnum(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public boolean isSecondaryAggregationTypeWritable()
+  {
+    return isWritable(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public boolean isSecondaryAggregationTypeReadable()
+  {
+    return isReadable(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public boolean isSecondaryAggregationTypeModified()
+  {
+    return isModified(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO getSecondaryAggregationTypeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO) getAttributeDTO(SECONDARYAGGREGATIONTYPE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttributeDTO getSecondaryAttribute()
+  {
+    if(getValue(SECONDARYATTRIBUTE) == null || getValue(SECONDARYATTRIBUTE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttributeDTO.get(getRequest(), getValue(SECONDARYATTRIBUTE));
+    }
+  }
+  
+  public String getSecondaryAttributeId()
+  {
+    return getValue(SECONDARYATTRIBUTE);
+  }
+  
+  public void setSecondaryAttribute(com.runwaysdk.system.metadata.MdAttributeDTO value)
+  {
+    if(value == null)
+    {
+      setValue(SECONDARYATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(SECONDARYATTRIBUTE, value.getId());
+    }
+  }
+  
+  public boolean isSecondaryAttributeWritable()
+  {
+    return isWritable(SECONDARYATTRIBUTE);
+  }
+  
+  public boolean isSecondaryAttributeReadable()
+  {
+    return isReadable(SECONDARYATTRIBUTE);
+  }
+  
+  public boolean isSecondaryAttributeModified()
+  {
+    return isModified(SECONDARYATTRIBUTE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getSecondaryAttributeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SECONDARYATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public String getSecondaryCategories()
+  {
+    return getValue(SECONDARYCATEGORIES);
+  }
+  
+  public void setSecondaryCategories(String value)
+  {
+    if(value == null)
+    {
+      setValue(SECONDARYCATEGORIES, "");
+    }
+    else
+    {
+      setValue(SECONDARYCATEGORIES, value);
+    }
+  }
+  
+  public boolean isSecondaryCategoriesWritable()
+  {
+    return isWritable(SECONDARYCATEGORIES);
+  }
+  
+  public boolean isSecondaryCategoriesReadable()
+  {
+    return isReadable(SECONDARYCATEGORIES);
+  }
+  
+  public boolean isSecondaryCategoriesModified()
+  {
+    return isModified(SECONDARYCATEGORIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getSecondaryCategoriesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(SECONDARYCATEGORIES).getAttributeMdDTO();
   }
   
   public String getStyleCategories()

@@ -56,7 +56,8 @@ $(document).ready(function(){
     mapId: '${mapId}',
     dashboardId : '${dashboardId}',
     workspace : '${workspace}',
-    criteria : ${conditions},    
+    aggregationMap : ${aggregationMap},
+    criteria : ${conditions},
     layerCategoriesTree: {
       termType : '${type}',
       relationshipTypes : [ '${relationType}' ],

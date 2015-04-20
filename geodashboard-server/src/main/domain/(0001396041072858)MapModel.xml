@@ -259,6 +259,9 @@
           <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
           <char name="polygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
           <text name="styleCategories" label="Category styling for layers" required="false" />
+          <reference name="secondaryAttribute" label="Secondary attribute" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
+          <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
+          <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />          
         </attributes>
       </mdBusiness>
 

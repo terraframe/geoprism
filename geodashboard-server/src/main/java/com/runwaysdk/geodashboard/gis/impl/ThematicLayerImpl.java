@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 
 public class ThematicLayerImpl extends LayerImpl implements ThematicLayer
@@ -47,11 +46,4 @@ public class ThematicLayerImpl extends LayerImpl implements ThematicLayer
   {
     this.attributeType = attributeType;
   }
-
-  @Override
-  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
-  {
-    return null;
-  }
-
 }

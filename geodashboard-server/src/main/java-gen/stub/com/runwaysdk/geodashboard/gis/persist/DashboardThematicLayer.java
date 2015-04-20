@@ -30,7 +30,6 @@ import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
@@ -255,9 +254,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
       ValueQuery thematicQuery = this.getValueQuery(factory, thematicMdAttribute, thematicAggregation);
 
-      SecondaryAttributeStyleIF sStyle = SecondaryAttributeStyle.getSecondaryAttributeStyleIF(tStyle.getId());
+      MdAttributeDAOIF secondaryMdAttribute = tStyle.getSecondaryAttributeDAO();
 
-      if (sStyle != null)
+      if (secondaryMdAttribute != null)
       {
         AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
         thematicGeoId.setColumnAlias(GeoEntity.GEOID);
@@ -271,11 +270,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         ValueQuery innerQuery = new ValueQuery(factory);
         innerQuery.SELECT(thematicGeoId, thematicLabel, thematicAttribute);
 
-        MdAttributeDAOIF secondaryMdAttribute = sStyle.getMdAttributeDAO();
-
         if (!secondaryMdAttribute.getId().equals(thematicMdAttribute.getId()))
         {
-          ValueQuery secondaryQuery = this.getValueQuery(factory, secondaryMdAttribute, sStyle.getAggregationMethod());
+          ValueQuery secondaryQuery = this.getValueQuery(factory, secondaryMdAttribute, tStyle.getSecondaryAttributeAggregationMethod());
 
           AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
           secondaryGeoId.setColumnAlias(GeoEntity.GEOID);
@@ -578,12 +575,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     }
 
     return AttributeType.BASIC;
-  }
-
-  @Override
-  public SecondaryAttributeStyleIF getSecondaryAttributeStyle()
-  {
-    return SecondaryAttributeStyle.getSecondaryAttributeStyleIF(this.getId());
   }
 
   @Override

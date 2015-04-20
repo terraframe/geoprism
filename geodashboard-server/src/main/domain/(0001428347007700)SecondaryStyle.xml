@@ -1,20 +1,5 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle" label="Secondary attribute style" generateController="false">
-        <attributes>
-          <reference name="thematicLayer" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer" indexType="unique index" />
-          <reference name="mdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
-          <enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
-          <text name="categories" label="Category styling for layers" required="true" />
-        </attributes>
-
-        <mdMethod name="getSecondaryAttributeStyle" label="Get secondary attribute styles" returnType="com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle" static="true">
-          <mdParameter name="thematicLayerId" label="Thematic layer id" order="0" type="java.lang.String" />
-        </mdMethod>
-
-      </mdBusiness>
-    </create>
     <update>
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
         <create>
@@ -28,7 +13,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.SecondaryAttributeStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.getSecondaryAttributes" type="com.runwaysdk.system.metadata.MdBusiness" />
     </delete>
   </undoIt>
 </version>

@@ -232,6 +232,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
      */
     req.setAttribute("conditions", activeDashboard.getConditionsJSON());
 
+    req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
+
     render("dashboardViewer.jsp");
   }
 }

@@ -5,8 +5,11 @@ import java.awt.GraphicsEnvironment;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.Style;
@@ -15,7 +18,13 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeChar;
+import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeDecimal;
+import com.runwaysdk.system.metadata.MdAttributeDouble;
+import com.runwaysdk.system.metadata.MdAttributeFloat;
+import com.runwaysdk.system.metadata.MdAttributeInteger;
+import com.runwaysdk.system.metadata.MdAttributeLong;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -121,7 +130,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       q.OR(q.getEnumName().EQ(AllAggregationType.MINORITY.name()));
       // // We are currently not supporting distribution but want to leave this hear for future implementation
       // q.OR(q.getEnumName().EQ(AllAggregationType.DISTRIBUTION.name()));
-      //q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+      // q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     }
     else
     {
@@ -131,10 +140,54 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       q.OR(q.getEnumName().EQ(AllAggregationType.AVG.name()));
       q.OR(q.getEnumName().EQ(AllAggregationType.MIN.name()));
       q.OR(q.getEnumName().EQ(AllAggregationType.MAX.name()));
-      //q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+      // q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     }
 
     return q;
   }
 
+  public static String getAggregationJSON()
+  {
+    try
+    {
+      JSONArray textOptions = DashboardStyle.getOptions(AllAggregationType.MAJORITY, AllAggregationType.MINORITY);
+      JSONArray numberOptions = DashboardStyle.getOptions(AllAggregationType.SUM, AllAggregationType.AVG, AllAggregationType.MIN, AllAggregationType.MAX);
+
+      JSONObject mapping = new JSONObject();
+      mapping.put(MdAttributeTerm.CLASS, textOptions);
+      mapping.put(MdAttributeText.CLASS, textOptions);
+      mapping.put(MdAttributeCharacter.CLASS, textOptions);
+      
+      mapping.put(MdAttributeInteger.CLASS, numberOptions);
+      mapping.put(MdAttributeLong.CLASS, numberOptions);
+      mapping.put(MdAttributeDecimal.CLASS, numberOptions);
+      mapping.put(MdAttributeDouble.CLASS, numberOptions);
+      mapping.put(MdAttributeFloat.CLASS, numberOptions);
+
+      return mapping.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  private static JSONArray getOptions(AllAggregationType... types) throws JSONException
+  {
+    JSONArray options = new JSONArray();
+
+    for (AllAggregationType type : types)
+    {
+      String value = type.name();
+      String label = type.getDisplayLabel();
+
+      JSONObject option = new JSONObject();
+      option.put("value", value);
+      option.put("label", label);
+
+      options.put(option);
+    }
+
+    return options;
+  }
 }

@@ -40,7 +40,6 @@ import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ReferenceLayer;
-import com.runwaysdk.geodashboard.gis.model.SecondaryAttributeStyleIF;
 import com.runwaysdk.geodashboard.gis.model.Style;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
@@ -303,7 +302,18 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
 
-          node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
+          node("Graphic").child(
+              node("Mark").child(
+                  node("WellKnownName").text(wkn),
+                  node("Fill").child(
+                      this.getFillNode(tStyle, fill),
+                      css("fill-opacity", opacity)),
+                  node("Stroke").child(
+                      css("stroke", stroke),
+                      css("stroke-width", width),
+                      css("stroke-opacity", strokeOpacity))),
+              sizeNode,
+              node("Rotation").text(rotation)).build(pointSymbolNode);
 
           // Adding labels
           this.addLabelSymbolizer(ruleNode);
@@ -320,7 +330,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           Node graphicNode = node("Graphic").build(pointSymbolNode);
           Node markNode = node("Mark").build(graphicNode);
           node("WellKnownName").text("circle").build(markNode);
-          node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)).build(markNode);
+          node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
           node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
           node("Size").text(tStyle.getPointFixedSize()).build(graphicNode);
 
@@ -386,7 +396,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             Node graphicNode = node("Graphic").build(pointSymbolNode);
             Node markNode = node("Mark").build(graphicNode);
             node("WellKnownName").text("circle").build(markNode);
-            node("Fill").child(this.getFillNode(tLayer, fill), css("fill-opacity", opacity)).build(markNode);
+            node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
 
             node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
             node("Size").text(currentPointSize).build(graphicNode);
@@ -400,13 +410,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return root;
     }
 
-    private NodeBuilder getFillNode(ThematicLayer tLayer, String fill)
+    private NodeBuilder getFillNode(ThematicStyle tStyle, String fill)
     {
-      SecondaryAttributeStyleIF sStyle = tLayer.getSecondaryAttributeStyle();
-
-      if (sStyle != null)
+      if (tStyle.getSecondaryAttributeDAO() != null)
       {
-        NodeBuilder node = css("fill").child(node(OGC, "Function").attr("name", "if_then_else").child(node(OGC, "Function").attr("name", "isNull").child(this.getRecodeNode(sStyle)), node("ogc:Literal").text(fill), this.getRecodeNode(sStyle)));
+        NodeBuilder node = css("fill").child(
+            node(OGC, "Function").attr("name", "if_then_else").child(
+                node(OGC, "Function").attr("name", "isNull").child(
+                    this.getRecodeNode(tStyle)),
+                    node("ogc:Literal").text(fill),
+                    this.getRecodeNode(tStyle)));
 
         return node;
       }
@@ -414,21 +427,21 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return css("Fill", fill);
     }
 
-    private NodeBuilder getRecodeNode(SecondaryAttributeStyleIF sStyle)
+    private NodeBuilder getRecodeNode(ThematicStyle tStyle)
     {
       try
       {
-        String attributeName = sStyle.getMdAttributeDAO().definesAttribute().toLowerCase();
+        String attributeName = tStyle.getSecondaryAttributeDAO().definesAttribute().toLowerCase();
 
         List<NodeBuilder> children = new LinkedList<NodeBuilder>();
         children.add(node(OGC, "PropertyName").text(attributeName));
 
-        JSONArray array = sStyle.getCategoriesAsJSON();
+        JSONArray array = tStyle.getSecondaryAttributeCategoriesAsJSON();
         for (int i = 0; i < array.length(); i++)
         {
           JSONObject category = array.getJSONObject(i);
-          String key = category.getString(SecondaryAttributeStyleIF.KEY);
-          String color = category.getString(SecondaryAttributeStyleIF.COLOR);
+          String key = category.getString(ThematicStyle.VAL);
+          String color = category.getString(ThematicStyle.COLOR);
 
           children.add(node(OGC, "Literal").text(key));
           children.add(node(OGC, "Literal").text(color));

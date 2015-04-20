@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 910046892)
+@com.runwaysdk.business.ClassSignature(hash = -1703623596)
 public class DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController";
@@ -65,20 +65,6 @@ public class DashboardLayerControllerBase implements com.runwaysdk.generation.lo
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO:style, java.lang.String:mapId, [Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;:conditions", post=true)
-  public void applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO:style, java.lang.String:mapId, [Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;:conditions", post=true)
-  public void failApplyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO layer, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failApplyWithStyle");
-  }
-  
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:dto", post=true)
   public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -133,20 +119,6 @@ public class DashboardLayerControllerBase implements com.runwaysdk.generation.lo
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failEdit");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute, java.lang.String:mapId", post=true)
-  public void newThematicInstance(java.lang.String mdAttribute, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.newThematicInstance");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute, java.lang.String:mapId", post=true)
-  public void failNewThematicInstance(java.lang.String mdAttribute, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.failNewThematicInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO:dto", post=true)
