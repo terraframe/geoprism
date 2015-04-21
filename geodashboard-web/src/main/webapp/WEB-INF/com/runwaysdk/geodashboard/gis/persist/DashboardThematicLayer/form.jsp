@@ -29,7 +29,12 @@
     <div id="DashboardLayer-mainDiv" class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize var="dl_form_heading" key="DashboardThematicLayer.form.heading"/>${dl_form_heading}${activeMdAttributeLabel}</h1>
+          <c:if test="${style.newInstance}">
+            <h1><gdb:localize key="DashboardThematicLayer.form.newHeading"/>${activeMdAttributeLabel}</h1>          
+          </c:if>
+          <c:if test="${!style.newInstance}">
+            <h1><gdb:localize key="DashboardThematicLayer.form.editHeading"/>${activeMdAttributeLabel}</h1>          
+          </c:if>
         </div>
           <fieldset>
           

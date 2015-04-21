@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 360232039)
+@com.runwaysdk.business.ClassSignature(hash = -1282793519)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String AGGREGATIONATTRIBUTE = "aggregationAttribute";
   public static java.lang.String AGGREGATIONMETHOD = "aggregationMethod";
+  public static java.lang.String ATTRIBUTELABEL = "attributeLabel";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String FEATURESTRATEGY = "featureStrategy";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
@@ -26,7 +27,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = 360232039;
+  private static final long serialVersionUID = -1282793519;
   
   public DashboardLayerViewBase()
   {
@@ -114,6 +115,34 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
     else
     {
       setValue(AGGREGATIONMETHOD, value);
+    }
+  }
+  
+  public String getAttributeLabel()
+  {
+    return getValue(ATTRIBUTELABEL);
+  }
+  
+  public void validateAttributeLabel()
+  {
+    this.validateAttribute(ATTRIBUTELABEL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getAttributeLabelMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayerView.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ATTRIBUTELABEL);
+  }
+  
+  public void setAttributeLabel(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTELABEL, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTELABEL, value);
     }
   }
   

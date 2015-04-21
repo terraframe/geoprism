@@ -319,6 +319,7 @@
           view.setAggregationMethod(layer.aggregationMethod);
           view.setAggregationAttribute(layer.aggregationAttribute);
           view.setMdAttribute(layer.mdAttributeId);
+          view.setAttributeLabel(layer.attributeLabel);
           
           view.style = layer.styles[0];          
           

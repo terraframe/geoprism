@@ -34,6 +34,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -133,6 +134,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("attributeType", this.getAttributeType());
       json.put("aggregationMethod", this.getAggregationMethod());
       json.put("aggregationAttribute", this.getAttribute());
+      json.put("attributeLabel", this.getAttributeDisplayLabel());
 
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -150,6 +152,20 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
       throw new ProgrammingErrorException(ex);
     }
+  }
+
+  public String getAttributeDisplayLabel()
+  {
+    MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO();
+
+    String label = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
+
+    if (label == null || label.length() == 0)
+    {
+      return mdAttribute.getMdAttributeConcrete().getDisplayLabel(Session.getCurrentLocale());
+    }
+
+    return label;
   }
 
   /**
