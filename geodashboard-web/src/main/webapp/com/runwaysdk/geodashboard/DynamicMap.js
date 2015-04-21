@@ -1106,11 +1106,9 @@
           var size = this._map.getSize();        
           var mapBbox = this._map.getBounds().toBBoxString();
           var map = this._map;
-          var layerNameMap = new Object();
-          var layerAggMap = new Object();
+          var layerMap = new Object();
           var layerStringList = '';
           var aggregationAttr = '';
-          var aggregationAttrArr = [];
           var popup = L.popup().setLatLng(e.latlng);
           var that = this;
         
@@ -1122,9 +1120,8 @@
             var layer = layers[i];
           
             if(layer.getLayerIsActive()){
-              var layerId = layer.attributeMap.viewName.value;
-              layerNameMap[layerId] = layer.getLayerName();
-              layerAggMap[layerId] = layer.getAggregationMethod();
+              var layerId = layer.attributeMap.viewName.value;              
+              layerMap[layerId] = layer;              
                 
               if(firstAdded){
                 layerStringList += "," + layerId;
@@ -1133,8 +1130,6 @@
                 layerStringList += layerId;
                 firstAdded = true;
               }
-              aggregationAttrArr.push(layer.getAggregationAttribute().toLowerCase());
-
             }
           }
         
@@ -1162,33 +1157,30 @@
             var popupContent = '';
             
             // The getfeatureinfo request will return only 1 feature
-            for(var i = 0; i<json.features.length; i++){
-              var currLayer = json.features[i];
-              var currProperties = currLayer.properties;
-              var currLayerIdReturn = currLayer.id;
-              var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
-              var currLayerDisplayName = layerNameMap[currLayerId];
-              var currFeatureDisplayName = currLayer.properties.displaylabel;
-              var currAggMethod = layerAggMap[currLayerId];
-              for (var currProperty in currProperties) {
-                if (currProperties.hasOwnProperty(currProperty)) {
-                  if(aggregationAttrArr.indexOf(currProperty.toLowerCase()) >= 0 ){
-                      aggregationAttr = currProperty.toLowerCase();
-                    }
-                }
-              }
-              var currAttributeVal = currLayer.properties[aggregationAttr];
+            for(var i = 0; i < json.features.length; i++){
+              var featureLayer = json.features[i];
+              var featureProperties = featureLayer.properties;
+              var featureLayerIdReturn = featureLayer.id;
+              var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
               
-              if(typeof currAttributeVal === 'number'){
-                currAttributeVal = that._formatter(currAttributeVal);
+              var layer = layerMap[featureLayerId];
+              var layerDisplayName = layer.getLayerName();
+              var aggregationMethod = layer.getAggregationMethod();
+              var attributeName = layer.getAggregationAttribute().toLowerCase();
+              
+              var attributeValue = featureLayer.properties[attributeName];                            
+              var featureDisplayName = featureLayer.properties.displaylabel;
+              
+              if(typeof attributeValue === 'number'){
+                attributeValue = that._formatter(attributeValue);
               }
-              else if(!isNaN(Date.parse(currAttributeVal.substring(0, currAttributeVal.length - 1)))){
-                var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
+              else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
+                var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
                 var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                currAttributeVal = that._formatDate(parsedAttr);
+                attributeValue = that._formatDate(parsedAttr);
               }
               
-              popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
+              popupContent += '<h3 class="popup-heading">'+layerDisplayName+'</h3>';
               
               var html = '';
               html += '<table class="table">';
@@ -1201,16 +1193,16 @@
               html += '</thead>';
               html += '<tbody>';  
               html += '<tr>'; 
-              html += '<td>'+ currFeatureDisplayName +'</td>';  
-              html += '<td>' + currAggMethod + '</td>'; 
-              html += '<td>' + currAttributeVal + '</td>';  
+              html += '<td>'+ featureDisplayName +'</td>';  
+              html += '<td>' + aggregationMethod + '</td>'; 
+              html += '<td>' + attributeValue + '</td>';  
               html += '</tr>';  
               html += '</tbody>';  
               html += '</table>';  
                       
               popupContent += html;
               
-              var currGeoId = currLayer.properties.geoid;
+              var currGeoId = featureLayer.properties.geoid;
               
               if(currGeoId != null)
               {                 
@@ -1681,13 +1673,13 @@
       },
       
       _renderSecondaryAggregation : function(type) {
-    	  
-    	var options = this._aggregationMap[type];
-    	
-    	if(options == null) {
-    	  options = [];
-    	}
-    	
+        
+        var options = this._aggregationMap[type];
+      
+        if(options == null) {
+          options = [];
+        }
+      
         var html = '<select id="secondaryAggregation" class="method-slect" name="secondaryAggregation">';
         
         for(var i = 0; i < options.length; i++) {
