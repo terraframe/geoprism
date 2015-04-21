@@ -2205,21 +2205,25 @@
       
       
       _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-        strokeCellHolder.append(polyStroke);
-        polyStroke.show();
+        if(strokeCellHolder != null) {        
+          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+          strokeCellHolder.append(polyStroke);
+          polyStroke.show();
         
-        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-        strokeCellHolder.append(polyStrokeWidth);
-        polyStrokeWidth.show();
+          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+          strokeCellHolder.append(polyStrokeWidth);
+          polyStrokeWidth.show();
         
-        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-        strokeCellHolder.append(polyStrokeOpacity);
-        polyStrokeOpacity.show();
+          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+          strokeCellHolder.append(polyStrokeOpacity);
+          polyStrokeOpacity.show();
+        }
         
-        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-        fillCellHolder.append(polyFillOpacity);
-        polyFillOpacity.show();
+        if(fillCellHolder != null) {
+          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          fillCellHolder.append(polyFillOpacity);
+          polyFillOpacity.show();
+        }
       },          
       
       _onLayerTypeTabChange : function(e) {
@@ -2240,7 +2244,7 @@
         }
         else if (type === "CATEGORY") {
           $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
         }
         else if (type === "FIXEDBUBBLE") {
             $("#tab005bubble").show();
