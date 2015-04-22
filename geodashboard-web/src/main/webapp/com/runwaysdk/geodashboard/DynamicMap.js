@@ -2574,6 +2574,7 @@
           viewParams: {id: this._dashboardId},          
           width: 600,
           onSuccess : function(dto) {
+            $("#report-export-container").show();
           },
           onFailure : function(e) {
             that.handleException(e);

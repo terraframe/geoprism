@@ -317,13 +317,24 @@ $(document).ready(function(){
   	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
  -->  
     <div id="report-toolbar">
-      <span><a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
+      <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
       <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
       <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
       <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
-      <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
-      <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
-      <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+      
+      <c:choose>
+        <c:when test="${!hasReport}">
+          <span id="report-export-container" style="display: none;">
+        </c:when>      
+        <c:otherwise>
+          <span id="report-export-container">
+        </c:otherwise>       
+      </c:choose>
+      
+        <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
+        <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
+        <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+      </span>
     </div>
     <div id="report-viewport">    
       <div id="report-content">
