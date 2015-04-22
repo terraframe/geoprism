@@ -597,7 +597,7 @@
 	                  >
 	                  
 	                    <div class="color-section">
-	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
 	                      <div class="heading-list">
 	                        <span><gdb:localize key="DashboardThematicLayer.form.category"/></span>
 	                        <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
@@ -699,8 +699,8 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-<!-- 								                       	 		<p id="cat-other-label">OTHER</p> -->
-															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="OTHER" placeholder="OTHER" autocomplete="off" disabled> 
+								                       	    <gdb:localize var="other" key="Other"/>								                       	 
+															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="${other}" placeholder="${other}" autocomplete="off" disabled> 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">

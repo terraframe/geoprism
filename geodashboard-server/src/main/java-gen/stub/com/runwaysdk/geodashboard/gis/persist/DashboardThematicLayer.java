@@ -59,13 +59,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       MdClassDAOIF mdClass = mdAttribute.definedByClass();
       MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
 
-      if (attr != null)
+      if (attr == null)
       {
-        this.setValue(DashboardLayer.GEOENTITY, attr.getId());
-      }
-      else
-      {
-        throw new ProgrammingErrorException("Class [" + mdClass.definesType() + "] does not reference a [" + GeoEntity.CLASS + "].");
+        throw new ProgrammingErrorException("Unable to find a Geo Entity attribute on type [" + mdClass.definesType() + "].");
       }
     }
 

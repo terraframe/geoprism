@@ -772,14 +772,27 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               {
                 otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
               }
+              
+              String label = LocalizationFacade.getFromBundles("Other");
 
-              node("Rule").child(node("Name").text("OTHER"), node("Title").text("OTHER"), otherPolySymbolNode.child(node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Not").child(otherOrNode.child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute))
-              // ,
-              // node(OGC, "PropertyIsEqualTo").child(
-              // node(OGC, "PropertyName").text(attribute),
-              // node(OGC, "Literal").text("")
-              // )
-                  )))))).build(root);
+              node("Rule").child(
+                  node("Name").text(label),
+                  node("Title").text(label),
+                  otherPolySymbolNode.child(
+                      node("Stroke").child(
+                          css("stroke", stroke),
+                          css("stroke-width", width),
+                          css("stroke-opacity", strokeOpacity))),
+                          node(OGC, "Filter").child(
+                              node(OGC, "And").child(
+                                  node(OGC, "PropertyIsEqualTo").child(
+                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                                  node(OGC, "Not").child(
+                                      otherOrNode.child(
+                                          node(OGC, "Or").child(
+                                              node(OGC, "PropertyIsNull").child(
+                                                  node(OGC, "PropertyName").text(attribute)))))))).build(root);
             }
           }
           else

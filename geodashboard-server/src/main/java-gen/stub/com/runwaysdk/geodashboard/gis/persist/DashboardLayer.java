@@ -301,19 +301,19 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      */
     return this.getId();
   }
-
-  @Override
-  public void setGeoEntity(MdAttributeReference value)
-  {
-    if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
-    {
-      super.setGeoEntity(value);
-    }
-    else
-    {
-      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
-    }
-  }
+//
+//  @Override
+//  public void setGeoEntity(MdAttributeReference value)
+//  {
+//    if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
+//    {
+//      super.setGeoEntity(value);
+//    }
+//    else
+//    {
+//      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+//    }
+//  }
 
   @Override
   public void lock()
