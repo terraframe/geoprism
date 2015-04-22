@@ -257,6 +257,30 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         ThematicLayer tLayer = (ThematicLayer) layer;
         ThematicStyle tStyle = (ThematicStyle) style;
 
+        double minAttrVal = 0;
+        double maxAttrVal = 0;
+        int minSize = 0;
+        int maxSize = 0;
+
+        // attribute must be lowercase to work with postgres
+        String attribute = tLayer.getAttribute().toLowerCase();
+
+        if (tStyle.getPointFixed())
+        {
+          int radius = tStyle.getPointFixedSize();
+          minSize = radius;
+          maxSize = radius;
+        }
+        else
+        {
+          HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
+          minAttrVal = minMaxMap.get("min");
+          maxAttrVal = minMaxMap.get("max");
+
+          minSize = tStyle.getPointMinSize();
+          maxSize = tStyle.getPointMaxSize();
+        }
+
         if (tStyle.getSecondaryAttributeDAO() != null)
         {
           try
@@ -272,14 +296,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
               NodeBuilder[] filterNodes = new NodeBuilder[] { node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attributeName)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key))) };
 
-              this.createRule(root, tLayer, tStyle, filterNodes, color, key);
+              this.createRule(root, filterNodes, color, key, minAttrVal, maxAttrVal, minSize, maxSize);
             }
 
             String fill = this.style.getPointFill();
             NodeBuilder[] filterNodes = this.getElseNode(attributeName, array);
             String label = LocalizationFacade.getFromBundles("Other");
 
-            this.createRule(root, tLayer, tStyle, filterNodes, fill, label);
+            this.createRule(root, filterNodes, fill, label, minAttrVal, maxAttrVal, minSize, maxSize);
           }
           catch (JSONException e)
           {
@@ -290,7 +314,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         {
           String fill = this.style.getPointFill();
 
-          createRule(root, tLayer, tStyle, null, fill, null);
+          createRule(root, null, fill, null, minAttrVal, maxAttrVal, minSize, maxSize);
         }
 
       }
@@ -322,39 +346,20 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return list.toArray(new NodeBuilder[list.size()]);
     }
 
-    private void createRule(Node root, ThematicLayer tLayer, ThematicStyle tStyle, NodeBuilder[] filterNodes, String fill, String postfix)
+    private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, double minAttrVal, double maxAttrVal, int minSize, int maxSize)
     {
-      Double opacity = this.style.getPointOpacity();
-      String stroke = this.style.getPointStroke();
-      Integer width = this.style.getPointStrokeWidth();
-      Double strokeOpacity = this.style.getPointStrokeOpacity();
-      String wkn = this.style.getPointWellKnownName();
-      Integer rotation = this.style.getPointRotation();
-      String currentLayerName = this.visitor.currentLayer.getName();
-
-      double minAttrVal = 0;
-      double maxAttrVal = 0;
-      int minSize = 0;
-      int maxSize = 0;
+      ThematicLayer tLayer = (ThematicLayer) layer;
+      ThematicStyle tStyle = (ThematicStyle) style;
 
       // attribute must be lowercase to work with postgres
       String attribute = tLayer.getAttribute().toLowerCase();
-
-      if (tStyle.getPointFixed())
-      {
-        int radius = tStyle.getPointFixedSize();
-        minSize = radius;
-        maxSize = radius;
-      }
-      else
-      {
-        HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
-        minAttrVal = minMaxMap.get("min");
-        maxAttrVal = minMaxMap.get("max");
-
-        minSize = tStyle.getPointMinSize();
-        maxSize = tStyle.getPointMaxSize();
-      }
+      Double opacity = tStyle.getPointOpacity();
+      String stroke = tStyle.getPointStroke();
+      Integer width = tStyle.getPointStrokeWidth();
+      Double strokeOpacity = tStyle.getPointStrokeOpacity();
+      String wkn = tStyle.getPointWellKnownName();
+      Integer rotation = tStyle.getPointRotation();
+      String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
 
       NumberFormat formatter = this.getRuleNumberFormatter();
 
@@ -772,27 +777,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               {
                 otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
               }
-              
+
               String label = LocalizationFacade.getFromBundles("Other");
 
-              node("Rule").child(
-                  node("Name").text(label),
-                  node("Title").text(label),
-                  otherPolySymbolNode.child(
-                      node("Stroke").child(
-                          css("stroke", stroke),
-                          css("stroke-width", width),
-                          css("stroke-opacity", strokeOpacity))),
-                          node(OGC, "Filter").child(
-                              node(OGC, "And").child(
-                                  node(OGC, "PropertyIsEqualTo").child(
-                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
-                                  node(OGC, "Not").child(
-                                      otherOrNode.child(
-                                          node(OGC, "Or").child(
-                                              node(OGC, "PropertyIsNull").child(
-                                                  node(OGC, "PropertyName").text(attribute)))))))).build(root);
+              node("Rule").child(node("Name").text(label), node("Title").text(label), otherPolySymbolNode.child(node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Not").child(otherOrNode.child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)))))))).build(root);
             }
           }
           else
