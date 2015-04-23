@@ -1046,6 +1046,26 @@ a.blueactive,
 	float:left;
 	margin:4px 11px 0 0;
 }
+
+.ico-enable{
+	display:inline-block;
+	vertical-align:top;
+	width:15px;
+	height:15px;
+	text-indent:-9999px;
+	overflow:hidden;
+	background:url(../images/sprite.png) no-repeat -69px 0;
+}
+.ico-enable:hover,
+.ico-enable:focus{
+	background-position:-52px 0;
+	outline:none;
+}
+.control-form .ico-enable{
+	float:left;
+	margin:4px 11px 0 0;
+}
+
 .ico-control{
 	display:inline-block;
 	vertical-align:top;

@@ -17,6 +17,20 @@
         </create>
       </mdController>
       
+      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController">
+        <create>
+          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
+            <mdParameter name="layer" label="Layer" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+            <mdParameter name="style" label="Style" order="1" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="newReferenceInstance" label="newReferenceInstance" isPost="true">
+            <mdParameter name="universalId" label="universalId" order="0" type="java.lang.String" />
+            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
+          </mdAction>
+        </create>
+      </mdController>
+      
     </update>
   </doIt>
   <undoIt>

@@ -44,6 +44,7 @@
         this.$initialize();
         
         var overlayLayerContainer = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+        var referenceLayerContainer = $('#'+DynamicMap.REFERENCE_LAYER_CONTAINER);
         
         this._googleEnabled = Mojo.Util.isObject(Mojo.GLOBAL.google);
         
@@ -69,8 +70,8 @@
         this._currentOverlay = null;
         this._map = null;
         
-        // LinkedHashMap<runwayId, DashboardLayerView>
         this._layerCache = new com.runwaysdk.structure.LinkedHashMap();
+        this._refLayerCache = new com.runwaysdk.structure.LinkedHashMap();
         
         // The current base map (only one at a time is allowed)
         this._defaultBase = null;
@@ -82,8 +83,10 @@
         this._responseCallback = null;
         this._bBox = null;
         
-        var bound = Mojo.Util.bind(this, this._overlayHandler);
-        overlayLayerContainer.on('click', 'a', bound);
+        var overlayBound = Mojo.Util.bind(this, this._overlayHandler);
+        var refBound = Mojo.Util.bind(this, this._referenceHandler);
+        overlayLayerContainer.on('click', 'a', overlayBound);
+        referenceLayerContainer.on('click', 'a', refBound);
         
         var dashboardBound = Mojo.Util.bind(this, this._dashboardClickHandler);
         $(".gdb-dashboard").on("click", dashboardBound); 
@@ -92,12 +95,15 @@
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
+        this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));       
+        this._ReferenceLayerController.setCancelListener(Mojo.Util.bind(this, this._cancelReferenceLayerListener));
+        this._ReferenceLayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener)); 
         this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
         this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
@@ -292,47 +298,145 @@
        * 
        */
       _updateCacheFromJSONResponse : function(json) {
-        // TODO : For now, we can't actually return an aggregate view (Runway doesn't support them yet), so we're returning JSON.
-        //          Since we're using JSON, we have to create DashboardLayerView objects here.
-        for (var i = 0; i < json.layers.length; ++i) {
-          var layer = json.layers[i];
-          
-          var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
-          view.setViewName(layer.viewName);
-          view.setLayerId(layer.layerId);
-          view.setSldName(layer.sldName);
-          view.setLayerName(layer.layerName);
-          view.setDisplayInLegend(layer.inLegend);
-          view.setLegendXPosition(layer.legendXPosition);
-          view.setLegendYPosition(layer.legendYPosition);
-          view.setGroupedInLegend(layer.groupedInLegend);
-          view.setActiveByDefault(true);
-          view.setFeatureStrategy(layer.featureStrategy);
-          // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
-          // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
-          if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
-            view.setLayerIsActive(true);
-          }
-          else{
-            view.setLayerIsActive(false);
-          }
-          view.setAggregationMethod(layer.aggregationMethod);
-          view.setAggregationAttribute(layer.aggregationAttribute);
-          view.setMdAttribute(layer.mdAttributeId);
-          view.setAttributeLabel(layer.attributeLabel);
-          
-          view.style = layer.styles[0];          
-          
-          var oldLayer = this._layerCache.get(layer.layerId);
-          if (oldLayer != null) {
-            view.leafletLayer = oldLayer.leafletLayer;
-          }
-          this._layerCache.put(layer.layerId, view);        
-        }
+        // Create DashboardLayerView and/or DashboardReferenceLayerView objects to be used throughout the map life cycle 
+    	// to provide more formal structure for layer objects.
+    	  
+    	if(json.layers){
+	    	// Build thematic layer objects and populate the cache
+	        for (var i = 0; i < json.layers.length; ++i) {
+	          var layer = json.layers[i];
+	          
+	          var view = this._setLayerViewObj(layer);
+	          
+	          var oldLayer = this._layerCache.get(view.getLayerId());
+	          if (oldLayer != null) {
+	            view.leafletLayer = oldLayer.leafletLayer;
+	          }
+	          this._layerCache.put(view.getLayerId(), view);        
+	        }
+    	}
         
-        if (json.bbox != null) {
-          this._bBox = json.bbox;
+        // Build reference layer objects and populate the cache
+        if(json.refLayers){
+	        for (var r = 0; r < json.refLayers.length; ++r) {
+	        	var refLayer = json.refLayers[r];
+	        	
+	        	// Construct the layer view objects
+	        	var refView = this._setLayerViewObj(refLayer);
+		        var oldLayer = this._refLayerCache.get(refView.universalId);
+		        if (oldLayer != null) {
+		          refView.leafletLayer = oldLayer.leafletLayer;
+		        }
+		        
+		        this._refLayerCache.put(refView.universalId, refView);
+	        }
+	        
+	        if (json.bbox != null) {
+	          this._bBox = json.bbox;
+	        }
         }
+      },
+      
+      /**
+       * Constructs a layer object from json returned from the server.
+       * The json does not type objects so we construct the appropriate type.
+       * 
+       * @layer - DashboardLayer representation
+       */
+      _setLayerViewObj : function(layer) {
+    	  var view;
+    	  
+    	  if(layer.layerType === "THEMATICLAYER"){
+	          view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
+	          view.setViewName(layer.viewName);
+	          view.setLayerId(layer.layerId);
+	          view.setSldName(layer.sldName);
+	          view.setLayerName(layer.layerName);
+	          view.setDisplayInLegend(layer.inLegend);
+	          view.setLegendXPosition(layer.legendXPosition);
+	          view.setLegendYPosition(layer.legendYPosition);
+	          view.setGroupedInLegend(layer.groupedInLegend);
+	          view.setActiveByDefault(true);
+	          view.setFeatureStrategy(layer.featureStrategy);
+	          // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+	          // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+	          if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+	            view.setLayerIsActive(true);
+	          }
+	          else{
+	            view.setLayerIsActive(false);
+	          }
+	          view.setAggregationMethod(layer.aggregationMethod);
+	          view.setAggregationAttribute(layer.aggregationAttribute);
+	          view.setMdAttribute(layer.mdAttributeId);
+	          view.setAttributeLabel(layer.attributeLabel);
+	          
+	          view.style = layer.styles[0];   
+    	  }
+    	  else if(layer.layerType === "REFERENCELAYER"){
+    		  var uniId = layer.uniId;
+    		  
+    		  view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
+	          view.setViewName(layer.viewName);
+	          view.setLayerId(layer.layerId);
+	          view.setSldName(layer.sldName);
+	          view.setLayerName(layer.layerName);
+	          view.setDisplayInLegend(layer.inLegend);
+	          view.setLegendXPosition(layer.legendXPosition);
+	          view.setLegendYPosition(layer.legendYPosition);
+	          view.setGroupedInLegend(layer.groupedInLegend);
+	          view.setActiveByDefault(false);
+	          view.setFeatureStrategy(layer.featureStrategy); // Reference layers should always be BASIC strategy
+	          
+	          view.layerExists = true;
+	          view.setLayerIsActive(true);
+	          
+	          view.layerType = layer.layerType;
+	          view.universalId = uniId;
+	          
+	          if(layer.styles){
+	        	view.style = layer.styles[0]; 
+	          }
+	          else{
+	        	view.style = null;
+	          }
+    	  }
+    	  else if(layer.layerType === "REFERENCEJSON"){
+  	          var displayName = layer.properties.uniDispLabel;  
+	          var uniId = layer.properties.uniId;
+	          var exists = layer.properties.refLayerExists;
+	          
+    		  view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
+	          view.setViewName(layer.viewName || null);
+	          view.setLayerId(uniId);  // IMPORTANT: additional logic depends on this being a universal id for REFERENCEJSON layers. 
+	          view.setSldName(layer.sldName || null);
+	          view.setLayerName(displayName);
+	          view.setDisplayInLegend(layer.inLegend || false); 
+	          view.setLegendXPosition(layer.legendXPosition || 0); // or default
+	          view.setLegendYPosition(layer.legendYPosition || 0); // or default
+	          view.setGroupedInLegend(layer.groupedInLegend || true); // or default
+	          view.setActiveByDefault(false);
+	          view.setFeatureStrategy("BASIC"); // Reference layers should always be BASIC strategy
+	          
+	          if(exists){
+	            view.layerExists = true;
+	          }
+	          else{
+	        	view.layerExists = false;
+	          }
+	          
+	          view.universalId = uniId;
+	          view.layerType = "REFERENCEJSON";
+	          
+	          if(layer.styles){
+	        	view.style = layer.styles[0] || null; 
+	          }
+	          else{
+	        	view.style = null;
+	          }
+    	  }
+    	  
+          return view;
       },
            
       /**
@@ -479,6 +583,7 @@
        */
       _renderUserLayers : function() {
         this._drawUserLayersHTML();
+        this._drawReferenceLayersHTML();
         this._addUserLayersToMap(true);
       },
       
@@ -611,6 +716,70 @@
       },
       
       
+      _constructLegendItem : function(layer, legendDragStopDragBound) {
+          var displayInLegend = layer.getDisplayInLegend();
+
+          if(displayInLegend)
+          {
+              var layerId = layer.getLayerId();
+              var displayName = layer.getLayerName() || "N/A";
+              var geoserverName = this._workspace + ":" + layer.getViewName();
+              var legendXPosition = layer.getLegendXPosition();
+              var legendYPosition = layer.getLegendYPosition();
+              var groupedInLegend = layer.getGroupedInLegend();
+              var featureStrategy = layer.getFeatureStrategy();
+              if(featureStrategy === "BASIC"){
+              	var showFeatureLabels = false;
+              }
+             else if(featureStrategy === "BUBBLE" && layer.attributeType === "BASIC"){
+              	// The label should be hidden when mapping bubbles against a text or term attribute.
+              	var showFeatureLabels = false;
+              }
+              else if(featureStrategy === "BUBBLE" && layer.style.bubbleContinuousSize && layer.attributeType !== "BASIC"){
+              	// The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
+              	var showFeatureLabels = true;
+              }
+              else{
+              	var showFeatureLabels = true;
+              }
+              
+              var legendObj = new this._Legend(
+                  layerId, 
+                  displayName, 
+                  geoserverName, 
+                  legendXPosition, 
+                  legendYPosition, 
+                  groupedInLegend,
+                  featureStrategy,
+                  showFeatureLabels
+                  );
+              
+              // render the legend
+              legendObj.create();
+              
+              // add legend object to the layer
+              layer.layerLegend = legendObj;
+              
+              // Attache draggable event listener to the new element
+              $("#"+legendObj.legendId).draggable({
+                   containment: "body", 
+                   snap: true, 
+                   snap: ".legend-snapable", 
+                   snapMode: "outer", 
+                   snapTolerance: 5,
+                   stack: ".legend-container"
+              });
+            $("#"+legendObj.legendId).on('dragstop', legendDragStopDragBound); 
+            
+            // hide the legend if the layer is un-checked
+            // originally implemented to handle legends when filters are applied with un-checked layers
+            if(layer.getLayerIsActive() === false){
+              legendObj.hide();
+            }
+          }
+      },
+      
+      
       /**
        * Draws legend entries based on the layer cache
        * 
@@ -618,6 +787,7 @@
       _drawLegendItems : function() {
         var that = this;
         var layers = this._layerCache.values();
+        var refLayers = this._refLayerCache.values();
         
           // Click and drag handlers  
           var legendDragStopDragBound = Mojo.Util.bind(this, this._legendDragStopHandler);
@@ -632,66 +802,12 @@
         //
           for(var i = layers.length-1; i >= 0; i--){
             var layer = layers[i];
-            var displayInLegend = layer.getDisplayInLegend();
-
-            if(displayInLegend)
-            {
-                var layerId = layer.getLayerId();
-                var displayName = layer.getLayerName() || "N/A";
-                var geoserverName = this._workspace + ":" + layer.getViewName();
-                var legendXPosition = layer.getLegendXPosition();
-                var legendYPosition = layer.getLegendYPosition();
-                var groupedInLegend = layer.getGroupedInLegend();
-                var featureStrategy = layer.getFeatureStrategy();
-                if(featureStrategy === "BASIC"){
-                  var showFeatureLabels = false;
-                }
-               else if(featureStrategy === "BUBBLE" && layer.attributeType === "BASIC"){
-                  // The label should be hidden when mapping bubbles against a text or term attribute.
-                  var showFeatureLabels = false;
-                }
-                else if(featureStrategy === "BUBBLE" && layer.style.bubbleContinuousSize && layer.attributeType !== "BASIC"){
-                  // The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
-                  var showFeatureLabels = true;
-                }
-                else{
-                  var showFeatureLabels = true;
-                }
-                
-                var legendObj = new this._Legend(
-                    layerId, 
-                    displayName, 
-                    geoserverName, 
-                    legendXPosition, 
-                    legendYPosition, 
-                    groupedInLegend,
-                    featureStrategy,
-                    showFeatureLabels
-                    );
-                
-                // render the legend
-                legendObj.create();
-                
-                // add legend object to the layer
-                layer.layerLegend = legendObj;
-                
-                // Attache draggable event listener to the new element
-                $("#"+legendObj.legendId).draggable({
-                     containment: "body", 
-                     snap: true, 
-                     snap: ".legend-snapable", 
-                     snapMode: "outer", 
-                     snapTolerance: 5,
-                     stack: ".legend-container"
-                });
-              $("#"+legendObj.legendId).on('dragstop', legendDragStopDragBound); 
-              
-              // hide the legend if the layer is un-checked
-              // originally implemented to handle legends when filters are applied with un-checked layers
-              if(layer.getLayerIsActive() === false){
-                legendObj.hide();
-              }
-            }
+            this._constructLegendItem(layer, legendDragStopDragBound);
+          }
+          
+          for(var r = refLayers.length-1; r >= 0; r--){
+              var layer = refLayers[r];
+              this._constructLegendItem(layer, legendDragStopDragBound);
           }
           
           //
@@ -702,14 +818,26 @@
               drop: function( event, ui ) {
                 var groupedInLegend = true;
                 var relatedLayerId = $(ui.draggable).data('parentlayerid');
-                var parentLayer = that._layerCache.get(relatedLayerId);
+                var parentLayer;
+                if(that._layerCache.get(relatedLayerId)){
+                	parentLayer = that._layerCache.get(relatedLayerId);
+                }
+                else if (that._refLayerCache.get(relatedLayerId)){
+                	parentLayer = that._refLayerCache.get(relatedLayerId);
+                }
                 var x = 0;
                 var y = 0;
                 
                 var clientRequest = new Mojo.ClientRequest({
                   onSuccess : function() {
                     // Update the layer object in the layer cache with the new legend position
-                    var relatedLayer = that._layerCache.get(relatedLayerId);
+                    var relatedLayer; 
+                    if(that._layerCache.get(relatedLayerId)){
+                    	relatedLayer = that._layerCache.get(relatedLayerId);
+                    }
+                    else if (that._refLayerCache.get(relatedLayerId)){
+                    	relatedLayer = that._refLayerCache.get(relatedLayerId);
+                    }
                     relatedLayer.setLegendXPosition(x);
                     relatedLayer.setLegendYPosition(y);
                     relatedLayer.setGroupedInLegend(groupedInLegend);
@@ -732,10 +860,16 @@
             var li = $(this);
             var parentLayerId = li.data("parentlayerid");
             var legendId = "legend_" + parentLayerId;
+            var parentLayer;
             
             // prevent legend containers from being created twice. 
             if($("#"+legendId).length === 0){
-                var parentLayer = that._layerCache.get(parentLayerId);
+            	if(that._layerCache.get(parentLayerId)){
+            		parentLayer = that._layerCache.get(parentLayerId);
+            	}
+            	else if(that._refLayerCache.get(parentLayerId)){
+            		parentLayer = that._refLayerCache.get(parentLayerId);
+            	}
                 parentLayer.layerLegend.unGroup(li);
                 
                 // Attache draggable event listener to the new element
@@ -750,6 +884,83 @@
                 $("#"+legendId).on('dragstop', legendDragStopDragBound); 
             }
           });
+      },
+      
+      
+      /**
+       * Build HTML for reference layers
+       * 
+       * @htmlInfo
+       * 
+       */
+      _drawReferenceLayersHTML : function() {
+	      var container = $('#'+DynamicMap.REFERENCE_LAYER_CONTAINER);
+	      var onCheckHandler = Mojo.Util.bind(this, this._toggleReferenceLayer);
+	      var layers = this._refLayerCache.values();
+	      var html = '';
+	      
+	      // 1) Create the HTML for the layer.
+	      for(var i = layers.length-1; i >= 0; i--){
+	        var layer = layers[i];
+	        var displayName = layer.getLayerName();
+	        
+	        //
+	        // IMPORTANT: We are setting id to the layer id of the server generated DashboardReferenceLayer when possible.
+	        // The layer id will later be used to remove the layer from the ui and server when the layer is enabled in the ui. 
+	        // The universalId is used as the key and general uniquie id for the _refLayerCache hashmap. This is done because
+	        // when reference layers are disabled there is no valid layer id.  Using the universalId ensures consistency.
+	        //
+	        
+	        var id = layer.getLayerId();
+	        	
+	        html += '<div class="row-form">';
+	        html += '<div id=' + id + ' data-universalid="'+layer.universalId+'"/>';
+	        html += '<label for="'+id+'">'+displayName+'</label>';
+	        html += '<div class="cell">';
+	        if(layer.layerExists){
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove">remove</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit">edit</a>';
+	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
+	        }
+	        else{
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;">remove</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" style="display:none;">edit</a>';
+	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable">enable</a>';
+	        }
+	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a></div>';
+	        html += '</div>';
+	      }
+	      
+	      // 2) Render the HTML we just generated.
+	      container.html(html);
+	      
+	      // 3) Add checkboxes and register click events
+	      for(var i = 0; i < layers.length; i++){
+	        var layer = layers[i];
+	        var chexd = false;
+	        var layerId = layer.getLayerId();
+	        var display = "none";
+	        
+	        // If the layer object is active (visible on the map) set the checkbox to checked
+	        if(layer.getLayerIsActive()){
+		        //var chexd = layer.checked === false || layer.checked === true ? layer.checked : true;
+		        chexd = true;
+	        }
+	        
+	        // If this reference layer is activated and mappable (exists) display the checkbox
+	        if(layer.layerExists){
+	        	display = "";
+	        }
+	        
+	        com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(layerId);
+	        var checkbox = this.getFactory().newCheckBox({el: "#"+layerId, data: {runwayId: layerId}, checked: chexd, classes: ["check"]});
+	        checkbox.addOnCheckListener(onCheckHandler);
+	        checkbox._node.style.display = display;
+	        checkbox.render();
+	      }        
+	      
+	      // TODO: Handle legends for saved/styled reference layers
+	      this._drawLegendItems();
       },
       
       
@@ -812,6 +1023,7 @@
        */
       _addUserLayersToMap : function(removeExisting) {
         var layers = this._layerCache.values();
+        var refLayers = this._refLayerCache.values();
         
         // Remove any already rendered layers from the leaflet map
         if (removeExisting === true) {
@@ -822,9 +1034,45 @@
               this._map.removeLayer(layer.leafletLayer);
             }
           }
+          
+          for (var i = 0; i < refLayers.length; i++) {
+              var layer = refLayers[i];
+              
+              if (layer.leafletLayer && layer.leafletLayer != null) {
+                this._map.removeLayer(layer.leafletLayer);
+              }
+            }
         }
         
-        // Add all our layers from the layerCache to leaflet map
+        //
+        // Add reference layers to leaflet map
+        //
+        for (var i = 0; i < refLayers.length; i++) {
+          var layer = refLayers[i];
+          
+          // Since REFERENCEJSON layers are basic placeholders for actual mappable layers we will make sure none of them
+          // get through here.
+          if(layer.layerType !== "REFERENCEJSON"){
+	          if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
+	            var viewName = layer.getViewName();
+	            var displayName = layer.getLayerName() || "N/A";
+	            var geoserverName = this._workspace + ":" + viewName;
+	              
+	            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
+	                layers: geoserverName,
+	                format: 'image/png',
+	                transparent: true,
+	                styles: layer.getSldName() || "" 
+	              });
+	            
+	            this._map.addLayer(leafletLayer);
+	                     
+	            layer.leafletLayer = leafletLayer;
+	          }
+          }
+        }
+        
+        // Add thematic layers to leaflet map
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
           
@@ -837,23 +1085,23 @@
                 layers: geoserverName,
                 format: 'image/png',
                 transparent: true,
-                styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
+                styles: layer.getSldName() || "" 
               });
             
-            // This tiling formt (tileLayer) is the preferred way to render wms due to performance gains. 
+            // This tiling format (tileLayer) is the preferred way to render wms due to performance gains. 
             // However, since bubbles are clipped by the differences between tiles we must render layers as a single tile. 
             // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
-            //var mapBounds = this._map.getBounds();
-            //var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-            //var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-              //layers: geoserverName,
-              //format: 'image/png',
-              //transparent: true,
-              //tiled: true,
-              //tileSize: 256,
-              //tilesorigin: mapSWOrigin,
-              //styles: layer.getSldName() || "" // This should be enabled we wire up the interface or set up a better test process
-            //});
+//            var mapBounds = this._map.getBounds();
+//            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+//            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+//              layers: geoserverName,
+//              format: 'image/png',
+//              transparent: true,
+//              tiled: true,
+//              tileSize: 256,
+//              tilesorigin: mapSWOrigin,
+//              styles: layer.getSldName() || "" 
+//            });
             
             this._map.addLayer(leafletLayer);
                      
@@ -1040,6 +1288,51 @@
         }
       },
       
+      
+      /**
+       * Opens the layer edit form for reference layers  
+       * 
+       * @param e
+       */
+      _referenceHandler : function(e){       
+        var that = this;     
+        var el = $(e.currentTarget);
+        
+        if(el.hasClass('ico-edit')) {
+          // edit the layer
+          var id = el.data('id');
+          this._ReferenceLayerController.edit(new Mojo.ClientRequest({
+            onSuccess : function(html){
+              that._displayLayerForm(html);
+              that._addLayerFormControls();
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          }), id);
+          
+        }
+        else if(el.hasClass('ico-remove')){         
+          // delete the layer
+          var layerId = el.data('id');
+          var universalId = el.data("universalid");
+          com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
+            onSuccess : function(){
+              that._removeLayer(el, universalId);
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          }), layerId);
+        }
+        else if(el.hasClass('ico-enable')) {
+            // enable this reference layer
+            
+            this._openReferenceLayerForAttribute(e);
+         }
+      },
+      
+      
       /*
        * Format dates
        * 
@@ -1124,6 +1417,7 @@
           for (var i = 0; i < layers.length; i++) { 
             var layer = layers[i];
           
+            // If the layer object is active (visible on the map)
             if(layer.getLayerIsActive()){
               var layerId = layer.attributeMap.viewName.value;              
               layerMap[layerId] = layer;              
@@ -1231,25 +1525,48 @@
        * from all caches, the sidebar, and the map itself.
        * 
        * @el
-       * @id
+       * @id - layer id
        */
       _removeLayer : function(el, id) {
-        
-        var toRemove = this._layerCache.get(id);
-        
-        // remove layer from our cache
-        this._layerCache.remove(id);
-        
-        // remove the actual layer from the map
-        this._map.removeLayer(toRemove.leafletLayer);
-        
-        // remove the layer from the map and UI
-        el.parent().parent().remove();
-        
-        // Remove associated legend and legend container
-        //// legend id's are set as the 'legend_' + layer id @ legend creation
-        $("#legend_"+id).remove();
-        $("li[data-parentlayerid='"+id+"']").remove();
+	    	var universalId = el.data("universalid");
+	    	  
+	    	if(this._layerCache.get(id) !== null){
+	    		var toRemove = this._layerCache.get(id);
+	    		// remove layer from our cache
+	            this._layerCache.remove(id);
+	            // remove the layer from the map and UI
+	            el.parent().parent().remove();
+	            
+	            // remove the actual layer from the map
+	        	if(toRemove.leafletLayer){
+	        		this._map.removeLayer(toRemove.leafletLayer);
+	        	}
+	        	
+		        // Remove associated legend and legend container
+		        //// legend id's are set as the 'legend_' + layer id @ legend creation
+		        $("#legend_"+id).remove();
+		        $("li[data-parentlayerid='"+id+"']").remove();
+	    	}
+	    	else if(this._refLayerCache.get(id) !== null){
+	    		toDisable = this._refLayerCache.get(id);
+	    		// disable the layer object
+	    		toDisable.setLayerIsActive(false);
+	    		toDisable.layerExists = false;
+	    		
+	            // remove the leaflet map layer from the map
+	        	if(toDisable.leafletLayer){
+	        		this._map.removeLayer(toDisable.leafletLayer);
+	        	}
+	    		
+	            // change the ui back to disabled
+	        	$(el).hide();
+	        	$(el).parent().find(".ico-edit").hide();
+	        	$(el).parent().find(".ico-enable").show();
+	        	$(el).parent().parent().find(".check").removeClass("checked").hide();
+	    		//this._drawReferenceLayersHTML(); 
+	        	
+	        	$('*[data-parentlayerid="'+ $(el).data("id") +'"]').remove();
+	    	}
       },
       
       
@@ -1276,10 +1593,28 @@
             if (response.isJSON()) {
               that._closeLayerModal();
               
-              that._updateCacheFromJSONResponse({layers: [Mojo.Util.toObject(htmlOrJson)]});
+              var layerType;
+              var returnedLayerJSON = JSON.parse( htmlOrJson);
+              if(returnedLayerJSON.layerType === "REFERENCELAYER"){
+            	  layerType = "refLayers";
+              }
+              else{
+            	  layerType = "layers";
+              }
+              var jsonObj = {};
+              jsonObj[layerType] = [Mojo.Util.toObject(htmlOrJson)];
               
-              // Redraw the HTML and update leaflet.
-              that._drawUserLayersHTML();
+              that._updateCacheFromJSONResponse(jsonObj);
+              
+              // Redraw the HTML
+              if(returnedLayerJSON.layerType === "REFERENCELAYER"){
+            	  that._drawReferenceLayersHTML();
+              }
+              else{
+            	  that._drawUserLayersHTML();
+              }
+              
+              // Update leaflet
               that._addUserLayersToMap(true);            
               
               // TODO : Push this somewhere as a default handler.
@@ -1310,12 +1645,19 @@
         }
         
         params['mapId'] = this._mapId;
-        params['style.mdAttribute'] = mdAttribute;
         params['layer.mdAttribute'] = mdAttribute;
         
         // Custom conversion to turn the checkboxes into boolean true/false
         params['style.enableLabel'] = params['style.enableLabel'].length > 0;
-        params['style.enableValue'] = params['style.enableValue'].length > 0;
+        
+        // A hack to set the enableValue property which is required on DashboardLayer but is
+        // not allowed for the reference layer form since ther is no 'value' to display
+        if(!params['style.enableValue']){
+        	params['style.enableValue'] = false;
+        }
+        else{
+        	params['style.enableValue'] = params['style.enableValue'].length > 0;
+        }
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         // Check for existense of dynamic settings which may not exist 
@@ -1406,6 +1748,36 @@
           //return request;
           var id = params['layer.componentId'];
           com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.unlock(request, id);
+        }
+      },
+      
+      
+      /**
+       * 
+       * @params
+       */
+      _cancelReferenceLayerListener : function(params){
+        var that = this;
+        
+        if(params['layer.isNew'] === 'true')
+        {
+          this._closeLayerModal();
+        }
+        else
+        {
+          var that = this;
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(params){
+              that._closeLayerModal();
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          });
+          
+          //return request;
+          var id = params['layer.componentId'];
+          com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.unlock(request, id);
         }
       },
       
@@ -1570,6 +1942,38 @@
           }
         }
       },
+      
+      
+      /**
+       * Toggles the overlay layers of the map.
+       * 
+       * @e
+       */
+      _toggleReferenceLayer : function(e){
+        var cbox = e.getCheckBox();
+        var checked = cbox.isChecked();
+        var layer = this._refLayerCache.get(cbox._node.dataset.universalid);
+        
+        layer.checked = checked;
+        
+        if (checked) {
+          layer.setLayerIsActive(true);
+          this._addUserLayersToMap(true);       
+          if(layer.getDisplayInLegend())
+          {
+            layer.layerLegend.show()
+          }
+        }
+        else {
+          layer.setLayerIsActive(false);
+          this._map.removeLayer(layer.leafletLayer);          
+          if(layer.getDisplayInLegend())
+          {
+            layer.layerLegend.hide()
+          }
+        }
+      },
+      
       
       /**
        * Disables the search functionality if google can't be loaded
@@ -1845,9 +2249,11 @@
         
         if($("#ontology-tree").length > 0){
           this._renderLayerTermTree();
+          attachCategoryColorPickers();
         }
-        else{
+        else if($(".category-input").length > 0){
           this._addCategoryAutoComplete('#category-colors-container', '#f59');
+          this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
             
           // category 'other' option
           $("#f53").change(function() {
@@ -1858,18 +2264,20 @@
               $("#cat-other").parent().parent().hide();
             }     
           });
+          
+          attachCategoryColorPickers();
         }
         
-        this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
-        
-        // ontology category layer type colors
-        $(".category-color-icon").colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        });
+        function attachCategoryColorPickers(){
+          // ontology category layer type colors
+          $(".category-color-icon").colpick({
+            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+              $(el).css('background','#'+hex);
+              $(el).find('.color-input').attr('value', '#'+hex);
+            }
+          });
+        }
         
         // Load the secondary values
         var secondaryAttribute = $("#secondaryAttribute").val();
@@ -1997,7 +2405,37 @@
         
         this._LayerController.newThematicInstance(request, this._currentAttributeId, this._mapId);
       },
+
+      
+      /**
+       * Gets the html for and calls the layer creation/edit form 
+       * 
+       * @e 
+       */
+      _openReferenceLayerForAttribute : function(e){
+          e.preventDefault();    
+          
+          var that = this;
+          
+          var el = $(e.currentTarget);
+          var universalId = el.data('universalid');
+
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(html){
+              that._displayLayerForm(html);
+              that._addLayerFormControls();
+              
+            },
+            onFailure : function(e){
+              that._closeLayerModal();
+              that.handleException(e);
+            }
+          });
+          
+          this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);
+        },
         
+      	
       /**
        * Renders the layer creation/edit form
        * 
@@ -2400,7 +2838,13 @@
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function() {
             // Update the layer object in the layer cache with the new legend position
-            var relatedLayer = that._layerCache.get(relatedLayerId);
+            var relatedLayer;
+            if(that._layerCache.get(relatedLayerId)){
+            	relatedLayer = that._layerCache.get(relatedLayerId);
+            }
+            else if(that._refLayerCache.get(relatedLayerId)){
+            	relatedLayer = that._refLayerCache.get(relatedLayerId);
+            }
             relatedLayer.setLegendXPosition(x);
             relatedLayer.setLegendYPosition(y);
             relatedLayer.setGroupedInLegend(groupedInLegend);

@@ -98,23 +98,11 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     return localizedFonts;
   }
 
-  public JSONObject toJSON()
+  public JSONObject toJSON() throws JSONException
   {
-    // try {
-    // JSONObject json = new JSONObject();
-    //
-    // return json;
-    // }
-    // catch (JSONException ex)
-    // {
-    // String msg = "Could not properly form DashboardStyle [" + this.toString() +
-    // "] into valid JSON to send back to the client.";
-    // throw new ProgrammingErrorException(msg, ex);
-    // }
+    JSONObject json = new JSONObject();
 
-    // Its okay to throw this here (for now) because this method is overridden with an implementation in
-    // DashboardThematicStyle
-    throw new UnsupportedOperationException();
+    return json;
   }
 
   public static AggregationTypeQuery getSortedAggregations(String thematicAttributeId)

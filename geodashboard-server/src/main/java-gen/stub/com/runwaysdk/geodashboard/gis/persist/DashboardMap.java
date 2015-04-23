@@ -2,7 +2,9 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -20,6 +22,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -37,13 +40,23 @@ import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableSingle;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabel;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabelQuery.UniversalDisplayLabelQueryStructIF;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class DashboardMap extends DashboardMapBase implements com.runwaysdk.generation.loader.Reloadable, Map
+public class DashboardMap extends DashboardMapBase implements
+    com.runwaysdk.generation.loader.Reloadable, Map
 {
   private static Log        log              = LogFactory.getLog(DashboardMap.class);
 
@@ -65,13 +78,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     return this.getAllHasLayer().getAll();
   }
-  
 
   /**
    * MdMethod
    * 
-   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the
-   * updated filter criteria conditions.
+   * Invoked when the user hits "apply" on the mapping screen. This will update
+   * BIRT and republish all layers with the updated filter criteria conditions.
    */
   @Override
   public String updateConditions(DashboardCondition[] conditions)
@@ -82,13 +94,13 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : layers)
     {
-      if(layer instanceof DashboardThematicLayer)
+      if (layer instanceof DashboardThematicLayer)
       {
         DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
         tLayer.setConditions(Arrays.asList(conditions));
-  
+
         generateSessionViewName(tLayer);
-  
+
         tLayer.publish(batch, true);
       }
     }
@@ -100,7 +112,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
   private void generateSessionViewName(DashboardLayer layer)
   {
-    // Generate a new database view name for the layer. This viewName is specific to a user's session.
+    // Generate a new database view name for the layer. This viewName is
+    // specific to a user's session.
     String viewName = layer.generateViewName();
 
     // Update the stored viewName for the session
@@ -114,7 +127,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   /**
    * MdMethod
    * 
-   * Invoked after the user reorders a layer via drag+drop in the dashboard viewer.
+   * Invoked after the user reorders a layer via drag+drop in the dashboard
+   * viewer.
    * 
    * @return The JSON representation of the current DashboardMap.
    */
@@ -182,7 +196,78 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   }
 
   /**
+   * Returns the reference layer options.
+   * 
+   * @return
+   */
+  private JSONArray getAvailableReferenceLayers()
+  {
+    try
+    {
+      Universal root = Universal.getRoot();
+      Universal universal = this.getDashboard().getCountry().getUniversal();
+
+      List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+      HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
+
+      List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
+      for (int i = 0; i < savedLayers.size(); i++)
+      {
+        DashboardLayer savedLayer = savedLayers.get(i);
+
+        if (savedLayer instanceof DashboardReferenceLayer)
+        {
+          String savedLayerUniId = savedLayer.getUniversal().getId();
+          savedLayerHash.put(savedLayerUniId, savedLayer);
+        }
+      }
+
+      JSONArray jsonArr = new JSONArray();
+
+      for (Term child : children)
+      {
+        if (!child.getId().equals(root.getId()))
+        {
+          JSONObject uniObjContainer = new JSONObject();
+          JSONObject uniObjProps = new JSONObject();
+
+          String uniDispLabel = child.getDisplayLabel().toString();
+          String uniId = child.getId();
+
+          if (savedLayerHash.containsKey(uniId))
+          {
+            // layerId = savedLayerHash.get(uniId).getId();
+            JSONObject savedLayerJSON = savedLayerHash.get(uniId).toJSON();
+            savedLayerJSON.put("uniId", uniId);
+            savedLayerJSON.put("refLayerExists", true);
+            savedLayerJSON.put("layerType", "REFERENCELAYER");
+            jsonArr.put(savedLayerJSON);
+          }
+          else
+          {
+            uniObjProps.put("uniId", uniId);
+            uniObjProps.put("uniDispLabel", uniDispLabel);
+            uniObjProps.put("refLayerExists", false);
+            uniObjContainer.put("layerType", "REFERENCEJSON");
+            uniObjContainer.put("properties", uniObjProps);
+            jsonArr.put(uniObjContainer);
+          }
+        }
+      }
+      
+      return jsonArr;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+  }
+
+  /**
    * Republishes all layers to GeoServer.
+   * 
    */
   public void publishAllLayers(DashboardLayer[] orderedLayers)
   {
@@ -190,7 +275,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : orderedLayers)
     {
-      if(layer instanceof DashboardThematicLayer)
+      if (layer instanceof DashboardThematicLayer)
       {
         DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
         this.generateSessionViewName(tLayer);
@@ -211,41 +296,62 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       DashboardLayer[] orderedLayers = this.getOrderedLayers();
-      
+
       JSONObject mapJSON = new JSONObject();
       JSONArray layers = new JSONArray();
-      
+
       mapJSON.put("mapName", this.getName());
-        
-      DashboardThematicLayer[] orderedTLayers = new DashboardThematicLayer[orderedLayers.length];
-      for(int i=0; i<orderedLayers.length; i++)
+
+      ArrayList<DashboardThematicLayer> orderedTLayers = new ArrayList<DashboardThematicLayer>();
+      ArrayList<DashboardReferenceLayer> orderedRefLayers = new ArrayList<DashboardReferenceLayer>();
+
+      for (int i = 0; i < orderedLayers.length; i++)
       {
-        if(orderedLayers[i] instanceof DashboardThematicLayer)
+        if (orderedLayers[i] instanceof DashboardThematicLayer)
         {
           DashboardThematicLayer tLayer = (DashboardThematicLayer) orderedLayers[i];
-          orderedTLayers[i] = tLayer;
+          orderedTLayers.add(tLayer);
         }
+        else if (orderedLayers[i] instanceof DashboardReferenceLayer)
+        {
+          DashboardReferenceLayer rLayer = (DashboardReferenceLayer) orderedLayers[i];
+          orderedRefLayers.add(rLayer);
+        }
+      }
+
+      // Convert from ListArray to Array
+      DashboardThematicLayer[] orderedTLayersArr = new DashboardThematicLayer[orderedTLayers.size()];
+      for (int i = 0; i < orderedTLayers.size(); i++)
+      {
+        orderedTLayersArr[i] = orderedTLayers.get(i);
       }
 
       if (config == null || !config.equals("republish=false"))
       {
-        publishAllLayers(orderedTLayers);
+        publishAllLayers(orderedTLayersArr);
       }
 
-      for (int i = 0; i < orderedTLayers.length; i++)
+      for (int i = 0; i < orderedTLayersArr.length; i++)
       {
-        layers.put(orderedTLayers[i].toJSON());
+        layers.put(orderedTLayersArr[i].toJSON());
       }
       mapJSON.put("layers", layers);
 
-      JSONArray mapBBox = getMapLayersBBox(orderedTLayers);
+      //
+      // TODO: Resolve the situation where a reference layer is saved and loaded
+      // compared to the results of getAvailableReferenceLayers()
+      //
+      JSONArray refLayerOptions = this.getAvailableReferenceLayers();
+      mapJSON.put("refLayers", refLayerOptions);
+
+      JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
       mapJSON.put("bbox", mapBBox);
 
       if (log.isDebugEnabled())
       {
         log.debug("JSON for map [" + this + "]:\n" + mapJSON.toString(4));
       }
-      
+
       return mapJSON.toString();
     }
     catch (JSONException ex)
@@ -320,7 +426,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
             else
             {
               String label = country.getDisplayLabel().getValue();
-              String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
+              String error = "The geometry [" + label
+                  + "] could not be used to create a valid bounding box";
 
               throw new ProgrammingErrorException(error);
             }
@@ -351,7 +458,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       }
     }
 
-    // There are no layers in the map (that contain data) so return the Cambodian defaults
+    // There are no layers in the map (that contain data) so return the
+    // Cambodian defaults
     if (bboxArr.length() == 0)
     {
       try
@@ -472,7 +580,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
         if (mdClass.getId().equals(wrapper.getWrappedMdClassId()))
         {
-          List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper.getSortedAttributes()));
+          List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper
+              .getSortedAttributes()));
 
           new Iterables<MdAttributeView>().remove(attributes, predicate);
 

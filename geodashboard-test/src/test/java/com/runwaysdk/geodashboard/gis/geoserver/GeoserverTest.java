@@ -377,7 +377,7 @@ public class GeoserverTest
       q.WHERE(q.getUniversal().EQ(state));
       q.ORDER_BY_ASC(q.getDisplayLabel().getDefaultLocale());
 
-      OIterator<? extends GeoEntity> iter = q.getIterator();
+      OIterator<? extends GeoEntity> iter = q.getIterator();    
 
       double total = q.getCount();
 
@@ -975,7 +975,8 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-
+//      style.setMdAttribute(rank);
+//      style.addAggregationType(AllAggregationType.SUM);
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
