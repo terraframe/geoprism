@@ -375,4 +375,29 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     return MdAttributeDAO.get(this.getMdAttributeId()).definesAttribute();
   }
 
+  protected void populate(DashboardLayer source)
+  {
+    super.populate(source);
+
+    if (source instanceof DashboardThematicLayer)
+    {
+      DashboardThematicLayer tSource = (DashboardThematicLayer) source;
+
+      List<AllAggregationType> types = tSource.getAggregationType();
+
+      for (AllAggregationType type : types)
+      {
+        this.addAggregationType(type);
+      }
+
+      this.setMdAttribute(tSource.getMdAttribute());
+    }
+  }
+
+  @Override
+  protected DashboardLayer newInstance()
+  {
+    return new DashboardThematicLayer();
+  }
+
 }

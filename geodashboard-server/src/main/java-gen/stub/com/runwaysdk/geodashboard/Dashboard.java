@@ -23,6 +23,7 @@ import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.dashboard.TermComparator;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
+import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
@@ -181,6 +182,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     finally
     {
       allMetadata.close();
+    }
+
+    DashboardMap map = clone.getMap();
+
+    // Clone the layer definitions
+    DashboardLayer[] layers = this.getMap().getOrderedLayers();
+
+    for (DashboardLayer layer : layers)
+    {
+      layer.clone(map);
     }
 
     return clone;

@@ -947,14 +947,18 @@
                 text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
                 "class": 'btn btn-primary',
                 click : function() {
-                  var createRequest = new Mojo.ClientRequest({
+                  var createRequest = new com.runwaysdk.geodashboard.StandbyClientRequest({
                     onSuccess : function(dashboard){
+                      $( "#clone-dialog" ).dialog( "close" );
+                    	
                       window.location = "?dashboard=" + dashboard.getId();
                     },
                     onFailure : function(e){
+                      $( "#clone-dialog" ).dialog( "close" );
+                      
                       that.handleException(e);
                     }
-                  });
+                  }, $("#clone-dialog").parent().get(0));
                   
                   var dashboardId = $('#clone-dashboard-id').val();
                   var label = $('#clone-label').val();

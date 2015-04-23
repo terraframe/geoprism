@@ -14,6 +14,7 @@ import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
@@ -27,10 +28,8 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.util.IDGenerator;
 
 public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
@@ -48,6 +47,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   public abstract ValueQuery getViewQuery();
 
   public abstract JSONObject toJSON();
+
+  protected abstract DashboardLayer newInstance();
 
   public void setConditions(List<DashboardCondition> conditions)
   {
@@ -136,6 +137,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   }
 
   @Transaction
+  @AbortIfProblem
   protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
@@ -301,19 +303,21 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      */
     return this.getId();
   }
-//
-//  @Override
-//  public void setGeoEntity(MdAttributeReference value)
-//  {
-//    if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
-//    {
-//      super.setGeoEntity(value);
-//    }
-//    else
-//    {
-//      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
-//    }
-//  }
+
+  //
+  // @Override
+  // public void setGeoEntity(MdAttributeReference value)
+  // {
+  // if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
+  // {
+  // super.setGeoEntity(value);
+  // }
+  // else
+  // {
+  // throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY +
+  // "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+  // }
+  // }
 
   @Override
   public void lock()
@@ -407,4 +411,41 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       return FeatureType.POLYGON;
     }
   }
+
+  protected void populate(DashboardLayer source)
+  {
+    this.setBBoxIncluded(source.getBBoxIncluded());
+    this.setActiveByDefault(source.getActiveByDefault());
+    this.setDisplayInLegend(source.getDisplayInLegend());
+    this.setLayerEnabled(source.getLayerEnabled());
+    this.setUniversal(source.getUniversal());
+    this.setVirtual(source.getVirtual());
+    this.getDashboardLegend().populate(source.getDashboardLegend());
+    this.setName(source.getName());
+
+    List<AllLayerType> types = source.getLayerType();
+
+    for (AllLayerType type : types)
+    {
+      this.addLayerType(type);
+    }
+  }
+
+  public DashboardLayer clone(DashboardMap map)
+  {
+    List<? extends DashboardStyle> styles = this.getStyles();
+
+    DashboardLayer clone = this.newInstance();
+    clone.populate(this);
+
+    for (DashboardStyle style : styles)
+    {
+      DashboardStyle cStyle = style.clone();
+
+      clone.applyWithStyle(cStyle, map.getId(), new DashboardCondition[] {});
+    }
+
+    return clone;
+  }
+
 }

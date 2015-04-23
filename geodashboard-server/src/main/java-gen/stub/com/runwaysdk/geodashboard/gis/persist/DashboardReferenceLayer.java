@@ -9,7 +9,7 @@ import com.runwaysdk.query.ValueQuery;
 public class DashboardReferenceLayer extends DashboardReferenceLayerBase implements com.runwaysdk.generation.loader.Reloadable, ReferenceLayer
 {
   private static final long serialVersionUID = -1393835330;
-  
+
   public DashboardReferenceLayer()
   {
     super();
@@ -19,7 +19,7 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   public void accepts(MapVisitor visitor)
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
@@ -35,7 +35,11 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
     // TODO Auto-generated method stub
     return null;
   }
-  
+
+  @Override
+  protected DashboardLayer newInstance()
+  {
+    return new DashboardReferenceLayer();
+  }
+
 }
-
-
