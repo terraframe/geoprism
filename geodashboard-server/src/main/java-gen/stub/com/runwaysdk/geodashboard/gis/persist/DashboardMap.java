@@ -84,15 +84,11 @@ public class DashboardMap extends DashboardMapBase implements
 
     for (DashboardLayer layer : layers)
     {
-      if (layer instanceof DashboardThematicLayer)
-      {
-        DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
-        tLayer.setConditions(Arrays.asList(conditions));
+      layer.setConditions(Arrays.asList(conditions));
 
-        generateSessionViewName(tLayer);
+      generateSessionViewName(layer);
 
-        tLayer.publish(batch, true);
-      }
+      layer.publish(batch, true);
     }
 
     GeoserverFacade.pushUpdates(batch);
@@ -215,37 +211,13 @@ public class DashboardMap extends DashboardMapBase implements
 
       JSONArray jsonArr = new JSONArray();
 
+      populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, universal);
+      
       for (Term child : children)
       {
-        if (!child.getId().equals(root.getId()))
-        {
-          JSONObject uniObjContainer = new JSONObject();
-          JSONObject uniObjProps = new JSONObject();
-
-          String uniDispLabel = child.getDisplayLabel().toString();
-          String uniId = child.getId();
-
-          if (savedLayerHash.containsKey(uniId))
-          {
-            // layerId = savedLayerHash.get(uniId).getId();
-            JSONObject savedLayerJSON = savedLayerHash.get(uniId).toJSON();
-            savedLayerJSON.put("uniId", uniId);
-            savedLayerJSON.put("refLayerExists", true);
-            savedLayerJSON.put("layerType", "REFERENCELAYER");
-            jsonArr.put(savedLayerJSON);
-          }
-          else
-          {
-            uniObjProps.put("uniId", uniId);
-            uniObjProps.put("uniDispLabel", uniDispLabel);
-            uniObjProps.put("refLayerExists", false);
-            uniObjContainer.put("layerType", "REFERENCEJSON");
-            uniObjContainer.put("properties", uniObjProps);
-            jsonArr.put(uniObjContainer);
-          }
-        }
+        populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, child);
       }
-      
+
       return jsonArr;
     }
     catch (JSONException e)
@@ -253,6 +225,38 @@ public class DashboardMap extends DashboardMapBase implements
       throw new ProgrammingErrorException(e);
     }
 
+  }
+
+  private void populateAvailableReferenceJSON(HashMap<String, DashboardLayer> savedLayerHash,
+      JSONArray jsonArr, Universal root, Term child) throws JSONException
+  {
+    if (!child.getId().equals(root.getId()))
+    {
+      JSONObject uniObjContainer = new JSONObject();
+      JSONObject uniObjProps = new JSONObject();
+
+      String uniDispLabel = child.getDisplayLabel().toString();
+      String uniId = child.getId();
+
+      if (savedLayerHash.containsKey(uniId))
+      {
+        // layerId = savedLayerHash.get(uniId).getId();
+        JSONObject savedLayerJSON = savedLayerHash.get(uniId).toJSON();
+        savedLayerJSON.put("uniId", uniId);
+        savedLayerJSON.put("refLayerExists", true);
+        savedLayerJSON.put("layerType", "REFERENCELAYER");
+        jsonArr.put(savedLayerJSON);
+      }
+      else
+      {
+        uniObjProps.put("uniId", uniId);
+        uniObjProps.put("uniDispLabel", uniDispLabel);
+        uniObjProps.put("refLayerExists", false);
+        uniObjContainer.put("layerType", "REFERENCEJSON");
+        uniObjContainer.put("properties", uniObjProps);
+        jsonArr.put(uniObjContainer);
+      }
+    }
   }
 
   /**
@@ -265,13 +269,9 @@ public class DashboardMap extends DashboardMapBase implements
 
     for (DashboardLayer layer : orderedLayers)
     {
-      if (layer instanceof DashboardThematicLayer)
-      {
-        DashboardThematicLayer tLayer = (DashboardThematicLayer) layer;
-        this.generateSessionViewName(tLayer);
+      this.generateSessionViewName(layer);
 
-        tLayer.publish(batch, true);
-      }
+      layer.publish(batch, true);
     }
 
     GeoserverFacade.pushUpdates(batch);
@@ -293,7 +293,6 @@ public class DashboardMap extends DashboardMapBase implements
       mapJSON.put("mapName", this.getName());
 
       ArrayList<DashboardThematicLayer> orderedTLayers = new ArrayList<DashboardThematicLayer>();
-      ArrayList<DashboardReferenceLayer> orderedRefLayers = new ArrayList<DashboardReferenceLayer>();
 
       for (int i = 0; i < orderedLayers.length; i++)
       {
@@ -302,14 +301,9 @@ public class DashboardMap extends DashboardMapBase implements
           DashboardThematicLayer tLayer = (DashboardThematicLayer) orderedLayers[i];
           orderedTLayers.add(tLayer);
         }
-        else if (orderedLayers[i] instanceof DashboardReferenceLayer)
-        {
-          DashboardReferenceLayer rLayer = (DashboardReferenceLayer) orderedLayers[i];
-          orderedRefLayers.add(rLayer);
-        }
       }
 
-      // Convert from ListArray to Array
+      // Convert from ListArray to Array for Thematic Layers
       DashboardThematicLayer[] orderedTLayersArr = new DashboardThematicLayer[orderedTLayers.size()];
       for (int i = 0; i < orderedTLayers.size(); i++)
       {
@@ -318,7 +312,7 @@ public class DashboardMap extends DashboardMapBase implements
 
       if (config == null || !config.equals("republish=false"))
       {
-        publishAllLayers(orderedTLayersArr);
+        publishAllLayers(orderedLayers);
       }
 
       for (int i = 0; i < orderedTLayersArr.length; i++)

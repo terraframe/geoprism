@@ -62,7 +62,7 @@
 			<mjl:component param="style" item="${style}">
 	            <div class="row-holder">
 	              <div class="label-holder style02">
-	                <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardThematicLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
+	                <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardReferenceLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
 	              </div>
 	              <div class="holder">
 	                <div class="row-holder">
@@ -162,7 +162,7 @@
 			  <input type="hidden" name="layer.${layer.universalMd.name}" value="${universalId}" />
 	            <div class="row-holder">
 	              <div class="label-holder style04">
-	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardThematicLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
+	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardReferenceLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
 	              </div>
 	              <div class="holder style04">
 	                <ul class="nav-tabs type-tabs">
@@ -199,7 +199,7 @@
 			<mjl:component param="style" item="${style}">
 	            <div class="row-holder">
 	              <div class="label-holder">
-	                <strong><gdb:localize var="dl_form_styleTheLayer" key="DashboardThematicLayer.form.styleTheLayer"/>${dl_form_styleTheLayer}</strong>
+	                <strong><gdb:localize var="dl_form_styleTheLayer" key="DashboardReferenceLayer.form.styleTheLayer"/>${dl_form_styleTheLayer}</strong>
 	              </div>
 	              <div class="holder">
 	                <div id="layer-type-styler-container" class="tab-content">
@@ -290,7 +290,7 @@
 	                    id="tab001basic"
 	                  >
 	                    <div class="fill-block">
-	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardReferenceLayer.form.fill"/>${dl_form_fill}</strong>
 	                      <div id="gdb-reusable-basic-fill-cell-holder" class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.polygonFillMd.displayLabel}</span>
@@ -306,7 +306,7 @@
 	                      <%-- Dynamically inserted: PolygonFillOpacity --%>
 	                    </div>
 	                    <div class="stroke-block">
-	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
+	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardReferenceLayer.form.stroke"/>${dl_form_stroke}</strong>
 	                      <div id="gdb-reusable-basic-stroke-cell-holder" class="cell-holder">
 	                        <%-- Dynamically inserted with javascript--%>
 	                      </div>
@@ -328,7 +328,7 @@
 	                    id="tab002bubble"
 	                  >
 	                    <div class="fill-block">
-	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardReferenceLayer.form.fill"/>${dl_form_fill}</strong>
 	                      <div class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.pointFillMd.displayLabel}</span>
@@ -361,7 +361,7 @@
 	                      </div>
 	                    </div>
 	                    <div class="stroke-block">
-	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
+	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardReferenceLayer.form.stroke"/>${dl_form_stroke}</strong>
 	                      <div class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.pointStrokeMd.displayLabel}</span>
@@ -412,7 +412,7 @@
 	                      </div>
 	                    </div>
 <!-- 	                    <div class="fill-block"> -->
-<%-- 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong> --%>
+<%-- 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardReferenceLayer.form.radius"/>${dl_form_radius}</strong> --%>
 <!-- 	                      <div class="cell-holder"> -->
 <!-- 		                        <div class="cell"> -->
 <%-- 		                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label> --%>
@@ -442,7 +442,7 @@
 	                  
 	                  <!-- GRADIENT -->
 	                  
-	                  <gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>
+	                  <gdb:localize var="dl_form_fill" key="DashboardReferenceLayer.form.fill"/>
 
 	                 
 	              </div>
@@ -463,7 +463,6 @@
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.create.button" 
 							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.applyWithStyle.mojo"
 							      classes="btn btn-primary"  />
-							    <!-- <input id="DashboardThematicLayer-create-button" name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button" value="Map It" class="btn btn-primary" type="button"> -->
 							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.cancel.button"
 							      value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.cancel.mojo"
 							      classes="btn btn-default" />
