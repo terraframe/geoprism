@@ -962,8 +962,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private Layer                                             currentLayer;
   
-  private ReferenceLayer                                    currentRefLayer;
-
   public SLDMapVisitor()
   {
     this.virtual = false;

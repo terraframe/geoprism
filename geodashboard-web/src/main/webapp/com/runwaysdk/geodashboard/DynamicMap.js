@@ -278,8 +278,6 @@
 		          refView.leafletLayer = oldLayer.leafletLayer;
 		        }
 		        
-//		        this._resolveOldRefLayerCache(refView);
-		        
 		        this._refLayerCache.put(refView.universalId, refView);
 	        }
 	        
@@ -287,40 +285,6 @@
 	          this._bBox = json.bbox;
 	        }
         }
-      },
-      
-      /**
-       * Remove old REFERENCEJSON layers from the cache when new REFERENCELAYER layers 
-       * exist to replace them. 
-       */
-      _resolveOldRefLayerCache : function(newLayer) {
-    	  var refLayers = this._refLayerCache.values();
-    	  var newUniversalLabel = newLayer.getLayerName();
-    	  // this will be the universal id for non persisted REFERENCEJSON layers
-    	  // and the actual persisted layer id for REFERENCELAYER layers
-    	  var newLayerId = newLayer.getLayerId(); 
-    	  var toDestroy = [];
-    	  
-    	  for(var i=0; i<refLayers.length; i++){
-  	        var refLayer = refLayers[i];
-  	        
-        	if(refLayer.getLayerName() === newUniversalLabel){
-        		var refUniId = refLayer.universalId;
-        		
-        		// Add the universal id because the _refLayerCache uses universal ids as keys in the hashmap
-        		var oldLayerId = refLayer.getId();
-        		toDestroy.push(refUniId);
-        	}
-    	  }
-    	  
-     	  for(var d=0; d<toDestroy.length; d++){
-      	  	var destroyId = toDestroy[d];
-      	  	
-      	  	// if destroyView is not null then we will remove the old REFERENCEJSON layer from the cache 
-      	  	// to be replaced by a REFERENCELAYER layer
-      	    this._refLayerCache.remove(destroyId);
-      	  }
-    	  
       },
       
       /**

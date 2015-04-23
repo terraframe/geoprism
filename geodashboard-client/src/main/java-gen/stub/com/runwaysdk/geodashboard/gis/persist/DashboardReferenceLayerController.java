@@ -256,7 +256,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
 
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
       layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+//      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
