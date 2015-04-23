@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1769819148)
+@com.runwaysdk.business.ClassSignature(hash = -1990257181)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -21,7 +21,6 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String DASHBOARDMAP = "dashboardMap";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTPUBLISHDATE = "lastPublishDate";
@@ -38,7 +37,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1769819148;
+  private static final long serialVersionUID = -1990257181;
   
   public DashboardLayerBase()
   {
@@ -267,46 +266,6 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
-    }
-  }
-  
-  public com.runwaysdk.system.metadata.MdAttributeReference getGeoEntity()
-  {
-    if (getValue(GEOENTITY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdAttributeReference.get(getValue(GEOENTITY));
-    }
-  }
-  
-  public String getGeoEntityId()
-  {
-    return getValue(GEOENTITY);
-  }
-  
-  public void validateGeoEntity()
-  {
-    this.validateAttribute(GEOENTITY);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeoEntityMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOENTITY);
-  }
-  
-  public void setGeoEntity(com.runwaysdk.system.metadata.MdAttributeReference value)
-  {
-    if(value == null)
-    {
-      setValue(GEOENTITY, "");
-    }
-    else
-    {
-      setValue(GEOENTITY, value.getId());
     }
   }
   

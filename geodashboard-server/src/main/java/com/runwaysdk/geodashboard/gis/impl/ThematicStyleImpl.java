@@ -1,28 +1,39 @@
 package com.runwaysdk.geodashboard.gis.impl;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
 import com.runwaysdk.geodashboard.gis.model.condition.Condition;
+import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 
 public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 {
-  private Condition condition;
+  private Condition          condition;
 
-  private String    polygonMinFill;
+  private String             polygonMinFill;
 
-  private String    polygonMaxFill;
+  private String             polygonMaxFill;
 
-  private Integer   pointMinSize;
+  private Integer            pointMinSize;
 
-  private Integer   pointMaxSize;
+  private Integer            pointMaxSize;
 
-  private Integer   pointFixedSize;
+  private Integer            pointFixedSize;
 
-  private Boolean   pointFixed;
+  private Boolean            pointFixed;
 
-  private String    styleCategories;
+  private String             styleCategories;
 
-  private Boolean   bubbleContinuousSize;
+  private Boolean            bubbleContinuousSize;
+
+  private MdAttributeDAOIF   secondaryAttribute;
+
+  private AllAggregationType secondaryAttributeAggregationMethod;
+
+  private JSONArray          secondaryAttributeCategories;
 
   public ThematicStyleImpl()
   {
@@ -118,5 +129,38 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public Boolean getPointFixed()
   {
     return this.pointFixed;
+  }
+
+  @Override
+  public MdAttributeDAOIF getSecondaryAttributeDAO()
+  {
+    return this.secondaryAttribute;
+  }
+
+  public void setSecondaryAttribute(MdAttributeDAOIF secondaryAttribute)
+  {
+    this.secondaryAttribute = secondaryAttribute;
+  }
+
+  @Override
+  public AllAggregationType getSecondaryAttributeAggregationMethod()
+  {
+    return this.secondaryAttributeAggregationMethod;
+  }
+
+  public void setSecondaryAttributeAggregationMethod(AllAggregationType secondaryAttributeAggregationMethod)
+  {
+    this.secondaryAttributeAggregationMethod = secondaryAttributeAggregationMethod;
+  }
+
+  @Override
+  public JSONArray getSecondaryAttributeCategoriesAsJSON() throws JSONException
+  {
+    return this.secondaryAttributeCategories;
+  }
+
+  public void setSecondaryAttributeCategories(JSONArray secondaryAttributeCategories)
+  {
+    this.secondaryAttributeCategories = secondaryAttributeCategories;
   }
 }

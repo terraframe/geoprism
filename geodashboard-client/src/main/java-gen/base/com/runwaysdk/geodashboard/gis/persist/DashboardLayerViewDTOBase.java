@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 9732839)
+@com.runwaysdk.business.ClassSignature(hash = -1316180399)
 public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayerView";
-  private static final long serialVersionUID = 9732839;
+  private static final long serialVersionUID = -1316180399;
   
   protected DashboardLayerViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -19,6 +19,7 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String AGGREGATIONATTRIBUTE = "aggregationAttribute";
   public static java.lang.String AGGREGATIONMETHOD = "aggregationMethod";
+  public static java.lang.String ATTRIBUTELABEL = "attributeLabel";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String FEATURESTRATEGY = "featureStrategy";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
@@ -140,6 +141,43 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getAggregationMethodMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(AGGREGATIONMETHOD).getAttributeMdDTO();
+  }
+  
+  public String getAttributeLabel()
+  {
+    return getValue(ATTRIBUTELABEL);
+  }
+  
+  public void setAttributeLabel(String value)
+  {
+    if(value == null)
+    {
+      setValue(ATTRIBUTELABEL, "");
+    }
+    else
+    {
+      setValue(ATTRIBUTELABEL, value);
+    }
+  }
+  
+  public boolean isAttributeLabelWritable()
+  {
+    return isWritable(ATTRIBUTELABEL);
+  }
+  
+  public boolean isAttributeLabelReadable()
+  {
+    return isReadable(ATTRIBUTELABEL);
+  }
+  
+  public boolean isAttributeLabelModified()
+  {
+    return isModified(ATTRIBUTELABEL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getAttributeLabelMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(ATTRIBUTELABEL).getAttributeMdDTO();
   }
   
   public Boolean getDisplayInLegend()

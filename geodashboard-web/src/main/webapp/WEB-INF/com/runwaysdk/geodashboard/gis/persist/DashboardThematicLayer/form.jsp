@@ -29,7 +29,12 @@
     <div id="DashboardLayer-mainDiv" class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize var="dl_form_heading" key="DashboardThematicLayer.form.heading"/>${dl_form_heading}${activeMdAttributeLabel}</h1>
+          <c:if test="${style.newInstance}">
+            <h1><gdb:localize key="DashboardThematicLayer.form.newHeading"/>${activeMdAttributeLabel}</h1>          
+          </c:if>
+          <c:if test="${!style.newInstance}">
+            <h1><gdb:localize key="DashboardThematicLayer.form.editHeading"/>${activeMdAttributeLabel}</h1>          
+          </c:if>
         </div>
           <fieldset>
           
@@ -499,17 +504,28 @@
 	                      </div>
 	                    </div>
 	                    <div class="secondary-box">
+	                      <input type='hidden' id='secondaryCategories' data-categoriesstore='${style.secondaryCategories}' />
+	                      <input type='hidden' id='secondaryAggregationValue' value='${secondaryAggregation}' />
+	                      
 	                      <strong class="title"><gdb:localize key="DashboardLayer.form.secondaryAttributeStyle"/></strong>
 	                      <div class="cell-holder">	                    
-	                        <label for="ss58"><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
+	                        <label class="secondary-label" for="secondaryAttribute" ><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
   	                        <div id="secondary-select-box" class="select-box">
-	                          <select id="ss58" class="method-slect" name="secondaryAttribute">
-	                            <option value=""><gdb:localize key="DashboardLayer.form.none"/></option>
+	                          <select id="secondaryAttribute" class="method-slect" name="secondaryAttribute">
+	                            <option ${style.secondaryAttributeId == '' ? 'selected="selected"' : ''} value=""><gdb:localize key="DashboardLayer.form.none"/></option>
 	                            <c:forEach items="${secondaryAttributes}" var="secondaryAttribute">
-		                          <option value="${secondaryAttribute.mdAttributeId}">${secondaryAttribute.displayLabel}</option>
+		                          <option ${style.secondaryAttributeId == secondaryAttribute.mdAttributeId ? 'selected="selected"' : ''} value="${secondaryAttribute.mdAttributeId}" data-type="${secondaryAttribute.attributeType}">${secondaryAttribute.displayLabel}</option>
 		                        </c:forEach>
 		                      </select>
 	                        </div>
+	                      </div>
+	                      <div id="secondary-content" ${style.secondaryAttributeId == '' ? 'style="display:none;"' : ''}>
+     	                    <div class="cell-holder">
+	                          <label class="secondary-label" for="secondaryAggregation"><gdb:localize key="DashboardLayer.form.secondaryAggregation"/></label>
+	                          <div class="select-box" id="secondary-aggregation-container"> 
+	                          </div> 
+	                        </div>
+	                        <div id="secondary-cateogries"></div>
 	                      </div>
                         </div>
 	                  </div>
@@ -581,10 +597,10 @@
 	                  >
 	                  
 	                    <div class="color-section">
-	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
 	                      <div class="heading-list">
-	                        <span><gdb:localize var="dl_form_category" key="DashboardThematicLayer.form.category"/>${dl_form_category}</span>
-	                        <span><gdb:localize var="dl_form_color" key="DashboardThematicLayer.form.color"/>${dl_form_color}</span>
+	                        <span><gdb:localize key="DashboardThematicLayer.form.category"/></span>
+	                        <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
 	                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardThematicLayer.form.catInputPlaceholder"/></span>
 	                      </div>
 	                    <div class="category-block" id="category-colors-container">
@@ -683,8 +699,8 @@
 							                       <li>
 							                         <div class="category-container">
 								                       	 <div class="text category-input-container">
-<!-- 								                       	 		<p id="cat-other-label">OTHER</p> -->
-															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="OTHER" placeholder="OTHER" autocomplete="off" disabled> 
+								                       	    <gdb:localize var="other" key="Other"/>								                       	 
+															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="${other}" placeholder="${other}" autocomplete="off" disabled> 
 								                       	 </div>
 						                   	 		 	 <div class="cell">
 										                  	<div class="color-holder">

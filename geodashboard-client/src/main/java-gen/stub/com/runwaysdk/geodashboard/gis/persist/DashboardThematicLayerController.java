@@ -23,7 +23,6 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
-import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
@@ -198,9 +197,6 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
 
-      // Filter out the invalid aggregation types based upon the
-      new Iterables<AggregationTypeDTO>().remove(aggregations, new AggregationPredicate(mdAttr));
-
       req.setAttribute("aggregations", aggregations);
       // req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
@@ -309,7 +305,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
       req.setAttribute("categories", style.getStyleCategories());
+
+      /*
+       * Secondary attribute objects
+       */
       req.setAttribute("secondaryAttributes", DashboardMapDTO.getSecondaryAttributes(this.getClientRequest(), mapId, mdAttributeId));
+      req.setAttribute("secondaryAggregation", style.getSecondaryAggregationType().size() > 0 ? style.getSecondaryAggregationType().get(0).getName() : "" );      
     }
   }
 
@@ -356,7 +357,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
-  @Override
+  // @Override
   public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO[] conditions) throws IOException, ServletException
   {
     try

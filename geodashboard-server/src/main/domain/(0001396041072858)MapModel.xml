@@ -90,13 +90,10 @@
           <enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
           <dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
           <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
-          <reference name="geoEntity" label="GeoEntity" required="false" type="com.runwaysdk.system.metadata.MdAttributeReference" />
           <reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
           <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
           <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
           <char name="viewName" size="64" label="View Name" description="The name of the DB view this layer maps to." required="false" />
-<!-- 		  <enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="false" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" /> -->
-<!-- 		  <enumeration name="layerType" selectMultiple="false" /> -->
 		  <boolean name="layerEnabled" required="true" defaultValue="true" label="Layer Enabled" />
 		  <boolean name="BBoxIncluded" required="true" defaultValue="true" label="BBox Inluded" />
 
@@ -147,6 +144,7 @@
           <char name="sldName" label="sldName" size="64" required="true" />
           <char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
           <char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
+          <text name="attributeLabel" label="Attribute label " required="true" />
           <char name="featureStrategy" label="Feature Strategy" size="50" required="true" />
         </attributes>
       </mdView>
@@ -275,6 +273,9 @@
           <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
           <char name="polygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
           <text name="styleCategories" label="Category styling for layers" required="false" />
+          <reference name="secondaryAttribute" label="Secondary attribute" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
+          <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
+          <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />          
         </attributes>
       </mdBusiness>
 

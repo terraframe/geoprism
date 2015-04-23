@@ -508,7 +508,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -569,7 +569,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -628,7 +628,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -699,7 +699,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -766,7 +766,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -829,7 +829,7 @@ public class GeoserverTest
       layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
-      layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
+      //layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.apply();
@@ -872,7 +872,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -963,7 +963,7 @@ public class GeoserverTest
       layer.setUniversal(country);
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -1035,7 +1035,7 @@ public class GeoserverTest
     layer.setUniversal(state);
     layer.addLayerType(AllLayerType.GRADIENT);
     layer.setVirtual(true);
-    layer.setGeoEntity(geoentityRef);
+    // layer.setGeoEntity(geoentityRef);
     layer.apply();
 
     HasLayer hasLayer = map.addHasLayer(layer);
@@ -1083,7 +1083,7 @@ public class GeoserverTest
     layer.setUniversal(state);
     layer.addLayerType(AllLayerType.BUBBLE);
     layer.setVirtual(true);
-    layer.setGeoEntity(geoentityRef);
+    // layer.setGeoEntity(geoentityRef);
     layer.apply();
 
     HasLayer hasLayer = map.addHasLayer(layer);
@@ -1133,7 +1133,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);
@@ -1259,7 +1259,7 @@ public class GeoserverTest
       layer.setUniversal(state);
       layer.addLayerType(AllLayerType.BASIC);
       layer.setVirtual(true);
-      layer.setGeoEntity(geoentityRef);
+      // layer.setGeoEntity(geoentityRef);
       layer.apply();
 
       DashboardThematicLayer layer2 = new DashboardThematicLayer();
@@ -1267,7 +1267,7 @@ public class GeoserverTest
       layer2.setUniversal(state);
       layer2.addLayerType(AllLayerType.BASIC);
       layer2.setVirtual(true);
-      layer2.setGeoEntity(geoentityRef);
+      //layer2.setGeoEntity(geoentityRef);
       layer2.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);

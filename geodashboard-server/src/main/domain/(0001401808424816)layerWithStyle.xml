@@ -2,21 +2,6 @@
   <doIt>
     <create></create>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController">
-        <create>
-          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
-            <mdParameter name="style" label="Style" order="1" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
-            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
-            <mdParameter name="conditions" label="Conditions" order="3" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-          </mdAction>
-          <mdAction name="newThematicInstance" label="newThematicInstance" isPost="true">
-            <mdParameter name="mdAttribute" label="mdAttribute" order="0" type="java.lang.String" />
-            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-      
       <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController">
         <create>
           <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
@@ -50,8 +35,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction"/>
-<!--       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.applyWithStyle" type="com.runwaysdk.system.metadata.MdMethod"/> -->
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.newThematicInstance" type="com.runwaysdk.system.metadata.MdAction"/>
     </delete>
   </undoIt>
 </version>

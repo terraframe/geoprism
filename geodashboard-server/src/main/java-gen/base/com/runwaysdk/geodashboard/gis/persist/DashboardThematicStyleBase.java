@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1836967091)
+@com.runwaysdk.business.ClassSignature(hash = 750544556)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -18,9 +18,12 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String POINTMINSIZE = "pointMinSize";
   public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
   public static java.lang.String POLYGONMINFILL = "polygonMinFill";
+  public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
+  public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
+  public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
   public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 1836967091;
+  private static final long serialVersionUID = 750544556;
   
   public DashboardThematicStyleBase()
   {
@@ -220,6 +223,112 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(POLYGONMINFILL, value);
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationType> getSecondaryAggregationType()
+  {
+    return (java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationType>) getEnumValues(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public void addSecondaryAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationType value)
+  {
+    if(value != null)
+    {
+      addEnumItem(SECONDARYAGGREGATIONTYPE, value.getId());
+    }
+  }
+  
+  public void removeSecondaryAggregationType(com.runwaysdk.geodashboard.gis.persist.AllAggregationType value)
+  {
+    if(value != null)
+    {
+      removeEnumItem(SECONDARYAGGREGATIONTYPE, value.getId());
+    }
+  }
+  
+  public void clearSecondaryAggregationType()
+  {
+    clearEnum(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public void validateSecondaryAggregationType()
+  {
+    this.validateAttribute(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF getSecondaryAggregationTypeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdClassIF.definesAttribute(SECONDARYAGGREGATIONTYPE);
+  }
+  
+  public com.runwaysdk.system.metadata.MdAttribute getSecondaryAttribute()
+  {
+    if (getValue(SECONDARYATTRIBUTE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.metadata.MdAttribute.get(getValue(SECONDARYATTRIBUTE));
+    }
+  }
+  
+  public String getSecondaryAttributeId()
+  {
+    return getValue(SECONDARYATTRIBUTE);
+  }
+  
+  public void validateSecondaryAttribute()
+  {
+    this.validateAttribute(SECONDARYATTRIBUTE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getSecondaryAttributeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(SECONDARYATTRIBUTE);
+  }
+  
+  public void setSecondaryAttribute(com.runwaysdk.system.metadata.MdAttribute value)
+  {
+    if(value == null)
+    {
+      setValue(SECONDARYATTRIBUTE, "");
+    }
+    else
+    {
+      setValue(SECONDARYATTRIBUTE, value.getId());
+    }
+  }
+  
+  public String getSecondaryCategories()
+  {
+    return getValue(SECONDARYCATEGORIES);
+  }
+  
+  public void validateSecondaryCategories()
+  {
+    this.validateAttribute(SECONDARYCATEGORIES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getSecondaryCategoriesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(SECONDARYCATEGORIES);
+  }
+  
+  public void setSecondaryCategories(String value)
+  {
+    if(value == null)
+    {
+      setValue(SECONDARYCATEGORIES, "");
+    }
+    else
+    {
+      setValue(SECONDARYCATEGORIES, value);
     }
   }
   

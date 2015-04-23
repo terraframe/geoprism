@@ -53,6 +53,7 @@
         this._mapId = config.mapId;
         this._dashboardId = config.dashboardId;
         this._workspace = config.workspace;
+        this._aggregationMap = config.aggregationMap;
         
         // Default criteria for filtering
         this._criteria = config.criteria;
@@ -173,6 +174,99 @@
           , this._mapId, '{testKey:"TestValue"}');
       },
       
+      _getSecondaryAttriubteCategories : function() {
+        if($("#secondary-tree").length > 0) {
+          var categories = this._getTermCategoryFromTree('secondary-tree');
+            
+          return categories;
+        }
+        else if ($('#secondary-choice-color').length > 0) {
+          var categories = this._getCategoryFromList("#secondary-choice-color", false);
+          
+          return categories;
+        }
+          
+        return null;
+      },
+      
+      _getTermCategoryFromTree : function (elementId) {
+        
+        if($("#" + elementId).length > 0) {
+          var categories = [];
+          
+          var elements = $("#" + elementId).find(".ontology-category-color-icon");
+          
+          $.each(elements, function( index, element ) {
+            var rwId = element.dataset.rwid;
+              
+            // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after                    
+            if(rwId.indexOf("PHANTOM") === -1){
+                        
+              var category = new Object();
+              category.id = element.dataset.rwid; 
+              category.val = element.parentElement.previousSibling.textContent;
+              category.color = GDB.gis.DynamicMap.prototype.rgb2hex($(element).css("background-color"));
+              category.isOntologyCat = true;
+                        
+              categories.push(category);
+            }
+          });          
+                
+          return categories;
+        }
+        
+        return null;        
+      },
+      
+      _getCategoryFromList : function(parentElementId, checkOther) {
+        var elements = $(parentElementId).find(".category-container");
+        var categories = [];        
+        
+        for(var i=0; i< elements.length; i++){
+          var catInputElem = $(elements[i]).find(".category-input");
+          var catColorElem = $(elements[i]).find(".cat-color-selector");
+          var catColor = GDB.gis.DynamicMap.prototype.rgb2hex($(catColorElem).css("background-color"));
+          var catVal = catInputElem.val();
+            
+          // parse the formatted number to the format of the data so the SLD can apply categories by this value
+          if(catInputElem.data("type") == "number" ) {
+            var thisNum = this._parser(catVal);
+              if($.isNumeric(thisNum)) {
+                catVal = thisNum;                
+              }
+          }
+            
+          // Filter out categories with no input values
+          if(catVal !== ""){
+            var category = new Object();
+            category.val = catVal;
+            category.color = catColor;
+            category.isOntologyCat = false;
+            
+            if(checkOther) {
+             category.otherEnabled = $("#f53").prop("checked");
+             
+             if(catInputElem[0].id === "cat-other"){
+                 category.otherCat = true;
+               }
+               else{
+                 category.otherCat = false;
+               }
+            }
+            else {
+              category.otherEnabled = false;
+              category.otherCat = false;
+            }
+                 
+            categories.push(category);
+          }
+        }  
+        
+          
+    return categories;
+
+      },
+      
       
       /**
        * Scrapes categories on the layer creation/edit form
@@ -183,56 +277,10 @@
          styleArr.catLiElems = [];
          
          if($("#ontology-tree").length > 0) {
-             var allElem = $(".ontology-category-color-icon");
-             for(var e=0; e<allElem.length; e++){
-               var rwId = allElem[e].dataset.rwid;
-               // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after
-               if(rwId.indexOf("PHANTOM") === -1){
-                 var theElem = allElem[e];
-                 
-                 var liObj = new Object();
-                 liObj.id = theElem.dataset.rwid; 
-                 liObj.val = theElem.parentElement.previousSibling.textContent;
-                 liObj.color = GDB.gis.DynamicMap.prototype.rgb2hex($(theElem).css("background-color"));
-                 liObj.isOntologyCat = true;
-                 
-                 styleArr.catLiElems.push(liObj);     
-               }
-             }
+           styleArr.catLiElems = this._getTermCategoryFromTree('ontology-tree');
          }
          else {           
-           var allElemCont = $(".category-container");
-           for(var i=0; i<allElemCont.length; i++){
-             var catInputElem = $(allElemCont[i]).find(".category-input");
-             var catColorElem = $(allElemCont[i]).find(".cat-color-selector");
-             var catColor = GDB.gis.DynamicMap.prototype.rgb2hex($(catColorElem).css("background-color"));
-             var catVal = catInputElem.val();
-             
-             // parse the formatted number to the format of the data so the SLD can apply categories by this value
-             if(catInputElem.data("type") == "number" ) {
-               var thisNum = this._parser(catVal);
-                 if($.isNumeric(thisNum)) {
-                   catVal = thisNum;                
-                 }
-             }
-             
-             // Filter out categories with no input values
-             if(catVal !== ""){
-                 var liObj = new Object();
-                 liObj.val = catVal;
-                 liObj.color = catColor;
-                 liObj.otherEnabled = $("#f53").prop("checked");
-                 if(catInputElem[0].id === "cat-other"){
-                	 liObj.otherCat = true;
-                 }
-                 else{
-                	 liObj.otherCat = false;
-                 }
-                 liObj.isOntologyCat = false;
-                 
-                 styleArr.catLiElems.push(liObj);                   
-             }
-           }
+           styleArr.catLiElems = this._getCategoryFromList('#category-colors-container', true);
          }
          
          // set the hidden input element in the layer creation/edit form 
@@ -272,6 +320,8 @@
         if(json.refLayers){
 	        for (var r = 0; r < json.refLayers.length; ++r) {
 	        	var refLayer = json.refLayers[r];
+	        	
+	        	// Construct the layer view objects
 	        	var refView = this._setLayerViewObj(refLayer);
 		        var oldLayer = this._refLayerCache.get(refView.universalId);
 		        if (oldLayer != null) {
@@ -319,6 +369,7 @@
 	          view.setAggregationMethod(layer.aggregationMethod);
 	          view.setAggregationAttribute(layer.aggregationAttribute);
 	          view.setMdAttribute(layer.mdAttributeId);
+	          view.setAttributeLabel(layer.attributeLabel);
 	          
 	          view.style = layer.styles[0];   
     	  }
@@ -1349,11 +1400,9 @@
           var size = this._map.getSize();        
           var mapBbox = this._map.getBounds().toBBoxString();
           var map = this._map;
-          var layerNameMap = new Object();
-          var layerAggMap = new Object();
+          var layerMap = new Object();
           var layerStringList = '';
           var aggregationAttr = '';
-          var aggregationAttrArr = [];
           var popup = L.popup().setLatLng(e.latlng);
           var that = this;
         
@@ -1366,9 +1415,8 @@
           
             // If the layer object is active (visible on the map)
             if(layer.getLayerIsActive()){
-              var layerId = layer.attributeMap.viewName.value;
-              layerNameMap[layerId] = layer.getLayerName();
-              layerAggMap[layerId] = layer.getAggregationMethod();
+              var layerId = layer.attributeMap.viewName.value;              
+              layerMap[layerId] = layer;              
                 
               if(firstAdded){
                 layerStringList += "," + layerId;
@@ -1377,8 +1425,6 @@
                 layerStringList += layerId;
                 firstAdded = true;
               }
-              aggregationAttrArr.push(layer.getAggregationAttribute().toLowerCase());
-
             }
           }
         
@@ -1406,33 +1452,30 @@
             var popupContent = '';
             
             // The getfeatureinfo request will return only 1 feature
-            for(var i = 0; i<json.features.length; i++){
-              var currLayer = json.features[i];
-              var currProperties = currLayer.properties;
-              var currLayerIdReturn = currLayer.id;
-              var currLayerId = currLayerIdReturn.substring(0, currLayerIdReturn.indexOf('.'));
-              var currLayerDisplayName = layerNameMap[currLayerId];
-              var currFeatureDisplayName = currLayer.properties.displaylabel;
-              var currAggMethod = layerAggMap[currLayerId];
-              for (var currProperty in currProperties) {
-            	  if (currProperties.hasOwnProperty(currProperty)) {
-            		  if(aggregationAttrArr.indexOf(currProperty.toLowerCase()) >= 0 ){
-                		  aggregationAttr = currProperty.toLowerCase();
-                	  }
-            	  }
-            	}
-              var currAttributeVal = currLayer.properties[aggregationAttr];
+            for(var i = 0; i < json.features.length; i++){
+              var featureLayer = json.features[i];
+              var featureProperties = featureLayer.properties;
+              var featureLayerIdReturn = featureLayer.id;
+              var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
               
-              if(typeof currAttributeVal === 'number'){
-                currAttributeVal = that._formatter(currAttributeVal);
+              var layer = layerMap[featureLayerId];
+              var layerDisplayName = layer.getLayerName();
+              var aggregationMethod = layer.getAggregationMethod();
+              var attributeName = layer.getAggregationAttribute().toLowerCase();
+              
+              var attributeValue = featureLayer.properties[attributeName];                            
+              var featureDisplayName = featureLayer.properties.displaylabel;
+              
+              if(typeof attributeValue === 'number'){
+                attributeValue = that._formatter(attributeValue);
               }
-              else if(!isNaN(Date.parse(currAttributeVal.substring(0, currAttributeVal.length - 1)))){
-            	  var slicedAttr = currAttributeVal.substring(0, currAttributeVal.length - 1);
-            	  var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-            	  currAttributeVal = that._formatDate(parsedAttr);
+              else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
+                var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
+                var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
+                attributeValue = that._formatDate(parsedAttr);
               }
               
-              popupContent += '<h3 class="popup-heading">'+currLayerDisplayName+'</h3>';
+              popupContent += '<h3 class="popup-heading">'+layerDisplayName+'</h3>';
               
               var html = '';
               html += '<table class="table">';
@@ -1445,16 +1488,16 @@
               html += '</thead>';
               html += '<tbody>';  
               html += '<tr>'; 
-              html += '<td>'+ currFeatureDisplayName +'</td>';  
-              html += '<td>' + currAggMethod + '</td>'; 
-              html += '<td>' + currAttributeVal + '</td>';  
+              html += '<td>'+ featureDisplayName +'</td>';  
+              html += '<td>' + aggregationMethod + '</td>'; 
+              html += '<td>' + attributeValue + '</td>';  
               html += '</tr>';  
               html += '</tbody>';  
               html += '</table>';  
                       
               popupContent += html;
               
-              var currGeoId = currLayer.properties.geoid;
+              var currGeoId = featureLayer.properties.geoid;
               
               if(currGeoId != null)
               {                 
@@ -1615,12 +1658,12 @@
         
         // Check for existense of dynamic settings which may not exist 
         if(params['style.bubbleContinuousSize']){
-        	params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         }
         
         if($("#f79").is(":visible")){
-        	params['style.pointFixedSize'] = params['style.pointFixedSize'];
-        	params['style.pointFixed'] = true;
+          params['style.pointFixedSize'] = params['style.pointFixedSize'];
+          params['style.pointFixed'] = true;
         }
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
@@ -1636,9 +1679,29 @@
         });      
         
         if($("#tab004categories").is(":visible")){
-        	var catStyleArr = this._updateCategoriesJSON();
-        	params['style.styleCategories'] = JSON.stringify(catStyleArr);
+          var catStyleArr = this._updateCategoriesJSON();
+          params['style.styleCategories'] = JSON.stringify(catStyleArr);
         }
+        
+        
+        var secondaryAttribute = $("#secondaryAttribute").val();
+        
+        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
+          var secondaryCategories = this._getSecondaryAttriubteCategories();
+          var secondaryAggregationType = $("#secondaryAggregation").val();
+            
+          if(secondaryCategories != null && secondaryCategories.length > 0){
+            params['style.secondaryAttribute'] = secondaryAttribute;
+            params['style.secondaryAggregationType'] = secondaryAggregationType;
+            params['style.secondaryCategories'] = JSON.stringify(secondaryCategories);
+          }          
+        }
+        else {
+          params['style.secondaryAttribute'] = '';
+          params['style.secondaryAggregationType'] = '';
+          params['style.secondaryCategories'] = '';
+        }
+          
         
         return request;
       },
@@ -1733,7 +1796,7 @@
         // the SATELLITE layer has all 22 zoom level, so we add it first to
         // become the internal base layer that determines the zoom levels of the
         // map.
-    	  
+        
         //var gsat = new L.Google('SATELLITE');         
         var gphy = new L.Google('TERRAIN');       
         var gmap = new L.Google('ROADMAP');       
@@ -1968,14 +2031,14 @@
        * 
        * 
        */
-      _addCategoryAutoComplete : function(){
+      _addCategoryAutoComplete : function(parent, aggregationId){
         
         var that = this;
         
         // Hook up the auto-complete for category input options new layers
         // existing layers have a seperate autocomplete hookup that queries 
         // the layer database view directly. 
-        $('.category-input').each(function(){
+        $(parent).find('.category-input').each(function(){
           var mdAttribute = $(this).data('mdattributeid');  
           var categoryType = $(this).data('type');
           
@@ -2003,7 +2066,7 @@
               
               // values are scraped from hidden input elements on the layer create form
               var universalId = $("#f58").val();
-              var aggregationVal = $("#f59").val();
+              var aggregationVal = $(aggregationId).val();
               var criteria = that._reloadCriteria();
               var conditions = that._getConditionsFromCriteria(criteria);
               
@@ -2012,79 +2075,224 @@
             minLength: 1
           });
         });
+      },
+      
+      _renderSecondaryAggregation : function(type) {
         
+        var options = this._aggregationMap[type];
+      
+        if(options == null) {
+          options = [];
+        }
+      
+        var html = '<select id="secondaryAggregation" class="method-slect" name="secondaryAggregation">';
         
-//        var clientRequest = new Mojo.ClientRequest({
-//          onSuccess : function(jsonCatData) {
-//          
-//            var data = JSON.parse(jsonCatData);
-//          
-//            that._autocomplete = $('.category-input').autocomplete({
-//                  minLength: 1,
-//                  autoFocus: true,
-//                  select : function(value, data){          
-//                    
-//                  // Set the field to this value
-//                    
-//                    that._suggestionCoords.clear();
-//                  },
-//                  source: function(request, response){
-//                  
-//                    var result = $.grep(data, function (el) {
-//                          return el.indexOf(request.term) === 0;
-//                      });
-//                      response(result);     
-//                  },
-//                  change: function (e, ui) {
-//                      if (!(0 || ui.item)) e.target.value = "";
-//                  }
-//                  
-//                });
-//        },
-//        onFailure : function(e) {
-//          that.handleException(e);
-//        }
-//      });
-//        
-//        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getThematicAttributeCategories(clientRequest, layerId);
+        for(var i = 0; i < options.length; i++) {
+          var option = options[i];
+          
+          html += '<option value="' + option.value + '">' + option.label + '</option>';
+        }
         
+        html += '</select>';
+        
+        $("#secondary-aggregation-container").html(html);
+        
+        // Set the saved value
+        var value = $('#secondaryAggregationValue').val();        
+        $("#secondaryAggregation").val(value);
+      },
+      
+      _renderSecondaryCategoryGroup : function(mdAttributeId, type) {
+        $('#secondary-content').hide();
+        
+        this._renderSecondaryAggregation(type);
+        
+        var categoryType = this._getCategoryType(type);
+        
+        var html =
+          '<div class="color-section">' +
+            '<div class="heading-list">' +
+              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
+              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
+              '<span></span>'+
+            '</div>' +
+            '<div class="category-block">' +
+              '<div class="panel-group choice-color category-group">' +
+                '<div class="panel">' +
+                  '<div id="secondary-choice-color" class="panel-collapse">' +
+                    '<ul class="color-list">' +
+                      this._getSecondaryCategoryHTML(1, mdAttributeId, categoryType) +
+                      this._getSecondaryCategoryHTML(2, mdAttributeId, categoryType) +
+                      this._getSecondaryCategoryHTML(3, mdAttributeId, categoryType) +
+                      this._getSecondaryCategoryHTML(4, mdAttributeId, categoryType) +
+                      this._getSecondaryCategoryHTML(5, mdAttributeId, categoryType) +
+                    '</ul>' +
+                  '</div>' +                              
+                '</div>' +              
+              '</div>' +            
+            '</div>' +
+          '</div>';          
+                 
+        $('#secondary-cateogries').html(html);
+        
+        this._addCategoryAutoComplete('#secondary-content',"#secondaryAggregation");
+        
+        this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
+        
+        jcf.customForms.replaceAll($('#secondary-content').get(0));
+        
+        $('#secondary-content').show();        
+      },
+      
+      _getSecondaryCategoryHTML : function(index, mdAttributeId, categoryType) {
+        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
+                
+        var html = '<li>' +
+          '<div class="category-container">' +
+            '<div class="text category-input-container">' +
+              '<input id="secondaryCat' + index + '" data-mdattributeid="' + mdAttributeId + '" data-type="' + categoryType+ '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="on" >' +
+            '</div>' +
+            '<div class="cell">' +
+              '<div class="color-holder">' +
+                '<a href="#" class="color-choice">' +
+                  '<span id="secondaryCat' + index + '-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>' +
+                  '<span class="arrow">arrow</span>' +
+                '</a>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</li>';
+          
+        return html;        
+      },
+      
+      _renderSecondaryTermTree : function(mdAttributeId, type) {
+        $('#secondary-content').hide();
+        
+        this._renderSecondaryAggregation(type);
+        
+        var html =
+         '<div class="color-section">' +
+           '<div class="heading-list">' +
+             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
+             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
+             '<span></span>'+
+           '</div>' +              
+           '<div class="category-block">' +
+             '<div class="ontology-category-input-container">' +
+             '<div id="secondary-tree"></div>' +
+           '</div>' +
+         '</div>';
+            
+        $('#secondary-cateogries').html(html);
+
+        // Get the term roots and setup the tree widget
+        var that = this;
+        var req = new Mojo.ClientRequest({
+          onSuccess : function(results){
+            var nodes = JSON.parse(results);
+            var rootTerms = [];
+                
+            for(var i = 0; i < nodes.length; i++) {
+              var id = nodes[i].id;              
+              rootTerms.push({termId : id});
+            }
+                
+            that._renderCategoryTermTree("#secondary-tree", rootTerms, '#secondaryCategories', nodes);
+            
+            $('#secondary-content').show();
+          },
+          onFailure : function(e){
+            that.handleException(e);
+          }
+        });
+        
+        jcf.customForms.replaceAll($('#secondary-content').get(0));
+            
+        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);            
+      },
+      
+      _handleSecondaryChange : function(e){
+        var option = e.target.selectedOptions[0];
+        var mdAttributeId = option.value;
+        var type = $(option).data("type");
+        
+        if(mdAttributeId == '') {
+          $('#secondary-content').hide();
+        }
+        else if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {
+          this._renderSecondaryTermTree(mdAttributeId, type);
+        }
+        else {
+          this._renderSecondaryCategoryGroup(mdAttributeId, type);
+        }
+      },
+      
+      _getCategoryType : function(type) {
+        if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
+          return 'number';
+        }
+        else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
+          return 'date';
+        }
+        
+        return 'text';
       },
       
       _addLayerFormControls : function(){
-    	  
-          if($("#ontology-tree").length > 0){
-        	  this._renderLayerTermTree();
-        	  this._addExistingCategoriesToUi();
-        	  attachCategoryColorPickers();
+        
+        $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
+        
+        if($("#ontology-tree").length > 0){
+          this._renderLayerTermTree();
+          attachCategoryColorPickers();
+        }
+        else if($(".category-input").length > 0){
+          this._addCategoryAutoComplete('#category-colors-container', '#f59');
+          this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
+            
+          // category 'other' option
+          $("#f53").change(function() {
+            if($(this).is(":checked")) {
+              $("#cat-other").parent().parent().show();
+            }
+            else{
+              $("#cat-other").parent().parent().hide();
+            }     
+          });
+          
+          attachCategoryColorPickers();
+        }
+        
+        function attachCategoryColorPickers(){
+          // ontology category layer type colors
+          $(".category-color-icon").colpick({
+            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+              $(el).css('background','#'+hex);
+              $(el).find('.color-input').attr('value', '#'+hex);
+            }
+          });
+        }
+        
+        // Load the secondary values
+        var secondaryAttribute = $("#secondaryAttribute").val();
+        
+        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
+
+          var type = $('#secondaryAttribute').find(":selected").data('type');
+          
+          if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {          
+          
+            this._renderSecondaryTermTree(secondaryAttribute, type);
           }
-          else if($(".category-input").length > 0){
-        	  this._addCategoryAutoComplete();
-        	  
-              // category 'other' option
-              $("#f53").change(function() {
-                  if($(this).is(":checked")) {
-                	  $("#cat-other").parent().parent().show();
-                  }
-                  else{
-                	  $("#cat-other").parent().parent().hide();
-                  }     
-              });
-              
-              this._addExistingCategoriesToUi();
-              attachCategoryColorPickers();
+          else {
+            this._renderSecondaryCategoryGroup(secondaryAttribute, type);
+          
+            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
+
           }
-    	  
-          function attachCategoryColorPickers(){
-        	  
-	          // ontology category layer type colors
-	          $(".category-color-icon").colpick({
-	            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-	            onChange:function(hsb,hex,rgb,el,bySetColor) {
-	              $(el).css('background','#'+hex);
-	              $(el).find('.color-input').attr('value', '#'+hex);
-	            }
-	          });
-          }
+        }
       },
       
       /**
@@ -2193,6 +2401,7 @@
         
         this._LayerController.newThematicInstance(request, this._currentAttributeId, this._mapId);
       },
+
       
       /**
        * Gets the html for and calls the layer creation/edit form 
@@ -2299,50 +2508,59 @@
        * 
        */
       _renderLayerTermTree : function() {
-    	  var that = this;
-    	  
-	  	  var rootsJSON = $("#ontology-tree").data("roots");
-		  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-		      termType : $("#ontology-tree").data("termtype"),
-		      relationshipTypes : [ $("#ontology-tree").data("reltype") ],
-		      rootTerms : rootsJSON.roots,
-		      editable : false,
-		      slide : false,
-		      selectable : false,
-		      onCreateLi: function(node, $li) {
-				  var nodeId = node.id;
+        
+        var elementId = "#ontology-tree";
+        var storeId = "#categories-input";
+        var rootsJSON = $("#ontology-tree").data("roots");
+        var rootTerms = rootsJSON.roots;
+        
+        this._renderCategoryTermTree(elementId,rootTerms, storeId);
+      },
+        
+      _renderCategoryTermTree : function(elementId, rootTerms, storeId, nodes) {
+        var that = this;
+        
+        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
+          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+          rootTerms : rootTerms,
+          editable : false,
+          slide : false,
+          selectable : false,
+          onCreateLi: function(node, $li) {
+            var nodeId = node.id;
 
-				  var catColor = that._getCategoryColor(nodeId);
-				  
-				  var thisLi = $.parseHTML(
-				          '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-           			  '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-           			  '</a>');
+            var catColor = that._getCategoryColor(nodeId, elementId, storeId);
+          
+            var thisLi = $.parseHTML(
+              '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+                '<span data-rwId="'+ nodeId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+              '</a>');
 
-		          // Add the color icon for category ontology nodes			        
-		          $li.find('> div').append(thisLi)
-		          
-		          // ontology category layer type colors
-			      $(thisLi).find("span").colpick({
-			      		submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-			           	onChange: function(hsb,hex,rgb,el,bySetColor) {
-				            		var hexStr = '#'+hex;
-				            		$(el).css('background', hexStr);
-				            		$(el).next(".color-input").attr('value', hexStr);            			            		
-				            	}
-			       });
-		      },
-		      /* checkable: true, */
-			  crud: {
-			      create: { // This configuration gets merged into the jquery create dialog.
-			        height: 320
-			      },
-			      update: {
-			        height: 320
-			      }
-			  }
-		  });
-		  tree.render("#ontology-tree");
+            // Add the color icon for category ontology nodes              
+            $li.find('> div').append(thisLi)
+              
+            // ontology category layer type colors
+            $(thisLi).find("span").colpick({
+              submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onChange: function(hsb,hex,rgb,el,bySetColor) {
+                var hexStr = '#'+hex;
+                $(el).css('background', hexStr);
+                $(el).next(".color-input").attr('value', hexStr);                                  
+              }
+            });
+          },
+          /* checkable: true, */
+          crud: {
+            create: { // This configuration gets merged into the jquery create dialog.
+              height: 320
+            },
+            update: {
+              height: 320
+            }
+          }
+        });
+        tree.render(elementId, nodes);
       },
       
       /**
@@ -2350,22 +2568,29 @@
        * 
        * @paarm nodeId - id of the node in the ui to get the color for.
        */
-      _getCategoryColor : function(nodeId) {
-    	  	var catsJSONObj = $("#categories-input").data("categoriesstore");
-	        if(catsJSONObj){
-	          var catsJSONArr = catsJSONObj.catLiElems;
-	          if($("#ontology-tree").length > 0){
-		    	  for(var i=0; i<catsJSONArr.length; i++){
-		              var cat = catsJSONArr[i];
-		              var catId = cat.id;
-		              if(catId === nodeId){
-		            	  return cat.color;
-		              }
-		    	  }
-	          }
-	        }
-	        // if no match is found return the default
-	    	return "#00bfff";
+      _getCategoryColor : function(nodeId, elementId, storeId) {
+          var catsJSONObj = $(storeId).data("categoriesstore");
+          
+          if(catsJSONObj){
+
+            var catsJSONArr = catsJSONObj.catLiElems;              
+            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
+              catsJSONArr = catsJSONObj;
+            }          
+
+            if($(elementId).length > 0){
+              for(var i=0; i<catsJSONArr.length; i++){
+                var cat = catsJSONArr[i];
+                var catId = cat.id;
+                
+                if(catId === nodeId){
+                  return cat.color;
+                }
+              }
+            }
+          }
+          // if no match is found return the default
+          return "#00bfff";
       },
       
       
@@ -2374,23 +2599,31 @@
        * The categories data is appended to the #categories-input element as json.
        * 
        */
-      _addExistingCategoriesToUi : function() {
-        var catsJSONObj = $("#categories-input").data("categoriesstore");
-        var catsJSONArr = catsJSONObj.catLiElems;
+      _loadExistingCategories : function(storeElement, prefix, treeElement, checkOther) {
+        
+        var catsJSONObj = $(storeElement).data("categoriesstore");
         
         if(catsJSONObj){
-          if($("#ontology-tree").length === 0){
-        	var catInputId;
+          var catsJSONArr = catsJSONObj.catLiElems;
+          
+          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
+            catsJSONArr = catsJSONObj;
+          }          
+          
+          if($(treeElement).length === 0)
+          {
+            var catInputId;
             var catOtherEnabled = true;
+            
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
               
               // Controlling for 'other' category 
               if(cat.otherCat){
-            	  catInputId = "cat-other";
+                catInputId = prefix + "-other";
               }
               else{
-            	  catInputId = "cat"+ (i+1);
+                catInputId = prefix + (i+1);
               }
               
               var catColorSelectorId = catInputId + "-color-selector";
@@ -2401,9 +2634,9 @@
             
             // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
             // The 'other' option is checked by default making this a valid sequence
-            if(!catOtherEnabled){
-            	$("#f53").click();
-            	$("#cat-other").parent().parent().hide();
+            if(checkOther && !catOtherEnabled){
+              $("#f53").click();
+              $("#" + prefix + "-other").parent().parent().hide();
             }
           }
         }
@@ -2411,21 +2644,25 @@
       
       
       _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-        strokeCellHolder.append(polyStroke);
-        polyStroke.show();
+        if(strokeCellHolder != null) {        
+          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+          strokeCellHolder.append(polyStroke);
+          polyStroke.show();
         
-        var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-        strokeCellHolder.append(polyStrokeWidth);
-        polyStrokeWidth.show();
+          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+          strokeCellHolder.append(polyStrokeWidth);
+          polyStrokeWidth.show();
         
-        var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-        strokeCellHolder.append(polyStrokeOpacity);
-        polyStrokeOpacity.show();
+          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+          strokeCellHolder.append(polyStrokeOpacity);
+          polyStrokeOpacity.show();
+        }
         
-        var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-        fillCellHolder.append(polyFillOpacity);
-        polyFillOpacity.show();
+        if(fillCellHolder != null) {
+          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          fillCellHolder.append(polyFillOpacity);
+          polyFillOpacity.show();
+        }
       },          
       
       _onLayerTypeTabChange : function(e) {
@@ -2446,7 +2683,7 @@
         }
         else if (type === "CATEGORY") {
           $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
         }
         else if (type === "FIXEDBUBBLE") {
             $("#tab005bubble").show();
@@ -2459,6 +2696,8 @@
        * 
        */
       rgb2hex : function(rgb) {
+        if(rgb != null) {
+          
           if (/^#[0-9A-F]{6}$/i.test(rgb)){
             return rgb;
           }
@@ -2478,6 +2717,23 @@
                ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
                ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
           }
+        }
+      },
+      
+      _setupCategoryColorPicker : function(elements) {
+        
+        // color dropdown buttons
+        elements.colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj) {
+            var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).find(".ico").css("background-color"));
+            $(this).colpickSetColor(currColor,false);
+          },
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).find(".ico").css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);
+          }
+        }); 
       },
       
       /**
@@ -2487,18 +2743,8 @@
        */
       _selectColor : function(){
         var that = this;
-        // color dropdown buttons
-        $('.color-holder').colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj) {
-        	var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).find(".ico").css("background-color"));
-          	$(this).colpickSetColor(currColor,false);
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).find(".ico").css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        }); 
+        
+        this._setupCategoryColorPicker($('.color-holder'));
         
         // category layer type colors
         $("#category-colors-container").find('.icon-color').colpick({
@@ -2772,6 +3018,7 @@
           viewParams: {id: this._dashboardId},          
           width: 600,
           onSuccess : function(dto) {
+            $("#report-export-container").show();
           },
           onFailure : function(e) {
             that.handleException(e);
