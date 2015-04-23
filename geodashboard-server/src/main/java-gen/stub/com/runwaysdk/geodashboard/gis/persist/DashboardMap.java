@@ -2,7 +2,9 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -20,6 +22,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -37,9 +40,18 @@ import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableSingle;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabel;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabelQuery.UniversalDisplayLabelQueryStructIF;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -180,9 +192,99 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       iter.close();
     }
   }
+  
+  
+  /**
+   * Returns the reference layer options. 
+   * 
+   * @return
+   */
+  private JSONArray getAvailableReferenceLayers()
+  {
+    QueryFactory f = new QueryFactory();
+    UniversalQuery query = new UniversalQuery(f);
+    
+    String dashboardCountry = this.getDashboard().getCountry().getUniversal().getUniversalId();
+
+    List<Term> children = this.getDashboard().getCountry().getUniversal().getAllDescendants(TYPE).getAll();
+    
+    Universal root = Universal.getRoot();
+    query.WHERE(query.getId().NE(root.getId()));
+    query.WHERE(query.getUniversalId().EQ(dashboardCountry));
+    
+    for(int i=0; i<children.size(); i++)
+    {
+        Term child = children.get(i);
+        query.OR( query.getId().EQ(child.getId()) );
+    }
+    
+    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
+
+//    ArrayList<String> savedLayerArr = new ArrayList<String>();
+    HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
+    List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
+    for(int i=0; i<savedLayers.size(); i++)
+    {
+      DashboardLayer savedLayer = savedLayers.get(i);
+      if(savedLayer instanceof DashboardReferenceLayer)
+      {
+        String savedLayerUniId = savedLayer.getUniversal().getId();
+//        savedLayerArr.add(savedLayerUniId);
+        savedLayerHash.put(savedLayerUniId, savedLayer);
+      }
+    }
+
+    JSONArray jsonArr = new JSONArray();
+
+    OIterator<? extends Universal> iter = query.getIterator();
+    try
+    {
+      while (iter.hasNext())
+      {
+        JSONObject uniObjContainer = new JSONObject();
+        JSONObject uniObjProps = new JSONObject();
+        
+        Universal uni = iter.next();
+        String uniDispLabel = uni.getDisplayLabel().toString();
+        String uniId = uni.getId();
+        
+        if(savedLayerHash.containsKey(uniId))
+        {
+//          layerId = savedLayerHash.get(uniId).getId();
+          JSONObject savedLayerJSON = savedLayerHash.get(uniId).toJSON();
+          savedLayerJSON.put("uniId", uniId);
+          savedLayerJSON.put("refLayerExists", true);
+          savedLayerJSON.put("layerType", "REFERENCELAYER");
+          jsonArr.put(savedLayerJSON);
+          
+        }
+        else
+        {
+          uniObjProps.put("uniId", uniId);
+          uniObjProps.put("uniDispLabel", uniDispLabel);
+          uniObjProps.put("refLayerExists", false);
+          uniObjContainer.put("layerType", "REFERENCEJSON");
+          uniObjContainer.put("properties", uniObjProps);
+          jsonArr.put(uniObjContainer);
+        }
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      iter.close();
+    }
+    
+    return jsonArr;
+  }
+  
 
   /**
    * Republishes all layers to GeoServer.
+   * 
    */
   public void publishAllLayers(DashboardLayer[] orderedLayers)
   {
@@ -217,28 +319,49 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       
       mapJSON.put("mapName", this.getName());
         
-      DashboardThematicLayer[] orderedTLayers = new DashboardThematicLayer[orderedLayers.length];
+      ArrayList<DashboardThematicLayer> orderedTLayers = new ArrayList<DashboardThematicLayer>();
+      ArrayList<DashboardReferenceLayer> orderedRefLayers = new ArrayList<DashboardReferenceLayer>();
+      
       for(int i=0; i<orderedLayers.length; i++)
       {
         if(orderedLayers[i] instanceof DashboardThematicLayer)
         {
           DashboardThematicLayer tLayer = (DashboardThematicLayer) orderedLayers[i];
-          orderedTLayers[i] = tLayer;
+          orderedTLayers.add(tLayer);
         }
+        else if(orderedLayers[i] instanceof DashboardReferenceLayer)
+        {
+          DashboardReferenceLayer rLayer = (DashboardReferenceLayer) orderedLayers[i];
+          orderedRefLayers.add(rLayer);
+        }
+      }
+      
+      
+      // Convert from ListArray to Array
+      DashboardThematicLayer[] orderedTLayersArr = new DashboardThematicLayer[orderedTLayers.size()];
+      for (int i = 0; i < orderedTLayers.size(); i++)
+      {
+        orderedTLayersArr[i] = orderedTLayers.get(i);
       }
 
       if (config == null || !config.equals("republish=false"))
       {
-        publishAllLayers(orderedTLayers);
+        publishAllLayers(orderedTLayersArr);
       }
 
-      for (int i = 0; i < orderedTLayers.length; i++)
+      for (int i = 0; i < orderedTLayersArr.length; i++)
       {
-        layers.put(orderedTLayers[i].toJSON());
+        layers.put(orderedTLayersArr[i].toJSON());
       }
       mapJSON.put("layers", layers);
+      
+      //
+      // TODO: Resolve the situation where a reference layer is saved and loaded compared to the results of getAvailableReferenceLayers()
+      //
+      JSONArray refLayerOptions = this.getAvailableReferenceLayers();
+      mapJSON.put("refLayers", refLayerOptions);
 
-      JSONArray mapBBox = getMapLayersBBox(orderedTLayers);
+      JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
       mapJSON.put("bbox", mapBBox);
 
       if (log.isDebugEnabled())

@@ -2,12 +2,15 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -55,18 +58,17 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   @Override
   public void accepts(MapVisitor visitor)
   {
-    // TODO Auto-generated method stub
-    
+    visitor.visit(this);
   }
   
-//  @Transaction
-//  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
-//  {
-//
-//    boolean isNew = this.isNew();
-//
-//    super.applyWithStyleInTransaction(style, mapId, conditions);
-//
+  @Transaction
+  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  {
+
+    boolean isNew = this.isNew();
+
+    super.applyWithStyleInTransaction(style, mapId, conditions);
+
 //    if (isNew && style instanceof DashboardThematicStyle)
 //    {
 //      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
@@ -74,13 +76,42 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
 //      MdAttribute md = MdAttribute.get(tStyle.getMdAttributeId());
 //      this.setMdAttribute(md);
 //    }
-//  }
+  }
 
   @Override
   public JSONObject toJSON()
   {
-    // TODO Auto-generated method stub
-    return null;
+    try
+    {
+      JSONObject json = new JSONObject();
+      json.put("viewName", getViewName());
+      json.put("sldName", getSLDName());
+      json.put("layerName", getName());
+      json.put("layerId", getId());
+      json.put("inLegend", this.getDisplayInLegend());
+      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
+      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
+      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
+      json.put("featureStrategy", getFeatureStrategy());
+      json.put("layerType", "REFERENCELAYER");
+      json.put("uniId", this.getUniversal().getId());
+
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i)
+      {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+
+      return json;
+    }
+    catch (JSONException ex)
+    {
+      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
+      throw new ProgrammingErrorException(ex);
+    }
   }
   
   /**
@@ -96,8 +127,6 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
     QueryFactory factory = new QueryFactory();
     ValueQuery query = new ValueQuery(factory);
 
-    ValueQuery outerQuery = new ValueQuery(factory);
-
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
     try
     {
@@ -106,10 +135,6 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
         DashboardStyle style = iter.next();
         if (style instanceof DashboardStyle)
         {
-          
-          Integer length = GeoserverProperties.getDecimalLength();
-          Integer precision = GeoserverProperties.getDecimalPrecision();
-          String sql;
 
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(query);
@@ -126,6 +151,20 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
         
           query.SELECT(label);
           query.SELECT(geoId1);
+          
+          Selectable geom;
+          if (this.getFeatureType().equals(FeatureType.POINT))
+          {
+            geom = geQ1.get(GeoEntity.GEOPOINT);
+          }
+          else
+          {
+            geom = geQ1.get(GeoEntity.GEOMULTIPOLYGON);
+          }
+
+          geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+          geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
+          query.SELECT(geom);
         }
       }
     }
@@ -151,40 +190,6 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
 
       this.viewHasData = false;
     }
-
-    // Set the GeoID and the Geometry attribute for the second query
-    GeoEntityQuery geQ2 = new GeoEntityQuery(query);
-    Selectable geoId2 = geQ2.getGeoId(GeoEntity.GEOID);
-    geoId2.setColumnAlias(GeoEntity.GEOID);
-    query.SELECT(geoId2);
-    // geometry
-    Selectable geom;
-    if (this.getFeatureType().equals(FeatureType.POINT))
-    {
-      geom = geQ2.get(GeoEntity.GEOPOINT);
-    }
-    else
-    {
-      geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON);
-    }
-
-    geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-    geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-    query.SELECT(geom);
-
-//    for (Selectable selectable : innerQuery.getSelectableRefs())
-//    {
-//      Attribute attribute = innerQuery.get(selectable.getResultAttributeName());
-//      attribute.setColumnAlias(selectable.getColumnAlias());
-//
-//      outerQuery.SELECT(attribute);
-//    }
-
-//    Attribute geomAttribute = innerQuery.get(GeoserverFacade.GEOM_COLUMN);
-//    geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-//    outerQuery.SELECT(geomAttribute);
-//    outerQuery
-//        .WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery.aCharacter(GeoEntity.GEOID)));
 
     return query;
   }

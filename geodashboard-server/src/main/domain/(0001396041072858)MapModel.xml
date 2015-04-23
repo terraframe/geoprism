@@ -90,7 +90,7 @@
           <enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
           <dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
           <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
-          <reference name="geoEntity" label="GeoEntity" required="true" type="com.runwaysdk.system.metadata.MdAttributeReference" />
+          <reference name="geoEntity" label="GeoEntity" required="false" type="com.runwaysdk.system.metadata.MdAttributeReference" />
           <reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
           <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
           <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
@@ -147,6 +147,22 @@
           <char name="sldName" label="sldName" size="64" required="true" />
           <char name="aggregationMethod" label="Aggregation Method" size="10" required="true" />
           <char name="aggregationAttribute" label="Aggregation Attribute" size="50" required="true" />
+          <char name="featureStrategy" label="Feature Strategy" size="50" required="true" />
+        </attributes>
+      </mdView>
+      
+      <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView" label="Dashboard Reference Layer View">
+        <attributes>
+          <virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+          <virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
+          <virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
+          <char name="viewName" label="viewName" size="64" required="true" />
+          <char name="layerName" label="layerName" size="64" required="true" />
+          <char name="layerId" label="layerId" size="64" required="true" />
+          <char name="sldName" label="sldName" size="64" required="true" />
           <char name="featureStrategy" label="Feature Strategy" size="50" required="true" />
         </attributes>
       </mdView>

@@ -1,9 +1,30 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+
+import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.geodashboard.GDBErrorUtility;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
+import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
+import com.runwaysdk.transport.conversion.json.JSONReturnObject;
+
 public class DashboardReferenceLayerController extends DashboardReferenceLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardReferenceLayer/";
+  
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
+  
+  private static final Log   log     = LogFactory.getLog(DashboardReferenceLayerController.class);
   
   public DashboardReferenceLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
@@ -12,8 +33,10 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   
   public void cancel(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    dto.unlock();
-    this.view(dto.getId());
+    if (!dto.isNewInstance())
+    {
+      dto.unlock();
+    }
   }
   public void failCancel(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -31,15 +54,13 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       this.failCreate(dto);
     }
   }
-  public void failCreate(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  
+  public void failCreate(DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    req.setAttribute("_dashboardMap", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_geoEntity", com.runwaysdk.system.metadata.MdAttributeReferenceDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_layerType", com.runwaysdk.geodashboard.gis.persist.AllLayerTypeDTO.allItems(super.getClientSession().getRequest()));
-    req.setAttribute("_universal", com.runwaysdk.system.gis.geo.UniversalDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
+  
   public void delete(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
@@ -52,40 +73,47 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       this.failDelete(dto);
     }
   }
-  public void failDelete(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  
+  public void failDelete(DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    req.setAttribute("_dashboardMap", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_geoEntity", com.runwaysdk.system.metadata.MdAttributeReferenceDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_layerType", com.runwaysdk.geodashboard.gis.persist.AllLayerTypeDTO.allItems(super.getClientSession().getRequest()));
-    req.setAttribute("_universal", com.runwaysdk.system.gis.geo.UniversalDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  
+  @Override
+  public void edit(String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO.lock(super.getClientRequest(), id);
-    req.setAttribute("_dashboardMap", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_geoEntity", com.runwaysdk.system.metadata.MdAttributeReferenceDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_layerType", com.runwaysdk.geodashboard.gis.persist.AllLayerTypeDTO.allItems(super.getClientSession().getRequest()));
-    req.setAttribute("_universal", com.runwaysdk.system.gis.geo.UniversalDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("item", dto);
+    DashboardReferenceLayerDTO layer = DashboardReferenceLayerDTO.lock(super.getClientRequest(), id);
+
+    DashboardMapDTO map = layer.getAllContainingMap().get(0);
+
+    // There will be one style only for this layer
+    DashboardStyleDTO style = layer.getAllHasStyle().get(0);
+    
+    String universalId = layer.getUniversalId();
+
+    this.loadLayerData(layer, style, map.getId(), universalId);
+
     render("editComponent.jsp");
   }
+  
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     this.view(id);
   }
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+  
+  @Override
+  public void newReferenceInstance(String universalId, String mapId) throws IOException, ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO(clientRequest);
-    req.setAttribute("_dashboardMap", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_geoEntity", com.runwaysdk.system.metadata.MdAttributeReferenceDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_layerType", com.runwaysdk.geodashboard.gis.persist.AllLayerTypeDTO.allItems(super.getClientSession().getRequest()));
-    req.setAttribute("_universal", com.runwaysdk.system.gis.geo.UniversalDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("item", dto);
+    DashboardReferenceLayerDTO layer = new DashboardReferenceLayerDTO(clientRequest);
+    DashboardStyleDTO style = new DashboardStyleDTO(clientRequest);
+
+    this.loadLayerData(layer, style, mapId, universalId);
+
     render("createComponent.jsp");
   }
+  
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
@@ -104,10 +132,6 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   }
   public void failUpdate(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    req.setAttribute("_dashboardMap", com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_geoEntity", com.runwaysdk.system.metadata.MdAttributeReferenceDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_layerType", com.runwaysdk.geodashboard.gis.persist.AllLayerTypeDTO.allItems(super.getClientSession().getRequest()));
-    req.setAttribute("_universal", com.runwaysdk.system.gis.geo.UniversalDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -146,5 +170,113 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
+  }
+  
+  @Override
+  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException, ServletException
+  {
+    try
+    {
+      DashboardConditionDTO[] conditions = null;  // place holder for ignoring conditions with reference layers
+      String layerJSON = layer.applyWithStyle(style, mapId, conditions);
+
+      JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
+      jsonReturn.setInformation(this.getClientRequest().getInformation());
+      jsonReturn.setWarnings(this.getClientRequest().getWarnings());
+
+      this.getResponse().setStatus(200);
+      this.getResponse().setContentType("application/json");
+
+      this.getResponse().getWriter().print(jsonReturn.toString());
+    }
+    catch (Throwable t)
+    {
+      DashboardReferenceLayerDTO tLayer = (DashboardReferenceLayerDTO) layer;
+      
+      String universalId = tLayer.getUniversalId();
+      
+      this.loadLayerData(layer, style, mapId, universalId);
+
+      if (t instanceof ProblemExceptionDTO)
+      {
+        ProblemExceptionDTO ex = (ProblemExceptionDTO) t;
+        GDBErrorUtility.prepareProblems(ex, req, true);
+      }
+      else
+      {
+        log.error(t);
+        GDBErrorUtility.prepareThrowable(t, req);
+      }
+
+      // TODO: this needs to be pushed into the render method.
+      this.getResponse().setContentType("text/html");
+
+      if (layer.isNewInstance())
+      {
+        render("createComponent.jsp");
+      }
+      else
+      {
+        render("editComponent.jsp");
+      }
+    }
+  }
+  
+  
+  /**
+   * Loads artifacts for layer/style CRUD.
+   * @param style
+   * @param mapId
+   *          TODO
+   * @param universalId TODO
+   * @param tLayer
+   * @param mdAttributeId
+   * @param mdAttribute
+   * 
+   * @throws JSONException
+   */
+  @SuppressWarnings("unchecked")
+  private void loadLayerData(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, String universalId)
+  {
+    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
+
+    if (layer instanceof DashboardReferenceLayerDTO)
+    {
+
+      DashboardReferenceLayerDTO rLayer = (DashboardReferenceLayerDTO) layer;
+      req.setAttribute("layer", rLayer);
+      
+      req.setAttribute("style", style);
+
+      String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
+      req.setAttribute("fonts", fonts);
+
+      // layer types
+      Map<String, String> labels = rLayer.getLayerTypeMd().getEnumItems();
+
+      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+      layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+
+      req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
+      req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
+
+      List<String> activeLayerType = rLayer.getLayerTypeEnumNames();
+      if (activeLayerType.size() > 0)
+      { // Set the selected layer type to what its currently set to in the database (this will exist for edits, but not
+        // new instances)
+        req.setAttribute("activeLayerTypeName", activeLayerType.get(0));
+      }
+      else
+      {
+        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
+      }
+      
+      req.setAttribute("universalId", universalId);
+      
+      UniversalDTO universal = UniversalDTO.get(clientRequest, universalId);
+      String uniDispLabel = universal.getDisplayLabel().toString();
+      req.setAttribute("layerName", uniDispLabel);
+    }
   }
 }

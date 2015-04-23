@@ -283,9 +283,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         }
         else
         {
-          HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
-          minAttrVal = minMaxMap.get("min");
-          maxAttrVal = minMaxMap.get("max");
+          if(this.visitor.currentLayer instanceof ThematicLayer)
+          {
+            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+            HashMap<String, Double> minMaxMap = currentTLayer.getLayerMinMax(attribute);
+            minAttrVal = minMaxMap.get("min");
+            maxAttrVal = minMaxMap.get("max");
+          }
 
           minSize = tStyle.getPointMinSize();
           maxSize = tStyle.getPointMaxSize();
@@ -514,7 +518,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         // attribute must be lowercase to work with postgres
         String attribute = tLayer.getAttribute().toLowerCase();
 
-        HashMap<String, Double> minMaxMap = this.visitor.currentLayer.getLayerMinMax(attribute);
+        HashMap<String, Double> minMaxMap = null;
+        if(this.visitor.currentLayer instanceof ThematicLayer)
+        {
+          ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+          minMaxMap = currentTLayer.getLayerMinMax(attribute);
+        }
         double minAttrVal = minMaxMap.get("min");
         double maxAttrVal = minMaxMap.get("max");
 
@@ -951,7 +960,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private Node                                              root;
 
-  private ThematicLayer                                     currentLayer;
+  private Layer                                             currentLayer;
+  
+  private ReferenceLayer                                    currentRefLayer;
 
   public SLDMapVisitor()
   {
@@ -1102,7 +1113,30 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   @Override
   public void visit(ReferenceLayer layer)
   {
+    
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
 
+    // We're starting a new layer so clear the prior structures
+    this.parents.clear();
+    this.conditions.clear();
+
+    this.virtual = layer.getVirtual();
+    this.featureType = layer.getFeatureType();
+
+    Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();
+
+    Node userStyle = this.node("UserStyle").child(node("Title").text(layer.getName())).build(layerNode);
+
+    parents.push(userStyle);
+
+    this.currentLayer = layer;
+    layerToNodeMap.put(layer.getId(), layerNode);
+    this.layers.put(layerNode, new LinkedList<DocumentFragment>());
+
+    for (Style style : layer.getStyles())
+    {
+      style.accepts(this);
+    }
   }
 
   /**
@@ -1111,19 +1145,19 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   @Override
   public void visit(Style style)
   {
-    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
-
-    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
-
-    if (this.virtual)
-    {
-      Node fts = this.node("FeatureTypeStyle").child(rule).build();
-      rulesFragment.appendChild(fts);
-    }
-    else
-    {
-      rulesFragment.appendChild(rule);
-    }
+//    DocumentFragment rulesFragment = this.doc.createDocumentFragment();
+//
+//    Node rule = this.node("Rule").child(this.node("Name").text(style.getName())).build();
+//
+//    if (this.virtual)
+//    {
+//      Node fts = this.node("FeatureTypeStyle").child(rule).build();
+//      rulesFragment.appendChild(fts);
+//    }
+//    else
+//    {
+//      rulesFragment.appendChild(rule);
+//    }
 
     Symbolizer symbolizer;
     if (this.featureType == FeatureType.POINT)
@@ -1144,9 +1178,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       throw new ProgrammingErrorException("Geometry type [" + this.featureType + "] is not supported for SLD generation.");
     }
 
-    rule.appendChild(symbolizer.getSLD());
+//    rule.appendChild(symbolizer.getSLD());
 
-    this.parents.pop().appendChild(rulesFragment);
+//    this.parents.pop().appendChild(rulesFragment);
+    this.parents.pop().appendChild(symbolizer.getSLD());
   }
 
   @Override

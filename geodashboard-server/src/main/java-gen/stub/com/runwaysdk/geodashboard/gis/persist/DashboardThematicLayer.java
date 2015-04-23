@@ -152,6 +152,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("attributeType", this.getAttributeType());
       json.put("aggregationMethod", this.getAggregationMethod());
       json.put("aggregationAttribute", this.getAttribute());
+      json.put("layerType", "THEMATICLAYER");
 
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();

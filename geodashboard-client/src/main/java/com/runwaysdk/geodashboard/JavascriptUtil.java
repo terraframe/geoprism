@@ -15,6 +15,8 @@ import com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
@@ -167,6 +169,8 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardLayerController.CLASS);
     types.add(DashboardThematicLayerDTO.CLASS);
     types.add(DashboardThematicLayerController.CLASS);
+    types.add(DashboardReferenceLayerDTO.CLASS);
+    types.add(DashboardReferenceLayerViewDTO.CLASS);
     types.add(DashboardReferenceLayerController.CLASS);
     types.add(DashboardGreaterThanDTO.CLASS);
     types.add(DashboardGreaterThanOrEqualDTO.CLASS);
