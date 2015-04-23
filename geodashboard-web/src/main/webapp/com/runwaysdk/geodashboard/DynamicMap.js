@@ -3063,7 +3063,7 @@
                 
               that._addUserLayersToMap(true);
                 
-              that._drawLegendItems()
+              that._drawLegendItems();
                 
               // TODO : Push this somewhere as a default handler.
               that.handleMessages(response);
