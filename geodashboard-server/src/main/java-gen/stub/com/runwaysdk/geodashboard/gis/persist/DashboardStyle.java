@@ -182,7 +182,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
   public DashboardStyle clone()
   {
     DashboardStyle clone = new DashboardStyle();
-    clone.populate(clone);
+    clone.populate(this);
     clone.apply();
 
     return clone;
