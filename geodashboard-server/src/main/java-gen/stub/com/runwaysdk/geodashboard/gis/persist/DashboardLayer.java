@@ -95,23 +95,20 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   @Override
   public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
-    this.applyWithStyleInTransaction(style, mapId, conditions);
+    return this.applyWithStyleAndPublish(style, mapId, conditions);
+  }
 
-    // We have to make sure that the transaction has ended before we can publish
-    // to geoserver,
-    // otherwise our database view won't exist yet.
-    //
-    // The false flag is set in publish(createDBView) to allow for running the
-    // createDatabaseView
-    // method inside the applyWithStyleInTransaction method so that incorrect
-    // SQL for view
-    // creation is caught before database object are created. Originally noticed
-    // on text attribute
-    // layer creation
+  private String applyWithStyleAndPublish(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  {
+    this.applyAll(style, mapId, conditions);
 
+    /*
+     * We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database
+     * view won't exist yet.
+     */
     GeoserverBatch batch = new GeoserverBatch();
 
-    this.publish(batch, true);
+    this.publish(batch);
 
     GeoserverFacade.pushUpdates(batch);
 
@@ -138,7 +135,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
 
   @Transaction
   @AbortIfProblem
-  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  public void applyAll(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
 
@@ -231,14 +228,11 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
    * does not exist yet.
    */
-  public void publish(GeoserverBatch batch, boolean createDBView)
+  public void publish(GeoserverBatch batch)
   {
     batch.addLayerToDrop(this);
 
-    if (createDBView)
-    {
-      createDatabaseView(true);
-    }
+    createDatabaseView(true);
 
     if (viewHasData)
     {
@@ -442,7 +436,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     {
       DashboardStyle cStyle = style.clone();
 
-      clone.applyWithStyle(cStyle, map.getId(), new DashboardCondition[] {});
+      clone.applyAll(cStyle, map.getId(), new DashboardCondition[] {});
     }
 
     return clone;

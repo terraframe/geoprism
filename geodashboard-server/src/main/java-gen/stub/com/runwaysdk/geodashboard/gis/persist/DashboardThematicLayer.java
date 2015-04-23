@@ -49,7 +49,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   }
 
   @Transaction
-  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  public void applyAll(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
 
@@ -65,7 +65,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
     }
 
-    super.applyWithStyleInTransaction(style, mapId, conditions);
+    super.applyAll(style, mapId, conditions);
   }
 
   /**
