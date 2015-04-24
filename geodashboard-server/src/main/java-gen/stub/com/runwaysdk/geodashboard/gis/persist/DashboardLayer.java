@@ -14,6 +14,7 @@ import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
@@ -27,10 +28,8 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.util.IDGenerator;
 
 public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
@@ -48,6 +47,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   public abstract ValueQuery getViewQuery();
 
   public abstract JSONObject toJSON();
+
+  protected abstract DashboardLayer newInstance();
 
   public void setConditions(List<DashboardCondition> conditions)
   {
@@ -94,23 +95,20 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   @Override
   public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
-    this.applyWithStyleInTransaction(style, mapId, conditions);
+    return this.applyWithStyleAndPublish(style, mapId, conditions);
+  }
 
-    // We have to make sure that the transaction has ended before we can publish
-    // to geoserver,
-    // otherwise our database view won't exist yet.
-    //
-    // The false flag is set in publish(createDBView) to allow for running the
-    // createDatabaseView
-    // method inside the applyWithStyleInTransaction method so that incorrect
-    // SQL for view
-    // creation is caught before database object are created. Originally noticed
-    // on text attribute
-    // layer creation
+  private String applyWithStyleAndPublish(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  {
+    this.applyAll(style, mapId, conditions);
 
+    /*
+     * We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database
+     * view won't exist yet.
+     */
     GeoserverBatch batch = new GeoserverBatch();
 
-    this.publish(batch, true);
+    this.publish(batch);
 
     GeoserverFacade.pushUpdates(batch);
 
@@ -136,7 +134,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   }
 
   @Transaction
-  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  @AbortIfProblem
+  public void applyAll(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
 
@@ -229,14 +228,11 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
    * does not exist yet.
    */
-  public void publish(GeoserverBatch batch, boolean createDBView)
+  public void publish(GeoserverBatch batch)
   {
     batch.addLayerToDrop(this);
 
-    if (createDBView)
-    {
-      createDatabaseView(true);
-    }
+    createDatabaseView(true);
 
     if (viewHasData)
     {
@@ -301,19 +297,21 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      */
     return this.getId();
   }
-//
-//  @Override
-//  public void setGeoEntity(MdAttributeReference value)
-//  {
-//    if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
-//    {
-//      super.setGeoEntity(value);
-//    }
-//    else
-//    {
-//      throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY + "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
-//    }
-//  }
+
+  //
+  // @Override
+  // public void setGeoEntity(MdAttributeReference value)
+  // {
+  // if (value.getMdBusiness().definesType().equals(GeoEntity.CLASS))
+  // {
+  // super.setGeoEntity(value);
+  // }
+  // else
+  // {
+  // throw new ProgrammingErrorException("The attribute [" + DashboardLayer.GEOENTITY +
+  // "] can only reference an MdAttributeReference to [" + GeoEntity.CLASS + "]");
+  // }
+  // }
 
   @Override
   public void lock()
@@ -407,4 +405,41 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       return FeatureType.POLYGON;
     }
   }
+
+  protected void populate(DashboardLayer source)
+  {
+    this.setBBoxIncluded(source.getBBoxIncluded());
+    this.setActiveByDefault(source.getActiveByDefault());
+    this.setDisplayInLegend(source.getDisplayInLegend());
+    this.setLayerEnabled(source.getLayerEnabled());
+    this.setUniversal(source.getUniversal());
+    this.setVirtual(source.getVirtual());
+    this.getDashboardLegend().populate(source.getDashboardLegend());
+    this.setName(source.getName());
+
+    List<AllLayerType> types = source.getLayerType();
+
+    for (AllLayerType type : types)
+    {
+      this.addLayerType(type);
+    }
+  }
+
+  public DashboardLayer clone(DashboardMap map)
+  {
+    List<? extends DashboardStyle> styles = this.getStyles();
+
+    DashboardLayer clone = this.newInstance();
+    clone.populate(this);
+
+    for (DashboardStyle style : styles)
+    {
+      DashboardStyle cStyle = style.clone();
+
+      clone.applyAll(cStyle, map.getId(), new DashboardCondition[] {});
+    }
+
+    return clone;
+  }
+
 }

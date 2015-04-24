@@ -6,50 +6,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ReferenceLayer;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
-import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
-import com.runwaysdk.query.AggregateFunction;
-import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.AttributeReference;
-import com.runwaysdk.query.F;
-import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.OrderBy;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.SelectableMoment;
-import com.runwaysdk.query.SelectableNumber;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
 
 public class DashboardReferenceLayer extends DashboardReferenceLayerBase implements com.runwaysdk.generation.loader.Reloadable, ReferenceLayer
 {
   private static final long serialVersionUID = -1393835330;
-  
+
   public DashboardReferenceLayer()
   {
     super();
@@ -60,22 +35,11 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   {
     visitor.visit(this);
   }
-  
-  @Transaction
-  protected void applyWithStyleInTransaction(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+
+  @Override
+  protected DashboardLayer newInstance()
   {
-
-    boolean isNew = this.isNew();
-
-    super.applyWithStyleInTransaction(style, mapId, conditions);
-
-//    if (isNew && style instanceof DashboardThematicStyle)
-//    {
-//      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-//
-//      MdAttribute md = MdAttribute.get(tStyle.getMdAttributeId());
-//      this.setMdAttribute(md);
-//    }
+    return new DashboardReferenceLayer();
   }
 
   @Override
@@ -113,13 +77,11 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       throw new ProgrammingErrorException(ex);
     }
   }
-  
+
   /**
-   * @prerequisite conditions is populated with any DashboardConditions
-   *               necessary for restricting the view dataset.
+   * @prerequisite conditions is populated with any DashboardConditions necessary for restricting the view dataset.
    * 
-   * @return A ValueQuery for use in creating/dropping the database view which
-   *         will be used with GeoServer.
+   * @return A ValueQuery for use in creating/dropping the database view which will be used with GeoServer.
    */
   @Override
   public ValueQuery getViewQuery()
@@ -148,10 +110,10 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();
           query.AND(geQ1.getUniversal().EQ(universal));
-        
+
           query.SELECT(label);
           query.SELECT(geoId1);
-          
+
           Selectable geom;
           if (this.getFeatureType().equals(FeatureType.POINT))
           {
@@ -195,6 +157,3 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   }
 
 }
-
-
-

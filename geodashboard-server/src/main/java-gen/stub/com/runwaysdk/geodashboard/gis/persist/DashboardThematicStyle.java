@@ -92,7 +92,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
 
     return null;
   }
-  
+
   @Override
   public JSONArray getSecondaryAttributeCategoriesAsJSON() throws JSONException
   {
@@ -103,24 +103,37 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
 
     return null;
   }
-//
-//  public static SecondaryAttributeStyleIF getSecondaryAttributeStyleIF(String thematicLayerId)
-//  {
-//    // return getSecondaryAttributeStyle(thematicLayerId);
-//
-//    /*
-//     * Spoof SecondaryAttributeStyle
-//     */
-//    MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO("org.ideorg.iq.cambodia.KhDeliverySummary");
-//
-//    JSONArray categories = new JSONArray();
-//    categories.put(SecondaryAttributeStyleImpl.createCategory("Active", "#F4A460"));
-//    categories.put(SecondaryAttributeStyleImpl.createCategory("Inactive", "#A4A460"));
-//    categories.put(SecondaryAttributeStyleImpl.createCategory("Active, Inactive", "#C4A460"));
-//
-//    SecondaryAttributeStyleImpl style = new SecondaryAttributeStyleImpl(mdClass, "sanitationTeacherStatus", AllAggregationType.MAJORITY, categories);
-//
-//    return style;
-//  }
-//
+
+  @Override
+  public DashboardStyle clone()
+  {
+    DashboardThematicStyle clone = new DashboardThematicStyle();
+    clone.populate(this);
+    clone.apply();
+
+    return clone;
+  }
+
+  @Override
+  protected void populate(DashboardStyle source)
+  {
+    super.populate(source);
+
+    if (source instanceof DashboardThematicStyle)
+    {
+      DashboardThematicStyle tSource = (DashboardThematicStyle) source;
+
+      this.setBubbleContinuousSize(tSource.getBubbleContinuousSize());
+      this.setPointFixed(tSource.getPointFixed());
+      this.setPointMaxSize(tSource.getPointMaxSize());
+      this.setPointMinSize(tSource.getPointMinSize());
+      this.setPolygonMaxFill(tSource.getPolygonMaxFill());
+      this.setPolygonMinFill(tSource.getPolygonMinFill());
+      this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());
+      this.setSecondaryAttribute(tSource.getSecondaryAttribute());
+      this.setSecondaryCategories(tSource.getSecondaryCategories());
+      this.setStyleCategories(tSource.getStyleCategories());
+      this.setStyleCondition(tSource.getStyleCondition());
+    }
+  }
 }

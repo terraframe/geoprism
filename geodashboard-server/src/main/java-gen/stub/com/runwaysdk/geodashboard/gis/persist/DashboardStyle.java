@@ -145,7 +145,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       mapping.put(MdAttributeTerm.CLASS, textOptions);
       mapping.put(MdAttributeText.CLASS, textOptions);
       mapping.put(MdAttributeCharacter.CLASS, textOptions);
-      
+
       mapping.put(MdAttributeInteger.CLASS, numberOptions);
       mapping.put(MdAttributeLong.CLASS, numberOptions);
       mapping.put(MdAttributeDecimal.CLASS, numberOptions);
@@ -177,5 +177,44 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     }
 
     return options;
+  }
+
+  public DashboardStyle clone()
+  {
+    DashboardStyle clone = new DashboardStyle();
+    clone.populate(this);
+    clone.apply();
+
+    return clone;
+  }
+
+  protected void populate(DashboardStyle source)
+  {
+    this.setValueSize(source.getValueSize());
+    this.setValueHaloWidth(source.getValueHaloWidth());
+    this.setValueHalo(source.getValueHalo());
+    this.setValueFont(source.getValueFont());
+    this.setValueColor(source.getValueColor());
+    this.setPolygonStrokeWidth(source.getPolygonStrokeWidth());
+    this.setPolygonStrokeOpacity(source.getPolygonStrokeOpacity());
+    this.setPolygonStroke(source.getPolygonStroke());
+    this.setPolygonFillOpacity(source.getPolygonFillOpacity());
+    this.setPolygonFill(source.getPolygonFill());
+    this.setPointWellKnownName(source.getPointWellKnownName());
+    this.setPointStrokeWidth(source.getPointStrokeWidth());
+    this.setPointStrokeOpacity(source.getPointStrokeOpacity());
+    this.setPointSize(source.getPointSize());
+    this.setPointRotation(source.getPointRotation());
+    this.setPointOpacity(source.getPointOpacity());
+    this.setPointFill(source.getPointFill());
+    this.setLineStrokeWidth(source.getLineStrokeWidth());
+    this.setLineStrokeCap(source.getLineStrokeCap());
+    this.setLineStroke(source.getLineStroke());
+    this.setLineOpacity(source.getLineOpacity());
+    this.setLabelSize(source.getLabelSize());
+    this.setLabelHaloWidth(source.getLabelHaloWidth());
+    this.setLabelHalo(source.getLabelHalo());
+    this.setLabelFont(source.getLabelFont());
+    this.setLabelColor(source.getLabelColor());
   }
 }

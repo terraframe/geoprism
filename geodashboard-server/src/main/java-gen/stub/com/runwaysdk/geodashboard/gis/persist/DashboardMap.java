@@ -88,7 +88,7 @@ public class DashboardMap extends DashboardMapBase implements
 
       generateSessionViewName(layer);
 
-      layer.publish(batch, true);
+      layer.publish(batch);
     }
 
     GeoserverFacade.pushUpdates(batch);
@@ -271,7 +271,7 @@ public class DashboardMap extends DashboardMapBase implements
     {
       this.generateSessionViewName(layer);
 
-      layer.publish(batch, true);
+      layer.publish(batch);
     }
 
     GeoserverFacade.pushUpdates(batch);
