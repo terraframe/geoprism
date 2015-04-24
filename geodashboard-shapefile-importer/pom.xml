@@ -49,6 +49,12 @@
       <version>1.2.0</version>
     </dependency>
     <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>swt</artifactId>
+      <version>3.5.2</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
       <groupId>org.mod4j.org.eclipse.core</groupId>
       <artifactId>commands</artifactId>
       <version>3.5.0</version>

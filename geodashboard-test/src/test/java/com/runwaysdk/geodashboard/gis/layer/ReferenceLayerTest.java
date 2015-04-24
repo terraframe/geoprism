@@ -1,11 +1,15 @@
 package com.runwaysdk.geodashboard.gis.layer;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.runwaysdk.business.Business;
@@ -37,6 +41,8 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.ClassAttribute;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
@@ -50,9 +56,9 @@ public class ReferenceLayerTest
 {
   protected static final String         TEST_PACKAGE   = "com.test.geodashboard";
 
-  protected static final String         TYPE_NAME      = "StateInfo16";
+  protected static final String         TYPE_NAME      = "StateInfo5";
 
-  protected static final String         VIEW_NAME      = "StateInfoView16";
+  protected static final String         VIEW_NAME      = "StateInfoView5";
 
   protected static final String         STATE_INFO     = TEST_PACKAGE + "." + TYPE_NAME;
 
@@ -94,23 +100,26 @@ public class ReferenceLayerTest
 
   private static boolean                keepData       = true;
   
-//  private static MdBusiness basicDashboard;
-//
-//  private static MdBusiness advancedDashboard;
 
-//  @BeforeClass
-//  @Request
-//  public static void classStartup()
-//  {
-////    basicDashboard = MdBusiness.getMdBusiness(BasicDashboard.CLASS);
-////    advancedDashboard = MdBusiness.getMdBusiness(AdvancedDashboard.CLASS);
-//  }
-//
-//  @AfterClass
-//  public static void classTeardown()
-//  {
-//
-//  }
+  @BeforeClass
+  @Request
+  public static void classStartup()
+  {
+    metadataSetup();
+    dataSetup();
+    
+    System.out.println("Metadata and data is setup");
+  }
+
+  @AfterClass
+  @Request
+  public static void classTeardown()
+  {
+    System.out.println("Starting teardown process...");
+    
+    metadataTeardown();
+    StrategyInitializer.shutDown();
+  }
   
   @Transaction
   private static void metadataSetup()
@@ -129,20 +138,20 @@ public class ReferenceLayerTest
   
       rank = new MdAttributeInteger();
       rank.setDefiningMdClass(stateInfo);
-      rank.setAttributeName("rank");
+      rank.setAttributeName("rank5");
       rank.getDisplayLabel().setDefaultValue("Alphabetic Rank");
       rank.apply();
   
       date = new MdAttributeDate();
       date.setDefiningMdClass(stateInfo);
-      date.setAttributeName("studyDate");
+      date.setAttributeName("studyDate5");
       date.getDisplayLabel().setDefaultValue("Study Date");
       date.apply();
   
       // ratio = rank/total (linear relationship...higher rank =
       ratio = new MdAttributeDouble();
       ratio.setDefiningMdClass(stateInfo);
-      ratio.setAttributeName("ratio");
+      ratio.setAttributeName("ratio5");
       ratio.setDatabaseLength(4);
       ratio.setDatabaseDecimal(2);
       ratio.getDisplayLabel().setDefaultValue("Alphabetic Ratio");
@@ -157,24 +166,24 @@ public class ReferenceLayerTest
       geoentityRef.apply();
   
       country = new Universal();
-      country.getDisplayLabel().setDefaultValue("Country");
-      country.getDescription().setDefaultValue("Country");
-      country.setUniversalId("country16");
+      country.getDisplayLabel().setDefaultValue("Country5");
+      country.getDescription().setDefaultValue("Country5");
+      country.setUniversalId("country5");
       country.apply();
   
       country.addLink(Universal.getRoot(), AllowedIn.CLASS);
   
       state = new Universal();
-      state.getDisplayLabel().setDefaultValue("State");
-      state.getDescription().setDefaultValue("State");
-      state.setUniversalId("state16");
+      state.getDisplayLabel().setDefaultValue("State5");
+      state.getDescription().setDefaultValue("State5");
+      state.setUniversalId("state5");
       state.apply();
   
       state.addLink(country, AllowedIn.CLASS).apply();
   
       usa = new GeoEntity();
       usa.getDisplayLabel().setDefaultValue("USA");
-      usa.setGeoId("USA000016");
+      usa.setGeoId("USA00005");
       usa.setUniversal(country);
     }
     catch(Exception e)
@@ -203,28 +212,28 @@ public class ReferenceLayerTest
     stateInfoView.apply();
 
     MdAttributeVirtual virtualRank = new MdAttributeVirtual();
-    virtualRank.setAttributeName("viewRank16");
+    virtualRank.setAttributeName("viewRank5");
     virtualRank.setMdAttributeConcrete(rank);
     virtualRank.setDefiningMdView(stateInfoView);
     virtualRank.getDisplayLabel().setDefaultValue("Education Rank");
     virtualRank.apply();
 
     MdAttributeVirtual virtualRatio = new MdAttributeVirtual();
-    virtualRatio.setAttributeName("viewRatio16");
+    virtualRatio.setAttributeName("viewRatio5");
     virtualRatio.setMdAttributeConcrete(ratio);
     virtualRatio.setDefiningMdView(stateInfoView);
     virtualRatio.getDisplayLabel().setDefaultValue("Crime Rate");
     virtualRatio.apply();
 
     MdAttributeVirtual virtualDate = new MdAttributeVirtual();
-    virtualDate.setAttributeName("studyDate16");
+    virtualDate.setAttributeName("studyDate5");
     virtualDate.setMdAttributeConcrete(date);
     virtualDate.setDefiningMdView(stateInfoView);
     virtualDate.getDisplayLabel().setDefaultValue("Study Date");
     virtualDate.apply();
 
     dashboard = new Dashboard();
-    dashboard.getDisplayLabel().setDefaultValue("Test Dashboard16");
+    dashboard.getDisplayLabel().setDefaultValue("Test Dashboard5");
     dashboard.setCountry(usa);
     dashboard.apply();
 
@@ -352,16 +361,36 @@ public class ReferenceLayerTest
   {
     try
     {
-      DashboardMap dm = dashboard.getMap();
-      dm.delete();
-//      dashboard.delete();
-
-      stateInfoView.delete();
-
+      DashboardMap map = dashboard.getMap();
+      
+      if(map != null)
+      {
+        map.delete();
+      }
+      
+      OIterator<? extends MetadataWrapper> dMeta = dashboard.getAllMetadata();
+      try
+      {
+        while(dMeta.hasNext())
+        {
+          MetadataWrapper meta = dMeta.next();
+          meta.delete();
+        }
+      }
+      finally
+      {
+        dMeta.close();
+      }
+      
+//      stateInfoView.delete();
+      
+      Dashboard.get(dashboard.getId()).delete();
       MdBusiness.get(stateInfo.getId()).delete();
       Universal.get(country.getId()).delete();
       Universal.get(state.getId()).delete();
       GeoEntity.get(usa.getId()).delete();
+      
+      System.out.println("Metadata and data has been removed");
     }
     catch (Throwable t)
     {
@@ -371,32 +400,19 @@ public class ReferenceLayerTest
 
   @Test
   @Request
-  public void test1()
+  public void viewQueryTest()
   {
-//    Dashboard dashboard = null;
     DashboardMap map = null;
+    DashboardReferenceLayer rl = null;
     try
     {
       
-      metadataSetup();
-      dataSetup();
-      
-      System.out.println("Metadata and data is setup");
-      
-      
-//      dashboard = new Dashboard();
-//      dashboard.getDisplayLabel().setDefaultValue("testDashboard16");
-//      dashboard.setCountry(usa);
-//      dashboard.apply();
-      
       map = dashboard.getMap();
     
-//    DashboardCondition[] conditions = dashboard.getConditions();
-    
-      DashboardReferenceLayer rl = new DashboardReferenceLayer();
-      rl.setName("testLayer16");
+      rl = new DashboardReferenceLayer();
+      rl.setName("testLayer");
       rl.setUniversal( state );
-      rl.setGeoEntity(geoentityRef);
+//      rl.setGeoEntity(geoentityRef);
       rl.addLayerType(AllLayerType.BASIC);
       rl.setDashboardMap(map);
       rl.apply();
@@ -411,13 +427,13 @@ public class ReferenceLayerTest
       hasLayer.setLayerIndex(0);
       hasLayer.apply();
     
-//    rl.applyWithStyle(style, map.getId(), conditions);
-    
       ValueQuery query = rl.getViewQuery();
-      String sql = query.getSQL();
-      System.out.println(sql);
-    
-//    assertEquals(null);
+      
+      long resultCount = query.getCount();
+      
+      // There are 51 states in the USA so the result should be 51.
+      // If adding filter conditions this may change and should be adjusted accordingly
+      assertEquals(51, resultCount);
     }
     catch (Exception e) 
     {
@@ -425,10 +441,10 @@ public class ReferenceLayerTest
     }
     finally
     {
-      map.delete();
-//      dashboard.delete();
-      
-      metadataTeardown();
+      if(rl != null)
+      {
+        rl.delete();
+      }
     }
   }
 
