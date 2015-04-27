@@ -2654,6 +2654,11 @@ span.select-area span.center {
 	z-index: 999999 !important;
 }
 
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all{
+	overflow-y: auto;
+	max-height: 100px;
+}
+
 div.alert.alertbox {
 	color: red;
 	font-weight: bold;
