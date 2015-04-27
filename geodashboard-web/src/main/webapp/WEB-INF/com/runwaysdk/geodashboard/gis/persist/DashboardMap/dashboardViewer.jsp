@@ -295,6 +295,13 @@ $(document).ready(function(){
       <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left"">
         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span>
       </a>
+      <c:if test="${hasAccess}">
+        <div>
+          <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left"">
+            <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span>
+          </a>
+        </div>
+      </c:if>
     </span>
   </aside>
   
@@ -317,36 +324,35 @@ $(document).ready(function(){
   
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
-<!-- 
-  	<h4 id="reporting-toggle-button"><gdb:localize key="dashboardViewer.chartPanel"/></h4>
- -->  
-    <div id="report-toolbar">
-      <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
-      <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
-      <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
+    <c:if test="${hasAccess || hasReport}">
+      <div id="report-toolbar">
+        <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
+        <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
+        <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
       
-      <c:if test="${hasAccess}">
-        <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
-      </c:if>
+        <c:if test="${hasAccess}">
+          <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
+        </c:if>
       
-      <c:choose>
-        <c:when test="${!hasReport}">
-          <span id="report-export-container" style="display: none;">
-        </c:when>      
-        <c:otherwise>
-          <span id="report-export-container">
-        </c:otherwise>       
-      </c:choose>
+        <c:choose>
+          <c:when test="${!hasReport}">
+            <span id="report-export-container" style="display: none;">
+          </c:when>      
+          <c:otherwise>
+            <span id="report-export-container">
+          </c:otherwise>       
+        </c:choose>
       
-        <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
-        <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
-        <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
-      </span>
-    </div>
-    <div id="report-viewport">    
-      <div id="report-content">
-      </div>   
-    </div>
+          <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
+          <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
+          <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+        </span>
+      </div>
+      <div id="report-viewport">    
+        <div id="report-content">
+        </div>   
+      </div>
+    </c:if>
   </article>
   
   <!-- allow a user to go to the top of the page -->

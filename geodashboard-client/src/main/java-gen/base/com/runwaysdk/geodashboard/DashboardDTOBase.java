@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -751941811)
+@com.runwaysdk.business.ClassSignature(hash = 1652213822)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = -751941811;
+  private static final long serialVersionUID = 1652213822;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -650,6 +650,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     String[] _declaredTypes = new String[]{"java.lang.String", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
     Object[] _parameters = new Object[]{id, conditions};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "applyConditions", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final void applyGlobalConditions(com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "applyGlobalConditions", _declaredTypes);
+    getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final void applyGlobalConditions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{id, conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "applyGlobalConditions", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

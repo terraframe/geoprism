@@ -469,29 +469,31 @@
        * 
        */
       _renderReport : function(geoId, criteria) {
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          that : this,
-          onSuccess : function(html){
-            this.that._displayReport(html);
-          },
-          onFailure : function(e){
-            this.that.handleException(e);
-          }
-        }, $( "#report-viewport" )[0]);
+    	if($( "#report-viewport" ).length > 0) {
+          var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            that : this,
+            onSuccess : function(html){
+              this.that._displayReport(html);
+            },
+            onFailure : function(e){
+              this.that.handleException(e);
+            }
+          }, $( "#report-viewport" )[0]);
         
-        // Get the width of the reporting div, make sure to remove some pixels because of
-        // the side bar and some padding. convert px to pt
-        var widthPt = Math.round(($('#report-content').width() - 20) * 72 / 96);
-        var heightPt = Math.round($('#report-content').height() * 72 / 96);
+          // Get the width of the reporting div, make sure to remove some pixels because of
+          // the side bar and some padding. convert px to pt
+          var widthPt = Math.round(($('#report-content').width() - 20) * 72 / 96);
+          var heightPt = Math.round($('#report-content').height() * 72 / 96);
         
-        var configuration = {};
-        configuration.parameters = [];
-        configuration.parameters.push({'name' : 'category', 'value' : geoId});
-        configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
-        configuration.parameters.push({'name' : 'width', 'value' : widthPt});
-        configuration.parameters.push({'name' : 'height', 'value' : heightPt});
+          var configuration = {};
+          configuration.parameters = [];
+          configuration.parameters.push({'name' : 'category', 'value' : geoId});
+          configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
+          configuration.parameters.push({'name' : 'width', 'value' : widthPt});
+          configuration.parameters.push({'name' : 'height', 'value' : heightPt});
         
-        this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));        
+          this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));		
+    	}
       },
       
       _exportReport : function(geoId, criteria, format) {
@@ -3117,6 +3119,32 @@
         }
       },
       
+      _onClickSaveGlobalFilters : function(e) {
+        var that = this;
+          
+        // Validate there are no existing errors
+        var errorCount = $('.gdb-attr-filter.field-error').length
+          
+        if(errorCount > 0) {
+          var message = com.runwaysdk.Localize.localize("filter", "error");
+            
+          that._renderMessage(message);
+        }
+        else {
+          var criteria = this._reloadCriteria();
+          var conditions = this._getConditionsFromCriteria(criteria);          
+            
+          var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function() {
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+            }
+          });
+            
+          com.runwaysdk.geodashboard.Dashboard.applyGlobalConditions(clientRequest, this._dashboardId, conditions);
+        }
+      },
       /**
        * Callback for sorting legend items
        */
@@ -3199,6 +3227,7 @@
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
+        $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
         
         // Reporting events
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        

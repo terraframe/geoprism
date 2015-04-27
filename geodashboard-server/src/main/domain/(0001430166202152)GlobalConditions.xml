@@ -1,0 +1,18 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <mdMethod name="applyGlobalConditions" label="Apply global conditions" static="false" returnType="void">
+            <mdParameter order="0" description="Conditions" name="conditions" label="Conditions" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.Dashboard.applyGlobalConditions" type="com.runwaysdk.system.metadata.MdMethod" />
+    </delete>
+  </undoIt>
+</version>
