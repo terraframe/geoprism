@@ -573,20 +573,14 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 }
 .ui-datepicker .ui-datepicker-prev{left:0;}
 .ui-datepicker .ui-datepicker-next{right:0;}
-.ui-datepicker .ui-datepicker-prev span,
-.ui-datepicker .ui-datepicker-next span{
-	position:static;
-	width:7px;
-	height:11px;
-	margin:0;
-}
+
 /* This CSS screws up the x button on dialogs */
 /* .ui-widget-header .ui-icon{
   width:7px;
   height:11px;
   background:url(../images/sprite.png) no-repeat -87px 0;
 } */
-.ui-widget-header .ui-datepicker-next .ui-icon{background-position:-87px -27px;}
+
 .ui-datepicker table{
 	margin:0;
 	font-size:12px;
