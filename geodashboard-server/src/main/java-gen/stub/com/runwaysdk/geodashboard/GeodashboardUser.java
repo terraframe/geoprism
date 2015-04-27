@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +10,8 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -63,7 +66,14 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     this.apply();
 
     Roles[] roles = RoleView.getGeodashboardRoles();
-    List<String> list = Arrays.asList(roleIds);
+    Set<String> set = new HashSet<String>(Arrays.asList(roleIds));
+
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.configureUserRoles(set);
+    }
 
     UserDAOIF user = UserDAO.get(this.getId());
 
@@ -74,7 +84,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     {
       RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
 
-      if (list.contains(role.getId()))
+      if (set.contains(role.getId()))
       {
         roleDAO.assignMember(user);
       }
@@ -83,6 +93,20 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
         roleDAO.deassignMember(user);
       }
     }
+  }
+
+  public static Boolean hasAccess(String functionality)
+  {
+    boolean hasAccess = false;
+
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      hasAccess = configuration.hasAccess(functionality) || hasAccess;
+    }
+
+    return hasAccess;
   }
 
   public static GeodashboardUser getByUsername(String username)
