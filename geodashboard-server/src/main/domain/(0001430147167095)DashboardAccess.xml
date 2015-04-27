@@ -3,8 +3,8 @@
     <update>
       <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser">
         <create>
-          <mdMethod name="isRoleMemeber" label="isRoleMember" returnType="java.lang.Boolean" static="true">
-            <mdParameter name="roles" label="Roles" order="0" type="java.lang.String" />
+          <mdMethod name="hasAccess" label="hasAccess" returnType="java.lang.Boolean" static="true">
+            <mdParameter name="functionality" label="Functionality" order="0" type="java.lang.String" />
           </mdMethod>
         </create>
       </mdBusiness>

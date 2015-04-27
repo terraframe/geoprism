@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.dashboard;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.Dashboard;
@@ -36,4 +37,20 @@ public interface ConfigurationIF extends Reloadable
    * @return
    */
   public Collection<String> getDatabrowserTypes();
+
+  /**
+   * Filter the user roles. This method is called when a user is applied. It can be used to remove or add roles on roles
+   * assignment.
+   * 
+   * @param roleIds
+   */
+  public void configureUserRoles(Set<String> roleIds);
+
+  /**
+   * Check is the user has access to some system functionality
+   * 
+   * @param functionality
+   * @return
+   */
+  public boolean hasAccess(String functionality);
 }

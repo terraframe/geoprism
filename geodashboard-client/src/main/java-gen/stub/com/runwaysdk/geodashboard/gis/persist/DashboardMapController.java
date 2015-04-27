@@ -9,8 +9,10 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.geodashboard.AccessConstants;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
+import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
@@ -232,6 +234,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
      */
     req.setAttribute("conditions", activeDashboard.getConditionsJSON());
     req.setAttribute("hasReport", activeDashboard.hasReport());
+    req.setAttribute("hasAccess", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
 
     req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
 
