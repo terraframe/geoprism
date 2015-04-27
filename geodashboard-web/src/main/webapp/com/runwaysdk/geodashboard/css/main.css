@@ -573,7 +573,6 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 }
 .ui-datepicker .ui-datepicker-prev{left:0;}
 .ui-datepicker .ui-datepicker-next{right:0;}
-.ui-datepicker .ui-datepicker-prev span,
 
 /* This CSS screws up the x button on dialogs */
 /* .ui-widget-header .ui-icon{
