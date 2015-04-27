@@ -3,12 +3,15 @@
 # This script is run by the AWS Elastic Beanstalk installer
 
 # Install Oracle JDK
-rpm -Uvh jdk-6u45-linux-amd64.rpm
-alternatives --install /usr/bin/java java /usr/java/default/bin/java 3
-alternatives --set java /usr/java/default/bin/java
+rpm --erase --nodeps java-1.6.0-openjdk java-1.6.0-openjdk-devel
+rpm -Uvh .ebextensions/jdk-6u45-linux-amd64.rpm
+/usr/sbin/alternatives --install /usr/bin/java java /usr/java/default/bin/java 3
+/usr/sbin/alternatives --set java /usr/java/default/bin/java
+/usr/sbin/alternatives --install /usr/bin/java_sdk java_sdk /usr/java/default/bin/java 3
+/usr/sbin/alternatives --set java_sdk /usr/java/default/bin/java
 
 export TOMCAT_HOME=/usr/share/tomcat6 # This value is also hardcoded in server.xml
-export JAVA_HOME=/usr/lib/jvm/jre
+export JAVA_HOME=/usr/java/default/jre
 
 # Forward port 443 to 8443
 /sbin/iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
@@ -27,3 +30,10 @@ cp .ebextensions/server.xml $TOMCAT_HOME/conf/server.xml
 
 # Copy the geoserver war over
 cp .ebextensions/geoserver.war $TOMCAT_HOME/conf/geoserver.war
+
+# Copy Post Installation Script:
+# mkdir /opt/elasticbeanstalk/hooks/appdeploy/post
+cp .ebextensions/post_aws_eb_installer.sh /opt/elasticbeanstalk/hooks/appdeploy/post/02post_aws_eb_installer.sh
+chmod +x /opt/elasticbeanstalk/hooks/appdeploy/post/02post_aws_eb_installer.sh
+
+echo "aws_eb_installer script success"

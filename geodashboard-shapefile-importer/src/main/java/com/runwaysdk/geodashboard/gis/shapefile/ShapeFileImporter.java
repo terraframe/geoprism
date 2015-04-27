@@ -349,7 +349,14 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
     entity.getDisplayLabel().setValue(entityName);
     entity.setUniversal(universal);
     entity.setGeoId(geoId);
-    entity.apply();
+    try
+    {
+      entity.apply();
+    }
+    catch(Exception e)
+    {
+      throw new RuntimeException(e);
+    }
 
     if (isNew)
     {
