@@ -219,7 +219,7 @@
         {
           var label = job.getDescriptionMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('description', label, job ? job.getLocalizedValue() : "");
-          form.addEntry(entry);                  
+          form.addEntry(label, entry);                  
         }
         
         if(job.isCronExpressionWritable())
