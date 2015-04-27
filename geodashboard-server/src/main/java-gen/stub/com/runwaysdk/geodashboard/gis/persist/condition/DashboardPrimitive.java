@@ -55,4 +55,14 @@ public abstract class DashboardPrimitive extends DashboardPrimitiveBase implemen
     }
   }
 
+  @Override
+  protected void populate(DashboardCondition source)
+  {
+    super.populate(source);
+
+    DashboardPrimitive dSource = (DashboardPrimitive) source;
+
+    this.setComparisonValue(dSource.getComparisonValue());
+  }
+
 }

@@ -97,4 +97,10 @@ public class ClassifierCondition extends ClassifierConditionBase implements com.
     }
   }
 
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new ClassifierCondition();
+  }
+
 }

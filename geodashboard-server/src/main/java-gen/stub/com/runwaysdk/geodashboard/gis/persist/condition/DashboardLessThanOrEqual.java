@@ -51,4 +51,10 @@ public class DashboardLessThanOrEqual extends DashboardLessThanOrEqualBase imple
   {
     return OPERATION;
   }
+
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardLessThanOrEqual();
+  }
 }

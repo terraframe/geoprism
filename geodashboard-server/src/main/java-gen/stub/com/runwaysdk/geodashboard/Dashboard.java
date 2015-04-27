@@ -194,6 +194,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       layer.clone(map);
     }
 
+    // Clone the global conditions
+    DashboardCondition[] conditions = this.getConditions((GeodashboardUser) null);
+
+    for (DashboardCondition condition : conditions)
+    {
+      condition.clone(clone);
+    }
+
     return clone;
   }
 
@@ -503,7 +511,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-   @Override
+  @Override
   @Transaction
   public void applyGlobalConditions(DashboardCondition[] conditions)
   {

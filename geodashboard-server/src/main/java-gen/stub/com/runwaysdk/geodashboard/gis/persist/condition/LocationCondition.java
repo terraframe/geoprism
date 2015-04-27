@@ -53,7 +53,7 @@ public class LocationCondition extends LocationConditionBase implements com.runw
     }
   }
 
-//  @Override
+  // @Override
   public String getComparisonLabel()
   {
     GeoEntity entity = this.getComparisonValue();
@@ -94,6 +94,22 @@ public class LocationCondition extends LocationConditionBase implements com.runw
   public String getJSONKey()
   {
     return CONDITION_TYPE;
+  }
+
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new LocationCondition();
+  }
+
+  @Override
+  protected void populate(DashboardCondition source)
+  {
+    super.populate(source);
+
+    LocationCondition lSource = (LocationCondition) source;
+
+    this.setComparisonValue(lSource.getComparisonValue());
   }
 
 }

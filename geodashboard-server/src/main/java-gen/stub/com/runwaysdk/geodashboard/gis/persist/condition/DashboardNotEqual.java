@@ -58,4 +58,10 @@ public class DashboardNotEqual extends DashboardNotEqualBase implements Reloadab
     return OPERATION;
   }
 
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardNotEqual();
+  }
+
 }
