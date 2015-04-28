@@ -133,7 +133,10 @@ $(document).ready(function(){
 		    <!-- Clone dashboard button -->
 		    <c:if test="${hasAccess}">
 		      <span id="clone-dashboard" class="pull-left">
-                <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+<!--                 <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
+  		          <a href="#" class="ico-new-dashboard">enable</a>
+  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+  		     
   		      </span>
   		    </c:if>
 		    

@@ -2389,6 +2389,22 @@ span.select-area span.center {
 		margin: 0px 9px 0px 0px;
 	}
 	
+	.ico-new-dashboard {
+	  display: inline-block;
+	  vertical-align: middle;
+	  width: 12px;
+	  height: 12px;
+	  text-indent: -9999px;
+	  overflow: hidden;
+	  background: url(../images/small_plus_signs.png) no-repeat 0px 0;
+	}
+	
+	.ico-new-dashboard:hover,
+	.ico-new-dashboard:focus{
+		background-position:-15px 0;
+		outline:none;
+	}
+	
 	#dashboardMetadata {
 		z-index: 16;
 	}
