@@ -35,7 +35,7 @@
       connectionTimeout="20000"
       emptySessionPath="true"
       keyAlias="tomcat"
-      keystoreFile="/usr/share/tomcat6/conf/ideiq.ks"
+      keystoreFile="/usr/share/tomcat6/conf/geodashboard.ks"
       keystorePass="2v8hVW2rPFncN6m"
       port="8443"
       redirectPort="8443" 

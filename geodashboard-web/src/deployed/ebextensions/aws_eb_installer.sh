@@ -21,8 +21,8 @@ export JAVA_HOME=/usr/java/default/jre
 cp -R .ebextensions/tomcat-lib/* $TOMCAT_HOME/lib/
 
 # Add our security cert to the jvm
-$JAVA_HOME/bin/keytool -importcert -alias ideiq -file .ebextensions/ideiq.crt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
-cp .ebextensions/ideiq.ks $TOMCAT_HOME/conf/ideiq.ks
+$JAVA_HOME/bin/keytool -importcert -alias geodashboard -file .ebextensions/geodashboard.crt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
+cp .ebextensions/geodashboard.ks $TOMCAT_HOME/conf/geodashboard.ks
 # sed -i "s/{TOMCAT_HOME}/$TOMCAT_HOME/g" .ebextensions/server.xml
 
 # Copy the server.xml config file
