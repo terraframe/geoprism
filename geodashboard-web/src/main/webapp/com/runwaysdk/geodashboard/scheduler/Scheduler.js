@@ -207,11 +207,11 @@
           row.removeClassName("row_selected");
         });
 
-        var form = this.getFactory().newForm();
+        var form = new com.runwaysdk.geodashboard.Form();
                     
         if(job.isDescriptionWritable())
         {
-          var descriptionInput = this.getFactory().newFormControl('textarea', 'description', {attributes:{type:'text', id:'description'}});
+          var descriptionInput = com.runwaysdk.geodashboard.FormEntry.newInput('textarea', 'description', {attributes:{type:'text', id:'description'}});
           descriptionInput.setValue(job.getDescription().getLocalizedValue());
           form.addFormEntry(job.getDescriptionMd(), descriptionInput);          
         }
