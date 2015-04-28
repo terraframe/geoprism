@@ -29,7 +29,7 @@
 
 <!-- Scheduler CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/scheduler/Scheduler.css" useRandomParam="false"/>  
+<jwr:style src="/bundles/scheduler.css" useRandomParam="false"/> 
 
 <!-- Scheduler Javascript -->
 <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
