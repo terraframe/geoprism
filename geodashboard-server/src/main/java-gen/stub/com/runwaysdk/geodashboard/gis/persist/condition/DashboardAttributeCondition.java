@@ -26,4 +26,11 @@ public abstract class DashboardAttributeCondition extends DashboardAttributeCond
     return this.getDefiningMdAttributeId();
   }
 
+  @Override
+  protected void populate(DashboardCondition source)
+  {
+    super.populate(source);
+
+    this.setDefiningMdAttribute( ( (DashboardAttributeCondition) source ).getDefiningMdAttribute());
+  }
 }

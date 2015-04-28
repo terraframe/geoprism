@@ -50,4 +50,10 @@ public class DashboardLessThan extends DashboardLessThanBase implements com.runw
   {
     return OPERATION;
   }
+
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardLessThan();
+  }
 }

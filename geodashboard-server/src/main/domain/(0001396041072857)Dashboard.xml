@@ -63,7 +63,7 @@
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true" generateController="false">
         <attributes>
-          <reference name="geodashboardUser" required="true" label="User" description="User of the condition" type="com.runwaysdk.geodashboard.GeodashboardUser" />
+          <reference name="geodashboardUser" required="false" label="User" description="User of the condition" type="com.runwaysdk.geodashboard.GeodashboardUser" />
           <reference name="dashboard" required="true" label="Dashboard" description="Dashboard of the condition" type="com.runwaysdk.geodashboard.Dashboard" />
         </attributes>
       </mdBusiness>

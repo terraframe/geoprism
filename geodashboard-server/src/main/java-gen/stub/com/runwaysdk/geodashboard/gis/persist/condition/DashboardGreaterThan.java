@@ -52,4 +52,10 @@ public class DashboardGreaterThan extends DashboardGreaterThanBase implements co
   {
     return OPERATION;
   }
+
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardGreaterThan();
+  }
 }

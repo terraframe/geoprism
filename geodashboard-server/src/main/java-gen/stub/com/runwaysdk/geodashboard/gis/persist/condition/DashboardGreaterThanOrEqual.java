@@ -50,4 +50,10 @@ public class DashboardGreaterThanOrEqual extends DashboardGreaterThanOrEqualBase
   {
     return OPERATION;
   }
+
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardGreaterThanOrEqual();
+  }
 }

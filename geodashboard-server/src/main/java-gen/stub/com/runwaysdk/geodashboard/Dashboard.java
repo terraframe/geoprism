@@ -194,6 +194,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       layer.clone(map);
     }
 
+    // Clone the global conditions
+    DashboardCondition[] conditions = this.getConditions((GeodashboardUser) null);
+
+    for (DashboardCondition condition : conditions)
+    {
+      condition.clone(clone);
+    }
+
     return clone;
   }
 
@@ -431,9 +439,32 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public DashboardCondition[] getConditions()
   {
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    DashboardCondition[] conditions = this.getConditions(user);
+
+    // There are no user specific conditions, return the global conditions
+    if (conditions.length == 0)
+    {
+      conditions = this.getConditions((GeodashboardUser) null);
+    }
+
+    return conditions;
+  }
+
+  private DashboardCondition[] getConditions(GeodashboardUser user)
+  {
     DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(this));
-    query.AND(query.getGeodashboardUser().EQ(GeodashboardUser.getCurrentUser()));
+
+    if (user != null)
+    {
+      query.AND(query.getGeodashboardUser().EQ(user));
+    }
+    else
+    {
+      query.AND(query.getGeodashboardUser().EQ((String) null));
+    }
 
     OIterator<? extends DashboardCondition> iterator = null;
 
@@ -463,9 +494,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     /*
      * First delete any conditions which exist
      */
-    this.deleteConditions();
-
     GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    DashboardCondition[] existing = this.getConditions(user);
+
+    for (DashboardCondition condition : existing)
+    {
+      condition.delete();
+    }
 
     for (DashboardCondition condition : conditions)
     {
@@ -475,13 +511,25 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  public void deleteConditions()
+  @Override
+  @Transaction
+  public void applyGlobalConditions(DashboardCondition[] conditions)
   {
-    DashboardCondition[] conditions = this.getConditions();
+    /*
+     * First delete any conditions which exist
+     */
+    DashboardCondition[] existing = this.getConditions((GeodashboardUser) null);
+
+    for (DashboardCondition condition : existing)
+    {
+      condition.delete();
+    }
 
     for (DashboardCondition condition : conditions)
     {
-      condition.delete();
+      condition.setDashboard(this);
+      condition.setGeodashboardUser(null);
+      condition.apply();
     }
   }
 

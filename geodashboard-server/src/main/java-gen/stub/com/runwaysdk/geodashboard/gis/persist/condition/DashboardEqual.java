@@ -63,4 +63,10 @@ public class DashboardEqual extends DashboardEqualBase implements com.runwaysdk.
     return OPERATION;
   }
 
+  @Override
+  protected DashboardCondition newInstance()
+  {
+    return new DashboardEqual();
+  }
+
 }
