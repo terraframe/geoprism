@@ -3348,6 +3348,9 @@
             if (jcf != null && jcf.customForms != null) {
               jcf.customForms.refreshElement($('#filter-opts-' + mdAttributeId).get(0));
             }
+            
+            // Open the filter input panel if a saved value is set for this filter block
+            $(this).parent().parent().parent().parent().parent().parent().find(".opener-link").click();
           }          
         });
         
@@ -3383,6 +3386,9 @@
                 var condition = conditions["ATTRIBUTE_CONDITION"][mdAttributeId][0];
                 
                 tree.setCheckedTerms(JSON.parse(condition.value));
+                
+                // Open the filter input panel if a saved value is set for this filter block
+                $("#" + mdAttributeId).parent().parent().parent().parent().parent().find(".opener-link").click();
               }          
               
               that._filterTrees.push({
@@ -3474,6 +3480,7 @@
         // Load saved date values
         $('.filter-date').each(function(){
           var mdAttributeId = $(this).data().mdattributeid;
+          var opened = false;
           
           if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
             var array = conditions["ATTRIBUTE_CONDITION"][mdAttributeId];
@@ -3495,6 +3502,12 @@
                 
                 $(this).datepicker( "setDate", date );
               }
+              
+              // Open the filter input panel if a saved value is set for this filter block
+              if(!opened){
+            	  $(this).parent().parent().parent().parent().parent().parent().parent().parent().find(".opener-link").click();
+            	  opened = true;
+              }
             }            
           }                
         });        
@@ -3502,6 +3515,7 @@
         // Load saved number values
         $('.filter-number').each(function(){
           var mdAttributeId = $(this).data().mdattributeid;
+          var opened = false;
           
           if(conditions["ATTRIBUTE_CONDITION"] != null && conditions["ATTRIBUTE_CONDITION"][mdAttributeId] != null) {
             var array = conditions["ATTRIBUTE_CONDITION"][mdAttributeId];
@@ -3516,6 +3530,12 @@
               var element = $('#filter-opts-' + mdAttributeId).get(0);
               
               jcf.customForms.refreshElement(element);
+            }
+            
+            // Open the filter input panel if a saved value is set for this filter block
+            if(!opened){
+              $(this).parent().parent().parent().parent().parent().parent().find(".opener-link").click();
+          	  opened = true;
             }
           }                
         }); 

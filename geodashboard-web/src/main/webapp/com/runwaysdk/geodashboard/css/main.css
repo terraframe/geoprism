@@ -1412,6 +1412,8 @@ a.blueactive,
 	background:rgba(255,255,255,0.05);
 	padding:0;
 	margin:2px 0 0;
+	overflow-y: auto;
+    max-height: 350px;
 }
 .sales-accortion .panel-collapse .panel-title{
 	font-weight:normal;
@@ -1433,7 +1435,7 @@ a.blueactive,
 	float:left;
 	padding:7px 5px 6px 17px;
 	color:#fff;
-	width:235px;
+/* 	width:235px; */
 	position:relative;
 }
 .sales-accortion .panel-collapse .panel-title .opener-link:hover,
@@ -2387,6 +2389,22 @@ span.select-area span.center {
 		margin: 0px 9px 0px 0px;
 	}
 	
+	.ico-new-dashboard {
+	  display: inline-block;
+	  vertical-align: middle;
+	  width: 12px;
+	  height: 12px;
+	  text-indent: -9999px;
+	  overflow: hidden;
+	  background: url(../images/small_plus_signs.png) no-repeat 0px 0;
+	}
+	
+	.ico-new-dashboard:hover,
+	.ico-new-dashboard:focus{
+		background-position:-15px 0;
+		outline:none;
+	}
+	
 	#dashboardMetadata {
 		z-index: 16;
 	}
@@ -2646,7 +2664,7 @@ span.select-area span.center {
 	}
 	
 	#collapse002 .panel-body{
-		width: 300px;
+		max-width: 300px;
 	}
 
 
@@ -2667,6 +2685,9 @@ div.alert.alertbox {
 #filter-buttons {
 	position: absolute;
 	bottom: 20px;
+/* 	display: block; */
+/*   	bottom: 10px; */
+/*   	position: fixed; */
 }
 
 a.filters-button {
