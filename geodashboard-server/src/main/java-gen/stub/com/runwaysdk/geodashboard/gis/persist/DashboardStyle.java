@@ -25,6 +25,7 @@ import com.runwaysdk.system.metadata.MdAttributeDouble;
 import com.runwaysdk.system.metadata.MdAttributeFloat;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeLong;
+import com.runwaysdk.system.metadata.MdAttributeMoment;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -119,6 +120,13 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       // // We are currently not supporting distribution but want to leave this hear for future implementation
       // q.OR(q.getEnumName().EQ(AllAggregationType.DISTRIBUTION.name()));
       // q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+    }
+    else if(mdAttrConcrete instanceof MdAttributeMoment) 
+    {
+      QueryFactory f = new QueryFactory();
+      q = new AggregationTypeQuery(f);
+      q.OR(q.getEnumName().EQ(AllAggregationType.MIN.name()));
+      q.OR(q.getEnumName().EQ(AllAggregationType.MAX.name()));
     }
     else
     {
