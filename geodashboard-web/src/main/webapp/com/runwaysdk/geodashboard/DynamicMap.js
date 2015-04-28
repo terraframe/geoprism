@@ -372,6 +372,8 @@
 	          view.setMdAttribute(layer.mdAttributeId);
 	          view.setAttributeLabel(layer.attributeLabel);
 	          
+	          view.layerType = layer.layerType;
+	          
 	          view.style = layer.styles[0];   
     	  }
     	  else if(layer.layerType === "REFERENCELAYER"){
@@ -601,15 +603,16 @@
        * @featureStrategy - strategy descriptor used to define the strategy for mapping layers (BASIC, BUBBLE, GRADIENT, CATEGORY)
        * 
        */
-      _Legend : function(layerId, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy, showFeatureLabels) {
-        this.legendId = "legend_" + layerId;
+      _Legend : function(layer, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy, showFeatureLabels) {
+    	this.layerId = layer.getLayerId();
+    	this.legendId = "legend_" + this.layerId;
         this.displayName = displayName;
         this.geoserverName = geoserverName;
         this.legendXPosition = legendXPosition;
         this.legendYPosition = legendYPosition;
         this.groupedInLegend = groupedInLegend;
         this.featureStrategy = featureStrategy;
-        this.showFeatureLabels = showFeatureLabels
+        this.showFeatureLabels = showFeatureLabels;
         this.create = function(){
             var src = window.location.origin; 
             src += '/geoserver/wms?REQUEST=GetLegendGraphic' + '&amp;';
@@ -624,16 +627,21 @@
             src += '&amp;';
             src += 'LAYER='+ this.geoserverName;
             
-              if(this.groupedInLegend){
-                  // Remove any old grouped legend items before creating new updated items
-                  $(".legend-item[data-parentlayerid='"+layerId+"']").remove();
-                  
-                  var html = '';
-                  html += '<li class="legend-item legend-grouped" data-parentLayerId="'+layerId+'">';
-                  html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
-                  html += '</li>';
+            if(this.groupedInLegend){
+                // Remove any old grouped legend items before creating new updated items
+                $(".legend-item[data-parentlayerid='"+this.layerId+"']").remove();
+                
+                var html = '';
+                if(layer.layerType === "REFERENCELAYER"){
+                    html += '<li class="legend-item legend-grouped" data-parentLayerId="'+this.layerId+'" data-parentLayerType="'+layer.layerType+'" data-parentUniversalId="'+layer.universalId+'">';
+                }
+                else{
+              	  html += '<li class="legend-item legend-grouped" data-parentLayerId="'+this.layerId+'" data-parentLayerType="'+layer.layerType+'">';
+                }
+                html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
+                html += '</li>';
               
-                  $("#legend-list-group").append(html);  
+                $("#legend-list-group").append(html);  
               }
               else
               {
@@ -641,9 +649,20 @@
                   $("#"+this.legendId).remove();
                   
                   var html = '';              
-                  html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ layerId +'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
+                  if(layer.layerType === "REFERENCELAYER"){
+                      html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ this.layerId +'" data-parentLayerType="'+layer.layerType+'" data-parentUniversalid="'+layer.universalId+'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
+                  }
+                  else{
+                      html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ this.layerId +'" data-parentLayerType="'+layer.layerType+'" style="top:'+ this.legendYPosition +'px; left:'+ this.legendXPosition +'px;">';
+                  }
+                  
                   html += '<div id="legend-items-container"><ul id="legend-list">';
-                   html += '<li class="legend-item" data-parentLayerId="'+layerId+'">';
+                   if(layer.layerType === "REFERENCELAYER"){
+                       html += '<li class="legend-item" data-parentLayerId="'+this.layerId+'" data-parentLayerType="'+layer.layerType+'" data-parentUniversalId="'+layer.universalId+'">';
+                   }
+                   else{
+                 	  html += '<li class="legend-item" data-parentLayerId="'+this.layerId+'" data-parentLayerType="'+layer.layerType+'">';
+                   }
                   html += '<img class="legend-image" src="'+ src +'" alt="">'+ this.displayName;
                   html += '</li>';
                   html += '</ul></div></div>';
@@ -661,7 +680,7 @@
           });
           
           if(this.groupedInLegend){
-            $('*[data-parentlayerid="'+layerId+'"]').show();
+            $('*[data-parentlayerid="'+this.layerId+'"]').show();
           }
           else{
             $("#"+this.legendId).show();
@@ -669,7 +688,7 @@
         };
         this.hide = function(){
           if(this.groupedInLegend){
-            $('*[data-parentlayerid="'+layerId+'"]').hide();
+            $('*[data-parentlayerid="'+this.layerId+'"]').hide();
           }
           else{
             $("#"+this.legendId).hide();
@@ -683,9 +702,14 @@
             var liXPosition = legendXPosition + 50;
               
             html = '';
-            html += '<div class="info-box legend-container legend-snapable" id="'+this.legendId+'" data-parentLayerId="'+layerId+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
-              html += '<div id="legend-items-container"><ul id="legend-list">';
-              html += '</ul></div></div>';
+            if(layer.layerType === "REFERENCELAYER"){
+                html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ this.layerId +'" data-parentLayerType="'+layer.layerType+'" data-parentUniversalid="'+layer.universalId+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
+            }
+            else{
+                html += '<div class="info-box legend-container legend-snapable" id="'+ this.legendId +'" data-parentLayerId="'+ this.layerId +'" data-parentLayerType="'+layer.layerType+'" style="top:'+liYPosition+'px; left:'+liXPosition+'px;">';
+            }
+            html += '<div id="legend-items-container"><ul id="legend-list">';
+            html += '</ul></div></div>';
               
               $(".pageContent").append(html);
               $("#"+this.legendId).children().children().append(li);
@@ -723,6 +747,12 @@
           if(displayInLegend)
           {
               var layerId = layer.getLayerId();
+        	  if(layer.layerType === "REFERENCELAYER"){
+        		  layerId = layer.universalId;
+        	  }
+        	  else{
+        		  layerId = layer.getLayerId();
+        	  }
               var displayName = layer.getLayerName() || "N/A";
               var geoserverName = this._workspace + ":" + layer.getViewName();
               var legendXPosition = layer.getLegendXPosition();
@@ -745,7 +775,7 @@
               }
               
               var legendObj = new this._Legend(
-                  layerId, 
+                  layer, 
                   displayName, 
                   geoserverName, 
                   legendXPosition, 
@@ -820,28 +850,21 @@
                 var groupedInLegend = true;
                 var relatedLayerId = $(ui.draggable).data('parentlayerid');
                 var parentLayer;
-                if(that._layerCache.get(relatedLayerId)){
-                	parentLayer = that._layerCache.get(relatedLayerId);
-                }
-                else if (that._refLayerCache.get(relatedLayerId)){
-                	parentLayer = that._refLayerCache.get(relatedLayerId);
-                }
+              	if($(ui.draggable).data("parentlayertype") === "THEMATICLAYER"){
+              		parentLayer = that._layerCache.get(relatedLayerId);
+            	}
+            	else if($(ui.draggable).data("parentlayertype") === "REFERENCELAYER"){
+            		parentLayer = that._refLayerCache.get($(ui.draggable).data("parentuniversalid"));
+            	}
                 var x = 0;
                 var y = 0;
+                parentLayer.setLegendXPosition(x);
+                parentLayer.setLegendYPosition(y);
+                parentLayer.setGroupedInLegend(groupedInLegend);
                 
                 var clientRequest = new Mojo.ClientRequest({
                   onSuccess : function() {
-                    // Update the layer object in the layer cache with the new legend position
-                    var relatedLayer; 
-                    if(that._layerCache.get(relatedLayerId)){
-                    	relatedLayer = that._layerCache.get(relatedLayerId);
-                    }
-                    else if (that._refLayerCache.get(relatedLayerId)){
-                    	relatedLayer = that._refLayerCache.get(relatedLayerId);
-                    }
-                    relatedLayer.setLegendXPosition(x);
-                    relatedLayer.setLegendYPosition(y);
-                    relatedLayer.setGroupedInLegend(groupedInLegend);
+                	  // No action needed
                   },
                   onFailure : function(e) {
                     that.handleException(e);
@@ -865,11 +888,11 @@
             
             // prevent legend containers from being created twice. 
             if($("#"+legendId).length === 0){
-            	if(that._layerCache.get(parentLayerId)){
+            	if(li.data("parentlayertype") === "THEMATICLAYER"){
             		parentLayer = that._layerCache.get(parentLayerId);
             	}
-            	else if(that._refLayerCache.get(parentLayerId)){
-            		parentLayer = that._refLayerCache.get(parentLayerId);
+            	else if(li.data("parentlayertype") === "REFERENCELAYER"){
+            		parentLayer = that._refLayerCache.get(li.data("parentuniversalid"));
             	}
                 parentLayer.layerLegend.unGroup(li);
                 
@@ -1533,9 +1556,11 @@
        * @id - layer id
        */
       _removeLayer : function(el, id) {
-	    	var universalId = el.data("universalid");
-	    	  
 	    	if(this._layerCache.get(id) !== null){
+	    		
+	        	// Close any info window popups if they exist
+	        	this._map.closePopup();
+	        	
 	    		var toRemove = this._layerCache.get(id);
 	    		// remove layer from our cache
 	            this._layerCache.remove(id);
@@ -1617,6 +1642,9 @@
               }
               else{
             	  that._drawUserLayersHTML();
+            	  
+              	  // Close any info window popups if they exist
+              	  that._map.closePopup();
               }
               
               // Update leaflet
@@ -1924,6 +1952,10 @@
        * @e
        */
       _toggleOverlayLayer : function(e){
+    	  
+    	// Close any info window popups if they exist
+    	this._map.closePopup();
+    	  
         var cbox = e.getCheckBox();
         var checked = cbox.isChecked();
         var layer = this._layerCache.get(cbox.getData().runwayId);
@@ -2840,19 +2872,22 @@
           groupedInLegend = false;
         }
         
+        // Update the layer object in the layer cache with the new legend position
+        var relatedLayer;
+      	if($(target).data("parentlayertype") === "THEMATICLAYER"){
+      		relatedLayer = that._layerCache.get(relatedLayerId);
+    	}
+    	else if($(target).data("parentlayertype") === "REFERENCELAYER"){
+    		relatedLayer = that._refLayerCache.get($(target).data("parentuniversalid"));
+    	}
+      	
+        relatedLayer.setLegendXPosition(x);
+        relatedLayer.setLegendYPosition(y);
+        relatedLayer.setGroupedInLegend(groupedInLegend);
+        
         var clientRequest = new Mojo.ClientRequest({
           onSuccess : function() {
-            // Update the layer object in the layer cache with the new legend position
-            var relatedLayer;
-            if(that._layerCache.get(relatedLayerId)){
-            	relatedLayer = that._layerCache.get(relatedLayerId);
-            }
-            else if(that._refLayerCache.get(relatedLayerId)){
-            	relatedLayer = that._refLayerCache.get(relatedLayerId);
-            }
-            relatedLayer.setLegendXPosition(x);
-            relatedLayer.setLegendYPosition(y);
-            relatedLayer.setGroupedInLegend(groupedInLegend);
+        	// No action needed
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -3051,6 +3086,9 @@
       
       _onClickApplyFilters : function(e) {
         var that = this;
+        
+        // Close any info window popups if they exist
+        that._map.closePopup();
         
         // Validate there are no existing errors
         var errorCount = $('.gdb-attr-filter.field-error').length
