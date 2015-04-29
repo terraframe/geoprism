@@ -2690,6 +2690,10 @@ div.alert.alertbox {
 /*   	position: fixed; */
 }
 
+#filter-buttons div {
+	text-align: center;
+}
+
 a.filters-button {
 	padding-left: 10px;
 	padding-right: 10px;
