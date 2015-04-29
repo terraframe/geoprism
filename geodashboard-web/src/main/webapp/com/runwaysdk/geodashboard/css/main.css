@@ -2717,6 +2717,10 @@ div.alert.alertbox {
 /*   	position: fixed; */
 }
 
+#filter-buttons div {
+	text-align: center;
+}
+
 #global-filters-container{
 	text-align: center;
 }
