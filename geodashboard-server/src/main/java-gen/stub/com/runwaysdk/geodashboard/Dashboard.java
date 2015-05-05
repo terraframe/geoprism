@@ -71,7 +71,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static DashboardQuery getSortedDashboards()
   {
-    if (!Dashboard.hasAccess(AccessConstants.ADMIN))
+    if (!GeodashboardUser.hasAccess(AccessConstants.ADMIN))
     {
       GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
 
@@ -622,7 +622,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     if (!access)
     {
-      return Dashboard.hasAccess(AccessConstants.ADMIN);
+      return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
     }
 
     return true;

@@ -43,7 +43,7 @@ public class BlockQueryResultSet implements IResultSet
     this.criteria = criteria;
     this.aggregation = aggregation;
 
-    this.pageSize = -1;
+    this.pageSize = 100;
   }
 
   private synchronized ComponentQueryResultSet getQuery()
@@ -51,7 +51,6 @@ public class BlockQueryResultSet implements IResultSet
     if (this.query == null)
     {
       this.maxPage = ReportItemDTO.getPageCount(this.request, this.queryId, this.category, this.criteria, this.aggregation, this.pageSize);
-      this.maxPage = 0;
 
       this.nextQuery();
     }

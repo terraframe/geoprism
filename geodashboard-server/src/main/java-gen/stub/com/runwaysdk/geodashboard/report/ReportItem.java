@@ -822,7 +822,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
       long count = query.getCount();
 
-      return new Integer((int) Math.ceil(count / pageSize));
+      return ( (int) count / pageSize ) + 1;
     }
 
     return 1;
