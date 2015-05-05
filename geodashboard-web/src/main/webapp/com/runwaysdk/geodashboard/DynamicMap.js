@@ -1085,57 +1085,64 @@
           if(layer.layerType !== "REFERENCEJSON"){
 	          if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
 	            var viewName = layer.getViewName();
-	            var displayName = layer.getLayerName() || "N/A";
 	            var geoserverName = this._workspace + ":" + viewName;
-	              
-	            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
+	            
+	              var mapBounds = this._map.getBounds();
+	              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+	              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
 	                layers: geoserverName,
 	                format: 'image/png',
 	                transparent: true,
+	                tiled: true,
+	                tileSize: 256,
+	                tilesorigin: mapSWOrigin,
 	                styles: layer.getSldName() || "" 
 	              });
-	            
-	            this._map.addLayer(leafletLayer);
-	                     
-	            layer.leafletLayer = leafletLayer;
+	          
+	              this._map.addLayer(leafletLayer);
+	              layer.leafletLayer = leafletLayer;
 	          }
           }
         }
         
+        //
         // Add thematic layers to leaflet map
+        //
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          
+          var viewName = layer.getViewName();
+          var geoserverName = this._workspace + ":" + viewName;
           if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
-            var viewName = layer.getViewName();
-            var displayName = layer.getLayerName() || "N/A";
-            var geoserverName = this._workspace + ":" + viewName;
-              
-            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
-                layers: geoserverName,
-                format: 'image/png',
-                transparent: true,
-                styles: layer.getSldName() || "" 
-              });
-            
-            // This tiling format (tileLayer) is the preferred way to render wms due to performance gains. 
-            // However, since bubbles are clipped by the differences between tiles we must render layers as a single tile. 
-            // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
-//            var mapBounds = this._map.getBounds();
-//            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-//            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-//              layers: geoserverName,
-//              format: 'image/png',
-//              transparent: true,
-//              tiled: true,
-//              tileSize: 256,
-//              tilesorigin: mapSWOrigin,
-//              styles: layer.getSldName() || "" 
-//            });
-            
-            this._map.addLayer(leafletLayer);
-                     
-            layer.leafletLayer = leafletLayer;
+	          if(layer.getFeatureStrategy() === "BUBBLE"){
+		            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
+		                layers: geoserverName,
+		                format: 'image/png',
+		                transparent: true,
+		                styles: layer.getSldName() || "" 
+		              });
+	            
+		            this._map.addLayer(leafletLayer);
+		            layer.leafletLayer = leafletLayer;
+	          }
+	          else{
+	              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains. 
+	              // However, since bubbles are clipped by the differences between tiles we must render bubble layers as a single tile. 
+	              // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
+	              var mapBounds = this._map.getBounds();
+	              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+	              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+	                layers: geoserverName,
+	                format: 'image/png',
+	                transparent: true,
+	                tiled: true,
+	                tileSize: 256,
+	                tilesorigin: mapSWOrigin,
+	                styles: layer.getSldName() || "" 
+	              });
+	          
+	              this._map.addLayer(leafletLayer);
+	              layer.leafletLayer = leafletLayer;
+		      }
           }
         }
       },

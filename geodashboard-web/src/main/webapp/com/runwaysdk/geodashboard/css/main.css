@@ -1413,7 +1413,7 @@ a.blueactive,
 	padding:0;
 	margin:2px 0 0;
 	overflow-y: auto;
-    max-height: 350px;
+    max-height: 500px;
 }
 .sales-accortion .panel-collapse .panel-title{
 	font-weight:normal;
@@ -2658,6 +2658,14 @@ span.select-area span.center {
 		width: 300px;
 	}
 	
+	#collapse000 {
+	  overflow-y: hidden;
+	}
+	
+	#collapse001 {
+	  overflow-y: hidden;
+	}
+	
 	#collapse002 {
 		overflow: auto;
 	    max-height: 200px;
@@ -2666,8 +2674,27 @@ span.select-area span.center {
 	#collapse002 .panel-body{
 		max-width: 300px;
 	}
-
-
+	
+	#collapse003 {
+	  overflow-y: hidden;
+	}
+	
+	#collapse004 {
+	  overflow-y: hidden;
+	}
+	
+	#collapse005 {
+	  overflow-y: hidden;
+	}
+	
+	#collapse006 {
+	  overflow-y: hidden;
+	}
+	
+	#collapse007 {
+	  overflow-y: hidden;
+	}
+	
 .ui-autocomplete {
 	z-index: 999999 !important;
 }
@@ -2691,6 +2718,10 @@ div.alert.alertbox {
 }
 
 #filter-buttons div {
+	text-align: center;
+}
+
+#global-filters-container{
 	text-align: center;
 }
 
