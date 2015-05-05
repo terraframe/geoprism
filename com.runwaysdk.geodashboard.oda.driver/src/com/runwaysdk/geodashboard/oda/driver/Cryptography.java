@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard.oda.driver.ui.profile;
+package com.runwaysdk.geodashboard.oda.driver;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.eclipse.emf.ecore.xml.type.internal.DataValue.Base64;
+import com.runwaysdk.util.Base64;
 
 public class Cryptography
 {
@@ -53,7 +53,7 @@ public class Cryptography
 
     byte[] encrypted = cipher.doFinal(this.convertToByteArray(value));
 
-    String encode = Base64.encode(encrypted);
+    String encode = Base64.encodeToString(encrypted, false);
     return encode;
   }
 

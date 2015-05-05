@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -105137317)
+@com.runwaysdk.business.ClassSignature(hash = 252440793)
 public abstract class DashboardPrimitiveDTOBase extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive";
-  private static final long serialVersionUID = -105137317;
+  private static final long serialVersionUID = 252440793;
   
   protected DashboardPrimitiveDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -60,9 +60,9 @@ public abstract class DashboardPrimitiveDTOBase extends com.runwaysdk.geodashboa
     return isModified(COMPARISONVALUE);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getComparisonValueMd()
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getComparisonValueMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(COMPARISONVALUE).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(COMPARISONVALUE).getAttributeMdDTO();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitiveDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

@@ -803,9 +803,29 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
-  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation)
+  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation, Integer pageSize, Integer pageNumber)
   {
-    return ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+
+    if (pageSize != null && pageSize > 0 && pageNumber != null)
+    {
+      query.restrictRows(pageSize, pageNumber);
+    }
+
+    return query;
+  }
+
+  public static Integer getPageCount(String queryId, String category, String criteria, String aggregation, Integer pageSize)
+  {
+    if (pageSize != null && pageSize > 0)
+    {
+      ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+      long count = query.getCount();
+
+      return new Integer((int) Math.ceil(count / pageSize));
+    }
+
+    return 1;
   }
 
   public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria, String aggregation)

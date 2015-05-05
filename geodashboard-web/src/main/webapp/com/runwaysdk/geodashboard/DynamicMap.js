@@ -3309,7 +3309,7 @@
         
         // Javascript to prevent input of non-number values in a number field
         $('.numbers-only').keyup(function () {
-          if (!that._validateNumeric(this.value)) {            
+          if (that._validateNumeric(this.value)) {            
             $(this).addClass('field-error');
           }
           else {            
@@ -3434,7 +3434,7 @@
               }
             });
               
-            com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, request.term, 10);
+            com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, that._dashboardId, request.term, 10);
           },
           select: function(event, ui) {
             $('#filter-geo-hidden' ).val(ui.item.id);

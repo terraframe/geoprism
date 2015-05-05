@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = -2104714789)
+@com.runwaysdk.business.ClassSignature(hash = 1774846553)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,7 @@ public abstract class DashboardPrimitiveBase extends com.runwaysdk.geodashboard.
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive";
   public static java.lang.String COMPARISONVALUE = "comparisonValue";
-  private static final long serialVersionUID = -2104714789;
+  private static final long serialVersionUID = 1774846553;
   
   public DashboardPrimitiveBase()
   {
@@ -29,10 +29,10 @@ public abstract class DashboardPrimitiveBase extends com.runwaysdk.geodashboard.
     this.validateAttribute(COMPARISONVALUE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getComparisonValueMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getComparisonValueMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive.CLASS);
-    return mdClassIF.definesAttribute(COMPARISONVALUE);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(COMPARISONVALUE);
   }
   
   public void setComparisonValue(String value)

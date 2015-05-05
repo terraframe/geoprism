@@ -266,8 +266,8 @@
         <attributes>
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
           <boolean name="bubbleContinuousSize" label="Continuous Size" required="false" defaultValue="true" />
-          <integer name="pointMinSize" label="Min" required="true" defaultValue="1" rejectNegative="true" />
-          <integer name="pointMaxSize" label="Max" required="true" defaultValue="10" rejectNegative="true" />
+          <integer name="pointMinSize" label="Min" required="true" defaultValue="20" rejectNegative="true" />
+          <integer name="pointMaxSize" label="Max" required="true" defaultValue="50" rejectNegative="true" />
           <integer name="pointFixedSize" label="Fixed Radius" required="true" defaultValue="5" rejectNegative="true" />
           <boolean name="pointFixed" label="Fixed Point Size" required="true" defaultValue="false" />
           <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />

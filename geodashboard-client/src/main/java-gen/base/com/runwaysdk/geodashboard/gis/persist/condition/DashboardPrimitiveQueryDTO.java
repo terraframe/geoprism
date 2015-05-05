@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 738404068)
+@com.runwaysdk.business.ClassSignature(hash = 95400880)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist.condition;
 public class DashboardPrimitiveQueryDTO extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 738404068;
+private static final long serialVersionUID = 95400880;
 
   protected DashboardPrimitiveQueryDTO(String type)
   {

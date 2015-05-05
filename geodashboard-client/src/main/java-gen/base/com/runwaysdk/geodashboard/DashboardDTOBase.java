@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1652213822)
+@com.runwaysdk.business.ClassSignature(hash = 1353945332)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1652213822;
+  private static final long serialVersionUID = 1353945332;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -30,6 +30,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARDROLE = "dashboardRole";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String FILTERDATE = "filterDate";
@@ -154,6 +155,55 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.RolesDTO getDashboardRole()
+  {
+    if(getValue(DASHBOARDROLE) == null || getValue(DASHBOARDROLE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.RolesDTO.get(getRequest(), getValue(DASHBOARDROLE));
+    }
+  }
+  
+  public String getDashboardRoleId()
+  {
+    return getValue(DASHBOARDROLE);
+  }
+  
+  public void setDashboardRole(com.runwaysdk.system.RolesDTO value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARDROLE, "");
+    }
+    else
+    {
+      setValue(DASHBOARDROLE, value.getId());
+    }
+  }
+  
+  public boolean isDashboardRoleWritable()
+  {
+    return isWritable(DASHBOARDROLE);
+  }
+  
+  public boolean isDashboardRoleReadable()
+  {
+    return isReadable(DASHBOARDROLE);
+  }
+  
+  public boolean isDashboardRoleModified()
+  {
+    return isModified(DASHBOARDROLE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardRoleMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARDROLE).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.DashboardDisplayLabelDTO getDisplayLabel()
@@ -757,10 +807,18 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getGeoEntitySuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String text, java.lang.Integer limit)
+  public final com.runwaysdk.business.ValueQueryDTO getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.Integer"};
     Object[] _parameters = new Object[]{text, limit};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoEntitySuggestions", _declaredTypes);
+    return (com.runwaysdk.business.ValueQueryDTO) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final com.runwaysdk.business.ValueQueryDTO getGeoEntitySuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String text, java.lang.Integer limit)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{id, text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoEntitySuggestions", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -795,6 +853,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{mdAttributeId, text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getTextSuggestions", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.Boolean hasAccess()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "hasAccess", _declaredTypes);
+    return (java.lang.Boolean) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.Boolean hasAccess(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "hasAccess", _declaredTypes);
+    return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.Boolean hasReport()

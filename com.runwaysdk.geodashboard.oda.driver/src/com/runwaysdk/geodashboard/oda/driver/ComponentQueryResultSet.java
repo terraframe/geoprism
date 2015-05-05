@@ -135,7 +135,14 @@ public class ComponentQueryResultSet implements IResultSet
   @Override
   public Date getDate(String columnName) throws OdaException
   {
-    return new Date(MdAttributeDateUtil.getTypeSafeValue(this.current.getValue(columnName)).getTime());
+    java.util.Date value = MdAttributeDateUtil.getTypeSafeValue(this.current.getValue(columnName));
+
+    if (value != null)
+    {
+      return new Date(value.getTime());
+    }
+
+    return null;
   }
 
   @Override
@@ -211,7 +218,14 @@ public class ComponentQueryResultSet implements IResultSet
   @Override
   public Time getTime(String columnName) throws OdaException
   {
-    return new Time(MdAttributeTimeUtil.getTypeSafeValue(this.current.getValue(columnName)).getTime());
+    java.util.Date value = MdAttributeTimeUtil.getTypeSafeValue(this.current.getValue(columnName));
+
+    if (value != null)
+    {
+      return new Time(value.getTime());
+    }
+
+    return null;
   }
 
   @Override
@@ -223,7 +237,14 @@ public class ComponentQueryResultSet implements IResultSet
   @Override
   public Timestamp getTimestamp(String columnName) throws OdaException
   {
-    return new Timestamp(MdAttributeDateTimeUtil.getTypeSafeValue(this.current.getValue(columnName)).getTime());
+    java.util.Date value = MdAttributeDateTimeUtil.getTypeSafeValue(this.current.getValue(columnName));
+
+    if (value != null)
+    {
+      return new Timestamp(value.getTime());
+    }
+
+    return null;
   }
 
   @Override
