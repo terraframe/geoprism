@@ -43,7 +43,7 @@ public class BlockQueryResultSet implements IResultSet
     this.criteria = criteria;
     this.aggregation = aggregation;
 
-    this.pageSize = 100;
+    this.pageSize = 4000;
   }
 
   private synchronized ComponentQueryResultSet getQuery()

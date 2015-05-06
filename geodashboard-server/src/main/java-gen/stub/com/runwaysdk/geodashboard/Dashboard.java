@@ -3,8 +3,10 @@ package com.runwaysdk.geodashboard;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,6 +47,7 @@ import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -626,5 +629,25 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return true;
+  }
+
+  public Map<String, Integer> getUniversalIndices()
+  {
+    Universal universal = this.getCountry().getUniversal();
+
+    List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+    Map<String, Integer> indices = new HashMap<String, Integer>();
+
+    int count = 0;
+
+    indices.put(universal.getId(), count++);
+
+    for (Term child : children)
+    {
+      indices.put(child.getId(), count++);
+    }
+
+    return indices;
   }
 }

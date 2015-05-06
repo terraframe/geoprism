@@ -155,5 +155,4 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
 
     return query;
   }
-
 }

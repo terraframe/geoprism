@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +24,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -32,21 +35,22 @@ import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
-import com.runwaysdk.geodashboard.gis.model.Map;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.logging.LogLevel;
+import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class DashboardMap extends DashboardMapBase implements
-    com.runwaysdk.generation.loader.Reloadable, Map
+public class DashboardMap extends DashboardMapBase implements com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.model.Map
 {
   private static Log        log              = LogFactory.getLog(DashboardMap.class);
 
@@ -72,8 +76,8 @@ public class DashboardMap extends DashboardMapBase implements
   /**
    * MdMethod
    * 
-   * Invoked when the user hits "apply" on the mapping screen. This will update
-   * BIRT and republish all layers with the updated filter criteria conditions.
+   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the
+   * updated filter criteria conditions.
    */
   @Override
   public String updateConditions(DashboardCondition[] conditions)
@@ -113,8 +117,7 @@ public class DashboardMap extends DashboardMapBase implements
   /**
    * MdMethod
    * 
-   * Invoked after the user reorders a layer via drag+drop in the dashboard
-   * viewer.
+   * Invoked after the user reorders a layer via drag+drop in the dashboard viewer.
    * 
    * @return The JSON representation of the current DashboardMap.
    */
@@ -212,7 +215,7 @@ public class DashboardMap extends DashboardMapBase implements
       JSONArray jsonArr = new JSONArray();
 
       populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, universal);
-      
+
       for (Term child : children)
       {
         populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, child);
@@ -227,8 +230,7 @@ public class DashboardMap extends DashboardMapBase implements
 
   }
 
-  private void populateAvailableReferenceJSON(HashMap<String, DashboardLayer> savedLayerHash,
-      JSONArray jsonArr, Universal root, Term child) throws JSONException
+  private void populateAvailableReferenceJSON(HashMap<String, DashboardLayer> savedLayerHash, JSONArray jsonArr, Universal root, Term child) throws JSONException
   {
     if (!child.getId().equals(root.getId()))
     {
@@ -410,8 +412,7 @@ public class DashboardMap extends DashboardMapBase implements
             else
             {
               String label = country.getDisplayLabel().getValue();
-              String error = "The geometry [" + label
-                  + "] could not be used to create a valid bounding box";
+              String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
 
               throw new ProgrammingErrorException(error);
             }
@@ -564,8 +565,7 @@ public class DashboardMap extends DashboardMapBase implements
 
         if (mdClass.getId().equals(wrapper.getWrappedMdClassId()))
         {
-          List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper
-              .getSortedAttributes()));
+          List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper.getSortedAttributes()));
 
           new Iterables<MdAttributeView>().remove(attributes, predicate);
 
@@ -579,6 +579,60 @@ public class DashboardMap extends DashboardMapBase implements
     }
 
     return new MdAttributeView[] {};
+  }
+
+  public Map<String, Integer> calculateLayerIndices()
+  {
+    Map<String, Integer> uIndexes = this.getDashboard().getUniversalIndices();
+
+    DashboardLayer[] layers = this.getOrderedLayers();
+
+    int index = Collections.max(uIndexes.values()) + 1;
+
+    Map<String, Integer> indices = new HashMap<String, Integer>();
+
+    for (DashboardLayer layer : layers)
+    {
+      if (layer instanceof DashboardReferenceLayer)
+      {
+        Integer universalIndex = uIndexes.get(layer.getUniversal().getId());
+
+        indices.put(layer.getId(), universalIndex);
+      }
+      else
+      {
+        indices.put(layer.getId(), index++);
+      }
+    }
+
+    return indices;
+  }
+
+  public int getMaxIndex()
+  {
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+    HasLayerQuery query = new HasLayerQuery(vQuery);
+
+    MAX selectable = F.MAX(query.getLayerIndex());
+    selectable.setColumnAlias(HasLayer.LAYERINDEX);
+    selectable.setUserDefinedAlias(HasLayer.LAYERINDEX);
+
+    vQuery.SELECT(selectable);
+    vQuery.WHERE(query.getParent().EQ(this));
+
+    OIterator<ValueObject> it = vQuery.getIterator();
+
+    try
+    {
+      ValueObject object = it.next();
+      Integer index = new Integer(object.getValue(HasLayer.LAYERINDEX));
+
+      return index;
+    }
+    finally
+    {
+      it.close();
+    }
   }
 
 }
