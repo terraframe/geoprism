@@ -3,7 +3,6 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -171,23 +170,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
 
-      /*
-       * Update the indexes of all of the existing layers. We must reorder all of the layer indexes such that the
-       * reference layers are on the bottom depending on their order referenced universal in the universal tree. The
-       * thematic layers will be on top based up their relative indexing between other thematic layers. If this layer is
-       * a new thematic layer then it will be on top.
-       */
-      Map<String, Integer> indices = map.calculateLayerIndices();
-      List<? extends HasLayer> relationships = map.getAllHasLayerRel().getAll();
-
-      for (HasLayer relationship : relationships)
-      {
-        Integer index = indices.get(relationship.getChildId());
-
-        relationship.appLock();
-        relationship.setLayerIndex(index);
-        relationship.apply();
-      }
+      map.reorderLayers();
     }
 
     this.validate();

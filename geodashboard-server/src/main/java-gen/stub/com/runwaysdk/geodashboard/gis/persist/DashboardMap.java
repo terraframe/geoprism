@@ -122,6 +122,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
    * @return The JSON representation of the current DashboardMap.
    */
   @Override
+  @Transaction
   public java.lang.String orderLayers(java.lang.String[] layerIds)
   {
     if (layerIds == null || layerIds.length == 0)
@@ -149,6 +150,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     {
       iter.close();
     }
+
+    this.reorderLayers();
 
     return "";
   }
@@ -632,6 +635,27 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     finally
     {
       it.close();
+    }
+  }
+
+  public void reorderLayers()
+  {
+    /*
+     * Update the indexes of all of the existing layers. We must reorder all of the layer indexes such that the
+     * reference layers are on the bottom depending on their order referenced universal in the universal tree. The
+     * thematic layers will be on top based up their relative indexing between other thematic layers. If this layer is a
+     * new thematic layer then it will be on top.
+     */
+    Map<String, Integer> indices = this.calculateLayerIndices();
+    List<? extends HasLayer> relationships = this.getAllHasLayerRel().getAll();
+
+    for (HasLayer relationship : relationships)
+    {
+      Integer index = indices.get(relationship.getChildId());
+
+      relationship.appLock();
+      relationship.setLayerIndex(index);
+      relationship.apply();
     }
   }
 
