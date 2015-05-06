@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -326252318)
+@com.runwaysdk.business.ClassSignature(hash = 1938572297)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,7 +25,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -326252318;
+  private static final long serialVersionUID = 1938572297;
   
   public DashboardMapBase()
   {
@@ -464,6 +464,18 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static DashboardMap getByKey(String key)
   {
     return (DashboardMap) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.io.InputStream generateMapImageExport(java.lang.String id, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  {
+    DashboardMap _instance = DashboardMap.get(id);
+    return _instance.generateMapImageExport(outFileFormat, mapBounds, mapSize);
   }
   
   public java.lang.String getMapJSON(java.lang.String config)

@@ -196,7 +196,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
-
+      
       req.setAttribute("aggregations", aggregations);
       // req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));

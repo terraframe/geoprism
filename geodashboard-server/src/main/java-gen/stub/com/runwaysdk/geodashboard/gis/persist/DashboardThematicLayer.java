@@ -38,6 +38,13 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeChar;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeMoment;
+import com.runwaysdk.system.metadata.MdAttributeTerm;
+import com.runwaysdk.system.metadata.MdAttributeText;
+import com.runwaysdk.system.metadata.MdAttributeVirtual;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
@@ -394,7 +401,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       this.setMdAttribute(tSource.getMdAttribute());
     }
   }
-
+  
+  
   @Override
   protected DashboardLayer newInstance()
   {

@@ -350,6 +350,8 @@ $(document).ready(function(){
           <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
           <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
         </span>
+        
+        <a href="#" class="map-export" data-format="png">Export Map</a>
       </div>
       <div id="report-viewport">    
         <div id="report-content">

@@ -184,4 +184,20 @@ public class GeoserverProperties implements Reloadable
     
     return restReader;
   }
+  
+  /**
+   * System keystore path
+   *
+   */
+  public static String getGeoserverKeystorePath() {
+    return getBundle().getString("geoserver.keystore.path");
+  }
+  
+  /**
+   * System keystore pass
+   *
+   */
+  public static String getGeoserverKeystorePass() {
+    return getBundle().getString("geoserver.keystore.pass");
+  }
 }

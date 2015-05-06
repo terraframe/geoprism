@@ -98,6 +98,7 @@
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
         this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
+        this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
@@ -496,6 +497,52 @@
         
           this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));		
     	}
+      },
+      
+      _exportMap : function() {
+    	  
+    	  var that = this;
+    	  
+    	  var mapId = this._mapId;
+    	  var outFileName = "GeoDashboard_Map";
+    	  var outFileFormat = "png";
+      	  var mapBounds = {};
+    	  var mapExtent = this._map.getBounds();
+    	  mapBounds.left = mapExtent._southWest.lng;
+    	  mapBounds.bottom = mapExtent._southWest.lat;
+    	  mapBounds.right = mapExtent._northEast.lng;
+    	  mapBounds.top = mapExtent._northEast.lat;
+    	  mapBoundsStr = JSON.stringify(mapBounds);
+    	
+    	var mapSize = {};
+    	mapSize.width = $("#mapDivId").width();
+    	mapSize.height = $("#mapDivId").height();
+    	mapSizeStr = JSON.stringify(mapSize);
+    	
+    	
+    	var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo';
+        url += '?' + encodeURIComponent("mapId") + "=" + encodeURIComponent(mapId);          
+        url += '&' + encodeURIComponent("outFileName") + "=" + encodeURIComponent(outFileName);   
+        url += '&' + encodeURIComponent("outFileFormat") + "=" + encodeURIComponent(outFileFormat);  
+        url += '&' + encodeURIComponent("mapBounds") + "=" + encodeURIComponent(mapBoundsStr);  
+        url += '&' + encodeURIComponent("mapSize") + "=" + encodeURIComponent(mapSizeStr);  
+          
+        window.location.href = url;
+    	  
+//    	  var request = com.runwaysdk.geodashboard.StandbyClientRequest({
+//    		  that : this,
+//              onSuccess : function (html) {
+//               console.log("success")
+//              },
+//              onFailure : function (exception) {
+//                this.that.handleException(exception)
+//              }
+//              
+//            }, $( "#report-viewport" )[0]);
+//    	  
+//            
+//    	  this._DashboardMapController.exportMap(request, mapId, outFileName, outFileFormat, mapBounds, mapSize);
+    	  
       },
       
       _exportReport : function(geoId, criteria, format) {
@@ -1113,36 +1160,24 @@
           var viewName = layer.getViewName();
           var geoserverName = this._workspace + ":" + viewName;
           if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
-	          if(layer.getFeatureStrategy() === "BUBBLE"){
-		            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
-		                layers: geoserverName,
-		                format: 'image/png',
-		                transparent: true,
-		                styles: layer.getSldName() || "" 
-		              });
-	            
-		            this._map.addLayer(leafletLayer);
-		            layer.leafletLayer = leafletLayer;
-	          }
-	          else{
-	              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains. 
-	              // However, since bubbles are clipped by the differences between tiles we must render bubble layers as a single tile. 
-	              // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
-	              var mapBounds = this._map.getBounds();
-	              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-	              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-	                layers: geoserverName,
-	                format: 'image/png',
-	                transparent: true,
-	                tiled: true,
-	                tileSize: 256,
-	                tilesorigin: mapSWOrigin,
-	                styles: layer.getSldName() || "" 
-	              });
-	          
-	              this._map.addLayer(leafletLayer);
-	              layer.leafletLayer = leafletLayer;
-		      }
+              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
+        	  // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO PREVENT BUBBLE CHOPPING.
+        	  // We could get slightly better performance by setting tiled: false for non-bubble layers but 
+        	  // this is currently unnecessary addition of code for relatively small performance gain.
+              var mapBounds = this._map.getBounds();
+              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+                layers: geoserverName,
+                format: 'image/png',
+                transparent: true,
+                tiled: true,
+                tileSize: 256,
+                tilesorigin: mapSWOrigin,
+                styles: layer.getSldName() || "" 
+              });
+          
+              this._map.addLayer(leafletLayer);
+              layer.leafletLayer = leafletLayer;
           }
         }
       },
@@ -1830,6 +1865,14 @@
        */
       _cancelDashboardListener : function(){        
           this._closeDashboardModal();
+      },
+      
+      /**
+       * Cancel a dashboard creation crud form
+       * 
+       */
+      _cancelDashboardMapListener : function(){  
+    	  
       },
       
       
@@ -3055,6 +3098,12 @@
         return conditions;
       },
       
+      _onClickExportMap : function(e) {
+    	  var format = $(e.target).data('format');  
+    	  
+    	  this._exportMap();
+      },
+      
       _onClickExportReport : function(e) {
         var format = $(e.target).data('format');
 
@@ -3277,6 +3326,8 @@
         // Reporting events
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
+        
+        $('.map-export').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
         
         // Max
         $('#report-max').on('click', function(){
