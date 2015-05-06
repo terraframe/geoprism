@@ -161,23 +161,16 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     // Create hasLayer and hasStyle relationships
     if (isNew)
     {
-      QueryFactory f = new QueryFactory();
-      DashboardLayerQuery q = new DashboardLayerQuery(f);
-      DashboardMapQuery mQ = new DashboardMapQuery(f);
-
-      mQ.WHERE(mQ.getId().EQ(mapId));
-      q.WHERE(q.containingMap(mQ));
-
-      int count = (int) q.getCount();
-      count++;
-
       DashboardMap map = DashboardMap.get(mapId);
+
       HasLayer hasLayer = map.addHasLayer(this);
-      hasLayer.setLayerIndex(count);
+      hasLayer.setLayerIndex(map.getMaxIndex() + 1);
       hasLayer.apply();
 
       HasStyle hasStyle = this.addHasStyle(style);
       hasStyle.apply();
+
+      map.reorderLayers();
     }
 
     this.validate();

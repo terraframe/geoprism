@@ -3,8 +3,9 @@
     <create>
       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
         <attributes>
-          <localChar name="displayLabel" required="true" />
-          <reference name="country" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />
+          <reference name="country" label="Country" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" />
+          <reference name="dashboardRole" label="Role" type="com.runwaysdk.system.Roles" required="true" />
         </attributes>
         <mdMethod name="getSortedDashboards" label="Get Sorted Dashboards" static="true" returnType="com.runwaysdk.geodashboard.DashboardQuery" />
         <mdMethod name="getSortedTypes" label="Get Sorted Types" description="Returns a sorted list of de-referenced MdClasses stored by MetadataWrapper" returnType="com.runwaysdk.system.metadata.MdClass[]" />
@@ -82,7 +83,7 @@
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" label="Primitive" isAbstract="true" generateController="false">
         <attributes>
-          <char name="comparisonValue" size="255" required="true" label="Value" />
+          <text name="comparisonValue" required="true" label="Value" />
         </attributes>
       </mdBusiness>
 

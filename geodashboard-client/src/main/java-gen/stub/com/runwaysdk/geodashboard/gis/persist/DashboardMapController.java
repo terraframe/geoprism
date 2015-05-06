@@ -19,7 +19,6 @@ import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
-import com.runwaysdk.geodashboard.gis.NoDashboardExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
@@ -181,7 +180,9 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
     if (dashboards.size() == 0)
     {
-      throw new NoDashboardExceptionDTO(clientRequest);
+      this.failCreateMapForSession();
+
+      return;
     }
 
     // Figure out the active dashboard.
@@ -190,58 +191,72 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     {
       activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
     }
-    req.setAttribute("activeDashboard", activeDashboard);
-    req.setAttribute("dashboardId", activeDashboard.getId());
-    req.setAttribute("workspace", GeoserverProperties.getWorkspace());
 
-    // Dashboards does not include the active dashboard.
-    dashboards.remove(activeDashboard);
-    req.setAttribute("dashboards", dashboards);
-
-    if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals(""))
+    if (!activeDashboard.hasAccess())
     {
-      throw new DashboardHasNoMapExceptionDTO(clientRequest);
+      this.failCreateMapForSession();
     }
-
-    req.setAttribute("mapId", activeDashboard.getMapId());
-
-    // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
-    MdClassDTO[] types = activeDashboard.getSortedTypes();
-    req.setAttribute("types", types);
-
-    List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
-    Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
-
-    for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
+    else
     {
-      attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+      req.setAttribute("activeDashboard", activeDashboard);
+      req.setAttribute("dashboardId", activeDashboard.getId());
+      req.setAttribute("workspace", GeoserverProperties.getWorkspace());
 
-      for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
+      // Dashboards does not include the active dashboard.
+      dashboards.remove(activeDashboard);
+      req.setAttribute("dashboards", dashboards);
+
+      if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals(""))
       {
-        attrs.add(mdAttrView);
+        throw new DashboardHasNoMapExceptionDTO(clientRequest);
       }
+
+      req.setAttribute("mapId", activeDashboard.getMapId());
+
+      // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
+      MdClassDTO[] types = activeDashboard.getSortedTypes();
+      req.setAttribute("types", types);
+
+      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
+      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
+
+      for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
+      {
+        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
+
+        for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
+        {
+          attrs.add(mdAttrView);
+        }
+      }
+
+      req.setAttribute("attrMap", attrMap);
+
+      GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
+
+      this.req.setAttribute("type", GeoEntityDTO.CLASS);
+      this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
+      this.req.setAttribute("rootId", root.getId());
+
+      JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
+
+      /*
+       * Load the conditions information
+       */
+      req.setAttribute("conditions", activeDashboard.getConditionsJSON());
+      req.setAttribute("hasReport", activeDashboard.hasReport());
+      req.setAttribute("hasAccess", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
+
+      req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
+
+      render("dashboardViewer.jsp");
     }
+  }
 
-    req.setAttribute("attrMap", attrMap);
-
-    GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
-
-    this.req.setAttribute("type", GeoEntityDTO.CLASS);
-    this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
-    this.req.setAttribute("rootId", root.getId());
-
-    JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
-
-    /*
-     * Load the conditions information
-     */
-    req.setAttribute("conditions", activeDashboard.getConditionsJSON());
-    req.setAttribute("hasReport", activeDashboard.hasReport());
-    req.setAttribute("hasAccess", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
-
-    req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
-
-    render("dashboardViewer.jsp");
+  @Override
+  public void failCreateMapForSession() throws IOException, ServletException
+  {
+    render("nodashboard.jsp");
   }
   
   

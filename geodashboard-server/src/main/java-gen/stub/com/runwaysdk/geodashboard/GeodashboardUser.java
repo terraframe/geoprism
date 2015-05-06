@@ -15,6 +15,7 @@ import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
 
@@ -153,6 +154,17 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     }
 
     return false;
+  }
+
+  public Boolean isAssigned(Roles role)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    AssignmentsQuery query = new AssignmentsQuery(factory);
+    query.WHERE(query.getParent().EQ(this));
+    query.AND(query.getChild().EQ(role));
+
+    return ( query.getCount() > 0 );
   }
 
 }

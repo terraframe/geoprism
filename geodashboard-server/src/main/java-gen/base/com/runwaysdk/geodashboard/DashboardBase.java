@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1452316994)
+@com.runwaysdk.business.ClassSignature(hash = 743509876)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -14,6 +14,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARDROLE = "dashboardRole";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   private com.runwaysdk.business.Struct displayLabel = null;
   
@@ -31,7 +32,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1452316994;
+  private static final long serialVersionUID = 743509876;
   
   public DashboardBase()
   {
@@ -121,6 +122,46 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public com.runwaysdk.system.Roles getDashboardRole()
+  {
+    if (getValue(DASHBOARDROLE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.Roles.get(getValue(DASHBOARDROLE));
+    }
+  }
+  
+  public String getDashboardRoleId()
+  {
+    return getValue(DASHBOARDROLE);
+  }
+  
+  public void validateDashboardRole()
+  {
+    this.validateAttribute(DASHBOARDROLE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardRoleMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARDROLE);
+  }
+  
+  public void setDashboardRole(com.runwaysdk.system.Roles value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARDROLE, "");
+    }
+    else
+    {
+      setValue(DASHBOARDROLE, value.getId());
+    }
   }
   
   public com.runwaysdk.geodashboard.DashboardDisplayLabel getDisplayLabel()
@@ -659,10 +700,16 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.getConditionsJSON();
   }
   
-  public static com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
+  public com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String id, java.lang.String text, java.lang.Integer limit)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getGeoEntitySuggestions(text, limit);
   }
   
   public static com.runwaysdk.geodashboard.DashboardQuery getSortedDashboards()
@@ -687,6 +734,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.Boolean hasAccess()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.Boolean hasAccess(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.hasAccess();
   }
   
   public java.lang.Boolean hasReport()

@@ -197,7 +197,7 @@ $(document).ready(function(){
 	                        </div>
 	                        <div class="row-holder">
 	                          <c:choose>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
+								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDecimal' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
 									<!-- Number attribute -->
 		                            <div class="select-holder">
 		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
@@ -211,9 +211,10 @@ $(document).ready(function(){
 		                              <label class="none"><gdb:localize key="dashboardViewer.number"/></label>
 		                              <gdb:localize key="dashboard.number.label" var="dashboardNumberLabel"/>
 		                              
-		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
+		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDecimal' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
 		                                <input class="gdb-attr-filter filter-number numbers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>
+		                              
 		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
 		                                <input class="gdb-attr-filter filter-number integers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
 		                              </c:if>

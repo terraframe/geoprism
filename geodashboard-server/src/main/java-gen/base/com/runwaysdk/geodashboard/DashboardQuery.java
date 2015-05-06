@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1104146933)
+@com.runwaysdk.business.ClassSignature(hash = -1066455061)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -99,6 +99,29 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.CREATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()
+  {
+    return getDashboardRole(null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE);
+
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE);
+
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel()
@@ -410,6 +433,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE)) 
+    {
+       return new com.runwaysdk.system.RolesQuery.RolesQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -613,6 +640,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole();
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias);
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel);
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel();
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel(String alias);
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
@@ -770,6 +800,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()
+  {
+    return getDashboardRole(null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias)
+  {
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE,  alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel()
@@ -1155,6 +1202,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE)) 
+    {
+       return new com.runwaysdk.system.RolesQuery.RolesQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
@@ -1219,6 +1270,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole();
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias);
+    public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel);
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel();
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel(String alias);
     public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
@@ -1397,6 +1451,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()
+  {
+    return getDashboardRole(null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias)
+  {
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE,  alias, displayLabel);
 
   }
   public com.runwaysdk.geodashboard.DashboardDisplayLabelQuery.DashboardDisplayLabelQueryStructIF getDisplayLabel()
@@ -1665,6 +1736,10 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.Dashboard.DASHBOARDROLE)) 
+    {
+       return new com.runwaysdk.system.RolesQuery.RolesQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(com.runwaysdk.geodashboard.Dashboard.ENTITYDOMAIN)) 
     {

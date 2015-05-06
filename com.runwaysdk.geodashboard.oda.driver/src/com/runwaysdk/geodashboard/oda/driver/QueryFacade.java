@@ -92,7 +92,7 @@ public class QueryFacade
         {
           JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
 
-          String type = params.getString(QueryFacade.QUERY_ID);
+          String queryId = params.getString(QueryFacade.QUERY_ID);
           String aggregation = null;
 
           if (params.has(QueryFacade.AGGREGATION))
@@ -105,15 +105,18 @@ public class QueryFacade
 
           if (queryMetadata)
           {
-            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, type, category, criteria, aggregation);
+            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, queryId, category, criteria, aggregation);
 
             return new ComponentQueryResultSet(results);
           }
           else
           {
-            ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria, aggregation);
+            // ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria,
+            // aggregation);
+            //
+            // return new ComponentQueryResultSet(results);
 
-            return new ComponentQueryResultSet(results);
+            return new BlockQueryResultSet(request, queryId, category, criteria, aggregation);
           }
         }
 

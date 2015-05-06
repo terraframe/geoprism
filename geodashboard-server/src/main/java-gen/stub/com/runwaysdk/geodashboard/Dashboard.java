@@ -3,8 +3,10 @@ package com.runwaysdk.geodashboard;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,6 +20,7 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
@@ -42,6 +45,9 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -68,12 +74,34 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static DashboardQuery getSortedDashboards()
   {
-    QueryFactory f = new QueryFactory();
-    DashboardQuery q = new DashboardQuery(f);
+    if (!GeodashboardUser.hasAccess(AccessConstants.ADMIN))
+    {
+      GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
 
-    q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+      QueryFactory f = new QueryFactory();
 
-    return q;
+      GeodashboardUserQuery userQuery = new GeodashboardUserQuery(f);
+      userQuery.WHERE(userQuery.getId().EQ(currentUser.getId()));
+
+      RolesQuery rolesQuery = new RolesQuery(f);
+      rolesQuery.WHERE(rolesQuery.singleActor(userQuery));
+
+      DashboardQuery q = new DashboardQuery(f);
+      q.WHERE(q.getDashboardRole().EQ(rolesQuery));
+
+      q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+
+      return q;
+    }
+    else
+    {
+      QueryFactory f = new QueryFactory();
+      DashboardQuery q = new DashboardQuery(f);
+
+      q.ORDER_BY_ASC(q.getDisplayLabel().localize());
+
+      return q;
+    }
   }
 
   @Override
@@ -143,6 +171,20 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     boolean isNew = isNew();
 
+    if (this.isNew() && !this.isAppliedToDB())
+    {
+      String dashboardLabel = this.getDisplayLabel().getValue();
+      String roleName = dashboardLabel.replaceAll("\\s", "");
+
+      // Create the Dashboard Role
+      Roles role = new Roles();
+      role.setRoleName(RoleView.DASHBOARD_NAMESPACE + "." + roleName);
+      role.getDisplayLabel().setValue(dashboardLabel);
+      role.apply();
+
+      this.setDashboardRole(role);
+    }
+
     super.apply();
 
     if (isNew && this.getMap() == null)
@@ -154,6 +196,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
       this.setMap(map);
       super.apply();
+
     }
   }
 
@@ -402,11 +445,33 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return Arrays.copyOf(array, Math.min(limit, array.length));
   }
 
-  public static ValueQuery getGeoEntitySuggestions(String text, Integer limit)
+  public static Dashboard[] getDashboardsForCountry(GeoEntity country)
+  {
+    DashboardQuery query = new DashboardQuery(new QueryFactory());
+    query.WHERE(query.getCountry().EQ(country));
+
+    OIterator<? extends Dashboard> it = query.getIterator();
+
+    try
+    {
+      List<? extends Dashboard> dashboards = it.getAll();
+
+      return dashboards.toArray(new Dashboard[dashboards.size()]);
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+
+  public ValueQuery getGeoEntitySuggestions(String text, Integer limit)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
+    GeoEntity country = this.getCountry();
+
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
+    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
 
     SelectableChar id = entityQuery.getId();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
@@ -420,6 +485,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
+    query.AND(aptQuery.getParentTerm().EQ(country));
+    query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+
     query.ORDER_BY_ASC(geoLabel);
 
     query.restrictRows(limit, 1);
@@ -546,5 +614,40 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return array.toString();
+  }
+
+  @Override
+  public Boolean hasAccess()
+  {
+    GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
+
+    Boolean access = currentUser.isAssigned(this.getDashboardRole());
+
+    if (!access)
+    {
+      return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+    }
+
+    return true;
+  }
+
+  public Map<String, Integer> getUniversalIndices()
+  {
+    Universal universal = this.getCountry().getUniversal();
+
+    List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+    Map<String, Integer> indices = new HashMap<String, Integer>();
+
+    int count = 0;
+
+    indices.put(universal.getId(), count++);
+
+    for (Term child : children)
+    {
+      indices.put(child.getId(), count++);
+    }
+
+    return indices;
   }
 }

@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard.oda.driver.ui.profile;
+package com.runwaysdk.geodashboard.oda.driver;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

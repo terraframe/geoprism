@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
-@com.runwaysdk.business.ClassSignature(hash = 1861160594)
+@com.runwaysdk.business.ClassSignature(hash = 1835087682)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -84,7 +84,7 @@ public  class DashboardPrimitiveQuery extends com.runwaysdk.geodashboard.gis.per
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public interface DashboardPrimitiveQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF
+  public interface DashboardPrimitiveQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionQuery.DashboardAttributeConditionQueryReferenceIF
   {
 
     public com.runwaysdk.query.SelectableChar getComparisonValue();
@@ -101,7 +101,7 @@ public  class DashboardPrimitiveQuery extends com.runwaysdk.geodashboard.gis.per
  * Implements type safe query methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public static class DashboardPrimitiveQueryReference extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryReference
+  public static class DashboardPrimitiveQueryReference extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionQuery.DashboardAttributeConditionQueryReference
  implements DashboardPrimitiveQueryReferenceIF
 , com.runwaysdk.generation.loader.Reloadable
   {
@@ -148,7 +148,7 @@ public  class DashboardPrimitiveQuery extends com.runwaysdk.geodashboard.gis.per
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public interface DashboardPrimitiveQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryMultiReferenceIF
+  public interface DashboardPrimitiveQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionQuery.DashboardAttributeConditionQueryMultiReferenceIF
   {
 
     public com.runwaysdk.query.SelectableChar getComparisonValue();
@@ -166,7 +166,7 @@ public  class DashboardPrimitiveQuery extends com.runwaysdk.geodashboard.gis.per
  * Implements type safe query methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public static class DashboardPrimitiveQueryMultiReference extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery.DashboardConditionQueryMultiReference
+  public static class DashboardPrimitiveQueryMultiReference extends com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeConditionQuery.DashboardAttributeConditionQueryMultiReference
  implements DashboardPrimitiveQueryMultiReferenceIF
 , com.runwaysdk.generation.loader.Reloadable
   {

@@ -48,15 +48,12 @@ public class Connection implements IConnection
   private IClientSession      session;
 
   /**
-   * Application context. This is used for sending in the user's session when
-   * the driver being run
+   * Application context. This is used for sending in the user's session when the driver being run
    */
   private Map<Object, Object> context;
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties
-   * )
+   * @see org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties )
    */
   public void open(Properties props) throws OdaException
   {
@@ -78,8 +75,9 @@ public class Connection implements IConnection
       {
         String username = props.getProperty(Constants.ODA_USER);
         String password = props.getProperty(Constants.ODA_PASSWORD);
+        String decrypted = CryptographySingleton.decrypt(password);
 
-        this.session = ClientSessionCache.getClientSession(url, username, password);
+        this.session = ClientSessionCache.getClientSession(url, username, decrypted);
       }
     }
 
@@ -90,9 +88,7 @@ public class Connection implements IConnection
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IConnection#setAppContext(java.lang
-   * .Object)
+   * @see org.eclipse.datatools.connectivity.oda.IConnection#setAppContext(java.lang .Object)
    */
   @SuppressWarnings("unchecked")
   public void setAppContext(Object context) throws OdaException
@@ -122,9 +118,7 @@ public class Connection implements IConnection
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IConnection#getMetaData(java.lang
-   * .String)
+   * @see org.eclipse.datatools.connectivity.oda.IConnection#getMetaData(java.lang .String)
    */
   public IDataSetMetaData getMetaData(String dataSetType) throws OdaException
   {
@@ -134,9 +128,7 @@ public class Connection implements IConnection
   }
 
   /*
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang.String
-   * )
+   * @see org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang.String )
    */
   public IQuery newQuery(String dataSetType) throws OdaException
   {
@@ -175,9 +167,7 @@ public class Connection implements IConnection
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.icu
-   * .util.ULocale)
+   * @see org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.icu .util.ULocale)
    */
   public void setLocale(ULocale locale) throws OdaException
   {

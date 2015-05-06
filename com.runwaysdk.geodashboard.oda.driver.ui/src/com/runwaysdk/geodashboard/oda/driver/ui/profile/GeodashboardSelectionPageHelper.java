@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.runwaysdk.geodashboard.oda.driver.CryptographySingleton;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.Constants;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.DriverLoader;
@@ -340,7 +341,7 @@ public class GeodashboardSelectionPageHelper
 
           final String connectionUrl = url.getText().trim();
           final String userid = userName.getText().trim();
-          final String passwd = password.getText();
+          final String passwd = CryptographySingleton.encrypt(password.getText());
 
           new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress()
           {

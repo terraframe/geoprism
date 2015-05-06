@@ -40,6 +40,15 @@
           <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
           <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
           <mdParameter name="aggregation" label="Aggregation" order="3" type="java.lang.String" />
+          <mdParameter name="pageSize" label="pageSize" order="4" type="java.lang.Integer" />
+          <mdParameter name="pageNumber" label="pageNumber" order="5" type="java.lang.Integer" />
+        </mdMethod>
+        <mdMethod name="getPageCount" label="Get page count" static="true" returnType="java.lang.Integer">
+          <mdParameter name="queryId" label="Query id" order="0" type="java.lang.String" />
+          <mdParameter name="category" label="Category" order="1" type="java.lang.String" />
+          <mdParameter name="criteria" label="Criteria" order="2" type="java.lang.String" />
+          <mdParameter name="aggregation" label="Aggregation" order="3" type="java.lang.String" />
+          <mdParameter name="pageSize" label="pageSize" order="4" type="java.lang.Integer" />
         </mdMethod>
         <mdMethod name="getMetadataForReporting" label="Get metadata for reporting" static="true" returnType="com.runwaysdk.query.ValueQuery">
           <mdParameter name="queryId" label="queryId" order="0" type="java.lang.String" />
