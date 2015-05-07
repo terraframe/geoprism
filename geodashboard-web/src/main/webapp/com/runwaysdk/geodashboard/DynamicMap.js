@@ -456,9 +456,9 @@
         
         this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
         
-        // Add attribution to the map
-        this._map.attributionControl.setPrefix("");
-        //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+//        // Add attribution to the map
+//        this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
+//        this._map.attributionControl.addAttribution('Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors');
         
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
         this._map.on("click", mapClickHandlerBound);
@@ -621,6 +621,10 @@
         try {
           var base = this._getBaseLayers();                                
           this._map.addLayer(base[0]);
+          
+    	  // Add attribution to the map
+          this._map.attributionControl.setPrefix("");  
+          this._map.attributionControl.addAttribution(base[0]._gdbmapattribution);
           
           this._renderBaseLayerSwitcher(base);
         }
@@ -1893,6 +1897,7 @@
         
         var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
         osm._gdbcustomtype = 'OSM';
+        osm._gdbmapattribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
         
         var base = [osm, gmap, ghyb, gphy];
         
@@ -1986,7 +1991,25 @@
               
               // The osm tileLayer isnt set at the bottom by default so this sets it as so
               if(newBaselayer._gdbcustomtype === "OSM"){
-              newBaselayer.bringToBack();
+            	  newBaselayer.bringToBack();
+            	  
+            	  // Add attribution to the map
+                  this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
+                  if($(this._map.attributionControl.getContainer()).hasClass("hidden")){
+                	  var attrContainer = this._map.attributionControl.getContainer();
+                      $(attrContainer).removeClass("hidden");
+                  }
+                  else{
+                	  this._map.attributionControl.addAttribution(newBaselayer._gdbmapattribution);
+                  }
+              }
+              else{
+            	  // Add attribution to the map
+                  this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
+                  
+                  var attrContainer = this._map.attributionControl.getContainer();
+                  $(attrContainer).addClass("hidden");
+                  
               }
             }
           }

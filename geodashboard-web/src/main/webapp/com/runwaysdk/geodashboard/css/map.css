@@ -71,6 +71,21 @@ h3.popup-heading {
 	margin: 0;
 }
 
+.leaflet-bottom.leaflet-right {
+	bottom: 30px;
+    right: 300px;
+}
+
+.gmnoprint {
+	bottom: 30px !important;
+	right: 371px !important;
+}
+
+.gmnoprint.gm-style-cc {
+	bottom: 30px !important;
+	right: 300px !important;
+}
+
 /***** 
 **** UX team delivery overrides (relevant to map page)
 ******/
