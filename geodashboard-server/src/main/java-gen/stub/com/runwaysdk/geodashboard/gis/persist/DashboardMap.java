@@ -993,8 +993,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     requestURL.append("FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25");
     requestURL.append("&");
     requestURL.append("&TRANSPARENT=true&LEGEND_OPTIONS=fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;");
-    requestURL.append("&");
-    requestURL.append("LAYER=" + layerString);
     
     DashboardStyle style = layer.getStyles().get(0);
     boolean contSize = true;
@@ -1006,19 +1004,19 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     
     // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
     if(layer.getFeatureStrategy().toString() == "BASIC"){
-      requestURL.append("&");
       requestURL.append("forceLabels:on;");
     }
     else if(layer.getFeatureStrategy().toString() == "BUBBLE" && layer.getLayerType().toString() == "BASIC"){
       // The label should be hidden when mapping bubbles against a text or term attribute.
-      requestURL.append("&");
       requestURL.append("forceLabels:off;");
     }
     else if(layer.getFeatureStrategy().toString() == "BUBBLE" && contSize && layer.getLayerType().toString() != "BASIC"){
       // The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
-      requestURL.append("&");
       requestURL.append("forceLabels:on;");
     }
+    
+    requestURL.append("&");
+    requestURL.append("LAYER=" + layerString);
     
     return requestURL.toString();
   }
@@ -1339,7 +1337,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       ValueObject object = it.next();
-      Integer index = new Integer(object.getValue(HasLayer.LAYERINDEX));
+      Integer index = 0;
+      if(object.getValue(HasLayer.LAYERINDEX) != "" && object.getValue(HasLayer.LAYERINDEX) != null)
+      {
+        index = new Integer(object.getValue(HasLayer.LAYERINDEX));
+      }
 
       return index;
     }
