@@ -628,9 +628,14 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       ValueObject object = it.next();
-      Integer index = new Integer(object.getValue(HasLayer.LAYERINDEX));
 
-      return index;
+      String value = object.getValue(HasLayer.LAYERINDEX);
+      if (value != null && value.trim().length() > 0)
+      {
+        return new Integer(value);
+      }
+
+      return 0;
     }
     finally
     {
