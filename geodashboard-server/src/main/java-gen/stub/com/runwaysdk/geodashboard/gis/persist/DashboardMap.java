@@ -1003,7 +1003,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
     
     // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-    if(layer.getFeatureStrategy().toString() == "BASIC"){
+    if(layer.getFeatureStrategy().toString() == "GRADIENT" || layer.getFeatureStrategy().toString() == "CATEGORY"){
       requestURL.append("forceLabels:on;");
     }
     else if(layer.getFeatureStrategy().toString() == "BUBBLE" && layer.getLayerType().toString() == "BASIC"){
