@@ -1161,18 +1161,34 @@ a.blueactive,
 	font-size:16px;
 	line-height:20px;
 	position:relative;
-	padding:0 18px 0 1px;
+	padding:0 10px 0 1px;
 	color:#26c9ff;
 }
-.sales-menu .link-opener:after{
+/* .sales-menu .link-opener:after{ */
+/* 	content:''; */
+/* 	position:absolute; */
+/* 	right:0; */
+/* 	top:7px; */
+/* 	width:10px; */
+/* 	height:7px; */
+/* 	background:url(../images/sprite.png) no-repeat -225px -25px; */
+/* } */
+
+.sales-menu .link-opener:before{
 	content:'';
 	position:absolute;
-	right:0;
+/* 	right:0; */
+	left: -15px;
 	top:7px;
 	width:10px;
 	height:7px;
 	background:url(../images/sprite.png) no-repeat -225px -25px;
 }
+
+.sales-menu.dropdown{
+  margin-left: 15px;
+}
+
 .sales-menu .dropdown-menu{
 	width:280px;
 	border:1px solid #bbb;

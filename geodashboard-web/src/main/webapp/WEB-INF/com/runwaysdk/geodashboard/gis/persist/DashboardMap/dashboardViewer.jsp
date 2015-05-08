@@ -130,15 +130,6 @@ $(document).ready(function(){
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
-		    <!-- Clone dashboard button -->
-		    <c:if test="${hasAccess}">
-		      <span id="clone-dashboard" class="pull-left">
-<!--                 <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
-  		          <a href="#" class="ico-new-dashboard">enable</a>
-  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
-  		     
-  		      </span>
-  		    </c:if>
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
@@ -150,6 +141,16 @@ $(document).ready(function(){
 					<c:if test="${empty dashboards}">&nbsp;</c:if>
 				</ul>
 			</div>
+			
+			<!-- Clone dashboard button -->
+		    <c:if test="${hasAccess}">
+		      <span id="clone-dashboard" class="pull-left">
+<!--                 <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
+  		          <a href="#" class="ico-new-dashboard">enable</a>
+  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+  		     
+  		      </span>
+  		    </c:if>
 		</div>
 		
 	    <!-- Global geo filter -->
