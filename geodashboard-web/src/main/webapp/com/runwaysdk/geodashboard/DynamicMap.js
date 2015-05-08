@@ -529,20 +529,6 @@
           
         window.location.href = url;
     	  
-//    	  var request = com.runwaysdk.geodashboard.StandbyClientRequest({
-//    		  that : this,
-//              onSuccess : function (html) {
-//               console.log("success")
-//              },
-//              onFailure : function (exception) {
-//                this.that.handleException(exception)
-//              }
-//              
-//            }, $( "#report-viewport" )[0]);
-//    	  
-//            
-//    	  this._DashboardMapController.exportMap(request, mapId, outFileName, outFileFormat, mapBounds, mapSize);
-    	  
       },
       
       _exportReport : function(geoId, criteria, format) {
@@ -2435,6 +2421,17 @@
         },
         
         /**
+         * Opens a new tab for the dashboard currently active in the dashboards dropdown
+         * 
+         */
+        _openNewDashboardTab : function(e){
+        	var url = "#";
+        	var win = window.open(url, '_blank');
+        	win.focus();
+        },
+        
+        
+        /**
          * Renders the dashboard creation form
          * 
          * @html
@@ -3342,6 +3339,7 @@
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
+        $('.ico-new-dashboard-tab').on('click',  Mojo.Util.bind(this, this._openNewDashboardTab));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
         $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));

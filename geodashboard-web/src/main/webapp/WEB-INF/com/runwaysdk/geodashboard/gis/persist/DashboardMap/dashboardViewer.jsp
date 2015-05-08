@@ -33,6 +33,8 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
+<link href="<c:url value="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" />" rel="stylesheet">
+
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
@@ -142,13 +144,13 @@ $(document).ready(function(){
 				</ul>
 			</div>
 			
+			<i class="fa fa-external-link ico-new-dashboard-tab"></i> 
+			
 			<!-- Clone dashboard button -->
 		    <c:if test="${hasAccess}">
-		      <span id="clone-dashboard" class="pull-left">
-<!--                 <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
-  		          <a href="#" class="ico-new-dashboard">enable</a>
+		      <span id="clone-dashboard" class="">
+  		          <i class="fa fa-plus ico-new-dashboard"></i>
   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
-  		     
   		      </span>
   		    </c:if>
 		</div>

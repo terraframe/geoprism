@@ -2405,21 +2405,33 @@ span.select-area span.center {
 		margin: 0px 9px 0px 0px;
 	}
 	
-	.ico-new-dashboard {
-	  display: inline-block;
-	  vertical-align: middle;
-	  width: 12px;
-	  height: 12px;
-	  text-indent: -9999px;
-	  overflow: hidden;
-	  background: url(../images/small_plus_signs.png) no-repeat 0px 0;
+	i.fa.fa-plus.ico-new-dashboard {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
 	}
 	
-	.ico-new-dashboard:hover,
-	.ico-new-dashboard:focus{
-		background-position:-15px 0;
-		outline:none;
+	i.fa.fa-plus.ico-new-dashboard:hover,
+	i.fa.fa-plus.ico-new-dashboard:focus{
+		color: #00bfff;
 	}
+	
+	i.fa.fa-external-link.ico-new-dashboard-tab {
+		margin-left: 0;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-external-link.ico-new-dashboard-tab:hover,
+	i.fa.fa-external-link.ico-new-dashboard-tab:focus{
+		color: #00bfff;
+	}
+	
+	
 	
 	#dashboardMetadata {
 		z-index: 16;
