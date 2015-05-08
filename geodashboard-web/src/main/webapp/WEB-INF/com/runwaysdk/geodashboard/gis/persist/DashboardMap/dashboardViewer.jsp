@@ -33,6 +33,7 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
+<!-- IMPORTANT: This unfortunately has to be hear and NOT in jawr because jawr errors when processing svg font url paths. -->
 <link href="<c:url value="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" />" rel="stylesheet">
 
 <!-- Dynamic map Javascript -->
