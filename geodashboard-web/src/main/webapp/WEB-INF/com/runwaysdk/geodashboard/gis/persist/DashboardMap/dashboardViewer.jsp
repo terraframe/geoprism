@@ -33,8 +33,7 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
-<!-- IMPORTANT: This unfortunately has to be hear and NOT in jawr because jawr errors when processing svg font url paths. -->
-<link href="<c:url value="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" />" rel="stylesheet">
+<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
 
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
@@ -127,6 +126,22 @@ $(document).ready(function(){
 			    </div>
 		    </div>
 		 </article>
+		 
+		<!-- Map Tools Panel -->       
+        <article class="accordion info-box" id="map-tools-collapse-container">
+        	<div class="accordion-group sales-accortion" id="map-tools-sub-container">
+<!--         		<div class="accordion-heading"> -->
+<%--         			<a class="map-tools-opener opener" id="map-tools-opener-button" data-toggle="collapse" data-parent="#map-tools-collapse-container" href="#collapse-map-tools"><gdb:localize key="dashboardViewer.map-tools"/></a> --%>
+<!--         		</div>	 -->
+              	<div id="collapse-map-tools" class="accordion-body">
+              		<div class="accordion-inner holder" id="mapToolsContainer">
+              			<i id="map-export-btn" class="fa fa-file-image-o map-tool-icon" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></i>
+              		</div>
+              
+			    </div>
+		    </div>
+		 </article>
+		 
       </fieldset>
     </form>
     
@@ -145,12 +160,12 @@ $(document).ready(function(){
 				</ul>
 			</div>
 			
-			<i class="fa fa-external-link ico-new-dashboard-tab"></i> 
+			<i class="fa fa-external-link ico-new-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
 			
 			<!-- Clone dashboard button -->
 		    <c:if test="${hasAccess}">
 		      <span id="clone-dashboard" class="">
-  		          <i class="fa fa-plus ico-new-dashboard"></i>
+  		          <i class="fa fa-plus ico-new-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
   		      </span>
   		    </c:if>
@@ -339,7 +354,7 @@ $(document).ready(function(){
         <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
       
         <c:if test="${hasAccess}">
-          <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
+          <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
         </c:if>
       
         <c:choose>
@@ -351,12 +366,10 @@ $(document).ready(function(){
           </c:otherwise>       
         </c:choose>
       
-          <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
-          <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
-          <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+          <a href="#" class="report-export" data-format="docx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as docx" ><gdb:localize key="report.docx"/></a>
+          <a href="#" class="report-export" data-format="xlsx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as xlsx" ><gdb:localize key="report.xlsx"/></a>
+          <a href="#" class="report-export" data-format="pdf" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as pdf" ><gdb:localize key="report.pdf"/></a>
         </span>
-        
-        <a href="#" class="map-export" data-format="png">Export Map</a>
       </div>
       <div id="report-viewport">    
         <div id="report-content">

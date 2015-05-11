@@ -1004,20 +1004,35 @@ a.blueactive,
 	margin:1px 0 0;
 }
 .control-form .cell{float:right;}
-.ico-remove{
-	display:inline-block;
-	vertical-align:top;
-	width:10px;
-	height:10px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/sprite.png) no-repeat -150px 0;
+/* .ico-remove{ */
+/* 	display:inline-block; */
+/* 	vertical-align:top; */
+/* 	width:10px; */
+/* 	height:10px; */
+/* 	text-indent:-9999px; */
+/* 	overflow:hidden; */
+/* 	background:url(../images/sprite.png) no-repeat -150px 0; */
+/* } */
+/* .ico-remove:hover, */
+/* .ico-remove:focus{ */
+/* 	background-position:-150px -25px; */
+/* 	outline:none; */
+/* } */
+
+a.fa.fa-times.ico-remove.ico-remove{
+  font-size: 16px;
+  margin-right: 10px;
+  margin-top: 2px;
+  float: left;
+  color: #bababa;
+  cursor: pointer;
 }
-.ico-remove:hover,
-.ico-remove:focus{
-	background-position:-150px -25px;
-	outline:none;
+
+a.fa.fa-times.ico-remove.ico-remove:hover,
+a.fa.fa-times.ico-remove.ico-remove:focus{
+	color: #00bfff;
 }
+
 .control-form .ico-remove{
 	float:left;
 	margin:5px 13px 0 0;
@@ -1041,21 +1056,33 @@ a.blueactive,
 	margin:4px 11px 0 0;
 }
 
-.ico-enable{
-	display:inline-block;
-	vertical-align:top;
-	width:12px;
-	height:12px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/small_plus_signs.png) no-repeat 0px 0;
-/* 	background:url(../images/sprite.png) no-repeat -69px 0; */
+/* .ico-enable{ */
+/* 	display:inline-block; */
+/* 	vertical-align:top; */
+/* 	width:12px; */
+/* 	height:12px; */
+/* 	text-indent:-9999px; */
+/* 	overflow:hidden; */
+/* 	background:url(../images/small_plus_signs.png) no-repeat 0px 0; */
+/* } */
+/* .ico-enable:hover, */
+/* .ico-enable:focus{ */
+/* 	background-position:-15px 0; */
+/* 	outline:none; */
+/* } */
+
+a.fa.fa-plus.referenceLayer.ico-enable{
+  font-size: 15px;
+  margin-left: -25px;
+  float: left;
+  color: #bababa;
+  cursor: pointer;
 }
-.ico-enable:hover,
-.ico-enable:focus{
-	background-position:-15px 0;
-	outline:none;
+a.fa.fa-plus.referenceLayer.ico-enable:hover,
+a.fa.fa-plus.referenceLayer.ico-enable:focus{
+	color: #00bfff;
 }
+
 .control-form .ico-enable{
 	float:left;
 	margin:4px 11px 0 0;
@@ -2566,6 +2593,33 @@ span.select-area span.center {
 		position: absolute;
 		z-index: 9999999999999;
 	}
+	
+	
+/* 
+*
+* Map Tools panel 
+*
+*/
+	#map-tools-collapse-container{
+		
+	}
+	
+	div#collapse-map-tools.accordion-body{
+		height: 100%;
+	}
+	
+	.fa.fa-file-image-o.map-tool-icon{
+		font-size: 30px;
+		margin: 2px;
+		color: #bababa;
+		cursor: pointer;
+	}
+	
+	i.fa.fa-file-image-o.map-tool-icon:hover,
+	i.fa.fa-file-image-o.map-tool-icon:focus{
+		color: #00bfff;
+	}
+
 	
 /*** 
 ** Legend

@@ -14,7 +14,8 @@
    "osmBasic" : "Open Street Map",
    "location" : "Location",
    "aggregationMethod" : "Aggregation Method", 
-   "aggregateValue" : "Value"
+   "aggregateValue" : "Value",
+   "deleteLayerTooltip" : "Delete layer"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
@@ -981,14 +982,18 @@
 	        html += '<label for="'+id+'">'+displayName+'</label>';
 	        html += '<div class="cell">';
 	        if(layer.layerExists && this._editable){
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit">edit</a>';
-	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
+	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
+	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
+	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
 	        else if(this._editable) {              
- 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" style="display:none;">edit</a>';
-	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable">enable</a>';
+ 	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;">edit</a>';
+	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" >enable</a>';
+	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
 	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a></div>';
 	        html += '</div>';
@@ -1050,8 +1055,8 @@
           html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
           
           if(this._editable) {
-            html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove">remove</a>';
-            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit">edit</a>';
+            html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
             html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
           }
           
@@ -3348,7 +3353,7 @@
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
-        $('.map-export').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
+        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
         
         // Max
         $('#report-max').on('click', function(){
