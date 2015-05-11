@@ -1026,7 +1026,7 @@ a.fa.fa-times.ico-remove:focus{
 
 a.fa.fa-pencil.ico-edit{
   font-size: 16px;
-  margin-right: 10px;
+  margin-right: 5px;
   margin-top: 0px;
   float: left;
   color: #bababa;
@@ -1037,43 +1037,15 @@ a.fa.fa-pencil.ico-edit:hover,
 a.fa.fa-pencil.ico-edit:focus{
 	color: #00bfff;
 }
-/* .ico-edit{ */
-/* 	display:inline-block; */
-/* 	vertical-align:top; */
-/* 	width:12px; */
-/* 	height:12px; */
-/* 	text-indent:-9999px; */
-/* 	overflow:hidden; */
-/* 	background:url(../images/sprite.png) no-repeat -175px 0; */
-/* } */
-/* .ico-edit:hover, */
-/* .ico-edit:focus{ */
-/* 	background-position:-175px -25px; */
-/* 	outline:none; */
-/* } */
+
 .control-form .ico-edit{
 	float:left;
 	margin:4px 11px 0 0;
 }
 
-/* .ico-enable{ */
-/* 	display:inline-block; */
-/* 	vertical-align:top; */
-/* 	width:12px; */
-/* 	height:12px; */
-/* 	text-indent:-9999px; */
-/* 	overflow:hidden; */
-/* 	background:url(../images/small_plus_signs.png) no-repeat 0px 0; */
-/* } */
-/* .ico-enable:hover, */
-/* .ico-enable:focus{ */
-/* 	background-position:-15px 0; */
-/* 	outline:none; */
-/* } */
-
 a.fa.fa-plus.referenceLayer.ico-enable{
   font-size: 15px;
-  margin-left: -25px;
+  margin-right: 5px;
   float: left;
   color: #bababa;
   cursor: pointer;
