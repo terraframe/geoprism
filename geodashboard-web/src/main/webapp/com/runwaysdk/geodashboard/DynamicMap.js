@@ -983,19 +983,24 @@
 	        html += '<div class="cell">';
 	        if(layer.layerExists && this._editable){
 	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
+	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
 	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
+
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
 	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
 	        else if(this._editable) {              
  	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;">edit</a>';
+	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;">edit</a>';
 	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" >enable</a>';
+
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;"></a>';
 	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
-	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a></div>';
+//	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a>';
+	        html += '</div>';
 	        html += '</div>';
 	      }
 	      
@@ -1055,9 +1060,13 @@
           html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
           
           if(this._editable) {
-            html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
-            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+            //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
+            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+        	  
+        	  html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+              html += '<a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
+              html += '</div>';
           }
           
           html += '</div>';
