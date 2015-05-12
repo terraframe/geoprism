@@ -3,7 +3,7 @@
 # This script is run by the AWS Elastic Beanstalk installer
 
 # Install Oracle JDK
-wget -O .ebextensions/jdk-6u45-linux-amd64.rpm "http://66.116.103.234:8081/nexus/service/local/artifact/maven/redirect?r=releases&g=com.oracle&a=jdk-linux-amd64&v=6u45&e=rpm"
+# wget -O .ebextensions/jdk-6u45-linux-amd64.rpm "http://66.116.103.234:8081/nexus/service/local/artifact/maven/redirect?r=releases&g=com.oracle&a=jdk-linux-amd64&v=6u45&e=rpm"
 rpm --erase --nodeps java-1.6.0-openjdk java-1.6.0-openjdk-devel
 rpm -Uvh .ebextensions/jdk-6u45-linux-amd64.rpm
 /usr/sbin/alternatives --install /usr/bin/java java /usr/java/default/bin/java 3
@@ -29,8 +29,11 @@ cp .ebextensions/geodashboard.ks $TOMCAT_HOME/conf/geodashboard.ks
 # Copy the server.xml config file
 cp .ebextensions/server.xml $TOMCAT_HOME/conf/server.xml
 
+# Copy the geoserver war over
+cp .ebextensions/geoserver.war $TOMCAT_HOME/conf/geoserver.war
+
 # Download the latest geoserver war to a temp directory. This will be moved into webapps in the post install script.
-wget -O $TOMCAT_HOME/conf/geoserver.war "http://66.116.103.234:8081/nexus/service/local/artifact/maven/redirect?r=allrepos&g=org.geoserver&a=geoserver&v=LATEST&e=war"
+# wget -O $TOMCAT_HOME/conf/geoserver.war "http://66.116.103.234:8081/nexus/service/local/artifact/maven/redirect?r=allrepos&g=org.geoserver&a=geoserver&v=LATEST&e=war"
 
 # Copy Post Installation Script:
 # mkdir /opt/elasticbeanstalk/hooks/appdeploy/post
