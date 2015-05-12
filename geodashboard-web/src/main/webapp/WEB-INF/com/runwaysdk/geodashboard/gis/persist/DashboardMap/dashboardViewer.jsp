@@ -75,6 +75,9 @@ $(document).ready(function(){
 </script>
 
     <form action="#" class="control-form" id="control-form">
+<!--     <div id="control-form-collapse-button"> -->
+<!--     	<i class="fa fa-angle-double-left toggle-left"></i> -->
+<!--     </div> -->
       <fieldset>
         <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
@@ -350,8 +353,8 @@ $(document).ready(function(){
     <c:if test="${hasAccess || hasReport}">
       <div id="report-toolbar">
         <div id="report-toggle-container">
-        	<i id="report-collapse-toggle" class="fa fa-arrow-down report-height-toggle" style="display:none;"></i>
-      		<i id="report-expand-toggle" class="fa fa-arrow-up report-height-toggle"></i>
+        	<i id="report-collapse-toggle" class="fa fa-angle-double-down report-height-toggle" style="display:none;"></i>
+      		<i id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
       	</div>
       
 <%--         <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a> --%>

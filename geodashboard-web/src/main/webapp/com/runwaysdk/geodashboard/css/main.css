@@ -1005,6 +1005,30 @@ a.blueactive,
 }
 .control-form .cell{float:right;}
 
+#control-form-collapse-button{
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  background-color: rgba(0,0,0,0.7);
+  left: 245px;
+  top: 75px;
+  border-radius: 3px;
+  border: solid 1px black;
+}
+
+i.fa.fa-angle-double-left.toggle-left{
+  font-size: 25px;
+  color: #bababa;
+  text-align: center;
+  margin: auto;
+  position: absolute;
+  top: 10%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
+
 a.fa.fa-times.ico-remove{
   font-size: 16px;
   margin-right: 10px;
@@ -1213,6 +1237,10 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color:#333;
 	background:#ddd;
 	text-decoration:none;
+}
+
+.dropdown-menu a{
+	cursor: pointer;
 }
 .choice-form{
 	overflow:hidden;
@@ -2497,13 +2525,10 @@ span.select-area span.center {
 	#report-toggle-container{
 		position: absolute;
   		text-align: center;
-/*   		margin: 0 auto; */
   		right: 320px;
-/*   		left: 0; */
   		top: -19px;
   		width: 70px;
   		height: 20px;
-/*   		background: rgba(0,0,0,0.8); */
 		background: rgba(255, 255, 255, 0.9);
   		border: 1px solid;
 		border-bottom: none;
@@ -2528,6 +2553,14 @@ span.select-area span.center {
 	.report-height-toggle:hover,
 	.report-height-toggle:focus{
 		color: #00bfff;
+	}
+	
+	#report-expand-toggle{
+		font-size: 20px;
+	}
+	
+	#report-collapse-toggle{
+		font-size: 20px;
 	}
 	
 	#report-toolbar a {
