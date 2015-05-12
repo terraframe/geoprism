@@ -2327,7 +2327,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	position:fixed;
 	left:0;
 	height:30px;   
-	bottom:0px;   
+	bottom:-30px;   
 	width:100%;
 	background: none;
 	margin: 0;
@@ -2494,6 +2494,42 @@ span.select-area span.center {
 		height: 30px;
 	}
 	
+	#report-toggle-container{
+		position: absolute;
+  		text-align: center;
+/*   		margin: 0 auto; */
+  		right: 320px;
+/*   		left: 0; */
+  		top: -19px;
+  		width: 70px;
+  		height: 20px;
+/*   		background: rgba(0,0,0,0.8); */
+		background: rgba(255, 255, 255, 0.9);
+  		border: 1px solid;
+		border-bottom: none;
+    	border-top-left-radius:3px;
+		border-top-right-radius:3px;
+	}
+	
+	#report-toggle-container.maxed{
+		top: 30px;
+		border-bottom: 1px solid;
+    	border-top-left-radius:0px;
+		border-top-right-radius:0px;
+		border-top: none;
+    	border-bottom-left-radius:3px;
+		border-bottom-right-radius:3px;
+	}
+	
+	.report-height-toggle{
+		cursor: pointer;
+		color: black;
+	}
+	.report-height-toggle:hover,
+	.report-height-toggle:focus{
+		color: #00bfff;
+	}
+	
 	#report-toolbar a {
 		color: #000;
 		padding-left: 10px;
@@ -2570,7 +2606,7 @@ span.select-area span.center {
 *
 */
 	#map-tools-collapse-container{
-		
+		  padding: 5px;
 	}
 	
 	div#collapse-map-tools.accordion-body{

@@ -349,9 +349,14 @@ $(document).ready(function(){
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
     <c:if test="${hasAccess || hasReport}">
       <div id="report-toolbar">
-        <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
-        <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
-        <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
+        <div id="report-toggle-container">
+        	<i id="report-collapse-toggle" class="fa fa-arrow-down report-height-toggle" style="display:none;"></i>
+      		<i id="report-expand-toggle" class="fa fa-arrow-up report-height-toggle"></i>
+      	</div>
+      
+<%--         <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a> --%>
+<%--         <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a> --%>
+<%--         <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a> --%>
       
         <c:if test="${hasAccess}">
           <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>

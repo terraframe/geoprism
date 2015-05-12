@@ -84,6 +84,7 @@
         this._autocomplete = null;
         this._responseCallback = null;
         this._bBox = null;
+        this._reportPanelState = 'min';
         
         var overlayBound = Mojo.Util.bind(this, this._overlayHandler);
         var refBound = Mojo.Util.bind(this, this._referenceHandler);
@@ -455,11 +456,8 @@
           $('#'+this._mapDivId).html('');
         }
         
-        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
-        
-//        // Add attribution to the map
-//        this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
-//        this._map.attributionControl.addAttribution('Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors');
+        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true, attributionControl: true});
+        this._map.attributionControl.setPrefix('');
         
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
         this._map.on("click", mapClickHandlerBound);
@@ -608,11 +606,6 @@
         try {
           var base = this._getBaseLayers();                                
           this._map.addLayer(base[0]);
-          
-    	  // Add attribution to the map
-          this._map.attributionControl.setPrefix("");  
-          this._map.attributionControl.addAttribution(base[0]._gdbmapattribution);
-          
           this._renderBaseLayerSwitcher(base);
         }
         catch (ex) {
@@ -982,24 +975,15 @@
 	        html += '<label for="'+id+'">'+displayName+'</label>';
 	        html += '<div class="cell">';
 	        if(layer.layerExists && this._editable){
-	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
-	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
-
 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
 	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
 	        else if(this._editable) {              
- 	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-	        	//html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;">edit</a>';
-	        	//html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" >enable</a>';
-
 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;"></a>';
 	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
-//	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a>';
 	        html += '</div>';
 	        html += '</div>';
 	      }
@@ -1895,9 +1879,10 @@
         var gmap = new L.Google('ROADMAP');       
         var ghyb = new L.Google('HYBRID');
         
-        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
+        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        	}); 
         osm._gdbcustomtype = 'OSM';
-        osm._gdbmapattribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
         
         var base = [osm, gmap, ghyb, gphy];
         
@@ -1991,25 +1976,8 @@
               
               // The osm tileLayer isnt set at the bottom by default so this sets it as so
               if(newBaselayer._gdbcustomtype === "OSM"){
+            	  this._map.attributionControl.setPrefix('');
             	  newBaselayer.bringToBack();
-            	  
-            	  // Add attribution to the map
-                  this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
-                  if($(this._map.attributionControl.getContainer()).hasClass("hidden")){
-                	  var attrContainer = this._map.attributionControl.getContainer();
-                      $(attrContainer).removeClass("hidden");
-                  }
-                  else{
-                	  this._map.attributionControl.addAttribution(newBaselayer._gdbmapattribution);
-                  }
-              }
-              else{
-            	  // Add attribution to the map
-                  this._map.attributionControl.setPrefix("");  // removes the leaflet.js attribution
-                  
-                  var attrContainer = this._map.attributionControl.getContainer();
-                  $(attrContainer).addClass("hidden");
-                  
               }
             }
           }
@@ -3292,7 +3260,7 @@
         return (value != '' && !$.isNumeric(number));        
       },
       
-      _setReportPanelHeight : function (height) {
+      _setReportPanelHeight : function (height, flipButton) {
         var current = $("#reporticng-container").height();
         var toolbar = $("#report-toolbar").height();        
         
@@ -3303,6 +3271,10 @@
           
           $("#reporticng-container").animate({ bottom: "-=" + difference + "px" }, 1000, function(){
             
+        	if(flipButton){
+        		$("#report-toggle-container").toggleClass("maxed");
+        	}
+        	  
             $("#reporticng-container").css("bottom", "0px");                                                  
             $("#report-viewport").height(height-toolbar);
             $("#reporticng-container").height(height);
@@ -3312,11 +3284,18 @@
         else if (current < height){
           var difference = (height - current);
           
+          $("#reporticng-container").css("bottom", "-" + difference + "px");
           $("#reporticng-container").height(height);
           $("#report-viewport").height(height-toolbar);
-          $("#reporticng-container").css("bottom", "-" + difference + "px");
               
-          $("#reporticng-container").animate({ bottom: "+=" + difference + "px" }, 1000, null);
+          $("#reporticng-container").animate(
+        	  {bottom: "+=" + difference + "px"}, 
+        	  1000, function() {
+    			  if(flipButton){
+    				  $("#report-toggle-container").toggleClass("maxed");
+    			  }
+        	  }
+           );
         }          
       },
       
@@ -3364,23 +3343,38 @@
         
         $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
         
-        // Max
-        $('#report-max').on('click', function(){
-          var height = $("#mapDivId").height();
-            
-          that._setReportPanelHeight(height);
-        });
         
-        // Split
-        $('#report-split').on('click', function(){
-          var height = Math.floor($("#mapDivId").height() / 2);
-              
-          that._setReportPanelHeight(height);
-        });
-        
-        // Min
-        $('#report-min').on('click', function(){
-          that._setReportPanelHeight(30);
+        $('.report-height-toggle').on('click', function(e){
+        	var target = e.target;
+        	var height = $("#mapDivId").height();
+        	
+        	if(target.id === "report-expand-toggle"){
+        		if(that._reportPanelState === 'min'){
+        			var splitHeight = Math.floor(height / 2);
+        			that._setReportPanelHeight(splitHeight, false);
+        			$("#report-collapse-toggle").show();
+        			that._reportPanelState = 'split';
+        		}
+            	else if(that._reportPanelState === 'split'){
+            		var reportToolbarHeight = 30;
+                    that._setReportPanelHeight(height + reportToolbarHeight, true);
+                    that._reportPanelState = 'max';
+                    $("#report-expand-toggle").hide();
+            	}
+        	}
+        	else{
+        		if(that._reportPanelState === 'split'){
+        			that._setReportPanelHeight(0, false);
+        			$("#report-collapse-toggle").hide();
+        			that._reportPanelState = 'min';
+        		}
+            	else if(that._reportPanelState === 'max'){
+        			var splitHeight = Math.floor(height / 2);
+        			that._setReportPanelHeight(splitHeight, true);
+                    that._reportPanelState = 'split';
+                    $("#report-expand-toggle").show();
+            	}
+        	}
         });
         
         // Render the menu

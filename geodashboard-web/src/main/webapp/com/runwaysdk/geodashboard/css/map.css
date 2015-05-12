@@ -72,18 +72,27 @@ h3.popup-heading {
 }
 
 .leaflet-bottom.leaflet-right {
-	bottom: 30px;
-    right: 300px;
+	bottom: 0px;
+    right: 410px;
+}
+
+.leaflet-control-attribution.leaflet-control{
+	color: gray;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.leaflet-control-attribution.leaflet-control > a{
+	color: gray;
 }
 
 .gmnoprint {
-	bottom: 30px !important;
-	right: 371px !important;
+	bottom: 0px !important;
+	right: 481px !important;
 }
 
 .gmnoprint.gm-style-cc {
-	bottom: 30px !important;
-	right: 300px !important;
+	bottom: 0px !important;
+	right: 410px !important;
 }
 
 /***** 
