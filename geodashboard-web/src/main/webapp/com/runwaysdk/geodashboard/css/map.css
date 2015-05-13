@@ -73,7 +73,7 @@ h3.popup-heading {
 
 .leaflet-bottom.leaflet-right {
 	bottom: 0px;
-    right: 410px;
+    right: 335px;
 }
 
 .leaflet-control-attribution.leaflet-control{
@@ -87,12 +87,12 @@ h3.popup-heading {
 
 .gmnoprint {
 	bottom: 0px !important;
-	right: 481px !important;
+	right: 406px !important;
 }
 
 .gmnoprint.gm-style-cc {
 	bottom: 0px !important;
-	right: 410px !important;
+	right: 335px !important;
 }
 
 /***** 
