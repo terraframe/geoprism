@@ -317,21 +317,32 @@ $(document).ready(function(){
 	        </c:forEach>
        </div> <!-- END sales-accortion panel-group -->
     
-    <span id="filter-buttons">
-      <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left"">
-        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span>
-      </a>
-      <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left"">
-        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span>
-      </a>
-      <c:if test="${hasAccess}">
-        <div>
-          <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left"">
-            <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span>
-          </a>
-        </div>
-      </c:if>
-    </span>
+	    <div id="filter-buttons-container">
+	      <a href="#" class="fa fa-filter filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left"">
+	      </a>
+	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
+	      </a>
+	      <c:if test="${hasAccess}">
+	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left"">
+	          </a>
+	      </c:if>
+	    </div>
+    
+<!--     <span id="filter-buttons"> -->
+<!--       <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span> --%>
+<!--       </a> -->
+<!--       <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span> --%>
+<!--       </a> -->
+<%--       <c:if test="${hasAccess}"> --%>
+<!--         <div> -->
+<!--           <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--             <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span> --%>
+<!--           </a> -->
+<!--         </div> -->
+<%--       </c:if> --%>
+<!--     </span> -->
   </aside>
   
   <!-- modal -->
