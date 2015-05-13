@@ -3106,6 +3106,101 @@
     	  this._exportMap();
       },
       
+      _onClickToggleLeftPanel : function(e) {
+    	  var target = $(e.target);
+    	  var speed = 500;
+    	  
+    	  if(target.hasClass("expanded")){
+    		  $("#control-form").animate({
+    			    left: "-=236",
+    			  },
+    			  speed, 
+    			  function() {
+    				  target.removeClass("expanded");
+    				  target.toggleClass("fa-angle-double-left fa-angle-double-right");
+    			  }
+    		   );
+    		  
+    		  // toggle the map zoom buttons
+    		  $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
+	  			    left: "-=236",
+				  }, speed );
+    	  }
+    	  else{
+    		  $("#control-form").animate({
+  			    	left: "+=236",
+	  			  }, 
+	  			  speed, 
+	  			  function() {
+	  				  target.addClass("expanded");
+	  				  target.toggleClass("fa-angle-double-right fa-angle-double-left");
+	  			  }
+    		  );
+    		  
+    		  // toggle the map zoom buttons
+    		  $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
+	  			    left: "+=236",
+				  }, speed );
+    	  }
+      },
+      
+      _onClickToggleRightPanel : function(e) {
+    	  var target = $(e.target);
+    	  var panel = $("#dashboardMetadata");
+    	  var speed = 500;
+    	  
+    	  if(panel.hasClass("expanded")){
+    		  $("#dashboardMetadata").animate({
+    			    right: "-=300",
+    			  },
+    			  speed, 
+    			  function() {
+    				  panel.removeClass("expanded");
+    				  target.toggleClass("fa-angle-double-right fa-angle-double-left");
+    			  }
+    		   );
+    		  
+    		  // Report Panel background
+    		  $("#report-viewport").animate({
+	  			    marginRight: "0px"
+				  },
+				  speed
+			   );
+    		  
+    		  // Repprt panel toolbar
+    		  $("#report-toolbar").animate({
+	  			    marginRight: "0px"
+				  },
+				  speed
+			   );
+    	  }
+    	  else{
+    		  $("#dashboardMetadata").animate({
+  			    	right: "+=300",
+	  			  }, 
+	  			  speed, 
+	  			  function() {
+	  				panel.addClass("expanded");
+	  				target.toggleClass("fa-angle-double-left fa-angle-double-right");
+	  			  }
+    		  );
+    		  
+    		  // Report Panel background
+    		  $("#report-viewport").animate({
+	  			    marginRight: "300px"
+				  },
+				  speed
+			   );
+  		  
+    		  // Repprt panel toolbar
+	  		  $("#report-toolbar").animate({
+		  			    marginRight: "300px"
+					  },
+					  speed
+			  );
+    	  }
+      },
+      
       _onClickExportReport : function(e) {
         var format = $(e.target).data('format');
 
@@ -3342,6 +3437,9 @@
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
         $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
+        
+        $('#control-form-collapse-button').on('click', Mojo.Util.bind(this, this._onClickToggleLeftPanel));
+        $('#data-panel-expand-toggle').on('click', Mojo.Util.bind(this, this._onClickToggleRightPanel));
         
         
         $('.report-height-toggle').on('click', function(e){

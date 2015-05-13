@@ -1029,6 +1029,30 @@ i.fa.fa-angle-double-left.toggle-left{
   cursor: pointer;
 }
 
+i.fa.fa-angle-double-left.toggle-left:hover,
+i.fa.fa-angle-double-left.toggle-left:focus{
+	color: #00bfff;
+}
+
+
+i.fa.fa-angle-double-right.toggle-left{
+  font-size: 25px;
+  color: #bababa;
+  text-align: center;
+  margin: auto;
+  position: absolute;
+  top: 10%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+i.fa.fa-angle-double-right.toggle-left:hover,
+i.fa.fa-angle-double-right.toggle-left:focus{
+	color: #00bfff;
+}
+
 a.fa.fa-times.ico-remove{
   font-size: 16px;
   margin-right: 10px;
@@ -2455,13 +2479,12 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
-	
-	
 	#dashboardMetadata {
 		z-index: 16;
 	}
+	
 	#new-dashboard-btn-container {
-	margin-bottom: 5px;
+		margin-bottom: 5px;
 	}
 	
 	.new-dashboard-btn {
@@ -2470,6 +2493,37 @@ span.select-area span.center {
 	}
 	
 	.new-dashboard-btn:hover {
+		color: #00bfff;
+	}
+	
+	#data-panel-toggle-container{
+		  margin-left: -36px;
+		  bottom: 11px;
+		  position: absolute;
+		  text-align: center;
+		  width: 20px;
+		  height: 40px;
+		  background: rgba(0, 0, 0, 0.8);
+		  border: 1px solid black;
+		  border-right: none;
+		  border-top-left-radius: 3px;
+		  border-bottom-left-radius: 3px;
+	}
+	
+	#data-panel-expand-toggle{
+		  font-size: 20px;
+		  margin: auto;
+		  position: absolute;
+		  top: 25%;
+		  left: 0;
+		  bottom: 0;
+		  right: 0;
+		  color: #bababa;
+		  cursor: pointer;
+	}
+	
+	#data-panel-expand-toggle:hover,
+	#data-panel-expand-toggle:focus{
 		color: #00bfff;
 	}
 
@@ -2516,7 +2570,7 @@ span.select-area span.center {
 		border-top: 1px solid #000;
 		margin-right: 300px;
 		left: 0px;
-		background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.8);
+		background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.9);
 		padding: 5px;
 		color: #000;
 		height: 30px;
@@ -2525,7 +2579,9 @@ span.select-area span.center {
 	#report-toggle-container{
 		position: absolute;
   		text-align: center;
-  		right: 320px;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
   		top: -19px;
   		width: 70px;
   		height: 20px;
