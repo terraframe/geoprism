@@ -37,7 +37,7 @@
 		<repository>
 			<id>terraframe</id>
 			<name>terraframe</name>
-			<url>http://66.116.103.234:8081/nexus/content/groups/allrepos</url>
+			<url>http://52.25.68.156:8081/nexus/content/groups/allrepos</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
