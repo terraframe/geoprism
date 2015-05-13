@@ -39,8 +39,8 @@
     "updateSynonym" : "Update Synonym",
     "deleteSynonym" : "Delete Synonym",
     "refreshSynonyms" : "Refresh Synonyms",
-    "emptyMessage" : "No data to display, create a Universal first."
-//    "exportAll" : "Export All"
+    "emptyMessage" : "No data to display, create a Universal first.",
+    "merge" : "Merge"
   });
   
   /**
@@ -267,6 +267,50 @@
         }
       },
       
+      /**
+       * Override
+       * 
+       */
+      _createNodeMoveMenu : function(event) {
+
+        var $thisTree = $(this.getRawEl());
+        var movedNode = event.move_info.moved_node;
+        var targetNode = event.move_info.target_node;
+                
+        var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);        
+                      
+        var that = this;
+            
+        // User clicks merge on context menu //
+        var mergeHandler = function(mouseEvent, contextMenu) {
+              
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(idsToUpdate) {
+            	
+              for(var i = 0 ; i < idsToUpdate.length;i++) {
+                that.refreshTerm(idsToUpdate[i]);
+              }
+            	
+              this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});            	
+            },
+            onFailure : function(ex) {
+              that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
+              that.handleException(ex);
+            }
+          });
+            
+          this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
+          
+          com.runwaysdk.geodashboard.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);
+        };
+      
+      
+        var items = this.$_createNodeMoveMenu(event);
+        items.push({label:this.localize("merge"), image:"merge", handler:Mojo.Util.bind(this, mergeHandler)});
+        
+        return items;        
+      },
       
       /**
        * Override
@@ -274,15 +318,15 @@
        */
       canMove : function(node)
       {
-    	  if(! node.parent.parent){
-    		  return false;
-    	  }
-    	  else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
-    		  return false;
-    	  }
-    	  else{
-    		  return true;
-    	  }
+        if(! node.parent.parent){
+          return false;
+        }
+        else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
+          return false;
+        }
+        else{
+          return true;
+        }
       },
       
       
@@ -292,12 +336,12 @@
        */
       canMoveTo : function(moved_node, target_node, position)
       {
-    	  if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
-              return false;
-          }
-    	  else{
-    		  return true;
-    	  }
+        if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
+          return false;
+        }
+        else{
+          return true;
+        }
       },
       
       /**
