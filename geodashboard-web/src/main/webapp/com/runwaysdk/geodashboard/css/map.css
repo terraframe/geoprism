@@ -71,6 +71,30 @@ h3.popup-heading {
 	margin: 0;
 }
 
+.leaflet-bottom.leaflet-right {
+	bottom: 0px;
+    right: 410px;
+}
+
+.leaflet-control-attribution.leaflet-control{
+	color: gray;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.leaflet-control-attribution.leaflet-control > a{
+	color: gray;
+}
+
+.gmnoprint {
+	bottom: 0px !important;
+	right: 481px !important;
+}
+
+.gmnoprint.gm-style-cc {
+	bottom: 0px !important;
+	right: 410px !important;
+}
+
 /***** 
 **** UX team delivery overrides (relevant to map page)
 ******/

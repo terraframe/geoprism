@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1018107225)
+@com.runwaysdk.business.ClassSignature(hash = -2052862198)
 public class DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMapController";
@@ -133,6 +133,20 @@ public class DashboardMapControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMapController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardMapController.failEdit");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mapId, java.lang.String:outFileName, java.lang.String:outFileFormat, java.lang.String:mapBounds, java.lang.String:mapSize", post=false)
+  public void exportMap(java.lang.String mapId, java.lang.String outFileName, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMapController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mapId, java.lang.String:outFileName, java.lang.String:outFileFormat, java.lang.String:mapBounds, java.lang.String:mapSize", post=false)
+  public void failExportMap(java.lang.String mapId, java.lang.String outFileName, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMapController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardMapController.failExportMap");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)

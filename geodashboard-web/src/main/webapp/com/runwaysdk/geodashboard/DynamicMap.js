@@ -14,7 +14,8 @@
    "osmBasic" : "Open Street Map",
    "location" : "Location",
    "aggregationMethod" : "Aggregation Method", 
-   "aggregateValue" : "Value"
+   "aggregateValue" : "Value",
+   "deleteLayerTooltip" : "Delete layer"
   });
   
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
@@ -83,6 +84,7 @@
         this._autocomplete = null;
         this._responseCallback = null;
         this._bBox = null;
+        this._reportPanelState = 'min';
         
         var overlayBound = Mojo.Util.bind(this, this._overlayHandler);
         var refBound = Mojo.Util.bind(this, this._referenceHandler);
@@ -98,6 +100,7 @@
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
         this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
+        this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
@@ -453,11 +456,8 @@
           $('#'+this._mapDivId).html('');
         }
         
-        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true});
-        
-        // Add attribution to the map
-        this._map.attributionControl.setPrefix("");
-        //this._map.attributionControl.addAttribution("TerraFrame | GeoDashboard");
+        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true, attributionControl: true});
+        this._map.attributionControl.setPrefix('');
         
         var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
         this._map.on("click", mapClickHandlerBound);
@@ -496,6 +496,38 @@
         
           this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));		
     	}
+      },
+      
+      _exportMap : function() {
+    	  
+    	  var that = this;
+    	  
+    	  var mapId = this._mapId;
+    	  var outFileName = "GeoDashboard_Map";
+    	  var outFileFormat = "png";
+      	  var mapBounds = {};
+    	  var mapExtent = this._map.getBounds();
+    	  mapBounds.left = mapExtent._southWest.lng;
+    	  mapBounds.bottom = mapExtent._southWest.lat;
+    	  mapBounds.right = mapExtent._northEast.lng;
+    	  mapBounds.top = mapExtent._northEast.lat;
+    	  mapBoundsStr = JSON.stringify(mapBounds);
+    	
+    	var mapSize = {};
+    	mapSize.width = $("#mapDivId").width();
+    	mapSize.height = $("#mapDivId").height();
+    	mapSizeStr = JSON.stringify(mapSize);
+    	
+    	
+    	var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo';
+        url += '?' + encodeURIComponent("mapId") + "=" + encodeURIComponent(mapId);          
+        url += '&' + encodeURIComponent("outFileName") + "=" + encodeURIComponent(outFileName);   
+        url += '&' + encodeURIComponent("outFileFormat") + "=" + encodeURIComponent(outFileFormat);  
+        url += '&' + encodeURIComponent("mapBounds") + "=" + encodeURIComponent(mapBoundsStr);  
+        url += '&' + encodeURIComponent("mapSize") + "=" + encodeURIComponent(mapSizeStr);  
+          
+        window.location.href = url;
+    	  
       },
       
       _exportReport : function(geoId, criteria, format) {
@@ -574,7 +606,6 @@
         try {
           var base = this._getBaseLayers();                                
           this._map.addLayer(base[0]);
-          
           this._renderBaseLayerSwitcher(base);
         }
         catch (ex) {
@@ -944,16 +975,16 @@
 	        html += '<label for="'+id+'">'+displayName+'</label>';
 	        html += '<div class="cell">';
 	        if(layer.layerExists && this._editable){
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit">edit</a>';
-	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable" style="display:none;">enable</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
+	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
 	        else if(this._editable) {              
- 	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-remove" style="display:none;">remove</a>';
-	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="ico-edit" style="display:none;">edit</a>';
-	        	html += '<a href="#" data-universalid="'+layer.universalId+'" class="referenceLayer ico-enable">enable</a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+	        	html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;"></a>';
+	        	html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
 	        }
-	        html += '<a href="#" data-id="'+id+'" class="ico-control">control</a></div>';
+	        html += '</div>';
 	        html += '</div>';
 	      }
 	      
@@ -1013,9 +1044,13 @@
           html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
           
           if(this._editable) {
-            html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove">remove</a>';
-            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit">edit</a>';
-            html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+            //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
+            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+        	  
+        	  html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+              html += '<a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
+              html += '</div>';
           }
           
           html += '</div>';
@@ -1113,36 +1148,24 @@
           var viewName = layer.getViewName();
           var geoserverName = this._workspace + ":" + viewName;
           if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
-	          if(layer.getFeatureStrategy() === "BUBBLE"){
-		            var leafletLayer = new L.NonTiledLayer.WMS(window.location.origin+"/geoserver/wms/", {
-		                layers: geoserverName,
-		                format: 'image/png',
-		                transparent: true,
-		                styles: layer.getSldName() || "" 
-		              });
-	            
-		            this._map.addLayer(leafletLayer);
-		            layer.leafletLayer = leafletLayer;
-	          }
-	          else{
-	              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains. 
-	              // However, since bubbles are clipped by the differences between tiles we must render bubble layers as a single tile. 
-	              // We should revisit this in the future to determine if bubbles can be supported in a tileLayer
-	              var mapBounds = this._map.getBounds();
-	              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-	              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-	                layers: geoserverName,
-	                format: 'image/png',
-	                transparent: true,
-	                tiled: true,
-	                tileSize: 256,
-	                tilesorigin: mapSWOrigin,
-	                styles: layer.getSldName() || "" 
-	              });
-	          
-	              this._map.addLayer(leafletLayer);
-	              layer.leafletLayer = leafletLayer;
-		      }
+              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
+        	  // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO PREVENT BUBBLE CHOPPING.
+        	  // We could get slightly better performance by setting tiled: false for non-bubble layers but 
+        	  // this is currently unnecessary addition of code for relatively small performance gain.
+              var mapBounds = this._map.getBounds();
+              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
+              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
+                layers: geoserverName,
+                format: 'image/png',
+                transparent: true,
+                tiled: true,
+                tileSize: 256,
+                tilesorigin: mapSWOrigin,
+                styles: layer.getSldName() || "" 
+              });
+          
+              this._map.addLayer(leafletLayer);
+              layer.leafletLayer = leafletLayer;
           }
         }
       },
@@ -1832,6 +1855,14 @@
           this._closeDashboardModal();
       },
       
+      /**
+       * Cancel a dashboard creation crud form
+       * 
+       */
+      _cancelDashboardMapListener : function(){  
+    	  
+      },
+      
       
       /**
        * Return all allowable base maps.
@@ -1848,7 +1879,9 @@
         var gmap = new L.Google('ROADMAP');       
         var ghyb = new L.Google('HYBRID');
         
-        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'); 
+        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        	}); 
         osm._gdbcustomtype = 'OSM';
         
         var base = [osm, gmap, ghyb, gphy];
@@ -1943,7 +1976,8 @@
               
               // The osm tileLayer isnt set at the bottom by default so this sets it as so
               if(newBaselayer._gdbcustomtype === "OSM"){
-              newBaselayer.bringToBack();
+            	  this._map.attributionControl.setPrefix('');
+            	  newBaselayer.bringToBack();
               }
             }
           }
@@ -2367,6 +2401,17 @@
 
           this._DashboardController.newInstance(request);
         },
+        
+        /**
+         * Opens a new tab for the dashboard currently active in the dashboards dropdown
+         * 
+         */
+        _openNewDashboardTab : function(e){
+        	var url = "#";
+        	var win = window.open(url, '_blank');
+        	win.focus();
+        },
+        
         
         /**
          * Renders the dashboard creation form
@@ -3055,6 +3100,12 @@
         return conditions;
       },
       
+      _onClickExportMap : function(e) {
+    	  var format = $(e.target).data('format');  
+    	  
+    	  this._exportMap();
+      },
+      
       _onClickExportReport : function(e) {
         var format = $(e.target).data('format');
 
@@ -3209,7 +3260,7 @@
         return (value != '' && !$.isNumeric(number));        
       },
       
-      _setReportPanelHeight : function (height) {
+      _setReportPanelHeight : function (height, flipButton) {
         var current = $("#reporticng-container").height();
         var toolbar = $("#report-toolbar").height();        
         
@@ -3220,6 +3271,10 @@
           
           $("#reporticng-container").animate({ bottom: "-=" + difference + "px" }, 1000, function(){
             
+        	if(flipButton){
+        		$("#report-toggle-container").toggleClass("maxed");
+        	}
+        	  
             $("#reporticng-container").css("bottom", "0px");                                                  
             $("#report-viewport").height(height-toolbar);
             $("#reporticng-container").height(height);
@@ -3229,11 +3284,18 @@
         else if (current < height){
           var difference = (height - current);
           
+          $("#reporticng-container").css("bottom", "-" + difference + "px");
           $("#reporticng-container").height(height);
           $("#report-viewport").height(height-toolbar);
-          $("#reporticng-container").css("bottom", "-" + difference + "px");
               
-          $("#reporticng-container").animate({ bottom: "+=" + difference + "px" }, 1000, null);
+          $("#reporticng-container").animate(
+        	  {bottom: "+=" + difference + "px"}, 
+        	  1000, function() {
+    			  if(flipButton){
+    				  $("#report-toggle-container").toggleClass("maxed");
+    			  }
+        	  }
+           );
         }          
       },
       
@@ -3270,6 +3332,7 @@
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
+        $('.ico-new-dashboard-tab').on('click',  Mojo.Util.bind(this, this._openNewDashboardTab));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
         $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
@@ -3278,23 +3341,40 @@
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
-        // Max
-        $('#report-max').on('click', function(){
-          var height = $("#mapDivId").height();
-            
-          that._setReportPanelHeight(height);
-        });
+        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
         
-        // Split
-        $('#report-split').on('click', function(){
-          var height = Math.floor($("#mapDivId").height() / 2);
-              
-          that._setReportPanelHeight(height);
-        });
         
-        // Min
-        $('#report-min').on('click', function(){
-          that._setReportPanelHeight(30);
+        $('.report-height-toggle').on('click', function(e){
+        	var target = e.target;
+        	var height = $("#mapDivId").height();
+        	
+        	if(target.id === "report-expand-toggle"){
+        		if(that._reportPanelState === 'min'){
+        			var splitHeight = Math.floor(height / 2);
+        			that._setReportPanelHeight(splitHeight, false);
+        			$("#report-collapse-toggle").show();
+        			that._reportPanelState = 'split';
+        		}
+            	else if(that._reportPanelState === 'split'){
+            		var reportToolbarHeight = 30;
+                    that._setReportPanelHeight(height + reportToolbarHeight, true);
+                    that._reportPanelState = 'max';
+                    $("#report-expand-toggle").hide();
+            	}
+        	}
+        	else{
+        		if(that._reportPanelState === 'split'){
+        			that._setReportPanelHeight(0, false);
+        			$("#report-collapse-toggle").hide();
+        			that._reportPanelState = 'min';
+        		}
+            	else if(that._reportPanelState === 'max'){
+        			var splitHeight = Math.floor(height / 2);
+        			that._setReportPanelHeight(splitHeight, true);
+                    that._reportPanelState = 'split';
+                    $("#report-expand-toggle").show();
+            	}
+        	}
         });
         
         // Render the menu

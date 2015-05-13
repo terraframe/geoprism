@@ -1004,58 +1004,81 @@ a.blueactive,
 	margin:1px 0 0;
 }
 .control-form .cell{float:right;}
-.ico-remove{
-	display:inline-block;
-	vertical-align:top;
-	width:10px;
-	height:10px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/sprite.png) no-repeat -150px 0;
+
+#control-form-collapse-button{
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  background-color: rgba(0,0,0,0.7);
+  left: 245px;
+  top: 75px;
+  border-radius: 3px;
+  border: solid 1px black;
 }
-.ico-remove:hover,
-.ico-remove:focus{
-	background-position:-150px -25px;
-	outline:none;
+
+i.fa.fa-angle-double-left.toggle-left{
+  font-size: 25px;
+  color: #bababa;
+  text-align: center;
+  margin: auto;
+  position: absolute;
+  top: 10%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
 }
+
+a.fa.fa-times.ico-remove{
+  font-size: 16px;
+  margin-right: 10px;
+  margin-top: 0px;
+  float: left;
+  color: #bababa;
+  cursor: pointer;
+}
+
+a.fa.fa-times.ico-remove:hover,
+a.fa.fa-times.ico-remove:focus{
+	color: #00bfff;
+}
+
 .control-form .ico-remove{
 	float:left;
 	margin:5px 13px 0 0;
 }
-.ico-edit{
-	display:inline-block;
-	vertical-align:top;
-	width:12px;
-	height:12px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/sprite.png) no-repeat -175px 0;
+
+a.fa.fa-pencil.ico-edit{
+  font-size: 16px;
+  margin-right: 5px;
+  margin-top: 0px;
+  float: left;
+  color: #bababa;
+  cursor: pointer;
 }
-.ico-edit:hover,
-.ico-edit:focus{
-	background-position:-175px -25px;
-	outline:none;
+
+a.fa.fa-pencil.ico-edit:hover,
+a.fa.fa-pencil.ico-edit:focus{
+	color: #00bfff;
 }
+
 .control-form .ico-edit{
 	float:left;
 	margin:4px 11px 0 0;
 }
 
-.ico-enable{
-	display:inline-block;
-	vertical-align:top;
-	width:12px;
-	height:12px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/small_plus_signs.png) no-repeat 0px 0;
-/* 	background:url(../images/sprite.png) no-repeat -69px 0; */
+a.fa.fa-plus.referenceLayer.ico-enable{
+  font-size: 15px;
+  margin-right: 5px;
+  float: left;
+  color: #bababa;
+  cursor: pointer;
 }
-.ico-enable:hover,
-.ico-enable:focus{
-	background-position:-15px 0;
-	outline:none;
+a.fa.fa-plus.referenceLayer.ico-enable:hover,
+a.fa.fa-plus.referenceLayer.ico-enable:focus{
+	color: #00bfff;
 }
+
 .control-form .ico-enable{
 	float:left;
 	margin:4px 11px 0 0;
@@ -1161,18 +1184,34 @@ a.blueactive,
 	font-size:16px;
 	line-height:20px;
 	position:relative;
-	padding:0 18px 0 1px;
+	padding:0 10px 0 1px;
 	color:#26c9ff;
 }
-.sales-menu .link-opener:after{
+/* .sales-menu .link-opener:after{ */
+/* 	content:''; */
+/* 	position:absolute; */
+/* 	right:0; */
+/* 	top:7px; */
+/* 	width:10px; */
+/* 	height:7px; */
+/* 	background:url(../images/sprite.png) no-repeat -225px -25px; */
+/* } */
+
+.sales-menu .link-opener:before{
 	content:'';
 	position:absolute;
-	right:0;
+/* 	right:0; */
+	left: -15px;
 	top:7px;
 	width:10px;
 	height:7px;
 	background:url(../images/sprite.png) no-repeat -225px -25px;
 }
+
+.sales-menu.dropdown{
+  margin-left: 15px;
+}
+
 .sales-menu .dropdown-menu{
 	width:280px;
 	border:1px solid #bbb;
@@ -1198,6 +1237,10 @@ a.blueactive,
 	color:#333;
 	background:#ddd;
 	text-decoration:none;
+}
+
+.dropdown-menu a{
+	cursor: pointer;
 }
 .choice-form{
 	overflow:hidden;
@@ -1487,6 +1530,7 @@ a.blueactive,
 **/
 	div.accordion-group.sales-accortion {
 		margin-left: 0px;
+		margin-right: 0px;
 	}
 	
 	div#baseLayerContainer.accordion-inner.holder {
@@ -1506,10 +1550,6 @@ a.blueactive,
 		-webkit-border-radius: 0px;
 		-moz-border-radius: 0px;
 		border-radius: 0px;
-	}
-	
-	#overlay-container{
-		padding-right: 2px;
 	}
 	
 	#overlay-container > .accordion-group{
@@ -2315,7 +2355,7 @@ a.blueactive,
 	position:fixed;
 	left:0;
 	height:30px;   
-	bottom:0px;   
+	bottom:-30px;   
 	width:100%;
 	background: none;
 	margin: 0;
@@ -2389,21 +2429,33 @@ span.select-area span.center {
 		margin: 0px 9px 0px 0px;
 	}
 	
-	.ico-new-dashboard {
-	  display: inline-block;
-	  vertical-align: middle;
-	  width: 12px;
-	  height: 12px;
-	  text-indent: -9999px;
-	  overflow: hidden;
-	  background: url(../images/small_plus_signs.png) no-repeat 0px 0;
+	i.fa.fa-plus.ico-new-dashboard {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
 	}
 	
-	.ico-new-dashboard:hover,
-	.ico-new-dashboard:focus{
-		background-position:-15px 0;
-		outline:none;
+	i.fa.fa-plus.ico-new-dashboard:hover,
+	i.fa.fa-plus.ico-new-dashboard:focus{
+		color: #00bfff;
 	}
+	
+	i.fa.fa-external-link.ico-new-dashboard-tab {
+		margin-left: 0;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-external-link.ico-new-dashboard-tab:hover,
+	i.fa.fa-external-link.ico-new-dashboard-tab:focus{
+		color: #00bfff;
+	}
+	
+	
 	
 	#dashboardMetadata {
 		z-index: 16;
@@ -2468,6 +2520,47 @@ span.select-area span.center {
 		padding: 5px;
 		color: #000;
 		height: 30px;
+	}
+	
+	#report-toggle-container{
+		position: absolute;
+  		text-align: center;
+  		right: 320px;
+  		top: -19px;
+  		width: 70px;
+  		height: 20px;
+		background: rgba(255, 255, 255, 0.9);
+  		border: 1px solid;
+		border-bottom: none;
+    	border-top-left-radius:3px;
+		border-top-right-radius:3px;
+	}
+	
+	#report-toggle-container.maxed{
+		top: 30px;
+		border-bottom: 1px solid;
+    	border-top-left-radius:0px;
+		border-top-right-radius:0px;
+		border-top: none;
+    	border-bottom-left-radius:3px;
+		border-bottom-right-radius:3px;
+	}
+	
+	.report-height-toggle{
+		cursor: pointer;
+		color: black;
+	}
+	.report-height-toggle:hover,
+	.report-height-toggle:focus{
+		color: #00bfff;
+	}
+	
+	#report-expand-toggle{
+		font-size: 20px;
+	}
+	
+	#report-collapse-toggle{
+		font-size: 20px;
 	}
 	
 	#report-toolbar a {
@@ -2538,6 +2631,33 @@ span.select-area span.center {
 		position: absolute;
 		z-index: 9999999999999;
 	}
+	
+	
+/* 
+*
+* Map Tools panel 
+*
+*/
+	#map-tools-collapse-container{
+		  padding: 5px;
+	}
+	
+	div#collapse-map-tools.accordion-body{
+		height: 100%;
+	}
+	
+	.fa.fa-file-image-o.map-tool-icon{
+		font-size: 30px;
+		margin: 2px;
+		color: #bababa;
+		cursor: pointer;
+	}
+	
+	i.fa.fa-file-image-o.map-tool-icon:hover,
+	i.fa.fa-file-image-o.map-tool-icon:focus{
+		color: #00bfff;
+	}
+
 	
 /*** 
 ** Legend

@@ -33,6 +33,8 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
+<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
@@ -73,6 +75,9 @@ $(document).ready(function(){
 </script>
 
     <form action="#" class="control-form" id="control-form">
+<!--     <div id="control-form-collapse-button"> -->
+<!--     	<i class="fa fa-angle-double-left toggle-left"></i> -->
+<!--     </div> -->
       <fieldset>
         <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
@@ -124,21 +129,28 @@ $(document).ready(function(){
 			    </div>
 		    </div>
 		 </article>
+		 
+		<!-- Map Tools Panel -->       
+        <article class="accordion info-box" id="map-tools-collapse-container">
+        	<div class="accordion-group sales-accortion" id="map-tools-sub-container">
+<!--         		<div class="accordion-heading"> -->
+<%--         			<a class="map-tools-opener opener" id="map-tools-opener-button" data-toggle="collapse" data-parent="#map-tools-collapse-container" href="#collapse-map-tools"><gdb:localize key="dashboardViewer.map-tools"/></a> --%>
+<!--         		</div>	 -->
+              	<div id="collapse-map-tools" class="accordion-body">
+              		<div class="accordion-inner holder" id="mapToolsContainer">
+              			<i id="map-export-btn" class="fa fa-file-image-o map-tool-icon" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></i>
+              		</div>
+              
+			    </div>
+		    </div>
+		 </article>
+		 
       </fieldset>
     </form>
     
     <!-- contain aside of the page -->
   <aside class="aside animated legend-snapable" id="dashboardMetadata">
 		<div class="nav-bar">
-		    <!-- Clone dashboard button -->
-		    <c:if test="${hasAccess}">
-		      <span id="clone-dashboard" class="pull-left">
-<!--                 <a href="#" class="opener glyphicon glyphicon-plus clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
-  		          <a href="#" class="ico-new-dashboard">enable</a>
-  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
-  		     
-  		      </span>
-  		    </c:if>
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div class="sales-menu dropdown">
@@ -150,6 +162,16 @@ $(document).ready(function(){
 					<c:if test="${empty dashboards}">&nbsp;</c:if>
 				</ul>
 			</div>
+			
+			<i class="fa fa-external-link ico-new-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
+			
+			<!-- Clone dashboard button -->
+		    <c:if test="${hasAccess}">
+		      <span id="clone-dashboard" class="">
+  		          <i class="fa fa-plus ico-new-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
+  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+  		      </span>
+  		    </c:if>
 		</div>
 		
 	    <!-- Global geo filter -->
@@ -330,12 +352,17 @@ $(document).ready(function(){
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
     <c:if test="${hasAccess || hasReport}">
       <div id="report-toolbar">
-        <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a>
-        <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a>
-        <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a>
+        <div id="report-toggle-container">
+        	<i id="report-collapse-toggle" class="fa fa-angle-double-down report-height-toggle" style="display:none;"></i>
+      		<i id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
+      	</div>
+      
+<%--         <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a> --%>
+<%--         <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a> --%>
+<%--         <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a> --%>
       
         <c:if test="${hasAccess}">
-          <a href="#" id="report-upload"><gdb:localize key="dashboardViewer.upload"/></a>
+          <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
         </c:if>
       
         <c:choose>
@@ -347,9 +374,9 @@ $(document).ready(function(){
           </c:otherwise>       
         </c:choose>
       
-          <a href="#" class="report-export" data-format="docx"><gdb:localize key="report.docx"/></a>
-          <a href="#" class="report-export" data-format="xlsx"><gdb:localize key="report.xlsx"/></a>
-          <a href="#" class="report-export" data-format="pdf"><gdb:localize key="report.pdf"/></a>
+          <a href="#" class="report-export" data-format="docx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as docx" ><gdb:localize key="report.docx"/></a>
+          <a href="#" class="report-export" data-format="xlsx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as xlsx" ><gdb:localize key="report.xlsx"/></a>
+          <a href="#" class="report-export" data-format="pdf" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as pdf" ><gdb:localize key="report.pdf"/></a>
         </span>
       </div>
       <div id="report-viewport">    

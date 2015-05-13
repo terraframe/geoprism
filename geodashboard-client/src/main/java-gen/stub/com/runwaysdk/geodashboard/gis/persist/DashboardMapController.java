@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.geodashboard.AccessConstants;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
@@ -18,6 +20,7 @@ import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
@@ -254,5 +257,30 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void failCreateMapForSession() throws IOException, ServletException
   {
     render("nodashboard.jsp");
+  }
+  
+  
+  @Override
+  public void exportMap(String mapId, String outFileName, String outFileFormat, String mapBounds,
+      String mapSize) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+    DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
+    
+    if(outFileName == null || outFileName.length() == 0)
+    {
+      outFileName = "default";
+    }
+    
+    try
+    {
+      InputStream mapImageInStream = map.generateMapImageExport(outFileFormat, mapBounds, mapSize);
+      FileDownloadUtil.writeFile(resp, outFileName, outFileFormat, mapImageInStream, "application/"+outFileFormat);
+    }
+    catch (Exception e)
+    {
+      ErrorUtility.prepareThrowable(e, req, resp, false);
+      this.failExportMap(mapId, outFileName, outFileFormat, mapBounds, mapSize);
+    }
   }
 }
