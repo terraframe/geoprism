@@ -75,9 +75,9 @@ $(document).ready(function(){
 </script>
 
     <form action="#" class="control-form" id="control-form">
-<!--     <div id="control-form-collapse-button"> -->
-<!--     	<i class="fa fa-angle-double-left toggle-left"></i> -->
-<!--     </div> -->
+    <div id="control-form-collapse-button">
+    	<i class="fa fa-angle-double-left toggle-left expanded"></i>
+    </div>
       <fieldset>
         <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
@@ -149,7 +149,10 @@ $(document).ready(function(){
     </form>
     
     <!-- contain aside of the page -->
-  <aside class="aside animated legend-snapable" id="dashboardMetadata">
+  <aside class="aside animated legend-snapable expanded" id="dashboardMetadata">
+        <div id="data-panel-toggle-container">
+      		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
+      	</div>
 		<div class="nav-bar">
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
@@ -314,21 +317,32 @@ $(document).ready(function(){
 	        </c:forEach>
        </div> <!-- END sales-accortion panel-group -->
     
-    <span id="filter-buttons">
-      <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left"">
-        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span>
-      </a>
-      <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left"">
-        <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span>
-      </a>
-      <c:if test="${hasAccess}">
-        <div>
-          <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left"">
-            <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span>
-          </a>
-        </div>
-      </c:if>
-    </span>
+	    <div id="filter-buttons-container">
+	      <a href="#" class="fa fa-filter filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left"">
+	      </a>
+	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
+	      </a>
+	      <c:if test="${hasAccess}">
+	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left"">
+	          </a>
+	      </c:if>
+	    </div>
+    
+<!--     <span id="filter-buttons"> -->
+<!--       <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span> --%>
+<!--       </a> -->
+<!--       <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span> --%>
+<!--       </a> -->
+<%--       <c:if test="${hasAccess}"> --%>
+<!--         <div> -->
+<!--           <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left""> -->
+<%--             <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span> --%>
+<!--           </a> -->
+<!--         </div> -->
+<%--       </c:if> --%>
+<!--     </span> -->
   </aside>
   
   <!-- modal -->
@@ -356,10 +370,6 @@ $(document).ready(function(){
         	<i id="report-collapse-toggle" class="fa fa-angle-double-down report-height-toggle" style="display:none;"></i>
       		<i id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
       	</div>
-      
-<%--         <a href="#" id="report-max"><gdb:localize key="dashboardViewer.max"/></a> --%>
-<%--         <a href="#" id="report-split"><gdb:localize key="dashboardViewer.split"/></a> --%>
-<%--         <a href="#" id="report-min"><gdb:localize key="dashboardViewer.min"/></a> --%>
       
         <c:if test="${hasAccess}">
           <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
