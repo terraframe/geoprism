@@ -1829,7 +1829,8 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	overflow:hidden;
 }
 .modal-form .cell.style02{
-	width:92px;
+/* 	width:92px; */
+	width: 160px;
 	margin:0;
 }
 .modal-form .select-holder{
@@ -1857,7 +1858,8 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	width:100%;
 }
 .select-font-select.select-area{
-	width:92px !important;
+/* 	width:92px !important; */
+	width: 100% !important;
 	height:28px;
 	margin:0;
 	font-size:13px;

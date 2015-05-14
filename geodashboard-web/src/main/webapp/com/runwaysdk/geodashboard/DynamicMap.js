@@ -2323,6 +2323,25 @@
         return 'text';
       },
       
+      /**
+       * Adding font-family style property to dropdown options for better usability.
+       * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
+       * 
+       */
+      _injectFontStylesForDropdown : function(){
+    	  var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
+    	  var selectedOption = $(".select-font-select.select-area").find(".center");
+    	  selectedOption.css("font-family", selectedOption.text());
+    	  
+    	  for(var i=0; i<convertedOptions.length; i++){
+    		  var targetSpan = $(convertedOptions[i]).find("span");
+    		  
+    		  if(targetSpan.text().length > 0){
+    			  targetSpan.css("font-family", targetSpan.text());
+    		  }
+    	  }
+      },
+      
       _addLayerFormControls : function(){
         
         $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
@@ -2377,6 +2396,8 @@
 
           }
         }
+        
+        this._injectFontStylesForDropdown();
       },
       
       /**

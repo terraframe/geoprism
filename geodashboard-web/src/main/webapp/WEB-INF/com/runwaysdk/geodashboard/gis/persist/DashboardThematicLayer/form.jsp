@@ -91,10 +91,10 @@
 	                        <c:forEach items="${fonts}" var="font">
 	                          <c:choose>
 	                            <c:when test="${style.labelFont == font}">
-	                              <option value="${font}" selected="selected">${font}</option>
+	                              <option value="${font}" style="font-family:${font}" selected="selected">${font}</option>
 	                            </c:when>
 	                            <c:otherwise>
-	                              <option value="${font}">${font}</option>
+	                              <option value="${font}" style="font-family:${font}" >${font}</option>
 	                            </c:otherwise>
 	                          </c:choose>
 	                        </c:forEach>
