@@ -298,7 +298,7 @@
                   that.refreshTerm(idsToUpdate[i]);
                 }
                     
-                this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});              
+                that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});              
               },
               onFailure : function(ex) {
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
