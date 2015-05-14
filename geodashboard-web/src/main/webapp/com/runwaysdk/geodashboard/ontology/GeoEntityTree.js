@@ -39,8 +39,12 @@
     "updateSynonym" : "Update Synonym",
     "deleteSynonym" : "Delete Synonym",
     "refreshSynonyms" : "Refresh Synonyms",
-    "emptyMessage" : "No data to display, create a Universal first."
-//    "exportAll" : "Export All"
+    "emptyMessage" : "No data to display, create a Universal first.",
+    "merge" : "Merge",
+    "mergeConfirmation" : "Are you sure you want to merge these to entities?",
+    "ok" : "Ok",
+    "cancel" : "Cancel",
+    "mergeTitle" : "Merge confirmation"
   });
   
   /**
@@ -267,6 +271,60 @@
         }
       },
       
+      /**
+       * Override
+       * 
+       */
+      _createNodeMoveMenu : function(event) {
+
+        var $thisTree = $(this.getRawEl());
+        var movedNode = event.move_info.moved_node;
+        var targetNode = event.move_info.target_node;
+                
+        var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);        
+                      
+        var that = this;
+            
+        // User clicks merge on context menu //
+        var mergeHandler = function(mouseEvent, contextMenu) {
+
+          var dialog = that.getFactory().newDialog(that.localize("mergeTitle"), {modal: false, width: 350, height: 200, resizable: false});
+
+          var okHandler = Mojo.Util.bind(this, function() {
+            var request = new Mojo.ClientRequest({
+              onSuccess : function(idsToUpdate) {
+                for(var i = 0 ; i < idsToUpdate.length;i++) {
+                  that.refreshTerm(idsToUpdate[i]);
+                }
+                    
+                that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});              
+              },
+              onFailure : function(ex) {
+                that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
+                that.handleException(ex);
+              }
+            });
+            
+            dialog.close();
+                  
+            this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
+                
+            com.runwaysdk.geodashboard.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);        	  
+          });          
+          
+          dialog.appendContent(that.localize("mergeConfirmation"));
+          dialog.addButton(that.localize("ok"), okHandler, null, {"class": "btn btn-primary"});
+          dialog.addButton(that.localize("cancel"), function(){dialog.close();}, null, {"class": "btn"});
+          dialog.render();
+        };
+      
+      
+        var items = this.$_createNodeMoveMenu(event);
+        items.push({label:this.localize("merge"), image:"merge", handler:Mojo.Util.bind(this, mergeHandler)});
+        
+        return items;        
+      },
       
       /**
        * Override
@@ -274,15 +332,15 @@
        */
       canMove : function(node)
       {
-    	  if(! node.parent.parent){
-    		  return false;
-    	  }
-    	  else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
-    		  return false;
-    	  }
-    	  else{
-    		  return true;
-    	  }
+        if(! node.parent.parent){
+          return false;
+        }
+        else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
+          return false;
+        }
+        else{
+          return true;
+        }
       },
       
       
@@ -292,12 +350,12 @@
        */
       canMoveTo : function(moved_node, target_node, position)
       {
-    	  if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
-              return false;
-          }
-    	  else{
-    		  return true;
-    	  }
+        if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
+          return false;
+        }
+        else{
+          return true;
+        }
       },
       
       /**

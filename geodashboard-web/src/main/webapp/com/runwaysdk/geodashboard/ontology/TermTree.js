@@ -273,11 +273,11 @@
       },
       
       setCheckedTerms : function(termIds) {
-        for(var i = 0; i< termIds.length; i++) {        	
+        for(var i = 0; i< termIds.length; i++) {          
           var termId = termIds[i];          
           var nodes = this.__getNodesById(termId);
           
-          if(nodes != null) {        	  
+          if(nodes != null) {            
             for(var j = 0; j < nodes.length; j++) {
               var node = nodes[j];
               node.skipCheckParent = false;
@@ -834,39 +834,31 @@
         }
       },
       
-      /**
-       * is binded to jqtree's node move event.s
-       */
-      __onNodeMove : function(event) {
+      _createNodeMoveMenu : function(event) {
+        
         var $thisTree = $(this.getRawEl());
         var movedNode = event.move_info.moved_node;
         var targetNode = event.move_info.target_node;
         var previousParent = event.move_info.previous_parent;
         var previousParentId = this.__getRunwayIdFromNode(previousParent);
-        
+              
         var movedNodeId = this.__getRunwayIdFromNode(movedNode);
-        var targetNodeId = this.__getRunwayIdFromNode(targetNode);
-        
-        if (this.rootTermConfigs.containsKey(movedNodeId)) {
-          event.preventDefault();
-          var ex = new com.runwaysdk.Exception("You cannot move a root node.");
-          return;
-        }
-        
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);        
+                    
         var that = this;
-        
+          
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
-          
+            
           var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
           var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
           var relType = this._getRelationshipForNode(movedNode, targetNode);
-          
-          var moveBizCallback = {
+            
+          var moveBizCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
               that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
-              
+                
               // Remove nodes from old relationship.
               var nodes = that.__getNodesById(movedNodeId);
               for (var i = 0; i<nodes.length; ++i) {
@@ -875,7 +867,7 @@
                   nodes[i]
                 );
               }
-              
+                
               // Create nodes that represent the new relationship
               nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
@@ -886,25 +878,24 @@
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
               that.handleException(ex);
             }
-          };
-          Mojo.Util.copy(new Mojo.ClientRequest(moveBizCallback), moveBizCallback);
+          });
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
-          
+            
           com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(moveBizCallback, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
         };
-        
+          
         // User clicks Copy on context menu //
         var copyHandler = function(mouseEvent, contextMenu) {
-          
+            
           var relType = null;
-          
-          var addChildCallback = {
+            
+          var addChildCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
               that.setNodeBusy(movedNode, false);
-              
+                
               that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
-              
+                
               var nodes = that.__getNodesById(targetNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 that.__createTreeNode(movedNodeId, nodes[i]);
@@ -914,23 +905,53 @@
               that.setNodeBusy(movedNode, false);
               that.handleException(ex);
             }
-          };
-          Mojo.Util.copy(new Mojo.ClientRequest(addChildCallback), addChildCallback);
-          
+          });
+            
           that.setNodeBusy(movedNode, true);
-          
+            
           var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.__getRunwayIdFromNode(movedNode.parent), that);
-          
+            
           // The oldRelId is null which means that this actually does a copy.
           com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
-          
+            
           relType = that._getRelationshipForNode(movedNode, targetNode);
           com.runwaysdk.system.ontology.TermUtil.addLink(addChildCallback, movedNodeId, targetNodeId, relType);
         };
+          
+        var items = [];
+        items.push({label:this.localize("move"), image:"add", handler:Mojo.Util.bind(this, moveHandler)});
+        items.push({label:this.localize("copy"), image:"paste", handler:Mojo.Util.bind(this, copyHandler)});
         
+        return items;
+      },
+      
+      /**
+       * is binded to jqtree's node move event.s
+       */
+      __onNodeMove : function(event) {
+        var movedNode = event.move_info.moved_node;
+        var targetNode = event.move_info.target_node;
+              
+        var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);
+
+        if (this.rootTermConfigs.containsKey(movedNodeId)) {
+          event.preventDefault();
+              
+          var ex = new com.runwaysdk.Exception("You cannot move a root node.");
+          return;
+        }
+        
+        var items = this._createNodeMoveMenu(event);
+      
         var cm = this.getFactory().newContextMenu({childId: movedNodeId, parentId: targetNodeId});
-        cm.addItem(this.localize("move"), "add", Mojo.Util.bind(this, moveHandler));
-        cm.addItem(this.localize("copy"), "paste", Mojo.Util.bind(this, copyHandler));
+        
+        for(var i = 0; i < items.length; i++) {
+          var item = items[i];
+          
+          cm.addItem(item.label, item.image, item.handler);
+        }
+        
         cm.render();
         
         event.preventDefault();

@@ -90,6 +90,7 @@ public class JavascriptUtil implements Reloadable
     types.add(SynonymDTO.CLASS);
     types.add(SynonymDisplayLabelDTO.CLASS);
     types.add(GeoEntityExportMenuDTO.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
