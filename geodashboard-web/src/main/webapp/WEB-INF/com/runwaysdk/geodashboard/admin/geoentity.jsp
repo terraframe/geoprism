@@ -31,6 +31,8 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
+<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
+
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
@@ -38,7 +40,24 @@
 <script type="text/javascript">${js}</script>
 </head>
 
-<div id="tree"></div>
+<div id="tree-container">
+	<div id="tree"></div>
+	<div id="problem-panel">
+		<ul id="problems-list">
+			<li class="geoent-problem-error-li">
+				<i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">
+					<p class="geoent-problem-msg">Your geoentity is all jacked up because your data sucks.  Fix it!</p>
+				</i>
+			</li>
+			
+			<li class="geoent-problem-warn-li">
+				<i class="fa fa-exclamation-triangle geoent-problem-msg-icon geoent-problem-warn">
+					<p class="geoent-problem-msg">You have an overlapping boundary in 2 or more of your geoentities.</p>
+				</i>
+			</li>
+		</ul>
+	</div>
+</div>
 
 <script type="text/javascript">
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){

@@ -2468,6 +2468,19 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
+	i.fa.fa-user-plus.ico-add-dashboard-user {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-user-plus.ico-add-dashboard-user:hover,
+	i.fa.fa-user-plus.ico-add-dashboard-user:focus{
+		color: #00bfff;
+	}
+	
 	i.fa.fa-external-link.ico-new-dashboard-tab {
 		margin-left: 0;
 		vertical-align: bottom;
@@ -2961,5 +2974,70 @@ div.secondary-box label {
 .secondary-label {
 	width:150px;
 }
+
+#tree-container{
+	margin: auto;
+}
+
+#tree{
+  width: 50%;
+/*   background-color: red; */
+  float: left;
+  padding: 10px;
+}
+
+#problem-panel{
+  margin-left: 50%;
+  width: 50%;
+/*   background-color: green; */
+  padding: 10px;
+}
+
+#problems-list{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+#problems-list li{
+	padding: 5px;
+	  border: rgb(190, 190, 190) 1px solid;
+}
+
+.geoent-problem-msg-icon{
+	font-size: 15px;
+}
+
+.geoent-problem-msg{
+	display: inline-block;
+	margin: 0;
+}
+
+.geoent-problem-error::before{
+	color: red;
+}
+
+.geoent-problem-warn::before{
+	color: orange;
+}
+
+.geoent-problem-error-li{
+	background: pink;
+	cursor: pointer;
+}
+
+.geoent-problem-error-li:hover{
+	background: rgb(245, 171, 184);
+}
+
+.geoent-problem-warn-li{
+	background: lightyellow;
+	cursor: pointer;
+}
+
+.geoent-problem-warn-li:hover{
+	background: rgb(244, 244, 184);
+}
+
+
 
 
