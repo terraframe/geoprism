@@ -3121,6 +3121,103 @@
         return conditions;
       },
       
+      _onClickAddDashboardUsers : function(e) {
+    	  var that = this;
+    	  
+    	  var clientRequest = new Mojo.ClientRequest({
+              onSuccess : function(usersJSON){     
+            	  var users = JSON.parse(usersJSON);
+            	  var html = '<div id="add-users-modal"><div class="holder"><div class="row-holder">';
+            	  for(var i=0; i<users.length; i++){
+            		  var user = users[i];
+            		  var userId = user.id;
+            		  var checked = "";
+            		  
+            		  if(user.hasAccess){
+            			  checked = "checked";
+            		  }
+                      var chk = '<div class="check-block">' +
+                      '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
+                      '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
+                      '</div>';
+                      
+                      html += chk;
+            	  }
+            	  
+            	  html += '</div></div></div>';
+            	  
+            	  // Set the html
+            	  $( "#add-dashboard-users-container" ).html(html);
+            	  
+            	  jcf.customForms.replaceAll($( "#add-dashboard-users-container" )[0]);
+            	  
+            	  $("#add-dashboard-users-container").dialog({
+            		  draggable: false,
+                      resizable: false,
+                      maxHeight: 300,
+                      modal: true,
+                      title: com.runwaysdk.Localize.localize("dashboard", "assignUsersHeading") + " " + $(".sales-menu.dropdown > a").text(),
+                      create: function (e, ui) {
+                          $(".add-user-checkbox").change( function(e){
+                        	  if ($(this).is(":checked")){
+                        		  $(this).attr("checked", true);
+                        	  }
+                        	  else{
+                        		  $(this).attr("checked", false);
+                        	  }
+                          });
+                      },
+            		  buttons: [
+            		            {
+					              text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
+					              "class": 'btn btn-primary',
+            		              click: function() {
+            		            	var thatThis = this;
+            		            	var checkedInputs = $("#add-users-modal input");
+            		            	var userIds = [];
+            		            	for(var i=0; i<checkedInputs.length; i++){
+            		            		var input = checkedInputs[i];
+            		            		var userObj = {};
+            		            		
+            		            		if(input.checked){
+            		            			userObj[input.id] = true;
+            		            		}
+            		            		else{
+            		            			userObj[input.id] = false;
+            		            		}
+            		            		userIds.push(userObj);
+            		            	}
+            		            	  
+            		                var request = new Mojo.ClientRequest({
+            		                    onSuccess : function(){     
+            		                    	$( thatThis ).dialog( "close" );
+            		                    },
+            		                    onFailure : function(e){
+            		                      that.handleException(e);
+            		                    }
+            		                  });
+            		                
+            		                com.runwaysdk.geodashboard.Dashboard.assignUsers(request, that._dashboardId, userIds);
+            		              }
+            		            },
+              		            {
+					                text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
+					                "class": 'btn btn-primarybtn btn-default',
+					                click : function() {
+					                   $( this ).dialog( "close" );
+					                }
+					            }
+            		          ]
+            	   });
+              },
+              onFailure : function(e){
+                that.handleException(e);
+              }
+            });
+    	  
+    	  com.runwaysdk.geodashboard.Dashboard.getAllDashboardUsers(clientRequest, this._dashboardId);
+      },
+      
       _onClickExportMap : function(e) {
     	  var format = $(e.target).data('format');  
     	  
@@ -3458,6 +3555,8 @@
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
         $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
+        
+        $('#add-dashboard-user-btn').on('click', Mojo.Util.bind(this, this._onClickAddDashboardUsers)); 
         
         $('#control-form-collapse-button').on('click', Mojo.Util.bind(this, this._onClickToggleLeftPanel));
         $('#data-panel-expand-toggle').on('click', Mojo.Util.bind(this, this._onClickToggleRightPanel));

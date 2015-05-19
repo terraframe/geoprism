@@ -49,7 +49,6 @@
 					<p class="geoent-problem-msg">Your geoentity is all jacked up because your data sucks.  Fix it!</p>
 				</i>
 			</li>
-			
 			<li class="geoent-problem-warn-li">
 				<i class="fa fa-exclamation-triangle geoent-problem-msg-icon geoent-problem-warn">
 					<p class="geoent-problem-msg">You have an overlapping boundary in 2 or more of your geoentities.</p>
