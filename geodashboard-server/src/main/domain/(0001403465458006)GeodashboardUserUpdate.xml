@@ -6,8 +6,10 @@
           <mdMethod name="isRoleMemeber" label="isRoleMember" returnType="java.lang.Boolean" static="true">
             <mdParameter name="roles" label="Roles" order="0" type="java.lang.String" />
           </mdMethod>
+          <mdMethod static="true" description="Get all dashboard users" name="getAllUsers" label="Get all users" returnType="com.runwaysdk.geodashboard.GeodashboardUser[]">
+        	</mdMethod>
         </create>
-      </mdBusiness>
+      </mdBusiness> 	 	
     </update>
   </doIt>
   <undoIt>

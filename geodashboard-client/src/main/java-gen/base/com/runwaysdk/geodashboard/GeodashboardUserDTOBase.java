@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 472742100)
+@com.runwaysdk.business.ClassSignature(hash = -2089297870)
 public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.GeodashboardUser";
-  private static final long serialVersionUID = 472742100;
+  private static final long serialVersionUID = -2089297870;
   
   protected GeodashboardUserDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -193,6 +193,14 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
     Object[] _parameters = new Object[]{id, roleIds};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.GeodashboardUserDTO.CLASS, "applyWithRoles", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.geodashboard.GeodashboardUserDTO[] getAllUsers(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.GeodashboardUserDTO.CLASS, "getAllUsers", _declaredTypes);
+    return (com.runwaysdk.geodashboard.GeodashboardUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.geodashboard.GeodashboardUserDTO getCurrentUser(com.runwaysdk.constants.ClientRequestIF clientRequest)

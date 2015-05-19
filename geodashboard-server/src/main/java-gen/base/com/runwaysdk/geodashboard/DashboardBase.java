@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 743509876)
+@com.runwaysdk.business.ClassSignature(hash = -1373692378)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,7 +32,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 743509876;
+  private static final long serialVersionUID = -1373692378;
   
   public DashboardBase()
   {
@@ -634,6 +634,12 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     _instance.applyGlobalConditions(conditions);
   }
   
+  public static void assignUsers(java.lang.String dashboardId, java.lang.String[] userIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public com.runwaysdk.geodashboard.Dashboard clone(java.lang.String name)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
@@ -650,6 +656,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.String getAllDashboardUsers()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getAllDashboardUsers(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getAllDashboardUsers();
   }
   
   public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)

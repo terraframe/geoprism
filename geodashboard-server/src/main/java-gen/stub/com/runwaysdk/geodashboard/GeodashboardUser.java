@@ -166,4 +166,24 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
     return ( query.getCount() > 0 );
   }
+
+  public static GeodashboardUser[] getAllUsers()
+  {
+    GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+    query.ORDER_BY_ASC(query.getUsername());
+
+    OIterator<? extends GeodashboardUser> it = query.getIterator();
+
+    try
+    {
+      List<? extends GeodashboardUser> list = it.getAll();
+
+      return list.toArray(new GeodashboardUser[list.size()]);
+    }
+    finally
+    {
+      it.close();
+    }
+
+  }
 }

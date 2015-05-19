@@ -16,6 +16,11 @@
         <mdMethod static="true" description="Creates a new dashboard." name="create" label="create" returnType="com.runwaysdk.geodashboard.Dashboard">
           <mdParameter order="0" description="A Dashboard to create." name="dto" label="A Dashboard to apply." type="com.runwaysdk.geodashboard.Dashboard" />
         </mdMethod>
+        <mdMethod static="true" description="Assign users to a dashboard" name="assignUsers" label="Assign Users" returnType="void">
+          <mdParameter order="0" description="Dashboard Id" name="dashboardId" label="Dashboard Id." type="java.lang.String" />
+          <mdParameter order="1" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />
+        </mdMethod>
+        <mdMethod static="false" description="Get all dashboard users and their access status" name="getAllDashboardUsers" label="Get all dashboard users" returnType="java.lang.String"></mdMethod>
       </mdBusiness>
 
       <mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata" cacheAlgorithm="everything">

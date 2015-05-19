@@ -1,9 +1,12 @@
 package com.runwaysdk.geodashboard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +14,18 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.business.rbac.UserDAO;
+import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -629,6 +638,125 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return true;
+  }
+  
+  @Override
+  public String getAllDashboardUsers()
+  {
+    JSONArray usersArr = new JSONArray();
+    
+    GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
+    for(int i=0; i<gdUsers.length; i++)
+    {
+      JSONObject userObj = new JSONObject();
+      
+      GeodashboardUser user = gdUsers[i];
+      boolean hasAccess = this.userHasAccess(user);
+      Boolean inactive = user.getInactive();
+      
+      if(!inactive)
+      {
+        try
+        {
+          userObj.put("firstName", user.getFirstName());
+          userObj.put("lastName", user.getLastName());
+          userObj.put("id", user.getId());
+          userObj.put("hasAccess", hasAccess);
+          usersArr.put(userObj);
+        }
+        catch (JSONException e)
+        {
+          String msg = "Could not properly build user json.";
+          throw new ProgrammingErrorException(msg, e);
+        }
+      }
+    }
+    
+    return usersArr.toString();
+  }
+  
+  public static void assignUsers(String dashboardId, String[] userIds)
+  {
+    Dashboard dashboard = Dashboard.get(dashboardId);
+    Roles dbRole = dashboard.getDashboardRole();
+    String dbRoleId = dbRole.getId();
+    Roles[] allGeodashRoles = RoleView.getGeodashboardRoles();
+    
+    for(String userJSON : userIds)
+    {
+      List<String> roleIds = new ArrayList<String>();
+      Set<String> set;
+      UserDAOIF user = null;
+      try
+      {
+        String userId = null;
+        JSONObject userObj = new JSONObject(userJSON);
+        
+        @SuppressWarnings("unchecked")
+        Iterator<String> userObjKeys = userObj.keys();
+        while(userObjKeys.hasNext())
+        {
+          userId = userObjKeys.next().toString();
+        }
+        
+        GeodashboardUser gdUser = GeodashboardUser.get(userId);
+        user = UserDAO.get(userId);
+        
+        boolean assignToDashboard = (Boolean) userObj.get(userId);
+        if(assignToDashboard)
+        {
+          roleIds.add(dbRoleId);
+        }
+        
+        List<? extends Roles> userRoles = gdUser.getAllAssignedRole().getAll();
+        for(Roles existingRole : userRoles)
+        {
+          // filter out roles for this dashboard if it already exists on the user
+          // because the dashboard role assignment happens above
+          if(!dbRoleId.equals(existingRole.getId()))
+          {
+            roleIds.add(existingRole.getId());
+          }
+        }
+      }
+      catch (JSONException e)
+      {
+        String msg = "Could not properly parse user json.";
+        throw new ProgrammingErrorException(msg, e);
+      }
+      
+      set = new HashSet<String>(roleIds);
+      
+      /*
+       * Assign roles
+       */
+      for (Roles role : allGeodashRoles)
+      {
+        RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
+  
+        if (set.contains(role.getId()))
+        {
+          roleDAO.assignMember(user);
+        }
+        else
+        {
+          roleDAO.deassignMember(user);
+        }
+      }
+    }
+  }
+  
+  
+  private Boolean userHasAccess(GeodashboardUser user)
+  {
+    Boolean access = user.isAssigned(this.getDashboardRole());
+
+    if (access)
+    {
+      return true;
+    }
+
+    return false;
   }
 
   public Map<String, Integer> getUniversalIndices()

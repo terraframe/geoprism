@@ -172,8 +172,10 @@ $(document).ready(function(){
 		    <c:if test="${hasAccess}">
 		      <span id="clone-dashboard" class="">
   		          <i class="fa fa-plus ico-new-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
-  		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a>
+<!--   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
   		      </span>
+  		      
+  		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i>
   		    </c:if>
 		</div>
 		
@@ -405,5 +407,6 @@ $(document).ready(function(){
 
 <!-- Dialog for cloning a dashboard  -->
 <div id="clone-container"></div>  
+<div id="add-dashboard-users-container"></div>
 
 </html>

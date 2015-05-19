@@ -44,13 +44,6 @@
   <div id="tree"></div>
   <div id="problem-panel">
     <ul id="problems-list">
-      <c:forEach items="${problems}" var="problem">
-        <li class="geoent-problem-error-li" data-entity="${problem.geoId}">
-          <i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">
-            <p class="geoent-problem-msg">${problem.problem}</p>
-          </i>
-        </li>      
-      </c:forEach>
     </ul>
   </div>
 </div>
@@ -76,12 +69,5 @@
     tree.render("#tree");
     
     tree.refreshEntityProblems();
-<!--
-    $(".geoent-problem-error-li").click(function(e){
-      var entityId = $(e.currentTarget).data("entity");
-      
-      tree.focusTerm(entityId);
-    });
--->    
   });
 </script>

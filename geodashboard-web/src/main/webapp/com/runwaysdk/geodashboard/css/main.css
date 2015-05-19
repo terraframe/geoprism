@@ -17,8 +17,8 @@ body{
 
 body.iFrameBody {
 	overflow: hidden;
+	overflow-y: auto;
 	background-color: inherit;
-	overflow: hidden;
 }
 
 div.pageContent {
