@@ -419,10 +419,7 @@
 //        }
         
         for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree(
-            'removeNode',
-            nodes[i]
-          );
+          $thisTree.tree('removeNode',nodes[i]);
         }
         
         delete this.termCache[termId];
@@ -456,12 +453,31 @@
         Mojo.Util.invokeControllerAction(this._config.termType, "delete", {dto: term}, deleteCallback);
       },
       
+      /**
+       * Callback handler for a successful creation of a new term.  This method may be overwritten
+       * in sub classes to provide more functionality.
+       */
+      _handleCreateTerm : function (parentId, parentNodes, responseObj) {
+        var termAndRel = this.__responseToTNR(responseObj);
+        var term = termAndRel.getTerm();
+        var relId = termAndRel.getRelationshipId();
+        var relType = termAndRel.getRelationshipType();
+          
+        this.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
+        this.termCache[term.getId()] = term;
+          
+        for (var i = 0; i < parentNodes.length; ++i) {
+          this.__createTreeNode(term.getId(), parentNodes[i], true);
+        }
+      },
+      
       createTerm : function(parentId, relType, parentNode) {
         this.requireParameter("parentId", parentId, "string");
         var that = this;
         
         var parentNodes = this.__getNodesById(parentId);
-        if (parentNodes == null || parentNodes == undefined) {
+        
+        if (parentNodes == null) {
           var ex = new com.runwaysdk.Exception("The provided parent [" + parentId + "] does not exist in this tree.");
           this.handleException(ex);
           return;
@@ -477,24 +493,7 @@
           action: "create",
           actionParams: {parentId: parentId, relationshipType: relType},
           onSuccess : function(responseObj) {
-            var termAndRel = that.__responseToTNR(responseObj);
-            var term = termAndRel.getTerm();
-            var relId = termAndRel.getRelationshipId();
-            var relType = termAndRel.getRelationshipType();
-            
-            that.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
-            that.termCache[term.getId()] = term;
-            
-            if (parentNode == null)
-            {
-              for (var i = 0; i < parentNodes.length; ++i) {
-                that.__createTreeNode(term.getId(), parentNodes[i], true);
-              }
-            }
-            else
-            {
-              that.__createTreeNode(term.getId(), parentNode, true);
-            }
+            that._handleCreateTerm(parentId, parentNodes, responseObj);
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -560,6 +559,35 @@
         var targetId = this.__getRunwayIdFromNode(targetNode);
         this.createTerm(targetId);
       },
+
+      /**
+       * Callback handler for a successful update of a term.  This method may be overwritten
+       * in sub classes to provide additional functionality.
+       */
+      _handleUpdateTerm : function (responseObj) {
+        var term = this.__responseToTerm(responseObj);
+        var termId = term.getId();
+          
+        this.setTermBusy(termId, false);
+          
+        var nodes = this.__getNodesById(termId);
+        
+        for (var i = 0; i < nodes.length; ++i) {
+        	
+          // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
+          if (this.duplicateMap.get(termId) != null) {      	  
+            var duplicates = this.duplicateMap.get(termId);
+            
+            this.duplicateMap.remove(termId);
+            this.duplicateMap.put(term.getId(), duplicates);
+          }
+            
+          this.getImpl().tree("updateNode", nodes[i], {label: this._getTermDisplayLabel(term), id: term.getId(), runwayId: term.getId()});
+        }
+          
+        this.termCache[termId] = null;
+        this.termCache[term.getId()] = term;        
+      },
       
       /**
        * is binded to context menu option Edit. 
@@ -578,24 +606,7 @@
           action: "update",
           actionParams: {parentId: parentId, relationshipType: ""},
           onSuccess : function(responseObj) {
-            var term = that.__responseToTerm(responseObj);
-            
-            that.setTermBusy(termId, false);
-            
-            var nodes = that.__getNodesById(termId);
-            for (var i = 0; i < nodes.length; ++i) {
-              // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
-              if (that.duplicateMap.get(termId) != null) {
-                var duplicates = that.duplicateMap.get(termId);
-                that.duplicateMap.remove(termId);
-                that.duplicateMap.put(term.getId(), duplicates);
-              }
-              
-              that.getImpl().tree("updateNode", nodes[i], {label: that._getTermDisplayLabel(term), id: term.getId(), runwayId: term.getId()});
-            }
-            
-            that.termCache[termId] = null;
-            that.termCache[term.getId()] = term;
+            that._handleUpdateTerm(responseObj);
           },
           onFailure : function(e) {
             that.setTermBusy(termId, false);
@@ -888,8 +899,6 @@
         // User clicks Copy on context menu //
         var copyHandler = function(mouseEvent, contextMenu) {
             
-          var relType = null;
-            
           var addChildCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
               that.setNodeBusy(movedNode, false);
@@ -907,14 +916,9 @@
             }
           });
             
-          that.setNodeBusy(movedNode, true);
+          that.setNodeBusy(movedNode, true);            
             
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentId(movedNodeId, this.__getRunwayIdFromNode(movedNode.parent), that);
-            
-          // The oldRelId is null which means that this actually does a copy.
-          com.runwaysdk.Facade.moveBusiness(addChildCallback, targetNodeId, movedNodeId, null, parentRecord.relType);
-            
-          relType = that._getRelationshipForNode(movedNode, targetNode);
+          var relType = that._getRelationshipForNode(movedNode, targetNode);
           com.runwaysdk.system.ontology.TermUtil.addLink(addChildCallback, movedNodeId, targetNodeId, relType);
         };
           
@@ -972,7 +976,7 @@
         var nodeId = this.__getRunwayIdFromNode(node);
         var that = this;
         
-        if (node.hasFetched == null || node.hasFetched == undefined) {
+        if (node.hasFetched == null || node.hasFetched == undefined || node.hasFetched == false) {
           this.refreshTerm(nodeId, null, null, node);
         }
       },
@@ -1167,23 +1171,58 @@
        
         for(var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
-          
-          // Create the cached term
-          var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label);
-          
-          // Populate the caches
-          this.termCache[term.getId()] = term;
-          
-          if(parentNode == null) { 
+
+          if(this.__getNodesById(node.id) == null) {
             
-            // Create the cached root term
-            var rootTerm = {term:term, termId: term.getId(), selectable:true};
-            this.rootTermConfigs.put(term.getId(), rootTerm);
+            // Create the cached term
+            var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label);
+          
+            // Populate the caches
+            this.termCache[term.getId()] = term;
+          
+            if(parentNode == null) { 
+            
+              // Create the cached root term
+              var rootTerm = {term:term, termId: term.getId(), selectable:true};
+              this.rootTermConfigs.put(term.getId(), rootTerm);
+            }
+            
+            if(node.parentRecord != null) {              
+              this.parentRelationshipCache.put(node.id, node.parentRecord);
+            }
+            
+            this.__createTreeNode(term.getId(), parentNode, node.fetched, false, true);
           }
+          else if(node.parentRecord != null){
+            // This might be an existing node with multiple parents
+            // Thus we need to check if the node has already been added
+            // to this parent.  If not we need to create a new tree ndoe
+            // for this relationship.
+            
+            if(!this.parentRelationshipCache.contains(node.id, node.parentRecord)) {
+              this.parentRelationshipCache.put(node.id, node.parentRecord);          
+                
+              this.__createTreeNode(node.id, parentNode, node.fetched, false, true);
+            }
+          }
+                    
+          var treeNodes = this.__getNodesById(node.id);
           
-          var createdNode = this.__createTreeNode(term.getId(), parentNode, true, false, true);
-          
-          this._createNodes(createdNode, node.children);          
+          for(var j = 0; j < treeNodes.length; j++) {
+            var treeNode = treeNodes[j];
+
+            if(node.children.length > 0) {              
+              this._createNodes(treeNodes[j], node.children);
+              
+              treeNode.hasFetched = true;              
+              
+              if(treeNode.phantomChild != null) {
+                $(this.getRawEl()).tree("removeNode", treeNode.phantomChild); 
+                
+                treeNode.phantomChild == null;
+              }
+            }
+          }
         }
       },
       
@@ -1193,76 +1232,62 @@
       __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
         var that = this;
         
-//        return this.__getTermFromId(childId, {
-//          onSuccess : function(childTerm) {
-            var childTerm = this.termCache[childId];
+        var childTerm = this.termCache[childId];
         
-            var $thisTree = $(that.getRawEl());
+        var $thisTree = $(that.getRawEl());
             
-            var duplicateTerm = $thisTree.tree("getNodeById", childId);
+        var duplicateTerm = $thisTree.tree("getNodeById", childId);
             
-            var idStr = childId;
-            if (duplicateTerm != null) {
-              if (that.duplicateMap.get(childId) == null) {
-                that.duplicateMap.put(childId, []);
-              }
-              idStr = Mojo.Util.generateId();
-              that.duplicateMap.get(childId).push(idStr);
-            }
+        var idStr = childId;
+        
+        if (duplicateTerm != null) {
+          if (that.duplicateMap.get(childId) == null) {
+              that.duplicateMap.put(childId, []);
+          }
+          
+          idStr = Mojo.Util.generateId();
+          that.duplicateMap.get(childId).push(idStr);
+        }
             
-            config = config || {};
-            var defaultConfig = {
-                id: idStr,
-                runwayId: childId
-            };
+        config = config || {};
+        
+        var defaultConfig = {
+          id: idStr,
+          runwayId: childId
+        };
             
-            config = Mojo.Util.deepMerge(defaultConfig, config);
+        config = Mojo.Util.deepMerge(defaultConfig, config);
             
-            if (config.label == null) {
-              config.label = that._getTermDisplayLabel(childTerm);
-            }
+        if (config.label == null) {
+          config.label = that._getTermDisplayLabel(childTerm);
+        }
             
-            var node = null;
-            if (parentNode == null || parentNode == undefined) {
-              node = $thisTree.tree(
-                'appendNode',
-                config
-              );
-            }
-            else {
-              node = $thisTree.tree(
-                'appendNode',
-                config,
-                parentNode
-              );
+        var node = null;
+        
+        if (parentNode == null || parentNode == undefined) {
+          node = $thisTree.tree('appendNode',config);
+        }
+        else {
+          node = $thisTree.tree('appendNode',config,parentNode);
               
-              if (!hasFetched) {
-                var phantom = $thisTree.tree(
-                  'appendNode',
-                  {
-                      label: "",
-                      id: idStr + "_PHANTOM",
-                      phantom: true,
-                      runwayId: childId
-                  },
-                  node
-                );
-                node.phantomChild = phantom;
-              }
-              
-              if(hide == null || !hide ) {                  
-                $thisTree.tree("openNode", parentNode);                
-              }
-            }
+          if (!hasFetched) {
+            var phantom = $thisTree.tree('appendNode',{
+              label: "",
+              id: idStr + "_PHANTOM",
+              phantom: true,
+              runwayId: childId
+            }, node);
             
-            node.hasFetched = hasFetched;
-            return node;
-//          },
-//          onFailure : function(err) {
-//            that.handleException(err);
-//            return;
-//          }
-//        });
+            node.phantomChild = phantom;
+          }
+              
+          if(hide == null || !hide ) {                  
+            $thisTree.tree("openNode", parentNode);                
+          }
+        }
+            
+        node.hasFetched = hasFetched;
+        return node;
       },
       
       __getRunwayIdFromNode : function(node) {
@@ -1435,6 +1460,20 @@
         }
         
         this.cache[childId].push(record);
+      },
+      
+      contains : function(childId, record) {
+        if(this.cache[childId] != null) {
+          var records = this.cache[childId];
+          
+          for(var i = 0; i < records.length; i++) {
+            if(records[i].relId == record.relId) {
+              return true;
+            }
+          }
+        } 
+      
+        return false;
       },
       
       /**

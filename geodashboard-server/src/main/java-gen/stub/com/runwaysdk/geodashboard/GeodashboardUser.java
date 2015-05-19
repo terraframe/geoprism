@@ -166,7 +166,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
     return ( query.getCount() > 0 );
   }
-  
+
   public static GeodashboardUser[] getAllUsers()
   {
     GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
@@ -177,7 +177,7 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     try
     {
       List<? extends GeodashboardUser> list = it.getAll();
-      
+
       return list.toArray(new GeodashboardUser[list.size()]);
     }
     finally
@@ -186,5 +186,4 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     }
 
   }
-
 }

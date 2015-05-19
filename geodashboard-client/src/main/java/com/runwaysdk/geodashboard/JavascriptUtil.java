@@ -42,6 +42,7 @@ import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityController;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
@@ -91,6 +92,7 @@ public class JavascriptUtil implements Reloadable
     types.add(SynonymDisplayLabelDTO.CLASS);
     types.add(GeoEntityExportMenuDTO.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+    types.add(GeoEntityProblemViewDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

@@ -813,17 +813,17 @@
         // Build the columns from the read permissions
         var user = new com.runwaysdk.geodashboard.GeodashboardUser();
         var columns = [];        
-        
-        columns.push({header: this.localize("edit"), customFormatter: Mojo.Util.bind(this, function(result, rowNumber){
-            return '<a href="#" class="fa fa-pencil ico-edit table-edit" id="table-edit-' + rowNumber + '"></a>';
-          })
-        });
-        
+
         columns.push({header: this.localize("delete"), customFormatter: Mojo.Util.bind(this, function(result, rowNumber){
             return '<a href="#" class="fa fa-times ico-remove table-delete" id="table-delete-' + rowNumber + '"></a>';
           })
         });
         
+        columns.push({header: this.localize("edit"), customFormatter: Mojo.Util.bind(this, function(result, rowNumber){
+            return '<a href="#" class="fa fa-pencil ico-edit table-edit" id="table-edit-' + rowNumber + '"></a>';
+          })
+        });
+                
         if(user.isUsernameReadable())
         {          
           columns.push({queryAttr: "username"});        

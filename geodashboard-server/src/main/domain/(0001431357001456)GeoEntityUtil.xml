@@ -6,6 +6,9 @@
           <mdParameter name="sourceId" label="Source id" order="0" type="java.lang.String" />
           <mdParameter name="destinationId" label="Destination id" order="1" type="java.lang.String" />
         </mdMethod>
+        <mdMethod name="getGeoEntityTree" returnType="java.lang.String" label="Get geo entity tree" static="true">
+          <mdParameter name="geoEntityId" label="Geo entity id" order="0" type="java.lang.String" />
+        </mdMethod>
       </mdUtil>
     </create>
     <update></update>

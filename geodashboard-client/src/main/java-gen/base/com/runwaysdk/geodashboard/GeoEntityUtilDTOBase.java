@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1171381795)
+@com.runwaysdk.business.ClassSignature(hash = -36533684)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.GeoEntityUtil";
-  private static final long serialVersionUID = -1171381795;
+  private static final long serialVersionUID = -36533684;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -17,6 +17,14 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
   }
   
   public static java.lang.String ID = "id";
+  public static final java.lang.String getGeoEntityTree(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String geoEntityId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{geoEntityId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.GeoEntityUtilDTO.CLASS, "getGeoEntityTree", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final java.lang.String[] makeSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String sourceId, java.lang.String destinationId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
