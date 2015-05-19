@@ -17,7 +17,7 @@ body{
 
 body.iFrameBody {
 	overflow: hidden;
-	overflow-y: auto;
+/* 	overflow-y: auto; */
 	background-color: inherit;
 }
 
@@ -2917,7 +2917,7 @@ div.alert.alertbox {
   text-align: center;
 }
 
-.fa.fa-filter.filters-button{
+.fa.fa-refresh.filters-button{
   color: #bababa;
   font-size: 30px;
   position: relative;
@@ -2934,6 +2934,14 @@ div.alert.alertbox {
 }
 
 .fa.fa-globe.filters-button{
+  color: #bababa;
+  font-size: 30px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.fa.fa-tachometer.filters-button{
   color: #bababa;
   font-size: 30px;
   position: relative;
