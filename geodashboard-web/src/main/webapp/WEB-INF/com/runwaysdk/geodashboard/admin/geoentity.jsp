@@ -41,42 +41,47 @@
 </head>
 
 <div id="tree-container">
-	<div id="tree"></div>
-	<div id="problem-panel">
-		<ul id="problems-list">
-			<li class="geoent-problem-error-li">
-				<i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">
-					<p class="geoent-problem-msg">Your geoentity is all jacked up because your data sucks.  Fix it!</p>
-				</i>
-			</li>
-			
-			<li class="geoent-problem-warn-li">
-				<i class="fa fa-exclamation-triangle geoent-problem-msg-icon geoent-problem-warn">
-					<p class="geoent-problem-msg">You have an overlapping boundary in 2 or more of your geoentities.</p>
-				</i>
-			</li>
-		</ul>
-	</div>
+  <div id="tree"></div>
+  <div id="problem-panel">
+    <ul id="problems-list">
+      <c:forEach items="${problems}" var="problem">
+        <li class="geoent-problem-error-li" data-entity="${problem.geoId}">
+          <i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">
+            <p class="geoent-problem-msg">${problem.problem}</p>
+          </i>
+        </li>      
+      </c:forEach>
+    </ul>
+  </div>
 </div>
 
 <script type="text/javascript">
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
-	  com.runwaysdk.ui.Manager.setFactory("JQuery");
-	  
-	  var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
-		termType : "${type}",
+    com.runwaysdk.ui.Manager.setFactory("JQuery");
+    
+    var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
+    termType : "${type}",
         relationshipTypes : [ "${relationshipType}" ],
-	    rootTerms : [ { termId : "${rootId}"} ],
-	    editable : true,
-	    crud: {
-	      create: { // This configuration gets merged into the jquery create dialog.
-	        height: 320
-	      },
-	      update: {
-	        height: 320
-	      }
-	    }
-	  });
-	  tree.render("#tree");
+      rootTerms : [ { termId : "${rootId}"} ],
+      editable : true,
+      crud: {
+        create: { // This configuration gets merged into the jquery create dialog.
+          height: 320
+        },
+        update: {
+          height: 320
+        }
+      }
+    });
+    tree.render("#tree");
+    
+    tree.refreshEntityProblems();
+<!--
+    $(".geoent-problem-error-li").click(function(e){
+      var entityId = $(e.currentTarget).data("entity");
+      
+      tree.focusTerm(entityId);
+    });
+-->    
   });
 </script>

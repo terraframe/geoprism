@@ -298,7 +298,9 @@
                   that.refreshTerm(idsToUpdate[i]);
                 }
                     
-                that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});              
+                that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);}); 
+                
+                that.refreshEntityProblems();
               },
               onFailure : function(ex) {
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -310,7 +312,7 @@
                   
             this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
                 
-            com.runwaysdk.geodashboard.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);        	  
+            com.runwaysdk.geodashboard.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);            
           });          
           
           dialog.appendContent(that.localize("mergeConfirmation"));
@@ -358,6 +360,37 @@
         }
       },
       
+      focusTerm : function(termId) {
+        var that = this;
+        var id = termId;
+          
+        var nodes = that.__getNodesById(termId);
+          
+        if(nodes == null) {
+          // Load all of the nodes going up the tree from termId
+          var request = new Mojo.ClientRequest({
+            onSuccess: function(response){
+              var nodes = JSON.parse(response);
+
+              that._createNodes(null, nodes);
+              
+              that.focusTerm(termId);              
+            }, 
+            onFailure : function(ex) {
+              that.handleException(ex);
+            }              
+          });
+          
+          com.runwaysdk.geodashboard.GeoEntityUtil.getGeoEntityTree(request, termId);
+        }
+        else {
+          for(var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            this.getImpl().tree('selectNode', node, true);            
+          }
+        }        
+      },
+      
       /**
        * Override
        * 
@@ -369,7 +402,7 @@
         
         this.setTermBusy(termId, true);
         
-        var nodes = that.__getNodesById(termId);
+        var nodes = that.__getNodesById(termId);        
         var parent = nodes[0];
         
         // Special case for synonyms.
@@ -397,7 +430,7 @@
                 
                 var parentRecord = {parentId: termId, relId: tnrs[i].getRelationshipId(), relType: tnrs[i].getRelationshipType()};
                 that.parentRelationshipCache.put(childId, parentRecord);
-                 
+                
                 that.termCache[childId] = tnrs[i].getTerm();
                 
                 for (var iNode = 0; iNode < nodes.length; ++iNode) {
@@ -420,6 +453,58 @@
         else {
           this.$refreshTerm(termId, callback);
         }
+      },   
+      
+      _handleUpdateTerm : function (parentId, parentNode, responseObj) {
+        this.$_handleUpdateTerm(parentId, parentNode, responseObj);
+        
+        this.refreshEntityProblems();
+      },
+      
+      _handleCreateTerm : function (parentId, parentNode, responseObj) {
+        this.$_handleCreateTerm(parentId, parentNode, responseObj);
+        
+        this.refreshEntityProblems();
+      },
+      
+      refreshTreeAfterDeleteTerm : function(termId) {
+        this.$refreshTreeAfterDeleteTerm(termId);
+        
+        this.refreshEntityProblems();
+      },
+      
+      refreshEntityProblems : function() {
+        var that = this;
+      
+        var request = new Mojo.ClientRequest({
+          onSuccess: function(views){
+            
+            var html = '';
+          
+            for(var i = 0; i < views.length; i++) {
+              var view = views[i];
+              
+              html += '<li class="geoent-problem-error-li" data-entity="' + view.getGeoId() + '">';
+              html += '  <i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
+              html += '    <p class="geoent-problem-msg">' + view.getProblem() + '</p>';
+              html += '  </i>';
+              html += '</li>';      
+            }
+            
+            $("#problems-list").html(html);
+            
+            $(".geoent-problem-error-li").click(function(e){
+              var entityId = $(e.currentTarget).data("entity");
+                
+              that.focusTerm(entityId);
+            });
+          },
+          onFailure : function(ex) {
+            that.handleException(ex);
+          }
+        });
+        
+        com.runwaysdk.system.gis.geo.GeoEntityProblemView.getAllProblems(request)
       },
       
       // @Override

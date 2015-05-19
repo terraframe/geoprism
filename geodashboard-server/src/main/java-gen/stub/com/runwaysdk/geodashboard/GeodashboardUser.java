@@ -166,5 +166,4 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
     return ( query.getCount() > 0 );
   }
-
 }

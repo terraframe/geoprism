@@ -9,6 +9,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
@@ -45,11 +46,14 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void geoentity() throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
+
     GeoEntityDTO root = GeoEntityDTO.getRoot(request);
+    GeoEntityProblemViewDTO[] problems = GeoEntityProblemViewDTO.getAllProblems(request);
 
     this.req.setAttribute("type", GeoEntityDTO.CLASS);
     this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
     this.req.setAttribute("rootId", root.getId());
+    this.req.setAttribute("problems", problems);
 
     JavascriptUtil.loadGeoEntityBundle(request, this.req);
 
@@ -153,7 +157,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     this.req.setAttribute("rootId", root.getId());
 
     JavascriptUtil.loadOntologyBundle(this.getClientRequest(), this.req);
-    
+
     render("ontologies.jsp");
   }
 
