@@ -17,7 +17,7 @@ body{
 
 body.iFrameBody {
 	overflow: hidden;
-	overflow-y: auto;
+/* 	overflow-y: auto; */
 	background-color: inherit;
 }
 
@@ -2917,7 +2917,7 @@ div.alert.alertbox {
   text-align: center;
 }
 
-.fa.fa-filter.filters-button{
+.fa.fa-refresh.filters-button{
   color: #bababa;
   font-size: 30px;
   position: relative;
@@ -2934,6 +2934,14 @@ div.alert.alertbox {
 }
 
 .fa.fa-globe.filters-button{
+  color: #bababa;
+  font-size: 30px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.fa.fa-tachometer.filters-button{
   color: #bababa;
   font-size: 30px;
   position: relative;
@@ -2991,6 +2999,12 @@ div.secondary-box label {
   width: 50%;
 /*   background-color: green; */
   padding: 10px;
+  border: rgb(190, 190, 190) solid 2px;
+  border-radius: 5px;
+}
+
+#problem-panel-heading{
+	text-align: center;
 }
 
 #problems-list{
@@ -3000,7 +3014,8 @@ div.secondary-box label {
 
 #problems-list li{
 	padding: 5px;
-	  border: rgb(190, 190, 190) 1px solid;
+	border: rgb(190, 190, 190) 1px solid;
+	border-radius: 2px;
 }
 
 .geoent-problem-msg-icon{
@@ -3021,12 +3036,16 @@ div.secondary-box label {
 }
 
 .geoent-problem-error-li{
-	background: pink;
+	background: rgb(254, 236, 239);
 	cursor: pointer;
 }
 
 .geoent-problem-error-li:hover{
 	background: rgb(245, 171, 184);
+}
+
+.geoent-problem-error-li > a:focus{
+	color: red;
 }
 
 .geoent-problem-warn-li{

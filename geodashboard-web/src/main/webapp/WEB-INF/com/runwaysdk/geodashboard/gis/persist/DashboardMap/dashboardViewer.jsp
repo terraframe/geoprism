@@ -320,7 +320,7 @@ $(document).ready(function(){
        </div> <!-- END sales-accortion panel-group -->
     
 	    <div id="filter-buttons-container">
-	      <a href="#" class="fa fa-filter filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left"">
+	      <a href="#" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left"">
 	      </a>
 	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
 	      </a>

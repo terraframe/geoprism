@@ -43,6 +43,7 @@
 <div id="tree-container">
   <div id="tree"></div>
   <div id="problem-panel">
+  	<h4 id="problem-panel-heading"><gdb:localize key="geoEntity.problems.header"/></h4>
     <ul id="problems-list">
     </ul>
   </div>

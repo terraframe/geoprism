@@ -386,7 +386,29 @@
         else {
           for(var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
-            this.getImpl().tree('selectNode', node, true);            
+            this.getImpl().tree('selectNode', node, true);      
+            
+            var escape = false;
+            var height = 0;
+            var currentElem = $(node.element);
+            while(escape !== true){
+            	if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
+            		height += currentElem.parent().position().top;
+            		currentElem = currentElem.parent();
+            		escape = true; // escape at the first container jqtree-folder
+            	}
+            	else if(currentElem.parent().hasClass("jqtree_common")){
+            		// pass containers if they aren't jqtree-folder's
+            		currentElem = currentElem.parent();
+            	}
+            	else{
+            		// just in case the html changes in the jqtree lib we will make sure the loop can be escaped
+            		escape = true;
+            	}
+            }
+            $('.pageContent').animate({
+                scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
+            }, 500);
           }
         }        
       },
@@ -496,9 +518,9 @@
               var view = views[i];
               
               html += '<li class="geoent-problem-error-li" data-entity="' + view.getGeoId() + '">';
-              html += '  <i class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
+              html += '  <a href="#" class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
               html += '    <p class="geoent-problem-msg">' + view.getProblem() + '</p>';
-              html += '  </i>';
+              html += '  </a>';
               html += '</li>';      
             }
             
