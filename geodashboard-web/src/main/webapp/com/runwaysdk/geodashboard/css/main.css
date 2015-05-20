@@ -3007,6 +3007,11 @@ div.secondary-box label {
 	text-align: center;
 }
 
+#problem-panel-noissue-msg{
+  text-align: center;
+  color: grey;
+}
+
 #problems-list{
 	list-style-type: none;
 	padding-left: 0;
@@ -3042,6 +3047,10 @@ div.secondary-box label {
 
 .geoent-problem-error-li:hover{
 	background: rgb(245, 171, 184);
+}
+
+.geoent-problem-error-li > a:hover{
+	color: red;
 }
 
 .geoent-problem-error-li > a:focus{
