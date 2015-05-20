@@ -3049,6 +3049,10 @@ div.secondary-box label {
 	background: rgb(245, 171, 184);
 }
 
+.geoent-problem-error-li > a:hover{
+	color: red;
+}
+
 .geoent-problem-error-li > a:focus{
 	color: red;
 }
