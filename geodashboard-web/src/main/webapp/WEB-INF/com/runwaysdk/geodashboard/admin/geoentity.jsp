@@ -45,6 +45,7 @@
   <div id="problem-panel">
   	<h4 id="problem-panel-heading"><gdb:localize key="geoEntity.problems.header"/></h4>
     <ul id="problems-list">
+    	<h4 id="problem-panel-noissue-msg" style="display:none;"><gdb:localize key="geoEntity.problems.noproblems-msg"/></h4>
     </ul>
   </div>
 </div>

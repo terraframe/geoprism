@@ -513,7 +513,12 @@
               html += '</li>';      
             }
             
-            $("#problems-list").html(html);
+            if(html.length > 0){
+            	$("#problems-list").html(html);
+            }
+            else{
+            	$("#problem-panel-noissue-msg").show();
+            }
             
             $(".geoent-problem-error-li").click(function(e){
               var entityId = $(e.currentTarget).data("entity");

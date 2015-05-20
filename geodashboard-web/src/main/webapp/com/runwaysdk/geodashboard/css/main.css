@@ -3007,6 +3007,11 @@ div.secondary-box label {
 	text-align: center;
 }
 
+#problem-panel-noissue-msg{
+  text-align: center;
+  color: grey;
+}
+
 #problems-list{
 	list-style-type: none;
 	padding-left: 0;
