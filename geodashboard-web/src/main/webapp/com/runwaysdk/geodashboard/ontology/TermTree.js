@@ -876,10 +876,9 @@
             
           var moveBizCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
+              // Remove nodes from old relationship.              
               that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
-              that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
                 
-              // Remove nodes from old relationship.
               var nodes = that.__getNodesById(movedNodeId);
               for (var i = 0; i<nodes.length; ++i) {
                 $thisTree.tree(
@@ -887,11 +886,21 @@
                   nodes[i]
                 );
               }
-                
-              // Create nodes that represent the new relationship
-              nodes = that.__getNodesById(targetNodeId);
-              for (var i = 0; i<nodes.length; ++i) {
-                that.__createTreeNode(movedNodeId, nodes[i]);
+
+              if(targetNode.hasFetched) {                
+                // Create nodes that represent the new relationship
+                that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
+                  
+                var nodes = that.__getNodesById(targetNodeId);
+                for (var i = 0; i<nodes.length; ++i) {
+                  that.__createTreeNode(movedNodeId, nodes[i]);
+                }
+              }
+              else {
+                // Refresh the node
+                var termId = that.__getRunwayIdFromNode(targetNode);
+                    
+                that.refreshTerm(termId, null, [targetNode]);
               }
             },
             onFailure : function(ex) {
@@ -911,12 +920,20 @@
           var addChildCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
               that.setNodeBusy(movedNode, false);
+              
+              if(targetNode.hasFetched) {                
+                that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
                 
-              that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
-                
-              var nodes = that.__getNodesById(targetNodeId);
-              for (var i = 0; i<nodes.length; ++i) {
-                that.__createTreeNode(movedNodeId, nodes[i]);
+                var nodes = that.__getNodesById(targetNodeId);
+                for (var i = 0; i<nodes.length; ++i) {
+                  that.__createTreeNode(movedNodeId, nodes[i]);
+                }
+              }
+              else {
+                // Refresh the node
+                var termId = that.__getRunwayIdFromNode(targetNode);
+                  
+                that.refreshTerm(termId, null, [targetNode]);
               }
             },
             onFailure : function(ex) {
