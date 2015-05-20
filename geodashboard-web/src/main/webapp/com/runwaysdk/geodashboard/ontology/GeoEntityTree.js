@@ -392,17 +392,28 @@
       },
       
       /**
-       * Override
+       * OVERRIDE :  Adds a special case handler for synonyms.
        * 
-       * Adds a special case handler for synonyms.
+       * Fetches all the term's children from the server, removes all children of the provided nodes,
+       * and then re-populates the child nodes based on the TermAndRel objects received from the server.
+       * 
+       * @param termId 
+       *     Id of the term to refresh
+       * @param callback
+       *     Map of additional callback functions for request success and failure
+       * @param nodes
+       *     List of nodes to update with the refreshed term data.  If this is null then
+       *     all nodes corresponding to the termId will be refreshed. 
        */
-      refreshTerm : function(termId, callback) {
+      refreshTerm : function(termId, callback, nodes) {
         var that = this;
         var id = termId;
         
         this.setTermBusy(termId, true);
         
-        var nodes = that.__getNodesById(termId);        
+        if(nodes == null) {
+          nodes = that.__getNodesById(termId);              
+        }
         var parent = nodes[0];
         
         // Special case for synonyms.
@@ -451,12 +462,12 @@
           Mojo.Util.invokeControllerAction("com.runwaysdk.system.gis.geo.Synonym", "getDirectDescendants", {parentId: parentId}, cr);
         }
         else {
-          this.$refreshTerm(termId, callback);
+          this.$refreshTerm(termId, callback, nodes);
         }
       },   
       
-      _handleUpdateTerm : function (parentId, parentNode, responseObj) {
-        this.$_handleUpdateTerm(parentId, parentNode, responseObj);
+      _handleUpdateTerm : function (termId, responseObj) {
+        this.$_handleUpdateTerm(termId, responseObj);
         
         this.refreshEntityProblems();
       },

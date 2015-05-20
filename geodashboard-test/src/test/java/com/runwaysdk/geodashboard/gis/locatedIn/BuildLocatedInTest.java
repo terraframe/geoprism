@@ -66,7 +66,7 @@ public class BuildLocatedInTest
     manager.addListener(new MockTaskListener());
     manager.run(logger);
 
-//    Assert.assertFalse(logger.hasLogged());
+    // Assert.assertFalse(logger.hasLogged());
   }
 
   @Test
@@ -89,10 +89,10 @@ public class BuildLocatedInTest
 
     for (Task task : tasks)
     {
-      Assert.assertFalse(LocaleManager.getMessage("DELETE_EXISTING").equals(task.getTaskName()));
+      Assert.assertFalse(Localizer.getMessage("DELETE_EXISTING").equals(task.getTaskName()));
     }
 
-//    Assert.assertFalse(logger.hasLogged());
+    // Assert.assertFalse(logger.hasLogged());
   }
 
   @Test
