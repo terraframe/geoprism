@@ -49,12 +49,6 @@
       <version>1.2.0</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse</groupId>
-      <artifactId>swt</artifactId>
-      <version>3.5.2</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>org.mod4j.org.eclipse.core</groupId>
       <artifactId>commands</artifactId>
       <version>3.5.0</version>
@@ -128,6 +122,82 @@
       <version>${geotools.version}</version>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>swt-windows-x86</id>
+      <activation>
+        <os>
+          <name>Windows</name>
+          <family>windows</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-win32</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-mac-x86</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86</arch>
+        </os>
+        <property> <!-- 32 bit OS -->
+          <name>sun.arch.data.model</name> <!-- This property may only exist in sun VM's -->
+          <value>32</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-macosx</artifactId>
+          <version>4.3</version>
+      </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-mac-64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+        <property> <!-- 64 bit OS -->
+          <name>sun.arch.data.model</name> <!-- This property may only exist in sun VM's -->
+          <value>64</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-macosx64</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-unix</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <name>!mac os x</name>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-linux</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+  
   <build>
     <plugins>
       <plugin>
