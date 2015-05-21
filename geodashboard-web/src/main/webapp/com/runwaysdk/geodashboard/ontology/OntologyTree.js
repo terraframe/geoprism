@@ -56,68 +56,24 @@
         
       },
       
-      /**
-       * Called when the user right clicks on a node.
-       * This override will stop the user from deleting root nodes.
-       */
-      // @Override
-      __onNodeRightClick : function(event, object) {
-        var $tree = this.getImpl();
-        var that = this;
-        var node = event.node;
+      _createNodeRightClickMenu : function(event) {
+        var node = event.node;    	  
+        var parentId = this.__getRunwayIdFromNode(node.parent);    	  
+    	  
+        // Display the standard context menu        
+        var items = this.$_createNodeRightClickMenu(event);
         
-        $tree.tree('selectNode', node);
-        
-        if (this._cm != null && !this._cm.isDestroyed()) {
-          this._cm.destroy();
+        // Disable the delete functionality if the node represents a root node.
+        for(var i = 0; i < items.length; i++) {
+          var item = items[i];
+          
+          if (item.id == 'delete' && this.isRootTermId(parentId)) {
+            item.enabled = false;
+          }
         }
         
-        this._cm = this.getFactory().newContextMenu(node);
-        var create = this._cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
-        var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-        var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
-        var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
-        var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
-        
-        if (this.isNodeBusy(node)) {
-//        if (this.busyNodes.contains(node.id)) { // jstree
-          create.setEnabled(false);
-          update.setEnabled(false);
-          del.setEnabled(false);
-          refresh.setEnabled(false);
-          cmiExport.setEnabled(false);
-        }
-        
-        // You can't delete the built in ontology nodes (IDE ontologys, geodashboard ontologies, etc)
-        var parentId = this.__getRunwayIdFromNode(node.parent);
-        if (parentId === this.rootTermId) {
-          del.setEnabled(false);
-        }
-        
-        this._cm.render();
-        
-        this._cm.addDestroyEventListener(function() {
-//          $tree.jstree("deselect_node", node);
-          $tree.tree('selectNode', null);
-        });
+        return items;
       },
-      
-      // @Override
-//      _check_callback : function(operation, node, node_parent, node_position, more) {
-//        if (operation === "move_node") {
-//          // You can't move the built in ontology nodes (IDE ontologies, geodashboard ontologies, etc)
-//          if (this.getParentRunwayId(node) === this.rootTermId) {
-//            return false;
-//          }
-//          
-//          // You can't move nodes onto the root level (Only a developer can create a root level node.)
-//          if (this.__getRunwayIdFromNode(node_parent) === this.rootTermId) {
-//            return false;
-//          } 
-//        }
-//        
-//        return true;
-//      },
       
       destroy : function() {
         

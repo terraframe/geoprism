@@ -9,6 +9,7 @@
         <mdMethod name="getGeoEntityTree" returnType="java.lang.String" label="Get geo entity tree" static="true">
           <mdParameter name="geoEntityId" label="Geo entity id" order="0" type="java.lang.String" />
         </mdMethod>
+        <mdMethod name="getAllProblems" label="Get all problems" static="true" returnType="com.runwaysdk.system.gis.geo.GeoEntityProblemView[]" />
       </mdUtil>
     </create>
     <update></update>

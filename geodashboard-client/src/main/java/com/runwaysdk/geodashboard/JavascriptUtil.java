@@ -16,10 +16,10 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
-import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO;
-import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.condition.ClassifierConditionDTO;
@@ -42,6 +42,7 @@ import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityController;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
@@ -93,6 +94,7 @@ public class JavascriptUtil implements Reloadable
     types.add(GeoEntityExportMenuDTO.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
     types.add(GeoEntityProblemViewDTO.CLASS);
+    types.add(GeoEntityProblemDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

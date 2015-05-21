@@ -24,6 +24,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemView;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
@@ -300,6 +301,40 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  public static GeoEntityProblemView[] getAllProblems()
+  {
+    List<GeoEntityProblemView> list = new LinkedList<GeoEntityProblemView>();
+
+    GeoEntityProblemQuery query = new GeoEntityProblemQuery(new QueryFactory());
+    query.ORDER_BY_DESC(query.getProblemType().getDisplayLabel().localize());
+    query.ORDER_BY_ASC(query.getGeoEntity().getDisplayLabel().localize());
+
+    OIterator<? extends GeoEntityProblem> iterator = query.getIterator();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        GeoEntityProblem problem = iterator.next();
+
+        list.addAll(problem.getViews());
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return list.toArray(new GeoEntityProblemView[list.size()]);
+  }
+
+  @Transaction
+  public static void deleteEntityProblem(String problemId)
+  {
+    GeoEntityProblem problem = GeoEntityProblem.get(problemId);
+    problem.delete();
   }
 
 }

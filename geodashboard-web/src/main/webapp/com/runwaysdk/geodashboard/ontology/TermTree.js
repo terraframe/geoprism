@@ -483,11 +483,14 @@
         }
       },
       
-      createTerm : function(parentId, relType, parentNode) {
+      createTerm : function(parentId, relType, parentNodes) {
         this.requireParameter("parentId", parentId, "string");
-        var that = this;
         
-        var parentNodes = this.__getNodesById(parentId);
+        if(parentNodes == null) {
+          parentNodes = this.__getNodesById(parentId);
+        }
+        
+        var that = this;                
         
         if (parentNodes == null) {
           var ex = new com.runwaysdk.Exception("The provided parent [" + parentId + "] does not exist in this tree.");
@@ -505,7 +508,7 @@
           action: "create",
           actionParams: {parentId: parentId, relationshipType: relType},
           onSuccess : function(responseObj) {
-            that._handleCreateTerm(parentId, parentNodes, responseObj);
+            that._handleCreateTerm(parentId, parentNodes, responseObj);                        
           },
           onFailure : function(e) {
             that.handleException(e);
@@ -520,12 +523,9 @@
        * is binded to context menu option Refresh.
        */
       __onContextRefreshClick : function(contextMenu, contextMenuItem, mouseEvent) {
-        var targetNode = contextMenu.getTarget();
+        var targetNode = contextMenu.getTarget();        
         
-        targetNode.hasFetched = null;
-        
-        // Node open will refresh.
-        this.__onNodeOpen({node: targetNode});
+        this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
       },
       
       /**
@@ -720,6 +720,16 @@
         return $(this.getRawEl());
       },
       
+      _createNodeRightClickMenu : function(event) {
+        var items = [];
+        items.push({label:this.localize("create"), id:"add", handler:Mojo.Util.bind(this, this.__onContextCreateClick)});
+        items.push({label:this.localize("update"), id:"edit", handler:Mojo.Util.bind(this, this.__onContextEditClick)});        
+        items.push({label:this.localize("delete"), id:"delete", handler:Mojo.Util.bind(this, this.__onContextDeleteClick)});        
+        items.push({label:this.localize("refresh"), id:"refresh", handler:Mojo.Util.bind(this, this.__onContextRefreshClick)});  
+          
+        return items;
+      },
+      
       /**
        * is binded to tree.contextmenu, called when the user right clicks on a node.
        */
@@ -727,17 +737,18 @@
         var $tree = $(this.getRawEl());
         $tree.tree('selectNode', e.node);
         
-        var cm = this.getFactory().newContextMenu(e.node);
-        var create = cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
-        var update = cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-        var del = cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
-        var refresh = cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
+        var items = this._createNodeRightClickMenu(e);
         
-        if (e.node.termBusy) {
-          create.setEnabled(false);
-          update.setEnabled(false);
-          del.setEnabled(false);
-          refresh.setEnabled(false);
+        var cm = this.getFactory().newContextMenu(e.node);
+        
+        for(var i = 0; i < items.length; i++) {
+          var item = items[i];
+          
+          var menuItem = cm.addItem(item.label, item.id, item.handler);
+          
+          if (e.node.termBusy || item.enabled === false) {
+            menuItem.setEnabled(false);
+          }
         }
         
         cm.render();
@@ -1138,6 +1149,14 @@
         else {
           return hisCallback.onSuccess(term);
         }
+      },
+      
+      isRootTermId : function(termId) {      
+        if(termId != null) {
+          return this.rootTermConfigs.containsKey(termId);        
+        }
+        
+        return true;
       },
       
       /**

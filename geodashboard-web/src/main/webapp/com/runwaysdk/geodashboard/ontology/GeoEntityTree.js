@@ -44,7 +44,8 @@
     "mergeConfirmation" : "Are you sure you want to merge these to entities?",
     "ok" : "Ok",
     "cancel" : "Cancel",
-    "mergeTitle" : "Merge confirmation"
+    "mergeTitle" : "Merge confirmation",
+    "accept" : "Confirm as new location"
   });
   
   /**
@@ -65,79 +66,89 @@
         
         this._wrapperDiv = this.getFactory().newElement("div");
       },
-      
+
       /**
        * is binded to tree.contextmenu, called when the user right clicks on a node.
        * This override will disable some context menu options that don't make sense.
        */
       // @Override
-      __onNodeRightClick : function(event, object) {
+      _createNodeRightClickMenu : function(event) {
         var that = this;
         var node = event.node;
         var parentId = this.__getRunwayIdFromNode(node.parent);
         var term = this.termCache[this.__getRunwayIdFromNode(node)];
         
-        that.getImpl().tree('selectNode', node);
-        
-        if (this._cm != null && !this._cm.isDestroyed()) {
-          this._cm.destroy();
-        }
-        
-        this._cm = this.getFactory().newContextMenu(node);
-        
         if (node.data != null && node.data.isSynonymContainer) {
           // They right clicked on a synonym container node. Display the context menu for synonym containers.
-          var create = this._cm.addItem(this.localize("createSynonym"), "add", Mojo.Util.bind(this, this.__onCreateSynonym));
-          var refresh = this._cm.addItem(this.localize("refreshSynonyms"), "refresh", Mojo.Util.bind(this, this.__onRefreshSynonym));
+          var items = [];
+          items.push({label:this.localize("createSynonym"), id:"add", handler:Mojo.Util.bind(this, this.__onCreateSynonym)});          
+          items.push({label:this.localize("refreshSynonyms"), id:"refresh", handler:Mojo.Util.bind(this, this.__onRefreshSynonym)});          
+          
+          return items;
         }
         else if (node.data != null && node.data.isSynonym) {
-          // Display the synonym node context menu.
-          var delSyn = this._cm.addItem(this.localize("updateSynonym"), "edit", Mojo.Util.bind(this, this.__onUpdateSynonym));
-          var update = this._cm.addItem(this.localize("deleteSynonym"), "delete", Mojo.Util.bind(this, this.__onDeleteSynonym));
+          var items = [];
+          items.push({label:this.localize("updateSynonym"), id:"edit", handler:Mojo.Util.bind(this, this.__onUpdateSynonym)});          
+          items.push({label:this.localize("deleteSynonym"), id:"delete", handler:Mojo.Util.bind(this, this.__onDeleteSynonym)});          
+          
+          return items;
         }
         else {
-          // Display the standard context menu but disable some options based on GeoEntity rules.
-          
-          var create = this._cm.addItem(this.localize("create"), "add", Mojo.Util.bind(this, this.__onContextCreateClick));
-          if (term.canCreateChildren === false) {
-            create.setEnabled(false);
+          // Display the standard context menu        
+          var items = this.$_createNodeRightClickMenu(event);
+        
+          if (node.data == null) {
+            node.data = {};
           }
           
-          var update = this._cm.addItem(this.localize("update"), "edit", Mojo.Util.bind(this, this.__onContextEditClick));
-          
-          var del = this._cm.addItem(this.localize("delete"), "delete", Mojo.Util.bind(this, this.__onContextDeleteClick));
-          if (parentId === this.rootTermId) {
-            del.setEnabled(false);
-          }
-          
-          var refresh = this._cm.addItem(this.localize("refresh"), "refresh", Mojo.Util.bind(this, this.__onContextRefreshClick));
-          
-          var synonyms = null;
-          if (node.data == null) { node.data = {}; }
           if (node.data.synonymNode != null) {
-            synonyms = this._cm.addItem(this.localize("hideSynonyms"), "synonyms", Mojo.Util.bind(this, this.__onHideSynonym));
+            items.push({label:this.localize("hideSynonyms"), id:"synonyms", handler:Mojo.Util.bind(this, this.__onHideSynonym)});          
           }
           else {
-            synonyms = this._cm.addItem(this.localize("viewSynonyms"), "synonyms", Mojo.Util.bind(this, this.__onContextViewSynonymsClick));
+            items.push({label:this.localize("viewSynonyms"), id:"synonyms", handler:Mojo.Util.bind(this, this.__onContextViewSynonymsClick)});          
+          }
+        
+          items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this.__onContextExportClick)}); 
+          
+          // For unmatched nodes we need to give the option to accept the node          
+          var problem = $(".geoent-problem-error-li[data-entity='"+term.getId()+"'][data-problem='UNMATCHED']");
+            
+          if(problem.length > 0) {
+            var problemId = problem.data('id');
+            
+            items.push({label:this.localize("accept"), id:"accept", handler:function(){that.deleteProblem(problemId);}}); 
           }
           
-          var cmiExport = this._cm.addItem(this.localize("export"), "export", Mojo.Util.bind(this, this.__onContextExportClick));
-          
-          if (this.isNodeBusy(node)) {
-            create.setEnabled(false);
-            update.setEnabled(false);
-            del.setEnabled(false);
-            refresh.setEnabled(false);
-            synonyms.setEnabled(false);
-            cmiExport.setEnabled(false);
+          // Disable some options based on GeoEntity rules.
+          for(var i = 0; i < items.length; i++) {
+            var item = items[i];
+            
+            if (item.id == 'add' && term.canCreateChildren === false) {
+              item.enabled = false;
+            }
+            
+            if (item.id == 'delete' && this.isRootTermId(parentId)) {
+              item.enabled = false;
+            }
           }
+          
+          return items;
         }
+      },
+      
+      deleteProblem : function(problemId) {
+        var that = this;
         
-        this._cm.render();
-        
-        this._cm.addDestroyEventListener(function() {
-          that.getImpl().tree("selectNode", null);
+        var request = new Mojo.ClientRequest({
+          onSuccess : function() {
+            that.refreshEntityProblems();
+          },
+          onFailure : function(ex) {
+            that.handleException(ex);
+          }
         });
+                  
+        com.runwaysdk.geodashboard.GeoEntityUtil.deleteEntityProblem(request, problemId);
       },
       
       __onCreateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
@@ -389,27 +400,27 @@
             this.getImpl().tree('selectNode', node, true);      
             
             if(i === nodes.length - 1){
-	            var escape = false;
-	            var height = 0;
-	            var currentElem = $(node.element);
-	            while(escape !== true){
-	            	if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
-	            		height += currentElem.parent().position().top;
-	            		currentElem = currentElem.parent();
-	            		escape = true; // escape at the first container jqtree-folder
-	            	}
-	            	else if(currentElem.parent().hasClass("jqtree_common")){
-	            		// pass containers if they aren't jqtree-folder's
-	            		currentElem = currentElem.parent();
-	            	}
-	            	else{
-	            		// just in case the html changes in the jqtree lib we will make sure the loop can be escaped
-	            		escape = true;
-	            	}
-	            }
-	            $('.pageContent').animate({
-	                scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
-	            }, 500);
+              var escape = false;
+              var height = 0;
+              var currentElem = $(node.element);
+              while(escape !== true){
+                if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
+                  height += currentElem.parent().position().top;
+                  currentElem = currentElem.parent();
+                  escape = true; // escape at the first container jqtree-folder
+                }
+                else if(currentElem.parent().hasClass("jqtree_common")){
+                  // pass containers if they aren't jqtree-folder's
+                  currentElem = currentElem.parent();
+                }
+                else{
+                  // just in case the html changes in the jqtree lib we will make sure the loop can be escaped
+                  escape = true;
+                }
+              }
+              $('.pageContent').animate({
+                  scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
+              }, 500);
             }
           }
         }        
@@ -519,7 +530,7 @@
             for(var i = 0; i < views.length; i++) {
               var view = views[i];
               
-              html += '<li class="geoent-problem-error-li" data-entity="' + view.getGeoId() + '">';
+              html += '<li class="geoent-problem-error-li" data-id="' + view.getConcreteId() + '" data-entity="' + view.getGeoId() + '" data-problem="' + view.getProblemName() + '">';
               html += '  <a href="#" class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
               html += '    <p class="geoent-problem-msg">' + view.getProblem() + '</p>';
               html += '  </a>';
@@ -527,10 +538,10 @@
             }
             
             if(html.length > 0){
-            	$("#problems-list").html(html);
+              $("#problems-list").html(html);
             }
             else{
-            	$("#problem-panel-noissue-msg").show();
+              $("#problem-panel-noissue-msg").show();
             }
             
             $(".geoent-problem-error-li").click(function(e){
@@ -544,7 +555,7 @@
           }
         });
         
-        com.runwaysdk.system.gis.geo.GeoEntityProblemView.getAllProblems(request)
+        com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request)
       },
       
       // @Override
