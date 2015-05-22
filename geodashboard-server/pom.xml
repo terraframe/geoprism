@@ -357,6 +357,11 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>src/main/domain</directory>
+        <filtering>false</filtering>
+        <targetPath>${project.basedir}/target/classes/metadata</targetPath>
+      </resource>
     </resources>
     <testSourceDirectory>src/test/java</testSourceDirectory>
     <testResources>

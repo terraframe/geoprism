@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.context;
 
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer;

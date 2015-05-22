@@ -12,6 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <geotools.version>11.0</geotools.version>
+    <mvn.server.url>http://52.25.68.156:8081/</mvn.server.url>
   </properties>
 
   <repositories>
@@ -26,6 +27,21 @@
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
   </repositories>
+  
+  <distributionManagement>
+    <repository>
+      <id>terraframe-releases</id>
+      <name>terraframe-releases</name>
+      <url>${mvn.server.url}nexus/content/repositories/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>terraframe-snapshots</id>
+      <name>terraframe-snapshots</name>
+      <url>${mvn.server.url}nexus/content/repositories/snapshots/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>

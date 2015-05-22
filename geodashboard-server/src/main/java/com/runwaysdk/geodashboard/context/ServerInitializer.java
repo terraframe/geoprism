@@ -1,4 +1,4 @@
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.context;
 
 import java.util.Collections;
 import java.util.List;
