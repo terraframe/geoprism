@@ -627,9 +627,11 @@
         this.termCache[oldTermId] = null;
         
         for (var i = 0; i < nodes.length; ++i) {
+          var node = nodes[i];
+          
           this._addNodeMapping(newTermId, node.id);
           
-          this.getImpl().tree("updateNode", nodes[i], {label:label, runwayId:term.getId()});
+          this.getImpl().tree("updateNode", node, {label:label, runwayId:term.getId()});
         }
           
         this.termCache[newTermId] = term;        
