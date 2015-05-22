@@ -22,7 +22,9 @@
 
   var Util = Mojo.Util;
   var ClassFramework = Mojo.Meta;
-  var Widget = com.runwaysdk.ui.factory.runway.Widget;
+  var Widget = com.runwaysdk.ui.factory.runway.Widget;  
+  var STRUCT = ClassFramework.alias(Mojo.STRUCTURE_PACKAGE + "*");
+
   
   var geoentityTreeName = "com.runwaysdk.geodashboard.ontology.GeoEntityTree";
   var TermTree = com.runwaysdk.geodashboard.ontology.TermTree;
@@ -47,6 +49,26 @@
     "mergeTitle" : "Merge confirmation",
     "accept" : "Confirm as new location"
   });
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.RefreshQueue', {
+    Instance : {
+      initialize : function(tree, ids) {
+        this._tree = tree;
+        this._ids = ids;
+        this._index = 0;
+      },      
+      onSuccess : function() {
+        if(this._index < this._ids.length) {
+          this._tree.refreshTerm(this._ids[this._index], this);
+          
+          this._index = this._index + 1;
+        }        
+      },
+      start : function() {
+        this.onSuccess();
+      }
+    }    
+  });  
   
   /**
    * 
@@ -305,9 +327,8 @@
           var okHandler = Mojo.Util.bind(this, function() {
             var request = new Mojo.ClientRequest({
               onSuccess : function(idsToUpdate) {
-                for(var i = 0 ; i < idsToUpdate.length;i++) {
-                  that.refreshTerm(idsToUpdate[i]);
-                }
+            	var queue = new com.runwaysdk.geodashboard.ontology.RefreshQueue(that, idsToUpdate);
+                queue.start();
                     
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);}); 
                 
