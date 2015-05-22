@@ -726,6 +726,7 @@
         items.push({label:this.localize("update"), id:"edit", handler:Mojo.Util.bind(this, this.__onContextEditClick)});        
         items.push({label:this.localize("delete"), id:"delete", handler:Mojo.Util.bind(this, this.__onContextDeleteClick)});        
         items.push({label:this.localize("refresh"), id:"refresh", handler:Mojo.Util.bind(this, this.__onContextRefreshClick)});  
+        items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this.__onContextExportClick)});
           
         return items;
       },
