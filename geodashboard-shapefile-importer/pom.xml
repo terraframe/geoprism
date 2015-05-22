@@ -148,10 +148,6 @@
           <family>mac</family>
           <arch>x86</arch>
         </os>
-        <property> <!-- 32 bit OS -->
-          <name>sun.arch.data.model</name> <!-- This property may only exist in sun VM's -->
-          <value>32</value>
-        </property>
       </activation>
       <dependencies>
         <dependency>
@@ -166,11 +162,8 @@
       <activation>
         <os>
           <family>mac</family>
+          <arch>x86_64</arch>
         </os>
-        <property> <!-- 64 bit OS -->
-          <name>sun.arch.data.model</name> <!-- This property may only exist in sun VM's -->
-          <value>64</value>
-        </property>
       </activation>
       <dependencies>
         <dependency>
@@ -181,7 +174,7 @@
       </dependencies>
     </profile>
     <profile>
-      <id>swt-unix</id>
+      <id>swt-linux</id>
       <activation>
         <os>
           <family>unix</family>
