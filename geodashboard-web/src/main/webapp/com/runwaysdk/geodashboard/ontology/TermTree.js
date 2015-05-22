@@ -154,9 +154,46 @@
         this._nodeMap.get(termId).push(nodeId);
       },
       
-      _removeNodeMapping : function(termId) {
+      _clearNodeMappings : function(termId) {
         this._nodeMap.remove(termId);
       },
+      
+      _removeNodeMapping : function(termId, nodeId) {
+        var nodeIds = this._nodeMap.get(termId);
+        
+        if(nodeIds != null) {
+          var index = nodeIds.indexOf(nodeId);         
+          
+          if (index > -1) {
+          nodeIds.splice(index, 1);
+          
+            this._nodeMap.put(termId, nodeIds);        
+          }
+        
+        }
+      },
+      
+      _refreshNodeMapping : function(termId) {
+        if (!this.rootTermConfigs.containsKey(termId)) {
+          if (this._nodeMap.get(termId) != null) {
+            var tree = $(this.getRawEl());
+                
+            var nodeIds = this._nodeMap.get(termId);
+                
+            for (var i = 0; i < nodeIds.length; ++i) {
+              var node = tree.tree("getNodeById", nodeIds[i]);
+                              
+              if (node == null) {
+                nodeIds.splice(i, 1);
+              }
+            }
+              
+            this._nodeMap.put(termId, nodeIds);
+          }
+        }        
+      },
+        
+      
       
       /*
        * Controls whether a node can be moved
@@ -431,7 +468,7 @@
 //        }
         
         for (var i = 0; i < nodes.length; ++i) {
-          $thisTree.tree('removeNode',nodes[i]);
+          this.removeNode(nodes[i]);
         }
         
         delete this.termCache[termId];
@@ -586,7 +623,7 @@
         // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
         var nodes = this.__getNodesById(oldTermId);        
         
-        this._removeNodeMapping(oldTermId);
+        this._clearNodeMappings(oldTermId);
         this.termCache[oldTermId] = null;
         
         for (var i = 0; i < nodes.length; ++i) {
@@ -661,7 +698,7 @@
               var nodes = that.__getNodesById(termId);
               for (var i = 0; i < nodes.length; ++i) {
                 if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId && relType === that._getRelationshipForNode(nodes[i], nodes[i].parent)) {
-                  $(that.getRawEl()).tree("removeNode", nodes[i]);
+                  that.removeNode(nodes[i]);
                 }
               }
               that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
@@ -893,10 +930,7 @@
                 
               var nodes = that.__getNodesById(movedNodeId);
               for (var i = 0; i<nodes.length; ++i) {
-                $thisTree.tree(
-                  'removeNode',
-                  nodes[i]
-                );
+                that.removeNode(nodes[i]);
               }
 
               if(targetNode.hasFetched) {                
@@ -1033,6 +1067,26 @@
         
       },
       
+      removeNodesFromCache : function(node) {
+        // Recursively delete all descendant nodes
+        if (node.children) {
+          for (var i=node.children.length-1; i >= 0; i--) {
+            var child = node.children[i];
+            this.removeNodesFromCache(child);
+          }
+        }
+        
+        // Remove the node from the term-node mapping
+        this._removeNodeMapping(node.runwayId, node.id);        
+      },
+      
+      removeNode : function(node) {
+        this.removeNodesFromCache(node);
+      
+        // Remove thte node form the tree
+        $(this.getRawEl()).tree("removeNode", node);        
+      },
+      
       /**
        * Fetches all the term's children from the server, removes all children of the provided nodes,
        * and then re-populates the child nodes based on the TermAndRel objects received from the server.
@@ -1050,7 +1104,7 @@
         
         this.setTermBusy(termId, true);
         
-        var myCallback = new Mojo.ClientRequest({
+        var request = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
             var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
@@ -1067,9 +1121,11 @@
             for (var iNode = 0; iNode < nodes.length; ++iNode) {
               var node = nodes[iNode];
               node.hasFetched = true;
-              var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
+              
+              var children = node.children.slice(0,node.children.length);
+              
               for (var i=0; i < children.length; i++) {
-                $(that.getRawEl()).tree("removeNode", children[i]);
+                that.removeNode(children[i]);
               }
             }
             
@@ -1084,7 +1140,7 @@
               
               for (var iNode = 0; iNode < nodes.length; ++iNode) {
                 var node = nodes[iNode];
-                that.__createTreeNode(childId, node);
+                that.__createTreeNode(childId, node);                
               }
             }
             
@@ -1093,7 +1149,7 @@
             if (callback != null && Mojo.Util.isFunction(callback.onSuccess))
             {
               callback.onSuccess();
-            }
+            }            
           },
           
           onFailure : function(err) {
@@ -1112,7 +1168,7 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, myCallback);
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, request);
       },
       
       /**
