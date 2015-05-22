@@ -17,14 +17,17 @@
     <root.db>template_postgis</root.db>
     <root.user>postgres</root.user>
     <root.pass>postgres</root.pass>
+    <database.name>geodashboard</database.name>
+    <database.user>geodashboard</database.user>
+    <database.pass>geodashboard</database.pass>
   </properties>
 
   <dependencies>
     <dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.6</version>
-		</dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.3.6</version>
+    </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-server</artifactId>
@@ -85,6 +88,20 @@
                     <argument>${root.db}</argument>
                     <argument>com/runwaysdk/resources/xsd/schema.xsd</argument>
                   </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -118,6 +135,20 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/domain</argument>
                   </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -151,6 +182,20 @@
                   <arguments>
                     <argument>-compile</argument>
                   </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>                  
                 </configuration>
               </execution>
             </executions>
@@ -184,8 +229,21 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
                   </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>                  
                 </configuration>
-
               </execution>
             </executions>
           </plugin>
@@ -220,6 +278,20 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>                  
                 </configuration>
               </execution>
             </executions>
@@ -255,41 +327,20 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>write-javascript</id>
-      <activation>
-        <property>
-          <name>write-javascript</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>write-javascript</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>com.runwaysdk.geodashboard.JavascriptFileWriter</mainClass>
-                  <arguments>
-                    <argument>${project.basedir}/../geodashboard-web/src/main/webapp</argument>
-                    <argument>com.runwaysdk.geodashboard</argument>
-                    <argument>com.runwaysdk.system</argument>
-                  </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>database.user</key>
+                      <value>${database.user}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.password</key>
+                      <value>${database.pass}</value>
+                    </systemProperty>
+                    <systemProperty>
+                      <key>database.name</key>
+                      <value>${database.name}</value>
+                    </systemProperty>
+                  </systemProperties>                  
                 </configuration>
               </execution>
             </executions>
