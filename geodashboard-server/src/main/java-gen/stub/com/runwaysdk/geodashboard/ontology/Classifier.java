@@ -91,7 +91,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
 
     classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch), classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
-
+    
     OIterator<? extends Classifier> i = classifierQ.getIterator();
     try
     {
@@ -197,5 +197,52 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  /**
+   * Finds the classifier with the given label for the given term attribute. If the classifier does not exist, then it
+   * is created.
+   * 
+   * @param classifierLabel
+   * @param mdAttributeTermDAO
+   * @return
+   */
+  @Transaction
+  public static Classifier findClassifierAddIfNotExist(String packageString, String classifierLabel, MdAttributeTermDAOIF mdAttributeTermDAO)
+  {
+    Classifier classifier = findMatchingTerm(classifierLabel, mdAttributeTermDAO);
+  
+    if (classifier == null)
+    {
+      classifier = new Classifier();
+      classifier.getDisplayLabel().setDefaultValue(classifierLabel);
+      classifier.setClassifierId(classifierLabel);
+      classifier.setClassifierPackage(packageString);
+      classifier.apply();
+  
+      QueryFactory qf = new QueryFactory();
+  
+      ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+      ClassifierAttributeRootQuery carQ = new ClassifierAttributeRootQuery(qf);
+  
+      carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
+  
+      classifierRootQ.WHERE(classifierRootQ.classifierAttributeRoots(carQ));
+  
+      OIterator<? extends Classifier> i = classifierRootQ.getIterator();
+      try
+      {
+        for (Classifier classifierRoot : i)
+        {
+          classifier.addLink(classifierRoot, ClassifierIsARelationship.CLASS);
+        }
+      }
+      finally
+      {
+        i.close();
+      }
+    }
+  
+    return classifier;
   }
 }
