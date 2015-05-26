@@ -1,6 +1,7 @@
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.context;
 
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.SessionEntry;
 
 public class SessionEntryContextListener implements Reloadable, ServerContextListener
 {
