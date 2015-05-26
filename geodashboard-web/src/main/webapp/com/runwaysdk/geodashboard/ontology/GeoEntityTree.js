@@ -418,9 +418,11 @@
         else {
           for(var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
-            this.getImpl().tree('selectNode', node, true);      
+            this.getImpl().tree('openNode', node, true);      
             
             if(i === nodes.length - 1){
+              this.getImpl().tree('selectNode', node, true);      
+            	
               var escape = false;
               var height = 0;
               var currentElem = $(node.element);

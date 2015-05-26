@@ -504,8 +504,8 @@
 	                      </div>
 	                    </div>
 	                    <div class="secondary-box">
-	                      <input type='hidden' id='secondaryCategories' data-categoriesstore='${style.secondaryCategories}' />
-	                      <input type='hidden' id='secondaryAggregationValue' value='${secondaryAggregation}' />
+	                      <input type="hidden" id="secondaryCategories" data-categoriesstore="${secondaryCategories}" />
+	                      <input type="hidden" id="secondaryAggregationValue" value="${secondaryAggregation}" />
 	                      
 	                      <strong class="title"><gdb:localize key="DashboardLayer.form.secondaryAttributeStyle"/></strong>
 	                      <div class="cell-holder">	                    
@@ -605,7 +605,7 @@
 	                      </div>
 	                    <div class="category-block" id="category-colors-container">
 	                      	  
-	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${categories}' type="hidden" class="category-input" name="style.styleCategories" value='${categories}' >
+	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${categories}' type="hidden" class="category-input" name="style.styleCategories" >
 		                      
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">

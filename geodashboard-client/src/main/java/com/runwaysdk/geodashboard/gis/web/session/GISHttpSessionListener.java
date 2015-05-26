@@ -2,13 +2,11 @@ package com.runwaysdk.geodashboard.gis.web.session;
 
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.ClientException;
-import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.web.WebClientSession;

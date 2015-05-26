@@ -1,26 +1,14 @@
 package com.runwaysdk.geodashboard.test;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
+import com.runwaysdk.session.Request;
+import com.runwaysdk.system.metadata.MdBusiness;
 //import com.example.AdvancedDashboard;
 //import com.example.BasicDashboard;
 //import com.example.DashboardView;
 //import com.example.DashboardViewDTO;
-import com.runwaysdk.ClientSession;
-import com.runwaysdk.business.ValueObjectDTO;
-import com.runwaysdk.business.ValueQueryDTO;
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.system.metadata.MdBusiness;
 
 public class ValueQueryTest
 {

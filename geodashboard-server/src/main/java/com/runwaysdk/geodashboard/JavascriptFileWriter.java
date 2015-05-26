@@ -1,15 +1,11 @@
 package com.runwaysdk.geodashboard;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 
-import com.runwaysdk.business.generation.json.JSONFacade;
 import com.runwaysdk.query.Condition;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;

@@ -1,6 +1,8 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
@@ -196,7 +199,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
-      
+
       req.setAttribute("aggregations", aggregations);
       // req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
@@ -304,14 +307,32 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("categories", style.getStyleCategories());
+      req.setAttribute("categories", this.encode(style.getStyleCategories()));
+      req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
 
       /*
        * Secondary attribute objects
        */
       req.setAttribute("secondaryAttributes", DashboardMapDTO.getSecondaryAttributes(this.getClientRequest(), mapId, mdAttributeId));
-      req.setAttribute("secondaryAggregation", style.getSecondaryAggregationType().size() > 0 ? style.getSecondaryAggregationType().get(0).getName() : "" );      
+      req.setAttribute("secondaryAggregation", style.getSecondaryAggregationType().size() > 0 ? style.getSecondaryAggregationType().get(0).getName() : "");
     }
+  }
+
+  private String encode(String value)
+  {
+    if (value != null)
+    {
+      try
+      {
+        return URLEncoder.encode(value, "UTF-8");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+        throw new ProgrammingErrorExceptionDTO(e.getClass().getName(), e.getLocalizedMessage(), e.getMessage());
+      }
+    }
+
+    return "";
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)

@@ -1,7 +1,6 @@
 package com.runwaysdk.geodashboard.gis.model;
 
 import java.util.List;
-import java.util.HashMap;
 
 
 public interface Layer extends Component

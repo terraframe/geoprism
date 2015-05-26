@@ -1,6 +1,5 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.util.List;
 
 public class DashboardThematicStyleDTO extends DashboardThematicStyleDTOBase implements com.runwaysdk.generation.loader.Reloadable
 {

@@ -2,14 +2,8 @@ package com.runwaysdk.geodashboard.gis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.http.Cookie;
-
-import com.runwaysdk.business.ontology.TermDTO;
-import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.ontology.TermControllerUtil;
-import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.system.ontology.io.TermFileFormatDTO;
 import com.runwaysdk.system.ontology.io.TermFileFormatMasterDTO;
 

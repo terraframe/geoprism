@@ -1,7 +1,6 @@
 package com.runwaysdk.geodashboard.gis.layer;
 
 import org.junit.Test;
-import com.runwaysdk.session.Request;
 
 public class LayerAutoCompleteTest
 {

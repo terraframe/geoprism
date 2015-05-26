@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.geodashboard.AttributeWrapper;
@@ -17,6 +18,7 @@ import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -80,11 +82,31 @@ public class DashboardMetadataBuilder
       {
         AttributeWrapper unitWrapper = getOrCreateAttributeWrapper(info, _mdView, mdBusinessDAO, attributeName);
 
-        DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
-        unitWrapperRel.setListOrder(listOrder++);
-        unitWrapperRel.apply();
+        MdAttributeConcreteDAOIF mdAttribute = mdBusinessDAO.definesAttribute(attributeName);
+
+        if (!this.isGeoEntityAttribute(mdAttribute))
+        {
+          DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
+          unitWrapperRel.setListOrder(listOrder++);
+          unitWrapperRel.apply();
+        }
       }
     }
+  }
+
+  private boolean isGeoEntityAttribute(MdAttributeConcreteDAOIF mdAttribute)
+  {
+    if (mdAttribute instanceof MdAttributeReferenceDAOIF)
+    {
+      MdAttributeReferenceDAOIF mdAttribteAttributeReference = (MdAttributeReferenceDAOIF) mdAttribute;
+
+      if (mdAttribteAttributeReference.getReferenceMdBusinessDAO().definesType().equals(GeoEntity.CLASS))
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   protected MetadataWrapper getOrCreateMetadataWrapper(MdView _mdView, Universal _universal)

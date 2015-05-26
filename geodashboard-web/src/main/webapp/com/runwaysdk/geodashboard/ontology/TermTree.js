@@ -1069,24 +1069,21 @@
         
       },
       
-      removeNodesFromCache : function(node) {
+      removeNode : function(node) {
+        
         // Recursively delete all descendant nodes
         if (node.children) {
           for (var i=node.children.length-1; i >= 0; i--) {
             var child = node.children[i];
-            this.removeNodesFromCache(child);
+            this.removeNode(child);
           }
         }
+          
+        // Remove thte node form the tree
+        $(this.getRawEl()).tree("removeNode", node);
         
         // Remove the node from the term-node mapping
-        this._removeNodeMapping(node.runwayId, node.id);        
-      },
-      
-      removeNode : function(node) {
-        this.removeNodesFromCache(node);
-      
-        // Remove thte node form the tree
-        $(this.getRawEl()).tree("removeNode", node);        
+        this._removeNodeMapping(node.runwayId, node.id);
       },
       
       /**

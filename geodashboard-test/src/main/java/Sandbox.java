@@ -1,22 +1,16 @@
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-
-import org.eclipse.emf.ecore.xml.type.internal.DataValue.Base64;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 public class Sandbox
 {
-  public static void main(String[] args) throws NoSuchAlgorithmException
+  public static void main(String[] args) throws Exception
   {
+    GeometryFactory gf = new GeometryFactory();
 
-    KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-    keyGenerator.init(128);
+    Coordinate coord = new Coordinate(1,1);
+    Point point = gf.createPoint(coord);
 
-    SecretKey key = keyGenerator.generateKey();
-
-    byte[] bytes = key.getEncoded();
-
-    System.out.println(Base64.encode(bytes));
+    System.out.println(point);
   }
 }

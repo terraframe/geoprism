@@ -15,7 +15,6 @@ import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
-import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardReferenceLayerController extends DashboardReferenceLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable

@@ -14,13 +14,13 @@ import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.geodashboard.AccessConstants;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.DashboardQueryDTO;
+import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
@@ -224,7 +224,9 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       {
         attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
 
-        for (MdAttributeViewDTO mdAttrView : mdDTO.getSortedAttributes())
+        MdAttributeViewDTO[] views = mdDTO.getSortedAttributes();
+
+        for (MdAttributeViewDTO mdAttrView : views)
         {
           attrs.add(mdAttrView);
         }
@@ -258,24 +260,22 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   {
     render("nodashboard.jsp");
   }
-  
-  
+
   @Override
-  public void exportMap(String mapId, String outFileName, String outFileFormat, String mapBounds,
-      String mapSize) throws IOException, ServletException
+  public void exportMap(String mapId, String outFileName, String outFileFormat, String mapBounds, String mapSize) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
-    
-    if(outFileName == null || outFileName.length() == 0)
+
+    if (outFileName == null || outFileName.length() == 0)
     {
       outFileName = "default";
     }
-    
+
     try
     {
       InputStream mapImageInStream = map.generateMapImageExport(outFileFormat, mapBounds, mapSize);
-      FileDownloadUtil.writeFile(resp, outFileName, outFileFormat, mapImageInStream, "application/"+outFileFormat);
+      FileDownloadUtil.writeFile(resp, outFileName, outFileFormat, mapImageInStream, "application/" + outFileFormat);
     }
     catch (Exception e)
     {
