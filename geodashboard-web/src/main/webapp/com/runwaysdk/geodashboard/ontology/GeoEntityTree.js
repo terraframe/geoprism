@@ -421,29 +421,33 @@
             this.getImpl().tree('openNode', node, true);      
             
             if(i === nodes.length - 1){
-              this.getImpl().tree('selectNode', node, true);      
+              this.getImpl().tree('selectNode', node, true);     
+              
+              this.getImpl().tree('scrollToNode', node);
             	
-              var escape = false;
-              var height = 0;
-              var currentElem = $(node.element);
-              while(escape !== true){
-                if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
-                  height += currentElem.parent().position().top;
-                  currentElem = currentElem.parent();
-                  escape = true; // escape at the first container jqtree-folder
-                }
-                else if(currentElem.parent().hasClass("jqtree_common")){
-                  // pass containers if they aren't jqtree-folder's
-                  currentElem = currentElem.parent();
-                }
-                else{
-                  // just in case the html changes in the jqtree lib we will make sure the loop can be escaped
-                  escape = true;
-                }
-              }
-              $('.pageContent').animate({
-                  scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
-              }, 500);
+              // This was originally implemented to have a more fluid scroll behavior but later replaced by 
+              // JQTree's native scroll method
+//              var escape = false;
+//              var height = 0;
+//              var currentElem = $(node.element);
+//              while(escape !== true){
+//                if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
+//                  height += currentElem.parent().position().top;
+//                  currentElem = currentElem.parent();
+//                  escape = true; // escape at the first container jqtree-folder
+//                }
+//                else if(currentElem.parent().hasClass("jqtree_common")){
+//                  // pass containers if they aren't jqtree-folder's
+//                  currentElem = currentElem.parent();
+//                }
+//                else{
+//                  // just in case the html changes in the jqtree lib we will make sure the loop can be escaped
+//                  escape = true;
+//                }
+//              }
+//              $('.pageContent').animate({
+//                  scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
+//              }, 500);
             }
           }
         }        

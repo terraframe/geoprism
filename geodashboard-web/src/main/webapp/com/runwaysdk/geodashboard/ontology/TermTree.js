@@ -1039,7 +1039,22 @@
        * Is binded to jqtree's node select (and deselect) event.
        */
       __onNodeSelect : function(e) {
+        var node = e.node;
+        var that = this;
+        var $tree = that.getImpl();
         
+        setParentOpen(node);
+        
+        // Recursively open all parent folder nodes
+        function setParentOpen(node){
+        	if(node.parent && !node.parent.is_open){
+        		$tree.tree('openNode', node.parent);
+        		setParentOpen(node.parent);
+        	}
+        	else if(node.parent){
+        		setParentOpen(node.parent);
+        	}
+        }
       },
       
       /**
@@ -1048,11 +1063,30 @@
       __onNodeOpen : function(e) {
         var node = e.node;
         var nodeId = this.__getRunwayIdFromNode(node);
-        var that = this;
         
         if (node.hasFetched == null || node.hasFetched == undefined || node.hasFetched == false) {
           this.refreshTerm(nodeId, null, [node]);
         }
+      },
+      
+      /**
+       * Is binded to jqtree's node close event and disables nodes when parents are closed.
+       */
+      __onNodeClose : function(e) {
+        var node = e.node;
+        var that = this;
+        
+        var $tree = that.getImpl();
+        var selected = $tree.tree('getSelectedNode');
+        
+        // Remove seleted status of all nodes and sub-nodes
+        if(selected){
+        	$tree.tree('removeFromSelection', selected);
+        }
+        node.iterate(function(child_node) {
+            $tree.tree('removeFromSelection', child_node);
+            return true;
+        });
       },
       
       // Subclasses of TermTree can override this if they're returning a view. (Like GeoEntity). Just convert the view to a TNR.
@@ -1414,6 +1448,16 @@
         $tree.bind(
             'tree.open',
             Mojo.Util.bind(this, this.__onNodeOpen)
+        );
+        
+        $tree.bind(
+            'tree.close',
+            Mojo.Util.bind(this, this.__onNodeClose)
+        );
+        
+        $tree.bind(
+            'tree.select',
+            Mojo.Util.bind(this, this.__onNodeSelect)
         );
         
         if (this._config.editable)
