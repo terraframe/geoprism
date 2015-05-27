@@ -2657,6 +2657,10 @@
             // ontology category layer type colors
             $(thisLi).find("span").colpick({
               submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj) {
+                var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).css("background-color"));
+                $(this).colpickSetColor(currColor,false);
+              },
               onChange: function(hsb,hex,rgb,el,bySetColor) {
                 var hexStr = '#'+hex;
                 $(el).css('background', hexStr);
