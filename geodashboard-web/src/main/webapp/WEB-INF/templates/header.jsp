@@ -19,7 +19,12 @@
 
 --%>
 
-
+<!-- Tell Runway what the application context path is. -->
+<script>
+window.com = window.com || {};
+window.com.runwaysdk = window.com.runwaysdk || {};
+window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+</script>
 
 <body>
   <noscript><div>Javascript must be enabled for the correct page display</div></noscript>

@@ -33,6 +33,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
+<!-- Tell Runway what the application context path is. -->
+<script>
+window.com = window.com || {};
+window.com.runwaysdk = window.com.runwaysdk || {};
+window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+</script>
+
 <%
   // This code must execute before the header is included because the inner HTML may overwrite 
   // the default header and footer includes.
