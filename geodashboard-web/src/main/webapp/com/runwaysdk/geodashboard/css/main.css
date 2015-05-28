@@ -1002,6 +1002,7 @@ a.blueactive,
 	font-weight:normal;
 	color:#ececec;
 	margin:1px 0 0;
+	max-width: 155px;
 }
 .control-form .cell{float:right;}
 
@@ -1234,6 +1235,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 
 .sales-menu.dropdown{
   margin-left: 15px;
+  max-width: 165px;
 }
 
 .sales-menu .dropdown-menu{
@@ -1504,6 +1506,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color:#fff;
 /* 	width:235px; */
 	position:relative;
+	max-width: 235px;
 }
 .sales-accortion .panel-collapse .panel-title .opener-link:hover,
 .sales-accortion .panel-collapse .panel-title .opener-link:focus,
