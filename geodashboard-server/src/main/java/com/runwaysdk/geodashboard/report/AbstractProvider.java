@@ -12,8 +12,8 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.F;
@@ -57,7 +57,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     {
       String attributeName = attribute.getAttributeName();
 
-      SelectablePrimitive selectable = this.getSelectable(query, attribute);
+      SelectablePrimitive selectable = this.getSelectable(vQuery, query, attribute);
       selectable.setColumnAlias(attributeName);
       selectable.setUserDefinedAlias(attributeName);
       selectable.setUserDefinedDisplayLabel(mdClass.definesAttribute(attributeName).getDisplayLabel(Session.getCurrentLocale()));
@@ -71,7 +71,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     }
   }
 
-  protected SelectablePrimitive getSelectable(GeneratedBusinessQuery query, ReportAttributeMetadata attribute)
+  protected SelectablePrimitive getSelectable(ValueQuery vQuery, GeneratedBusinessQuery query, ReportAttributeMetadata attribute)
   {
     Attribute selectable = query.get(attribute.getAttributeName());
 
@@ -82,9 +82,11 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       if (mdAttribute.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
       {
         AttributeReference reference = (AttributeReference) selectable;
-        AttributeLocal aLocalCharacter = reference.aLocalCharacter(Classifier.DISPLAYLABEL);
+        ClassifierQuery cQuery = new ClassifierQuery(vQuery);
 
-        return aLocalCharacter.localize();
+        vQuery.WHERE(reference.LEFT_JOIN_EQ(cQuery));
+
+        return cQuery.getDisplayLabel().localize();
       }
     }
     else if (attribute.getAggregation() != null && attribute.getAggregation().equals(AllAggregationType.SUM))
