@@ -377,7 +377,7 @@ public class GeoserverTest
       q.WHERE(q.getUniversal().EQ(state));
       q.ORDER_BY_ASC(q.getDisplayLabel().getDefaultLocale());
 
-      OIterator<? extends GeoEntity> iter = q.getIterator();    
+      OIterator<? extends GeoEntity> iter = q.getIterator();
 
       double total = q.getCount();
 
@@ -829,7 +829,7 @@ public class GeoserverTest
       layer = new DashboardThematicLayer();
       layer.setName("Layer 1");
       layer.setUniversal(state);
-      //layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
+      // layer.setGeoEntity(MdAttributeReference.get(createdBy.getId()));
       layer.addLayerType(AllLayerType.BUBBLE);
       layer.setVirtual(true);
       layer.apply();
@@ -975,8 +975,8 @@ public class GeoserverTest
       eq.apply();
 
       DashboardThematicStyle style = new DashboardThematicStyle();
-//      style.setMdAttribute(rank);
-//      style.addAggregationType(AllAggregationType.SUM);
+      // style.setMdAttribute(rank);
+      // style.addAggregationType(AllAggregationType.SUM);
       style.setName("Style 1");
       style.setStyleCondition(eq);
       style.apply();
@@ -1267,7 +1267,7 @@ public class GeoserverTest
       layer2.setUniversal(state);
       layer2.addLayerType(AllLayerType.BASIC);
       layer2.setVirtual(true);
-      //layer2.setGeoEntity(geoentityRef);
+      // layer2.setGeoEntity(geoentityRef);
       layer2.apply();
 
       HasLayer hasLayer = map.addHasLayer(layer);

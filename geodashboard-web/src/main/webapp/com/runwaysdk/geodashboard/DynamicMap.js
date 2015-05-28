@@ -203,17 +203,13 @@
           $.each(elements, function( index, element ) {
             var rwId = element.dataset.rwid;
               
-            // filters out the jqTree 'phantom' elements which are duplicates of the elements we are after                    
-            if(rwId.indexOf("PHANTOM") === -1){
+            var category = new Object();
+            category.id = element.dataset.rwid; 
+            category.val = element.parentElement.previousSibling.textContent;
+            category.color = GDB.gis.DynamicMap.prototype.rgb2hex($(element).css("background-color"));
+            category.isOntologyCat = true;
                         
-              var category = new Object();
-              category.id = element.dataset.rwid; 
-              category.val = element.parentElement.previousSibling.textContent;
-              category.color = GDB.gis.DynamicMap.prototype.rgb2hex($(element).css("background-color"));
-              category.isOntologyCat = true;
-                        
-              categories.push(category);
-            }
+            categories.push(category);
           });          
                 
           return categories;
@@ -2642,36 +2638,42 @@
           slide : false,
           selectable : false,
           onCreateLi: function(node, $li) {
-            var termId = node.runwayId;
+        	if(!node.phantom) {
+              var termId = node.runwayId;
 
-            var catColor = that._getCategoryColor(termId, elementId, storeId);
+              var catColor = that._getCategoryColor(termId, elementId, storeId);
           
-            var thisLi = $.parseHTML(
-              '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-                '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-              '</a>');
+              var thisLi = $.parseHTML(
+                '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+                  '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+                '</a>');
 
-            // Add the color icon for category ontology nodes              
-            $li.find('> div').append(thisLi)
+              // Add the color icon for category ontology nodes              
+              $li.find('> div').append(thisLi);
               
             // ontology category layer type colors
             $(thisLi).find("span").colpick({
               submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj) {
+                var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).css("background-color"));
+                $(this).colpickSetColor(currColor,false);
+              },
               onChange: function(hsb,hex,rgb,el,bySetColor) {
                 var hexStr = '#'+hex;
                 $(el).css('background', hexStr);
                 $(el).next(".color-input").attr('value', hexStr);                                  
+              },
+              /* checkable: true, */
+              crud: {
+                create: { // This configuration gets merged into the jquery create dialog.
+                  height: 320
+                },
+                update: {
+                  height: 320
+                }
               }
             });
-          },
-          /* checkable: true, */
-          crud: {
-            create: { // This configuration gets merged into the jquery create dialog.
-              height: 320
-            },
-            update: {
-              height: 320
-            }
+           }
           }
         });
         tree.render(elementId, nodes);
