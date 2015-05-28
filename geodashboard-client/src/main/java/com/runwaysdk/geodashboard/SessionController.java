@@ -21,6 +21,10 @@ public class SessionController extends SessionControllerBase implements Reloadab
 {
   public static final long   serialVersionUID = 1234283350799L;
 
+  public static final String LOGIN_ACTION     = SessionController.class.getName() + ".login" + MdActionInfo.ACTION_SUFFIX;
+
+  public static final String LOGOUT_ACTION    = SessionController.class.getName() + ".logout" + MdActionInfo.ACTION_SUFFIX;
+
   public SessionController(HttpServletRequest req, HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous);
