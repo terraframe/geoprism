@@ -2649,7 +2649,7 @@
                 '</a>');
 
               // Add the color icon for category ontology nodes              
-              $li.find('> div').append(thisLi)
+              $li.find('> div').append(thisLi);
               
             // ontology category layer type colors
             $(thisLi).find("span").colpick({
@@ -2662,17 +2662,18 @@
                 var hexStr = '#'+hex;
                 $(el).css('background', hexStr);
                 $(el).next(".color-input").attr('value', hexStr);                                  
+              },
+              /* checkable: true, */
+              crud: {
+                create: { // This configuration gets merged into the jquery create dialog.
+                  height: 320
+                },
+                update: {
+                  height: 320
+                }
               }
             });
-          },
-          /* checkable: true, */
-          crud: {
-            create: { // This configuration gets merged into the jquery create dialog.
-              height: 320
-            },
-            update: {
-              height: 320
-            }
+           }
           }
         });
         tree.render(elementId, nodes);
