@@ -43,33 +43,43 @@
 <div id="tree-container">
   <div id="tree"></div>
   <div id="problem-panel">
-  	<h4 id="problem-panel-heading"><gdb:localize key="geoEntity.problems.header"/></h4>
+    <h4 id="problem-panel-heading"><gdb:localize key="geoEntity.problems.header"/></h4>
     <ul id="problems-list">
-    	<h4 id="problem-panel-noissue-msg" style="display:none;"><gdb:localize key="geoEntity.problems.noproblems-msg"/></h4>
+      <h4 id="problem-panel-noissue-msg" style="display:none;"><gdb:localize key="geoEntity.problems.noproblems-msg"/></h4>
     </ul>
   </div>
 </div>
 
 <script type="text/javascript">
+
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
-    
-    var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
-    termType : "${type}",
-        relationshipTypes : [ "${relationshipType}" ],
-      rootTerms : [ { termId : "${rootId}"} ],
-      editable : true,
-      crud: {
-        create: { // This configuration gets merged into the jquery create dialog.
-          height: 320
-        },
-        update: {
-          height: 320
-        }
+
+    var request = new Mojo.ClientRequest({
+      onSuccess: function(views){
+            
+        var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
+          termType : "${type}",
+          relationshipTypes : [ "${relationshipType}" ],
+          rootTerms : [ { termId : "${rootId}"} ],
+          editable : true,
+          crud: {
+            create: { // This configuration gets merged into the jquery create dialog.
+              height: 320
+            },
+            update: {
+              height: 320
+            }
+          }
+        });
+        tree.render("#tree", views);
+      },
+      onFailure : function(ex) {
+    	// TODO fix this to use standard error popup
+        alert("Error reading entity problems");
       }
     });
-    tree.render("#tree");
-    
-    tree.refreshEntityProblems();
+      
+    com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request);    
   });
 </script>

@@ -173,28 +173,6 @@
         }
       },
       
-      _refreshNodeMapping : function(termId) {
-        if (!this.rootTermConfigs.containsKey(termId)) {
-          if (this._nodeMap.get(termId) != null) {
-            var tree = $(this.getRawEl());
-                
-            var nodeIds = this._nodeMap.get(termId);
-                
-            for (var i = 0; i < nodeIds.length; ++i) {
-              var node = tree.tree("getNodeById", nodeIds[i]);
-                              
-              if (node == null) {
-                nodeIds.splice(i, 1);
-              }
-            }
-              
-            this._nodeMap.put(termId, nodeIds);
-          }
-        }        
-      },
-        
-      
-      
       /*
        * Controls whether a node can be moved
        */

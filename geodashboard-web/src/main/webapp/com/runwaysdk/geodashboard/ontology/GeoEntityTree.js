@@ -64,8 +64,8 @@
           this._index = this._index + 1;
         }        
       },
-      start : function() {
-        this.onSuccess();
+      start : function() {          
+        this._tree.refreshEntityProblems(this);        
       }
     }    
   });  
@@ -129,16 +129,15 @@
           else {
             items.push({label:this.localize("viewSynonyms"), id:"synonyms", handler:Mojo.Util.bind(this, this.__onContextViewSynonymsClick)});          
           }
-        
-          items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this.__onContextExportClick)}); 
           
           // For unmatched nodes we need to give the option to accept the node          
           var problem = $(".geoent-problem-error-li[data-entity='"+term.getId()+"'][data-problem='UNMATCHED']");
             
           if(problem.length > 0) {
             var problemId = problem.data('id');
+            var termId = problem.data('entity');
             
-            items.push({label:this.localize("accept"), id:"accept", handler:function(){that.deleteProblem(problemId);}}); 
+            items.push({label:this.localize("accept"), id:"accept", handler:function(){that.deleteProblem(termId, problemId);}}); 
           }
           
           // Disable some options based on GeoEntity rules.
@@ -158,12 +157,12 @@
         }
       },
       
-      deleteProblem : function(problemId) {
+      deleteProblem : function(termId, problemId) {
         var that = this;
         
         var request = new Mojo.ClientRequest({
           onSuccess : function() {
-            that.refreshEntityProblems();
+            that.refreshTermProblems(termId);
           },
           onFailure : function(ex) {
             that.handleException(ex);
@@ -327,12 +326,10 @@
           var okHandler = Mojo.Util.bind(this, function() {
             var request = new Mojo.ClientRequest({
               onSuccess : function(idsToUpdate) {
-            	var queue = new com.runwaysdk.geodashboard.ontology.RefreshQueue(that, idsToUpdate);
+                var queue = new com.runwaysdk.geodashboard.ontology.RefreshQueue(that, idsToUpdate);
                 queue.start();
                     
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);}); 
-                
-                that.refreshEntityProblems();
               },
               onFailure : function(ex) {
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -424,30 +421,6 @@
               this.getImpl().tree('selectNode', node, true);     
               
               this.getImpl().tree('scrollToNode', node);
-            	
-              // This was originally implemented to have a more fluid scroll behavior but later replaced by 
-              // JQTree's native scroll method
-//              var escape = false;
-//              var height = 0;
-//              var currentElem = $(node.element);
-//              while(escape !== true){
-//                if(currentElem.parent().hasClass("jqtree_common") && currentElem.parent().hasClass("jqtree-folder") && !currentElem.parent().hasClass("jqtree-selected")){
-//                  height += currentElem.parent().position().top;
-//                  currentElem = currentElem.parent();
-//                  escape = true; // escape at the first container jqtree-folder
-//                }
-//                else if(currentElem.parent().hasClass("jqtree_common")){
-//                  // pass containers if they aren't jqtree-folder's
-//                  currentElem = currentElem.parent();
-//                }
-//                else{
-//                  // just in case the html changes in the jqtree lib we will make sure the loop can be escaped
-//                  escape = true;
-//                }
-//              }
-//              $('.pageContent').animate({
-//                  scrollTop: height + $('.pageContent').scrollTop() - ($('.pageContent')[0].getBoundingClientRect().height / 2)
-//              }, 500);
             }
           }
         }        
@@ -526,63 +499,143 @@
         else {
           this.$refreshTerm(termId, callback, nodes);
         }
-      },   
+      },
+      
+      __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
+        var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
+        
+        var hasProblem = this.hasProblem(node.runwayId);
+        
+        this._toggleProblem(node, hasProblem);
+      },
+      
+      _refreshProblems : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        var hasProblem = this.hasProblem(termId);
+        
+        for(var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          
+          this._toggleProblem(node, hasProblem);
+        }
+      },
+      
+      _toggleProblem : function(node, hasProblem) {
+        if(hasProblem && node.name.indexOf(" *") == -1) {
+          // Indicate that the node has a problem
+          var name = node.name + " *";
+          
+          this.getImpl().tree('updateNode', node, name);
+          
+          node.problem = true;
+        }
+        else if(!hasProblem && node.name.indexOf(" *") != -1) {
+          // Indicate that the node no longer has a problem
+          var name = node.name.replace(" *", "");
+          
+          this.getImpl().tree('updateNode', node, name);
+          
+          node.problem = false;
+        }        
+      },
+      
+      hasProblem : function(termId) {
+        var problem = $(".geoent-problem-error-li[data-entity='"+termId+"']");
+          
+        return (problem.length > 0);
+      },
       
       _handleUpdateTerm : function (termId, responseObj) {
         this.$_handleUpdateTerm(termId, responseObj);
         
-        this.refreshEntityProblems();
+        this.refreshTermProblems(termId);
       },
       
       _handleCreateTerm : function (parentId, parentNode, responseObj) {
-        this.$_handleCreateTerm(parentId, parentNode, responseObj);
+        var that = this;
         
-        this.refreshEntityProblems();
+        var callback = {};
+        callback.onSuccess = function(){
+          that.$_handleCreateTerm(parentId, parentNode, responseObj);
+        };        
+        
+        this.refreshEntityProblems(callback);
       },
       
       refreshTreeAfterDeleteTerm : function(termId) {
-        this.$refreshTreeAfterDeleteTerm(termId);
+        var that = this;
         
-        this.refreshEntityProblems();
+        var callback = {};
+        callback.onSuccess = function(){
+          that.$refreshTreeAfterDeleteTerm(termId);
+        };        
+        
+        this.refreshEntityProblems(callback);
       },
       
-      refreshEntityProblems : function() {
+      /*
+       * Refreshes all of the problems list and all of the nodes corresponding to a term
+       */
+      refreshTermProblems : function(termId) {
+        var that = this;
+      
+        var callback = {};
+        callback.onSuccess = function(){
+          that._refreshProblems(termId);
+        };
+        
+        this.refreshEntityProblems(callback);  
+      },
+      
+      refreshEntityProblems : function(callback) {
         var that = this;
       
         var request = new Mojo.ClientRequest({
           onSuccess: function(views){
+            that.displayEntityProblems(views);  
             
-            var html = '';
-          
-            for(var i = 0; i < views.length; i++) {
-              var view = views[i];
-              
-              html += '<li class="geoent-problem-error-li" data-id="' + view.getConcreteId() + '" data-entity="' + view.getGeoId() + '" data-problem="' + view.getProblemName() + '">';
-              html += '  <a href="#" class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
-              html += '    <p class="geoent-problem-msg">' + view.getProblem() + '</p>';
-              html += '  </a>';
-              html += '</li>';      
+            if(callback != null && Mojo.Util.isFunction(callback.onSuccess)) {
+              callback.onSuccess(views);
             }
-            
-            if(html.length > 0){
-              $("#problems-list").html(html);
-            }
-            else{
-              $("#problem-panel-noissue-msg").show();
-            }
-            
-            $(".geoent-problem-error-li").click(function(e){
-              var entityId = $(e.currentTarget).data("entity");
-                
-              that.focusTerm(entityId);
-            });
           },
           onFailure : function(ex) {
             that.handleException(ex);
+            
+            if(callback != null && Mojo.Util.isFunction(callback.onFailure)) {
+              callback.onFailure(ex);
+            }
           }
         });
         
-        com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request)
+        com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request);
+      },
+      
+      displayEntityProblems : function(views) {
+        var that = this;
+        var html = '';
+          
+        for(var i = 0; i < views.length; i++) {
+          var view = views[i];
+            
+          html += '<li class="geoent-problem-error-li" data-id="' + view.getConcreteId() + '" data-entity="' + view.getGeoId() + '" data-problem="' + view.getProblemName() + '">';
+          html += '  <a href="#" class="fa fa-times-circle geoent-problem-msg-icon geoent-problem-error">';
+          html += '    <p class="geoent-problem-msg">' + view.getProblem() + '</p>';
+          html += '  </a>';
+          html += '</li>';      
+        }
+          
+        if(html.length > 0){
+          $("#problems-list").html(html);
+        }
+        else{
+          $("#problem-panel-noissue-msg").show();
+        }
+          
+        $(".geoent-problem-error-li").click(function(e){
+          var entityId = $(e.currentTarget).data("entity");
+              
+          that.focusTerm(entityId);
+        });        
       },
       
       // @Override
@@ -630,23 +683,14 @@
         this.exportTerm(this.rootTermId);
       },
       
-//      createExportAllButton : function() {
-//        var but = this.getFactory().newButton(this.localize("exportAll"), Mojo.Util.bind(this, this._onClickExportAll));
-//        
-//        but.addClassName("btn btn-primary");
-//        but.setStyle("margin-bottom", "20px");
-//        
-//        this._wrapperDiv.appendChild(but);
-//      },
-      
-      render : function(parent) {
-        
-//        this.createExportAllButton();
+      render : function(parent, views) {
+        if(views != null) {
+          this.displayEntityProblems(views);         
+        }
         
         this._wrapperDiv.render(parent);
         
-        this.$render(this._wrapperDiv);
-        
+        this.$render(this._wrapperDiv);        
       }
     }
   });

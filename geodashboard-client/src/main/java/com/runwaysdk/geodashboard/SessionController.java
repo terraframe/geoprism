@@ -39,7 +39,7 @@ public class SessionController extends SessionControllerBase implements Reloadab
 
       Locale[] locales = ServletUtility.getLocales(req);
 
-      WebClientSession clientSession = WebClientSession.createUserSession(username, password, locales);
+      WebClientSession clientSession = WebClientSession.createUserSession(username.trim(), password, locales);
       ClientRequestIF clientRequest = clientSession.getRequest();
 
       req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());

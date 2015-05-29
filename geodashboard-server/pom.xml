@@ -20,6 +20,7 @@
     <database.name>geodashboard</database.name>
     <database.user>geodashboard</database.user>
     <database.pass>geodashboard</database.pass>
+    <overrideServerPropertiesPath></overrideServerPropertiesPath>
   </properties>
 
   <dependencies>
@@ -371,6 +372,65 @@
     </testResources>
 
     <plugins>
+      <!-- Read the server properties as maven properties. This allows us to override the database properties later when we build. -->
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>buildOverrideServerPropertiesPath</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                String server = session.executionRootDirectory;
+                pathSplit = server.split("/") as ArrayList;
+                String projectName = pathSplit.remove(pathSplit.size()-1);
+                overrideServerPropertiesPath = pathSplit.join("/") + "/" + projectName + "/" + projectName + "-server/src/main/resources/runwaysdk/server.properties";
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+			  <groupId>com.soebes.maven.plugins</groupId>
+			  <artifactId>maven-echo-plugin</artifactId>
+			  <version>0.1</version>
+			  <executions>
+			    <execution>
+			      <phase>initialize</phase>
+			      <goals>
+			        <goal>echo</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			  <configuration>
+			    <echos>
+			      <echo>${project.overrideServerPropertiesPath}</echo>
+			    </echos>
+			  </configuration>
+			</plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${overrideServerPropertiesPath}</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    
       <!-- Weave Aspects -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -450,6 +510,58 @@
       </plugin>
 
     </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.codehaus.groovy.maven
+    								</groupId>
+    								<artifactId>
+    									gmaven-plugin
+    								</artifactId>
+    								<versionRange>[1.0,)</versionRange>
+    								<goals>
+    									<goal>execute</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									properties-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.0-alpha-2,)
+    								</versionRange>
+    								<goals>
+    									<goal>
+    										read-project-properties
+    									</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
   </build>
   <dependencyManagement>
     <dependencies>
