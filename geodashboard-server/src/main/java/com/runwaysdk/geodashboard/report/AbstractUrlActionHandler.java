@@ -13,7 +13,6 @@ import org.eclipse.birt.report.engine.api.IAction;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.script.IReportContext;
 
-import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.generation.loader.Reloadable;
 
 public abstract class AbstractUrlActionHandler extends HTMLActionHandler implements Reloadable
@@ -74,7 +73,7 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
     {
       StringBuffer buffer = new StringBuffer();
       buffer.append("/");
-      buffer.append(CommonProperties.getDeployAppName());
+      buffer.append(context.getAppContext());
       buffer.append("/");
       buffer.append(this.reportURL);
 
