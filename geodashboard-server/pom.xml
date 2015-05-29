@@ -17,10 +17,6 @@
     <root.db>template_postgis</root.db>
     <root.user>postgres</root.user>
     <root.pass>postgres</root.pass>
-    <database.name>geodashboard</database.name>
-    <database.user>geodashboard</database.user>
-    <database.pass>geodashboard</database.pass>
-    <overrideServerPropertiesPath></overrideServerPropertiesPath>
   </properties>
 
   <dependencies>
@@ -372,46 +368,31 @@
     </testResources>
 
     <plugins>
-      <!-- Read the server properties as maven properties. This allows us to override the database properties later when we build. -->
+      <!-- Read the server properties (from projects that extend geodashboard) as maven properties. This allows us to override the database properties later when we build. -->
       <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
+        <groupId>org.kohsuke.gmaven</groupId>
+		    <artifactId>gmaven-plugin</artifactId>
+		    <version>1.0-rc-5-patch-2</version>
         <executions>
           <execution>
-            <id>buildOverrideServerPropertiesPath</id>
+            <id>ExtendableServerProperties</id>
             <phase>initialize</phase>
             <goals>
               <goal>execute</goal>
             </goals>
             <configuration>
-              <source>
-                String server = session.executionRootDirectory;
-                pathSplit = server.split("/") as ArrayList;
-                String projectName = pathSplit.remove(pathSplit.size()-1);
-                overrideServerPropertiesPath = pathSplit.join("/") + "/" + projectName + "/" + projectName + "-server/src/main/resources/runwaysdk/server.properties";
-              </source>
+              <classpath>
+                <element>
+                  <groupId>commons-lang</groupId>
+                  <artifactId>commons-lang</artifactId>
+                  <version>2.4</version>
+                 </element>
+              </classpath>
+              <source>${project.basedir}/src/build/groovy/ExtendableServerProperties.groovy</source>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      <plugin>
-			  <groupId>com.soebes.maven.plugins</groupId>
-			  <artifactId>maven-echo-plugin</artifactId>
-			  <version>0.1</version>
-			  <executions>
-			    <execution>
-			      <phase>initialize</phase>
-			      <goals>
-			        <goal>echo</goal>
-			      </goals>
-			    </execution>
-			  </executions>
-			  <configuration>
-			    <echos>
-			      <echo>${project.overrideServerPropertiesPath}</echo>
-			    </echos>
-			  </configuration>
-			</plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
@@ -522,23 +503,6 @@
     					<pluginExecutions>
     						<pluginExecution>
     							<pluginExecutionFilter>
-    								<groupId>
-    									org.codehaus.groovy.maven
-    								</groupId>
-    								<artifactId>
-    									gmaven-plugin
-    								</artifactId>
-    								<versionRange>[1.0,)</versionRange>
-    								<goals>
-    									<goal>execute</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore></ignore>
-    							</action>
-    						</pluginExecution>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
     								<groupId>org.codehaus.mojo</groupId>
     								<artifactId>
     									properties-maven-plugin
@@ -550,6 +514,25 @@
     									<goal>
     										read-project-properties
     									</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.kohsuke.gmaven
+    								</groupId>
+    								<artifactId>
+    									gmaven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.0-rc-5-patch-2,)
+    								</versionRange>
+    								<goals>
+    									<goal>execute</goal>
     								</goals>
     							</pluginExecutionFilter>
     							<action>
