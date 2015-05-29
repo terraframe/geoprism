@@ -129,8 +129,6 @@
           else {
             items.push({label:this.localize("viewSynonyms"), id:"synonyms", handler:Mojo.Util.bind(this, this.__onContextViewSynonymsClick)});          
           }
-        
-          items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this.__onContextExportClick)}); 
           
           // For unmatched nodes we need to give the option to accept the node          
           var problem = $(".geoent-problem-error-li[data-entity='"+term.getId()+"'][data-problem='UNMATCHED']");
