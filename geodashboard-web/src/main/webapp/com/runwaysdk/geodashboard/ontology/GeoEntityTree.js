@@ -83,6 +83,7 @@
         config = config || {};
         
         config.exportMenuType = "com.runwaysdk.geodashboard.gis.GeoEntityExportMenu";
+        config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);
         
         this.$initialize(config);
         
@@ -163,6 +164,8 @@
         var request = new Mojo.ClientRequest({
           onSuccess : function() {
             that.refreshTermProblems(termId);
+
+            $("#tree").find('[data-problemid="'+problemId+'"]').remove();
           },
           onFailure : function(ex) {
             that.handleException(ex);
@@ -502,41 +505,47 @@
       },
       
       __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
+    	 
+    	  var problemId = "";
+    	 var hasProblem = this.hasProblem(childId);
+     	 if(hasProblem){
+    		 problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
+    	 }
+    	  
+    	 if(config){
+    		 config.hasProblem = hasProblem;
+    		 config.problemId = problemId
+    	 }
+    	 else{
+    		 var config = {};
+    		 config.hasProblem = hasProblem;
+    		 config.problemId = problemId
+    	 }
+    	 
         var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
-        
-        var hasProblem = this.hasProblem(node.runwayId);
-        
-        this._toggleProblem(node, hasProblem);
+
       },
       
-      _refreshProblems : function(termId) {
-        var nodes = this.__getNodesById(termId);
-        var hasProblem = this.hasProblem(termId);
-        
-        for(var i = 0; i < nodes.length; i++) {
-          var node = nodes[i];
-          
-          this._toggleProblem(node, hasProblem);
-        }
-      },
-      
-      _toggleProblem : function(node, hasProblem) {
-        if(hasProblem && node.name.indexOf(" *") == -1) {
-          // Indicate that the node has a problem
-          var name = node.name + " *";
-          
-          this.getImpl().tree('updateNode', node, name);
-          
-          node.problem = true;
-        }
-        else if(!hasProblem && node.name.indexOf(" *") != -1) {
-          // Indicate that the node no longer has a problem
-          var name = node.name.replace(" *", "");
-          
-          this.getImpl().tree('updateNode', node, name);
-          
-          node.problem = false;
-        }        
+      __onCreateLi : function(node, $li) {
+    	  if (!node.phantom) {
+    		  if(node.hasProblem){
+    			  var msg = "";
+    			  var msgEls = $("#problems-list").find('[data-entity="'+node.runwayId+'"]');
+    			  for(var i=0; i<msgEls.length; i++){
+    				  var msgEl = msgEls[i];
+    				  msg +=  i+1 + "." + "&nbsp;&nbsp;" + $(msgEl).find(".geoent-problem-msg").text(); // gets the message from the problems panel
+    				  if(i < msgEls.length - 1){
+    					  msg += "<br/><br/>";
+    				  }
+    			  }
+    			  $li.find("span").parent().append("<i data-problemid='"+ node.problemId +"' data-entity='"+ node.runwayId +"' class='fa fa-times-circle geoent-problem-msg-icon geoent-problem-error'></i>");
+    			  $li.find("i").tooltip({
+    				  items: "i",
+    				  content: msg,
+    				  tooltipClass: "geoentity-problem-tooltip"
+    			  });
+    		  }
+    	  }
       },
       
       hasProblem : function(termId) {
@@ -581,7 +590,7 @@
       
         var callback = {};
         callback.onSuccess = function(){
-          that._refreshProblems(termId);
+          // no callback needed
         };
         
         this.refreshEntityProblems(callback);  
@@ -610,6 +619,9 @@
         com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request);
       },
       
+      /**
+       * Removes and re-creates the problems panel
+       */
       displayEntityProblems : function(views) {
         var that = this;
         var html = '';
