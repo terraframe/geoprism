@@ -526,6 +526,17 @@
 
       },
       
+      _refreshProblems : function(termId) {
+        var nodes = this.__getNodesById(termId);
+        var hasProblem = this.hasProblem(termId);
+        
+        for(var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          
+          this._toggleProblem(node, hasProblem);
+        }
+      },
+      
       __onCreateLi : function(node, $li) {
     	  if (!node.phantom) {
     		  if(node.hasProblem){
@@ -546,6 +557,22 @@
     			  });
     		  }
     	  }
+      },
+      
+      _toggleProblem : function(node, hasProblem) {
+        if(hasProblem) {
+          // Indicate that the node has a problem
+          this.getImpl().tree('updateNode', node, {hasProblem:true} );
+          
+          node.problem = true;
+        }
+        else if(!hasProblem) {
+          // Indicate that the node no longer has a problem
+          $(node.element).find("i").hide();
+          this.getImpl().tree('updateNode', node, {hasProblem:false} );
+          
+          node.problem = false;
+        }        
       },
       
       hasProblem : function(termId) {
@@ -590,7 +617,7 @@
       
         var callback = {};
         callback.onSuccess = function(){
-          // no callback needed
+          that._refreshProblems(termId);
         };
         
         this.refreshEntityProblems(callback);  
