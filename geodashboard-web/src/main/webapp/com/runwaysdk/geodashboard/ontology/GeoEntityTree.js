@@ -364,13 +364,13 @@
        * Override
        * 
        */
-      canMove : function(node)
+      _canMove : function(node)
       {
         if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
           return false;
         }
         
-        return this.$canMove(node);
+        return this.$_canMove(node);
       },
       
       
@@ -378,7 +378,7 @@
        * Override
        * 
        */
-      canMoveTo : function(moved_node, target_node, position)
+      _canMoveTo : function(moved_node, target_node, position)
       {
         if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
           return false;

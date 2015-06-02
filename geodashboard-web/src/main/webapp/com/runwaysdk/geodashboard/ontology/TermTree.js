@@ -175,8 +175,8 @@
           selectable: true,
           checkable: false,
           editable: false,
-          onCanMove: this.canMove,
-          onCanMoveTo: this.canMoveTo,
+          onCanMove: Mojo.Util.bind(this, this._canMove),
+          onCanMoveTo: Mojo.Util.bind(this, this._canMoveTo),
           autoOpen: false,
           openFolderDelay: 5000,
           crud: {
@@ -212,7 +212,7 @@
       /*
        * Controls whether a node can be moved
        */
-      canMove : function(node)
+      _canMove : function(node)
       {
         // restrict the ability to move the root node
         if(! node.parent.parent || node.dragAndDrop === false){
@@ -228,7 +228,7 @@
        *  Controls whether a node can be moved to a specific parent.
        *  Allow all by default
        */
-      canMoveTo : function(moved_node, target_node, position)
+      _canMoveTo : function(moved_node, target_node, position)
       {
         return true;
       },
