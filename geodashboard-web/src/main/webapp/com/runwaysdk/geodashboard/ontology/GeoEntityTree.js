@@ -590,12 +590,12 @@
         this.refreshEntityProblems(callback);
       },
       
-      _handleCreateTerm : function (parentId, parentNode, responseObj) {
+      _handleCreateTerm : function (parentId, parentNodes, responseObj) {
         var that = this;
         
         var callback = {};
         callback.onSuccess = function(){
-          that.$_handleCreateTerm(parentId, parentNode, responseObj);
+          that.$_handleCreateTerm(parentId, parentNodes, responseObj);
         };        
         
         this.refreshEntityProblems(callback);

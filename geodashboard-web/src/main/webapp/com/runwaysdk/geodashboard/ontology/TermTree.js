@@ -77,17 +77,82 @@
     }    
   });
   
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.NodeMap', {
+    Instance : {
+      initialize : function(tree) {
+        this._tree = tree;
+        this._nodeMap = new com.runwaysdk.structure.HashMap();
+      },
+      
+      addNodeMapping : function(termId, nodeId) {
+        if (this._nodeMap.get(termId) == null) {
+          this._nodeMap.put(termId, []);
+        }
+          
+        this._nodeMap.get(termId).push(nodeId);
+      },
+        
+      clearNodeMappings : function(termId) {
+        this._nodeMap.remove(termId);
+      },
+        
+      removeNodeMapping : function(termId, nodeId) {
+        var nodeIds = this._nodeMap.get(termId);
+          
+        if(nodeIds != null) {
+          var index = nodeIds.indexOf(nodeId);         
+            
+          if (index > -1) {
+            nodeIds.splice(index, 1);
+            
+            this._nodeMap.put(termId, nodeIds);        
+          }          
+        }
+      },
+      
+      get : function(termId) {
+        return this._nodeMap.get(termId);
+      },
+      
+      containsKey : function(termId) {
+        return this._nodeMap.containsKey(termId);
+      },
+      
+      getNodes : function(termId) {
+        if (this.containsKey(termId)) {
+              
+          var impl = this._tree.getImpl();
+          
+          var nodeIds = this.get(termId);
+          var nodes = [];
+                
+          for (var i = 0; i < nodeIds.length; ++i) {
+            var node = impl.tree("getNodeById", nodeIds[i]);
+                              
+            if (node != null) {
+              nodes.push(node);
+            }
+          }
+                
+          return nodes;
+        }
+              
+        return null;      
+      }
+    }    
+  });
+  
   /**
    * @class com.runwaysdk.geodashboard.ontology.TermTree A wrapper around JQuery widget jqTree to allow for integration with Term objects.
    * 
    * @constructs
    * @param Object config
-   *   @param String   config.termType The typename of the term this tree will act upon.
-   *   @param String   config.relationshipTypes The relationships this tree will act upon.
-   *   @param Object[] config.rootTerms An array of objects. Each object contains:
-   *     @param Boolean config.rootTerms[i].selectable This is the boolean flag defined on the AttributeRoot and it denotes whether or not to display the root in the tree.
-   *     @param TermDTO config.rootTerms[i].term Optional The root Term. If selectable is true then its recommended that you pass the DTO instead of the id (it avoids an extra unnecessary ajax request later).
-   *     @param String config.rootTerms[i].termId Optional The id of the root Term. If you don't provide the term then you must provide the termId. Its recommended to use this if you know that selectable is false. If you're unsure then give us the DTO.
+   * @param String   config.termType The typename of the term this tree will act upon.
+   * @param String   config.relationshipTypes The relationships this tree will act upon.
+   * @param Object[] config.rootTerms An array of objects. Each object contains:
+   * @param Boolean config.rootTerms[i].selectable This is the boolean flag defined on the AttributeRoot and it denotes whether or not to display the root in the tree.
+   * @param TermDTO config.rootTerms[i].term Optional The root Term. If selectable is true then its recommended that you pass the DTO instead of the id (it avoids an extra unnecessary ajax request later).
+   * @param String config.rootTerms[i].termId Optional The id of the root Term. If you don't provide the term then you must provide the termId. Its recommended to use this if you know that selectable is false. If you're unsure then give us the DTO.
    */
   var tree = Mojo.Meta.newClass(termTreeName, {
     
@@ -136,41 +201,12 @@
         
         this.termCache = {};
         
-        // jqtree assumes that id's are unique. For our purposes the id may map to multiple nodes.
-        // This map maps the runwayId = [ generatedId's ]
-        this._nodeMap = new com.runwaysdk.structure.HashMap();
+        this._nodeMap = new com.runwaysdk.geodashboard.ontology.NodeMap(this);
         
         this.parentRelationshipCache = new ParentRelationshipCache();
         
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
-      },
-      
-      _addNodeMapping : function(termId, nodeId) {
-        if (this._nodeMap.get(termId) == null) {
-          this._nodeMap.put(termId, []);
-        }
-        
-        this._nodeMap.get(termId).push(nodeId);
-      },
-      
-      _clearNodeMappings : function(termId) {
-        this._nodeMap.remove(termId);
-      },
-      
-      _removeNodeMapping : function(termId, nodeId) {
-        var nodeIds = this._nodeMap.get(termId);
-        
-        if(nodeIds != null) {
-          var index = nodeIds.indexOf(nodeId);         
-          
-          if (index > -1) {
-          nodeIds.splice(index, 1);
-          
-            this._nodeMap.put(termId, nodeIds);        
-          }
-        
-        }
       },
       
       /*
@@ -492,10 +528,16 @@
           
         this.parentRelationshipCache.put(term.getId(), {parentId: parentId, relId: relId, relType: relType});
         this.termCache[term.getId()] = term;
+        
+        var nodes = [];
           
         for (var i = 0; i < parentNodes.length; ++i) {
-          this.__createTreeNode(term.getId(), parentNodes[i], true);
+          var node = this.__createTreeNode(term.getId(), parentNodes[i], true);
+          
+          nodes.push(node);
         }
+        
+        return nodes;
       },
       
       createTerm : function(parentId, relType, parentNodes) {
@@ -601,13 +643,13 @@
         // Update the node's Id from the id we've received from the server (since if the ids are deterministic it may have changed)
         var nodes = this.__getNodesById(oldTermId);        
         
-        this._clearNodeMappings(oldTermId);
+        this._nodeMap.clearNodeMappings(oldTermId);
         this.termCache[oldTermId] = null;
         
         for (var i = 0; i < nodes.length; ++i) {
           var node = nodes[i];
           
-          this._addNodeMapping(newTermId, node.id);
+          this._nodeMap.addNodeMapping(newTermId, node.id);
           
           this.getImpl().tree("updateNode", node, {label:label, runwayId:term.getId()});
         }
@@ -712,37 +754,30 @@
         };
         
         var term = this.termCache[termId];
-//        this.__getTermFromId(termId, {
-//          onSuccess: function(term) {
-            var newType = eval("new " + that._config.termType + "()");
-            var termMdLabel = newType.getMd().getDisplayLabel();
-            var termLabel = term.getDisplayLabel().getLocalizedValue();
+        var newType = eval("new " + that._config.termType + "()");
+        var termMdLabel = newType.getMd().getDisplayLabel();
+        var termLabel = term.getDisplayLabel().getLocalizedValue();
             
-            var deleteLabel = that.localize("delete") + " " + termMdLabel;
+        var deleteLabel = that.localize("delete") + " " + termMdLabel;
             
-            if (parentRecords.length > 1) {
-              var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
-              deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
+        if (parentRecords.length > 1) {
+          var deleteMultiParentDescribe = that.localize("deleteMultiParentDescribe").replace("${termMdLabel}", termMdLabel).replace("${termMdLabel}", termMdLabel).replace("${termLabel}", termLabel);
+          deleteMultiParentDescribe = deleteMultiParentDescribe.replace("${parentLabel}", that.termCache[parentId].getDisplayLabel().getLocalizedValue());
               
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 650, height: 300, resizable: false});
-              dialog.appendContent(deleteMultiParentDescribe);
-              dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
-              dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
-              dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
-              dialog.render();
-            }
-            else {
-              dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 485, height: 200, resizable: false});
-              dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
-              dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
-              dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
-              dialog.render();
-            }
-//          },
-//          onFailure: function(e) {
-//            that.handleException(e);
-//          }
-//        });
+          dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 650, height: 300, resizable: false});
+          dialog.appendContent(deleteMultiParentDescribe);
+          dialog.addButton(that.localize("deleteTermAndRels").replace("${termLabel}", termLabel), deleteHandler, null, {"class": "btn btn-primary"});
+          dialog.addButton(that.localize("deleteRel").replace("${termLabel}", termLabel), performDeleteRelHandler, null, {"class": "btn btn-primary"});
+          dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
+          dialog.render();
+        }
+        else {
+          dialog = that.getFactory().newDialog(deleteLabel, {modal: false, width: 485, height: 200, resizable: false});
+          dialog.appendContent(that.localize("deleteDescribe").replace("${termLabel}", termLabel));
+          dialog.addButton(deleteLabel, deleteHandler, null, {"class": "btn btn-primary"});
+          dialog.addButton(that.localize("cancel"), cancelHandler, null, {"class": "btn"});
+          dialog.render();
+        }
       },
       
       getImpl : function()
@@ -896,14 +931,70 @@
         }
       },
       
-      _createNodeMoveMenu : function(event) {
+      _handleMove : function(movedNode, targetNode, previousParent, relDTO, nodes) {
+        var previousParentId = this.__getRunwayIdFromNode(previousParent);              
+        var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);                
         
+        var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
+        var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
+
+        // Remove nodes from old relationship.              
+        this.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
+            
+        this.removeNodes(movedNodeId);
+
+        if(targetNode.hasFetched) {
+          
+          // Create nodes that represent the new relationship
+          this.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
+              
+          if(nodes == null) {
+            nodes = this.__getNodesById(targetNodeId);
+          }
+          
+          for (var i = 0; i<nodes.length; ++i) {
+            this.__createTreeNode(movedNodeId, nodes[i]);
+          }
+        }
+        else {
+          // Refresh the node
+          this.refreshTerm(targetNodeId, null, [targetNode]);
+        }        
+      },
+      
+      _handleCopy : function(movedNode, targetNode, relDTO, nodes) {
+        var movedNodeId = this.__getRunwayIdFromNode(movedNode);
+        var targetNodeId = this.__getRunwayIdFromNode(targetNode);                
+        
+        this.setNodeBusy(movedNode, false);
+          
+        if(targetNode.hasFetched) {                
+          this.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
+            
+          if(nodes == null) {
+            nodes = this.__getNodesById(targetNodeId);
+          }
+          
+          for (var i = 0; i<nodes.length; ++i) {
+            this.__createTreeNode(movedNodeId, nodes[i]);
+          }
+        }
+        else {
+          // Refresh the node
+          var termId = this.__getRunwayIdFromNode(targetNode);
+              
+          this.refreshTerm(termId, null, [targetNode]);
+        }        
+      },
+      
+      _createNodeMoveMenu : function(event) {        
         var $thisTree = $(this.getRawEl());
         var movedNode = event.move_info.moved_node;
         var targetNode = event.move_info.target_node;
         var previousParent = event.move_info.previous_parent;
-        var previousParentId = this.__getRunwayIdFromNode(previousParent);
-              
+        
+        var previousParentId = this.__getRunwayIdFromNode(previousParent);              
         var movedNodeId = this.__getRunwayIdFromNode(movedNode);
         var targetNodeId = this.__getRunwayIdFromNode(targetNode);        
                     
@@ -912,35 +1003,9 @@
         // User clicks Move on context menu //
         var moveHandler = function(mouseEvent, contextMenu) {
             
-          var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
-          var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
-          var relType = this._getRelationshipForNode(movedNode, targetNode);
-            
-          var moveBizCallback = new Mojo.ClientRequest({
+          var request = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
-              // Remove nodes from old relationship.              
-              that.parentRelationshipCache.removeRecordMatchingRelId(movedNodeId, parentRecord.relId);
-                
-              var nodes = that.__getNodesById(movedNodeId);
-              for (var i = 0; i<nodes.length; ++i) {
-                that.removeNode(nodes[i]);
-              }
-
-              if(targetNode.hasFetched) {                
-                // Create nodes that represent the new relationship
-                that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
-                  
-                var nodes = that.__getNodesById(targetNodeId);
-                for (var i = 0; i<nodes.length; ++i) {
-                  that.__createTreeNode(movedNodeId, nodes[i]);
-                }
-              }
-              else {
-                // Refresh the node
-                var termId = that.__getRunwayIdFromNode(targetNode);
-                    
-                that.refreshTerm(termId, null, [targetNode]);
-              }
+              that._handleMove(movedNode, targetNode, previousParent, relDTO);
             },
             onFailure : function(ex) {
               that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);});
@@ -949,8 +1014,12 @@
           });
           
           this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
+          
+          var oldRelType = this._getRelationshipForNode(movedNode, previousParent);
+          var parentRecord = this.parentRelationshipCache.getRecordWithParentIdAndRelType(movedNodeId, previousParentId, oldRelType);
+          var relType = this._getRelationshipForNode(movedNode, targetNode);
             
-          com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(moveBizCallback, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
+          com.runwaysdk.system.ontology.TermUtil.addAndRemoveLink(request, movedNodeId, previousParentId, parentRecord.relType, targetNodeId, relType);
         };
           
         // User clicks Copy on context menu //
@@ -958,22 +1027,7 @@
             
           var addChildCallback = new Mojo.ClientRequest({
             onSuccess : function(relDTO) {
-              that.setNodeBusy(movedNode, false);
-              
-              if(targetNode.hasFetched) {                
-                that.parentRelationshipCache.put(movedNodeId, {parentId: targetNodeId, relId: relDTO.getId(), relType: relDTO.getType()});
-                
-                var nodes = that.__getNodesById(targetNodeId);
-                for (var i = 0; i<nodes.length; ++i) {
-                  that.__createTreeNode(movedNodeId, nodes[i]);
-                }
-              }
-              else {
-                // Refresh the node
-                var termId = that.__getRunwayIdFromNode(targetNode);
-                  
-                that.refreshTerm(termId, null, [targetNode]);
-              }
+              that._handleCopy(movedNode, targetNode, relDTO);
             },
             onFailure : function(ex) {
               that.setNodeBusy(movedNode, false);
@@ -1094,6 +1148,14 @@
         
       },
       
+      removeNodes : function(termId) {
+        var nodes = this.__getNodesById(termId);
+          
+        for (var i = 0; i< nodes.length; ++i) {
+          this.removeNode(nodes[i]);
+        }  
+      },
+      
       removeNode : function(node) {
         
         // Recursively delete all descendant nodes
@@ -1108,7 +1170,7 @@
         $(this.getRawEl()).tree("removeNode", node);
         
         // Remove the node from the term-node mapping
-        this._removeNodeMapping(node.runwayId, node.id);
+        this._nodeMap.removeNodeMapping(node.runwayId, node.id);
       },
       
       /**
@@ -1257,25 +1319,7 @@
           }
         }
         
-        var tree = $(this.getRawEl());
-
-        if (this._nodeMap.get(termId) != null) {
-          
-          var nodeIds = this._nodeMap.get(termId);
-          var nodes = [];
-          
-          for (var i = 0; i < nodeIds.length; ++i) {
-            var node = tree.tree("getNodeById", nodeIds[i]);
-                        
-            if (node != null) {
-              nodes.push(node);
-            }
-          }
-          
-          return nodes;
-        }
-        
-        return null;
+        return this._nodeMap.getNodes(termId);
       },
       
       _getTermDisplayLabel : function(term) {
@@ -1405,7 +1449,7 @@
             
         node.hasFetched = hasFetched;
         
-        this._addNodeMapping(childId, node.id);
+        this._nodeMap.addNodeMapping(childId, node.id);
         
         return node;
       },
@@ -1485,43 +1529,6 @@
         }
       },
       
-      /**
-       * Returns the relationships that the term has with its parent. The relationships may be cached and the method may return
-       * synchronously. The cache may or may not contain all relationships the term has with its parent.
-       * 
-       * @param com.runwaysdk.business.TermDTO or String (Id) term The term to remove from the tree.
-       * @param Object callback A callback object with onSuccess and onFailure methods.
-       * @returns com.runwaysdk.business.TermRelationship[] The relationships.
-       */
-  //    getRelationshipsWithParent : function(term, callback) {
-  //      this.__assertPrereqs();
-  //      this.requireParameter("term", term);
-  //      this.requireParameter("callback", callback);
-  //      
-  //      var termId = (term instanceof Object) ? term.getId() : term;
-  //      
-  //      var that = this;
-  //      
-  //      var hisCallback = callback;
-  //      var myCallback = {
-  //        onSuccess : function(relationships) {
-  //          hisCallback(relationships);
-  //        },
-  //        
-  //        onFailure : function(err) {
-  //          hisCallback.onFailure(err);
-  //          return;
-  //        }
-  //      };
-  //      Mojo.Util.copy(new Mojo.ClientRequest(myCallback), myCallback);
-  //      
-  //      if (this.parentRelationshipCache[termId] != null && this.parentRelationshipCache != undefined) {
-  //        myCallback.onSuccess([this.parentRelationshipCache[termId]]);
-  //      }
-  //      else {
-  //        com.runwaysdk.Facade.getParentRelationships(myCallback, termId, relationshipType);
-  //      }
-  //    },
     }
   });
   
