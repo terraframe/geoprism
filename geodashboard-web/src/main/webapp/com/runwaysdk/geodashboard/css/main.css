@@ -1063,6 +1063,11 @@ a.fa.fa-times.ico-remove{
   cursor: pointer;
 }
 
+.fa.fa-times-circle.geoent-problem-msg-icon.geoent-problem-error{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
 a.fa.fa-times.ico-remove:hover,
 a.fa.fa-times.ico-remove:focus{
 	color: #00bfff;
@@ -3028,6 +3033,10 @@ div.secondary-box label {
 
 .geoent-problem-msg-icon{
 	font-size: 15px;
+}
+
+.geoentity-problem-tooltip{
+	background: rgb(254, 236, 239) !important;
 }
 
 .geoent-problem-msg{
