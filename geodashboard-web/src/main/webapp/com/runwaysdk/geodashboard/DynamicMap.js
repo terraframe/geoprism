@@ -3494,7 +3494,10 @@
             $("#reporticng-container").css("bottom", "0px");                                                  
             $("#report-viewport").height(height-toolbar);
             $("#reporticng-container").height(height);
-          });          
+          });     
+          
+          // animate the loading spinner
+          $(".standby-overlay").animate({top: "+=" + difference + "px"}, 1000);
         }
         // Maximize
         else if (current < height){
@@ -3512,6 +3515,10 @@
             }
             }
            );
+          
+          // animate the loading spinner
+          $(".standby-overlay").animate({top: "-=" + difference + "px"}, 1000);
+          $(".standby-overlay").css("height", current + difference);
         }          
       },
       
