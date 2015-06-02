@@ -62,7 +62,8 @@ import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
-import com.runwaysdk.geodashboard.DashboardQuery;
+import com.runwaysdk.geodashboard.DashboardMetadataQuery;
+import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.MdAttributeView;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
@@ -525,13 +526,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     QueryFactory factory = new QueryFactory();
 
+    DashboardMetadataQuery dmQuery = new DashboardMetadataQuery(factory);
+    dmQuery.WHERE(dmQuery.getParent().EQ(this.getDashboardId()));
+
     MetadataWrapperQuery query = new MetadataWrapperQuery(factory);
-
-    DashboardQuery dQuery = new DashboardQuery(factory);
-    dQuery.WHERE(dQuery.getId().EQ(this.getDashboardId()));
-
     query.WHERE(query.getWrappedMdClass().EQ(mdClass));
-    query.AND(query.dashboard(dQuery));
+    query.AND(query.dashboard(dmQuery));
 
     OIterator<? extends MetadataWrapper> iterator = query.getIterator();
 
@@ -541,33 +541,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         MetadataWrapper wrapper = iterator.next();
         Universal lowest = wrapper.getUniversal();
-
         Universal root = Universal.getRoot();
 
-        OIterator<Term> ancestors = lowest.getAllAncestors(AllowedIn.CLASS);
+        List<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
 
-        try
-        {
-          List<Term> results = ancestors.getAll();
-          List<Universal> universals = new LinkedList<Universal>();
-
-          for (Term result : results)
-          {
-            if (!result.getId().equals(root.getId()))
-            {
-              universals.add((Universal) result);
-            }
-          }
-
-          universals.add(lowest);
-
-          return universals.toArray(new Universal[universals.size()]);
-        }
-        finally
-        {
-          ancestors.close();
-        }
-
+        return universals.toArray(new Universal[universals.size()]);
       }
       else
       {
@@ -617,14 +595,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return new MdAttributeView[] {};
   }
-  
+
   @Override
   public InputStream generateMapImageExport(String outFileFormat, String mapBounds, String mapSize)
   {
     InputStream inStream = null;
 
-    int leftOffset = 0;
-    int topOffset = 0;
     int width;
     int height;
 
@@ -715,7 +691,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return inStream;
   }
-  
+
   /**
    * Builds a combined image layer of all the layers in a saved map.
    * 
@@ -730,7 +706,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     String top;
     String right;
     String left;
-    String processingFormat = "png"; // needed to allow transparency on each overlay before combining to a single map/format
+    String processingFormat = "png"; // needed to allow transparency on each overlay before combining to a single
+                                     // map/format
     Graphics mapBaseGraphic = null;
     BufferedImage base = null;
 
@@ -758,67 +735,69 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {
-//        if (layer instanceof DashboardThematicLayer)
-//        {
+        // if (layer instanceof DashboardThematicLayer)
+        // {
 
-          Graphics2D newOverlayBaseGraphic = null;
-          Graphics2D mapLayerGraphic2d = null;
+        Graphics2D newOverlayBaseGraphic = null;
+        Graphics2D mapLayerGraphic2d = null;
 
-          String layersString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
+        String layersString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
 
-          StringBuffer requestURL = new StringBuffer();
-          requestURL.append(GeoserverProperties.getLocalPath() + "/wms?");
-          requestURL.append("LAYERS=" + layersString);
-          requestURL.append("&");
-          requestURL.append("STYLES="); // there are no geoserver styles being added. sld's are used instead
-          requestURL.append("&");
-          requestURL.append("SRS=EPSG%3A4326");
-          requestURL.append("&");
-          requestURL.append("TRANSPARENT=true");
-          requestURL.append("&");
-          requestURL.append("ISBASELAYER=false"); // in the browser the baselayer prop is set for the 1st layer in the map.
-          requestURL.append("&");
-          requestURL.append("SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage");
-          requestURL.append("&");
-          requestURL.append("FORMAT=image%2F" + processingFormat);
-          requestURL.append("&");
-          requestURL.append("BBOX=" + left + "," + bottom + "," + right + "," + top);
-          requestURL.append("&");
-          requestURL.append("WIDTH=" + Integer.toString(mapWidth));
-          requestURL.append("&");
-          requestURL.append("HEIGHT=" + Integer.toString(mapHeight));
+        StringBuffer requestURL = new StringBuffer();
+        requestURL.append(GeoserverProperties.getLocalPath() + "/wms?");
+        requestURL.append("LAYERS=" + layersString);
+        requestURL.append("&");
+        requestURL.append("STYLES="); // there are no geoserver styles being added. sld's are used instead
+        requestURL.append("&");
+        requestURL.append("SRS=EPSG%3A4326");
+        requestURL.append("&");
+        requestURL.append("TRANSPARENT=true");
+        requestURL.append("&");
+        requestURL.append("ISBASELAYER=false"); // in the browser the baselayer prop is set for the 1st layer in the
+                                                // map.
+        requestURL.append("&");
+        requestURL.append("SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage");
+        requestURL.append("&");
+        requestURL.append("FORMAT=image%2F" + processingFormat);
+        requestURL.append("&");
+        requestURL.append("BBOX=" + left + "," + bottom + "," + right + "," + top);
+        requestURL.append("&");
+        requestURL.append("WIDTH=" + Integer.toString(mapWidth));
+        requestURL.append("&");
+        requestURL.append("HEIGHT=" + Integer.toString(mapHeight));
 
-          try
+        try
+        {
+          BufferedImage layerImg = this.getImageFromGeoserver(requestURL.toString());
+          BufferedImage newOverlayBase = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB);
+
+          newOverlayBaseGraphic = newOverlayBase.createGraphics();
+
+          // Add transparency to the layerGraphic
+          // This is set in JavaScript in the app so we are replicating browser side transparency settings that are
+          // applied to the whole layer
+          AlphaComposite thisLayerComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getLayerOpacity(layer));
+          mapLayerGraphic2d = layerImg.createGraphics();
+          newOverlayBaseGraphic.setComposite(thisLayerComposite);
+
+          // Add the current layerGraphic to the base image
+          newOverlayBaseGraphic.drawImage(layerImg, 0, 0, null);
+          mapBaseGraphic.drawImage(newOverlayBase, 0, 0, null);
+
+        }
+        finally
+        {
+          if (newOverlayBaseGraphic != null)
           {
-            BufferedImage layerImg = this.getImageFromGeoserver(requestURL.toString());
-            BufferedImage newOverlayBase = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB);
-
-            newOverlayBaseGraphic = newOverlayBase.createGraphics();
-
-            // Add transparency to the layerGraphic
-            // This is set in JavaScript in the app so we are replicating browser side transparency settings that are applied to the whole layer
-            AlphaComposite thisLayerComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getLayerOpacity(layer));
-            mapLayerGraphic2d = layerImg.createGraphics();
-            newOverlayBaseGraphic.setComposite(thisLayerComposite);
-
-            // Add the current layerGraphic to the base image
-            newOverlayBaseGraphic.drawImage(layerImg, 0, 0, null);
-            mapBaseGraphic.drawImage(newOverlayBase, 0, 0, null);
-
+            newOverlayBaseGraphic.dispose();
           }
-          finally
+
+          if (mapLayerGraphic2d != null)
           {
-            if (newOverlayBaseGraphic != null)
-            {
-              newOverlayBaseGraphic.dispose();
-            }
-
-            if (mapLayerGraphic2d != null)
-            {
-              mapLayerGraphic2d.dispose();
-            }
+            mapLayerGraphic2d.dispose();
           }
-//        }
+        }
+        // }
       }
     }
     finally
@@ -828,25 +807,24 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return base;
   }
-  
+
   private float getLayerOpacity(DashboardLayer layer)
   {
     DashboardStyle style = layer.getStyles().get(0);
     String featureType = layer.getFeatureType().toString();
-    
-    if(featureType == "POINT")
+
+    if (featureType == "POINT")
     {
       return style.getPointOpacity().floatValue();
     }
-    else if(featureType == "POLYGON")
+    else if (featureType == "POLYGON")
     {
       return style.getPolygonFillOpacity().floatValue();
     }
-    
+
     return (float) 1.0; // return no transparency
   }
-  
-  
+
   /**
    * Builds an image layer of all the layers in a SavedMap.
    * 
@@ -881,73 +859,72 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         {
           Graphics2D titleBaseGraphic = null;
           Graphics2D iconGraphic = null;
-          
+
           String requestURL = getLegendURL(layer);
-          
+
           try
           {
-              // handle color graphics and categories
-              BufferedImage titleBase = getLegendTitleImage(layer);
-              titleBaseGraphic = titleBase.createGraphics();
-              int paddedTitleWidth = titleBase.getWidth();
-              int paddedTitleHeight = titleBase.getHeight();
-              
-              BufferedImage icon = getImageFromGeoserver(requestURL);
-              int iconHeight = icon.getHeight();
-              int iconWidth = icon.getWidth();
-              int paddedIconWidth = iconWidth + (padding * 2);
-              int paddedIconHeight = iconHeight + (padding * 2);
-              
-              int fullWidth = paddedIconWidth + paddedTitleWidth;
-              int fullHeight;
-              if(paddedIconHeight >= paddedTitleHeight)
+            // handle color graphics and categories
+            BufferedImage titleBase = getLegendTitleImage(layer);
+            titleBaseGraphic = titleBase.createGraphics();
+            int paddedTitleWidth = titleBase.getWidth();
+            int paddedTitleHeight = titleBase.getHeight();
+
+            BufferedImage icon = getImageFromGeoserver(requestURL);
+            int iconHeight = icon.getHeight();
+            int iconWidth = icon.getWidth();
+            int paddedIconWidth = iconWidth + ( padding * 2 );
+            int paddedIconHeight = iconHeight + ( padding * 2 );
+
+            int fullWidth = paddedIconWidth + paddedTitleWidth;
+            int fullHeight;
+            if (paddedIconHeight >= paddedTitleHeight)
+            {
+              fullHeight = paddedIconHeight;
+            }
+            else
+            {
+              fullHeight = paddedTitleHeight;
+            }
+
+            DashboardLegend legend = layer.getDashboardLegend();
+            if (legend.getGroupedInLegend())
+            {
+              if (legendTopPlacement + fullHeight >= mapHeight)
               {
-                fullHeight = paddedIconHeight;
+                legendLeftPlacement = widestLegend + legendLeftPlacement + padding;
+                legendTopPlacement = 0; // reset so 2nd column legends start at the top row
               }
-              else
-              {
-                fullHeight = paddedTitleHeight;
-              }
-              
-              DashboardLegend legend = layer.getDashboardLegend();
-              if(legend.getGroupedInLegend())
-              {
-                if(legendTopPlacement + fullHeight >= mapHeight)
-                {
-                  legendLeftPlacement = widestLegend + legendLeftPlacement + padding;  
-                  legendTopPlacement = 0; //reset so 2nd column legends start at the top row 
-                }
-                legendXPosition = legendLeftPlacement + padding;
-                legendYPosition = legendTopPlacement + padding;
-              }
-              else
-              {
-                legendXPosition = (int) Math.round((double) legend.getLegendXPosition());
-                legendYPosition = (int) Math.round((double) legend.getLegendYPosition());
-              }
-              
-              BufferedImage legendBase = new BufferedImage(fullWidth + (padding * 2), fullHeight + (padding * 2), BufferedImage.TYPE_INT_ARGB);
-              Graphics2D legendBaseGraphic = legendBase.createGraphics();
-              legendBaseGraphic.setColor(innerBackgroundColor);
-              legendBaseGraphic.fillRect(0, 0, fullWidth, fullHeight);
-              legendBaseGraphic.setColor(outerBorderColor);
-              legendBaseGraphic.setStroke(new BasicStroke(5));
-              legendBaseGraphic.drawRect(0, 0, fullWidth, fullHeight);
-              
-              
-              legendBaseGraphic.drawImage(icon, padding, padding, paddedIconWidth, paddedIconHeight, null);
-              legendBaseGraphic.drawImage(titleBase, paddedIconWidth + (padding * 2), (fullHeight / 2) - (paddedTitleHeight / 2), paddedTitleWidth, paddedTitleHeight, null);
-              mapBaseGraphic.drawImage(legendBase, legendXPosition, legendYPosition, fullWidth, fullHeight, null);
-              
-              if(legend.getGroupedInLegend())
-              {
-                legendTopPlacement = legendTopPlacement + fullHeight + padding;
-              }
-              
-              if(fullWidth > widestLegend)
-              {
-                widestLegend = fullWidth;
-              }
+              legendXPosition = legendLeftPlacement + padding;
+              legendYPosition = legendTopPlacement + padding;
+            }
+            else
+            {
+              legendXPosition = (int) Math.round((double) legend.getLegendXPosition());
+              legendYPosition = (int) Math.round((double) legend.getLegendYPosition());
+            }
+
+            BufferedImage legendBase = new BufferedImage(fullWidth + ( padding * 2 ), fullHeight + ( padding * 2 ), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D legendBaseGraphic = legendBase.createGraphics();
+            legendBaseGraphic.setColor(innerBackgroundColor);
+            legendBaseGraphic.fillRect(0, 0, fullWidth, fullHeight);
+            legendBaseGraphic.setColor(outerBorderColor);
+            legendBaseGraphic.setStroke(new BasicStroke(5));
+            legendBaseGraphic.drawRect(0, 0, fullWidth, fullHeight);
+
+            legendBaseGraphic.drawImage(icon, padding, padding, paddedIconWidth, paddedIconHeight, null);
+            legendBaseGraphic.drawImage(titleBase, paddedIconWidth + ( padding * 2 ), ( fullHeight / 2 ) - ( paddedTitleHeight / 2 ), paddedTitleWidth, paddedTitleHeight, null);
+            mapBaseGraphic.drawImage(legendBase, legendXPosition, legendYPosition, fullWidth, fullHeight, null);
+
+            if (legend.getGroupedInLegend())
+            {
+              legendTopPlacement = legendTopPlacement + fullHeight + padding;
+            }
+
+            if (fullWidth > widestLegend)
+            {
+              widestLegend = fullWidth;
+            }
           }
           finally
           {
@@ -955,7 +932,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
             {
               titleBaseGraphic.dispose();
             }
-            
+
             if (iconGraphic != null)
             {
               iconGraphic.dispose();
@@ -971,8 +948,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return base;
   }
-  
-  
+
   private String getLegendURL(DashboardLayer layer)
   {
     String layerString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
@@ -986,34 +962,39 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     requestURL.append("FORMAT=image/png&amp;WIDTH=25&amp;HEIGHT=25");
     requestURL.append("&");
     requestURL.append("&TRANSPARENT=true&LEGEND_OPTIONS=fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;");
-    
+
     DashboardStyle style = layer.getStyles().get(0);
     boolean contSize = true;
-    if(style instanceof DashboardThematicStyle)
+    if (style instanceof DashboardThematicStyle)
     {
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
       contSize = tStyle.getBubbleContinuousSize();
     }
-    
-    // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by default
-    if(layer.getFeatureStrategy().toString() == "GRADIENT" || layer.getFeatureStrategy().toString() == "CATEGORY"){
+
+    // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by
+    // default
+    if (layer.getFeatureStrategy().toString() == "GRADIENT" || layer.getFeatureStrategy().toString() == "CATEGORY")
+    {
       requestURL.append("forceLabels:on;");
     }
-    else if(layer.getFeatureStrategy().toString() == "BUBBLE" && layer.getLayerType().toString() == "BASIC"){
+    else if (layer.getFeatureStrategy().toString() == "BUBBLE" && layer.getLayerType().toString() == "BASIC")
+    {
       // The label should be hidden when mapping bubbles against a text or term attribute.
       requestURL.append("forceLabels:off;");
     }
-    else if(layer.getFeatureStrategy().toString() == "BUBBLE" && contSize && layer.getLayerType().toString() != "BASIC"){
-      // The label should be displayed when mapping continuous size bubbles against anything other than a text or term attribute.
+    else if (layer.getFeatureStrategy().toString() == "BUBBLE" && contSize && layer.getLayerType().toString() != "BASIC")
+    {
+      // The label should be displayed when mapping continuous size bubbles against anything other than a text or term
+      // attribute.
       requestURL.append("forceLabels:on;");
     }
-    
+
     requestURL.append("&");
     requestURL.append("LAYER=" + layerString);
-    
+
     return requestURL.toString();
   }
-  
+
   private BufferedImage getLegendTitleImage(DashboardLayer layer)
   {
 
@@ -1028,12 +1009,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     int titleLeftPadding = textBoxHorizontalPadding;
     BufferedImage newLegendTitleBase;
     Graphics2D newLegendTitleBaseGraphic = null;
-    
+
     try
     {
       // Build the Font object
       Font titleFont = new Font(layer.getName(), Font.BOLD, 14);
-      
+
       // Build variables for base legend graphic construction
       try
       {
@@ -1075,7 +1056,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       newLegendTitleBaseGraphic.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
       newLegendTitleBaseGraphic.setFont(titleFont);
 
-
       // draw title text
       fm = newLegendTitleBaseGraphic.getFontMetrics();
       newLegendTitleBaseGraphic.setColor(Color.WHITE);
@@ -1093,7 +1073,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return newLegendTitleBase;
   }
-  
+
   private BufferedImage getImageFromGeoserver(String _requestURL)
   {
     for (int i = 0; i < 10; i++)
@@ -1153,11 +1133,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
   /**
    * Makes a getMap request to geoserver and returns the response as a ByteArrayOutputStream
-   * @throws NoSuchAlgorithmException 
+   * 
+   * @throws NoSuchAlgorithmException
    * 
    * @requestURL = geoserver getMap() or getLegendGraphic() request url
    */
-  private byte[] requestGeoserverImage(String requestURL) 
+  private byte[] requestGeoserverImage(String requestURL)
   {
     InputStream inStream = null;
     ByteArrayOutputStream outStream = null;
@@ -1166,23 +1147,19 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-      
+
       // StorePath and StorePass must be set for the systems keystore
       trustStore.load(new FileInputStream(GeoserverProperties.getGeoserverKeystorePath()), GeoserverProperties.getGeoserverKeystorePass().toCharArray());
-      
-      SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(
-          trustStore, GeoserverProperties.getGeoserverKeystorePass().toCharArray()
-          ).loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
-      
+
+      SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(trustStore, GeoserverProperties.getGeoserverKeystorePass().toCharArray()).loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
+
       //
       // TODO: socket factory load once ever
       //
-      SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, 
-          null, 
-          SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-      
+      SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
       client = HttpClients.custom()
-          // Allow all hostnames regardless of what is specified in the certificate
+      // Allow all hostnames regardless of what is specified in the certificate
           .setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
           // Use the provided SSL socket factory
           .setSSLSocketFactory(factory)
@@ -1285,7 +1262,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return outStream.toByteArray();
   }
-  
+
   public Map<String, Integer> calculateLayerIndices()
   {
     Map<String, Integer> uIndexes = this.getDashboard().getUniversalIndices();
@@ -1330,11 +1307,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       ValueObject object = it.next();
-      Integer index = 0;
-      if(object.getValue(HasLayer.LAYERINDEX) != "" && object.getValue(HasLayer.LAYERINDEX) != null)
-      {
-        index = new Integer(object.getValue(HasLayer.LAYERINDEX));
-      }
 
       String value = object.getValue(HasLayer.LAYERINDEX);
       if (value != null && value.trim().length() > 0)

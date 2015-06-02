@@ -179,7 +179,7 @@
       canMove : function(node)
       {
         // restrict the ability to move the root node
-        if(! node.parent.parent){
+        if(! node.parent.parent || node.dragAndDrop === false){
           return false;
         }
         else{
@@ -639,7 +639,19 @@
             that.handleException(e);
           },
           onCancel : function() {
-            that.setTermBusy(termId, false);
+            // Unlocked the entity
+            var request = new Mojo.ClientRequest({
+              onSuccess : function() {
+                that.setTermBusy(termId, false);                
+              },
+              onFailure : function(ex) {
+                that.setTermBusy(termId, false);
+                that.handleException(ex);
+              }
+            });
+            
+            var term = that.termCache[termId]; 
+            Mojo.Util.invokeControllerAction(that._config.termType, "cancel", {dto: term}, request);            
           }
         };
         Mojo.Util.merge(this._config.crud.update, config);
@@ -694,6 +706,7 @@
           
           dialog.close();
         };
+        
         var cancelHandler = function() {
           dialog.close();
         };
@@ -1025,13 +1038,13 @@
         
         // Recursively open all parent folder nodes
         function setParentOpen(node){
-        	if(node.parent && !node.parent.is_open){
-        		$tree.tree('openNode', node.parent);
-        		setParentOpen(node.parent);
-        	}
-        	else if(node.parent){
-        		setParentOpen(node.parent);
-        	}
+          if(node.parent && !node.parent.is_open){
+            $tree.tree('openNode', node.parent);
+            setParentOpen(node.parent);
+          }
+          else if(node.parent){
+            setParentOpen(node.parent);
+          }
         }
       },
       
@@ -1059,11 +1072,11 @@
         
         // Remove seleted status of all nodes and sub-nodes
         if(selected){
-        	$tree.tree('removeFromSelection', selected);
+          $tree.tree('removeFromSelection', selected);
         }
         node.iterate(function(child_node) {
-            $tree.tree('removeFromSelection', child_node);
-            return true;
+          $tree.tree('removeFromSelection', child_node);
+          return true;
         });
       },
       
@@ -1372,7 +1385,7 @@
           node = tree.tree('appendNode',config);
         }
         else {
-          node = tree.tree('appendNode',config,parentNode);
+          node = tree.tree('appendNode', config, parentNode);
               
           if (!hasFetched) {
             var phantom = tree.tree('appendNode',{

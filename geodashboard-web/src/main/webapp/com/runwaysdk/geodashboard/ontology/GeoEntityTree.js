@@ -363,15 +363,11 @@
        */
       canMove : function(node)
       {
-        if(! node.parent.parent){
+        if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
           return false;
         }
-        else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
-          return false;
-        }
-        else{
-          return true;
-        }
+        
+        return this.$canMove(node);
       },
       
       
@@ -546,9 +542,16 @@
       },
       
       _handleUpdateTerm : function (termId, responseObj) {
-        this.$_handleUpdateTerm(termId, responseObj);
-        
-        this.refreshTermProblems(termId);
+        var that = this;
+          
+        var callback = {};
+        callback.onSuccess = function(){
+          that.$_handleUpdateTerm(termId, responseObj);
+          
+          that._refreshProblems(termId);          
+        };        
+          
+        this.refreshEntityProblems(callback);
       },
       
       _handleCreateTerm : function (parentId, parentNode, responseObj) {

@@ -231,11 +231,11 @@
               node.data = node.data || {};
               node.data.isANode = id;
               
-              var synNode = null;
+              var subtypeNode = null;
               
               // Create a synonym node for all nodes expect the hidden root node
               if(runwayId != null) {
-                synNode = that.__createTreeNode(id, node, true, {label: that.localize("isANode"), runwayId:runwayId, data: { isSubtypeContainer: true }});
+                subtypeNode = that.__createTreeNode(id, node, true, {dragAndDrop: false, label: that.localize("isANode"), runwayId:runwayId, data: { isSubtypeContainer: true }});
               }
               
               for (var i = 0; i < termAndRels.length; ++i) {
@@ -248,8 +248,8 @@
                 
                 if (termAndRels[i].getRelationshipType() === "com.runwaysdk.system.gis.geo.IsARelationship")
                 {
-                  if(synNode != null) {
-                    that.__createTreeNode(childId, synNode);                    
+                  if(subtypeNode != null) {
+                    that.__createTreeNode(childId, subtypeNode);                    
                   }
                 }
                 else

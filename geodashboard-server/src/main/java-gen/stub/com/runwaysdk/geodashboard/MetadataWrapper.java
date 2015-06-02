@@ -29,8 +29,6 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     }
 
     super.delete();
-
-    this.getWrappedMdClass().delete();
   }
 
   public MdAttributeView[] getSortedAttributes()
