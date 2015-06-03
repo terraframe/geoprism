@@ -337,4 +337,57 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     problem.delete();
   }
 
+  public static List<Term> getOrderedAncestors(Term root, Term term, String relationship)
+  {
+    List<Term> results = new LinkedList<Term>();
+
+    OIterator<Term> iterator = term.getDirectAncestors(relationship);
+
+    try
+    {
+      List<Term> parents = iterator.getAll();
+
+      for (Term parent : parents)
+      {
+        if (!parent.getId().equals(root.getId()))
+        {
+          results.addAll(GeoEntityUtil.getOrderedAncestors(root, parent, relationship));
+        }
+      }
+
+      results.add(term);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return results;
+  }
+
+  public static List<Term> getOrderedDescendants(Term term, String relationship)
+  {
+    List<Term> results = new LinkedList<Term>();
+
+    OIterator<Term> iterator = term.getDirectDescendants(relationship);
+
+    try
+    {
+      results.add(term);
+
+      List<Term> parents = iterator.getAll();
+
+      for (Term parent : parents)
+      {
+        results.addAll(GeoEntityUtil.getOrderedDescendants(parent, relationship));
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return results;
+  }
+
 }

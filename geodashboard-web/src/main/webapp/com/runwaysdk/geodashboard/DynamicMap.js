@@ -465,7 +465,7 @@
        * 
        */
       _renderReport : function(geoId, criteria) {
-      if($( "#report-viewport" ).length > 0) {
+        if($( "#report-viewport" ).length > 0) {
           var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
             that : this,
             onSuccess : function(html){

@@ -364,17 +364,13 @@
        * Override
        * 
        */
-      canMove : function(node)
+      _canMove : function(node)
       {
-        if(! node.parent.parent){
+        if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
           return false;
         }
-        else if(node.data != null && (node.data.isSynonym || node.data.isSynonymContainer)) {
-          return false;
-        }
-        else{
-          return true;
-        }
+        
+        return this.$_canMove(node);
       },
       
       
@@ -382,7 +378,7 @@
        * Override
        * 
        */
-      canMoveTo : function(moved_node, target_node, position)
+      _canMoveTo : function(moved_node, target_node, position)
       {
         if (target_node.data != null && (target_node.data.isSynonym || target_node.data.isSynonymContainer)) {
           return false;
@@ -582,17 +578,24 @@
       },
       
       _handleUpdateTerm : function (termId, responseObj) {
-        this.$_handleUpdateTerm(termId, responseObj);
-        
-        this.refreshTermProblems(termId);
+        var that = this;
+          
+        var callback = {};
+        callback.onSuccess = function(){
+          that.$_handleUpdateTerm(termId, responseObj);
+          
+          that._refreshProblems(termId);          
+        };        
+          
+        this.refreshEntityProblems(callback);
       },
       
-      _handleCreateTerm : function (parentId, parentNode, responseObj) {
+      _handleCreateTerm : function (parentId, parentNodes, responseObj) {
         var that = this;
         
         var callback = {};
         callback.onSuccess = function(){
-          that.$_handleCreateTerm(parentId, parentNode, responseObj);
+          that.$_handleCreateTerm(parentId, parentNodes, responseObj);
         };        
         
         this.refreshEntityProblems(callback);

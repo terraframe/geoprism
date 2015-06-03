@@ -296,9 +296,7 @@
     <update>
       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
         <create>
-          <attributes>
-            <reference name="map" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" column="dashboard_map" required="false" />
-          </attributes>
+          <mdMethod name="getMapId" label="Get map id" static="false" returnType="java.lang.String" />
         </create>
       </mdBusiness>
     </update>

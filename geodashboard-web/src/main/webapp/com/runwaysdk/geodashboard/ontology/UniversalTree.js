@@ -58,7 +58,30 @@
         
         this._wrapperDiv = this.getFactory().newElement("div");
         
+        this._subtypeMap = new com.runwaysdk.geodashboard.ontology.NodeMap(this);
       },
+      
+      removeNode : function(node) {          
+        // Recursively delete all descendant nodes
+        if (node.children) {
+          for (var i=node.children.length-1; i >= 0; i--) {
+            var child = node.children[i];
+            
+            this.removeNode(child);
+          }
+        }
+            
+        // Remove thte node form the tree
+        this.getImpl().tree("removeNode", node);
+          
+        // Remove the node from the term-node mapping
+        this._nodeMap.removeNodeMapping(node.runwayId, node.id);
+          
+        // Remove the node from the term-subtype mapping
+        if(node.data != null && node.data.isSubtypeContainer) {
+          this._subtypeMap.removeNodeMapping(node.runwayId, node.id);          
+        }
+      },      
       
       /**
        * Removes the term and all children terms from the caches.
@@ -112,10 +135,7 @@
         this.__dropAll(termId);
         
         for (var i = 0; i < nodes.length; ++i) {
-          $tree.tree(
-            'removeNode',
-            nodes[i]
-          );
+          this.removeNode(nodes[i]);
         }
         
         if (shouldRefresh) {
@@ -150,6 +170,53 @@
       refreshTermHookin : function(parentNode) {
         if (parentNode.id === "#" || (parentNode.data != null && parentNode.data.isSubtypeContainer)) { return; }
       },
+
+      _handleMove : function(movedNode, targetNode, previousParent, relDTO, nodes) {
+        if(targetNode.data != null && targetNode.data.isSubtypeContainer) {
+          // We need to refresh all of the subtype nodes        
+          var subtypeNodes = this._subtypeMap.getNodes(targetNode.runwayId);
+          
+          this.$_handleMove(movedNode, targetNode, previousParent, relDTO, subtypeNodes)
+        }
+        else {
+          this.$_handleMove(movedNode, targetNode, previousParent, relDTO, nodes)          
+        }
+      },
+      
+      _handleCopy : function(movedNode, targetNode, relDTO, nodes) {
+        if(targetNode.data != null && targetNode.data.isSubtypeContainer) {
+          // We need to refresh all of the subtype nodes        
+          var subtypeNodes = this._subtypeMap.getNodes(targetNode.runwayId);
+          
+          this.$_handleCopy(movedNode, targetNode, relDTO, subtypeNodes)
+        }
+        else {
+          this.$_handleCopy(movedNode, targetNode, relDTO, nodes)          
+        }
+      },
+      
+      _handleCreateTerm : function (parentId, parentNodes, responseObj) {
+        var nodes = this.$_handleCreateTerm(parentId, parentNodes, responseObj);
+        
+        // Create the subtype nodes
+        for (var i = 0; i < nodes.length; ++i) {
+          this._createSubtypeNode(nodes[i]);
+        }
+      },
+      
+      _createSubtypeNode : function(parent) {
+        var id = Mojo.Util.generateId();
+          
+        parent.data = parent.data || {};
+        parent.data.isANode = id;
+          
+        var config = {dragAndDrop: false, label: this.localize("isANode"), runwayId:parent.runwayId, data: { isSubtypeContainer: true }}
+        var node = this.__createTreeNode(id, parent, true, config);
+            
+        this._subtypeMap.addNodeMapping(parent.runwayId, node.id);
+        
+        return node;
+      },
       
       
       /**
@@ -175,8 +242,10 @@
       __onIsACreateClick : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         var targetId = this.__getRunwayIdFromNode(targetNode);
+
+        var nodes = this._subtypeMap.getNodes(targetId);
         
-        this.createTerm(targetId, "com.runwaysdk.system.gis.geo.IsARelationship", [targetNode]);
+        this.createTerm(targetId, "com.runwaysdk.system.gis.geo.IsARelationship", nodes);
       },
       
       /**
@@ -218,7 +287,7 @@
               
               var children = node.children.slice(0,node.children.length); // slice is used here to avoid concurrent modification, screwing up the loop.
               for (var i=0; i < children.length; i++) {
-                $(that.getRawEl()).tree("removeNode", children[i]);
+                that.removeNode(children[i]);
               }
             }
             
@@ -228,14 +297,11 @@
               var runwayId = that.__getRunwayIdFromNode(node);
               var id = Mojo.Util.generateId();
               
-              node.data = node.data || {};
-              node.data.isANode = id;
+              var subtypeNode = null;
               
-              var synNode = null;
-              
-              // Create a synonym node for all nodes expect the hidden root node
+              // Create a subtype node for all nodes expect the hidden root node
               if(runwayId != null) {
-                synNode = that.__createTreeNode(id, node, true, {label: that.localize("isANode"), runwayId:runwayId, data: { isSubtypeContainer: true }});
+                subtypeNode = that._createSubtypeNode(node);
               }
               
               for (var i = 0; i < termAndRels.length; ++i) {
@@ -248,8 +314,8 @@
                 
                 if (termAndRels[i].getRelationshipType() === "com.runwaysdk.system.gis.geo.IsARelationship")
                 {
-                  if(synNode != null) {
-                    that.__createTreeNode(childId, synNode);                    
+                  if(subtypeNode != null) {
+                    that.__createTreeNode(childId, subtypeNode);                    
                   }
                 }
                 else

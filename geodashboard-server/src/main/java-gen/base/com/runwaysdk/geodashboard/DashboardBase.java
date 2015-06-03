@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1373692378)
+@com.runwaysdk.business.ClassSignature(hash = -536497953)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -26,13 +26,12 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String MAP = "map";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1373692378;
+  private static final long serialVersionUID = -536497953;
   
   public DashboardBase()
   {
@@ -404,46 +403,6 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
-  public com.runwaysdk.geodashboard.gis.persist.DashboardMap getMap()
-  {
-    if (getValue(MAP).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.gis.persist.DashboardMap.get(getValue(MAP));
-    }
-  }
-  
-  public String getMapId()
-  {
-    return getValue(MAP);
-  }
-  
-  public void validateMap()
-  {
-    this.validateAttribute(MAP);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getMapMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(MAP);
-  }
-  
-  public void setMap(com.runwaysdk.geodashboard.gis.persist.DashboardMap value)
-  {
-    if(value == null)
-    {
-      setValue(MAP, "");
-    }
-    else
-    {
-      setValue(MAP, value.getId());
-    }
-  }
-  
   public com.runwaysdk.system.Actor getOwner()
   {
     if (getValue(OWNER).trim().equals(""))
@@ -728,6 +687,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getGeoEntitySuggestions(text, limit);
+  }
+  
+  public java.lang.String getMapId()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getMapId(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getMapId();
   }
   
   public static com.runwaysdk.geodashboard.DashboardQuery getSortedDashboards()
