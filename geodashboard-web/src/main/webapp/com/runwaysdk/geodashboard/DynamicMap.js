@@ -1460,7 +1460,6 @@
           var map = this._map;
           var layerMap = new Object();
           var layerStringList = '';
-          var aggregationAttr = '';
           var popup = L.popup().setLatLng(e.latlng);
           var that = this;
         
@@ -1512,7 +1511,6 @@
             // The getfeatureinfo request will return only 1 feature
             for(var i = 0; i < json.features.length; i++){
               var featureLayer = json.features[i];
-              var featureProperties = featureLayer.properties;
               var featureLayerIdReturn = featureLayer.id;
               var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
               
