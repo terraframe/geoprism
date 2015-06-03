@@ -73,6 +73,11 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
           {
             log.debug("Geoserver available.");
 
+            // To prevent a problem if the database connection information of the 
+            // datastore ever changes we must delete and recreate the store and workspace.
+            GeoserverFacade.removeWorkspace();
+            GeoserverFacade.removeStore();
+            
             GeoserverFacade.publishWorkspace();
             GeoserverFacade.publishStore();
 
