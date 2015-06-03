@@ -1,9 +1,12 @@
 package com.runwaysdk.geodashboard;
 
 import java.sql.Savepoint;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -337,12 +340,11 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     problem.delete();
   }
 
-  public static List<Term> getOrderedAncestors(Term root, Term term, String relationship)
+  public static Collection<Term> getOrderedAncestors(Term root, Term term, String relationship)
   {
-    List<Term> results = new LinkedList<Term>();
+    Map<String, Term> map = new LinkedHashMap<String, Term>();
 
     OIterator<Term> iterator = term.getDirectAncestors(relationship);
-
     try
     {
       List<Term> parents = iterator.getAll();
@@ -351,35 +353,51 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       {
         if (!parent.getId().equals(root.getId()))
         {
-          results.addAll(GeoEntityUtil.getOrderedAncestors(root, parent, relationship));
+          Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, parent, relationship);
+
+          for (Term ancestor : ancestors)
+          {
+            if (!map.containsKey(ancestor.getId()))
+            {
+              map.put(ancestor.getId(), ancestor);
+            }
+          }
         }
       }
 
-      results.add(term);
+      map.put(term.getId(), term);
     }
     finally
     {
       iterator.close();
     }
 
-    return results;
+    return map.values();
   }
 
-  public static List<Term> getOrderedDescendants(Term term, String relationship)
+  public static Collection<Term> getOrderedDescendants(Term term, String relationship)
   {
-    List<Term> results = new LinkedList<Term>();
+    Map<String, Term> map = new LinkedHashMap<String, Term>();
 
     OIterator<Term> iterator = term.getDirectDescendants(relationship);
 
     try
     {
-      results.add(term);
+      map.put(term.getId(), term);
 
       List<Term> parents = iterator.getAll();
 
       for (Term parent : parents)
       {
-        results.addAll(GeoEntityUtil.getOrderedDescendants(parent, relationship));
+        Collection<Term> descendants = GeoEntityUtil.getOrderedDescendants(parent, relationship);
+
+        for (Term descendant : descendants)
+        {
+          if (!map.containsKey(descendant.getId()))
+          {
+            map.put(descendant.getId(), descendant);
+          }
+        }
       }
     }
     finally
@@ -387,7 +405,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       iterator.close();
     }
 
-    return results;
+    return map.values();
   }
 
 }

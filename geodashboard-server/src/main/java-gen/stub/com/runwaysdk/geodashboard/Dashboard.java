@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -849,7 +850,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     Universal universal = this.getCountry().getUniversal();
 
-    List<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+    Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
 
     Map<String, Integer> indices = new HashMap<String, Integer>();
 

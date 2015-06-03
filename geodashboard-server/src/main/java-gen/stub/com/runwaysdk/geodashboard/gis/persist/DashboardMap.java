@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -543,7 +544,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         Universal lowest = wrapper.getUniversal();
         Universal root = Universal.getRoot();
 
-        List<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
+        Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
 
         return universals.toArray(new Universal[universals.size()]);
       }
