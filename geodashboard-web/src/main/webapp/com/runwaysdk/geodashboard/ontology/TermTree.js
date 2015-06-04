@@ -701,6 +701,39 @@
         new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
       },
       
+      removeLink : function(termId, parentId, relType) {
+        var that = this;
+        var parentRecord = that.parentRelationshipCache.getRecordWithParentIdAndRelType(termId, parentId, relType);
+          
+        var request = new Mojo.ClientRequest({
+          onSuccess : function() {
+            var nodes = that.__getNodesById(termId);
+              
+            for (var i = 0; i < nodes.length; ++i) {
+              var nodeParentId = that.__getRunwayIdFromNode(nodes[i].parent);
+              var nodeRelationship = that._getRelationshipForNode(nodes[i], nodes[i].parent)
+              
+              if (nodeParentId == parentId && relType === nodeRelationship) {
+                that.removeNode(nodes[i]);
+              }
+            }
+            
+            that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
+              
+            that.setTermBusy(termId, false);
+          },
+          onFailure : function(err) {
+            that.setTermBusy(termId, false);
+              
+            that.handleException(err);
+          }
+        });
+          
+        this.setTermBusy(termId, true);
+          
+        com.runwaysdk.system.ontology.TermUtil.removeLink(request, termId, parentId, relType);
+      },
+      
       /**
        * is binded to context menu option Delete. 
        */
@@ -724,28 +757,9 @@
           that.deleteTerm(termId, parentId);
           dialog.close();
         };
+        
         var performDeleteRelHandler = function() {
-          var parentRecord = that.parentRelationshipCache.getRecordWithParentIdAndRelType(termId, parentId, relType);
-          
-          var deleteRelCallback = {
-            onSuccess : function() {
-              var nodes = that.__getNodesById(termId);
-              for (var i = 0; i < nodes.length; ++i) {
-                if (that.__getRunwayIdFromNode(nodes[i].parent) == parentId && relType === that._getRelationshipForNode(nodes[i], nodes[i].parent)) {
-                  that.removeNode(nodes[i]);
-                }
-              }
-              that.parentRelationshipCache.removeRecordMatchingRelId(termId, parentRecord.relId);
-            },
-            onFailure : function(err) {
-              that.handleException(err);
-              return;
-            }
-          }
-          Mojo.Util.copy(new Mojo.ClientRequest(deleteRelCallback), deleteRelCallback);
-          
-          com.runwaysdk.system.ontology.TermUtil.removeLink(deleteRelCallback, termId, parentId, relType);
-          
+          that.removeLink(termId, parentId, relType);
           dialog.close();
         };
         
