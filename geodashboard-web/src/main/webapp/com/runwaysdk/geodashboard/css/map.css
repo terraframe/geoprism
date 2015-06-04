@@ -71,6 +71,10 @@ h3.popup-heading {
 	margin: 0;
 }
 
+.leaflet-popup-content .table{
+	font-size: 17px;
+}
+
 .leaflet-bottom.leaflet-right {
 	bottom: 0px;
     right: 335px;

@@ -1460,7 +1460,6 @@
           var map = this._map;
           var layerMap = new Object();
           var layerStringList = '';
-          var aggregationAttr = '';
           var popup = L.popup().setLatLng(e.latlng);
           var that = this;
         
@@ -1512,7 +1511,6 @@
             // The getfeatureinfo request will return only 1 feature
             for(var i = 0; i < json.features.length; i++){
               var featureLayer = json.features[i];
-              var featureProperties = featureLayer.properties;
               var featureLayerIdReturn = featureLayer.id;
               var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
               
@@ -2337,6 +2335,7 @@
       },
       
       _addLayerFormControls : function(){
+    	var that = this;
         
         $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
         
@@ -2390,6 +2389,20 @@
 
           }
         }
+        
+        // Scroll selector dropdown options on page scroll
+        $("#modal01").scroll(function(){       	
+	        var drops = $(".select-options");
+	    	for(var i=0; i<drops.length; i++){
+	    		var drop = $(drops[i]);
+	    		if(!drop.hasClass("options-hidden")){
+	    			var dropSelector = $(".select-active");
+	    			var diff = dropSelector.offset().top + dropSelector.height() + 2; 
+	    			var diffStr = diff.toString() + "px";
+	    			drop.css({ top: diffStr });
+	    		}
+	    	}
+        });
         
         this._injectFontStylesForDropdown();
       },
@@ -3570,7 +3583,6 @@
         
         $('#control-form-collapse-button').on('click', Mojo.Util.bind(this, this._onClickToggleLeftPanel));
         $('#data-panel-expand-toggle').on('click', Mojo.Util.bind(this, this._onClickToggleRightPanel));
-        
         
         $('.report-height-toggle').on('click', function(e){
           var target = e.target;

@@ -343,7 +343,7 @@ label {
     <h1>Error</h1>
   </header>
     
-  <div name = "main-content" style="color: #F6F3F3;text-align: center;">
+  <div name = "main-content" style="color: red;text-align: center;">
     The service is down or unresponsive.  Please check the error logs for more detail.
   </div>  
 </body>
