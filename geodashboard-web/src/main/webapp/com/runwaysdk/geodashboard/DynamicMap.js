@@ -2369,12 +2369,15 @@
           // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
           // The 'other' option is checked by default making this a valid sequence
           var otherEnabled = true;
-          var catJSON = JSON.parse(decodeURIComponent($("#categories-input").data("categoriesstore"))).catLiElems;
-          for(var i=0; i<catJSON.length; i++){
-          	var cat = catJSON[i];
-          	if(cat.id === "cat-other-color-selector"){
-          		otherEnabled = cat.otherEnabled;
-          	}
+          var catStore = $("#categories-input").data("categoriesstore");
+          if(catStore.length > 0){
+        	  var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+        	  for(var i=0; i<catJSON.length; i++){
+        		  var cat = catJSON[i];
+        		  if(cat.id === "cat-other-color-selector"){
+        			  otherEnabled = cat.otherEnabled;
+        		  }
+        	  }
           }
           
           if(!otherEnabled){

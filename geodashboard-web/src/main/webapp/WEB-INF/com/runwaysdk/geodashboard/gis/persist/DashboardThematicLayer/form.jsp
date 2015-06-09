@@ -627,7 +627,7 @@
 						                    </ul>
 						                </div>
 									  	<div class="check-block">
-								      		<input id="f56" class="other-option-check-box" type="checkbox" name="" checked>
+								      		<input id="f56" class="other-option-check-box" type="checkbox" name="" checked></input>
 								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 								      	</div>
 									</div>
