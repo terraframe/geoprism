@@ -803,6 +803,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
+  @Transaction
   public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation, Integer pageSize, Integer pageNumber)
   {
     ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
@@ -815,6 +816,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return query;
   }
 
+  @Transaction
   public static Integer getPageCount(String queryId, String category, String criteria, String aggregation, Integer pageSize)
   {
     if (pageSize != null && pageSize > 0)
@@ -828,6 +830,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return 1;
   }
 
+  @Transaction
   public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria, String aggregation)
   {
     ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
