@@ -402,7 +402,15 @@
             view.setFeatureStrategy(layer.featureStrategy); // Reference layers should always be BASIC strategy
             
             view.layerExists = true;
-            view.setLayerIsActive(true);
+            
+            // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+            // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+                view.setLayerIsActive(true);
+            }
+            else{
+                view.setLayerIsActive(false);
+            }
             
             view.layerType = layer.layerType;
             view.universalId = uniId;
