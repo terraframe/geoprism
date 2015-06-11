@@ -2857,6 +2857,10 @@ span.select-area span.center {
 		width: 300px;
 	}
 	
+	#cat-other-basic-label{
+		margin-left: 1.5em;
+	}
+	
 	#collapse000 {
 	  overflow-y: hidden;
 	}
