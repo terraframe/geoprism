@@ -872,6 +872,43 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return indices;
   }
 
+  public GeoNode[] getGeoNodes(MdAttributeDAOIF thematicAttribute)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    DashboardQuery dQuery = new DashboardQuery(factory);
+    dQuery.WHERE(dQuery.getId().EQ(this.getId()));
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.dashboard(dQuery));
+    mwQuery.AND(mwQuery.getWrappedMdClass().EQ(thematicAttribute.definedByClass()));
+
+    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+    mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
+
+    OIterator<? extends MetadataGeoNode> iterator = mgQuery.getIterator();
+
+    List<GeoNode> nodes = new LinkedList<GeoNode>();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        MetadataGeoNode metadata = iterator.next();
+        GeoNode geoNode = metadata.getChild();
+
+        nodes.add(geoNode);
+      }
+
+      return nodes.toArray(new GeoNode[nodes.size()]);
+
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
   public GeoNode getGeoNode(MdAttributeDAOIF mdAttribute)
   {
     MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
