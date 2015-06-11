@@ -159,6 +159,38 @@
 	              </div>
 	            </div>
 			</mjl:component>
+            
+            
+			<!-- AGGREGATION SETTINGS -->
+			
+			           <div class="row-holder">
+              <div class="label-holder style03">
+                <strong><gdb:localize var="dl_form_defineGeoNode" key="DashboardThematicLayer.form.defineGeoNode"/>${dl_form_defineGeoNode}</strong>
+              </div>
+              <div class="holder add">
+              	<mjl:component param="layer" item="${layer}">
+                <div class="box">
+                  <label for="f60"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
+                  <div class="select-box">
+<%-- 	                    <select id="f60" class="method-slect" name="layer.${layer.universalMd.name}"> --%>
+<%-- 	                       <c:forEach items="${universals}" var="universal"> --%>
+<%-- 		                         <c:choose> --%>
+<%-- 		                           <c:when test="${layer.universalId == universal.id}"> --%>
+<%-- 				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option> --%>
+<%-- 		                           </c:when> --%>
+<%-- 		                           <c:otherwise> --%>
+<%-- 		                           		<option value="${universal.id}">${universal.displayLabel.value}</option> --%>
+<%-- 		                           </c:otherwise> --%>
+<%-- 		                         </c:choose> --%>
+<%-- 	                      </c:forEach> --%>
+<!-- 	                    </select> -->
+                  </div>
+                </div>
+				</mjl:component>
+              </div>
+            </div>
+			
+			
             <div class="row-holder">
               <div class="label-holder style03">
                 <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardThematicLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong>
@@ -168,23 +200,20 @@
                 <div class="box">
                   <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
                   <div class="select-box">
-<%-- 					<mjl:component param="layer" item="${layer}"> --%>
-	                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
-	                       <c:forEach items="${universals}" var="universal">
-		                         <c:choose>
-		                           <c:when test="${layer.universalId == universal.id}">
-				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option>
-		                           </c:when>
-		                           <c:otherwise>
-		                           		<option value="${universal.id}">${universal.displayLabel.value}</option>
-		                           </c:otherwise>
-		                         </c:choose>
-	                      </c:forEach>
-	                    </select>
-<%-- 					</mjl:component> --%>
+<%-- 	                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}"> --%>
+<%-- 	                       <c:forEach items="${universals}" var="universal"> --%>
+<%-- 		                         <c:choose> --%>
+<%-- 		                           <c:when test="${layer.universalId == universal.id}"> --%>
+<%-- 				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option> --%>
+<%-- 		                           </c:when> --%>
+<%-- 		                           <c:otherwise> --%>
+<%-- 		                           		<option value="${universal.id}">${universal.displayLabel.value}</option> --%>
+<%-- 		                           </c:otherwise> --%>
+<%-- 		                         </c:choose> --%>
+<%-- 	                      </c:forEach> --%>
+<!-- 	                    </select> -->
                   </div>
                 </div>
-<%-- 				<mjl:component param="style" item="${style}"> --%>
 	                <div class="box">
 	                  <label for="f59"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
 	                  <div class="select-box">
