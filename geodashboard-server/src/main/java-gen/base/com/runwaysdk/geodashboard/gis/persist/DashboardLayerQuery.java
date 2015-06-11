@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -722077862)
+@com.runwaysdk.business.ClassSignature(hash = 411280202)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -443,29 +443,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal()
-  {
-    return getUniversal(null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL);
-
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL);
-
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL, mdAttributeIF, this, alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableChar getViewName()
   {
     return getViewName(null);
@@ -527,10 +504,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL)) 
-    {
-       return new com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -896,9 +869,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal();
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getViewName();
     public com.runwaysdk.query.SelectableChar getViewName(String alias);
     public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel);
@@ -1349,23 +1319,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal()
-  {
-    return getUniversal(null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias)
-  {
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL,  alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableChar getViewName()
   {
     return getViewName(null);
@@ -1660,10 +1613,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL)) 
-    {
-       return new com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
     else 
     {
       String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
@@ -1773,9 +1722,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal();
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
-    public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getViewName();
     public com.runwaysdk.query.SelectableChar getViewName(String alias);
     public com.runwaysdk.query.SelectableChar getViewName(String alias, String displayLabel);
@@ -2223,23 +2169,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.TYPE, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal()
-  {
-    return getUniversal(null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias)
-  {
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL, alias, null);
-
-  }
- 
-  public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL,  alias, displayLabel);
-
-  }
   public com.runwaysdk.query.SelectableChar getViewName()
   {
     return getViewName(null);
@@ -2301,10 +2230,6 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.UNIVERSAL)) 
-    {
-       return new com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1990257181)
+@com.runwaysdk.business.ClassSignature(hash = 1409447649)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -34,10 +34,9 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1990257181;
+  private static final long serialVersionUID = 1409447649;
   
   public DashboardLayerBase()
   {
@@ -593,46 +592,6 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
-  }
-  
-  public com.runwaysdk.system.gis.geo.Universal getUniversal()
-  {
-    if (getValue(UNIVERSAL).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.Universal.get(getValue(UNIVERSAL));
-    }
-  }
-  
-  public String getUniversalId()
-  {
-    return getValue(UNIVERSAL);
-  }
-  
-  public void validateUniversal()
-  {
-    this.validateAttribute(UNIVERSAL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getUniversalMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(UNIVERSAL);
-  }
-  
-  public void setUniversal(com.runwaysdk.system.gis.geo.Universal value)
-  {
-    if(value == null)
-    {
-      setValue(UNIVERSAL, "");
-    }
-    else
-    {
-      setValue(UNIVERSAL, value.getId());
-    }
   }
   
   public String getViewName()

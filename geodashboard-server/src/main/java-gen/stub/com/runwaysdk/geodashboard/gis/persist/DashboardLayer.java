@@ -388,15 +388,22 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   public FeatureType getFeatureType()
   {
     // LayerType is required so it's safe to assume access to the object
-    AllLayerType type = this.getLayerType().get(0);
-    if (type == AllLayerType.BUBBLE)
+    List<AllLayerType> types = this.getLayerType();
+
+    if (types.size() > 0)
     {
-      return FeatureType.POINT;
+      AllLayerType type = types.get(0);
+      if (type == AllLayerType.BUBBLE)
+      {
+        return FeatureType.POINT;
+      }
+      else
+      {
+        return FeatureType.POLYGON;
+      }
     }
-    else
-    {
-      return FeatureType.POLYGON;
-    }
+
+    throw new ProgrammingErrorException("Feature type is a required value");
   }
 
   protected void populate(DashboardLayer source)
@@ -405,7 +412,6 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     this.setActiveByDefault(source.getActiveByDefault());
     this.setDisplayInLegend(source.getDisplayInLegend());
     this.setLayerEnabled(source.getLayerEnabled());
-    this.setUniversal(source.getUniversal());
     this.setVirtual(source.getVirtual());
     this.getDashboardLegend().populate(source.getDashboardLegend());
     this.setName(source.getName());

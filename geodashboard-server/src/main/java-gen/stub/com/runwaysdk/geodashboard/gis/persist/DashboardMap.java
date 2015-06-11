@@ -246,7 +246,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
         if (savedLayer instanceof DashboardReferenceLayer)
         {
-          String savedLayerUniId = savedLayer.getUniversal().getId();
+          DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) savedLayer;
+
+          String savedLayerUniId = referenceLayer.getUniversal().getId();
           savedLayerHash.put(savedLayerUniId, savedLayer);
         }
       }
@@ -1278,7 +1280,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     {
       if (layer instanceof DashboardReferenceLayer)
       {
-        Integer universalIndex = uIndexes.get(layer.getUniversal().getId());
+        DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) layer;
+
+        Integer universalIndex = uIndexes.get(referenceLayer.getUniversal().getId());
 
         indices.put(layer.getId(), universalIndex);
       }

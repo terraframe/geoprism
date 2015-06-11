@@ -1,5 +1,6 @@
 package com.runwaysdk.geodashboard.dashboard;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,12 +14,15 @@ import com.runwaysdk.geodashboard.AttributeWrapperQuery;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardAttributes;
 import com.runwaysdk.geodashboard.DashboardMetadata;
+import com.runwaysdk.geodashboard.MetadataGeoNode;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
+import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -59,7 +63,7 @@ public class DashboardMetadataBuilder
     }
   }
 
-  public void add(Dashboard _dashboard, MdView _mdView, Universal _universal, Map<String, DashboardInfo> map)
+  public void addDashboard(Dashboard _dashboard, MdView _mdView, Universal _universal, Map<String, DashboardInfo> map)
   {
     Set<Entry<String, DashboardInfo>> entries = map.entrySet();
 
@@ -91,7 +95,17 @@ public class DashboardMetadataBuilder
           unitWrapperRel.apply();
         }
       }
+
+      List<GeoNode> nodes = info.getNodes();
+
+      for (GeoNode node : nodes)
+      {
+        // Associate the node with the MetadataWrapper
+        MetadataGeoNode relationship = new MetadataGeoNode(mWrapper, node);
+        relationship.apply();
+      }
     }
+
   }
 
   private boolean isGeoEntityAttribute(MdAttributeConcreteDAOIF mdAttribute)
@@ -104,6 +118,10 @@ public class DashboardMetadataBuilder
       {
         return true;
       }
+    }
+    else if (mdAttribute instanceof MdAttributeGeometryDAOIF)
+    {
+      return true;
     }
 
     return false;

@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1330382748)
+@com.runwaysdk.business.ClassSignature(hash = 1171284837)
 public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
-  private static final long serialVersionUID = 1330382748;
+  private static final long serialVersionUID = 1171284837;
   
   protected MetadataWrapperDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -553,6 +553,60 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode()
+  {
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO> getAllGeoNodeRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO> getAllGeoNodeRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.MetadataGeoNodeDTO addGeoNode(com.runwaysdk.system.gis.geo.GeoNodeDTO child)
+  {
+    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.MetadataGeoNodeDTO addGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.gis.geo.GeoNodeDTO child)
+  {
+    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  public void removeGeoNode(com.runwaysdk.geodashboard.MetadataGeoNodeDTO relationship)
+  {
+    getRequest().deleteChild(relationship.getId());
+  }
+  
+  public static void removeGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.MetadataGeoNodeDTO relationship)
+  {
+    clientRequestIF.deleteChild(relationship.getId());
+  }
+  
+  public void removeAllGeoNode()
+  {
+    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+  }
+  
+  public static void removeAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")

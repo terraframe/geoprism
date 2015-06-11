@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 286005091)
+@com.runwaysdk.business.ClassSignature(hash = -482663071)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 286005091;
+  private static final long serialVersionUID = -482663071;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -48,7 +48,6 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
   public Boolean getBBoxIncluded()
@@ -737,55 +736,6 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getSiteMasterMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.system.gis.geo.UniversalDTO getUniversal()
-  {
-    if(getValue(UNIVERSAL) == null || getValue(UNIVERSAL).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.UniversalDTO.get(getRequest(), getValue(UNIVERSAL));
-    }
-  }
-  
-  public String getUniversalId()
-  {
-    return getValue(UNIVERSAL);
-  }
-  
-  public void setUniversal(com.runwaysdk.system.gis.geo.UniversalDTO value)
-  {
-    if(value == null)
-    {
-      setValue(UNIVERSAL, "");
-    }
-    else
-    {
-      setValue(UNIVERSAL, value.getId());
-    }
-  }
-  
-  public boolean isUniversalWritable()
-  {
-    return isWritable(UNIVERSAL);
-  }
-  
-  public boolean isUniversalReadable()
-  {
-    return isReadable(UNIVERSAL);
-  }
-  
-  public boolean isUniversalModified()
-  {
-    return isModified(UNIVERSAL);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
   }
   
   public String getViewName()

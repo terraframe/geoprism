@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2117217377)
+@com.runwaysdk.business.ClassSignature(hash = 1192702307)
 public abstract class DashboardReferenceLayerDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer";
-  private static final long serialVersionUID = 2117217377;
+  private static final long serialVersionUID = 1192702307;
   
   protected DashboardReferenceLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -25,6 +25,56 @@ public abstract class DashboardReferenceLayerDTOBase extends com.runwaysdk.geoda
   protected java.lang.String getDeclaredType()
   {
     return CLASS;
+  }
+  
+  public static java.lang.String UNIVERSAL = "universal";
+  public com.runwaysdk.system.gis.geo.UniversalDTO getUniversal()
+  {
+    if(getValue(UNIVERSAL) == null || getValue(UNIVERSAL).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.UniversalDTO.get(getRequest(), getValue(UNIVERSAL));
+    }
+  }
+  
+  public String getUniversalId()
+  {
+    return getValue(UNIVERSAL);
+  }
+  
+  public void setUniversal(com.runwaysdk.system.gis.geo.UniversalDTO value)
+  {
+    if(value == null)
+    {
+      setValue(UNIVERSAL, "");
+    }
+    else
+    {
+      setValue(UNIVERSAL, value.getId());
+    }
+  }
+  
+  public boolean isUniversalWritable()
+  {
+    return isWritable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalReadable()
+  {
+    return isReadable(UNIVERSAL);
+  }
+  
+  public boolean isUniversalModified()
+  {
+    return isModified(UNIVERSAL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

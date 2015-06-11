@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -59140205)
+@com.runwaysdk.business.ClassSignature(hash = 1892174158)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -614,6 +614,122 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
+  public com.runwaysdk.query.Condition geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.getBusinessQuery().isParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.getBusinessQuery().isParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.getBusinessQuery().isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.getBusinessQuery().isParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.getBusinessQuery().isParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.getBusinessQuery().isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.getBusinessQuery().isNotParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.getBusinessQuery().isNotParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+
 /**
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
@@ -683,6 +799,20 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   public com.runwaysdk.query.Condition SUBSELECT_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
 
 
+  public com.runwaysdk.query.Condition geoNode();
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode();
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery);
+
+
   public com.runwaysdk.query.Condition NOT_IN_attributeWrapper();
 
   public com.runwaysdk.query.Condition NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
@@ -695,6 +825,20 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery);
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_attributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperQuery attributeWrapperQuery, com.runwaysdk.geodashboard.DashboardAttributesQuery dashboardAttributesQuery);
+
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode();
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode();
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery);
 
 
   public com.runwaysdk.query.Condition dashboard();
@@ -1047,6 +1191,64 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   }
 
 
+  public com.runwaysdk.query.Condition geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.isParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.isParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.isParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.isParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.isParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.isParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+
   public com.runwaysdk.query.Condition NOT_IN_attributeWrapper()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
@@ -1102,6 +1304,64 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
   {
     dashboardAttributesQuery.AND(dashboardAttributesQuery.hasChild(attributeWrapperQuery));
     return this.isNotParentIn_SUBSELECT(dashboardAttributesQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.isNotParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    return this.isNotParentIn_SUBSELECT(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.isNotParentIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
+
+    return this.isNotParentIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.isNotParentIn(metadataGeoNodeQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MetadataGeoNodeQuery metadataGeoNodeQuery)
+  {
+    metadataGeoNodeQuery.AND(metadataGeoNodeQuery.hasChild(geoNodeQuery));
+    return this.isNotParentIn_SUBSELECT(metadataGeoNodeQuery);
   }
 
 

@@ -55,6 +55,11 @@
         <child cardinality="*" name="com.runwaysdk.geodashboard.AttributeWrapper" method="AttributeWrapper" />
       </mdRelationship>
 
+      <mdRelationship name="com.runwaysdk.geodashboard.MetadataGeoNode" label="Wrapper Geo node" cacheAlgorithm="everything">
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="DashboardMetadata" />
+        <child cardinality="*" name="com.runwaysdk.system.gis.geo.GeoNode" method="GeoNode" />
+      </mdRelationship>
+
 
       <mdBusiness name="com.runwaysdk.geodashboard.AttributeWrapper" label="Attribute Wrapper" cacheAlgorithm="everything">
         <attributes>

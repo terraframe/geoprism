@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1025047012)
+@com.runwaysdk.business.ClassSignature(hash = -606882587)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -25,7 +25,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -1025047012;
+  private static final long serialVersionUID = -606882587;
   
   public MetadataWrapperBase()
   {
@@ -438,6 +438,34 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getAttributeWrapperRel(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
   {
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes>) getRelationshipsWithChild(attributeWrapper, com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.MetadataGeoNode addGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
+  {
+    return (com.runwaysdk.geodashboard.MetadataGeoNode) addChild(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+  }
+  
+  public void removeGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
+  {
+    removeAllChildren(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode> getAllGeoNode()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode>) getChildren(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode> getAllGeoNodeRel()
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode>) getChildRelationships(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode> getGeoNodeRel(com.runwaysdk.system.gis.geo.GeoNode geoNode)
+  {
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode>) getRelationshipsWithChild(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
   }
   
   public com.runwaysdk.geodashboard.DashboardMetadata addDashboard(com.runwaysdk.geodashboard.Dashboard dashboard)

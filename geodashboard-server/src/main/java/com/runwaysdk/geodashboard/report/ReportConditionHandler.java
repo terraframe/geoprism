@@ -54,7 +54,7 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
 
     if (key.startsWith(type))
     {
-      Attribute attribute = QueryUtil.get(query, attributeName);
+      Attribute attribute = query.get(attributeName);
 
       if (attribute instanceof AttributeNumber)
       {
@@ -87,7 +87,7 @@ public class ReportConditionHandler implements ReportConditionHandlerIF, Reloada
 
     if (mdAttribute != null)
     {
-      AttributeReference attribute = (AttributeReference) QueryUtil.get(query, mdAttribute.definesAttribute());
+      AttributeReference attribute = (AttributeReference) query.get(mdAttribute.definesAttribute());
 
       addGeoEntityCondition(_value, attribute);
     }

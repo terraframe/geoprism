@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -961207962)
+@com.runwaysdk.business.ClassSignature(hash = 7308879)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -38,6 +38,29 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.CLASS;
   }
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy()
+  {
+    return getAggregationStrategy(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY);
+
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY);
+
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY, mdAttributeIF, this, alias, displayLabel);
+
+  }
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
   {
     return getAggregationType(null);
@@ -59,6 +82,29 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONTYPE);
 
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONTYPE, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode()
+  {
+    return getGeoNode(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE);
+
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE);
+
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
@@ -88,7 +134,15 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -144,9 +198,15 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   public interface DashboardThematicLayerQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.DashboardLayerQuery.DashboardLayerQueryReferenceIF
   {
 
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy();
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias);
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias, String displayLabel);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode();
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias);
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -185,6 +245,23 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
       return this.NE(dashboardThematicLayer.getId());
     }
 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy()
+  {
+    return getAggregationStrategy(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY,  alias, displayLabel);
+
+  }
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
   {
     return getAggregationType(null);
@@ -200,6 +277,23 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode()
+  {
+    return getGeoNode(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
@@ -223,7 +317,15 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -256,9 +358,15 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   public interface DashboardThematicLayerQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.geodashboard.gis.persist.DashboardLayerQuery.DashboardLayerQueryMultiReferenceIF
   {
 
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy();
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias);
+    public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias, String displayLabel);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType();
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias);
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel);
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode();
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias);
+    public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
@@ -346,6 +454,23 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
 
       return this.containsExactly(itemIdArray);
   }
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy()
+  {
+    return getAggregationStrategy(null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY,  alias, displayLabel);
+
+  }
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType()
   {
     return getAggregationType(null);
@@ -361,6 +486,23 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF getAggregationType(String alias, String displayLabel)
   {
     return (com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery.AllAggregationTypeQueryIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode()
+  {
+    return getGeoNode(null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF getGeoNode(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReferenceIF)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute()
@@ -384,7 +526,15 @@ public  class DashboardThematicLayerQuery extends com.runwaysdk.geodashboard.gis
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
+    if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.AGGREGATIONSTRATEGY)) 
+    {
+       return new com.runwaysdk.geodashboard.gis.persist.AggregationStrategyQuery.AggregationStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.GEONODE)) 
+    {
+       return new com.runwaysdk.system.gis.geo.GeoNodeQuery.GeoNodeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else if (name.equals(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.MDATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }

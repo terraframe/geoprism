@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -835367825)
+@com.runwaysdk.business.ClassSignature(hash = -1816139688)
 public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer";
-  private static final long serialVersionUID = -835367825;
+  private static final long serialVersionUID = -1816139688;
   
   protected DashboardThematicLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,8 +27,59 @@ public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodas
     return CLASS;
   }
   
+  public static java.lang.String AGGREGATIONSTRATEGY = "aggregationStrategy";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
+  public static java.lang.String GEONODE = "geoNode";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
+  public com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO getAggregationStrategy()
+  {
+    if(getValue(AGGREGATIONSTRATEGY) == null || getValue(AGGREGATIONSTRATEGY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO.get(getRequest(), getValue(AGGREGATIONSTRATEGY));
+    }
+  }
+  
+  public String getAggregationStrategyId()
+  {
+    return getValue(AGGREGATIONSTRATEGY);
+  }
+  
+  public void setAggregationStrategy(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO value)
+  {
+    if(value == null)
+    {
+      setValue(AGGREGATIONSTRATEGY, "");
+    }
+    else
+    {
+      setValue(AGGREGATIONSTRATEGY, value.getId());
+    }
+  }
+  
+  public boolean isAggregationStrategyWritable()
+  {
+    return isWritable(AGGREGATIONSTRATEGY);
+  }
+  
+  public boolean isAggregationStrategyReadable()
+  {
+    return isReadable(AGGREGATIONSTRATEGY);
+  }
+  
+  public boolean isAggregationStrategyModified()
+  {
+    return isModified(AGGREGATIONSTRATEGY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getAggregationStrategyMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(AGGREGATIONSTRATEGY).getAttributeMdDTO();
+  }
+  
   @SuppressWarnings("unchecked")
   public java.util.List<com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO> getAggregationType()
   {
@@ -73,6 +124,55 @@ public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO getAggregationTypeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO) getAttributeDTO(AGGREGATIONTYPE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.gis.geo.GeoNodeDTO getGeoNode()
+  {
+    if(getValue(GEONODE) == null || getValue(GEONODE).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.gis.geo.GeoNodeDTO.get(getRequest(), getValue(GEONODE));
+    }
+  }
+  
+  public String getGeoNodeId()
+  {
+    return getValue(GEONODE);
+  }
+  
+  public void setGeoNode(com.runwaysdk.system.gis.geo.GeoNodeDTO value)
+  {
+    if(value == null)
+    {
+      setValue(GEONODE, "");
+    }
+    else
+    {
+      setValue(GEONODE, value.getId());
+    }
+  }
+  
+  public boolean isGeoNodeWritable()
+  {
+    return isWritable(GEONODE);
+  }
+  
+  public boolean isGeoNodeReadable()
+  {
+    return isReadable(GEONODE);
+  }
+  
+  public boolean isGeoNodeModified()
+  {
+    return isModified(GEONODE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoNodeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEONODE).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdAttributeDTO getMdAttribute()

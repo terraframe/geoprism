@@ -157,7 +157,7 @@ public class Sandbox
     layer.addLayerType(AllLayerType.BASIC);
     layer.setDisplayInLegend(false);
     layer.setVirtual(false);
-    layer.setUniversal(null);
+//    layer.setUniversal(null);
 //    layer.setGeoEntity(null);
     layer.apply();
 

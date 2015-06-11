@@ -61,6 +61,7 @@ import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -157,7 +158,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       metadata.close();
     }
 
+    Roles role = this.getDashboardRole();
+
     super.delete();
+
+    // Delete the dashboard role
+    role.delete();
   }
 
   public DashboardMap getMap()
@@ -864,5 +870,46 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return indices;
+  }
+
+  public GeoNode getGeoNode(MdAttributeDAOIF mdAttribute)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
+    QueryFactory factory = new QueryFactory();
+
+    DashboardQuery dQuery = new DashboardQuery(factory);
+    dQuery.WHERE(dQuery.getId().EQ(this.getId()));
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.dashboard(dQuery));
+
+    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+    mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
+
+    OIterator<? extends MetadataGeoNode> iterator = mgQuery.getIterator();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        MetadataGeoNode metadata = iterator.next();
+        GeoNode geoNode = metadata.getChild();
+
+        // Geo entity node
+        String geoEntityAttributeId = geoNode.getGeoEntityAttributeId();
+
+        if (geoEntityAttributeId.equals(mdAttribute.getId()) || geoEntityAttributeId.equals(mdAttributeConcrete.getId()))
+        {
+          return geoNode;
+        }
+      }
+
+      throw new ProgrammingErrorException("Unable to find a Geo Node for the Dashboard [" + this.getId() + "] and Attribute [" + mdAttribute.getId() + "]");
+
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 }

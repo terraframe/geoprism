@@ -20,24 +20,16 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.QueryUtil;
-import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
-import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
-import com.runwaysdk.query.Attribute;
-import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.Universal;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
@@ -172,130 +164,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
    */
   public ValueQuery getViewQuery()
   {
-    QueryFactory factory = new QueryFactory();
-    ValueQuery innerQuery2 = new ValueQuery(factory);
+    AggregationStrategy strategy = this.getAggregationStrategy();
 
-    ValueQuery outerQuery = new ValueQuery(factory);
-
-    ValueQuery innerQuery1 = this.getInnerQuery(factory);
-
-    if (log.isDebugEnabled())
-    {
-      // print the SQL if the generated
-      log.debug("SLD for Layer [%s], this:\n" + innerQuery1.getSQL());
-    }
-
-    this.viewHasData = true;
-    if (innerQuery1.getCount() == 0)
-    {
-      EmptyLayerInformation info = new EmptyLayerInformation();
-      info.setLayerName(this.getName());
-      info.apply();
-
-      info.throwIt();
-
-      this.viewHasData = false;
-    }
-
-    // Set the GeoID and the Geometry attribute for the second query
-    GeoEntityQuery geQ2 = new GeoEntityQuery(innerQuery2);
-    Selectable geoId2 = geQ2.getGeoId(GeoEntity.GEOID);
-    geoId2.setColumnAlias(GeoEntity.GEOID);
-    innerQuery2.SELECT(geoId2);
-    // geometry
-    Selectable geom;
-    if (this.getFeatureType().equals(FeatureType.POINT))
-    {
-      geom = geQ2.get(GeoEntity.GEOPOINT);
-    }
-    else
-    {
-      geom = geQ2.get(GeoEntity.GEOMULTIPOLYGON);
-    }
-
-    geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-    geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-    innerQuery2.SELECT(geom);
-
-    for (Selectable selectable : innerQuery1.getSelectableRefs())
-    {
-      Attribute attribute = innerQuery1.get(selectable.getResultAttributeName());
-      attribute.setColumnAlias(selectable.getColumnAlias());
-
-      outerQuery.SELECT(attribute);
-    }
-
-    Attribute geomAttribute = innerQuery2.get(GeoserverFacade.GEOM_COLUMN);
-    geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-    outerQuery.SELECT(geomAttribute);
-    outerQuery.WHERE(innerQuery2.aCharacter(GeoEntity.GEOID).EQ(innerQuery1.aCharacter(GeoEntity.GEOID)));
-
-    return outerQuery;
+    return strategy.getViewQuery(this);
   }
 
-  private ValueQuery getInnerQuery(QueryFactory factory)
-  {
-    MdAttributeDAOIF thematicMdAttribute = this.getMdAttributeDAO();
-    AllAggregationType thematicAggregation = this.getAggregationMethod();
-    Universal universal = this.getUniversal();
-    List<DashboardCondition> conditions = this.getConditions();
-
-    DashboardStyle style = this.getStyle();
-    // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
-    // but we need to define a non-thematic's behavior or even finalize
-    // on the semantics of a layer without a thematic attribute...which might
-    // not even exist!
-    if (style instanceof DashboardThematicStyle)
-    {
-      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
-      ValueQuery thematicQuery = QueryUtil.getThematicValueQuery(factory, thematicMdAttribute, thematicAggregation, universal, conditions);
-
-      MdAttributeDAOIF secondaryMdAttribute = tStyle.getSecondaryAttributeDAO();
-
-      if (secondaryMdAttribute != null)
-      {
-        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
-        thematicGeoId.setColumnAlias(GeoEntity.GEOID);
-
-        AttributeCharacter thematicLabel = thematicQuery.aCharacter(GeoEntity.DISPLAYLABEL);
-        thematicLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
-
-        Attribute thematicAttribute = thematicQuery.get(thematicMdAttribute.definesAttribute());
-        thematicAttribute.setColumnAlias(thematicMdAttribute.definesAttribute());
-
-        ValueQuery innerQuery = new ValueQuery(factory);
-        innerQuery.SELECT(thematicGeoId, thematicLabel, thematicAttribute);
-
-        if (!secondaryMdAttribute.getId().equals(thematicMdAttribute.getId()))
-        {
-          ValueQuery secondaryQuery = QueryUtil.getThematicValueQuery(factory, secondaryMdAttribute, tStyle.getSecondaryAttributeAggregationMethod(), universal, conditions);
-
-          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
-          secondaryGeoId.setColumnAlias(GeoEntity.GEOID);
-
-          Attribute secondaryAttribute = secondaryQuery.get(secondaryMdAttribute.definesAttribute());
-          secondaryAttribute.setColumnAlias(secondaryMdAttribute.definesAttribute());
-
-          innerQuery.SELECT(secondaryAttribute);
-          innerQuery.WHERE(thematicGeoId.LEFT_JOIN_EQ(secondaryGeoId));
-        }
-
-        return innerQuery;
-      }
-      else
-      {
-        return thematicQuery;
-      }
-    }
-    else
-    {
-      return new ValueQuery(factory);
-    }
-
-  }
-
-  private DashboardStyle getStyle()
+  public DashboardStyle getStyle()
   {
     OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
 
@@ -394,8 +268,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       this.setMdAttribute(tSource.getMdAttribute());
     }
   }
-  
-  
+
   @Override
   protected DashboardLayer newInstance()
   {
