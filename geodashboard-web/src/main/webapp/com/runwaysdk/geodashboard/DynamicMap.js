@@ -210,7 +210,20 @@
             category.isOntologyCat = true;
                         
             categories.push(category);
-          });          
+          });
+          
+          // Get the other category for the a layer create/edit form term tree
+          if($("#"+elementId).next().attr('id') === "other-cat-container"){
+	          var otherCat = new Object();
+	          otherCat.id = "cat-other-color-selector"; 
+	          otherCat.val = "Other";
+	          otherCat.color = GDB.gis.DynamicMap.prototype.rgb2hex($("#cat-other-color-selector").css("background-color"));
+	          otherCat.isOntologyCat = false;
+	          otherCat.otherCat = true;
+	          otherCat.otherEnabled =  $(".other-option-check-box").prop("checked");
+	                      
+	          categories.push(otherCat);
+          }
                 
           return categories;
         }
@@ -244,7 +257,7 @@
             category.isOntologyCat = false;
             
             if(checkOther) {
-             category.otherEnabled = $("#f53").prop("checked");
+             category.otherEnabled = $(".other-option-check-box").prop("checked");
              
              if(catInputElem[0].id === "cat-other"){
                  category.otherCat = true;
@@ -389,7 +402,15 @@
             view.setFeatureStrategy(layer.featureStrategy); // Reference layers should always be BASIC strategy
             
             view.layerExists = true;
-            view.setLayerIsActive(true);
+            
+            // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+            // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+                view.setLayerIsActive(true);
+            }
+            else{
+                view.setLayerIsActive(false);
+            }
             
             view.layerType = layer.layerType;
             view.universalId = uniId;
@@ -2342,13 +2363,41 @@
         if($("#ontology-tree").length > 0){
           this._renderLayerTermTree();
           attachCategoryColorPickers();
+          
+          // category 'other' option
+          $(".other-option-check-box").change(function() {
+            if($(this).is(":checked")) {
+            	$("#other-cat-container").show();
+            }
+            else{
+            	$("#other-cat-container").hide();
+            }     
+          });
+          
+          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
+          // The 'other' option is checked by default making this a valid sequence
+          var otherEnabled = true;
+          var catStore = $("#categories-input").data("categoriesstore");
+          if(catStore.length > 0){
+        	  var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+        	  for(var i=0; i<catJSON.length; i++){
+        		  var cat = catJSON[i];
+        		  if(cat.id === "cat-other-color-selector"){
+        			  otherEnabled = cat.otherEnabled;
+        		  }
+        	  }
+          }
+          
+          if(!otherEnabled){
+            $(".other-option-check-box").click();
+          }
         }
         else if($(".category-input").length > 0){
           this._addCategoryAutoComplete('#category-colors-container', '#f59');
           this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
             
           // category 'other' option
-          $("#f53").change(function() {
+          $(".other-option-check-box").change(function() {
             if($(this).is(":checked")) {
               $("#cat-other").parent().parent().show();
             }
@@ -2690,6 +2739,9 @@
           }
         });
         tree.render(elementId, nodes);
+        
+        // Set the color of the 'other' category selector icon
+        $("#cat-other-color-selector").css('background', that._getCategoryColor("", elementId, storeId));
       },
       
       /**
@@ -2715,6 +2767,9 @@
                 
                 if(catId === termId){
                   return cat.color;
+                }
+                else if(catId === "cat-other-color-selector"){
+                	return cat.color;
                 }
               }
             }
@@ -2767,7 +2822,7 @@
             // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
             // The 'other' option is checked by default making this a valid sequence
             if(checkOther && !catOtherEnabled){
-              $("#f53").click();
+              $(".other-option-check-box").click();
               $("#" + prefix + "-other").parent().parent().hide();
             }
           }

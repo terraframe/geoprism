@@ -477,8 +477,14 @@
          }
        
          var dateTime = this._formatter(view.getStartTime());
+         
+         // This isn't ideal but we need to indicate the time-zone for past runs. 
+         // The view has this information embeded in a string.
+         // Using MomentTimeZone lib could help with this.
+         var regExp = /\(([^)]+)\)/;
+         var timeZnCode = regExp.exec(view.getStartTime());
        
-         return  dateTime; 
+         return  dateTime + " " + timeZnCode[0]; 
       },
       
       render : function(parent) {

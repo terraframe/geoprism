@@ -612,6 +612,24 @@
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
+										<div id="other-cat-container">
+											<ul class="color-list other-cat">							                       <li>
+						                         <div class="category-container">
+							                       	 <div class="text category-input-container">
+							                       	    <gdb:localize var="other" key="Other"/>								                       	 
+							                       	 	<p id="cat-other-basic-label" >${other}</p>
+							                       	 </div>
+							                       	 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+	                  									<span id="cat-other-color-selector" class="ico ontology-category-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
+	                								 </a>
+					                   	 		 </div>
+						                       </li>	                       
+						                    </ul>
+						                </div>
+									  	<div class="check-block">
+								      		<input id="f56" class="other-option-check-box" type="checkbox" name="" checked></input>
+								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+								      	</div>
 									</div>
 		                      	</c:when>
 		                      	<c:otherwise>
@@ -718,7 +736,7 @@
 							                 <div class="style-options-block">
 <%-- 						                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
 											  	<div class="check-block">
-										      		<input id="f53" type="checkbox" name="" checked>
+										      		<input id="f53" class="other-option-check-box" type="checkbox" name="" checked>
 										        	<label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 										      	</div>
 						                     </div>
