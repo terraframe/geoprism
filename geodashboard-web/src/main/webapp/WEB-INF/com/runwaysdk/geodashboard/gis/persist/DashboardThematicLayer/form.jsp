@@ -168,20 +168,11 @@
                 <div class="box">
                   <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
                   <div class="select-box">
-<%-- 					<mjl:component param="layer" item="${layer}"> --%>
-	                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}">
-	                       <c:forEach items="${universals}" var="universal">
-		                         <c:choose>
-		                           <c:when test="${layer.universalId == universal.id}">
-				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option>
-		                           </c:when>
-		                           <c:otherwise>
-		                           		<option value="${universal.id}">${universal.displayLabel.value}</option>
-		                           </c:otherwise>
-		                         </c:choose>
+	                    <select id="f58" class="method-slect" name="layer.${layer.aggregationStrategyMd.name}">
+	                       <c:forEach items="${strategies}" var="strategy">
+		                     <option value="${strategy.value}" data-type="${strategy.aggregationType}">${strategy.displayLabel}</option>	                       
 	                      </c:forEach>
 	                    </select>
-<%-- 					</mjl:component> --%>
                   </div>
                 </div>
 <%-- 				<mjl:component param="style" item="${style}"> --%>

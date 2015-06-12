@@ -63,6 +63,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
@@ -870,6 +871,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return indices;
+  }
+
+  public GeoNode[] getGeoNodes(MdAttribute thematicAttribute)
+  {
+    MdAttributeDAOIF thematicAttributeDAO = MdAttributeDAO.get(thematicAttribute.getId());
+
+    return this.getGeoNodes(thematicAttributeDAO);
   }
 
   public GeoNode[] getGeoNodes(MdAttributeDAOIF thematicAttribute)

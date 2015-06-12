@@ -1,7 +1,7 @@
 package com.runwaysdk.geodashboard.dashboard;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -31,24 +31,41 @@ import com.runwaysdk.system.metadata.MdView;
 
 public class DashboardMetadataBuilder
 {
-  private static final String SUB_PACKAGE   = "view";
+  private static final String                SUB_PACKAGE   = "view";
 
-  private static final String CLASS_POSTFIX = "View";
+  private static final String                CLASS_POSTFIX = "View";
 
-  public MdView getOrCreateMdView(MdBusinessDAOIF _mdBusiness)
+  private HashMap<String, DashboardTypeInfo> typeInformation;
+
+  private Universal                          universal;
+
+  private String                             packageName;
+
+  private String                             label;
+
+  private String                             viewName;
+
+  public DashboardMetadataBuilder(MdBusinessDAOIF _mdBusiness)
   {
-    String packageName = _mdBusiness.getPackage() + "." + SUB_PACKAGE;
-    String typeName = _mdBusiness.getTypeName() + CLASS_POSTFIX;
-    String label = _mdBusiness.getDisplayLabel(Session.getCurrentLocale());
-
-    return getOrCreateMdView(packageName, typeName, label);
+    this.packageName = _mdBusiness.getPackage() + "." + SUB_PACKAGE;
+    this.viewName = _mdBusiness.getTypeName() + CLASS_POSTFIX;
+    this.label = _mdBusiness.getDisplayLabel(Session.getCurrentLocale());
+    this.typeInformation = new HashMap<String, DashboardTypeInfo>();
   }
 
-  public MdView getOrCreateMdView(String packageName, String typeName, String label)
+  public DashboardMetadataBuilder(String packageName, String viewName, String label)
+  {
+    this.packageName = packageName;
+    this.viewName = viewName;
+    this.label = label;
+    this.typeInformation = new HashMap<String, DashboardTypeInfo>();
+  }
+
+  private MdView getOrCreateMdView()
   {
     try
     {
-      return MdView.getMdView(packageName + "." + typeName);
+      return MdView.getMdView(packageName + "." + viewName);
     }
     catch (Exception e)
     {
@@ -56,56 +73,11 @@ public class DashboardMetadataBuilder
       MdView mdView = new MdView();
       mdView.getDisplayLabel().setDefaultValue(label);
       mdView.setPackageName(packageName);
-      mdView.setTypeName(typeName);
+      mdView.setTypeName(viewName);
       mdView.apply();
 
       return mdView;
     }
-  }
-
-  public void addDashboard(Dashboard _dashboard, MdView _mdView, Universal _universal, Map<String, DashboardInfo> map)
-  {
-    Set<Entry<String, DashboardInfo>> entries = map.entrySet();
-
-    for (Entry<String, DashboardInfo> entry : entries)
-    {
-      MdBusinessDAOIF mdBusinessDAO = MdBusinessDAO.getMdBusinessDAO(entry.getKey());
-
-      DashboardInfo info = entry.getValue();
-      String[] attributes = info.getAttributes();
-
-      MetadataWrapper mWrapper = getOrCreateMetadataWrapper(_mdView, _universal);
-
-      DashboardMetadata dm = _dashboard.addMetadata(mWrapper);
-      dm.setListOrder(info.getIndex());
-      dm.apply();
-
-      int listOrder = 0;
-
-      for (String attributeName : attributes)
-      {
-        AttributeWrapper unitWrapper = getOrCreateAttributeWrapper(info, _mdView, mdBusinessDAO, attributeName);
-
-        MdAttributeConcreteDAOIF mdAttribute = mdBusinessDAO.definesAttribute(attributeName);
-
-        if (!this.isGeoEntityAttribute(mdAttribute))
-        {
-          DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
-          unitWrapperRel.setListOrder(listOrder++);
-          unitWrapperRel.apply();
-        }
-      }
-
-      List<GeoNode> nodes = info.getNodes();
-
-      for (GeoNode node : nodes)
-      {
-        // Associate the node with the MetadataWrapper
-        MetadataGeoNode relationship = new MetadataGeoNode(mWrapper, node);
-        relationship.apply();
-      }
-    }
-
   }
 
   private boolean isGeoEntityAttribute(MdAttributeConcreteDAOIF mdAttribute)
@@ -157,7 +129,7 @@ public class DashboardMetadataBuilder
 
   }
 
-  protected AttributeWrapper getOrCreateAttributeWrapper(DashboardInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
+  protected AttributeWrapper getOrCreateAttributeWrapper(DashboardTypeInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
   {
     MdAttributeVirtual mdAttributeVirtual = getOrCreateMdAttributeVirtual(info, mdView, mdBusinessDAO, attributeName);
 
@@ -186,7 +158,7 @@ public class DashboardMetadataBuilder
     }
   }
 
-  private MdAttributeVirtual getOrCreateMdAttributeVirtual(DashboardInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
+  private MdAttributeVirtual getOrCreateMdAttributeVirtual(DashboardTypeInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
   {
     MdAttributeConcrete mdAttributeConcrete = DashboardMetadataBuilder.getMdAttributeConcrete(mdBusinessDAO, attributeName);
 
@@ -231,4 +203,59 @@ public class DashboardMetadataBuilder
     return MdAttributeConcrete.getByKey(mdConcreteDAO.getKey());
   }
 
+  public void addType(String type, DashboardTypeInfo info)
+  {
+    this.typeInformation.put(type, info);
+  }
+
+  public void setUniversal(Universal universal)
+  {
+    this.universal = universal;
+  }
+
+  public void build(Dashboard _dashboard)
+  {
+    MdView mdView = this.getOrCreateMdView();
+
+    Set<Entry<String, DashboardTypeInfo>> entries = this.typeInformation.entrySet();
+
+    for (Entry<String, DashboardTypeInfo> entry : entries)
+    {
+      MdBusinessDAOIF mdBusinessDAO = MdBusinessDAO.getMdBusinessDAO(entry.getKey());
+
+      DashboardTypeInfo info = entry.getValue();
+      List<String> attributes = info.getAttributes();
+
+      MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdView, this.universal);
+
+      DashboardMetadata dm = _dashboard.addMetadata(mWrapper);
+      dm.setListOrder(info.getIndex());
+      dm.apply();
+
+      int listOrder = 0;
+
+      for (String attributeName : attributes)
+      {
+        AttributeWrapper unitWrapper = this.getOrCreateAttributeWrapper(info, mdView, mdBusinessDAO, attributeName);
+
+        MdAttributeConcreteDAOIF mdAttribute = mdBusinessDAO.definesAttribute(attributeName);
+
+        if (info.isDashboardAttribute(attributeName) && !this.isGeoEntityAttribute(mdAttribute))
+        {
+          DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
+          unitWrapperRel.setListOrder(listOrder++);
+          unitWrapperRel.apply();
+        }
+      }
+
+      List<GeoNode> nodes = info.getNodes();
+
+      for (GeoNode node : nodes)
+      {
+        // Associate the node with the MetadataWrapper
+        MetadataGeoNode relationship = new MetadataGeoNode(mWrapper, node);
+        relationship.apply();
+      }
+    }
+  }
 }
