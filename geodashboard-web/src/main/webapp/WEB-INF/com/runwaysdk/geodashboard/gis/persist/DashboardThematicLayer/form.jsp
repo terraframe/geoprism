@@ -54,6 +54,7 @@
               </div>
               <div class="holder">
 <mjl:component param="layer" item="${layer}">
+                <input  id="layer.geoNode" name="layer.geoNode"  type="hidden" value="${node.id}" />
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
                   <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
@@ -168,7 +169,7 @@
                 <div class="box">
                   <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
                   <div class="select-box">
-	                    <select id="f58" class="method-slect" name="layer.${layer.aggregationStrategyMd.name}">
+	                    <select id="f58" class="method-slect">
 	                       <c:forEach items="${strategies}" var="strategy">
 		                     <option value="${strategy.value}" data-type="${strategy.aggregationType}">${strategy.displayLabel}</option>	                       
 	                      </c:forEach>
@@ -618,7 +619,7 @@
 						                    </ul>
 						                </div>
 									  	<div class="check-block">
-								      		<input id="f56" class="other-option-check-box" type="checkbox" name="" checked></input>
+								      		<input id="f56" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
 								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 								      	</div>
 									</div>

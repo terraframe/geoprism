@@ -193,14 +193,14 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
       req.setAttribute("nodes", nodes);
-      
+
       // Making an assumption that the user has decided to select the first geo node
       GeoNodeDTO node = nodes[0];
+      req.setAttribute("node", node);
 
       // Get the universals, sorted by their ordering in the universal tree.
       AggregationStrategyViewDTO[] strategies = AggregationStrategyViewDTO.getAggregationStrategies(clientRequest, node);
       req.setAttribute("strategies", strategies);
-
 
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
@@ -386,12 +386,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
 
-  // @Override
-  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, DashboardConditionDTO[] conditions) throws IOException, ServletException
+  @Override
+  public void applyWithStyle(DashboardThematicLayerDTO layer, DashboardStyleDTO style, String mapId, AggregationStrategyDTO strategy, DashboardConditionDTO[] conditions) throws IOException, ServletException
   {
     try
     {
-      String layerJSON = layer.applyWithStyle(style, mapId, conditions);
+      String layerJSON = layer.applyWithStyleAndStrategy(style, mapId, strategy, conditions);
 
       JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
       jsonReturn.setInformation(this.getClientRequest().getInformation());

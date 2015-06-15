@@ -15,72 +15,62 @@
           <mdParameter name="conditions" order="0" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
         </mdMethod>
       </mdBusiness>
-      
-      		<enumerationMaster
-				name="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="Aggregation Type">
-			</enumerationMaster>
 
-			<object key="SUM"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="SUM" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Sum" />
-				</attributeStruct>
-			</object>
+      <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="Aggregation Type">
+      </enumerationMaster>
 
-			<object key="MIN"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="MIN" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Min" />
-				</attributeStruct>
-			</object>
+      <object key="SUM" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="SUM" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Sum" />
+        </attributeStruct>
+      </object>
 
-			<object key="MAX"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="MAX" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Max" />
-				</attributeStruct>
-			</object>
+      <object key="MIN" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="MIN" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Min" />
+        </attributeStruct>
+      </object>
 
-			<object key="AVG"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="AVG" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Avg" />
-				</attributeStruct>
-			</object>
-			
-			<object key="MAJORITY"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="MAJORITY" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Majority" />
-				</attributeStruct>
-			</object>
-			
-			<object key="MINORITY"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="MINORITY" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Minority" />
-				</attributeStruct>
-			</object>
-			
-			<object key="DISTRIBUTION"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
-				<attribute name="enumName" value="DISTRIBUTION" />
-				<attributeStruct name="displayLabel">
-					<attribute name="defaultLocale" value="Distribution" />
-				</attributeStruct>
-			</object>
+      <object key="MAX" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="MAX" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Max" />
+        </attributeStruct>
+      </object>
 
-			<mdEnumeration
-				name="com.runwaysdk.geodashboard.gis.persist.AllAggregationType"
-				type="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="All Aggregation Type">
-				<includeAll></includeAll>
-			</mdEnumeration>
+      <object key="AVG" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="AVG" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Avg" />
+        </attributeStruct>
+      </object>
+
+      <object key="MAJORITY" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="MAJORITY" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Majority" />
+        </attributeStruct>
+      </object>
+
+      <object key="MINORITY" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="MINORITY" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Minority" />
+        </attributeStruct>
+      </object>
+
+      <object key="DISTRIBUTION" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+        <attribute name="enumName" value="DISTRIBUTION" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Distribution" />
+        </attributeStruct>
+      </object>
+
+      <mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" type="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="All Aggregation Type">
+        <includeAll></includeAll>
+      </mdEnumeration>
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" isAbstract="true" label="Layer" generateController="true" cacheAlgorithm="everything">
         <attributes>
@@ -93,51 +83,57 @@
           <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
           <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
           <char name="viewName" size="64" label="View Name" description="The name of the DB view this layer maps to." required="false" />
-		  <boolean name="layerEnabled" required="true" defaultValue="true" label="Layer Enabled" />
-		  <boolean name="BBoxIncluded" required="true" defaultValue="true" label="BBox Inluded" />
+          <boolean name="layerEnabled" required="true" defaultValue="true" label="Layer Enabled" />
+          <boolean name="BBoxIncluded" required="true" defaultValue="true" label="BBox Inluded" />
 
         </attributes>
-        
+
         <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="java.lang.String">
           <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
           <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
           <mdParameter name="conditions" label="Conditions" order="2" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
         </mdMethod>
-          
+
         <mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
           <mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer" />
           <mdParameter name="legendYPosition" label="legendYPosition" order="1" type="java.lang.Integer" />
           <mdParameter name="groupedInLegend" label="groupedInLegend" order="2" type="java.lang.Boolean" />
         </mdMethod>
       </mdBusiness>
-      
+
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" label="Aggregation" isAbstract="true" generateController="false" />
-      
+
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy" label="Universal Aggregation" generateController="false" extends="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy">
         <attributes>
-          <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />        
+          <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
         </attributes>
       </mdBusiness>
-      
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy" label="Geometry Aggregation" generateController="false" extends="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy"/>
-      
+
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy" label="Geometry Aggregation" generateController="false" extends="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
+
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer" label="Thematic Layer" extends="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" generateController="true">
         <attributes>
-        	<enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="false" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
-        	<reference name="mdAttribute" label="MdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
-        	<reference name="geoNode" label="Geo node" required="true" type="com.runwaysdk.system.gis.geo.GeoNode" />
-        	<reference name="aggregationStrategy" label="Aggregation strategy" required="true" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
+          <enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="false" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
+          <reference name="mdAttribute" label="MdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
+          <reference name="geoNode" label="Geo node" required="true" type="com.runwaysdk.system.gis.geo.GeoNode" />
+          <reference name="aggregationStrategy" label="Aggregation strategy" required="true" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
         </attributes>
+        <mdMethod name="applyWithStyleAndStrategy" label="Apply With Style and strategy" static="false" returnType="java.lang.String">
+          <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+          <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
+          <mdParameter name="strategy" label="Strategy" order="2" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
+          <mdParameter name="conditions" label="Conditions" order="3" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
+        </mdMethod>
       </mdBusiness>
-      
-      
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer" label="Layer" extends="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" generateController="true" >
+
+
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer" label="Layer" extends="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" generateController="true">
         <attributes>
-          <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />        
+          <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
         </attributes>
       </mdBusiness>
-      
-      
+
+
 
       <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View">
         <attributes>
@@ -158,7 +154,7 @@
           <char name="featureStrategy" label="Feature Strategy" size="50" required="true" />
         </attributes>
       </mdView>
-      
+
       <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView" label="Dashboard Reference Layer View">
         <attributes>
           <virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
@@ -190,7 +186,7 @@
         <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
         <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
       </mdRelationship>
-      
+
       <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
 
       <object key="BASIC" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
@@ -266,7 +262,7 @@
           <char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
           <double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
-          
+
           <double name="pointStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
         </attributes>
       </mdBusiness>
@@ -285,7 +281,7 @@
           <text name="styleCategories" label="Category styling for layers" required="false" />
           <reference name="secondaryAttribute" label="Secondary attribute" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
           <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
-          <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />          
+          <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />
         </attributes>
       </mdBusiness>
 
@@ -317,13 +313,13 @@
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
       <object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
       <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.viewName" type="com.runwaysdk.system.metadata.MdAttribute" />
-	  <object key="com.runwaysdk.geodashboard.gis.persist.AggregationType" type="com.runwaysdk.system.metadata.MdBusiness" />
-	  <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.aggregationType" type="com.runwaysdk.system.metadata.MdAttribute" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.AggregationType" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.aggregationType" type="com.runwaysdk.system.metadata.MdAttribute" />
     </delete>
   </undoIt>
 </version>

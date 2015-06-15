@@ -41,7 +41,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   }
 
   @Transaction
-  public void applyAll(DashboardStyle style, String mapId, DashboardCondition[] conditions)
+  public void applyAll(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
   {
     boolean isNew = this.isNew();
 
@@ -57,7 +57,26 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
     }
 
+    // If there is an existing aggregation strategy then delete it and use the new one
+    AggregationStrategy existing = this.getAggregationStrategy();
+
+    strategy.apply();
+
+    this.setAggregationStrategy(strategy);
+
     super.applyAll(style, mapId, conditions);
+
+    if (existing != null)
+    {
+      existing.delete();
+    }
+  }
+
+  public String applyWithStyleAndStrategy(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
+  {
+    this.applyAll(style, mapId, strategy, conditions);
+
+    return this.publish();
   }
 
   /**

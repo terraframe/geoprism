@@ -95,13 +95,13 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   @Override
   public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
-    return this.applyWithStyleAndPublish(style, mapId, conditions);
-  }
-
-  private String applyWithStyleAndPublish(DashboardStyle style, String mapId, DashboardCondition[] conditions)
-  {
     this.applyAll(style, mapId, conditions);
 
+    return this.publish();
+  }
+
+  protected String publish()
+  {
     /*
      * We have to make sure that the transaction has ended before we can publish to geoserver, otherwise our database
      * view won't exist yet.
