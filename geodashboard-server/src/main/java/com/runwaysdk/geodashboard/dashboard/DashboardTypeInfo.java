@@ -8,9 +8,11 @@ import java.util.Map;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.system.gis.geo.GeoNode;
 
-public class DashboardInfo implements Reloadable
+public class DashboardTypeInfo implements Reloadable
 {
-  private String[]            attributes;
+  private List<String>        attributes;
+
+  private List<String>        dashboardAttributes;
 
   private Integer             index;
 
@@ -18,12 +20,31 @@ public class DashboardInfo implements Reloadable
 
   private List<GeoNode>       nodes;
 
-  public DashboardInfo(String[] _attributes, Integer _index)
+  public DashboardTypeInfo(Integer _index)
   {
-    this.attributes = _attributes;
     this.index = _index;
     this.labels = new HashMap<String, String>();
     this.nodes = new LinkedList<GeoNode>();
+    this.attributes = new LinkedList<String>();
+    this.dashboardAttributes = new LinkedList<String>();
+  }
+
+  public void add(String... attributeNames)
+  {
+    for (String attributeName : attributeNames)
+    {
+      this.dashboardAttributes.add(attributeName);
+    }
+
+    this.addViewOnlyAttribute(attributeNames);
+  }
+
+  public void addViewOnlyAttribute(String... attributeNames)
+  {
+    for (String attributeName : attributeNames)
+    {
+      this.attributes.add(attributeName);
+    }
   }
 
   public Integer getIndex()
@@ -36,14 +57,14 @@ public class DashboardInfo implements Reloadable
     this.index = _index;
   }
 
-  public String[] getAttributes()
+  public List<String> getDashboardAttribute()
   {
-    return attributes;
+    return dashboardAttributes;
   }
 
-  public void setAttributes(String[] _attributes)
+  public List<String> getAttributes()
   {
-    this.attributes = _attributes;
+    return attributes;
   }
 
   public void setLabel(String _attributeName, String _label)
@@ -64,6 +85,11 @@ public class DashboardInfo implements Reloadable
   public List<GeoNode> getNodes()
   {
     return nodes;
+  }
+
+  public boolean isDashboardAttribute(String attributeName)
+  {
+    return this.dashboardAttributes.contains(attributeName);
   }
 
 }

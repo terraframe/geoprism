@@ -1,0 +1,31 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <create>
+          <mdMethod name="getGeoNodes" label="Get geo nodes" returnType="com.runwaysdk.system.gis.geo.GeoNode[]" static="false">
+            <mdParameter name="thematicAttribute" label="Thematic attribute" order="0" type="com.runwaysdk.system.metadata.MdAttribute" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+    <create>
+      <mdView name="com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView" label="Aggregation strategy view">
+        <attributes>
+          <text name="displayLabel" label="Display label" />
+          <text name="value" label="Value" />
+          <text name="aggregationType" label="Aggregation type" />
+        </attributes>
+        <mdMethod name="getAggregationStrategies" returnType="com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView[]" static="true">
+          <mdParameter name="node" label="Geo node" order="0" type="com.runwaysdk.system.gis.geo.GeoNode" />
+        </mdMethod>
+      </mdView>
+    </create>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.Dashboard" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView" type="com.runwaysdk.system.metadata.MdView" />
+    </delete>
+  </undoIt>
+</version>

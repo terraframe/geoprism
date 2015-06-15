@@ -32,7 +32,8 @@
       DASHBOARD_MODAL : "#dashboardModal01",
       TO_DATE : 'to-field',
       FROM_DATE : 'from-field',
-      SRID : "EPSG:4326"
+      SRID : "EPSG:4326",
+      GEOAGGDROPDOWN : "#f58"
     },
     
     Instance : {
@@ -2182,7 +2183,7 @@
           options = [];
         }
       
-        var html = '<select id="secondaryAggregation" class="method-slect" name="secondaryAggregation">';
+        var html = '<select id="secondaryAggregation" class="method-select" name="secondaryAggregation">';
         
         for(var i = 0; i < options.length; i++) {
           var option = options[i];
@@ -2656,6 +2657,25 @@
           }
         });
         
+        
+        $("#geonode-select").change(function(){ 
+        	var selectedVal = $("#geonode-select option:selected").val();
+            
+        	var clientRequest = new Mojo.ClientRequest({
+                  onSuccess : function(data) {
+                  	that._setGeographicAggregationDropdown(data);
+                  },
+                  onFailure : function(e) {
+                    that.handleException(e);
+                   
+                  }
+                });
+                
+                // Persist legend position to the db
+                com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategiesJSON(clientRequest, selectedVal);
+          });
+     
+        
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
           var value = $(this).val();
@@ -2673,6 +2693,25 @@
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
         modal.modal('show');
+      },
+      
+      
+      /**
+       * Populate the geographic aggregation dropdown
+       * 
+       */
+      _setGeographicAggregationDropdown : function(data) {
+    	  var aggregations = JSON.parse(decodeURIComponent(data));
+    	  var el = $(DynamicMap.GEOAGGDROPDOWN).html("");
+    	  
+    	  for(var i=0; i<aggregations.length; i++){
+    		  var agg = aggregations[i];
+    		  el.append($("<option></option>").attr("value",agg.id).text(agg.label)); 
+    	  }
+    	  
+    	  jcf.customForms.refreshElement(el);
+//    	  jcf.customForms.replaceAll(el.get(0));
+    	  
       },
       
       /**

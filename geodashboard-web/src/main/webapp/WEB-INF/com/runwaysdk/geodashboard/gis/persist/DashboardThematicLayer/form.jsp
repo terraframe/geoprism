@@ -170,20 +170,20 @@
               <div class="holder add">
               	<mjl:component param="layer" item="${layer}">
                 <div class="box">
-                  <label for="f60"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
+                  <label for="geonode-select"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
                   <div class="select-box">
-<%-- 	                    <select id="f60" class="method-slect" name="layer.${layer.universalMd.name}"> --%>
-<%-- 	                       <c:forEach items="${universals}" var="universal"> --%>
-<%-- 		                         <c:choose> --%>
-<%-- 		                           <c:when test="${layer.universalId == universal.id}"> --%>
-<%-- 				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option> --%>
-<%-- 		                           </c:when> --%>
-<%-- 		                           <c:otherwise> --%>
-<%-- 		                           		<option value="${universal.id}">${universal.displayLabel.value}</option> --%>
-<%-- 		                           </c:otherwise> --%>
-<%-- 		                         </c:choose> --%>
-<%-- 	                      </c:forEach> --%>
-<!-- 	                    </select> -->
+	                    <select id="geonode-select" class="method-select" name="layer.${layer.id}">
+	                       <c:forEach items="${nodes}" var="node">
+		                         <c:choose>
+		                           <c:when test="${layer.geoNodeId == node.id}">
+				                         <option value="${node.id}" data-type="${node.type}" selected="selected">${node.geoEntityAttribute.displayLabel}</option>
+		                           </c:when>
+		                           <c:otherwise>
+		                           		<option value="${node.id}" data-type="${node.type}" >${node.geoEntityAttribute.displayLabel}</option>
+		                           </c:otherwise>
+		                         </c:choose>
+	                      </c:forEach>
+	                    </select>
                   </div>
                 </div>
 				</mjl:component>
@@ -200,7 +200,8 @@
                 <div class="box">
                   <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
                   <div class="select-box">
-<%-- 	                    <select id="f58" class="method-slect" name="layer.${layer.universalMd.name}"> --%>
+
+<%-- 	                    <select id="f58" class="method-select" name="layer.${layer.universalMd.name}"> --%>
 <%-- 	                       <c:forEach items="${universals}" var="universal"> --%>
 <%-- 		                         <c:choose> --%>
 <%-- 		                           <c:when test="${layer.universalId == universal.id}"> --%>
@@ -212,12 +213,19 @@
 <%-- 		                         </c:choose> --%>
 <%-- 	                      </c:forEach> --%>
 <!-- 	                    </select> -->
+
+	                    <select id="f58" class="method-select" name="layer.${layer.aggregationStrategyMd.name}">
+	                    	 <option value="na" data-type="">na</option>
+<%-- 	                       <c:forEach items="${strategies}" var="strategy"> --%>
+<%-- 		                     <option value="${strategy.value}" data-type="${strategy.aggregationType}">${strategy.displayLabel}</option>	                        --%>
+<%-- 	                      </c:forEach> --%>
+	                    </select>
                   </div>
                 </div>
 	                <div class="box">
 	                  <label for="f59"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
 	                  <div class="select-box">
-	                    <select id="f59" class="method-slect" name="layer.${layer.aggregationTypeMd.name}">
+	                    <select id="f59" class="method-select" name="layer.${layer.aggregationTypeMd.name}">
 	                      <c:forEach items="${aggregations}" var="aggregation">
 	                         	<c:choose>
 	                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}">
@@ -540,7 +548,7 @@
 	                      <div class="cell-holder">	                    
 	                        <label class="secondary-label" for="secondaryAttribute" ><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
   	                        <div id="secondary-select-box" class="select-box">
-	                          <select id="secondaryAttribute" class="method-slect" name="secondaryAttribute">
+	                          <select id="secondaryAttribute" class="method-select" name="secondaryAttribute">
 	                            <option ${style.secondaryAttributeId == '' ? 'selected="selected"' : ''} value=""><gdb:localize key="DashboardLayer.form.none"/></option>
 	                            <c:forEach items="${secondaryAttributes}" var="secondaryAttribute">
 		                          <option ${style.secondaryAttributeId == secondaryAttribute.mdAttributeId ? 'selected="selected"' : ''} value="${secondaryAttribute.mdAttributeId}" data-type="${secondaryAttribute.attributeType}">${secondaryAttribute.displayLabel}</option>

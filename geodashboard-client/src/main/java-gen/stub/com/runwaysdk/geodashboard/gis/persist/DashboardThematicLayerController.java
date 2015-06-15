@@ -3,7 +3,6 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
-import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.gis.geo.GeoNodeDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
@@ -177,11 +176,6 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
       req.setAttribute("fonts", fonts);
 
-      // Get the universals, sorted by their ordering in the universal tree.
-      List<UniversalDTO> universals = Arrays.asList(DashboardMapDTO.getUniversalAggregations(clientRequest, mapId, mdAttributeId));
-
-      req.setAttribute("universals", universals);
-
       // selected attribute
       MdAttributeDTO mdAttr;
 
@@ -193,6 +187,20 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       { // edit
         mdAttr = ( (MdAttributeDTO) tLayer.getMdAttribute() );
       }
+
+      DashboardMapDTO map = DashboardMapDTO.get(clientRequest, mapId);
+      DashboardDTO dashboard = map.getDashboard();
+
+      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
+      req.setAttribute("nodes", nodes);
+      
+      // Making an assumption that the user has decided to select the first geo node
+      GeoNodeDTO node = nodes[0];
+
+      // Get the universals, sorted by their ordering in the universal tree.
+      AggregationStrategyViewDTO[] strategies = AggregationStrategyViewDTO.getAggregationStrategies(clientRequest, node);
+      req.setAttribute("strategies", strategies);
+
 
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));

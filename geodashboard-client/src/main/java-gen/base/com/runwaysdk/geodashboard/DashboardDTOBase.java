@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 419426911)
+@com.runwaysdk.business.ClassSignature(hash = 1792793174)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 419426911;
+  private static final long serialVersionUID = 1792793174;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -795,6 +795,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{id, text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoEntitySuggestions", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final com.runwaysdk.system.gis.geo.GeoNodeDTO[] getGeoNodes(com.runwaysdk.system.metadata.MdAttributeDTO thematicAttribute)
+  {
+    String[] _declaredTypes = new String[]{"com.runwaysdk.system.metadata.MdAttribute"};
+    Object[] _parameters = new Object[]{thematicAttribute};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoNodes", _declaredTypes);
+    return (com.runwaysdk.system.gis.geo.GeoNodeDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final com.runwaysdk.system.gis.geo.GeoNodeDTO[] getGeoNodes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.system.metadata.MdAttributeDTO thematicAttribute)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.system.metadata.MdAttribute"};
+    Object[] _parameters = new Object[]{id, thematicAttribute};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoNodes", _declaredTypes);
+    return (com.runwaysdk.system.gis.geo.GeoNodeDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.String getMapId()

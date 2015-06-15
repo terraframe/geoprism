@@ -1983,14 +1983,14 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	font-size:12px;
 	line-height:15px;
 }
-.select-method-slect.select-area{
+.select-method-select.select-area{
 	width:100% !important;
 	background:#ddd;
 	font-size:12px;
 	line-height:18px;
 	margin:0;
 }
-.select-method-slect.select-area .center{
+.select-method-select.select-area .center{
 	padding:6px 30px 6px 10px;
 	overflow:hidden;
 	text-overflow:ellipsis;
@@ -1999,16 +1999,16 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	max-width:100%;
 }
 .modal-form .holder.add{padding-top:14px;}
-.select-method-slect.select-area .select-opener{
+.select-method-select.select-area .select-opener{
 	top:11px;
 	right:8px;
 }
-.select-options.drop-method-slect{
+.select-options.drop-method-select{
 	font-size:12px;
 	line-height:15px;
 }
-.select-options.drop-method-slect .drop-holder{padding:4px 0;}
-.select-options.drop-method-slect .select-options ul a{padding:2px 10px;}
+.select-options.drop-method-select .drop-holder{padding:4px 0;}
+.select-options.drop-method-select .select-options ul a{padding:2px 10px;}
 
 .modal-form .label-holder.style02{padding-top:12px;}
 .modal-form .label-holder.style03{padding-top:9px;}

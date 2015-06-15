@@ -12,6 +12,7 @@ import com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO;
 import com.runwaysdk.geodashboard.gis.ClassifierExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO;
+import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
@@ -45,6 +46,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
+import com.runwaysdk.system.gis.geo.GeoNodeDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.SynonymDTO;
@@ -193,6 +195,8 @@ public class JavascriptUtil implements Reloadable
     types.add(ReportItemDTO.CLASS);
     types.add(ReportItemViewDTO.CLASS);
     types.addAll(JavascriptUtil.getOntologyTypes());
+    types.add(GeoNodeDTO.CLASS);
+    types.add(AggregationStrategyViewDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
