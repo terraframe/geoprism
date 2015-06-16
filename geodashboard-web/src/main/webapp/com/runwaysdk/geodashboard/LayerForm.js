@@ -2,7 +2,10 @@
   var CategoryWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryWidget', {
     
     IsAbstract : true,
-    
+    Constants : {
+      OTHER : 'other',
+      UNIVERSAL_AGGREGATION: "#f58"      
+    },    
     Instance : {
       
       render : {
@@ -11,25 +14,77 @@
       getCategories:  {
         IsAbstract : true
       },
+      attachCategoryColorPickers : function (){
+        // ontology category layer type colors
+        $(".category-color-icon").colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);
+          }
+        });
+      }
     }
   });
   
   var CategoryTreeWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryListWidget', {
     Extends : CategoryWidget,    
     Instance : {
-      initialize : function(elementId, storeId, checkOther, prefix, parser){
+      initialize : function(map, elementId, storeId, checkOther, prefix, mdAttributeId, categoryType, aggregationId){
+      this._map = map;
         this._elementId = elementId;
         this._storeId = storeId;        
         this._checkOther = checkOther;    
         this._prefix = prefix;
-        this._parser = parser;
+        this._mdAttributeId = mdAttributeId;
+        this._categoryType = categoryType;
+        this._aggregationId = aggregationId;
+        
+        this._parser = Globalize.numberParser();
+        this._formatter = Globalize.numberFormatter();
       },
-      _getImpl : function() {        
+      getImpl : function() {        
           return $(this._elementId);
       },      
       setCheckOther : function(checkOther) {
         this._checkOther = checkOther;  
       },
+      
+      _getCategoryHTML : function(index) {
+        
+        var autocomplete = 'on';
+        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
+        var disabled = "";
+        var color = "#000000"
+        var id = this._prefix + '-' + index;
+        
+        if(index == CategoryWidget.OTHER) {
+          autocomplete = 'off';
+          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other", "Other");
+          disabled = "disabled";
+          color = "#737678";
+        }       
+                  
+        var html = '<li>' +
+          '<div class="category-container">' +
+            '<div class="text category-input-container">' +
+              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
+            '</div>' +
+            '<div class="cell">' +
+              '<div class="color-holder">' +
+                '<a href="#" class="color-choice">' +
+                  '<span id="' + id  + '-color-selector" class="ico cat-color-selector" style="background:' + color +'">icon</span>' +
+                  '<span class="arrow">arrow</span>' +
+                '</a>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</li>';
+            
+        return html;        
+      },
+        
+      
       /**
        * Adds the value and color setting for saved categories on the layer create/edit form.
        * The categories data is appended to the #categories-input element as json.
@@ -37,47 +92,117 @@
        */
       render : function() {
         
-        var catsJSONObj = $(this._storeId).data("categoriesstore");
+        var html = '<ul class="color-list">';
+        html += this._getCategoryHTML(1);
+        html += this._getCategoryHTML(2);
+        html += this._getCategoryHTML(3);
+        html += this._getCategoryHTML(4);
+        html += this._getCategoryHTML(5);
+
+        if(this._checkOther) {
+          html += this._getCategoryHTML(CategoryWidget.OTHER);
+        }
+        html += '</ul>';
+      
+        this.getImpl().html(html);
         
+        // Load the existing data 
+        this._addCategoryAutoComplete();        
+        this._loadExistingCategories();
+        
+        this.attachCategoryColorPickers();
+      },
+      
+      /**
+       * Hooks the auto-complete functionality to the category field input fields
+       */
+      _addCategoryAutoComplete : function(){
+        
+        var that = this;
+        
+        // Hook up the auto-complete for category input options new layers
+        // existing layers have a seperate autocomplete hookup that queries 
+        // the layer database view directly. 
+        this.getImpl().find('.category-input').each(function(){
+          
+          var mdAttribute = $(this).data('mdattributeid');  
+          var categoryType = $(this).data('type');
+          
+          $(this).autocomplete({
+            source: function( request, response ) {
+              var req = new Mojo.ClientRequest({
+                onSuccess : function(results){
+                  
+                  // We need to localize the results for numbers
+                  if(categoryType == 'number') {
+                    for(var i = 0; i < results.length; i++) {
+                      var number = parseFloat(results[i]);
+                      var localized = that._formatter(number);
+                      
+                      results[i] = localized;
+                    }
+                  }
+                  
+                  response( results );
+                },
+                onFailure : function(e){
+                  that.handleException(e);
+                }
+              });
+              
+              // values are scraped from hidden input elements on the layer create form
+              var universalId = $(CategoryWidget.UNIVERSAL_AGGREGATION).val();
+              var aggregationVal = $(that._aggregationId).val();
+              var conditions = that._map.getCurrentConditions();
+              
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
+            },
+            minLength: 1
+          });
+        });
+      },
+      _loadExistingCategories : function() {
+        var catsJSONObj = $(this._storeId).data("categoriesstore");
+          
         if(catsJSONObj){
           catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-          
+            
           var catsJSONArr = catsJSONObj.catLiElems;
-          
+            
           if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
             catsJSONArr = catsJSONObj;
           }          
-          
+            
           var catInputId;
           var catOtherEnabled = true;
-            
+              
           for(var i=0; i<catsJSONArr.length; i++){
             var cat = catsJSONArr[i];
-              
+                
             // Controlling for 'other' category 
             if(cat.otherCat){
-              catInputId = this._prefix + "-other";
+              catInputId = this._prefix + "-" + CategoryWidget.OTHER;
             }
             else{
-              catInputId = this._prefix + (i+1);
+              catInputId = this._prefix + "-" + (i+1);
             }
-              
+                
             var catColorSelectorId = catInputId + "-color-selector";
             $("#"+catInputId).val(cat.val);
             $("#"+catColorSelectorId).css("background", cat.color);
             catOtherEnabled = cat.otherEnabled;
           }
-            
+              
           // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
           // The 'other' option is checked by default making this a valid sequence
-          if(checkOther && !catOtherEnabled){
+          if(this._checkOther && !catOtherEnabled){
             $(".other-option-check-box").click();
-            $("#" + this._prefix + "-other").parent().parent().hide();
+            $("#" + this._prefix + "-" + CategoryWidget.OTHER).parent().parent().hide();
           }
         }
-      },
+      },        
       getCategories: function () {    
-        var elements = this._getImpl().find(".category-container");
+        var elements = this.getImpl().find(".category-container");
         var categories = [];        
             
         for(var i=0; i< elements.length; i++){
@@ -143,7 +268,7 @@
         }
       },
       
-      _getImpl : function() {        
+      getImpl : function() {        
         return $(this._elementId);
       },
       
@@ -154,7 +279,7 @@
       render : function(rootTerms, nodes) {
         
         if(rootTerms == null) {
-          var rootsJSON = this._getImpl().data("roots");
+          var rootsJSON = this.getImpl().data("roots");
           rootTerms = rootsJSON.roots;        
         }
         
@@ -210,6 +335,8 @@
         
         // Set the color of the 'other' category selector icon
         $("#cat-other-color-selector").css('background', this._getCategoryColor(""));
+        
+        this.attachCategoryColorPickers();
       },
       
       /**
@@ -229,7 +356,7 @@
             catsJSONArr = catsJSONObj;
           }          
 
-          if(this._getImpl().length > 0){
+          if(this.getImpl().length > 0){
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
               var catId = cat.id;
@@ -249,10 +376,10 @@
       
       getCategories: function () {
           
-        if(this._getImpl().length > 0) {
+        if(this.getImpl().length > 0) {
           var categories = [];
               
-          var elements = this._getImpl().find(".ontology-category-color-icon");
+          var elements = this.getImpl().find(".ontology-category-color-icon");
               
           $.each(elements, function( index, element ) {
             var rwId = element.dataset.rwid;
@@ -267,7 +394,7 @@
           });
               
           // Get the other category for the a layer create/edit form term tree
-          if(this._getImpl().next().attr('id') === "other-cat-container"){
+          if(this.getImpl().next().attr('id') === "other-cat-container"){
             var otherCat = new Object();
             otherCat.id = "cat-other-color-selector"; 
             otherCat.val = "Other";
@@ -740,6 +867,11 @@
        */
       _applyWithStyleListener : function(params){
         
+        var layer = this._map.getLayer(params["layer.componentId"]);
+        var mdAttribute = (layer != null) ? layer.getValue('mdAttribute') : this._thematicAttributeId;
+        
+        params['layer.mdAttribute'] = mdAttribute;
+        
         var conditions = this._map.getConditions();
         
         $.each(conditions, function( index, condition ) {
@@ -802,8 +934,6 @@
           this._categoryWidget = new CategoryTreeWidget("#ontology-tree", "#categories-input");
           this._categoryWidget.render();
           
-          attachCategoryColorPickers();
-            
           // category 'other' option
           $(".other-option-check-box").change(function() {
             if($(this).is(":checked")) {
@@ -837,9 +967,11 @@
           }
         }
         else if($(".category-input").length > 0){
-          this._addCategoryAutoComplete('#category-colors-container', '#f59');
-          this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
-              
+          var categoryType = $("#categories-input").data('type');
+          
+          this._categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-input", true, "cat", this._thematicAttributeId, categoryType, '#f59');
+          this._categoryWidget.render();
+          
           // category 'other' option
           $(".other-option-check-box").change(function() {
             if($(this).is(":checked")) {
@@ -849,19 +981,8 @@
               $("#cat-other").parent().parent().hide();
             }     
           });
-           
-          attachCategoryColorPickers();
-        }
-          
-        function attachCategoryColorPickers(){
-          // ontology category layer type colors
-          $(".category-color-icon").colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-            onChange:function(hsb,hex,rgb,el,bySetColor) {
-              $(el).css('background','#'+hex);
-              $(el).find('.color-input').attr('value', '#'+hex);
-            }
-          });
+
+          this._setupCategoryColorPicker($("#choice-color01").find('.color-holder'));
         }
           
         // Load the secondary values
@@ -877,8 +998,6 @@
           }
           else {
             this._renderSecondaryCategoryGroup(secondaryAttribute, type);
-            
-            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
           }
         }
         
@@ -886,57 +1005,6 @@
       },
       
 
-      /**
-       * Hooks the auto-complete functionality to the category field input fields
-       * 
-       * 
-       */
-      _addCategoryAutoComplete : function(parent, aggregationId){
-        
-        var that = this;
-        
-        // Hook up the auto-complete for category input options new layers
-        // existing layers have a seperate autocomplete hookup that queries 
-        // the layer database view directly. 
-        $(parent).find('.category-input').each(function(){
-          var mdAttribute = $(this).data('mdattributeid');  
-          var categoryType = $(this).data('type');
-          
-          $(this).autocomplete({
-            source: function( request, response ) {
-              var req = new Mojo.ClientRequest({
-                onSuccess : function(results){
-                  
-                  // We need to localize the results for numbers
-                  if(categoryType == 'number') {
-                    for(var i = 0; i < results.length; i++) {
-                      var number = parseFloat(results[i]);
-                      var localized = that._formatter(number);
-                      
-                      results[i] = localized;
-                    }
-                  }
-                  
-                  response( results );
-                },
-                onFailure : function(e){
-                  that.handleException(e);
-                }
-              });
-              
-              // values are scraped from hidden input elements on the layer create form
-              var universalId = $("#f58").val();
-              var aggregationVal = $(aggregationId).val();
-              var criteria = that._reloadCriteria();
-              var conditions = that._getConditionsFromCriteria(criteria);
-              
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
-            },
-            minLength: 1
-          });
-        });
-      },
-      
       _renderSecondaryAggregation : function(type) {
         
         var options = this._map.getAggregationMap()[type];
@@ -980,13 +1048,6 @@
               '<div class="panel-group choice-color category-group">' +
                 '<div class="panel">' +
                   '<div id="secondary-choice-color" class="panel-collapse">' +
-                    '<ul class="color-list">' +
-                      this._getSecondaryCategoryHTML(1, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(2, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(3, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(4, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(5, mdAttributeId, categoryType) +
-                    '</ul>' +
                   '</div>' +                              
                 '</div>' +              
               '</div>' +            
@@ -995,35 +1056,15 @@
                  
         $('#secondary-cateogries').html(html);
         
-        this._addCategoryAutoComplete('#secondary-content',"#secondaryAggregation");
+        
+        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation");
+        this._secondaryWidget.render();
         
         this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
         
         jcf.customForms.replaceAll($('#secondary-content').get(0));
         
         $('#secondary-content').show();        
-      },
-      
-      _getSecondaryCategoryHTML : function(index, mdAttributeId, categoryType) {
-        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
-                
-        var html = '<li>' +
-          '<div class="category-container">' +
-            '<div class="text category-input-container">' +
-              '<input id="secondaryCat' + index + '" data-mdattributeid="' + mdAttributeId + '" data-type="' + categoryType+ '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="on" >' +
-            '</div>' +
-            '<div class="cell">' +
-              '<div class="color-holder">' +
-                '<a href="#" class="color-choice">' +
-                  '<span id="secondaryCat' + index + '-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>' +
-                  '<span class="arrow">arrow</span>' +
-                '</a>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</li>';
-          
-        return html;        
       },
       
       _renderSecondaryTermTree : function(mdAttributeId, type) {
@@ -1100,143 +1141,29 @@
         return 'text';
       },
       
-      _getCategoryType : function() {
-        var categoryType = null;
-          
-        $.each($('.category-input'), function(index, element) {
-          categoryType = $(element).data("type");
-        });
-          
-        return categoryType;
-      },
-      
       _getSecondaryAttriubteCategories : function() {
-        if($("#secondary-tree").length > 0) {
+        if(this._secondaryWidget != null) {
           var categories = this._secondaryWidget.getCategories();
               
-          return categories;
-        }
-        else if ($('#secondary-choice-color').length > 0) {
-          var categories = this._getCategoryFromList("#secondary-choice-color", false);
-            
           return categories;
         }
             
         return null;
       },
       
-      _loadExistingCategories : function(storeElement, prefix, treeElement, checkOther) {
-          
-          var catsJSONObj = $(storeElement).data("categoriesstore");
-          
-          if(catsJSONObj){
-            catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-            
-            var catsJSONArr = catsJSONObj.catLiElems;
-            
-            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-              catsJSONArr = catsJSONObj;
-            }          
-            
-            if($(treeElement).length === 0)
-            {
-              var catInputId;
-              var catOtherEnabled = true;
-              
-              for(var i=0; i<catsJSONArr.length; i++){
-                var cat = catsJSONArr[i];
-                
-                // Controlling for 'other' category 
-                if(cat.otherCat){
-                  catInputId = prefix + "-other";
-                }
-                else{
-                  catInputId = prefix + (i+1);
-                }
-                
-                var catColorSelectorId = catInputId + "-color-selector";
-                $("#"+catInputId).val(cat.val);
-                $("#"+catColorSelectorId).css("background", cat.color);
-                catOtherEnabled = cat.otherEnabled;
-              }
-              
-              // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-              // The 'other' option is checked by default making this a valid sequence
-              if(checkOther && !catOtherEnabled){
-                $(".other-option-check-box").click();
-                $("#" + prefix + "-other").parent().parent().hide();
-              }
-            }
-          }
-        },
-        
       /**
        * Scrapes categories on the layer creation/edit form
        * 
        */
       _updateCategoriesJSON : function() {
         var styleArr = new Object();
-        styleArr.catLiElems = [];
-           
-        if($("#ontology-tree").length > 0) {
-          styleArr.catLiElems = this._categoryWidget.getCategories();
-        }
-        else {           
-          styleArr.catLiElems = this._getCategoryFromList('#category-colors-container', true);
-        }
+        styleArr.catLiElems = this._categoryWidget.getCategories();
            
         // set the hidden input element in the layer creation/edit form 
         $("#categories-input").data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
            
         return  styleArr;
-      },
-
-      _getCategoryFromList : function(parentElementId, checkOther) {
-          var elements = $(parentElementId).find(".category-container");
-          var categories = [];        
-          
-          for(var i=0; i< elements.length; i++){
-            var catInputElem = $(elements[i]).find(".category-input");
-            var catColorElem = $(elements[i]).find(".cat-color-selector");
-            var catColor = LayerForm.rgb2hex($(catColorElem).css("background-color"));
-            var catVal = catInputElem.val();
-              
-            // parse the formatted number to the format of the data so the SLD can apply categories by this value
-            if(catInputElem.data("type") == "number" ) {
-              var thisNum = this._parser(catVal);
-                if($.isNumeric(thisNum)) {
-                  catVal = thisNum;                
-                }
-            }
-              
-            // Filter out categories with no input values
-            if(catVal !== ""){
-              var category = new Object();
-              category.val = catVal;
-              category.color = catColor;
-              category.isOntologyCat = false;
-              
-              if(checkOther) {
-               category.otherEnabled = $(".other-option-check-box").prop("checked");
-               
-               if(catInputElem[0].id === "cat-other"){
-                   category.otherCat = true;
-                 }
-                 else{
-                   category.otherCat = false;
-                 }
-              }
-              else {
-                category.otherEnabled = false;
-                category.otherCat = false;
-              }
-                   
-              categories.push(category);
-            }
-          }  
-                    
-          return categories;
-        },
+      }
     }
   });
   
@@ -1310,8 +1237,8 @@
        * @param e
        */
       edit : function(id){
-    	var that = this;
-    	
+        var that = this;
+      
         // edit the layer
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){

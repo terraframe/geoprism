@@ -2070,8 +2070,21 @@
         return criteria;
       },
       
+      /*
+       * Returns cached conditions
+       */    		  
       getConditions : function() {
         return this._getConditionsFromCriteria(this._criteria);  
+      },
+    
+      /*
+       * Returns the non cached conditions
+       */
+      getCurrentConditions : function() {
+        var criteria = this._reloadCriteria();
+        var conditions = this._getConditionsFromCriteria(criteria);
+        
+        return conditions;
       },
       
       /*
