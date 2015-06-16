@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1560585969)
+@com.runwaysdk.business.ClassSignature(hash = -988694058)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -15,7 +15,7 @@ public abstract class DashboardThematicLayerBase extends com.runwaysdk.geodashbo
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String GEONODE = "geoNode";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
-  private static final long serialVersionUID = 1560585969;
+  private static final long serialVersionUID = -988694058;
   
   public DashboardThematicLayerBase()
   {
@@ -202,16 +202,10 @@ public abstract class DashboardThematicLayerBase extends com.runwaysdk.geodashbo
     return (DashboardThematicLayer) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.lang.String applyWithStyleAndStrategy(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.AggregationStrategy strategy, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static java.lang.String getGeoNodeGeometryTypesJSON(java.lang.String geoNodeId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final java.lang.String applyWithStyleAndStrategy(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.AggregationStrategy strategy, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
-  {
-    DashboardThematicLayer _instance = DashboardThematicLayer.get(id);
-    return _instance.applyWithStyleAndStrategy(style, mapId, strategy, conditions);
   }
   
   public static DashboardThematicLayer lock(java.lang.String id)

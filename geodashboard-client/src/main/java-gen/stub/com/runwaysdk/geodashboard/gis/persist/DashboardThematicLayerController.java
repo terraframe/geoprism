@@ -194,14 +194,6 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
       req.setAttribute("nodes", nodes);
 
-      // Making an assumption that the user has decided to select the first geo node
-      GeoNodeDTO node = nodes[0];
-      req.setAttribute("node", node);
-
-      // Get the universals, sorted by their ordering in the universal tree.
-      AggregationStrategyViewDTO[] strategies = AggregationStrategyViewDTO.getAggregationStrategies(clientRequest, node);
-      req.setAttribute("strategies", strategies);
-
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
@@ -209,21 +201,28 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
 
       req.setAttribute("aggregations", aggregations);
-      // req.setAttribute("activeAggregation", style.getActiveAggregationLabel(aggregations));
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
 
       // layer types
       Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
 
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
-      layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
 
-      // filter out invalid layer types depending on attribute type
-      // this is primarily to prevent creating gradients on date fields
+      // Set possible layer types based on attribute type
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
-
-      if (! ( mdAttributeConcrete instanceof MdAttributeDateDTO ))
+      if (mdAttributeConcrete instanceof MdAttributeDateDTO )
       {
+        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+      }
+      else if( mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO )
+      {
+        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
+      }
+      else
+      {
+        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
@@ -231,6 +230,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
+      
+      req.setAttribute("layerTypeNamesJSON", encode(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)
@@ -246,8 +247,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // Determine if the attribute is an ontology attribute
       if (mdAttributeConcrete instanceof MdAttributeTermDTO)
       {
-        req.setAttribute("isOntologyAttribute", true);
-        req.setAttribute("isTextAttribute", false);
+//        req.setAttribute("isOntologyAttribute", true);
+//        req.setAttribute("isTextAttribute", false);
         req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
         req.setAttribute("termType", ClassifierDTO.CLASS);
 

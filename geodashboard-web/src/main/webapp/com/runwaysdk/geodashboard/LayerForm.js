@@ -292,6 +292,10 @@
     
     Constants : {
       LAYER_MODAL : '#modal01',
+      GEO_AGG_LEVEL_DD : "agg-level-dd",
+      GEO_AGG_METHOD_DD : "#agg-method-dd",
+      GEO_AGG_HOLDER : "#agg-level-holder",
+      GEO_TYPE_HOLDER : "#geom-type-holder"
     },
     
     Instance : {
@@ -482,7 +486,7 @@
         }
         
         // Get the strategy information
-        var strategy = $('#f58').find(":selected");
+        var strategy = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
         var strategyType = strategy.data('type');
         var strategyValue = strategy.val();
         
@@ -538,14 +542,15 @@
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
      
         // Attach event listeners for the universal (geo) aggregation dropdown.
-        $("#f58").change(function(){ 
-          if($("#f58 option:selected").hasClass("universal-leaf")){
-            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-            $("#f59").parent().parent().hide();
-          }
-          else{
-            $("#f59").parent().parent().show();
-          }
+        this._setGeoAggEventListeners();
+        
+        // Populate the Aggregation Options based on the default selected GeoNode
+        this._getGeographicAggregationOptions();
+        this._getPossibleGeometryTypes();
+        
+        $("#geonode-select").change(function(){ 
+        	that._getGeographicAggregationOptions();
+        	that._getPossibleGeometryTypes();
         });
         
         // Localize any existing number cateogry values
@@ -565,8 +570,143 @@
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
         modal.modal('show');
-      },     
+      },  
+      
+      /**
+       * 
+       * @selectedVal - selected dropdown option element 
+       * 
+       */
+      _getGeographicAggregationOptions : function(){
+    	  var that = this;
+    	  var selectedVal = $("#geonode-select option:selected").val();
+    	  
+      	  var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function(data) {
+            	that._setGeographicAggregationOptions(data);
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+            }
+          });
+          
+          com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategiesJSON(clientRequest, selectedVal);
+      },
+      
+      /**
+       * 
+       * @selectedVal - selected dropdown option element 
+       * 
+       */
+      _getPossibleGeometryTypes : function(){
+    	  var that = this;
+    	  var selectedVal = $("#geonode-select option:selected").val();
+    	  
+      	  var clientRequest = new Mojo.ClientRequest({
+            onSuccess : function(data) {
+            	console.log(data)
+            	//that._setGeographicAggregationOptions(data);
+            },
+            onFailure : function(e) {
+              that.handleException(e);
+            }
+          });
+          
+          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getGeoNodeGeometryTypesJSON(clientRequest, selectedVal);
+      },
+      
+      _setGeoAggEventListeners : function(){
+    	  var that = this;
+    	  
+          // Attach event listeners for the universal (geo) aggregation dropdown.
+          $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
+            if($("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD+" option:selected").hasClass("universal-leaf")){
+              // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
+            }
+            else{
+              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
+            }
+            
+            var selectedOption = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+      	  	that._setLayerTypeOptions(selectedOption);
+          });
+      },
+      
+      /**
+       * Populate the geographic aggregation dropdown
+       * 
+       * @data - JSON representing geo aggregation levels
+       */
+      _setGeographicAggregationOptions : function(data) {
+    	  var selected = "";
+    	  var aggregations = JSON.parse(decodeURIComponent(data));
+    	  
+    	  // Get the original name value from the originally rendered dropdown because this
+    	  // data was already passed from server to client in the jsp
+    	  var name = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).attr("name");
+    	  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
+    	  
+    	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD+'" class="method-select" name="'+name+'" data-layertypes="'+layerTypes+'" >';
+    	  for(var i=0; i<aggregations.length; i++){
+    		  var agg = aggregations[i];
+    		  if(i === 0){
+    			  selected = "selected";
+    		  }
+    		  else{
+    			  selected = "";
+    		  }
+    		  html += '<option value="' + agg.id + '" data-type="'+agg.type.trim()+'" '+selected+'>' + agg.label + '</option>';
+    	  }
+    	  html += '</select>';
+          
+          $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().html(html);
 
+    	  jcf.customForms.replaceAll($("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().get(0));
+    	  
+    	  $(ThematicLayerForm.GEO_AGG_HOLDER).show();
+    	  
+    	  var selectedOption = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+    	  this._setLayerTypeOptions(selectedOption);
+    	  
+    	  this._setGeoAggEventListeners();
+      },
+      
+      
+      /**
+       * Populate the layer type block based on the selection of the geo aggregation level dropdown
+       * 
+       * @selectedOption - selected option from the geographic aggregation level dropdown
+       */
+      _setLayerTypeOptions : function(selectedOption) {
+    	  var type = selectedOption.data('type');
+    	  
+    	  if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
+    		  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
+    		  var layerTypesJSON = JSON.parse(decodeURIComponent(layerTypes));
+    		  
+    		  for(var i=0; i<layerTypesJSON.length; i++){
+    			  var lType = layerTypesJSON[i];
+    			  
+    			  $("." + lType).show();
+    		  }
+    	  }
+    	  else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
+    		  
+    		  //
+    		  // HOW WILL WE KNOW WHAT TYPES TO DISPLAY????
+    		  //
+    		  $(".BASIC").show();
+    		  $(".BUBBLE").show();
+    		  
+    		  $(".CATEGORY").hide();
+    		  $(".GRADIENT").hide();
+    	  }
+    	  
+    	  $(ThematicLayerForm.GEO_TYPE_HOLDER).show();
+      },
+
+      
       _addLayerFormControls : function(){
         var that = this;
           
@@ -612,7 +752,7 @@
           }
         }
         else if($(".category-input").length > 0){
-          this._addCategoryAutoComplete('#category-colors-container', '#f59');
+          this._addCategoryAutoComplete('#category-colors-container', ThematicLayerForm.GEO_AGG_METHOD_DD);
           this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
               
           // category 'other' option
@@ -780,7 +920,7 @@
               });
               
               // values are scraped from hidden input elements on the layer create form
-              var universalId = $("#f58").val();
+              var universalId = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
               var aggregationVal = $(aggregationId).val();
               var criteria = that._reloadCriteria();
               var conditions = that._getConditionsFromCriteria(criteria);
@@ -800,7 +940,7 @@
           options = [];
         }
       
-        var html = '<select id="secondaryAggregation" class="method-slect" name="secondaryAggregation">';
+        var html = '<select id="secondaryAggregation" class="method-select" name="secondaryAggregation">';
         
         for(var i = 0; i < options.length; i++) {
           var option = options[i];
