@@ -1,6 +1,5 @@
 (function(){
   var CategoryWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryWidget', {
-    
     IsAbstract : true,
     Constants : {
       OTHER : 'other',
@@ -31,7 +30,7 @@
     Extends : CategoryWidget,    
     Instance : {
       initialize : function(map, elementId, storeId, checkOther, prefix, mdAttributeId, categoryType, aggregationId){
-      this._map = map;
+        this._map = map;
         this._elementId = elementId;
         this._storeId = storeId;        
         this._checkOther = checkOther;    
@@ -55,20 +54,22 @@
         var autocomplete = 'on';
         var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
         var disabled = "";
-        var color = "#000000"
+        var color = "#000000";
+        var value = "";
         var id = this._prefix + '-' + index;
         
         if(index == CategoryWidget.OTHER) {
           autocomplete = 'off';
           fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other", "Other");
           disabled = "disabled";
+          value = "other";
           color = "#737678";
         }       
                   
         var html = '<li>' +
           '<div class="category-container">' +
             '<div class="text category-input-container">' +
-              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
+              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" name="" type="text" value="' + value + '" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
             '</div>' +
             '<div class="cell">' +
               '<div class="color-holder">' +
@@ -146,7 +147,7 @@
                   response( results );
                 },
                 onFailure : function(e){
-                  that.handleException(e);
+                  that._map.handleException(e);
                 }
               });
               
@@ -626,7 +627,7 @@
         // Show the white background modal.
         var modal = this.getImpl().first();
         modal.html(html);
-        
+                
         jcf.customForms.replaceAll(modal[0]);
         
         // Add layer styling event listeners
@@ -767,14 +768,18 @@
     
     Instance : {
           
-      initialize : function(map, mapId, thematicAttributeId){
+      initialize : function(map, mapId){
         this.$initialize(map, mapId);
         
-        this._thematicAttributeId = thematicAttributeId;
-    
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;        
         this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));       
+      },
+      
+      _displayLayerForm : function(html) {
+    	this.$_displayLayerForm(html);
+    	
+        this._thematicAttributeId = $("#categories-input").data('mdattributeid');
       },
       
       edit : function(id) {
