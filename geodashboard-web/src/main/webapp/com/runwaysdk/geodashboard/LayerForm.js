@@ -800,7 +800,7 @@
         }), id);  
       },
       
-      open : function() {
+      open : function(thematicAttributeId) {
         var that = this;
           
         var request = new Mojo.ClientRequest({
@@ -814,7 +814,7 @@
           }
         });
           
-        this._LayerController.newThematicInstance(request, this._thematicAttributeId, this._mapId);      
+        this._LayerController.newThematicInstance(request, thematicAttributeId, this._mapId);      
       },
       
       /**
