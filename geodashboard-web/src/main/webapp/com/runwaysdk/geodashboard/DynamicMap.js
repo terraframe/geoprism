@@ -1247,7 +1247,7 @@
           // edit the layer
           var id = el.data('id');
           
-          var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId, null);
+          var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId);
           form.edit(id);
         }
         else if(el.hasClass('ico-remove')){         
@@ -1898,7 +1898,7 @@
         var attrId = el.data('id');
         this._currentAttributeId = attrId;
         
-        var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId, this._currentAttributeId);
+        var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId);
         form.open();
       },
 
