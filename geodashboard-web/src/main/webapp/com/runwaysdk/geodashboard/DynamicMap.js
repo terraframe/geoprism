@@ -1897,10 +1897,9 @@
         
         var el = $(e.currentTarget);
         var attrId = el.data('id');
-        this._currentAttributeId = attrId;
         
         var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId);
-        form.open();
+        form.open(attrId);
       },
 
       
@@ -1957,10 +1956,10 @@
         var relatedLayer;
         if($(target).data("parentlayertype") === "THEMATICLAYER"){
           relatedLayer = that._layerCache.get(relatedLayerId);
-      }
-      else if($(target).data("parentlayertype") === "REFERENCELAYER"){
-        relatedLayer = that._refLayerCache.get($(target).data("parentuniversalid"));
-      }
+        }
+        else if($(target).data("parentlayertype") === "REFERENCELAYER"){
+          relatedLayer = that._refLayerCache.get($(target).data("parentuniversalid"));
+        }
         
         relatedLayer.setLegendXPosition(x);
         relatedLayer.setLegendYPosition(y);
