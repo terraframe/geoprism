@@ -54,6 +54,7 @@
               </div>
               <div class="holder">
 <mjl:component param="layer" item="${layer}">
+                <input  id="layer.geoNode" name="layer.geoNode"  type="hidden" value="${node.id}" />
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
                   <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
@@ -163,7 +164,7 @@
             
 			<!-- AGGREGATION SETTINGS -->
 			
-			           <div class="row-holder">
+			<div id="geonode-holder" class="row-holder">
               <div class="label-holder style03">
                 <strong><gdb:localize var="dl_form_defineGeoNode" key="DashboardThematicLayer.form.defineGeoNode"/>${dl_form_defineGeoNode}</strong>
               </div>
@@ -191,41 +192,25 @@
             </div>
 			
 			
-            <div class="row-holder">
+            <div id="agg-level-holder" class="row-holder" style="display:none;">
               <div class="label-holder style03">
                 <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardThematicLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong>
               </div>
               <div class="holder add">
               	<mjl:component param="layer" item="${layer}">
-                <div class="box">
-                  <label for="f58"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
-                  <div class="select-box">
-
-<%-- 	                    <select id="f58" class="method-select" name="layer.${layer.universalMd.name}"> --%>
-<%-- 	                       <c:forEach items="${universals}" var="universal"> --%>
-<%-- 		                         <c:choose> --%>
-<%-- 		                           <c:when test="${layer.universalId == universal.id}"> --%>
-<%-- 				                         <option value="${universal.id}" selected="selected">${universal.displayLabel.value}</option> --%>
-<%-- 		                           </c:when> --%>
-<%-- 		                           <c:otherwise> --%>
-<%-- 		                           		<option value="${universal.id}">${universal.displayLabel.value}</option> --%>
-<%-- 		                           </c:otherwise> --%>
-<%-- 		                         </c:choose> --%>
-<%-- 	                      </c:forEach> --%>
-<!-- 	                    </select> -->
-
-	                    <select id="f58" class="method-select" name="layer.${layer.aggregationStrategyMd.name}">
-	                    	 <option value="na" data-type="">na</option>
-<%-- 	                       <c:forEach items="${strategies}" var="strategy"> --%>
-<%-- 		                     <option value="${strategy.value}" data-type="${strategy.aggregationType}">${strategy.displayLabel}</option>	                        --%>
-<%-- 	                      </c:forEach> --%>
-	                    </select>
-                  </div>
-                </div>
 	                <div class="box">
-	                  <label for="f59"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
+	                  <label for="agg-level-dd"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
 	                  <div class="select-box">
-	                    <select id="f59" class="method-select" name="layer.${layer.aggregationTypeMd.name}">
+		                    <select id="agg-level-dd" class="method-select" name="layer.${layer.aggregationStrategyMd.name}">
+		                    	 <option value="" data-aggType=""></option>
+								 <!-- OPTIONS ARE DYNAMICALLY SET IN JAVASCRIPT -->
+		                    </select>
+	                  </div>
+	                </div>
+	                <div class="box">
+	                  <label for="agg-method-dd"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
+	                  <div class="select-box">
+	                    <select id="agg-method-dd" class="method-select" name="layer.${layer.aggregationTypeMd.name}">
 	                      <c:forEach items="${aggregations}" var="aggregation">
 	                         	<c:choose>
 	                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}">
@@ -247,37 +232,34 @@
               </div>
             </div>
             
+   
+            
             <!-- 
                Begin Layer Types
              -->
 			<mjl:component param="layer" item="${layer}">
-	            <div class="row-holder">
+	            <div id="geom-type-holder" class="row-holder" style="display:none" data-layerTypes="${layerTypeNamesJSON}">
 	              <div class="label-holder style04">
 	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardThematicLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
 	              </div>
 	              <div class="holder style04">
 	                <ul class="nav-tabs type-tabs">
 		                <c:forEach items="${layerTypeNames}" var="layerTypeName" varStatus="loop">
-		                	<c:choose>
-			          			<c:when test="${'GRADIENT' != layerTypeName || 'false' == isOntologyAttribute && 'false' == isTextAttribute}">
-				                  <li
-				                    class="${layerTypeName}  
-				                    <c:if test="${layerTypeName == activeLayerTypeName}">
-				                        active
-				                    </c:if>
-				                    ">
-				                    <a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}">
-				                      <input
-				                        <c:if test="${layerTypeName == activeLayerTypeName}">
-				                          checked="checked"
-				                        </c:if>
-				                        id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio">
-				                      </input>
-				                      <label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label>
-				                    </a>
-				                  </li>
-				                </c:when>
-				             </c:choose>
+			                  <li class="${layerTypeName}  
+			                    <c:if test="${layerTypeName == activeLayerTypeName}">
+			                        active
+			                    </c:if>
+			                    	" style="display:none;">
+			                    	<a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}">
+			                      	<input
+			                        	<c:if test="${layerTypeName == activeLayerTypeName}">
+			                          		checked="checked"
+			                        	</c:if>
+			                        	id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio">
+			                      	</input>
+			                      	<label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label>
+			                    	</a>
+			                  </li>
 		                </c:forEach>
 	                </ul>
 	              </div>
@@ -664,7 +646,7 @@
 						                    </ul>
 						                </div>
 									  	<div class="check-block">
-								      		<input id="f56" class="other-option-check-box" type="checkbox" name="" checked></input>
+								      		<input id="f56" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
 								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 								      	</div>
 									</div>

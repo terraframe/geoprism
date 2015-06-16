@@ -17,10 +17,10 @@
    "aggregateValue" : "Value",
    "deleteLayerTooltip" : "Delete layer"
   });
-  
+    
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
     
-  Extends : Component,
+    Extends : Component,
     
     Constants : {
       BASE_LAYER_CONTAINER : 'baseLayerContainer',
@@ -32,8 +32,7 @@
       DASHBOARD_MODAL : "#dashboardModal01",
       TO_DATE : 'to-field',
       FROM_DATE : 'from-field',
-      SRID : "EPSG:4326",
-      GEOAGGDROPDOWN : "#f58"
+      SRID : "EPSG:4326"
     },
     
     Instance : {
@@ -98,17 +97,14 @@
         // Handler for the clone dashboard button
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         
-        this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
         this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
-        this._LayerController.setCancelListener(Mojo.Util.bind(this, this._cancelLayerListener));
-        this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));       
-        this._ReferenceLayerController.setCancelListener(Mojo.Util.bind(this, this._cancelReferenceLayerListener));
-        this._ReferenceLayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener)); 
+//        this._ReferenceLayerController.setCancelListener(Mojo.Util.bind(this, this._cancelReferenceLayerListener));
+//        this._ReferenceLayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener)); 
         this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
         this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
@@ -116,6 +112,14 @@
           update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
         });
         overlayLayerContainer.disableSelection();      
+      },
+      
+      getLayer : function(layerId) {
+        return this._layerCache.get(layerId);        
+      },
+      
+      getAggregationMap : function() {
+    	return this._aggregationMap;  
       },
       
       /**
@@ -151,6 +155,19 @@
         this._renderReport('', this._criteria);
       },
       
+      handleLayerEvent : function(jsonObj) {
+        this._updateCacheFromJSONResponse(jsonObj);
+          
+        this._drawUserLayersHTML();
+            
+        // Close any info window popups if they exist
+        this._map.closePopup();
+          
+        // Update leaflet
+        this._addUserLayersToMap(true);    
+      },
+      
+      
       /**
        * Requests all map data again from the server (bounds, persisted layers, etc...) and updates our internal caches.
        * 
@@ -179,129 +196,6 @@
           , this._mapId, '{testKey:"TestValue"}');
       },
       
-      _getSecondaryAttriubteCategories : function() {
-        if($("#secondary-tree").length > 0) {
-          var categories = this._getTermCategoryFromTree('secondary-tree');
-            
-          return categories;
-        }
-        else if ($('#secondary-choice-color').length > 0) {
-          var categories = this._getCategoryFromList("#secondary-choice-color", false);
-          
-          return categories;
-        }
-          
-        return null;
-      },
-      
-      _getTermCategoryFromTree : function (elementId) {
-        
-        if($("#" + elementId).length > 0) {
-          var categories = [];
-          
-          var elements = $("#" + elementId).find(".ontology-category-color-icon");
-          
-          $.each(elements, function( index, element ) {
-            var rwId = element.dataset.rwid;
-              
-            var category = new Object();
-            category.id = element.dataset.rwid; 
-            category.val = element.parentElement.previousSibling.textContent;
-            category.color = GDB.gis.DynamicMap.prototype.rgb2hex($(element).css("background-color"));
-            category.isOntologyCat = true;
-                        
-            categories.push(category);
-          });
-          
-          // Get the other category for the a layer create/edit form term tree
-          if($("#"+elementId).next().attr('id') === "other-cat-container"){
-	          var otherCat = new Object();
-	          otherCat.id = "cat-other-color-selector"; 
-	          otherCat.val = "Other";
-	          otherCat.color = GDB.gis.DynamicMap.prototype.rgb2hex($("#cat-other-color-selector").css("background-color"));
-	          otherCat.isOntologyCat = false;
-	          otherCat.otherCat = true;
-	          otherCat.otherEnabled =  $(".other-option-check-box").prop("checked");
-	                      
-	          categories.push(otherCat);
-          }
-                
-          return categories;
-        }
-        
-        return null;        
-      },
-      
-      _getCategoryFromList : function(parentElementId, checkOther) {
-        var elements = $(parentElementId).find(".category-container");
-        var categories = [];        
-        
-        for(var i=0; i< elements.length; i++){
-          var catInputElem = $(elements[i]).find(".category-input");
-          var catColorElem = $(elements[i]).find(".cat-color-selector");
-          var catColor = GDB.gis.DynamicMap.prototype.rgb2hex($(catColorElem).css("background-color"));
-          var catVal = catInputElem.val();
-            
-          // parse the formatted number to the format of the data so the SLD can apply categories by this value
-          if(catInputElem.data("type") == "number" ) {
-            var thisNum = this._parser(catVal);
-              if($.isNumeric(thisNum)) {
-                catVal = thisNum;                
-              }
-          }
-            
-          // Filter out categories with no input values
-          if(catVal !== ""){
-            var category = new Object();
-            category.val = catVal;
-            category.color = catColor;
-            category.isOntologyCat = false;
-            
-            if(checkOther) {
-             category.otherEnabled = $(".other-option-check-box").prop("checked");
-             
-             if(catInputElem[0].id === "cat-other"){
-                 category.otherCat = true;
-               }
-               else{
-                 category.otherCat = false;
-               }
-            }
-            else {
-              category.otherEnabled = false;
-              category.otherCat = false;
-            }
-                 
-            categories.push(category);
-          }
-        }  
-                  
-        return categories;
-      },
-      
-      
-      /**
-       * Scrapes categories on the layer creation/edit form
-       * 
-       */
-       _updateCategoriesJSON : function() {
-         var styleArr = new Object();
-         styleArr.catLiElems = [];
-         
-         if($("#ontology-tree").length > 0) {
-           styleArr.catLiElems = this._getTermCategoryFromTree('ontology-tree');
-         }
-         else {           
-           styleArr.catLiElems = this._getCategoryFromList('#category-colors-container', true);
-         }
-         
-         // set the hidden input element in the layer creation/edit form 
-         $("#categories-input").data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
-         
-         return  styleArr;
-       },
-      
-      
       /**
        * Creates "view" objects for each layer defined by the dashboardlayerview.java class
        * and builds the initial layer cache
@@ -311,9 +205,9 @@
        */
       _updateCacheFromJSONResponse : function(json) {
         // Create DashboardLayerView and/or DashboardReferenceLayerView objects to be used throughout the map life cycle 
-      // to provide more formal structure for layer objects.
+        // to provide more formal structure for layer objects.
         
-      if(json.layers){
+        if(json.layers){
         // Build thematic layer objects and populate the cache
           for (var i = 0; i < json.layers.length; ++i) {
             var layer = json.layers[i];
@@ -326,7 +220,7 @@
             }
             this._layerCache.put(view.getLayerId(), view);        
           }
-      }
+        }
         
         // Build reference layer objects and populate the cache
         if(json.refLayers){
@@ -511,7 +405,7 @@
           configuration.parameters.push({'name' : 'height', 'value' : heightPt});
         
           this._ReportController.run(request, this._dashboardId, JSON.stringify(configuration));    
-      }
+        }
       },
       
       _exportMap : function() {
@@ -521,7 +415,7 @@
         var mapId = this._mapId;
         var outFileName = "GeoDashboard_Map";
         var outFileFormat = "png";
-          var mapBounds = {};
+        var mapBounds = {};
         var mapExtent = this._map.getBounds();
         mapBounds.left = mapExtent._southWest.lng;
         mapBounds.bottom = mapExtent._southWest.lat;
@@ -529,21 +423,20 @@
         mapBounds.top = mapExtent._northEast.lat;
         mapBoundsStr = JSON.stringify(mapBounds);
       
-      var mapSize = {};
-      mapSize.width = $("#mapDivId").width();
-      mapSize.height = $("#mapDivId").height();
-      mapSizeStr = JSON.stringify(mapSize);
+        var mapSize = {};
+        mapSize.width = $("#mapDivId").width();
+        mapSize.height = $("#mapDivId").height();
+        mapSizeStr = JSON.stringify(mapSize);
       
       
-      var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo';
+        var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo';
         url += '?' + encodeURIComponent("mapId") + "=" + encodeURIComponent(mapId);          
         url += '&' + encodeURIComponent("outFileName") + "=" + encodeURIComponent(outFileName);   
         url += '&' + encodeURIComponent("outFileFormat") + "=" + encodeURIComponent(outFileFormat);  
         url += '&' + encodeURIComponent("mapBounds") + "=" + encodeURIComponent(mapBoundsStr);  
         url += '&' + encodeURIComponent("mapSize") + "=" + encodeURIComponent(mapSizeStr);  
           
-        window.location.href = url;
-        
+        window.location.href = url;        
       },
       
       _exportReport : function(geoId, criteria, format) {
@@ -653,8 +546,8 @@
        * 
        */
       _Legend : function(layer, displayName, geoserverName, legendXPosition, legendYPosition, groupedInLegend, featureStrategy, showFeatureLabels) {
-      this.layerId = layer.getLayerId();
-      this.legendId = "legend_" + this.layerId;
+        this.layerId = layer.getLayerId();
+        this.legendId = "legend_" + this.layerId;
         this.displayName = displayName;
         this.geoserverName = geoserverName;
         this.legendXPosition = legendXPosition;
@@ -1339,16 +1232,9 @@
         if(el.hasClass('ico-edit')) {
           // edit the layer
           var id = el.data('id');
-          this._LayerController.edit(new Mojo.ClientRequest({
-            onSuccess : function(html){
-              that._displayLayerForm(html);
-              that._addLayerFormControls();
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          }), id);
           
+          var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId, null);
+          form.edit(id);
         }
         else if(el.hasClass('ico-remove')){         
           // delete the layer
@@ -1644,193 +1530,7 @@
             $('*[data-parentlayerid="'+ $(el).data("id") +'"]').remove();
         }
       },
-      
-      
-      /**
-       * Closes the overlay with the layer/style CRUD.
-       * 
-       */
-      _closeLayerModal : function(){
-        $(DynamicMap.LAYER_MODAL).modal('hide').html('');
-      },
-      
-      
-      /**
-       * Called when a user submits (creates/updates) a layer with styles.
-       * 
-       * @params
-       */
-      _applyWithStyleListener : function(params){
-        
-        var that = this;
-        
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(htmlOrJson, response){
-            if (response.isJSON()) {
-              that._closeLayerModal();
-              
-              var layerType;
-              var returnedLayerJSON = JSON.parse( htmlOrJson);
-              if(returnedLayerJSON.layerType === "REFERENCELAYER"){
-                layerType = "refLayers";
-              }
-              else{
-                layerType = "layers";
-              }
-              var jsonObj = {};
-              jsonObj[layerType] = [Mojo.Util.toObject(htmlOrJson)];
-              
-              that._updateCacheFromJSONResponse(jsonObj);
-              
-              // Redraw the HTML
-              if(returnedLayerJSON.layerType === "REFERENCELAYER"){
-                that._drawReferenceLayersHTML();
-              }
-              else{
-                that._drawUserLayersHTML();
-                
-                  // Close any info window popups if they exist
-                  that._map.closePopup();
-              }
-              
-              // Update leaflet
-              that._addUserLayersToMap(true);            
-              
-              // TODO : Push this somewhere as a default handler.
-              that.handleMessages(response);
-            }
-            else if (response.isHTML()) {
-              // we got html back, meaning there was an error
-              
-              that._displayLayerForm(htmlOrJson);
-              that._addLayerFormControls();
-              $(DynamicMap.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
-            }
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        }, $(DynamicMap.LAYER_MODAL)[0]);
-        
-        var layer = this._layerCache.get(params["layer.componentId"]);
-        var mdAttribute = null;
-        if (layer != null) 
-        {
-          mdAttribute = layer.getValue('mdAttribute');
-        }
-        else 
-        {
-          mdAttribute = this._currentAttributeId;
-        }
-        
-        params['mapId'] = this._mapId;
-        params['layer.mdAttribute'] = mdAttribute;
-        
-        // Custom conversion to turn the checkboxes into boolean true/false
-        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
-        
-        // A hack to set the enableValue property which is required on DashboardLayer but is
-        // not allowed for the reference layer form since ther is no 'value' to display
-        if(!params['style.enableValue']){
-          params['style.enableValue'] = false;
-        }
-        else{
-          params['style.enableValue'] = params['style.enableValue'].length > 0;
-        }
-        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
-        
-        // Check for existense of dynamic settings which may not exist 
-        if(params['style.bubbleContinuousSize']){
-          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
-        }
-        
-        if($("#f79").is(":visible")){
-          params['style.pointFixedSize'] = params['style.pointFixedSize'];
-          params['style.pointFixed'] = true;
-        }
-        
-        var conditions = this._getConditionsFromCriteria(this._criteria);
-        
-        $.each(conditions, function( index, condition ) {
-          params["conditions_" + index + ".comparisonValue"] = condition.getValue('comparisonValue');
-          params["conditions_" + index + ".isNew"] = "true";
-          params["#conditions_" + index + ".actualType"] = condition.getType();
-          
-          if(condition instanceof com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition) {
-            params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');  
-          }
-        });      
-        
-        if($("#tab004categories").is(":visible")){
-          var catStyleArr = this._updateCategoriesJSON();
-          params['style.styleCategories'] = JSON.stringify(catStyleArr);
-        }
-        
-        
-        var secondaryAttribute = $("#secondaryAttribute").val();
-        
-        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
-          var secondaryCategories = this._getSecondaryAttriubteCategories();
-          var secondaryAggregationType = $("#secondaryAggregation").val();
             
-          if(secondaryCategories != null && secondaryCategories.length > 0){
-            params['style.secondaryAttribute'] = secondaryAttribute;
-            params['style.secondaryAggregationType'] = secondaryAggregationType;
-            params['style.secondaryCategories'] = JSON.stringify(secondaryCategories);
-          }          
-        }
-        else {
-          params['style.secondaryAttribute'] = '';
-          params['style.secondaryAggregationType'] = '';
-          params['style.secondaryCategories'] = '';
-        }
-          
-        
-        return request;
-      },
-      
-
-      _getCategoryType : function() {
-        var categoryType = null;
-        
-        $.each($('.category-input'), function(index, element) {
-          categoryType = $(element).data("type");
-        });
-        
-        return categoryType;
-      },
-      
-      
-      /**
-       * 
-       * @params
-       */
-      _cancelLayerListener : function(params){
-        var that = this;
-        
-        if(params['layer.isNew'] === 'true')
-        {
-          this._closeLayerModal();
-        }
-        else
-        {
-          var that = this;
-          var request = new Mojo.ClientRequest({
-            onSuccess : function(params){
-              that._closeLayerModal();
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          });
-          
-          //return request;
-          var id = params['layer.componentId'];
-          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.unlock(request, id);
-        }
-      },
-      
-      
       /**
        * 
        * @params
@@ -2123,340 +1823,7 @@
           }
         });
       },
-      
-      /**
-       * Hooks the auto-complete functionality to the category field input fields
-       * 
-       * 
-       */
-      _addCategoryAutoComplete : function(parent, aggregationId){
-        
-        var that = this;
-        
-        // Hook up the auto-complete for category input options new layers
-        // existing layers have a seperate autocomplete hookup that queries 
-        // the layer database view directly. 
-        $(parent).find('.category-input').each(function(){
-          var mdAttribute = $(this).data('mdattributeid');  
-          var categoryType = $(this).data('type');
-          
-          $(this).autocomplete({
-            source: function( request, response ) {
-              var req = new Mojo.ClientRequest({
-                onSuccess : function(results){
-                  
-                  // We need to localize the results for numbers
-                  if(categoryType == 'number') {
-                    for(var i = 0; i < results.length; i++) {
-                      var number = parseFloat(results[i]);
-                      var localized = that._formatter(number);
-                      
-                      results[i] = localized;
-                    }
-                  }
-                  
-                  response( results );
-                },
-                onFailure : function(e){
-                  that.handleException(e);
-                }
-              });
-              
-              // values are scraped from hidden input elements on the layer create form
-              var universalId = $("#f58").val();
-              var aggregationVal = $(aggregationId).val();
-              var criteria = that._reloadCriteria();
-              var conditions = that._getConditionsFromCriteria(criteria);
-              
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
-            },
-            minLength: 1
-          });
-        });
-      },
-      
-      _renderSecondaryAggregation : function(type) {
-        
-        var options = this._aggregationMap[type];
-      
-        if(options == null) {
-          options = [];
-        }
-      
-        var html = '<select id="secondaryAggregation" class="method-select" name="secondaryAggregation">';
-        
-        for(var i = 0; i < options.length; i++) {
-          var option = options[i];
-          
-          html += '<option value="' + option.value + '">' + option.label + '</option>';
-        }
-        
-        html += '</select>';
-        
-        $("#secondary-aggregation-container").html(html);
-        
-        // Set the saved value
-        var value = $('#secondaryAggregationValue').val();        
-        $("#secondaryAggregation").val(value);
-      },
-      
-      _renderSecondaryCategoryGroup : function(mdAttributeId, type) {
-        $('#secondary-content').hide();
-        
-        this._renderSecondaryAggregation(type);
-        
-        var categoryType = this._getCategoryType(type);
-        
-        var html =
-          '<div class="color-section">' +
-            '<div class="heading-list">' +
-              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
-              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
-              '<span></span>'+
-            '</div>' +
-            '<div class="category-block">' +
-              '<div class="panel-group choice-color category-group">' +
-                '<div class="panel">' +
-                  '<div id="secondary-choice-color" class="panel-collapse">' +
-                    '<ul class="color-list">' +
-                      this._getSecondaryCategoryHTML(1, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(2, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(3, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(4, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(5, mdAttributeId, categoryType) +
-                    '</ul>' +
-                  '</div>' +                              
-                '</div>' +              
-              '</div>' +            
-            '</div>' +
-          '</div>';          
-                 
-        $('#secondary-cateogries').html(html);
-        
-        this._addCategoryAutoComplete('#secondary-content',"#secondaryAggregation");
-        
-        this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
-        
-        jcf.customForms.replaceAll($('#secondary-content').get(0));
-        
-        $('#secondary-content').show();        
-      },
-      
-      _getSecondaryCategoryHTML : function(index, mdAttributeId, categoryType) {
-        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
-                
-        var html = '<li>' +
-          '<div class="category-container">' +
-            '<div class="text category-input-container">' +
-              '<input id="secondaryCat' + index + '" data-mdattributeid="' + mdAttributeId + '" data-type="' + categoryType+ '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="on" >' +
-            '</div>' +
-            '<div class="cell">' +
-              '<div class="color-holder">' +
-                '<a href="#" class="color-choice">' +
-                  '<span id="secondaryCat' + index + '-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>' +
-                  '<span class="arrow">arrow</span>' +
-                '</a>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</li>';
-          
-        return html;        
-      },
-      
-      _renderSecondaryTermTree : function(mdAttributeId, type) {
-        $('#secondary-content').hide();
-        
-        this._renderSecondaryAggregation(type);
-        
-        var html =
-         '<div class="color-section">' +
-           '<div class="heading-list">' +
-             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
-             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
-             '<span></span>'+
-           '</div>' +              
-           '<div class="category-block">' +
-             '<div class="ontology-category-input-container">' +
-             '<div id="secondary-tree"></div>' +
-           '</div>' +
-         '</div>';
-            
-        $('#secondary-cateogries').html(html);
-
-        // Get the term roots and setup the tree widget
-        var that = this;
-        var req = new Mojo.ClientRequest({
-          onSuccess : function(results){
-            var nodes = JSON.parse(results);
-            var rootTerms = [];
-                
-            for(var i = 0; i < nodes.length; i++) {
-              var id = nodes[i].id;              
-              rootTerms.push({termId : id});
-            }
-                
-            that._renderCategoryTermTree("#secondary-tree", rootTerms, '#secondaryCategories', nodes);
-            
-            $('#secondary-content').show();
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        });
-        
-        jcf.customForms.replaceAll($('#secondary-content').get(0));
-            
-        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);            
-      },
-      
-      _handleSecondaryChange : function(e){
-        var option = e.target.selectedOptions[0];
-        var mdAttributeId = option.value;
-        var type = $(option).data("type");
-        
-        if(mdAttributeId == '') {
-          $('#secondary-content').hide();
-        }
-        else if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {
-          this._renderSecondaryTermTree(mdAttributeId, type);
-        }
-        else {
-          this._renderSecondaryCategoryGroup(mdAttributeId, type);
-        }
-      },
-      
-      _getCategoryType : function(type) {
-        if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-          return 'number';
-        }
-        else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-          return 'date';
-        }
-        
-        return 'text';
-      },
-      
-      /**
-       * Adding font-family style property to dropdown options for better usability.
-       * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
-       * 
-       */
-      _injectFontStylesForDropdown : function(){
-        var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
-        var selectedOption = $(".select-font-select.select-area").find(".center");
-        selectedOption.css("font-family", selectedOption.text());
-        
-        for(var i=0; i<convertedOptions.length; i++){
-          var targetSpan = $(convertedOptions[i]).find("span");
-          
-          if(targetSpan.text().length > 0){
-            targetSpan.css("font-family", targetSpan.text());
-          }
-        }
-      },
-      
-      _addLayerFormControls : function(){
-    	var that = this;
-        
-        $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
-        
-        if($("#ontology-tree").length > 0){
-          this._renderLayerTermTree();
-          attachCategoryColorPickers();
-          
-          // category 'other' option
-          $(".other-option-check-box").change(function() {
-            if($(this).is(":checked")) {
-            	$("#other-cat-container").show();
-            }
-            else{
-            	$("#other-cat-container").hide();
-            }     
-          });
-          
-          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-          // The 'other' option is checked by default making this a valid sequence
-          var otherEnabled = true;
-          var catStore = $("#categories-input").data("categoriesstore");
-          if(catStore.length > 0){
-        	  var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
-        	  for(var i=0; i<catJSON.length; i++){
-        		  var cat = catJSON[i];
-        		  if(cat.id === "cat-other-color-selector"){
-        			  otherEnabled = cat.otherEnabled;
-        		  }
-        	  }
-          }
-          
-          if(!otherEnabled){
-            $(".other-option-check-box").click();
-          }
-        }
-        else if($(".category-input").length > 0){
-          this._addCategoryAutoComplete('#category-colors-container', '#f59');
-          this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
-            
-          // category 'other' option
-          $(".other-option-check-box").change(function() {
-            if($(this).is(":checked")) {
-              $("#cat-other").parent().parent().show();
-            }
-            else{
-              $("#cat-other").parent().parent().hide();
-            }     
-          });
-          
-          attachCategoryColorPickers();
-        }
-        
-        function attachCategoryColorPickers(){
-          // ontology category layer type colors
-          $(".category-color-icon").colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-            onChange:function(hsb,hex,rgb,el,bySetColor) {
-              $(el).css('background','#'+hex);
-              $(el).find('.color-input').attr('value', '#'+hex);
-            }
-          });
-        }
-        
-        // Load the secondary values
-        var secondaryAttribute = $("#secondaryAttribute").val();
-        
-        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
-
-          var type = $('#secondaryAttribute').find(":selected").data('type');
-          
-          if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {          
-          
-            this._renderSecondaryTermTree(secondaryAttribute, type);
-          }
-          else {
-            this._renderSecondaryCategoryGroup(secondaryAttribute, type);
-          
-            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
-
-          }
-        }
-        
-        // Scroll selector dropdown options on page scroll
-        $("#modal01").scroll(function(){       	
-	        var drops = $(".select-options");
-	    	for(var i=0; i<drops.length; i++){
-	    		var drop = $(drops[i]);
-	    		if(!drop.hasClass("options-hidden")){
-	    			var dropSelector = $(".select-active");
-	    			var diff = dropSelector.offset().top + dropSelector.height() + 2; 
-	    			var diffStr = diff.toString() + "px";
-	    			drop.css({ top: diffStr });
-	    		}
-	    	}
-        });
-        
-        this._injectFontStylesForDropdown();
-      },
-      
+           
       /**
        * Gets the html for and calls the new dashboard creation form 
        * 
@@ -2535,18 +1902,17 @@
           return request;
         },
         
-        /**
-         * Closes the new dashboard CRUD.
-         * 
-         */
-        _closeDashboardModal : function(){
-          $(DynamicMap.DASHBOARD_MODAL).modal('hide').html('');
-        },
+      /**
+       * Closes the new dashboard CRUD.
+       */
+      _closeDashboardModal : function(){
+        $(DynamicMap.DASHBOARD_MODAL).modal('hide').html('');
+      },
       
       /**
        * Gets the html for and calls the layer creation/edit form 
        * 
-       * @e 
+       * @
        */
       _openLayerForAttribute : function(e){
         e.preventDefault();      
@@ -2554,25 +1920,9 @@
         var el = $(e.currentTarget);
         var attrId = el.data('id');
         this._currentAttributeId = attrId;
-
-        var that = this;
         
-        var request = new Mojo.ClientRequest({
-          onSuccess : function(html){
-            that._displayLayerForm(html);
-            that._addLayerFormControls();
-            
-            //
-            // See form.jsp in DashboardLayer for category color pickers event listener configuration
-            //
-          },
-          onFailure : function(e){
-            that._closeLayerModal();
-            that.handleException(e);
-          }
-        });
-        
-        this._LayerController.newThematicInstance(request, this._currentAttributeId, this._mapId);
+        var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(this, this._mapId, this._currentAttributeId);
+        form.open();
       },
 
       
@@ -2582,450 +1932,29 @@
        * @e 
        */
       _openReferenceLayerForAttribute : function(e){
-          e.preventDefault();    
+        e.preventDefault();    
           
-          var that = this;
-          
-          var el = $(e.currentTarget);
-          var universalId = el.data('universalid');
-
-          var request = new Mojo.ClientRequest({
-            onSuccess : function(html){
-              that._displayLayerForm(html);
-              that._addLayerFormControls();
-              
-            },
-            onFailure : function(e){
-              that._closeLayerModal();
-              that.handleException(e);
-            }
-          });
-          
-          this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);
-        },
-        
-        
-      /**
-       * Renders the layer creation/edit form
-       * 
-       * @html
-       */
-      _displayLayerForm : function(html){
-        
         var that = this;
-        
-        // clear all previous color picker dom elements
-        $(".colpick.colpick_full.colpick_full_ns").remove();
-        
-        // Show the white background modal.
-        var modal = $(DynamicMap.LAYER_MODAL).first();
-        modal.html(html);
-        
-        jcf.customForms.replaceAll(modal[0]);
-        
-        // Add layer styling event listeners
-        this._selectColor();
-        this._selectLayerType();
-        
-        // Move reusable cells to active cell holder
-        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab001basic") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-        }
-        else if (activeTab === "tab003gradient") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-        }
-        else if (activeTab === "tab004categories") {
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
           
-          // Hide the reusable input cells that don't apply to categories
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          polyFillOpacity.hide();
-        }
-        
-        // Attach listeners
-        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
-     
-        // Attach event listeners for the universal (geo) aggregation dropdown.
-        $("#f58").change(function(){ 
-          if($("#f58 option:selected").hasClass("universal-leaf")){
-            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-            $("#f59").parent().parent().hide();
-          }
-          else{
-            $("#f59").parent().parent().show();
-          }
-        });
-        
-        
-        $("#geonode-select").change(function(){ 
-        	var selectedVal = $("#geonode-select option:selected").val();
-            
-        	var clientRequest = new Mojo.ClientRequest({
-                  onSuccess : function(data) {
-                  	that._setGeographicAggregationDropdown(data);
-                  },
-                  onFailure : function(e) {
-                    that.handleException(e);
-                   
-                  }
-                });
-                
-                // Persist legend position to the db
-                com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategiesJSON(clientRequest, selectedVal);
-          });
-     
-        
-        // Localize any existing number cateogry values
-        $.each($('.category-input'), function() {
-          var value = $(this).val();
-          if(value != null && value.length > 0) {
-            var categoryType = $(this).data("type");
-            if(categoryType == "number") {
-              var number = parseFloat(value);
-              var localized = that._formatter(number);
-              
-              $(this).val(localized);
-            }
-          }
-        });    
-        
-        // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
-        //            It is better to finish all of the DOM modification before showing the modal to the user
-        modal.modal('show');
-      },
-      
-      
-      /**
-       * Populate the geographic aggregation dropdown
-       * 
-       */
-      _setGeographicAggregationDropdown : function(data) {
-    	  var aggregations = JSON.parse(decodeURIComponent(data));
-    	  var el = $(DynamicMap.GEOAGGDROPDOWN).html("");
-    	  
-    	  for(var i=0; i<aggregations.length; i++){
-    		  var agg = aggregations[i];
-    		  el.append($("<option></option>").attr("value",agg.id).text(agg.label)); 
-    	  }
-    	  
-    	  jcf.customForms.refreshElement(el);
-//    	  jcf.customForms.replaceAll(el.get(0));
-    	  
-      },
-      
-      /**
-       * Renders the term tree on the layer form for ontology categories
-       * 
-       */
-      _renderLayerTermTree : function() {
-        
-        var elementId = "#ontology-tree";
-        var storeId = "#categories-input";
-        var rootsJSON = $("#ontology-tree").data("roots");
-        var rootTerms = rootsJSON.roots;
-        
-        this._renderCategoryTermTree(elementId,rootTerms, storeId);
-      },
-        
-      _renderCategoryTermTree : function(elementId, rootTerms, storeId, nodes) {
-        var that = this;
-        
-        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
-          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
-          rootTerms : rootTerms,
-          editable : false,
-          slide : false,
-          selectable : false,
-          onCreateLi: function(node, $li) {
-        	if(!node.phantom) {
-              var termId = node.runwayId;
+        var el = $(e.currentTarget);
+        var universalId = el.data('universalid');
 
-              var catColor = that._getCategoryColor(termId, elementId, storeId);
-          
-              var thisLi = $.parseHTML(
-                '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-                  '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-                '</a>');
-
-              // Add the color icon for category ontology nodes              
-              $li.find('> div').append(thisLi);
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){
+            that._displayLayerForm(html);
+            that._addLayerFormControls();
               
-            // ontology category layer type colors
-            $(thisLi).find("span").colpick({
-              submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onShow:function(colPickObj) {
-                var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).css("background-color"));
-                $(this).colpickSetColor(currColor,false);
-              },
-              onChange: function(hsb,hex,rgb,el,bySetColor) {
-                var hexStr = '#'+hex;
-                $(el).css('background', hexStr);
-                $(el).next(".color-input").attr('value', hexStr);                                  
-              },
-              /* checkable: true, */
-              crud: {
-                create: { // This configuration gets merged into the jquery create dialog.
-                  height: 320
-                },
-                update: {
-                  height: 320
-                }
-              }
-            });
-           }
-          }
-        });
-        tree.render(elementId, nodes);
-        
-        // Set the color of the 'other' category selector icon
-        $("#cat-other-color-selector").css('background', that._getCategoryColor("", elementId, storeId));
-      },
-      
-      /**
-       * Gets the hex color code for an ontology category based on the term id 
-       * 
-       * @paarm nodeId - id of the node in the ui to get the color for.
-       */
-      _getCategoryColor : function(termId, elementId, storeId) {
-        var catsJSONObj = $(storeId).data("categoriesstore");
-          
-        if(catsJSONObj){
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-            
-          var catsJSONArr = catsJSONObj.catLiElems;              
-            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-              catsJSONArr = catsJSONObj;
-            }          
-
-            if($(elementId).length > 0){
-              for(var i=0; i<catsJSONArr.length; i++){
-                var cat = catsJSONArr[i];
-                var catId = cat.id;
-                
-                if(catId === termId){
-                  return cat.color;
-                }
-                else if(catId === "cat-other-color-selector"){
-                	return cat.color;
-                }
-              }
-            }
-          }
-          // if no match is found return the default
-          return "#00bfff";
-      },
-      
-      
-      /**
-       * Adds the value and color setting for saved categories on the layer create/edit form.
-       * The categories data is appended to the #categories-input element as json.
-       * 
-       */
-      _loadExistingCategories : function(storeElement, prefix, treeElement, checkOther) {
-        
-        var catsJSONObj = $(storeElement).data("categoriesstore");
-        
-        if(catsJSONObj){
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-          
-          var catsJSONArr = catsJSONObj.catLiElems;
-          
-          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-            catsJSONArr = catsJSONObj;
-          }          
-          
-          if($(treeElement).length === 0)
-          {
-            var catInputId;
-            var catOtherEnabled = true;
-            
-            for(var i=0; i<catsJSONArr.length; i++){
-              var cat = catsJSONArr[i];
-              
-              // Controlling for 'other' category 
-              if(cat.otherCat){
-                catInputId = prefix + "-other";
-              }
-              else{
-                catInputId = prefix + (i+1);
-              }
-              
-              var catColorSelectorId = catInputId + "-color-selector";
-              $("#"+catInputId).val(cat.val);
-              $("#"+catColorSelectorId).css("background", cat.color);
-              catOtherEnabled = cat.otherEnabled;
-            }
-            
-            // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-            // The 'other' option is checked by default making this a valid sequence
-            if(checkOther && !catOtherEnabled){
-              $(".other-option-check-box").click();
-              $("#" + prefix + "-other").parent().parent().hide();
-            }
-          }
-        }
-      },
-      
-      
-      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        if(strokeCellHolder != null) {        
-          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-          strokeCellHolder.append(polyStroke);
-          polyStroke.show();
-        
-          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-          strokeCellHolder.append(polyStrokeWidth);
-          polyStrokeWidth.show();
-        
-          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-          strokeCellHolder.append(polyStrokeOpacity);
-          polyStrokeOpacity.show();
-        }
-        
-        if(fillCellHolder != null) {
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          fillCellHolder.append(polyFillOpacity);
-          polyFillOpacity.show();
-        }
-      },          
-      
-      _onLayerTypeTabChange : function(e) {
-        var activeTab = e.target;
-        
-        var type = activeTab.dataset["gdbTabType"];
-        
-        if (type === "BASIC") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-          $("#tab001basic").show();
-        }
-        else if (type === "BUBBLE") {
-          $("#tab002bubble").show();
-        }
-        else if (type === "GRADIENT") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-          $("#tab003gradient").show();
-        }
-        else if (type === "CATEGORY") {
-          $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
-        }
-        else if (type === "FIXEDBUBBLE") {
-            $("#tab005bubble").show();
-            this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
-        }
-      },
-      
-      /**
-       * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
-       * 
-       */
-      rgb2hex : function(rgb) {
-        if(rgb != null) {
-          
-          if (/^#[0-9A-F]{6}$/i.test(rgb)){
-            return rgb;
-          }
-
-          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-          if(rgbMatch){
-            function hex(x) {
-              return ("0" + parseInt(x).toString(16)).slice(-2);
-            }
-            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-          }
-          
-          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-          if(rgbaMatch){
-            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-          }
-        }
-      },
-      
-      _setupCategoryColorPicker : function(elements) {
-        
-        // color dropdown buttons
-        elements.colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj) {
-            var currColor = GDB.gis.DynamicMap.prototype.rgb2hex($(this).find(".ico").css("background-color"));
-            $(this).colpickSetColor(currColor,false);
           },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).find(".ico").css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        }); 
-      },
-      
-      /**
-       * Handles the selection of colors from the color picker 
-       * 
-       * 
-       */
-      _selectColor : function(){
-        var that = this;
-        
-        this._setupCategoryColorPicker($('.color-holder'));
-        
-        // category layer type colors
-        $("#category-colors-container").find('.icon-color').colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);          
+          onFailure : function(e){
+            that._closeLayerModal();
+            that.handleException(e);
           }
         });
-        
-        // ontology category layer type colors
-        $(".ontology-category-color-icon").colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).next(".color-input").attr('value', '#'+hex);
-          }
-        });
-        
+          
+        this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);
       },
-      
-      /**
-       * Handles the selection of layer type representation in the layer create/edit form
-       * i.e. basic, bubble, gradient, category
-       * 
-       */
-      _selectLayerType : function(){
-        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
-        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
-              
-              var targetRadio = $(this);
-              
-              // hide all the styling options
-              $.each($('.tab-pane'), function(){
-                if($(this).is(":visible")){
-                  $(this).hide(); 
-                }
-              });
-            
-              // add the relevant styling options for the layer type
-              if (targetRadio.attr("id") === "radio1") {
-                  $("#tab001").show();
-              }
-              else if (targetRadio.attr("id") === "radio2") {
-                  $("#tab002").show();
-              }
-              else if (targetRadio.attr("id") === "radio3") {
-                  $("#tab003").show();
-              }
-              else if (targetRadio.attr("id") === "radio4") {
-                  $("#tab004").show();
-              }
-        });
-      },
-      
+        
+        
       /**
        * Control stack order or legends
        */
@@ -3172,6 +2101,10 @@
         }
         
         return criteria;
+      },
+      
+      getConditions : function() {
+        return this._getConditionsFromCriteria(this._criteria);  
       },
       
       /*

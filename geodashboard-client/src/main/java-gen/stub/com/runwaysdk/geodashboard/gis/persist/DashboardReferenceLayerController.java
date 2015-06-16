@@ -172,7 +172,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   }
   
   @Override
-  public void applyWithStyle(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException, ServletException
+  public void applyWithStyle(DashboardReferenceLayerDTO layer, DashboardStyleDTO style, String mapId) throws IOException, ServletException
   {
     try
     {
@@ -234,7 +234,6 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
    * 
    * @throws JSONException
    */
-  @SuppressWarnings("unchecked")
   private void loadLayerData(DashboardLayerDTO layer, DashboardStyleDTO style, String mapId, String universalId)
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();

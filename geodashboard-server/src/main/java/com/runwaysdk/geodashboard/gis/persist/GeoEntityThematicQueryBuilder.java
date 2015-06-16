@@ -47,6 +47,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
 
     SelectableSingle label = this.geoEntityQuery.getDisplayLabel().localize(mdAttribute.definesAttribute());
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
 
     return label;
   }
@@ -58,6 +59,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
 
     // geo id (for uniqueness)
     Selectable geoId = this.geoEntityQuery.getGeoId(mdAttribute.definesAttribute());
+    geoId.setUserDefinedAlias(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
 
     return geoId;

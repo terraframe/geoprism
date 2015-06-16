@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1816139688)
+@com.runwaysdk.business.ClassSignature(hash = -297675407)
 public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer";
-  private static final long serialVersionUID = -1816139688;
+  private static final long serialVersionUID = -297675407;
   
   protected DashboardThematicLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -222,6 +222,22 @@ public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getMdAttributeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(MDATTRIBUTE).getAttributeMdDTO();
+  }
+  
+  public final java.lang.String applyWithStyleAndStrategy(com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO strategy, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.AggregationStrategy", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{style, mapId, strategy, conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO.CLASS, "applyWithStyleAndStrategy", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String applyWithStyleAndStrategy(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO strategy, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "com.runwaysdk.geodashboard.gis.persist.AggregationStrategy", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{id, style, mapId, strategy, conditions};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO.CLASS, "applyWithStyleAndStrategy", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
