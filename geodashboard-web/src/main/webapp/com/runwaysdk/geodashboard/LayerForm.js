@@ -2,7 +2,10 @@
   var CategoryWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryWidget', {
     
     IsAbstract : true,
-    
+    Constants : {
+      OTHER : 'other',
+      UNIVERSAL_AGGREGATION: "#f58"      
+    },    
     Instance : {
       
       render : {
@@ -11,25 +14,77 @@
       getCategories:  {
         IsAbstract : true
       },
+      attachCategoryColorPickers : function (){
+        // ontology category layer type colors
+        $(".category-color-icon").colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);
+          }
+        });
+      }
     }
   });
   
   var CategoryTreeWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryListWidget', {
     Extends : CategoryWidget,    
     Instance : {
-      initialize : function(elementId, storeId, checkOther, prefix, parser){
+      initialize : function(map, elementId, storeId, checkOther, prefix, mdAttributeId, categoryType, aggregationId){
+      this._map = map;
         this._elementId = elementId;
         this._storeId = storeId;        
         this._checkOther = checkOther;    
         this._prefix = prefix;
-        this._parser = parser;
+        this._mdAttributeId = mdAttributeId;
+        this._categoryType = categoryType;
+        this._aggregationId = aggregationId;
+        
+        this._parser = Globalize.numberParser();
+        this._formatter = Globalize.numberFormatter();
       },
-      _getImpl : function() {        
+      getImpl : function() {        
           return $(this._elementId);
       },      
       setCheckOther : function(checkOther) {
         this._checkOther = checkOther;  
       },
+      
+      _getCategoryHTML : function(index) {
+        
+        var autocomplete = 'on';
+        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
+        var disabled = "";
+        var color = "#000000"
+        var id = this._prefix + '-' + index;
+        
+        if(index == CategoryWidget.OTHER) {
+          autocomplete = 'off';
+          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other", "Other");
+          disabled = "disabled";
+          color = "#737678";
+        }       
+                  
+        var html = '<li>' +
+          '<div class="category-container">' +
+            '<div class="text category-input-container">' +
+              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
+            '</div>' +
+            '<div class="cell">' +
+              '<div class="color-holder">' +
+                '<a href="#" class="color-choice">' +
+                  '<span id="' + id  + '-color-selector" class="ico cat-color-selector" style="background:' + color +'">icon</span>' +
+                  '<span class="arrow">arrow</span>' +
+                '</a>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</li>';
+            
+        return html;        
+      },
+        
+      
       /**
        * Adds the value and color setting for saved categories on the layer create/edit form.
        * The categories data is appended to the #categories-input element as json.
@@ -37,53 +92,123 @@
        */
       render : function() {
         
-        var catsJSONObj = $(this._storeId).data("categoriesstore");
+        var html = '<ul class="color-list">';
+        html += this._getCategoryHTML(1);
+        html += this._getCategoryHTML(2);
+        html += this._getCategoryHTML(3);
+        html += this._getCategoryHTML(4);
+        html += this._getCategoryHTML(5);
+
+        if(this._checkOther) {
+          html += this._getCategoryHTML(CategoryWidget.OTHER);
+        }
+        html += '</ul>';
+      
+        this.getImpl().html(html);
         
+        // Load the existing data 
+        this._addCategoryAutoComplete();        
+        this._loadExistingCategories();
+        
+        this.attachCategoryColorPickers();
+      },
+      
+      /**
+       * Hooks the auto-complete functionality to the category field input fields
+       */
+      _addCategoryAutoComplete : function(){
+        
+        var that = this;
+        
+        // Hook up the auto-complete for category input options new layers
+        // existing layers have a seperate autocomplete hookup that queries 
+        // the layer database view directly. 
+        this.getImpl().find('.category-input').each(function(){
+          
+          var mdAttribute = $(this).data('mdattributeid');  
+          var categoryType = $(this).data('type');
+          
+          $(this).autocomplete({
+            source: function( request, response ) {
+              var req = new Mojo.ClientRequest({
+                onSuccess : function(results){
+                  
+                  // We need to localize the results for numbers
+                  if(categoryType == 'number') {
+                    for(var i = 0; i < results.length; i++) {
+                      var number = parseFloat(results[i]);
+                      var localized = that._formatter(number);
+                      
+                      results[i] = localized;
+                    }
+                  }
+                  
+                  response( results );
+                },
+                onFailure : function(e){
+                  that.handleException(e);
+                }
+              });
+              
+              // values are scraped from hidden input elements on the layer create form
+              var universalId = $(CategoryWidget.UNIVERSAL_AGGREGATION).val();
+              var aggregationVal = $(that._aggregationId).val();
+              var conditions = that._map.getCurrentConditions();
+              
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
+            },
+            minLength: 1
+          });
+        });
+      },
+      _loadExistingCategories : function() {
+        var catsJSONObj = $(this._storeId).data("categoriesstore");
+          
         if(catsJSONObj){
           catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-          
+            
           var catsJSONArr = catsJSONObj.catLiElems;
-          
+            
           if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
             catsJSONArr = catsJSONObj;
           }          
-          
+            
           var catInputId;
           var catOtherEnabled = true;
-            
+              
           for(var i=0; i<catsJSONArr.length; i++){
             var cat = catsJSONArr[i];
-              
+                
             // Controlling for 'other' category 
             if(cat.otherCat){
-              catInputId = this._prefix + "-other";
+              catInputId = this._prefix + "-" + CategoryWidget.OTHER;
             }
             else{
-              catInputId = this._prefix + (i+1);
+              catInputId = this._prefix + "-" + (i+1);
             }
-              
+                
             var catColorSelectorId = catInputId + "-color-selector";
             $("#"+catInputId).val(cat.val);
             $("#"+catColorSelectorId).css("background", cat.color);
             catOtherEnabled = cat.otherEnabled;
           }
-            
+              
           // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
           // The 'other' option is checked by default making this a valid sequence
-          if(checkOther && !catOtherEnabled){
+          if(this._checkOther && !catOtherEnabled){
             $(".other-option-check-box").click();
-            $("#" + this._prefix + "-other").parent().parent().hide();
+            $("#" + this._prefix + "-" + CategoryWidget.OTHER).parent().parent().hide();
           }
         }
-      },
+      },        
       getCategories: function () {    
-        var elements = this._getImpl().find(".category-container");
+        var elements = this.getImpl().find(".category-container");
         var categories = [];        
             
         for(var i=0; i< elements.length; i++){
           var catInputElem = $(elements[i]).find(".category-input");
           var catColorElem = $(elements[i]).find(".cat-color-selector");
-          var catColor = ThematicLayerForm.prototype.rgb2hex($(catColorElem).css("background-color"));
+          var catColor = LayerForm.rgb2hex($(catColorElem).css("background-color"));
           var catVal = catInputElem.val();
                 
           // parse the formatted number to the format of the data so the SLD can apply categories by this value
@@ -143,7 +268,7 @@
         }
       },
       
-      _getImpl : function() {        
+      getImpl : function() {        
         return $(this._elementId);
       },
       
@@ -154,7 +279,7 @@
       render : function(rootTerms, nodes) {
         
         if(rootTerms == null) {
-          var rootsJSON = this._getImpl().data("roots");
+          var rootsJSON = this.getImpl().data("roots");
           rootTerms = rootsJSON.roots;        
         }
         
@@ -185,7 +310,7 @@
             $(thisLi).find("span").colpick({
               submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
               onShow:function(colPickObj) {
-                var currColor = ThematicLayerForm.prototype.rgb2hex($(this).css("background-color"));
+                var currColor = LayerForm.rgb2hex($(this).css("background-color"));
                 $(this).colpickSetColor(currColor,false);
               },
               onChange: function(hsb,hex,rgb,el,bySetColor) {
@@ -210,6 +335,8 @@
         
         // Set the color of the 'other' category selector icon
         $("#cat-other-color-selector").css('background', this._getCategoryColor(""));
+        
+        this.attachCategoryColorPickers();
       },
       
       /**
@@ -229,7 +356,7 @@
             catsJSONArr = catsJSONObj;
           }          
 
-          if(this._getImpl().length > 0){
+          if(this.getImpl().length > 0){
             for(var i=0; i<catsJSONArr.length; i++){
               var cat = catsJSONArr[i];
               var catId = cat.id;
@@ -249,10 +376,10 @@
       
       getCategories: function () {
           
-        if(this._getImpl().length > 0) {
+        if(this.getImpl().length > 0) {
           var categories = [];
               
-          var elements = this._getImpl().find(".ontology-category-color-icon");
+          var elements = this.getImpl().find(".ontology-category-color-icon");
               
           $.each(elements, function( index, element ) {
             var rwId = element.dataset.rwid;
@@ -260,18 +387,18 @@
             var category = new Object();
             category.id = element.dataset.rwid; 
             category.val = element.parentElement.previousSibling.textContent;
-            category.color = ThematicLayerForm.prototype.rgb2hex($(element).css("background-color"));
+            category.color = LayerForm.rgb2hex($(element).css("background-color"));
             category.isOntologyCat = true;
                             
             categories.push(category);
           });
               
           // Get the other category for the a layer create/edit form term tree
-          if(this._getImpl().next().attr('id') === "other-cat-container"){
+          if(this.getImpl().next().attr('id') === "other-cat-container"){
             var otherCat = new Object();
             otherCat.id = "cat-other-color-selector"; 
             otherCat.val = "Other";
-            otherCat.color = ThematicLayerForm.prototype.rgb2hex($("#cat-other-color-selector").css("background-color"));
+            otherCat.color = LayerForm.rgb2hex($("#cat-other-color-selector").css("background-color"));
             otherCat.isOntologyCat = false;
             otherCat.otherCat = true;
             otherCat.otherEnabled =  $(".other-option-check-box").prop("checked");
@@ -287,9 +414,9 @@
     }
   });
  
-  var ThematicLayerForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.ThematicLayerForm', {
+  var LayerForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.LayerForm', {
     Extends : com.runwaysdk.ui.Component,  
-    
+    IsAbstract : true,    
     Constants : {
       LAYER_MODAL : '#modal01',
       GEO_AGG_LEVEL_DD : "agg-level-dd",
@@ -297,12 +424,356 @@
       GEO_AGG_HOLDER : "#agg-level-holder",
       GEO_TYPE_HOLDER : "#geom-type-holder"
     },
+    Instance : {
+      initialize : function(map, mapId){
+        this._map = map;
+        this._mapId = mapId;
+      },
+      
+      _onApplySuccess : {
+        IsAbstract : true,            
+      },        
+      
+      /**
+       * Closes the overlay with the layer/style CRUD.
+       * 
+       */
+      _closeLayerModal : function(){
+        this.getImpl().modal('hide').html('');
+      },
+
+      getImpl : function(){
+        return $(LayerForm.LAYER_MODAL);
+      },
+      
+      /**
+       * Adding font-family style property to dropdown options for better usability.
+       * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
+       * 
+       */
+      _injectFontStylesForDropdown : function(){
+        var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
+        var selectedOption = $(".select-font-select.select-area").find(".center");
+        selectedOption.css("font-family", selectedOption.text());
+        
+        for(var i=0; i<convertedOptions.length; i++){
+          var targetSpan = $(convertedOptions[i]).find("span");
+          
+          if(targetSpan.text().length > 0){
+            targetSpan.css("font-family", targetSpan.text());
+          }
+        }
+      },
+      
+      _addLayerFormControls : function(){
+        // Scroll selector dropdown options on page scroll
+        this.getImpl().scroll(function(){         
+          var drops = $(".select-options");
+              
+          for(var i=0; i<drops.length; i++){
+            var drop = $(drops[i]);
+                
+            if(!drop.hasClass("options-hidden")){
+              var dropSelector = $(".select-active");
+              var diff = dropSelector.offset().top + dropSelector.height() + 2; 
+              var diffStr = diff.toString() + "px";
+              drop.css({ top: diffStr });
+            }
+          }
+        });
+              
+        this._injectFontStylesForDropdown();
+      },          
+      
+      _setupCategoryColorPicker : function(elements) {
+          
+        // color dropdown buttons
+        elements.colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj) {
+            var currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
+            $(this).colpickSetColor(currColor,false);
+          },
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).find(".ico").css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);
+          }
+        }); 
+      },       
+      
+      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
+        if(strokeCellHolder != null) {        
+          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+          strokeCellHolder.append(polyStroke);
+          polyStroke.show();
+          
+          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+          strokeCellHolder.append(polyStrokeWidth);
+          polyStrokeWidth.show();
+          
+          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+          strokeCellHolder.append(polyStrokeOpacity);
+          polyStrokeOpacity.show();
+        }
+          
+        if(fillCellHolder != null) {
+          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          fillCellHolder.append(polyFillOpacity);
+          polyFillOpacity.show();
+        }
+      },          
+        
+      _onLayerTypeTabChange : function(e) {
+        var activeTab = e.target;
+          
+        var type = activeTab.dataset["gdbTabType"];
+          
+        if (type === "BASIC") {
+          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+          $("#tab001basic").show();
+        }
+        else if (type === "BUBBLE") {
+          $("#tab002bubble").show();
+        }
+        else if (type === "GRADIENT") {
+          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+          $("#tab003gradient").show();
+        }
+        else if (type === "CATEGORY") {
+          $("#tab004categories").show();
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
+        }
+        else if (type === "FIXEDBUBBLE") {
+          $("#tab005bubble").show();
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+        }
+      },
+        
+      /**
+       * Handles the selection of colors from the color picker 
+       * 
+       * 
+       */
+      _selectColor : function(){
+        var that = this;
+        
+        this._setupCategoryColorPicker($('.color-holder'));
+        
+        // category layer type colors
+        $("#category-colors-container").find('.icon-color').colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).find('.color-input').attr('value', '#'+hex);          
+          }
+        });
+        
+        // ontology category layer type colors
+        $(".ontology-category-color-icon").colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            $(el).css('background','#'+hex);
+            $(el).next(".color-input").attr('value', '#'+hex);
+          }
+        });        
+      },   
+      
+      /**
+       * Handles the selection of layer type representation in the layer create/edit form
+       * i.e. basic, bubble, gradient, category
+       * 
+       */
+      _selectLayerType : function(){
+      
+        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
+        
+        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
+              
+          var targetRadio = $(this);
+              
+          // hide all the styling options
+          $.each($('.tab-pane'), function(){
+            if($(this).is(":visible")){
+              $(this).hide(); 
+            }
+          });
+            
+          // add the relevant styling options for the layer type
+          if (targetRadio.attr("id") === "radio1") {
+            $("#tab001").show();
+          }
+          else if (targetRadio.attr("id") === "radio2") {
+            $("#tab002").show();
+          }
+          else if (targetRadio.attr("id") === "radio3") {
+            $("#tab003").show();
+          }
+          else if (targetRadio.attr("id") === "radio4") {
+            $("#tab004").show();
+          }
+        });
+      },
+      
+      
+      /**
+       * Renders the layer creation/edit form
+       * 
+       * @html
+       */
+      _displayLayerForm : function(html){
+        
+        var that = this;
+        
+        // clear all previous color picker dom elements
+        $(".colpick.colpick_full.colpick_full_ns").remove();
+        
+        // Show the white background modal.
+        var modal = this.getImpl().first();
+        modal.html(html);
+        
+        jcf.customForms.replaceAll(modal[0]);
+        
+        // Add layer styling event listeners
+        this._selectColor();
+        this._selectLayerType();
+        
+        // Move reusable cells to active cell holder
+        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
+        if (activeTab === "tab001basic") {
+          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+        }
+        else if (activeTab === "tab003gradient") {
+          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+        }
+        else if (activeTab === "tab004categories") {
+          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+          
+          // Hide the reusable input cells that don't apply to categories
+          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          polyFillOpacity.hide();
+        }
+        
+        // Attach listeners
+        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+     
+        // Attach event listeners for the universal (geo) aggregation dropdown.
+        $("#f58").change(function(){ 
+          if($("#f58 option:selected").hasClass("universal-leaf")){
+            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+            $("#f59").parent().parent().hide();
+          }
+          else{
+            $("#f59").parent().parent().show();
+          }
+        });
+        
+        // Localize any existing number cateogry values
+        $.each($('.category-input'), function() {
+          var value = $(this).val();
+          if(value != null && value.length > 0) {
+            var categoryType = $(this).data("type");
+            if(categoryType == "number") {
+              var number = parseFloat(value);
+              var localized = that._map.getFormatter()(number);
+              
+              $(this).val(localized);
+            }
+          }
+        });    
+        
+        // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
+        //            It is better to finish all of the DOM modification before showing the modal to the user
+        modal.modal('show');
+      },
+
+      /**
+       * Called when a user submits (creates/updates) a layer with styles.
+       * 
+       * @params
+       */
+      _applyWithStyleListener : function(params){
+        
+        var that = this;
+        
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          onSuccess : function(htmlOrJson, response){
+            that._onApplySuccess(htmlOrJson, response);
+          },
+          onFailure : function(e){
+            that.handleException(e);
+          }
+        }, this.getImpl()[0]);
+        
+        var layer = this._map.getLayer(params["layer.componentId"]);
+        
+        params['mapId'] = this._mapId;
+        
+        // Custom conversion to turn the checkboxes into boolean true/false
+        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
+        
+        // A hack to set the enableValue property which is required on DashboardLayer but is
+        // not allowed for the reference layer form since ther is no 'value' to display
+        if(!params['style.enableValue']){
+          params['style.enableValue'] = false;
+        }
+        else{
+          params['style.enableValue'] = params['style.enableValue'].length > 0;
+        }
+        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
+        
+        // Check for existense of dynamic settings which may not exist 
+        if(params['style.bubbleContinuousSize']){
+          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+        }
+        
+        if($("#f79").is(":visible")){
+          params['style.pointFixedSize'] = params['style.pointFixedSize'];
+          params['style.pointFixed'] = true;
+        }
+        
+        return request;
+      }
+    },
+    Static : {
+      /**
+       * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
+       * 
+       */
+      rgb2hex : function(rgb) {
+        if(rgb != null) {
+            
+          if (/^#[0-9A-F]{6}$/i.test(rgb)){
+            return rgb;
+          }
+
+          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          if(rgbMatch){
+            function hex(x) {
+              return ("0" + parseInt(x).toString(16)).slice(-2);
+            }
+            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+          }
+            
+          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+          if(rgbaMatch){
+            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+          }
+        }
+      },
+    }
+  });
+  
+  var ThematicLayerForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.ThematicLayerForm', {
+    Extends : LayerForm,  
     
     Instance : {
           
       initialize : function(map, mapId, thematicAttributeId){
-        this._map = map;
-        this._mapId = mapId;
+        this.$initialize(map, mapId);
+        
         this._thematicAttributeId = thematicAttributeId;
     
         this._LayerController = com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;        
@@ -342,14 +813,6 @@
       },
       
       /**
-       * Closes the overlay with the layer/style CRUD.
-       * 
-       */
-      _closeLayerModal : function(){
-        $(ThematicLayerForm.LAYER_MODAL).modal('hide').html('');
-      },
-      
-      /**
        * 
        * @params
        */
@@ -378,6 +841,29 @@
         }
       },
       
+      _onApplySuccess : function(htmlOrJson, response) {
+        if (response.isJSON()) {
+          this._closeLayerModal();
+              
+          var returnedLayerJSON = JSON.parse( htmlOrJson);
+          var jsonObj = {};
+          jsonObj["layers"] = [Mojo.Util.toObject(htmlOrJson)];
+              
+          this._map.handleLayerEvent(jsonObj)
+              
+          // TODO : Push this somewhere as a default handler.
+          this.handleMessages(response);
+        }
+        else if (response.isHTML()) {
+          // we got html back, meaning there was an error
+              
+          this._displayLayerForm(htmlOrJson);
+          this._addLayerFormControls();
+              
+          this.getImpl().animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
+        }
+      },
+      
       /**
        * Called when a user submits (creates/updates) a layer with styles.
        * 
@@ -385,70 +871,10 @@
        */
       _applyWithStyleListener : function(params){
         
-        var that = this;
-        
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(htmlOrJson, response){
-            if (response.isJSON()) {
-              that._closeLayerModal();
-              
-              var returnedLayerJSON = JSON.parse( htmlOrJson);
-              var jsonObj = {};
-              jsonObj["layers"] = [Mojo.Util.toObject(htmlOrJson)];
-              
-              that._map.handleLayerEvent(jsonObj)
-              
-              // TODO : Push this somewhere as a default handler.
-              that.handleMessages(response);
-            }
-            else if (response.isHTML()) {
-              // we got html back, meaning there was an error
-              
-              that._displayLayerForm(htmlOrJson);
-              that._addLayerFormControls();
-              
-              $(ThematicLayerForm.LAYER_MODAL).animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
-            }
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        }, $(ThematicLayerForm.LAYER_MODAL)[0]);
-        
         var layer = this._map.getLayer(params["layer.componentId"]);
+        var mdAttribute = (layer != null) ? layer.getValue('mdAttribute') : this._thematicAttributeId;
         
-        var mdAttribute = this._thematicAttributeId;
-        
-        if (layer != null) 
-        {
-          mdAttribute = layer.getValue('mdAttribute');
-        }
-        
-        params['mapId'] = this._mapId;
         params['layer.mdAttribute'] = mdAttribute;
-        
-        // Custom conversion to turn the checkboxes into boolean true/false
-        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
-        
-        // A hack to set the enableValue property which is required on DashboardLayer but is
-        // not allowed for the reference layer form since ther is no 'value' to display
-        if(!params['style.enableValue']){
-          params['style.enableValue'] = false;
-        }
-        else{
-          params['style.enableValue'] = params['style.enableValue'].length > 0;
-        }
-        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
-        
-        // Check for existense of dynamic settings which may not exist 
-        if(params['style.bubbleContinuousSize']){
-          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
-        }
-        
-        if($("#f79").is(":visible")){
-          params['style.pointFixedSize'] = params['style.pointFixedSize'];
-          params['style.pointFixed'] = true;
-        }
         
         var conditions = this._map.getConditions();
         
@@ -496,6 +922,8 @@
         if(strategyType == "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy") {
           params["strategy.universal"] = strategyValue;
         }
+        
+        var request = this.$_applyWithStyleListener(params);
         
         return request;
       },
@@ -717,8 +1145,6 @@
           this._categoryWidget = new CategoryTreeWidget("#ontology-tree", "#categories-input");
           this._categoryWidget.render();
           
-          attachCategoryColorPickers();
-            
           // category 'other' option
           $(".other-option-check-box").change(function() {
             if($(this).is(":checked")) {
@@ -752,9 +1178,11 @@
           }
         }
         else if($(".category-input").length > 0){
-          this._addCategoryAutoComplete('#category-colors-container', ThematicLayerForm.GEO_AGG_METHOD_DD);
-          this._loadExistingCategories("#categories-input", "cat", "#ontology-tree", true);
-              
+          var categoryType = $("#categories-input").data('type');
+          
+          this._categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-input", true, "cat", this._thematicAttributeId, categoryType, '#f59');
+          this._categoryWidget.render();
+          
           // category 'other' option
           $(".other-option-check-box").change(function() {
             if($(this).is(":checked")) {
@@ -929,9 +1357,30 @@
             },
             minLength: 1
           });
-        });
+
+          this._setupCategoryColorPicker($("#choice-color01").find('.color-holder'));
+        }
+          
+        // Load the secondary values
+        var secondaryAttribute = $("#secondaryAttribute").val();
+          
+        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
+        
+          var type = $('#secondaryAttribute').find(":selected").data('type');
+            
+          if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {          
+           
+            this._renderSecondaryTermTree(secondaryAttribute, type);
+          }
+          else {
+            this._renderSecondaryCategoryGroup(secondaryAttribute, type);
+          }
+        }
+        
+        this.$_addLayerFormControls();          
       },
       
+
       _renderSecondaryAggregation : function(type) {
         
         var options = this._map.getAggregationMap()[type];
@@ -975,13 +1424,6 @@
               '<div class="panel-group choice-color category-group">' +
                 '<div class="panel">' +
                   '<div id="secondary-choice-color" class="panel-collapse">' +
-                    '<ul class="color-list">' +
-                      this._getSecondaryCategoryHTML(1, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(2, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(3, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(4, mdAttributeId, categoryType) +
-                      this._getSecondaryCategoryHTML(5, mdAttributeId, categoryType) +
-                    '</ul>' +
                   '</div>' +                              
                 '</div>' +              
               '</div>' +            
@@ -990,35 +1432,15 @@
                  
         $('#secondary-cateogries').html(html);
         
-        this._addCategoryAutoComplete('#secondary-content',"#secondaryAggregation");
+        
+        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation");
+        this._secondaryWidget.render();
         
         this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
         
         jcf.customForms.replaceAll($('#secondary-content').get(0));
         
         $('#secondary-content').show();        
-      },
-      
-      _getSecondaryCategoryHTML : function(index, mdAttributeId, categoryType) {
-        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
-                
-        var html = '<li>' +
-          '<div class="category-container">' +
-            '<div class="text category-input-container">' +
-              '<input id="secondaryCat' + index + '" data-mdattributeid="' + mdAttributeId + '" data-type="' + categoryType+ '" class="category-input" name="" type="text" value="" placeholder="' + fillLabel +'" autocomplete="on" >' +
-            '</div>' +
-            '<div class="cell">' +
-              '<div class="color-holder">' +
-                '<a href="#" class="color-choice">' +
-                  '<span id="secondaryCat' + index + '-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>' +
-                  '<span class="arrow">arrow</span>' +
-                '</a>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</li>';
-          
-        return html;        
       },
       
       _renderSecondaryTermTree : function(mdAttributeId, type) {
@@ -1095,213 +1517,136 @@
         return 'text';
       },
       
-      /**
-       * Adding font-family style property to dropdown options for better usability.
-       * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
-       * 
-       */
-      _injectFontStylesForDropdown : function(){
-        var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
-        var selectedOption = $(".select-font-select.select-area").find(".center");
-        selectedOption.css("font-family", selectedOption.text());
-        
-        for(var i=0; i<convertedOptions.length; i++){
-          var targetSpan = $(convertedOptions[i]).find("span");
-          
-          if(targetSpan.text().length > 0){
-            targetSpan.css("font-family", targetSpan.text());
-          }
-        }
-      },
-      
-      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        if(strokeCellHolder != null) {        
-          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-          strokeCellHolder.append(polyStroke);
-          polyStroke.show();
-        
-          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-          strokeCellHolder.append(polyStrokeWidth);
-          polyStrokeWidth.show();
-        
-          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-          strokeCellHolder.append(polyStrokeOpacity);
-          polyStrokeOpacity.show();
-        }
-        
-        if(fillCellHolder != null) {
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          fillCellHolder.append(polyFillOpacity);
-          polyFillOpacity.show();
-        }
-      },          
-      
-      _onLayerTypeTabChange : function(e) {
-        var activeTab = e.target;
-        
-        var type = activeTab.dataset["gdbTabType"];
-        
-        if (type === "BASIC") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-          $("#tab001basic").show();
-        }
-        else if (type === "BUBBLE") {
-          $("#tab002bubble").show();
-        }
-        else if (type === "GRADIENT") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-          $("#tab003gradient").show();
-        }
-        else if (type === "CATEGORY") {
-          $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
-        }
-        else if (type === "FIXEDBUBBLE") {
-            $("#tab005bubble").show();
-            this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
-        }
-      },
-      
-      /**
-       * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
-       * 
-       */
-      rgb2hex : function(rgb) {
-        if(rgb != null) {
-          
-          if (/^#[0-9A-F]{6}$/i.test(rgb)){
-            return rgb;
-          }
-
-          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-          if(rgbMatch){
-            function hex(x) {
-              return ("0" + parseInt(x).toString(16)).slice(-2);
-            }
-            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-          }
-          
-          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-          if(rgbaMatch){
-            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-          }
-        }
-      },
-      
-      _setupCategoryColorPicker : function(elements) {
-        
-        // color dropdown buttons
-        elements.colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj) {
-            var currColor = ThematicLayerForm.prototype.rgb2hex($(this).find(".ico").css("background-color"));
-            $(this).colpickSetColor(currColor,false);
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).find(".ico").css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        }); 
-      },
-      
-      _getCategoryType : function() {
-        var categoryType = null;
-          
-        $.each($('.category-input'), function(index, element) {
-          categoryType = $(element).data("type");
-        });
-          
-        return categoryType;
-      },
-      
       _getSecondaryAttriubteCategories : function() {
-        if($("#secondary-tree").length > 0) {
+        if(this._secondaryWidget != null) {
           var categories = this._secondaryWidget.getCategories();
               
-          return categories;
-        }
-        else if ($('#secondary-choice-color').length > 0) {
-          var categories = this._getCategoryFromList("#secondary-choice-color", false);
-            
           return categories;
         }
             
         return null;
       },
       
-      _loadExistingCategories : function(storeElement, prefix, treeElement, checkOther) {
-          
-          var catsJSONObj = $(storeElement).data("categoriesstore");
-          
-          if(catsJSONObj){
-            catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
-            
-            var catsJSONArr = catsJSONObj.catLiElems;
-            
-            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-              catsJSONArr = catsJSONObj;
-            }          
-            
-            if($(treeElement).length === 0)
-            {
-              var catInputId;
-              var catOtherEnabled = true;
-              
-              for(var i=0; i<catsJSONArr.length; i++){
-                var cat = catsJSONArr[i];
-                
-                // Controlling for 'other' category 
-                if(cat.otherCat){
-                  catInputId = prefix + "-other";
-                }
-                else{
-                  catInputId = prefix + (i+1);
-                }
-                
-                var catColorSelectorId = catInputId + "-color-selector";
-                $("#"+catInputId).val(cat.val);
-                $("#"+catColorSelectorId).css("background", cat.color);
-                catOtherEnabled = cat.otherEnabled;
-              }
-              
-              // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-              // The 'other' option is checked by default making this a valid sequence
-              if(checkOther && !catOtherEnabled){
-                $(".other-option-check-box").click();
-                $("#" + prefix + "-other").parent().parent().hide();
-              }
-            }
-          }
-        },
-        
       /**
        * Scrapes categories on the layer creation/edit form
        * 
        */
       _updateCategoriesJSON : function() {
         var styleArr = new Object();
-        styleArr.catLiElems = [];
-           
-        if($("#ontology-tree").length > 0) {
-          styleArr.catLiElems = this._categoryWidget.getCategories();
-        }
-        else {           
-          styleArr.catLiElems = this._getCategoryFromList('#category-colors-container', true);
-        }
+        styleArr.catLiElems = this._categoryWidget.getCategories();
            
         // set the hidden input element in the layer creation/edit form 
         $("#categories-input").data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
            
         return  styleArr;
-      },
+      }
     }
   });
   
-  var ReferenceLayerForm = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'ReferenceLayerForm', {
-    
+  var ReferenceLayerForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.ReferenceLayerForm', {
+    Extends : LayerForm,  
+      
+    Instance : {
+            
+      initialize : function(map, mapId){
+        this.$initialize(map, mapId);
+      
+        this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
+        this._ReferenceLayerController.setCancelListener(Mojo.Util.bind(this, this._cancelReferenceLayerListener));
+        this._ReferenceLayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener)); 
+      },
+      
+      _onApplySuccess : function(htmlOrJson, response) {
+        if (response.isJSON(htmlOrJson, response)) {
+          this._closeLayerModal();
+              
+          var returnedLayerJSON = JSON.parse( htmlOrJson);
+          var jsonObj = {};
+          jsonObj["refLayers"] = [Mojo.Util.toObject(htmlOrJson)];
+              
+          this._map.handleReferenceLayerEvent(jsonObj)
+              
+          this.handleMessages(response);
+        }
+        else if (response.isHTML()) {
+          // we got html back, meaning there was an error
+              
+          this._displayLayerForm(htmlOrJson);
+          this._addLayerFormControls();
+              
+          this.getImpl().animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
+        }        
+      },
+      
+      /**
+       * 
+       * @params
+       */
+      _cancelReferenceLayerListener : function(params){
+        var that = this;
+        
+        if(params['layer.isNew'] === 'true')
+        {
+          this._closeLayerModal();
+        }
+        else
+        {
+          var that = this;
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(params){
+              that._closeLayerModal();
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          });
+          
+          //return request;
+          var id = params['layer.componentId'];
+          com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.unlock(request, id);
+        }
+      },
+      
+      /**
+       * Edit form for reference layers  
+       * 
+       * @param e
+       */
+      edit : function(id){
+        var that = this;
+      
+        // edit the layer
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){
+            that._displayLayerForm(html);
+            that._addLayerFormControls();
+          },
+          onFailure : function(e){
+            that.handleException(e);
+          }
+        });
+      
+        this._ReferenceLayerController.edit(request, id);
+      },
+      
+      open : function(universalId){
+        var that = this;
+      
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(html){
+            that._displayLayerForm(html);
+            that._addLayerFormControls();
+                  
+          },
+          onFailure : function(e){
+            that._closeLayerModal();
+            that.handleException(e);
+          }
+        });
+              
+        this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);        
+      }
+    }
   });
   
 })();

@@ -656,111 +656,17 @@
 			                        <div class="panel-group choice-color category-group">
 										<div class="panel">
 					                    	<div id="choice-color01" class="panel-collapse">
-							                    <ul class="color-list">
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">		
-								                       	 	<gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>
-								                       	 	<input id="cat1" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat1-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat2" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat2-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat3" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat3-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat4" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat4-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>		                       		                       
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">
-								                       	 	<input id="cat5" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" class="category-input" name="" type="text" value="" placeholder="${dl_form_cat_input_placeholder}" autocomplete="on" > 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat5-color-selector" class="ico cat-color-selector" style="background:#000000">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>	
-							                       <li>
-							                         <div class="category-container">
-								                       	 <div class="text category-input-container">
-								                       	    <gdb:localize var="other" key="Other"/>								                       	 
-															<input id="cat-other" data-mdattributeid="${mdAttributeId}" data-type="text" class="category-input" name="" type="text" value="${other}" placeholder="${other}" autocomplete="off" disabled> 
-								                       	 </div>
-						                   	 		 	 <div class="cell">
-										                  	<div class="color-holder">
-								                            	<a href="#" class="color-choice">
-								                              	<span id="cat-other-color-selector" class="ico cat-color-selector" style="background:#737678">icon</span>
-								                              	<span class="arrow">arrow</span>
-								                            	</a>
-								                          	</div>
-								                         </div>
-						                   	 		 </div>
-							                       </li>	                       
-							                     </ul>
-							                   </div>
-							                 </div>
-							                 <div class="style-options-block">
-<%-- 						                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
-											  	<div class="check-block">
-										      		<input id="f53" class="other-option-check-box" type="checkbox" name="" checked>
-										        	<label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
-										      	</div>
-						                     </div>
-			                        	</div>
-		                      		</c:otherwise>
+	  					                    </div>
+							            </div>
+							            <div class="style-options-block">
+<%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
+										  <div class="check-block">
+										    <input id="f53" class="other-option-check-box" type="checkbox" name="" checked>
+										    <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+										  </div>
+						                </div>
+			                        </div>
+		                      	</c:otherwise>
 		                      </c:choose>
 	
 	                      </div>

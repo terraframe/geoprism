@@ -97,14 +97,11 @@
         // Handler for the clone dashboard button
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         
-        this._ReferenceLayerController = com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
         
         // set controller listeners
-//        this._ReferenceLayerController.setCancelListener(Mojo.Util.bind(this, this._cancelReferenceLayerListener));
-//        this._ReferenceLayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener)); 
         this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
         this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
@@ -119,7 +116,15 @@
       },
       
       getAggregationMap : function() {
-    	return this._aggregationMap;  
+        return this._aggregationMap;  
+      },
+      
+      getParser : function() {
+        return this._parser;
+      },
+      
+      getFormatter : function() {
+        return this._formatter;
       },
       
       /**
@@ -163,6 +168,15 @@
         // Close any info window popups if they exist
         this._map.closePopup();
           
+        // Update leaflet
+        this._addUserLayersToMap(true);    
+      },
+      
+      handleReferenceLayerEvent : function(jsonObj) {
+        this._updateCacheFromJSONResponse(jsonObj);
+        
+        this._drawReferenceLayersHTML();
+        
         // Update leaflet
         this._addUserLayersToMap(true);    
       },
@@ -1261,23 +1275,16 @@
         var el = $(e.currentTarget);
         
         if(el.hasClass('ico-edit')) {
-          // edit the layer
-          var id = el.data('id');
-          this._ReferenceLayerController.edit(new Mojo.ClientRequest({
-            onSuccess : function(html){
-              that._displayLayerForm(html);
-              that._addLayerFormControls();
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          }), id);
-          
+          var id = el.data('id');  
+            
+          var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm(this, this._mapId);
+          form.edit(id);
         }
         else if(el.hasClass('ico-remove')){         
           // delete the layer
           var layerId = el.data('id');
           var universalId = el.data("universalid");
+          
           com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
             onSuccess : function(){
               that._removeLayer(el, universalId);
@@ -1531,36 +1538,6 @@
         }
       },
             
-      /**
-       * 
-       * @params
-       */
-      _cancelReferenceLayerListener : function(params){
-        var that = this;
-        
-        if(params['layer.isNew'] === 'true')
-        {
-          this._closeLayerModal();
-        }
-        else
-        {
-          var that = this;
-          var request = new Mojo.ClientRequest({
-            onSuccess : function(params){
-              that._closeLayerModal();
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          });
-          
-          //return request;
-          var id = params['layer.componentId'];
-          com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.unlock(request, id);
-        }
-      },
-      
-      
       /**
        * Cancel a dashboard creation crud form
        * 
@@ -1939,19 +1916,8 @@
         var el = $(e.currentTarget);
         var universalId = el.data('universalid');
 
-        var request = new Mojo.ClientRequest({
-          onSuccess : function(html){
-            that._displayLayerForm(html);
-            that._addLayerFormControls();
-              
-          },
-          onFailure : function(e){
-            that._closeLayerModal();
-            that.handleException(e);
-          }
-        });
-          
-        this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);
+        var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm(this, this._mapId);
+        form.open(universalId);
       },
         
         
@@ -2103,8 +2069,21 @@
         return criteria;
       },
       
+      /*
+       * Returns cached conditions
+       */    		  
       getConditions : function() {
         return this._getConditionsFromCriteria(this._criteria);  
+      },
+    
+      /*
+       * Returns the non cached conditions
+       */
+      getCurrentConditions : function() {
+        var criteria = this._reloadCriteria();
+        var conditions = this._getConditionsFromCriteria(criteria);
+        
+        return conditions;
       },
       
       /*
