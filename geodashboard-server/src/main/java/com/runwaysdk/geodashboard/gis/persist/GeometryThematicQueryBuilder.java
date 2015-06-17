@@ -1,11 +1,14 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.util.List;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
@@ -26,6 +29,13 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
     super(factory, layer);
 
     this.geoNode = layer.getGeoNode();
+  }
+
+  public GeometryThematicQueryBuilder(QueryFactory factory, MdAttributeDAOIF thematicMdAttribute, DashboardStyle style, AllAggregationType aggregation, List<DashboardCondition> conditions, GeoNode geoNode)
+  {
+    super(factory, thematicMdAttribute, style, aggregation, conditions);
+
+    this.geoNode = geoNode;
   }
 
   @Override

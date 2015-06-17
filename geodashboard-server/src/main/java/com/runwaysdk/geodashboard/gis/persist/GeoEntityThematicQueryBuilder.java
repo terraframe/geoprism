@@ -1,11 +1,14 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.util.List;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.GeneratedComponentQuery;
@@ -32,6 +35,14 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
 
     this.universal = universal;
     this.geoNode = layer.getGeoNode();
+  }
+
+  public GeoEntityThematicQueryBuilder(QueryFactory factory, MdAttributeDAOIF thematicMdAttribute, DashboardStyle style, AllAggregationType aggregation, List<DashboardCondition> conditions, Universal universal, GeoNode geoNode)
+  {
+    super(factory, thematicMdAttribute, style, aggregation, conditions);
+
+    this.universal = universal;
+    this.geoNode = geoNode;
   }
 
   @Override

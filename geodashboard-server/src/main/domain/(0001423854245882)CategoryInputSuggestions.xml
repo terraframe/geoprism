@@ -6,11 +6,12 @@
         <create>
           <mdMethod name="getCategoryInputSuggestions" label="Get category input suggestions" static="true" returnType="java.lang.String[]">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
-            <mdParameter name="universalId" order="1" type="java.lang.String" label="Universal id" />
-            <mdParameter name="aggregationVal" order="2" type="java.lang.String" label="Aggregation value" />
-            <mdParameter name="text" order="3" type="java.lang.String" label="Text" />
-            <mdParameter name="limit" order="4" type="java.lang.Integer" label="Limit" />
-            <mdParameter name="conditions" order="5" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" label="Dashboard Conditions" />
+            <mdParameter name="geoNodeId" order="1" type="java.lang.String" label="Geo node id" />
+            <mdParameter name="universalId" order="2" type="java.lang.String" label="Universal id" />
+            <mdParameter name="aggregationVal" order="3" type="java.lang.String" label="Aggregation value" />
+            <mdParameter name="text" order="4" type="java.lang.String" label="Text" />
+            <mdParameter name="limit" order="5" type="java.lang.Integer" label="Limit" />
+            <mdParameter name="conditions" order="6" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" label="Dashboard Conditions" />
           </mdMethod>
         </create>
       </mdBusiness>

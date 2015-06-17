@@ -18,7 +18,9 @@ import com.runwaysdk.system.gis.geo.Universal;
 
 public class AggregationStrategyView extends AggregationStrategyViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = 1241142559;
+  private static final long  serialVersionUID = 1241142559;
+
+  public static final String GEOMETRY         = "GEOMETRY";
 
   public AggregationStrategyView()
   {
@@ -65,7 +67,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
 
       AggregationStrategyView view = new AggregationStrategyView();
       view.setAggregationType(GeometryAggregationStrategy.CLASS);
-      view.setValue("GEOMETRY");
+      view.setValue(GEOMETRY);
       view.setDisplayLabel(label);
 
       list.add(view);

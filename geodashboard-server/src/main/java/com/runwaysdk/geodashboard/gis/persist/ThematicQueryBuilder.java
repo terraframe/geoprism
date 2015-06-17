@@ -32,14 +32,32 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public abstract class ThematicQueryBuilder implements Reloadable
 {
-  private QueryFactory           factory;
+  private QueryFactory             factory;
 
-  private DashboardThematicLayer layer;
+  private MdAttributeDAOIF         thematicMdAttribute;
+
+  private DashboardStyle           style;
+
+  private AllAggregationType       aggregation;
+
+  private List<DashboardCondition> conditions;
 
   public ThematicQueryBuilder(QueryFactory factory, DashboardThematicLayer layer)
   {
     this.factory = factory;
-    this.layer = layer;
+    this.thematicMdAttribute = layer.getMdAttributeDAO();
+    this.style = layer.getStyle();
+    this.aggregation = layer.getAggregationMethod();
+    this.conditions = layer.getConditions();
+  }
+
+  public ThematicQueryBuilder(QueryFactory factory, MdAttributeDAOIF thematicMdAttribute, DashboardStyle style, AllAggregationType aggregation, List<DashboardCondition> conditions)
+  {
+    this.factory = factory;
+    this.thematicMdAttribute = thematicMdAttribute;
+    this.style = style;
+    this.aggregation = aggregation;
+    this.conditions = conditions;
   }
 
   protected abstract SelectableSingle getLabelSelectable(GeneratedComponentQuery query);
@@ -52,25 +70,18 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
   protected abstract void addLocationCondition(ValueQuery vQuery, GeneratedComponentQuery componentQuery, LocationCondition condition);
 
-  protected DashboardThematicLayer getLayer()
-  {
-    return this.layer;
-  }
-
   public ValueQuery getThematicValueQuery()
   {
-    MdAttributeDAOIF thematicMdAttribute = layer.getMdAttributeDAO();
-    DashboardStyle style = layer.getStyle();
 
     // IMPORTANT - Everything is going to be a 'thematic layer' in IDE,
     // but we need to define a non-thematic's behavior or even finalize
     // on the semantics of a layer without a thematic attribute...which might
     // not even exist!
-    if (style instanceof DashboardThematicStyle)
+    if (style != null && style instanceof DashboardThematicStyle)
     {
-      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
-
       ValueQuery thematicQuery = this.build();
+      
+      DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
 
       MdAttributeDAOIF secondaryMdAttribute = tStyle.getSecondaryAttributeDAO();
 
@@ -113,16 +124,13 @@ public abstract class ThematicQueryBuilder implements Reloadable
     }
     else
     {
-      return new ValueQuery(factory);
+      return this.build();
     }
   }
 
   private ValueQuery build()
   {
-    MdAttributeDAOIF mdAttribute = this.layer.getMdAttributeDAO();
-    AllAggregationType aggregation = this.layer.getAggregationMethod();
-
-    return this.build(mdAttribute, aggregation);
+    return this.build(this.thematicMdAttribute, aggregation);
   }
 
   private ValueQuery build(MdAttributeDAOIF mdAttribute, AllAggregationType aggregation)
@@ -279,7 +287,6 @@ public abstract class ThematicQueryBuilder implements Reloadable
   private void setCriteriaOnInnerQuery(ValueQuery vQuery, GeneratedComponentQuery componentQuery)
   {
     MdClassDAOIF mdClass = componentQuery.getMdClassIF();
-    List<DashboardCondition> conditions = this.layer.getConditions();
 
     this.addLocationCriteria(vQuery, componentQuery);
 
