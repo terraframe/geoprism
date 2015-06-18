@@ -54,7 +54,6 @@
               </div>
               <div class="holder">
 <mjl:component param="layer" item="${layer}">
-                <input id="geoNodeId" name="layer.geoNode"  type="hidden" value="${node.id}" />
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
                   <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
@@ -173,7 +172,7 @@
                 <div class="box">
                   <label for="geonode-select"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
                   <div class="select-box">
-	                    <select id="geonode-select" class="method-select" name="layer.${layer.id}">
+	                    <select id="geonode-select" class="method-select" name="layer.geoNode">
 	                       <c:forEach items="${nodes}" var="node">
 		                         <c:choose>
 		                           <c:when test="${layer.geoNodeId == node.id}">

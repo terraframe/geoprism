@@ -2,9 +2,7 @@
   var CategoryWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryWidget', {
     IsAbstract : true,
     Constants : {
-      OTHER : 'other',
-      GEO_AGG_LEVEL_DD : "#agg-level-dd",
-      GEO_NODE_ID : "#geoNodeId"
+      OTHER : 'other'
     },    
     Instance : {
       
@@ -153,8 +151,8 @@
               });
               
               // values are scraped from hidden input elements on the layer create form
-              var universalId = $(CategoryWidget.GEO_AGG_LEVEL_DD).val();
-              var geoNodeId = $(CategoryWidget.GEO_NODE_ID).val();
+              var universalId = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
+              var geoNodeId = $(ThematicLayerForm.GEO_NODE_SELECT_EL).val();
               var aggregationVal = $(that._aggregationId).val();
               var conditions = that._map.getCurrentConditions();
               
@@ -666,6 +664,16 @@
           }
         });
         
+        // Attach event listeners for the universal (geo) aggregation dropdown.
+        this._setGeoAggEventListeners();
+        
+        // Populate the Aggregation Options based on the default selected GeoNode
+        this._getGeographicAggregationOptions();
+        
+        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
+        	that._getGeographicAggregationOptions();
+        });
+        
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
           var value = $(this).val();
@@ -702,8 +710,6 @@
             that.handleException(e);
           }
         }, this.getImpl()[0]);
-        
-        var layer = this._map.getLayer(params["layer.componentId"]);
         
         params['mapId'] = this._mapId;
         
@@ -854,11 +860,10 @@
         if (response.isJSON()) {
           this._closeLayerModal();
               
-          var returnedLayerJSON = JSON.parse( htmlOrJson);
           var jsonObj = {};
           jsonObj["layers"] = [Mojo.Util.toObject(htmlOrJson)];
               
-          this._map.handleLayerEvent(jsonObj)
+          this._map.handleLayerEvent(jsonObj);
               
           // TODO : Push this somewhere as a default handler.
           this.handleMessages(response);
@@ -937,75 +942,6 @@
         return request;
       },
       
-      /**
-       * Renders the layer creation/edit form
-       * 
-       * @html
-       */
-      _displayLayerForm : function(html){
-        
-        var that = this;
-        
-        // clear all previous color picker dom elements
-        $(".colpick.colpick_full.colpick_full_ns").remove();
-        
-        // Show the white background modal.
-        var modal = $(LayerForm.LAYER_MODAL).first();
-        modal.html(html);
-        
-        jcf.customForms.replaceAll(modal[0]);
-        
-        // Add layer styling event listeners
-        this._selectColor();
-        this._selectLayerType();
-        
-        // Move reusable cells to active cell holder
-        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab001basic") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-        }
-        else if (activeTab === "tab003gradient") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-        }
-        else if (activeTab === "tab004categories") {
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
-          
-          // Hide the reusable input cells that don't apply to categories
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          polyFillOpacity.hide();
-        }
-        
-        // Attach listeners
-        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
-     
-        // Attach event listeners for the universal (geo) aggregation dropdown.
-        this._setGeoAggEventListeners();
-        
-        // Populate the Aggregation Options based on the default selected GeoNode
-        this._getGeographicAggregationOptions();
-        
-        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
-        	that._getGeographicAggregationOptions();
-        });
-        
-        // Localize any existing number cateogry values
-        $.each($('.category-input'), function() {
-          var value = $(this).val();
-          if(value != null && value.length > 0) {
-            var categoryType = $(this).data("type");
-            if(categoryType == "number") {
-              var number = parseFloat(value);
-              var localized = that._map._formatter(number);
-              
-              $(this).val(localized);
-            }
-          }
-        });    
-        
-        // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
-        //            It is better to finish all of the DOM modification before showing the modal to the user
-        modal.modal('show');
-      },  
       
       /**
        * 
@@ -1083,10 +1019,9 @@
     	  
     	  // Get the original name value from the originally rendered dropdown because this
     	  // data was already passed from server to client in the jsp
-    	  var name = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).attr("name");
     	  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
     	  
-    	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" name="'+name+'" data-layertypes="'+layerTypes+'" >';
+    	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" data-layertypes="'+layerTypes+'" >';
     	  for(var i=0; i<aggregations.length; i++){
     		  var agg = aggregations[i];
     		  if(i === 0){
@@ -1095,7 +1030,7 @@
     		  else{
     			  selected = "";
     		  }
-    		  html += '<option value="' + agg.getId() + '" data-type="'+agg.getAggregationType()+'" data-geomTypes="'+agg.getAvailableGeometryTypes()+'" '+selected+'>' + agg.getDisplayLabel() + '</option>';
+    		  html += '<option value="' + agg.getValue() + '" data-type="'+agg.getAggregationType()+'" data-geomTypes="'+agg.getAvailableGeometryTypes()+'" '+selected+'>' + agg.getDisplayLabel() + '</option>';
     	  }
     	  html += '</select>';
           
