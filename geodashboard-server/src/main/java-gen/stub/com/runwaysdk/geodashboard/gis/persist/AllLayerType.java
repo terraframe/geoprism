@@ -15,19 +15,7 @@ public enum AllLayerType implements com.runwaysdk.business.BusinessEnumeration, 
   
   CATEGORY(),
   
-  GRADIENT(),
-  
-  POINT(),
-  
-  MULTIPOINT(),
-  
-  POLYGON(),
-  
-  MULTIPOLYGON(),
-  
-  LINE(),
-  
-  MULTILINE();
+  GRADIENT();
   
   public static final java.lang.String CLASS = "com.runwaysdk.geodashboard.gis.persist.AllLayerType";
   private com.runwaysdk.geodashboard.gis.persist.LayerType enumeration;

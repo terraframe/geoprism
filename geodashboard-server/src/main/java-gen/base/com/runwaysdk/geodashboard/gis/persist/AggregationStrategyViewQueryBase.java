@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2097788521)
+@com.runwaysdk.business.ClassSignature(hash = 1251901006)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -40,6 +40,24 @@ public  abstract  class AggregationStrategyViewQueryBase extends com.runwaysdk.q
   public com.runwaysdk.query.SelectableChar getAggregationType(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.AGGREGATIONTYPE, alias, displayLabel);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAvailableGeometryTypes()
+  {
+    return getAvailableGeometryTypes(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAvailableGeometryTypes(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.AVAILABLEGEOMETRYTYPES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getAvailableGeometryTypes(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.AVAILABLEGEOMETRYTYPES, alias, displayLabel);
 
   }
  

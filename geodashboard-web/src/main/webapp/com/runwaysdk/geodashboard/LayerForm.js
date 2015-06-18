@@ -3,7 +3,7 @@
     IsAbstract : true,
     Constants : {
       OTHER : 'other',
-      UNIVERSAL_AGGREGATION: "#f58"      
+      GEO_AGG_LEVEL_DD : "#agg-level-dd"
     },    
     Instance : {
       
@@ -152,7 +152,7 @@
               });
               
               // values are scraped from hidden input elements on the layer create form
-              var universalId = $(CategoryWidget.UNIVERSAL_AGGREGATION).val();
+              var universalId = $(CategoryWidget.GEO_AGG_LEVEL_DD).val();
               var aggregationVal = $(that._aggregationId).val();
               var conditions = that._map.getCurrentConditions();
               
@@ -419,11 +419,7 @@
     Extends : com.runwaysdk.ui.Component,  
     IsAbstract : true,    
     Constants : {
-      LAYER_MODAL : '#modal01',
-      GEO_AGG_LEVEL_DD : "agg-level-dd",
-      GEO_AGG_METHOD_DD : "#agg-method-dd",
-      GEO_AGG_HOLDER : "#agg-level-holder",
-      GEO_TYPE_HOLDER : "#geom-type-holder"
+      LAYER_MODAL : '#modal01'
     },
     Instance : {
       initialize : function(map, mapId){
@@ -658,13 +654,13 @@
         $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
      
         // Attach event listeners for the universal (geo) aggregation dropdown.
-        $("#f58").change(function(){ 
-          if($("#f58 option:selected").hasClass("universal-leaf")){
+        $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
+          if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+"option:selected").hasClass("universal-leaf")){
             // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-            $("#f59").parent().parent().hide();
+            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
           }
           else{
-            $("#f59").parent().parent().show();
+            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
           }
         });
         
@@ -769,7 +765,13 @@
   
   var ThematicLayerForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.ThematicLayerForm', {
     Extends : LayerForm,  
-    
+    Constants : {
+        GEO_AGG_LEVEL_DD : "#agg-level-dd",
+        GEO_AGG_METHOD_DD : "#agg-method-dd",
+        GEO_AGG_HOLDER : "#agg-level-holder",
+        GEO_TYPE_HOLDER : "#geom-type-holder",
+        GEO_NODE_SELECT_EL : "#geonode-select"
+    },
     Instance : {
           
       initialize : function(map, mapId){
@@ -917,7 +919,7 @@
         }
         
         // Get the strategy information
-        var strategy = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+        var strategy = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
         var strategyType = strategy.data('type');
         var strategyValue = strategy.val();
         
@@ -946,7 +948,7 @@
         $(".colpick.colpick_full.colpick_full_ns").remove();
         
         // Show the white background modal.
-        var modal = $(ThematicLayerForm.LAYER_MODAL).first();
+        var modal = $(LayerForm.LAYER_MODAL).first();
         modal.html(html);
         
         jcf.customForms.replaceAll(modal[0]);
@@ -979,11 +981,9 @@
         
         // Populate the Aggregation Options based on the default selected GeoNode
         this._getGeographicAggregationOptions();
-        this._getPossibleGeometryTypes();
         
-        $("#geonode-select").change(function(){ 
+        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
         	that._getGeographicAggregationOptions();
-        	that._getPossibleGeometryTypes();
         });
         
         // Localize any existing number cateogry values
@@ -1012,7 +1012,7 @@
        */
       _getGeographicAggregationOptions : function(){
     	  var that = this;
-    	  var selectedVal = $("#geonode-select option:selected").val();
+    	  var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
     	  
       	  var clientRequest = new Mojo.ClientRequest({
             onSuccess : function(data) {
@@ -1023,7 +1023,7 @@
             }
           });
           
-          com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategiesJSON(clientRequest, selectedVal);
+          com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategies(clientRequest, selectedVal);
       },
       
       /**
@@ -1033,12 +1033,14 @@
        */
       _getPossibleGeometryTypes : function(){
     	  var that = this;
-    	  var selectedVal = $("#geonode-select option:selected").val();
+    	  var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
+    	  var geomTypes;
     	  
       	  var clientRequest = new Mojo.ClientRequest({
             onSuccess : function(data) {
-            	console.log(data)
-            	//that._setGeographicAggregationOptions(data);
+            	geomTypes = data;
+            	console.log('in')
+            	return geomTypes
             },
             onFailure : function(e) {
               that.handleException(e);
@@ -1046,14 +1048,17 @@
           });
           
           com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getGeoNodeGeometryTypesJSON(clientRequest, selectedVal);
+          
+          console.log("out")
+          return geomTypes;
       },
       
       _setGeoAggEventListeners : function(){
     	  var that = this;
     	  
           // Attach event listeners for the universal (geo) aggregation dropdown.
-          $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
-            if($("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD+" option:selected").hasClass("universal-leaf")){
+          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
+            if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+" option:selected").hasClass("universal-leaf")){
               // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
               $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
             }
@@ -1061,7 +1066,7 @@
               $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
             }
             
-            var selectedOption = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+            var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
       	  	that._setLayerTypeOptions(selectedOption);
           });
       },
@@ -1069,18 +1074,17 @@
       /**
        * Populate the geographic aggregation dropdown
        * 
-       * @data - JSON representing geo aggregation levels
+       * @aggregations - JSON representing geo aggregation levels
        */
-      _setGeographicAggregationOptions : function(data) {
+      _setGeographicAggregationOptions : function(aggregations) {
     	  var selected = "";
-    	  var aggregations = JSON.parse(decodeURIComponent(data));
     	  
     	  // Get the original name value from the originally rendered dropdown because this
     	  // data was already passed from server to client in the jsp
-    	  var name = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).attr("name");
+    	  var name = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).attr("name");
     	  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
     	  
-    	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD+'" class="method-select" name="'+name+'" data-layertypes="'+layerTypes+'" >';
+    	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" name="'+name+'" data-layertypes="'+layerTypes+'" >';
     	  for(var i=0; i<aggregations.length; i++){
     		  var agg = aggregations[i];
     		  if(i === 0){
@@ -1089,17 +1093,17 @@
     		  else{
     			  selected = "";
     		  }
-    		  html += '<option value="' + agg.id + '" data-type="'+agg.type.trim()+'" '+selected+'>' + agg.label + '</option>';
+    		  html += '<option value="' + agg.getId() + '" data-type="'+agg.getAggregationType()+'" data-geomTypes="'+agg.getAvailableGeometryTypes()+'" '+selected+'>' + agg.getDisplayLabel() + '</option>';
     	  }
     	  html += '</select>';
           
-          $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().html(html);
+          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().html(html);
 
-    	  jcf.customForms.replaceAll($("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().get(0));
+    	  jcf.customForms.replaceAll($(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().get(0));
     	  
     	  $(ThematicLayerForm.GEO_AGG_HOLDER).show();
     	  
-    	  var selectedOption = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+    	  var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
     	  this._setLayerTypeOptions(selectedOption);
     	  
     	  this._setGeoAggEventListeners();
@@ -1107,17 +1111,16 @@
       
       
       /**
-       * Populate the layer type block based on the selection of the geo aggregation level dropdown
+       * Populate the layer type block based on the selection of the geonode and geo aggregation level dropdown
        * 
        * @selectedOption - selected option from the geographic aggregation level dropdown
        */
       _setLayerTypeOptions : function(selectedOption) {
     	  var type = selectedOption.data('type');
+   		  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
+		  var layerTypesJSON = JSON.parse(decodeURIComponent(layerTypes));
     	  
     	  if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
-    		  var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
-    		  var layerTypesJSON = JSON.parse(decodeURIComponent(layerTypes));
-    		  
     		  for(var i=0; i<layerTypesJSON.length; i++){
     			  var lType = layerTypesJSON[i];
     			  
@@ -1125,15 +1128,28 @@
     		  }
     	  }
     	  else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
+    		  for(var i=0; i<layerTypesJSON.length; i++){
+    			  var lType = layerTypesJSON[i];
+    			  
+    			  $("." + lType).hide();
+    		  }
     		  
-    		  //
-    		  // HOW WILL WE KNOW WHAT TYPES TO DISPLAY????
-    		  //
-    		  $(".BASIC").show();
-    		  $(".BUBBLE").show();
+    		  var geomTypes = JSON.parse(decodeURIComponent(selectedOption.data("geomtypes")));
     		  
-    		  $(".CATEGORY").hide();
-    		  $(".GRADIENT").hide();
+    		  for(var i=0; i<geomTypes.length; i++){
+    			  var geomType = geomTypes[i];
+    			  if(geomType === "geoPoint"){
+    				  $(".BUBBLE").show();
+    			  }
+    			  else if(geomType === "geoMultiPolygon"){
+    				  $(".BASIC").show();
+    				  $(".CATEGORY").show();
+    	    		  $(".GRADIENT").show();
+    			  }
+    			  else{
+    				  //TODO: this needs to be an else if (geomType === "some geom type") which isnt defined yet
+    			  }
+    		  }
     	  }
     	  
     	  $(ThematicLayerForm.GEO_TYPE_HOLDER).show();
@@ -1353,7 +1369,7 @@
               });
               
               // values are scraped from hidden input elements on the layer create form
-              var universalId = $("#"+ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
+              var universalId = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
               var aggregationVal = $(aggregationId).val();
               var criteria = that._reloadCriteria();
               var conditions = that._getConditionsFromCriteria(criteria);
@@ -1364,7 +1380,7 @@
           });
 
           this._setupCategoryColorPicker($("#choice-color01").find('.color-holder'));
-        }
+        })
           
         // Load the secondary values
         var secondaryAttribute = $("#secondaryAttribute").val();

@@ -2,14 +2,11 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -23,6 +20,9 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
+import com.runwaysdk.system.gis.metadata.MdAttributePoint;
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public class AggregationStrategyView extends AggregationStrategyViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -33,56 +33,10 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
     super();
   }
   
-  public static String getAggregationStrategiesJSON(java.lang.String nodeId)
-  {
-    GeoNode geoNode = GeoNode.get(nodeId);
-    AggregationStrategyView[] strategyViews = getAggregationStrategies(geoNode);
-    
-    JSONArray strategyViewsJSON = new JSONArray();
-    for(AggregationStrategyView view : strategyViews)
-    {
-      JSONObject viewObj = new JSONObject();
-      String id = view.getId();
-      String type = view.getAggregationType();
-      String dispLabel = view.getDisplayLabel();
-      try
-      {
-        viewObj.put("id", id);
-        viewObj.put("type", type);
-        viewObj.put("label", dispLabel);
-      }
-      catch (JSONException e)
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      strategyViewsJSON.put(viewObj);
-    }
-    
-    return encode(strategyViewsJSON.toString());
-  }
   
-  
-  private static String encode(String value)
+  public static AggregationStrategyView[] getAggregationStrategies(String nodeId)
   {
-    if (value != null)
-    {
-      try
-      {
-        return URLEncoder.encode(value, "UTF-8");
-      }
-      catch (UnsupportedEncodingException e)
-      {
-        throw new ProgrammingErrorException(e.getLocalizedMessage());
-      }
-    }
-
-    return "";
-  }
-
-  
-  public static AggregationStrategyView[] getAggregationStrategies(GeoNode node)
-  {
+    GeoNode node = GeoNode.get(nodeId); 
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
     MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
@@ -123,10 +77,43 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       view.setAggregationType(GeometryAggregationStrategy.CLASS);
       view.setValue("GEOMETRY");
       view.setDisplayLabel(label);
+      
+      JSONArray geomTypesJSONArr = new JSONArray();
+      MdAttribute geomAttr = node.getGeometryAttribute();
+      if(geomAttr != null){
+        geomTypesJSONArr.put(geomAttr.getAttributeName());
+      }
+      MdAttributePoint pointAttr = node.getPointAttribute();
+      if(pointAttr != null){
+        geomTypesJSONArr.put(pointAttr.getAttributeName());
+      }
+      MdAttributeMultiPolygon polyAttr = node.getMultiPolygonAttribute();
+      if(polyAttr != null){
+        geomTypesJSONArr.put(polyAttr.getAttributeName());
+      }
+      
+      view.setAvailableGeometryTypes(encode(geomTypesJSONArr.toString()));
 
       list.add(view);
     }
 
     return list.toArray(new AggregationStrategyView[list.size()]);
+  }
+  
+  private static String encode(String value)
+  {
+    if (value != null)
+    {
+      try
+      {
+        return URLEncoder.encode(value, "UTF-8");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+        throw new ProgrammingErrorException(e.getLocalizedMessage());
+      }
+    }
+
+    return "";
   }
 }

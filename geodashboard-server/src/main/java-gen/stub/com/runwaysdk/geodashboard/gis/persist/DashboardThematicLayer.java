@@ -30,6 +30,10 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
+import com.runwaysdk.system.gis.metadata.MdAttributePoint;
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
@@ -292,6 +296,29 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   protected DashboardLayer newInstance()
   {
     return new DashboardThematicLayer();
+  }
+  
+  
+  public static String getGeoNodeGeometryTypesJSON(String geoNodeId)
+  {
+    JSONArray geomTypesJSONArr = new JSONArray();
+    JSONObject geomTypesJSON = new JSONObject();
+    
+    GeoNode geoNode = GeoNode.get(geoNodeId);
+    MdAttribute geomAttr = geoNode.getGeometryAttribute();
+    if(geomAttr != null){
+      geomTypesJSONArr.put(geomAttr.getType());
+    }
+    MdAttributePoint pointAttr = geoNode.getPointAttribute();
+    if(pointAttr != null){
+      geomTypesJSONArr.put(pointAttr.getType());
+    }
+    MdAttributeMultiPolygon polyAttr = geoNode.getMultiPolygonAttribute();
+    if(polyAttr != null){
+      geomTypesJSONArr.put(polyAttr.getType());
+    }
+    
+    return geomTypesJSONArr.toString();
   }
 
 }

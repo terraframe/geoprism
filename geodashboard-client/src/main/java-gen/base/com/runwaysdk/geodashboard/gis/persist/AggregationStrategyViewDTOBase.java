@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1734091488)
+@com.runwaysdk.business.ClassSignature(hash = 1713873495)
 public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView";
-  private static final long serialVersionUID = -1734091488;
+  private static final long serialVersionUID = 1713873495;
   
   protected AggregationStrategyViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -17,6 +17,7 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
   }
   
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
+  public static java.lang.String AVAILABLEGEOMETRYTYPES = "availableGeometryTypes";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String VALUE = "value";
@@ -55,6 +56,43 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
   public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getAggregationTypeMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(AGGREGATIONTYPE).getAttributeMdDTO();
+  }
+  
+  public String getAvailableGeometryTypes()
+  {
+    return getValue(AVAILABLEGEOMETRYTYPES);
+  }
+  
+  public void setAvailableGeometryTypes(String value)
+  {
+    if(value == null)
+    {
+      setValue(AVAILABLEGEOMETRYTYPES, "");
+    }
+    else
+    {
+      setValue(AVAILABLEGEOMETRYTYPES, value);
+    }
+  }
+  
+  public boolean isAvailableGeometryTypesWritable()
+  {
+    return isWritable(AVAILABLEGEOMETRYTYPES);
+  }
+  
+  public boolean isAvailableGeometryTypesReadable()
+  {
+    return isReadable(AVAILABLEGEOMETRYTYPES);
+  }
+  
+  public boolean isAvailableGeometryTypesModified()
+  {
+    return isModified(AVAILABLEGEOMETRYTYPES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getAvailableGeometryTypesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(AVAILABLEGEOMETRYTYPES).getAttributeMdDTO();
   }
   
   public String getDisplayLabel()
@@ -131,20 +169,12 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(VALUE).getAttributeMdDTO();
   }
   
-  public static final com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO[] getAggregationStrategies(com.runwaysdk.constants.ClientRequestIF clientRequest, com.runwaysdk.system.gis.geo.GeoNodeDTO node)
-  {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.system.gis.geo.GeoNode"};
-    Object[] _parameters = new Object[]{node};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO.CLASS, "getAggregationStrategies", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public static final java.lang.String getAggregationStrategiesJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String nodeId)
+  public static final com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO[] getAggregationStrategies(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String nodeId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{nodeId};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO.CLASS, "getAggregationStrategiesJSON", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO.CLASS, "getAggregationStrategies", _declaredTypes);
+    return (com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static AggregationStrategyViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
