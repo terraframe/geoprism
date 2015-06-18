@@ -3,7 +3,8 @@
     IsAbstract : true,
     Constants : {
       OTHER : 'other',
-      GEO_AGG_LEVEL_DD : "#agg-level-dd"
+      GEO_AGG_LEVEL_DD : "#agg-level-dd",
+      GEO_NODE_ID : "#geoNodeId"
     },    
     Instance : {
       
@@ -153,10 +154,11 @@
               
               // values are scraped from hidden input elements on the layer create form
               var universalId = $(CategoryWidget.GEO_AGG_LEVEL_DD).val();
+              var geoNodeId = $(CategoryWidget.GEO_NODE_ID).val();
               var aggregationVal = $(that._aggregationId).val();
               var conditions = that._map.getCurrentConditions();
               
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, universalId, aggregationVal, request.term, 10, conditions);
+              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, geoNodeId, universalId, aggregationVal, request.term, 10, conditions);
             },
             minLength: 1
           });

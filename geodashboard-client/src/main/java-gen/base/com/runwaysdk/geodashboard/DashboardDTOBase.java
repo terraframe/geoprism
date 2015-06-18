@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1792793174)
+@com.runwaysdk.business.ClassSignature(hash = -1903661006)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1792793174;
+  private static final long serialVersionUID = -1903661006;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -717,10 +717,10 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.lang.String[] getCategoryInputSuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  public static final java.lang.String[] getCategoryInputSuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{mdAttributeId, universalId, aggregationVal, text, limit, conditions};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
+    Object[] _parameters = new Object[]{mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, conditions};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getCategoryInputSuggestions", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

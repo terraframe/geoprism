@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 108599510)
+@com.runwaysdk.business.ClassSignature(hash = -1549455694)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 108599510;
+  private static final long serialVersionUID = -1549455694;
   
   public DashboardBase()
   {
@@ -629,7 +629,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.getAllDashboardUsers();
   }
   
-  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

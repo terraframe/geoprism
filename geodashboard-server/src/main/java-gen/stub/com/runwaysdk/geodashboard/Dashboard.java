@@ -35,10 +35,14 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.dashboard.TermComparator;
+import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery;
+import com.runwaysdk.geodashboard.gis.persist.GeoEntityThematicQueryBuilder;
+import com.runwaysdk.geodashboard.gis.persist.GeometryThematicQueryBuilder;
+import com.runwaysdk.geodashboard.gis.persist.ThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
@@ -508,15 +512,15 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  public static String[] getCategoryInputSuggestions(String mdAttributeId, String universalId, String aggregationVal, String text, Integer limit, DashboardCondition[] conditions)
+  public static String[] getCategoryInputSuggestions(String mdAttributeId, String geoNodeId, String universalId, String aggregationVal, String text, Integer limit, DashboardCondition[] conditions)
   {
     Set<String> suggestions = new TreeSet<String>();
+
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
-    Universal universal = Universal.get(universalId);
-    AllAggregationType aggregationType = AllAggregationType.valueOf(aggregationVal);
     String attributeName = mdAttribute.definesAttribute();
 
-    ValueQuery query = QueryUtil.getThematicValueQuery(new QueryFactory(), mdAttribute, aggregationType, universal, Arrays.asList(conditions));
+    ThematicQueryBuilder builder = getBuilder(geoNodeId, universalId, aggregationVal, conditions, mdAttribute);
+    ValueQuery query = builder.getThematicValueQuery();
 
     OIterator<ValueObject> iterator = null;
 
@@ -547,6 +551,24 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     String[] array = suggestions.toArray(new String[suggestions.size()]);
 
     return Arrays.copyOf(array, Math.min(limit, array.length));
+  }
+
+  private static ThematicQueryBuilder getBuilder(String geoNodeId, String universalId, String aggregationVal, DashboardCondition[] conditions, MdAttributeDAOIF mdAttribute)
+  {
+    GeoNode geoNode = GeoNode.get(geoNodeId);
+    List<DashboardCondition> conditionList = Arrays.asList(conditions);
+    AllAggregationType aggregationType = AllAggregationType.valueOf(aggregationVal);
+
+    if (universalId.equals(AggregationStrategyView.GEOMETRY))
+    {
+      return new GeometryThematicQueryBuilder(new QueryFactory(), mdAttribute, null, aggregationType, conditionList, geoNode);
+    }
+    else
+    {
+      Universal universal = Universal.get(universalId);
+
+      return new GeoEntityThematicQueryBuilder(new QueryFactory(), mdAttribute, null, aggregationType, conditionList, universal, geoNode);
+    }
   }
 
   public static Dashboard[] getDashboardsForCountry(GeoEntity country)

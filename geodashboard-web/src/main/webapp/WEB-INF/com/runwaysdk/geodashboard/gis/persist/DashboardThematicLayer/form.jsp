@@ -54,7 +54,7 @@
               </div>
               <div class="holder">
 <mjl:component param="layer" item="${layer}">
-                <input  id="layer.geoNode" name="layer.geoNode"  type="hidden" value="${node.id}" />
+                <input id="geoNodeId" name="layer.geoNode"  type="hidden" value="${node.id}" />
                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
                 <span class="text">
                   <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
