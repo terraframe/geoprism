@@ -18,6 +18,127 @@
    "deleteLayerTooltip" : "Delete layer"
   });
     
+  var LayerViewFactory = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'LayerViewFactory', {
+    Static : {
+      /**
+       * Constructs a layer object from json returned from the server.
+       * The json does not type objects so we construct the appropriate type.
+       * 
+       * @layer - DashboardLayer representation
+       */
+      createLayerView : function(layer) {
+          
+          if(layer.layerType === "THEMATICLAYER"){
+            var view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
+            view.setViewName(layer.viewName);
+            view.setLayerId(layer.layerId);
+            view.setSldName(layer.sldName);
+            view.setLayerName(layer.layerName);
+            view.setDisplayInLegend(layer.inLegend);
+            view.setLegendXPosition(layer.legendXPosition);
+            view.setLegendYPosition(layer.legendYPosition);
+            view.setGroupedInLegend(layer.groupedInLegend);
+            view.setActiveByDefault(true);
+            view.setFeatureStrategy(layer.featureStrategy);
+            
+              // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+              // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+              view.setLayerIsActive(true);
+            }
+            else{
+              view.setLayerIsActive(false);
+            }
+            view.setAggregationMethod(layer.aggregationMethod);
+            view.setAggregationAttribute(layer.aggregationAttribute);
+            view.setMdAttribute(layer.mdAttributeId);
+            view.setAttributeLabel(layer.attributeLabel);
+            
+            view.layerType = layer.layerType;              
+            view.style = layer.styles[0];
+            view.geoNodeId = layer.geoNodeId;
+            view.aggregationStrategy = layer.aggregationStrategy;
+            
+            return view;
+          }
+          else if(layer.layerType === "REFERENCELAYER"){
+            var uniId = layer.uniId;
+            
+            var view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
+            view.setViewName(layer.viewName);
+            view.setLayerId(layer.layerId);
+            view.setSldName(layer.sldName);
+            view.setLayerName(layer.layerName);
+            view.setDisplayInLegend(layer.inLegend);
+            view.setLegendXPosition(layer.legendXPosition);
+            view.setLegendYPosition(layer.legendYPosition);
+            view.setGroupedInLegend(layer.groupedInLegend);
+            view.setActiveByDefault(false);
+            view.setFeatureStrategy(layer.featureStrategy); // Reference layers should always be BASIC strategy
+              
+            view.layerExists = true;
+              
+            // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
+            // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
+            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
+                view.setLayerIsActive(true);
+            }
+            else{
+                view.setLayerIsActive(false);
+            }
+              
+            view.layerType = layer.layerType;
+            view.universalId = uniId;
+              
+            if(layer.styles){
+              view.style = layer.styles[0]; 
+            }
+            else{
+              view.style = null;
+            }
+            
+            return view;
+          }
+          else if(layer.layerType === "REFERENCEJSON"){
+            var displayName = layer.properties.uniDispLabel;  
+            var uniId = layer.properties.uniId;
+            var exists = layer.properties.refLayerExists;
+              
+            var view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
+            view.setViewName(layer.viewName || null);
+            view.setLayerId(uniId);  // IMPORTANT: additional logic depends on this being a universal id for REFERENCEJSON layers. 
+            view.setSldName(layer.sldName || null);
+            view.setLayerName(displayName);
+            view.setDisplayInLegend(layer.inLegend || false); 
+            view.setLegendXPosition(layer.legendXPosition || 0); // or default
+            view.setLegendYPosition(layer.legendYPosition || 0); // or default
+            view.setGroupedInLegend(layer.groupedInLegend || true); // or default
+            view.setActiveByDefault(false);
+            view.setFeatureStrategy("BASIC"); // Reference layers should always be BASIC strategy
+              
+            if(exists){
+              view.layerExists = true;
+            }
+            else{
+              view.layerExists = false;
+            }
+              
+            view.universalId = uniId;
+            view.layerType = "REFERENCEJSON";
+              
+            if(layer.styles){
+              view.style = layer.styles[0] || null; 
+            }
+            else{
+              view.style = null;
+            }
+            
+            return view;
+          }          
+        },
+   } 
+  });
+  
   var DynamicMap = Mojo.Meta.newClass(GDB.Constants.GIS_PACKAGE+'DynamicMap', {
     
     Extends : Component,
@@ -157,7 +278,7 @@
           
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
         
-        this._renderReport('', this._criteria);
+        this._renderReport('', '', this._criteria);
       },
       
       handleLayerEvent : function(jsonObj) {
@@ -226,7 +347,7 @@
           for (var i = 0; i < json.layers.length; ++i) {
             var layer = json.layers[i];
             
-            var view = this._setLayerViewObj(layer);
+            var view = LayerViewFactory.createLayerView(layer);
             
             var oldLayer = this._layerCache.get(view.getLayerId());
             if (oldLayer != null) {
@@ -242,7 +363,7 @@
             var refLayer = json.refLayers[r];
             
             // Construct the layer view objects
-            var refView = this._setLayerViewObj(refLayer);
+            var refView = LayerViewFactory.createLayerView(refLayer);
             var oldLayer = this._refLayerCache.get(refView.universalId);
             if (oldLayer != null) {
               refView.leafletLayer = oldLayer.leafletLayer;
@@ -256,119 +377,7 @@
           }
         }
       },
-      
-      /**
-       * Constructs a layer object from json returned from the server.
-       * The json does not type objects so we construct the appropriate type.
-       * 
-       * @layer - DashboardLayer representation
-       */
-      _setLayerViewObj : function(layer) {
-        var view;
-        
-        if(layer.layerType === "THEMATICLAYER"){
-            view = new com.runwaysdk.geodashboard.gis.persist.DashboardLayerView();
-            view.setViewName(layer.viewName);
-            view.setLayerId(layer.layerId);
-            view.setSldName(layer.sldName);
-            view.setLayerName(layer.layerName);
-            view.setDisplayInLegend(layer.inLegend);
-            view.setLegendXPosition(layer.legendXPosition);
-            view.setLegendYPosition(layer.legendYPosition);
-            view.setGroupedInLegend(layer.groupedInLegend);
-            view.setActiveByDefault(true);
-            view.setFeatureStrategy(layer.featureStrategy);
-            // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
-            // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
-            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
-              view.setLayerIsActive(true);
-            }
-            else{
-              view.setLayerIsActive(false);
-            }
-            view.setAggregationMethod(layer.aggregationMethod);
-            view.setAggregationAttribute(layer.aggregationAttribute);
-            view.setMdAttribute(layer.mdAttributeId);
-            view.setAttributeLabel(layer.attributeLabel);
-            
-            view.layerType = layer.layerType;
-            
-            view.style = layer.styles[0];   
-        }
-        else if(layer.layerType === "REFERENCELAYER"){
-          var uniId = layer.uniId;
-          
-          view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
-            view.setViewName(layer.viewName);
-            view.setLayerId(layer.layerId);
-            view.setSldName(layer.sldName);
-            view.setLayerName(layer.layerName);
-            view.setDisplayInLegend(layer.inLegend);
-            view.setLegendXPosition(layer.legendXPosition);
-            view.setLegendYPosition(layer.legendYPosition);
-            view.setGroupedInLegend(layer.groupedInLegend);
-            view.setActiveByDefault(false);
-            view.setFeatureStrategy(layer.featureStrategy); // Reference layers should always be BASIC strategy
-            
-            view.layerExists = true;
-            
-            // The $("#"+layer.layerId).length < 1 is a bit of a hack to account for the initial map load when the checkbox elements
-            // may not be created yet.  The default is for all layers to be active on load so this is generally a safe assumption.
-            if($("#"+layer.layerId).hasClass("checked") || $("#"+layer.layerId).length < 1){
-                view.setLayerIsActive(true);
-            }
-            else{
-                view.setLayerIsActive(false);
-            }
-            
-            view.layerType = layer.layerType;
-            view.universalId = uniId;
-            
-            if(layer.styles){
-            view.style = layer.styles[0]; 
-            }
-            else{
-            view.style = null;
-            }
-        }
-        else if(layer.layerType === "REFERENCEJSON"){
-              var displayName = layer.properties.uniDispLabel;  
-            var uniId = layer.properties.uniId;
-            var exists = layer.properties.refLayerExists;
-            
-          view = new com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView();
-            view.setViewName(layer.viewName || null);
-            view.setLayerId(uniId);  // IMPORTANT: additional logic depends on this being a universal id for REFERENCEJSON layers. 
-            view.setSldName(layer.sldName || null);
-            view.setLayerName(displayName);
-            view.setDisplayInLegend(layer.inLegend || false); 
-            view.setLegendXPosition(layer.legendXPosition || 0); // or default
-            view.setLegendYPosition(layer.legendYPosition || 0); // or default
-            view.setGroupedInLegend(layer.groupedInLegend || true); // or default
-            view.setActiveByDefault(false);
-            view.setFeatureStrategy("BASIC"); // Reference layers should always be BASIC strategy
-            
-            if(exists){
-              view.layerExists = true;
-            }
-            else{
-            view.layerExists = false;
-            }
-            
-            view.universalId = uniId;
-            view.layerType = "REFERENCEJSON";
-            
-            if(layer.styles){
-            view.style = layer.styles[0] || null; 
-            }
-            else{
-            view.style = null;
-            }
-        }
-        
-          return view;
-      },
-           
+                 
       /**
        * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
        * 
@@ -394,7 +403,7 @@
        * @criteria
        * 
        */
-      _renderReport : function(geoId, criteria) {
+      _renderReport : function(layerId, geoId, criteria) {
         if($( "#report-viewport" ).length > 0) {
           var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
             that : this,
@@ -413,6 +422,7 @@
         
           var configuration = {};
           configuration.parameters = [];
+          configuration.parameters.push({'name' : 'layerId', 'value' : layerId});
           configuration.parameters.push({'name' : 'category', 'value' : geoId});
           configuration.parameters.push({'name' : 'criteria', 'value' : JSON.stringify(criteria)});
           configuration.parameters.push({'name' : 'width', 'value' : widthPt});
@@ -1474,9 +1484,8 @@
               {                 
                 that._currGeoId = currGeoId;
               
-                that._renderReport(that._currGeoId, that._criteria);
-              }
-            
+                that._renderReport(layer.getLayerId(), that._currGeoId, that._criteria);
+              }            
             }
             
             if(popupContent.length > 0){
@@ -2071,7 +2080,7 @@
       
       /*
        * Returns cached conditions
-       */    		  
+       */  
       getConditions : function() {
         return this._getConditionsFromCriteria(this._criteria);  
       },
@@ -2419,7 +2428,7 @@
           
           this._currGeoId = '';
             
-          this._renderReport(this._currGeoId, this._criteria);
+          this._renderReport('', this._currGeoId, this._criteria);
         }
       },
       

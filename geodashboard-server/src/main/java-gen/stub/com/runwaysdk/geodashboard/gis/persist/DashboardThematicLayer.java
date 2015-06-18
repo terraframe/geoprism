@@ -13,13 +13,11 @@ import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
@@ -30,10 +28,13 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoNode;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
   private static final long serialVersionUID = -810007054;
+
+  public static String      layerType        = "THEMATICLAYER";
 
   public DashboardThematicLayer()
   {
@@ -43,20 +44,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   @Transaction
   public void applyAll(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
   {
-    boolean isNew = this.isNew();
-
-    if (isNew)
-    {
-      MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO();
-      MdClassDAOIF mdClass = mdAttribute.definedByClass();
-      MdAttributeDAOIF attr = QueryUtil.getGeoEntityAttribute(mdClass);
-
-      if (attr == null)
-      {
-        throw new ProgrammingErrorException("Unable to find a Geo Entity attribute on type [" + mdClass.definesType() + "].");
-      }
-    }
-
     // If there is an existing aggregation strategy then delete it and use the new one
     AggregationStrategy existing = this.getAggregationStrategy();
 
@@ -141,8 +128,10 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("attributeType", this.getAttributeType());
       json.put("aggregationMethod", this.getAggregationMethod());
       json.put("aggregationAttribute", this.getAttribute());
-      json.put("layerType", "THEMATICLAYER");
+      json.put("layerType", layerType);
       json.put("attributeLabel", this.getAttributeDisplayLabel());
+      json.put("geoNodeId", this.getGeoNodeId());
+      json.put("aggregationStrategy", this.getAggregationStrategy().getJSON());
 
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -285,6 +274,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
 
       this.setMdAttribute(tSource.getMdAttribute());
+      this.setGeoNode(tSource.getGeoNode());
+      this.setAggregationStrategy(tSource.getAggregationStrategy().clone());
     }
   }
 
@@ -292,6 +283,14 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   protected DashboardLayer newInstance()
   {
     return new DashboardThematicLayer();
+  }
+
+  public String getCategoryLabel(String categoryId)
+  {
+    AggregationStrategy strategy = this.getAggregationStrategy();
+    GeoNode geoNode = this.getGeoNode();
+
+    return strategy.getCategoryLabel(geoNode, categoryId);
   }
 
 }

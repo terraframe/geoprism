@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
+import org.json.JSONObject;
+
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
@@ -15,6 +17,12 @@ public abstract class AggregationStrategy extends AggregationStrategyBase implem
 
   public abstract ValueQuery getViewQuery(DashboardThematicLayer layer);
 
+  public abstract JSONObject getJSON();
+
+  public abstract String getCategoryLabel(GeoNode geoNode, String categoryId);
+
+  public abstract AggregationStrategy clone();
+
   public String getGeometryColumn(DashboardThematicLayer layer)
   {
     GeoNode geoNode = layer.getGeoNode();
@@ -28,7 +36,5 @@ public abstract class AggregationStrategy extends AggregationStrategyBase implem
       return geoNode.getMultiPolygonAttribute().getAttributeName();
     }
   }
-  
-  
 
 }

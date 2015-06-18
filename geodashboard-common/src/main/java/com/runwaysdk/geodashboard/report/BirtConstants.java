@@ -6,6 +6,14 @@ import com.runwaysdk.constants.DeployProperties;
 
 public interface BirtConstants
 {
+  public static final String CATEGORY    = "category";
+
+  public static final String CRITERIA    = "criteria";
+
+  public static final String AGGREGATION = "aggregation";
+
+  public static final String LAYER_ID    = "layerId";
+
   public static final String BIRT_SUFFIX = "imgs/birt";
 
   /**
@@ -17,4 +25,5 @@ public interface BirtConstants
    * birt temp imgs directory
    */
   public static final String IMGS_DIR    = DeployProperties.getDeployPath() + File.separator + "imgs" + File.separator + "birt";
+
 }

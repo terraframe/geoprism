@@ -33,6 +33,7 @@ import org.eclipse.birt.report.engine.api.PDFRenderOption;
 import org.eclipse.birt.report.engine.api.RenderOption;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Authenticate;
@@ -44,6 +45,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
@@ -72,6 +74,10 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static final String  RPTDESIGN_EXTENSION   = "rptdesign";
 
   public static final String  RPTDOCUMENT_EXTENSION = "rptdoc";
+
+  public static final String  LAYER_ID              = "layerId";
+
+  public static final String  CONTEXT               = "context";
 
   public static final String  CATEGORY              = "category";
 
@@ -428,9 +434,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(CATEGORY, country.getGeoId());
     }
 
-    GeoEntity geoEntity = GeoEntity.getByKey(map.get(CATEGORY));
-
-    map.put("categoryLabel", geoEntity.getDisplayLabel().getValue());
+    map.put("categoryLabel", this.getLabel(map));
 
     if (map.containsKey(CRITERIA))
     {
@@ -445,7 +449,26 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       }
     }
 
+    map.put(CONTEXT, new JSONObject(map).toString());
+
     return map;
+  }
+
+  private String getLabel(Map<String, String> map)
+  {
+    String layerId = map.get(LAYER_ID);
+    String categoryId = map.get(CATEGORY);
+
+    if (layerId == null || layerId.length() == 0)
+    {
+      GeoEntity geoEntity = GeoEntity.getByKey(categoryId);
+      String label = geoEntity.getDisplayLabel().getValue();
+
+      return label;
+    }
+
+    DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
+    return layer.getCategoryLabel(categoryId);
   }
 
   private String getFormat(Map<String, String> parameters)
@@ -804,9 +827,9 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Transaction
-  public static ValueQuery getValuesForReporting(String queryId, String category, String criteria, String aggregation, Integer pageSize, Integer pageNumber)
+  public static ValueQuery getValuesForReporting(String queryId, String context, Integer pageSize, Integer pageNumber)
   {
-    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, context);
 
     if (pageSize != null && pageSize > 0 && pageNumber != null)
     {
@@ -817,11 +840,11 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Transaction
-  public static Integer getPageCount(String queryId, String category, String criteria, String aggregation, Integer pageSize)
+  public static Integer getPageCount(String queryId, String context, Integer pageSize)
   {
     if (pageSize != null && pageSize > 0)
     {
-      ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+      ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, context);
       long count = query.getCount();
 
       return ( (int) count / pageSize ) + 1;
@@ -831,9 +854,9 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Transaction
-  public static ValueQuery getMetadataForReporting(String queryId, String category, String criteria, String aggregation)
+  public static ValueQuery getMetadataForReporting(String queryId, String context)
   {
-    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, category, criteria, aggregation);
+    ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, context);
     query.restrictRows(1, 1);
 
     return query;

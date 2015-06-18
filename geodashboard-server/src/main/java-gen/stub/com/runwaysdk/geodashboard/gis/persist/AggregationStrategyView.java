@@ -15,12 +15,11 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public class AggregationStrategyView extends AggregationStrategyViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long  serialVersionUID = 1241142559;
-
-  public static final String GEOMETRY         = "GEOMETRY";
+  private static final long serialVersionUID = 1241142559;
 
   public AggregationStrategyView()
   {
@@ -63,16 +62,38 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
 
     if (node instanceof GeoNodeGeometry)
     {
-      String label = node.getGeoEntityAttribute().getDisplayLabel().getValue();
+      String label = getDisplayLabel(node);
 
       AggregationStrategyView view = new AggregationStrategyView();
       view.setAggregationType(GeometryAggregationStrategy.CLASS);
-      view.setValue(GEOMETRY);
+      view.setValue(GeometryAggregationStrategy.VALUE);
       view.setDisplayLabel(label);
 
       list.add(view);
     }
 
     return list.toArray(new AggregationStrategyView[list.size()]);
+  }
+
+  public static String getDisplayLabel(GeoNode node)
+  {
+    MdAttribute attribute = node.getGeometryAttribute();
+
+    if (attribute == null)
+    {
+      attribute = node.getPointAttribute();
+    }
+
+    if (attribute == null)
+    {
+      attribute = node.getMultiPolygonAttribute();
+    }
+
+    if (attribute == null)
+    {
+      attribute = node.getGeoEntityAttribute();
+    }
+
+    return attribute.getDisplayLabel().getValue();
   }
 }

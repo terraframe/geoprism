@@ -3,33 +3,47 @@ package com.runwaysdk.geodashboard.report;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.AggregationStrategy;
+import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
+import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.GeneratedBusinessQuery;
+import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectablePrimitive;
 import com.runwaysdk.query.SelectableReference;
+import com.runwaysdk.query.SelectableSQLCharacter;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF;
+import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeReference;
 
 public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 {
@@ -48,6 +62,43 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
   public static final String NONE         = "7";
 
   public static final String TYPE         = "8";
+
+  protected abstract String getDefaultGeoId();
+
+  protected String getCategory(JSONObject object) throws JSONException
+  {
+    return this.get(object, BirtConstants.CATEGORY);
+  }
+
+  protected String getCriteria(JSONObject object) throws JSONException
+  {
+    return this.get(object, BirtConstants.CRITERIA);
+  }
+
+  protected String getAggregation(JSONObject object) throws JSONException
+  {
+    return this.get(object, BirtConstants.AGGREGATION);
+  }
+
+  protected String getLayerId(JSONObject object) throws JSONException
+  {
+    return this.get(object, BirtConstants.LAYER_ID);
+  }
+
+  private String get(JSONObject object, String key) throws JSONException
+  {
+    if (object.has(key))
+    {
+      return object.getString(key);
+    }
+
+    return null;
+  }
+
+  protected GeoEntity getGeoEntity(String category)
+  {
+    return ReportProviderUtil.getGeoEntity(category, this.getDefaultGeoId());
+  }
 
   protected void addSelectables(GeneratedBusinessQuery query, List<ReportAttributeMetadata> attributes, ValueQuery vQuery)
   {
@@ -127,8 +178,87 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     return parentDepth;
   }
 
-  protected void addGeoEntityQuery(ValueQuery vQuery, String aggregation, GeoEntity geoEntity, GeoEntityQueryReferenceIF geoAttribute)
+  protected void addLocationQuery(ValueQuery vQuery, String category, String layerId, String aggregation, GeneratedComponentQuery query, GeoEntityQueryReferenceIF geoAttribute)
   {
+    if (layerId != null && layerId.length() > 0)
+    {
+      DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
+      AggregationStrategy strategy = layer.getAggregationStrategy();
+
+      if (strategy instanceof GeometryAggregationStrategy)
+      {
+        addGeometryQuery(vQuery, query, layer, aggregation);
+      }
+      else
+      {
+        this.addGeoEntityQuery(vQuery, category, aggregation, geoAttribute);
+      }
+    }
+    else
+    {
+      this.addGeoEntityQuery(vQuery, category, aggregation, geoAttribute);
+    }
+  }
+
+  private void addGeometryQuery(ValueQuery vQuery, GeneratedComponentQuery query, DashboardThematicLayer layer, String aggregation)
+  {
+    GeoNode geoNode = layer.getGeoNode();
+    MdAttribute identifierAttribute = geoNode.getIdentifierAttribute();
+    MdAttribute displayLabelAttribute = geoNode.getDisplayLabelAttribute();
+    MdAttributeReference entityAttribute = geoNode.getGeoEntityAttribute();
+
+    Selectable geoLocation = query.get(displayLabelAttribute.getAttributeName());
+
+    if (geoLocation instanceof AttributeLocal)
+    {
+      geoLocation = ( (AttributeLocal) geoLocation ).localize();
+    }
+
+    geoLocation.setColumnAlias(entityAttribute.getAttributeName());
+    geoLocation.setUserDefinedAlias(entityAttribute.getAttributeName());
+    geoLocation.setUserDefinedDisplayLabel(entityAttribute.getDisplayLabel().getValue());
+
+    Selectable geoId = query.get(identifierAttribute.getAttributeName());
+    geoId.setColumnAlias(GeoEntity.GEOID);
+    geoId.setUserDefinedAlias(GeoEntity.GEOID);
+    geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
+
+    vQuery.SELECT(geoLocation, geoId);
+
+    if (aggregation != null && aggregation.equals(TYPE))
+    {
+      String label = AggregationStrategyView.getDisplayLabel(geoNode);
+
+      SelectableSQLCharacter universal = vQuery.aSQLCharacter("universalLabel", "'" + label + "'");
+      universal.setColumnAlias("universalLabel");
+      universal.setUserDefinedAlias("universalLabel");
+      universal.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles("universalLabel"));
+    }
+    else if (aggregation != null && aggregation.equals(COUSINS))
+    {
+      // Cousins
+      GeoEntityQueryReferenceIF parent = (GeoEntityQueryReferenceIF) query.get(entityAttribute.getAttributeName());
+
+      LocatedInQuery parentQuery = new LocatedInQuery(vQuery);
+
+      vQuery.WHERE(parentQuery.getChild().EQ(parent));
+
+      this.addGeoLabel(vQuery, "parent", parent);
+      this.addGeoLabel(vQuery, "grandparent", parentQuery.getParent());
+    }
+    else if (aggregation != null && aggregation.equals(SIBLINGS))
+    {
+      // Siblings
+      GeoEntityQueryReferenceIF parent = (GeoEntityQueryReferenceIF) query.get(entityAttribute.getAttributeName());
+      this.addGeoLabel(vQuery, "parent", parent);
+    }
+
+  }
+
+  protected void addGeoEntityQuery(ValueQuery vQuery, String category, String aggregation, GeoEntityQueryReferenceIF geoAttribute)
+  {
+    GeoEntity geoEntity = this.getGeoEntity(category);
+
     GeoEntityQuery entityQuery = new GeoEntityQuery(vQuery);
 
     MdAttributeConcreteDAOIF mdAttribute = geoAttribute.getMdAttributeIF();
@@ -139,6 +269,9 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     geoLocation.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
 
     SelectableChar geoId = entityQuery.getGeoId();
+    geoId.setColumnAlias(GeoEntity.GEOID);
+    geoId.setUserDefinedAlias(GeoEntity.GEOID);
+    geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
 
     vQuery.SELECT(geoLocation, geoId);
 

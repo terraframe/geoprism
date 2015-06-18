@@ -155,4 +155,17 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
 
     return query;
   }
+
+  @Override
+  protected void populate(DashboardLayer source)
+  {
+    super.populate(source);
+
+    if (source instanceof DashboardReferenceLayer)
+    {
+      DashboardReferenceLayer tSource = (DashboardReferenceLayer) source;
+
+      this.setUniversal(tSource.getUniversal());
+    }
+  }
 }

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.geodashboard.report.BirtConstants;
 import com.runwaysdk.geodashboard.report.PairViewDTO;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
 
@@ -100,23 +101,18 @@ public class QueryFacade
             aggregation = params.getString(QueryFacade.AGGREGATION);
           }
 
-          String category = (String) parameters.get("category");
-          String criteria = (String) parameters.get("criteria");
+          JSONObject context = getContext(parameters);
+          context.put(BirtConstants.AGGREGATION, aggregation);
 
           if (queryMetadata)
           {
-            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, queryId, category, criteria, aggregation);
+            ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, queryId, context.toString());
 
             return new ComponentQueryResultSet(results);
           }
           else
           {
-            // ValueQueryDTO results = ReportItemDTO.getValuesForReporting(request, type, category, criteria,
-            // aggregation);
-            //
-            // return new ComponentQueryResultSet(results);
-
-            return new BlockQueryResultSet(request, queryId, category, criteria, aggregation);
+            return new BlockQueryResultSet(request, queryId, context.toString());
           }
         }
 
@@ -129,6 +125,21 @@ public class QueryFacade
     }
 
     throw new OdaException("Unable to execute an empty query");
+  }
+
+  private JSONObject getContext(Map<String, Object> parameters)
+  {
+    if (parameters.containsKey("context"))
+    {
+      String value = (String) parameters.get("context");
+
+      if (value != null && value.length() > 0)
+      {
+        return new JSONObject(value);
+      }
+    }
+
+    return new JSONObject();
   }
 
   public String getQueryId(String query) throws OdaException
@@ -198,8 +209,7 @@ public class QueryFacade
         else if (action.equals(QUERY))
         {
           LinkedHashMap<String, IParameter> map = new LinkedHashMap<String, IParameter>();
-          map.put("category", new StringParameter("category", IParameterMetaData.parameterNullable));
-          map.put("criteria", new StringParameter("criteria", IParameterMetaData.parameterNullable));
+          map.put("context", new StringParameter("context", IParameterMetaData.parameterNullable));
 
           return new ParameterMetaData(map);
         }

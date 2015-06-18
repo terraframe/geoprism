@@ -2,7 +2,10 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.query.Attribute;
@@ -11,6 +14,7 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
 
 public class UniversalAggregationStrategy extends UniversalAggregationStrategyBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -94,5 +98,40 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
     ValueQuery valueQuery = builder.getThematicValueQuery();
 
     return valueQuery;
+  }
+
+  @Override
+  public JSONObject getJSON()
+  {
+    try
+    {
+      JSONObject object = new JSONObject();
+      object.put("type", this.getClass().getSimpleName());
+      object.put("value", this.getUniversalId());
+
+      return object;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Override
+  public String getCategoryLabel(GeoNode geoNode, String categoryId)
+  {
+    GeoEntity entity = GeoEntity.getByKey(categoryId);
+
+    return entity.getDisplayLabel().getValue();
+  }
+
+  @Override
+  public AggregationStrategy clone()
+  {
+    UniversalAggregationStrategy clone = new UniversalAggregationStrategy();
+    clone.setUniversal(this.getUniversal());
+    clone.apply();
+
+    return clone;
   }
 }
