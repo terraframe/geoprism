@@ -15,9 +15,10 @@
           <text name="displayLabel" label="Display label" />
           <text name="value" label="Value" />
           <text name="aggregationType" label="Aggregation type" />
+		  <text name="availableGeometryTypes" label="Available geometry types" required="false" />
         </attributes>
         <mdMethod name="getAggregationStrategies" returnType="com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView[]" static="true">
-          <mdParameter name="node" label="Geo node" order="0" type="com.runwaysdk.system.gis.geo.GeoNode" />
+          <mdParameter name="nodeId" label="Geo node id" order="0" type="java.lang.String" />
         </mdMethod>
       </mdView>
     </create>

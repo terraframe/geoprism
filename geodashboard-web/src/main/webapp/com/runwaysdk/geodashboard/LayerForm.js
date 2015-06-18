@@ -726,16 +726,6 @@
         }
         params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
-        // Check for existense of dynamic settings which may not exist 
-        if(params['style.bubbleContinuousSize']){
-          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
-        }
-        
-        if($("#f79").is(":visible")){
-          params['style.pointFixedSize'] = params['style.pointFixedSize'];
-          params['style.pointFixed'] = true;
-        }
-        
         return request;
       }
     },
@@ -905,6 +895,16 @@
         if($("#tab004categories").is(":visible")){
           var catStyleArr = this._updateCategoriesJSON();
           params['style.styleCategories'] = JSON.stringify(catStyleArr);
+        }
+        
+        // Check for existense of dynamic settings which may not exist 
+        if(params['style.bubbleContinuousSize']){
+          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+        }
+        
+        if($("#f79").is(":visible")){
+          params['style.pointFixedSize'] = params['style.pointFixedSize'];
+          params['style.pointFixed'] = true;
         }
                 
         var secondaryAttribute = $("#secondaryAttribute").val();

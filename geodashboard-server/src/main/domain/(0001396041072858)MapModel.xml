@@ -124,6 +124,9 @@
           <mdParameter name="strategy" label="Strategy" order="2" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
           <mdParameter name="conditions" label="Conditions" order="3" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
         </mdMethod>
+        <mdMethod name="getGeoNodeGeometryTypesJSON" returnType="java.lang.String" static="true">
+        	<mdParameter name="geoNodeId" label="Geo node id" order="0" type="java.lang.String" />
+      	</mdMethod>
       </mdBusiness>
 
 

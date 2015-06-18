@@ -247,8 +247,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // Determine if the attribute is an ontology attribute
       if (mdAttributeConcrete instanceof MdAttributeTermDTO)
       {
-//        req.setAttribute("isOntologyAttribute", true);
-//        req.setAttribute("isTextAttribute", false);
+        req.setAttribute("isOntologyAttribute", true);
+        req.setAttribute("isTextAttribute", false);
         req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
         req.setAttribute("termType", ClassifierDTO.CLASS);
 
