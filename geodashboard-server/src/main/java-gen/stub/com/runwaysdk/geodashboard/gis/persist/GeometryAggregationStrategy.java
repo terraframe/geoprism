@@ -2,14 +2,22 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
+import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
@@ -18,9 +26,14 @@ import com.runwaysdk.system.gis.geo.GeoNode;
 
 public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = 178551989;
+  private static final long  serialVersionUID = 178551989;
 
-  public static final Log   log              = LogFactory.getLog(GeometryAggregationStrategy.class);
+  public static final Log    log              = LogFactory.getLog(GeometryAggregationStrategy.class);
+
+  /**
+   * Hard-coded magic value representing the use of the Geometry aggregation strategy
+   */
+  public static final String VALUE            = "GEOMETRY";
 
   public GeometryAggregationStrategy()
   {
@@ -107,5 +120,77 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     ValueQuery valueQuery = builder.getThematicValueQuery();
 
     return valueQuery;
+  }
+
+  @Override
+  public JSONObject getJSON()
+  {
+    try
+    {
+      JSONObject object = new JSONObject();
+      object.put("type", this.getClass().getSimpleName());
+      object.put("value", VALUE);
+
+      return object;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Override
+  public String getCategoryLabel(GeoNode geoNode, String categoryId)
+  {
+    MdAttributeDAOIF identifierAttribute = MdAttributeDAO.get(geoNode.getIdentifierAttribute().getId());
+    MdAttributeDAOIF displayLabelAttribute = MdAttributeDAO.get(geoNode.getDisplayLabelAttribute().getId());
+    String attributeName = displayLabelAttribute.definesAttribute();
+
+    MdClassDAOIF mdClass = identifierAttribute.definedByClass();
+
+    QueryFactory factory = new QueryFactory();
+
+    ValueQuery vQuery = new ValueQuery(factory);
+
+    GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, vQuery);
+    Selectable labelAttribute = query.get(attributeName);
+
+    if (labelAttribute instanceof AttributeLocal)
+    {
+      labelAttribute = ( (AttributeLocal) labelAttribute ).localize();
+      labelAttribute.setColumnAlias(attributeName);
+      labelAttribute.setUserDefinedAlias(attributeName);
+    }
+
+    vQuery.SELECT(labelAttribute);
+    vQuery.WHERE(query.get(identifierAttribute.definesAttribute()).EQ(categoryId));
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ValueObject object = iterator.next();
+        String label = object.getValue(attributeName);
+
+        return label;
+      }
+
+      throw new ProgrammingErrorException("Unable to retrieve a display label for a geometry strategy object.  This should never happen");
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  @Override
+  public AggregationStrategy clone()
+  {
+    GeometryAggregationStrategy clone = new GeometryAggregationStrategy();
+    clone.apply();
+
+    return clone;
   }
 }

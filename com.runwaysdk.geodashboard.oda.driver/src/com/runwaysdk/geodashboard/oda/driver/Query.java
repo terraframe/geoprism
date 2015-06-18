@@ -70,9 +70,8 @@ public class Query implements IQuery
   /*
    * @see org.eclipse.datatools.connectivity.oda.IQuery#setAppContext(java.lang.Object )
    */
-  public void setAppContext(Object context) throws OdaException
+  public void setAppContext(Object appContext) throws OdaException
   {
-    // do nothing; assumes no support for pass-through context
   }
 
   /*

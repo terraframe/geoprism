@@ -35,12 +35,12 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.dashboard.TermComparator;
-import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMapQuery;
 import com.runwaysdk.geodashboard.gis.persist.GeoEntityThematicQueryBuilder;
+import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.gis.persist.GeometryThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.ThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
@@ -559,7 +559,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     List<DashboardCondition> conditionList = Arrays.asList(conditions);
     AllAggregationType aggregationType = AllAggregationType.valueOf(aggregationVal);
 
-    if (universalId.equals(AggregationStrategyView.GEOMETRY))
+    if (universalId.equals(GeometryAggregationStrategy.VALUE))
     {
       return new GeometryThematicQueryBuilder(new QueryFactory(), mdAttribute, null, aggregationType, conditionList, geoNode);
     }

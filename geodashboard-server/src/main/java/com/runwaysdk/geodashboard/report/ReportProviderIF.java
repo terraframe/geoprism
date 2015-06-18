@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.report;
 
+import org.json.JSONException;
+
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.ValueQuery;
 
@@ -15,7 +17,7 @@ public interface ReportProviderIF extends Reloadable
    */
   public static final String DASHBOARD_ID   = "dashboardId";
 
-  public ValueQuery getReportQuery(String category, String criteria, String aggregation);
+  public ValueQuery getReportQuery(String context) throws JSONException;
 
   public PairView getReportQueryDescriptor();
 

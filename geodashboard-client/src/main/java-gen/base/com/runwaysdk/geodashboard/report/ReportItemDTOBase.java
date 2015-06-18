@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1632406134)
+@com.runwaysdk.business.ClassSignature(hash = -669227954)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = -1632406134;
+  private static final long serialVersionUID = -669227954;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -661,18 +661,18 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getMetadataForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String category, java.lang.String criteria, java.lang.String aggregation)
+  public static final com.runwaysdk.business.ValueQueryDTO getMetadataForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String context)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{queryId, category, criteria, aggregation};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{queryId, context};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getMetadataForReporting", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.lang.Integer getPageCount(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String category, java.lang.String criteria, java.lang.String aggregation, java.lang.Integer pageSize)
+  public static final java.lang.Integer getPageCount(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer"};
-    Object[] _parameters = new Object[]{queryId, category, criteria, aggregation, pageSize};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{queryId, context, pageSize};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getPageCount", _declaredTypes);
     return (java.lang.Integer) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -733,10 +733,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getValuesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String category, java.lang.String criteria, java.lang.String aggregation, java.lang.Integer pageSize, java.lang.Integer pageNumber)
+  public static final com.runwaysdk.business.ValueQueryDTO getValuesForReporting(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize, java.lang.Integer pageNumber)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "java.lang.Integer"};
-    Object[] _parameters = new Object[]{queryId, category, criteria, aggregation, pageSize, pageNumber};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.Integer", "java.lang.Integer"};
+    Object[] _parameters = new Object[]{queryId, context, pageSize, pageNumber};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getValuesForReporting", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

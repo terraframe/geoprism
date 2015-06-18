@@ -21,11 +21,7 @@ public class BlockQueryResultSet implements IResultSet
 
   private String                  queryId;
 
-  private String                  category;
-
-  private String                  criteria;
-
-  private String                  aggregation;
+  private String                  context;
 
   private int                     pageSize;
 
@@ -35,13 +31,11 @@ public class BlockQueryResultSet implements IResultSet
 
   private int                     maxPage;
 
-  public BlockQueryResultSet(ClientRequestIF request, String queryId, String category, String criteria, String aggregation)
+  public BlockQueryResultSet(ClientRequestIF request, String queryId, String context)
   {
     this.request = request;
     this.queryId = queryId;
-    this.category = category;
-    this.criteria = criteria;
-    this.aggregation = aggregation;
+    this.context = context;
 
     this.pageSize = 4000;
   }
@@ -50,7 +44,7 @@ public class BlockQueryResultSet implements IResultSet
   {
     if (this.query == null)
     {
-      this.maxPage = ReportItemDTO.getPageCount(this.request, this.queryId, this.category, this.criteria, this.aggregation, this.pageSize);
+      this.maxPage = ReportItemDTO.getPageCount(this.request, this.queryId, this.context, this.pageSize);
 
       this.nextQuery();
     }
@@ -62,7 +56,7 @@ public class BlockQueryResultSet implements IResultSet
   {
     this.currentPage = this.currentPage + 1;
 
-    ValueQueryDTO values = ReportItemDTO.getValuesForReporting(this.request, this.queryId, this.category, this.criteria, this.aggregation, this.pageSize, this.currentPage);
+    ValueQueryDTO values = ReportItemDTO.getValuesForReporting(this.request, this.queryId, this.context, this.pageSize, this.currentPage);
 
     this.query = new ComponentQueryResultSet(values);
   }
