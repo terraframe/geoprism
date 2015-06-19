@@ -16,6 +16,16 @@
         // ontology category layer type colors
         $(".cat-color-selector").colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+        	  var that = this;
+              $(LayerForm.LAYER_MODAL).scroll(function(){  
+              	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              	var colPick = $(that);
+              	var diff = colPick.offset().top + colPick.height() + 2; 
+              	var diffStr = diff.toString() + "px";
+              	colorPicker.css({ top: diffStr });
+              });
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
             $(el).find('.color-input').attr('value', '#'+hex);
@@ -311,8 +321,17 @@
             $(thisLi).find("span").colpick({
               submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
               onShow:function(colPickObj) {
+            	var that = this;
                 var currColor = LayerForm.rgb2hex($(this).css("background-color"));
                 $(this).colpickSetColor(currColor,false);
+
+                $(LayerForm.LAYER_MODAL).scroll(function(){  
+                	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                	var colPick = $(that);
+                	var diff = colPick.offset().top + colPick.height() + 2; 
+                	var diffStr = diff.toString() + "px";
+                	colorPicker.css({ top: diffStr });
+                });
               },
               onChange: function(hsb,hex,rgb,el,bySetColor) {
                 var hexStr = '#'+hex;
@@ -466,7 +485,6 @@
         // Scroll selector dropdown options on page scroll
         this.getImpl().scroll(function(){         
           var drops = $(".select-options");
-              
           for(var i=0; i<drops.length; i++){
             var drop = $(drops[i]);
                 
@@ -477,6 +495,7 @@
               drop.css({ top: diffStr });
             }
           }
+          
         });
               
         this._injectFontStylesForDropdown();
@@ -488,8 +507,18 @@
         elements.colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onShow:function(colPickObj) {
+        	var that = this;
             var currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
             $(this).colpickSetColor(currColor,false);
+            
+            $(LayerForm.LAYER_MODAL).scroll(function(){  
+            	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+            	var colPick = $(that);
+            	var diff = colPick.offset().top + colPick.height() + 2; 
+            	var diffStr = diff.toString() + "px";
+            	colorPicker.css({ top: diffStr });
+            });
+            
           },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).find(".ico").css('background','#'+hex);
@@ -559,6 +588,16 @@
         // category layer type colors
         $("#category-colors-container").find('.icon-color').colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+        	  var that = this;
+              $(LayerForm.LAYER_MODAL).scroll(function(){  
+              	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              	var colPick = $(that);
+              	var diff = colPick.offset().top + colPick.height() + 2; 
+              	var diffStr = diff.toString() + "px";
+              	colorPicker.css({ top: diffStr });
+              });
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
             $(el).find('.color-input').attr('value', '#'+hex);          
@@ -568,6 +607,16 @@
         // ontology category layer type colors
         $(".ontology-category-color-icon").colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+        	  var that = this;
+              $(LayerForm.LAYER_MODAL).scroll(function(){  
+              	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              	var colPick = $(that);
+              	var diff = colPick.offset().top + colPick.height() + 2; 
+              	var diffStr = diff.toString() + "px";
+              	colorPicker.css({ top: diffStr });
+              });
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
             $(el).next(".color-input").attr('value', '#'+hex);
@@ -1179,6 +1228,16 @@
           // ontology category layer type colors
           $(".category-color-icon").colpick({
             submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onShow:function(colPickObj){
+            	var that = this;
+                $(LayerForm.LAYER_MODAL).scroll(function(){  
+                	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                	var colPick = $(that);
+                	var diff = colPick.offset().top + colPick.height() + 2; 
+                	var diffStr = diff.toString() + "px";
+                	colorPicker.css({ top: diffStr });
+                });
+            },
             onChange:function(hsb,hex,rgb,el,bySetColor) {
               $(el).css('background','#'+hex);
               $(el).find('.color-input').attr('value', '#'+hex);
@@ -1232,6 +1291,16 @@
         // category layer type colors
         $("#category-colors-container").find('.icon-color').colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+        	  var that = this;
+              $(LayerForm.LAYER_MODAL).scroll(function(){  
+              	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              	var colPick = $(that);
+              	var diff = colPick.offset().top + colPick.height() + 2; 
+              	var diffStr = diff.toString() + "px";
+              	colorPicker.css({ top: diffStr });
+              });
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
             $(el).find('.color-input').attr('value', '#'+hex);          
@@ -1241,6 +1310,16 @@
         // ontology category layer type colors
         $(".ontology-category-color-icon").colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+        	  var that = this;
+              $(LayerForm.LAYER_MODAL).scroll(function(){  
+              	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              	var colPick = $(that);
+              	var diff = colPick.offset().top + colPick.height() + 2; 
+              	var diffStr = diff.toString() + "px";
+              	colorPicker.css({ top: diffStr });
+              });
+          },
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
             $(el).next(".color-input").attr('value', '#'+hex);
