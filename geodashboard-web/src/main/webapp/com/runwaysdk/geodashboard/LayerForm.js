@@ -772,6 +772,7 @@
       },
       
       _displayLayerForm : function(html, layer) {
+    	var that = this;
     	this.$_displayLayerForm(html, layer);
     	
         // Attach event listeners for the universal (geo) aggregation dropdown.
@@ -809,7 +810,7 @@
           
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){
-            that._displayLayerForm(html, null);
+            that._displayLayerForm(html, "");
             that._addLayerFormControls();              
           },
           onFailure : function(e){
@@ -950,7 +951,7 @@
       
       /**
        * 
-       * @selectedVal - selected dropdown option element 
+       * @layer - the layer object representing the layer the form is targeting 
        * 
        */
       _getGeographicAggregationOptions : function(layer){
