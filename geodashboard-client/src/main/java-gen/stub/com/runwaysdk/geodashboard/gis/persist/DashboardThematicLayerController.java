@@ -3,6 +3,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.GeoNodeDTO;
+import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
@@ -193,6 +195,11 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
       req.setAttribute("nodes", nodes);
+      
+//      // Get the universals, sorted by their ordering in the universal tree.
+//      List<UniversalDTO> universals = Arrays.asList(DashboardMapDTO.getUniversalAggregations(clientRequest, mapId, mdAttributeId));
+//
+//      req.setAttribute("universals", universals);
 
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));

@@ -14,7 +14,7 @@
       },
       attachCategoryColorPickers : function (){
         // ontology category layer type colors
-        $(".category-color-icon").colpick({
+        $(".cat-color-selector").colpick({
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onChange:function(hsb,hex,rgb,el,bySetColor) {
             $(el).css('background','#'+hex);
@@ -617,7 +617,7 @@
        * 
        * @html
        */
-      _displayLayerForm : function(html){
+      _displayLayerForm : function(html, layer){
         
         var that = this;
         
@@ -664,15 +664,6 @@
           }
         });
         
-        // Attach event listeners for the universal (geo) aggregation dropdown.
-        this._setGeoAggEventListeners();
-        
-        // Populate the Aggregation Options based on the default selected GeoNode
-        this._getGeographicAggregationOptions();
-        
-        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
-        	that._getGeographicAggregationOptions();
-        });
         
         // Localize any existing number cateogry values
         $.each($('.category-input'), function() {
@@ -780,18 +771,31 @@
         this._LayerController.setApplyWithStyleListener(Mojo.Util.bind(this, this._applyWithStyleListener));       
       },
       
-      _displayLayerForm : function(html) {
-    	this.$_displayLayerForm(html);
+      _displayLayerForm : function(html, layer) {
+    	this.$_displayLayerForm(html, layer);
     	
+        // Attach event listeners for the universal (geo) aggregation dropdown.
+        this._setGeoAggEventListeners();
+        
+        // Populate the Aggregation Options based on the default selected GeoNode
+        this._getGeographicAggregationOptions(layer);
+        
+        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
+        	that._getGeographicAggregationOptions(layer);
+        });
+        
         this._thematicAttributeId = $("#categories-input").data('mdattributeid');
       },
       
       edit : function(id) {
         var that = this;
+        
+        var layer = this._map._layerCache.get(id);
+        that._layer = layer;
       
         this._LayerController.edit(new Mojo.ClientRequest({
           onSuccess : function(html){
-            that._displayLayerForm(html);
+            that._displayLayerForm(html, that._layer);
             that._addLayerFormControls();
           },
           onFailure : function(e){
@@ -805,7 +809,7 @@
           
         var request = new Mojo.ClientRequest({
           onSuccess : function(html){
-            that._displayLayerForm(html);
+            that._displayLayerForm(html, null);
             that._addLayerFormControls();              
           },
           onFailure : function(e){
@@ -816,6 +820,7 @@
           
         this._LayerController.newThematicInstance(request, thematicAttributeId, this._mapId);      
       },
+      
       
       /**
        * 
@@ -861,7 +866,7 @@
         else if (response.isHTML()) {
           // we got html back, meaning there was an error
               
-          this._displayLayerForm(htmlOrJson);
+          this._displayLayerForm(htmlOrJson, null);
           this._addLayerFormControls();
               
           this.getImpl().animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
@@ -948,13 +953,26 @@
        * @selectedVal - selected dropdown option element 
        * 
        */
-      _getGeographicAggregationOptions : function(){
+      _getGeographicAggregationOptions : function(layer){
     	  var that = this;
+    	  
+    	  // To set the option on a saved layer when initiating an edit session we get the
+    	  // universal id OR geometry aggregation value id depending on the aggregation type of
+    	  // the saved layer. 
+    	  if(layer){
+	    	  var universalOrGeomId = layer.aggregationStrategy.value;
+	    	  if(universalOrGeomId){
+	    		  that._selectedOption = universalOrGeomId;
+	    	  }
+	    	  else{
+	    		  that._selectedOption = null;
+	    	  }
+    	  }
     	  var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
     	  
       	  var clientRequest = new Mojo.ClientRequest({
             onSuccess : function(data) {
-            	that._setGeographicAggregationOptions(data);
+            	that._setGeographicAggregationOptions(data, that._selectedOption);
             },
             onFailure : function(e) {
               that.handleException(e);
@@ -1014,7 +1032,7 @@
        * 
        * @aggregations - JSON representing geo aggregation levels
        */
-      _setGeographicAggregationOptions : function(aggregations) {
+      _setGeographicAggregationOptions : function(aggregations, selectedOption) {
     	  var selected = "";
     	  
     	  // Get the original name value from the originally rendered dropdown because this
@@ -1024,7 +1042,10 @@
     	  var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" data-layertypes="'+layerTypes+'" >';
     	  for(var i=0; i<aggregations.length; i++){
     		  var agg = aggregations[i];
-    		  if(i === 0){
+    		  if(selectedOption === agg.getValue()){
+    			  selected = "selected";
+    		  }
+    		  else if(i === 0){
     			  selected = "selected";
     		  }
     		  else{
@@ -1094,7 +1115,6 @@
 
       
       _addLayerFormControls : function(){
-        var that = this;
           
         $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
           
@@ -1138,7 +1158,7 @@
         else if($(".category-input").length > 0){
           var categoryType = $("#categories-input").data('type');
           
-          this._categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-input", true, "cat", this._thematicAttributeId, categoryType, '#f59');
+          this._categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
           this._categoryWidget.render();
           
           // category 'other' option
@@ -1169,22 +1189,18 @@
         var secondaryAttribute = $("#secondaryAttribute").val();
           
         if(secondaryAttribute != null && secondaryAttribute.length > 0) {
-        
           var type = $('#secondaryAttribute').find(":selected").data('type');
-            
           if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {          
-           
             this._renderSecondaryTermTree(secondaryAttribute, type);
           }
           else {
             this._renderSecondaryCategoryGroup(secondaryAttribute, type);
-            
             this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
           }
         }
           
         // Scroll selector dropdown options on page scroll
-        $("#modal01").scroll(function(){         
+        $(LayerForm.LAYER_MODAL).scroll(function(){         
           var drops = $(".select-options");
           
           for(var i=0; i<drops.length; i++){
@@ -1276,9 +1292,7 @@
         
         var that = this;
         
-        // Hook up the auto-complete for category input options new layers
-        // existing layers have a seperate autocomplete hookup that queries 
-        // the layer database view directly. 
+        // Hook up the auto-complete for category input options 
         $(parent).find('.category-input').each(function(){
           var mdAttribute = $(this).data('mdattributeid');  
           var categoryType = $(this).data('type');
