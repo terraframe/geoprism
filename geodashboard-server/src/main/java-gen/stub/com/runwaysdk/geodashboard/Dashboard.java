@@ -66,6 +66,7 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
@@ -916,24 +917,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
     mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
 
-    OIterator<? extends MetadataGeoNode> iterator = mgQuery.getIterator();
+    GeoNodeQuery gnQuery = new GeoNodeQuery(factory);
+    gnQuery.WHERE(gnQuery.EQ(mgQuery.getChild()));
 
-    Set<GeoNode> nodes = new TreeSet<GeoNode>(new Comparator<GeoNode>()
-    {
+    OIterator<? extends GeoNode> iterator = gnQuery.getIterator();
 
-      @Override
-      public int compare(GeoNode o1, GeoNode o2)
-      {
-        return o1.getId().compareTo(o2.getId());
-      }
-    });
+    List<GeoNode> nodes = new LinkedList<GeoNode>();
 
     try
     {
       while (iterator.hasNext())
       {
-        MetadataGeoNode metadata = iterator.next();
-        GeoNode geoNode = metadata.getChild();
+        GeoNode geoNode = iterator.next();
 
         nodes.add(geoNode);
       }
