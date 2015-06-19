@@ -49,9 +49,9 @@
       },
       
       _getCategoryHTML : function(index) {
-        
+            	  
         var autocomplete = 'on';
-        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "fill");  
+        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "catInputPlaceholder");  
         var disabled = "";
         var color = "#000000";
         var value = "";
@@ -59,7 +59,7 @@
         
         if(index == CategoryWidget.OTHER) {
           autocomplete = 'off';
-          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other", "Other");
+          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other");
           disabled = "disabled";
           value = "other";
           color = "#737678";

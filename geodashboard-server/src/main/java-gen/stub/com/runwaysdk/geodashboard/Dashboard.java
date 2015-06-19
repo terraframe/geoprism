@@ -918,7 +918,15 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     OIterator<? extends MetadataGeoNode> iterator = mgQuery.getIterator();
 
-    List<GeoNode> nodes = new LinkedList<GeoNode>();
+    Set<GeoNode> nodes = new TreeSet<GeoNode>(new Comparator<GeoNode>()
+    {
+
+      @Override
+      public int compare(GeoNode o1, GeoNode o2)
+      {
+        return o1.getId().compareTo(o2.getId());
+      }
+    });
 
     try
     {

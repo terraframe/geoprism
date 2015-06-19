@@ -187,7 +187,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       if (strategy instanceof GeometryAggregationStrategy)
       {
-        addGeometryQuery(vQuery, query, layer, aggregation);
+        this.addGeometryQuery(vQuery, query, layer, aggregation);
       }
       else
       {
@@ -233,6 +233,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       universal.setColumnAlias("universalLabel");
       universal.setUserDefinedAlias("universalLabel");
       universal.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles("universalLabel"));
+
+      vQuery.SELECT(universal);
     }
     else if (aggregation != null && aggregation.equals(COUSINS))
     {
