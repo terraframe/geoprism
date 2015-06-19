@@ -196,11 +196,6 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
       req.setAttribute("nodes", nodes);
       
-//      // Get the universals, sorted by their ordering in the universal tree.
-//      List<UniversalDTO> universals = Arrays.asList(DashboardMapDTO.getUniversalAggregations(clientRequest, mapId, mdAttributeId));
-//
-//      req.setAttribute("universals", universals);
-
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
