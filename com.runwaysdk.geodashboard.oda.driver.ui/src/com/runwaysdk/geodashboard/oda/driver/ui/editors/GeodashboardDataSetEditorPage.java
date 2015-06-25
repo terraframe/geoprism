@@ -166,11 +166,6 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       this.schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
       this.schemaCombo.setInput(input);
 
-      if (input.length > 0)
-      {
-        this.schemaCombo.setSelection(new StructuredSelection(input[0]));
-      }
-
       Label depthLabel = new Label(selectTableGroup, SWT.LEFT);
       depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
 
@@ -213,9 +208,15 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       this.entityCombo.setLabelProvider(new DataSetTypeLabelProvider());
       this.entityCombo.setInput(entities);
 
+      // Initialize the drop down selectables
+      if (input.length > 0)
+      {
+        this.schemaCombo.setSelection(new StructuredSelection(input[0]));
+      }
+
       if (entities.length > 0)
       {
-        this.entityCombo.setSelection(new StructuredSelection(input[0]));
+        this.entityCombo.setSelection(new StructuredSelection(entities[0]));
       }
 
       this.initialized = true;
@@ -225,7 +226,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       Shell shell = parent.getShell();
       String label = GeodashboardPlugin.getResourceString("dataset.error");
       String message = GeodashboardPlugin.getResourceString("dashboardpage.label.connectionerror");
-//      String message = ex.getLocalizedMessage();
+      // String message = ex.getLocalizedMessage();
 
       ExceptionHandler.showException(shell, label, message, ex);
 

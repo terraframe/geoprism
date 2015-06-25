@@ -70,7 +70,12 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
     for (PairView view : views)
     {
-      return view.getValue().equals(queryId);
+      String value = view.getValue();
+
+      if (value.equals(queryId))
+      {
+        return true;
+      }
     }
 
     return false;
