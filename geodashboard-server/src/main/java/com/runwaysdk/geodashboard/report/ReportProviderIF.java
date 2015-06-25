@@ -1,5 +1,7 @@
 package com.runwaysdk.geodashboard.report;
 
+import java.util.List;
+
 import org.json.JSONException;
 
 import com.runwaysdk.generation.loader.Reloadable;
@@ -17,9 +19,38 @@ public interface ReportProviderIF extends Reloadable
    */
   public static final String DASHBOARD_ID   = "dashboardId";
 
-  public ValueQuery getReportQuery(String context) throws JSONException;
+  /**
+   * A list of id-label pairing for all of the report queries supported by this provider
+   * 
+   * @return
+   */
+  public List<PairView> getSupportedQueryDescriptors();
 
-  public PairView getReportQueryDescriptor();
+  /**
+   * If the ReportProvider supports the given query
+   * 
+   * @param queryId
+   * @return
+   */
+  public boolean hasSupport(String queryId);
 
-  public PairView[] getSupportedAggregation();
+  /**
+   * List of all of the aggregations supported by the given query
+   * 
+   * @param queryId
+   * @return
+   */
+  public PairView[] getSupportedAggregation(String queryId);
+
+  /**
+   * Returns a ValueQuery containing all of the results for the given query based upon the context in which the query is
+   * run.
+   * 
+   * @param queryId
+   * @param context
+   * @return
+   * @throws JSONException
+   */
+  public ValueQuery getReportQuery(String queryId, String context) throws JSONException;
+
 }

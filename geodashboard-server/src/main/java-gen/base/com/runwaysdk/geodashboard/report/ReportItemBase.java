@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 574046926)
+@com.runwaysdk.business.ClassSignature(hash = 178510018)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 574046926;
+  private static final long serialVersionUID = 178510018;
   
   public ReportItemBase()
   {
@@ -551,6 +551,12 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   {
     ReportItem _instance = ReportItem.get(id);
     return _instance.getDocumentAsStream();
+  }
+  
+  public static com.runwaysdk.geodashboard.report.PairView[] getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static com.runwaysdk.query.ValueQuery getMetadataForReporting(java.lang.String queryId, java.lang.String context)

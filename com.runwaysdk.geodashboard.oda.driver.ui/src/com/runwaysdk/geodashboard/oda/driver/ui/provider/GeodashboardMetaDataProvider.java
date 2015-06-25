@@ -18,6 +18,82 @@ import com.runwaysdk.geodashboard.oda.driver.Driver;
 
 public class GeodashboardMetaDataProvider
 {
+  class TempThread extends Thread
+  {
+    private List<LabelValuePair> results;
+
+    private Throwable            throwable;
+
+    private String               queryText;
+
+    public TempThread(String queryText)
+    {
+      this.queryText = queryText;
+    }
+
+    @Override
+    public void run()
+    {
+      this.results = new LinkedList<LabelValuePair>();
+
+      try
+      {
+        IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
+
+        IQuery query = connection.newQuery(null);
+        query.prepare(this.queryText);
+
+        IResultSet results = query.executeQuery();
+
+        while (results.next())
+        {
+          String value = results.getString("value");
+          String label = results.getString("label");
+
+          this.results.add(new LabelValuePair(value, label));
+        }
+      }
+      catch (Throwable e)
+      {
+        logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+
+        this.throwable = e;
+      }
+    }
+
+    public Throwable getThrowable()
+    {
+      return this.throwable;
+    }
+
+    public List<LabelValuePair> getResults()
+    {
+      return this.results;
+    }
+
+    public List<LabelValuePair> execute(long milliSeconds)
+    {
+      this.start();
+
+      try
+      {
+        this.join(milliSeconds);
+      }
+      catch (InterruptedException e)
+      {
+      }
+
+      if (this.getThrowable() != null)
+      {
+        throw new ConnectionException(this.getThrowable());
+      }
+
+      List<LabelValuePair> results = this.getResults();
+      return results;
+    }
+
+  }
+
   private static Logger logger = Logger.getLogger(GeodashboardMetaDataProvider.class.getName());
 
   private DataSetDesign design;
@@ -57,142 +133,29 @@ public class GeodashboardMetaDataProvider
     }
   }
 
-  public LabelValuePair[] getSupportedAggregation(final String queryId, int milliSeconds)
+  public LabelValuePair[] getSupportedAggregation(final String queryId, long milliSeconds)
   {
-    class TempThread extends Thread
-    {
-      private List<LabelValuePair> results;
+    String queryText = QueryFacadeUtil.getSupportedAggregationQueryText(queryId);
 
-      private Throwable            throwable;
-
-      @Override
-      public void run()
-      {
-        this.results = new LinkedList<LabelValuePair>();
-
-        try
-        {
-          IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
-
-          IQuery query = connection.newQuery(null);
-          query.prepare(QueryFacadeUtil.getSupportedAggregationQueryText(queryId));
-
-          IResultSet results = query.executeQuery();
-
-          while (results.next())
-          {
-            String value = results.getString("value");
-            String label = results.getString("label");
-
-            this.results.add(new LabelValuePair(value, label));
-          }
-        }
-        catch (Throwable e)
-        {
-          logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-
-          this.throwable = e;
-        }
-      }
-
-      public Throwable getThrowable()
-      {
-        return this.throwable;
-      }
-
-      public List<LabelValuePair> getResults()
-      {
-        return this.results;
-      }
-    }
-
-    TempThread tt = new TempThread();
-    tt.start();
-
-    try
-    {
-      tt.join(milliSeconds);
-    }
-    catch (InterruptedException e)
-    {
-    }
-
-    if (tt.getThrowable() != null)
-    {
-      throw new RuntimeException(tt.getThrowable());
-    }
-
-    List<LabelValuePair> results = tt.getResults();
+    List<LabelValuePair> results = new TempThread(queryText).execute(milliSeconds);
 
     return results.toArray(new LabelValuePair[results.size()]);
   }
 
   public LabelValuePair[] getTypes(long milliSeconds)
   {
-    class TempThread extends Thread
-    {
-      private List<LabelValuePair> results;
+    String queryText = QueryFacadeUtil.getDashboardQueryText();
 
-      private Throwable            throwable;
+    List<LabelValuePair> results = new TempThread(queryText).execute(milliSeconds);
 
-      @Override
-      public void run()
-      {
-        this.results = new LinkedList<LabelValuePair>();
+    return results.toArray(new LabelValuePair[results.size()]);
+  }
 
-        try
-        {
-          IConnection connection = GeodashboardMetaDataProvider.this.getConnection();
-
-          IQuery query = connection.newQuery(null);
-          query.prepare(QueryFacadeUtil.getDashboardQueryText());
-
-          IResultSet results = query.executeQuery();
-
-          while (results.next())
-          {
-            String value = results.getString("value");
-            String label = results.getString("label");
-
-            this.results.add(new LabelValuePair(value, label));
-          }
-        }
-        catch (Throwable e)
-        {
-          logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-
-          this.throwable = e;
-        }
-      }
-
-      public Throwable getThrowable()
-      {
-        return this.throwable;
-      }
-
-      public List<LabelValuePair> getResults()
-      {
-        return this.results;
-      }
-    }
-
-    TempThread tt = new TempThread();
-    tt.start();
-
-    try
-    {
-      tt.join(milliSeconds);
-    }
-    catch (InterruptedException e)
-    {
-    }
-
-    if (tt.getThrowable() != null)
-    {
-      throw new RuntimeException(tt.getThrowable());
-    }
-
-    List<LabelValuePair> results = tt.getResults();
+  public LabelValuePair[] getEntitySuggestions(final String text, long milliSeconds)
+  {
+    String queryText = QueryFacadeUtil.getEntitySuggestions(text);
+    TempThread thread = new TempThread(queryText);
+    List<LabelValuePair> results = thread.execute(milliSeconds);
 
     return results.toArray(new LabelValuePair[results.size()]);
   }

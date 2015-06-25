@@ -20,4 +20,13 @@ public class PairView extends PairViewBase implements com.runwaysdk.generation.l
     return view;
   }
 
+  public static PairView createWithLabel(String value, String label)
+  {
+    PairView view = new PairView();
+    view.setValue(value);
+    view.setLabel(label);
+
+    return view;
+  }
+
 }

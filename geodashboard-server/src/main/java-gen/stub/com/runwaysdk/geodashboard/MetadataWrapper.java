@@ -7,9 +7,14 @@ import java.util.Locale;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdClassQuery;
 
 public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -81,6 +86,61 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     }
 
     return mdAttr.toArray(new MdAttributeView[mdAttr.size()]);
+  }
+
+  public static List<MdClass> getMdClassesWithGeoNodes()
+  {
+    // Returns list of all types defined with GeoNodes
+    QueryFactory factory = new QueryFactory();
+
+    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.EQ(mgQuery.getParent()));
+
+    MdClassQuery query = new MdClassQuery(factory);
+    query.WHERE(query.EQ(mwQuery.getWrappedMdClass()));
+
+    OIterator<? extends MdClass> iterator = query.getIterator();
+
+    try
+    {
+      List<? extends MdClass> results = iterator.getAll();
+
+      return new LinkedList<MdClass>(results);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+  }
+
+  public static List<GeoNode> getGeoNodes(String type)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.AND(mwQuery.getWrappedMdClass().EQ(MdClassDAO.getMdClassDAO(type)));
+
+    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+    mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
+
+    GeoNodeQuery gnQuery = new GeoNodeQuery(factory);
+    gnQuery.WHERE(gnQuery.EQ(mgQuery.getChild()));
+
+    OIterator<? extends GeoNode> iterator = gnQuery.getIterator();
+
+    try
+    {
+      List<? extends GeoNode> nodes = iterator.getAll();
+
+      return new LinkedList<GeoNode>(nodes);
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
 }

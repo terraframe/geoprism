@@ -26,7 +26,7 @@ public class QueryFacadeUtil
     return object.toString();
   }
 
-  public static String getValuesQueryText(String queryId, String aggregation)
+  public static String getValuesQueryText(String queryId, String aggregation, String defaultGeoId)
   {
     JSONObject parameters = new JSONObject();
     parameters.put(QueryFacade.QUERY_ID, queryId);
@@ -34,6 +34,7 @@ public class QueryFacadeUtil
     if (aggregation != null && aggregation.length() > 0)
     {
       parameters.put(QueryFacade.AGGREGATION, aggregation);
+      parameters.put(QueryFacade.DEFAULT_GEO_ID, defaultGeoId);
     }
 
     JSONObject object = new JSONObject();
@@ -66,5 +67,32 @@ public class QueryFacadeUtil
     }
 
     return null;
+  }
+
+  public static String getGeoIdFromQueryText(String queryText)
+  {
+    JSONObject object = new JSONObject(queryText);
+    JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
+
+    if (parameters.has(QueryFacade.DEFAULT_GEO_ID))
+    {
+      String aggregation = parameters.getString(QueryFacade.DEFAULT_GEO_ID);
+
+      return aggregation;
+    }
+
+    return null;
+  }
+
+  public static String getEntitySuggestions(String text)
+  {
+    JSONObject parameters = new JSONObject();
+    parameters.put(QueryFacade.TEXT, text);
+
+    JSONObject object = new JSONObject();
+    object.put(QueryFacade.ACTION, QueryFacade.ENTITY);
+    object.put(QueryFacade.PARAMETERS, parameters);
+
+    return object.toString();
   }
 }

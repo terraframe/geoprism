@@ -43,13 +43,13 @@ public class ReportProviderBridge implements Reloadable
   {
     try
     {
-      List<ReportProviderIF> reports = getReportProviders();
+      List<ReportProviderIF> providers = getReportProviders();
 
-      for (ReportProviderIF report : reports)
+      for (ReportProviderIF provider : providers)
       {
-        if (report.getReportQueryDescriptor().getValue().equals(queryId))
+        if (provider.hasSupport(queryId))
         {
-          return report.getReportQuery(context);
+          return provider.getReportQuery(queryId, context);
         }
       }
 
@@ -64,11 +64,11 @@ public class ReportProviderBridge implements Reloadable
   public static PairView[] getQueriesForReporting()
   {
     ArrayList<PairView> types = new ArrayList<PairView>();
-    List<ReportProviderIF> reports = getReportProviders();
+    List<ReportProviderIF> providers = getReportProviders();
 
-    for (ReportProviderIF report : reports)
+    for (ReportProviderIF provider : providers)
     {
-      types.add(report.getReportQueryDescriptor());
+      types.addAll(provider.getSupportedQueryDescriptors());
     }
 
     return types.toArray(new PairView[types.size()]);
@@ -76,13 +76,13 @@ public class ReportProviderBridge implements Reloadable
 
   public static PairView[] getSupportedAggregation(String queryId)
   {
-    List<ReportProviderIF> reports = getReportProviders();
+    List<ReportProviderIF> providers = getReportProviders();
 
-    for (ReportProviderIF report : reports)
+    for (ReportProviderIF provider : providers)
     {
-      if (report.getReportQueryDescriptor().getValue().equals(queryId))
+      if (provider.hasSupport(queryId))
       {
-        return report.getSupportedAggregation();
+        return provider.getSupportedAggregation(queryId);
       }
     }
 
@@ -95,6 +95,7 @@ public class ReportProviderBridge implements Reloadable
   public static List<ReportProviderIF> getReportProviders()
   {
     List<ReportProviderIF> reports = new ArrayList<ReportProviderIF>();
+    reports.add(new GenericTypeProvider());
 
     ServiceLoader<ReportProviderIF> loader = ServiceLoader.load(ReportProviderIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
 
