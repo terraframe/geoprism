@@ -219,7 +219,49 @@
           <attribute name="defaultLocale" value="Category" />
         </attributeStruct>
       </object>
-
+      
+      <object key="BASICPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="BASICPOINT" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Basic Point" />
+        </attributeStruct>
+      </object>
+      
+      <object key="BASICPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="BASICPOLYGON" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Basic Polygon" />
+        </attributeStruct>
+      </object>
+      
+      <object key="CATEGORYPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="CATEGORYPOINT" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Category Point" />
+        </attributeStruct>
+      </object>
+      
+       <object key="CATEGORYPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="CATEGORYPOLYGON" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Category Polygon" />
+        </attributeStruct>
+      </object>
+      
+      <object key="GRADIENTPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="GRADIENTPOINT" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Gradient Point" />
+        </attributeStruct>
+      </object>
+      
+      <object key="GRADIENTPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+        <attribute name="enumName" value="GRADIENTPOLYGON" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Gradient Polygon" />
+        </attributeStruct>
+      </object>
+  
       <mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllLayerType" type="com.runwaysdk.geodashboard.gis.persist.LayerType" label="All Layer Type">
         <includeAll></includeAll>
       </mdEnumeration>
@@ -244,7 +286,7 @@
           <char name="labelHalo" label="Halo" size="7" required="true" defaultValue="#FFFFFF" />
           <integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 
-          <!-- point styles -->
+          <!-- basic point styles -->
           <integer name="pointSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />
           <char name="pointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
@@ -252,21 +294,21 @@
           <char name="pointFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
           <double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
-
-          <!-- line styles -->
+          <double name="pointStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+<!--           <integer name="pointRadius" label="Radius" required="true" defaultValue="5" rejectNegative="true" /> -->
+          
+          <!-- basic line styles -->
           <char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000" />
           <integer name="lineStrokeWidth" label="Width" required="true" defaultValue="3" rejectNegative="true" />
           <char name="lineStrokeCap" label="Line Stroke Cap" size="6" required="false" defaultValue="butt" />
           <double name="lineOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
 
-          <!-- polygon styles -->
+          <!-- basic polygon styles -->
           <char name="polygonFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
           <double name="polygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <char name="polygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="polygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
           <double name="polygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
-
-          <double name="pointStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
         </attributes>
       </mdBusiness>
 
@@ -274,14 +316,44 @@
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" label="Thematic Attribute" generateController="true" extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
         <attributes>
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
+          
+          <!-- Gradient Basic Point Attributes -->
+          <char name="gradientPointMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
+          <char name="gradientPointMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
+          
+          <!-- Category Basic Point Attributes -->
+          <text name="categoryPointStyles" label="Category styling for layers" required="false" />
+		  
+		  <!-- Thematic Bubble Attributes -->
           <boolean name="bubbleContinuousSize" label="Continuous Size" required="false" defaultValue="true" />
-          <integer name="pointMinSize" label="Min" required="true" defaultValue="20" rejectNegative="true" />
-          <integer name="pointMaxSize" label="Max" required="true" defaultValue="50" rejectNegative="true" />
-          <integer name="pointFixedSize" label="Fixed Radius" required="true" defaultValue="5" rejectNegative="true" />
-          <boolean name="pointFixed" label="Fixed Point Size" required="true" defaultValue="false" />
-          <char name="polygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
-          <char name="polygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
-          <text name="styleCategories" label="Category styling for layers" required="false" />
+          <integer name="bubbleMinSize" label="Min" required="true" defaultValue="20" rejectNegative="true" />
+          <integer name="bubbleMaxSize" label="Max" required="true" defaultValue="50" rejectNegative="true" />
+          <integer name="bubbleSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />
+          <char name="bubbleStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="bubbleStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <char name="bubbleWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
+          <char name="bubbleFill" label="Color" size="7" required="true" defaultValue="#00bfff" />
+          <double name="bubbleOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <integer name="bubbleRotation" label="Bubble Rotation" required="false" defaultValue="0" />
+          <double name="bubbleStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
+          
+          <!-- Thematic Gradient Polygon Attributes -->
+          <char name="gradientPolygonMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
+          <char name="gradientPolygonMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
+          <double name="gradientPolygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <char name="gradientPolygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="gradientPolygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <double name="gradientPolygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          
+          <!-- Thematic Category Polygon Attributes -->
+          <double name="categoryPolygonFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <char name="categoryPolygonStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="categoryPolygonStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <double name="categoryPolygonStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <text name="categoryPolygonStyles" label="Category styling for layers" required="false" />
+<!--           <text name="styleCategories" label="Category styling for layers" required="false" /> -->
+          
+          <!-- Secondary Attribute Attributes -->
           <reference name="secondaryAttribute" label="Secondary attribute" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
           <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
           <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />

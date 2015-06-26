@@ -214,18 +214,20 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
       if (mdAttributeConcrete instanceof MdAttributeDateDTO )
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
       }
       else if( mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO )
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
       }
       else
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
       }
@@ -243,7 +245,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
       else
       {
-        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
+        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASICPOINT.getName());
       }
 
       // Determine if the attribute is an ontology attribute
@@ -318,7 +320,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("categories", this.encode(style.getStyleCategories()));
+      req.setAttribute("categories", this.encode(style.getCategoryPolygonStyles()));
       req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
 
       /*

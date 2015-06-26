@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -565644805)
+@com.runwaysdk.business.ClassSignature(hash = -1596742491)
 public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerType";
-  private static final long serialVersionUID = -565644805;
+  private static final long serialVersionUID = -1596742491;
   
   protected LayerTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

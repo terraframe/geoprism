@@ -2060,6 +2060,13 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	top:1px;
 	background:url(../images/sprite.png) no-repeat 0 -50px;
 }
+.nav-tabs.type-tabs .BASICPOINT label:after{
+	width:87px;
+	height:77px;
+	left:28px;
+	top:12px;
+	background:url(../images/point-layer-type-icons.png) no-repeat -11px -10px;
+}
 .nav-tabs.type-tabs .BUBBLE label:after{
 	width:60px;
 	height:58px;

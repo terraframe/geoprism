@@ -528,35 +528,38 @@
       },       
       
       _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        if(strokeCellHolder != null) {        
-          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-          strokeCellHolder.append(polyStroke);
-          polyStroke.show();
-          
-          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-          strokeCellHolder.append(polyStrokeWidth);
-          polyStrokeWidth.show();
-          
-          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-          strokeCellHolder.append(polyStrokeOpacity);
-          polyStrokeOpacity.show();
-        }
-          
-        if(fillCellHolder != null) {
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          fillCellHolder.append(polyFillOpacity);
-          polyFillOpacity.show();
-        }
-      },          
+          if(strokeCellHolder != null) {        
+            var polyStroke = $("#gdb-reusable-cell-polygonStroke");
+            strokeCellHolder.append(polyStroke);
+            polyStroke.show();
+            
+            var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
+            strokeCellHolder.append(polyStrokeWidth);
+            polyStrokeWidth.show();
+            
+            var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
+            strokeCellHolder.append(polyStrokeOpacity);
+            polyStrokeOpacity.show();
+          }
+            
+          if(fillCellHolder != null) {
+            var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+            fillCellHolder.append(polyFillOpacity);
+            polyFillOpacity.show();
+          }
+        },           
         
       _onLayerTypeTabChange : function(e) {
         var activeTab = e.target;
           
         var type = activeTab.dataset["gdbTabType"];
           
-        if (type === "BASIC") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-          $("#tab001basic").show();
+        if (type === "BASICPOLYGON") {
+          this._attachDynamicCells($("#gdb-reusable-basic-polygon-stroke-cell-holder"), $("#gdb-reusable-basic-polygon-fill-cell-holder"));
+          $("#tab001basicpolygon").show();
+        }
+        else if (type === "BASICPOINT") {
+            $("#tab001basicpoint").show();
         }
         else if (type === "BUBBLE") {
           $("#tab002bubble").show();
@@ -626,7 +629,7 @@
       
       /**
        * Handles the selection of layer type representation in the layer create/edit form
-       * i.e. basic, bubble, gradient, category
+       * i.e. basic polygon, basic point, bubble, gradient, category, etc...
        * 
        */
       _selectLayerType : function(){
@@ -635,28 +638,12 @@
         
         $('input:radio[name="layer.'+layerType+'"]').change(function(){   
               
-          var targetRadio = $(this);
-              
           // hide all the styling options
           $.each($('.tab-pane'), function(){
             if($(this).is(":visible")){
               $(this).hide(); 
             }
           });
-            
-          // add the relevant styling options for the layer type
-          if (targetRadio.attr("id") === "radio1") {
-            $("#tab001").show();
-          }
-          else if (targetRadio.attr("id") === "radio2") {
-            $("#tab002").show();
-          }
-          else if (targetRadio.attr("id") === "radio3") {
-            $("#tab003").show();
-          }
-          else if (targetRadio.attr("id") === "radio4") {
-            $("#tab004").show();
-          }
         });
       },
       
@@ -685,8 +672,11 @@
         
         // Move reusable cells to active cell holder
         var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab001basic") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+        if (activeTab === "tab001basicpolygon") {
+          this._attachDynamicCells($("#gdb-reusable-basic-polygon-stroke-cell-holder"), $("#gdb-reusable-basic-polygon-fill-cell-holder"));
+        }
+        else if (activeTab === "tab001basicpoint") {
+        	$("#tab001basicpoint").show();
         }
         else if (activeTab === "tab003gradient") {
           this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
@@ -695,7 +685,7 @@
           this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
           
           // Hide the reusable input cells that don't apply to categories
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
+          var polyFillOpacity = $("#gdb-reusable-cell-fillOpacity");
           polyFillOpacity.hide();
         }
         
@@ -957,11 +947,6 @@
           params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         }
         
-        if($("#f79").is(":visible")){
-          params['style.pointFixedSize'] = params['style.pointFixedSize'];
-          params['style.pointFixed'] = true;
-        }
-                
         var secondaryAttribute = $("#secondaryAttribute").val();
         
         if(secondaryAttribute != null && secondaryAttribute.length > 0) {
@@ -1148,9 +1133,10 @@
     			  var geomType = geomTypes[i];
     			  if(geomType === "geoPoint"){
     				  $(".BUBBLE").show();
+    				  $(".BASICPOINT").show();
     			  }
     			  else if(geomType === "geoMultiPolygon"){
-    				  $(".BASIC").show();
+    				  $(".BASICPOLYGON").show();
     				  $(".CATEGORY").show();
     	    		  $(".GRADIENT").show();
     			  }
@@ -1329,7 +1315,7 @@
 
       /**
        * Handles the selection of layer type representation in the layer create/edit form
-       * i.e. basic, bubble, gradient, category
+       * i.e. basic point, basic polygon, bubble, gradient, category, etc...
        * 
        */
       _selectLayerType : function(){
@@ -1338,28 +1324,12 @@
         
         $('input:radio[name="layer.'+layerType+'"]').change(function(){   
               
-          var targetRadio = $(this);
-              
           // hide all the styling options
           $.each($('.tab-pane'), function(){
             if($(this).is(":visible")){
               $(this).hide(); 
             }
           });
-            
-          // add the relevant styling options for the layer type
-          if (targetRadio.attr("id") === "radio1") {
-            $("#tab001").show();
-          }
-          else if (targetRadio.attr("id") === "radio2") {
-            $("#tab002").show();
-          }
-          else if (targetRadio.attr("id") === "radio3") {
-            $("#tab003").show();
-          }
-          else if (targetRadio.attr("id") === "radio4") {
-            $("#tab004").show();
-          }
         });
       },
       

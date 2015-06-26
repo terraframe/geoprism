@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1782435717)
+@com.runwaysdk.business.ClassSignature(hash = -1653619931)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class LayerTypeBase extends com.runwaysdk.system.EnumerationMaster implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerType";
-  private static final long serialVersionUID = -1782435717;
+  private static final long serialVersionUID = -1653619931;
   
   public LayerTypeBase()
   {

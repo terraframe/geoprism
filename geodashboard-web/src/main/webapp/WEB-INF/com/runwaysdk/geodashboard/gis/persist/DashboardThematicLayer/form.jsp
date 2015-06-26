@@ -348,10 +348,10 @@
 	                  --%>
 	                  
 	                  
-					  <!-- BASIC -->
+	                  <!-- BASICPOLYGON -->
 	                  <div
 	                    <c:choose>
-	                      <c:when test="${'BASIC' == activeLayerTypeName}">
+	                      <c:when test="${'BASICPOLYGON' == activeLayerTypeName}">
 	                        class="tab-pane active"
 	                      </c:when>
 	                      <c:otherwise>
@@ -359,11 +359,11 @@
 	                      </c:otherwise>
 	                    </c:choose>
 	                    
-	                    id="tab001basic"
+	                    id="tab001basicpolygon"
 	                  >
 	                    <div class="fill-block">
 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
-	                      <div id="gdb-reusable-basic-fill-cell-holder" class="cell-holder">
+	                      <div id="gdb-reusable-basic-polygon-fill-cell-holder" class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.polygonFillMd.displayLabel}</span>
 	                          <div class="color-holder">
@@ -379,8 +379,119 @@
 	                    </div>
 	                    <div class="stroke-block">
 	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
-	                      <div id="gdb-reusable-basic-stroke-cell-holder" class="cell-holder">
+	                      <div id="gdb-reusable-basic-polygon-stroke-cell-holder" class="cell-holder">
 	                        <%-- Dynamically inserted with javascript--%>
+	                      </div>
+	                    </div>
+	                  </div>
+	                  
+	                  <!-- BASICPOINT -->
+	                  <div
+	                    <c:choose>
+	                      <c:when test="${'BASICPOINT' == activeLayerTypeName}">
+	                        class="tab-pane active"
+	                      </c:when>
+	                      <c:otherwise>
+	                        class="tab-pane" style="display: none;"
+	                      </c:otherwise>
+	                    </c:choose>
+	                    
+	                    id="tab001basicpoint"
+	                  >
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+	                      <div id="gdb-reusable-basic-point-fill-cell-holder" class="cell-holder">
+		                        <div class="cell">
+		                          <span>${style.pointFillMd.displayLabel}</span>
+		                          <div class="color-holder">
+		                            <a href="#" class="color-choice">
+		                              <span class="ico" style="background:${style.pointFill};">icon</span>
+		                              <span class="arrow">arrow</span>
+		                              <input type="hidden" class="color-input" name="style.${style.pointFillMd.name}" value="${style.pointFill}" />
+		                            </a>
+		                          </div>
+		                        </div>
+		                        <div class="cell">
+		                          <label for="basic-point-opacity-select">${style.pointOpacityMd.displayLabel}</label>
+		                          <div class="text">
+		                            <select id="basic-point-opacity-select" class="tab-select" name="style.${style.pointOpacityMd.name}">
+		                              <c:forEach step="5" begin="0" end="100" var="size">
+		                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
+		                                <c:choose>
+		                                  <c:when test="${style.pointOpacity*100 == size}">
+		                                    <option selected="selected" value="${potentialValue}">${size}</option>
+		                                  </c:when>
+		                                  <c:otherwise>
+		                                    <option value="${potentialValue}">${size}</option>
+		                                  </c:otherwise>
+		                                </c:choose>
+		                              </c:forEach>
+		                            </select>                          
+		                          </div>
+		                        </div>
+	                      	</div>
+	                    </div>
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
+	                      <div id="gdb-reusable-basic-point-stroke-cell-holder" class="cell-holder">
+	                        <div class="cell">
+	                          <span>${style.pointStrokeMd.displayLabel}</span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:${style.pointStroke};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.${style.pointStrokeMd.name}" value="${style.pointStroke}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="basic-point-stroke-select">${style.pointStrokeWidthMd.displayLabel}</label>
+	                          <div class="select-holder">
+	                            <select name="style.${style.pointStrokeWidthMd.name}" id="basic-point-stroke-select" class="tab-select">
+	                              <c:forEach begin="0" end="15" var="size">
+	                                <c:choose>
+	                                  <c:when test="${style.pointStrokeWidth == size}">
+	                                    <option selected="selected" value="${size}">${size}</option>
+	                                  </c:when>
+	                                  <c:otherwise>
+	                                    <option value="${size}">${size}</option>
+	                                  </c:otherwise>
+	                                </c:choose>
+	                              </c:forEach>
+	                            </select>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="basic-point-stroke-opacity-select">${style.pointStrokeOpacityMd.name}</label>
+	                          <div class="text">
+	                             <select id="basic-point-stroke-opacity-select" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
+	                              <c:forEach step="5" begin="0" end="100" var="size">
+	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+	                                
+	                                <c:choose>
+	                                  <c:when test="${style.pointStrokeOpacity*100 == size}">
+	                                    <option selected="selected" value="${potentialValue}">${size}</option>
+	                                  </c:when>
+	                                  <c:otherwise>
+	                                    <option value="${potentialValue}">${size}</option>
+	                                  </c:otherwise>
+	                                </c:choose>
+	                              </c:forEach>
+	                            </select>   
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="point-radius-select">${style.pointSizeMd.displayLabel}</label>
+		                          <div class="text">
+		                          	<input id="point-radius-select" name="style.${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+		                          </div>
+		                        </div>
 	                      </div>
 	                    </div>
 	                  </div>
@@ -403,23 +514,23 @@
 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
 	                      <div class="cell-holder">
 	                        <div class="cell">
-	                          <span>${style.pointFillMd.displayLabel}</span>
+	                          <span>${style.bubbleFillMd.displayLabel}</span>
 	                          <div class="color-holder">
 	                            <a href="#" class="color-choice">
-	                              <span class="ico" style="background:${style.pointFill};">icon</span>
+	                              <span class="ico" style="background:${style.bubbleFill};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.${style.pointFillMd.name}" value="${style.pointFill}" />
+	                              <input type="hidden" class="color-input" name="style.${style.bubbleFillMd.name}" value="${style.bubbleFill}" />
 	                            </a>
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <label for="f71">${style.pointOpacityMd.displayLabel}</label>
+	                          <label for="f71">${style.bubbleOpacityMd.displayLabel}</label>
 	                          <div class="text">
-	                            <select id="f71" class="tab-select" name="style.${style.pointOpacityMd.name}">
+	                            <select id="f71" class="tab-select" name="style.${style.bubbleOpacityMd.name}">
 	                              <c:forEach step="5" begin="0" end="100" var="size">
 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
 	                                <c:choose>
-	                                  <c:when test="${style.pointOpacity*100 == size}">
+	                                  <c:when test="${style.bubbleOpacity*100 == size}">
 	                                    <option selected="selected" value="${potentialValue}">${size}</option>
 	                                  </c:when>
 	                                  <c:otherwise>
@@ -436,22 +547,22 @@
 	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
 	                      <div class="cell-holder">
 	                        <div class="cell">
-	                          <span>${style.pointStrokeMd.displayLabel}</span>
+	                          <span>${style.bubbleStrokeMd.displayLabel}</span>
 	                          <div class="color-holder">
 	                            <a href="#" class="color-choice">
-	                              <span class="ico" style="background:${style.pointStroke};">icon</span>
+	                              <span class="ico" style="background:${style.bubbleStroke};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.${style.pointStrokeMd.name}" value="${style.pointStroke}" />
+	                              <input type="hidden" class="color-input" name="style.${style.bubbleStrokeMd.name}" value="${style.bubbleStroke}" />
 	                            </a>
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <label for="f33">${style.pointStrokeWidthMd.displayLabel}</label>
+	                          <label for="f33">${style.bubbleStrokeWidthMd.displayLabel}</label>
 	                          <div class="select-holder">
-	                            <select name="style.${style.pointStrokeWidthMd.name}" id="f73" class="tab-select">
+	                            <select name="style.${style.bubbleStrokeWidthMd.name}" id="f73" class="tab-select">
 	                              <c:forEach begin="0" end="15" var="size">
 	                                <c:choose>
-	                                  <c:when test="${style.pointStrokeWidth == size}">
+	                                  <c:when test="${style.bubbleStrokeWidth == size}">
 	                                    <option selected="selected" value="${size}">${size}</option>
 	                                  </c:when>
 	                                  <c:otherwise>
@@ -463,14 +574,14 @@
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <label for="f74">${style.pointStrokeOpacityMd.name}</label>
+	                          <label for="f74">${style.bubbleStrokeOpacityMd.name}</label>
 	                          <div class="text">
-	                             <select id="f74" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
+	                             <select id="f74" class="tab-select" name="style.${style.bubbleStrokeOpacityMd.name}">
 	                              <c:forEach step="5" begin="0" end="100" var="size">
 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
 	                                
 	                                <c:choose>
-	                                  <c:when test="${style.pointStrokeOpacity*100 == size}">
+	                                  <c:when test="${style.bubbleStrokeOpacity*100 == size}">
 	                                    <option selected="selected" value="${potentialValue}">${size}</option>
 	                                  </c:when>
 	                                  <c:otherwise>
@@ -486,39 +597,24 @@
 	                    <div class="fill-block">
 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
 	                      <div class="cell-holder">
-		                    <c:choose>
-			                    <c:when test="${'true' == isOntologyAttribute || 'true' == isTextAttribute}">
-			                    	<div class="cell">
-			                          <label for="f79">${style.pointFixedSizeMd.displayLabel}</label>
-			                          <div class="text">
-			                          	<input id="f79" name="style.${style.pointFixedSizeMd.name}" type="text" value="${style.pointFixedSize}">
-			                          </div>
-			                          <input type="hidden" class="" name="style.${style.pointFixedMd.name}" value="${style.pointFixed}" />
-			                        </div>
-		                        </c:when>
-		                        <c:otherwise>
+		                        <div class="cell">
+		                          <label for="f76">${style.bubbleMinSizeMd.displayLabel}</label>
+		                          <div class="text"><input id="f76" name="style.${style.bubbleMinSizeMd.name}" type="text" value="${style.bubbleMinSize}"></div>
+		                        </div>
+		                        <div class="cell">
+		                          <label for="f77">${style.bubbleMaxSizeMd.displayLabel}</label>
+		                          <div class="text">
+		                            <input id="f77" name="style.${style.bubbleMaxSizeMd.name}" type="text" value="${style.bubbleMaxSize}">
+		                          </div>
+		                        </div>
 		                        
-					                
-			                        <div class="cell">
-			                          <label for="f76">${style.pointMinSizeMd.displayLabel}</label>
-			                          <div class="text"><input id="f76" name="style.${style.pointMinSizeMd.name}" type="text" value="${style.pointMinSize}"></div>
-			                        </div>
-			                        <div class="cell">
-			                          <label for="f77">${style.pointMaxSizeMd.displayLabel}</label>
-			                          <div class="text">
-			                            <input id="f77" name="style.${style.pointMaxSizeMd.name}" type="text" value="${style.pointMaxSize}">
-			                          </div>
-			                        </div>
-			                        
-			                        <div class="check-block">
-					                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize">
-					                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label>
-					                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message">
-					                      <mjl:message />
-					                    </mjl:messages>
-					                </div>
-		                        </c:otherwise>
-	                        </c:choose>
+		                        <div class="check-block">
+				                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize">
+				                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label>
+				                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message">
+				                      <mjl:message />
+				                    </mjl:messages>
+				                </div>
 	                      </div>
 	                    </div>
 	                    <div class="secondary-box">
@@ -569,22 +665,22 @@
 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
 	                      <div id="gdb-reusable-gradient-fill-cell-holder" class="cell-holder">
 	                        <div class="cell">
-	                          <span>${style.polygonMinFillMd.displayLabel}</span>
+	                          <span>${style.gradientPolygonMinFillMd.displayLabel}</span>
 	                          <div class="color-holder">
 	                            <a href="#" class="color-choice">
-	                              <span class="ico" style="background:${style.polygonMinFill};">icon</span>
+	                              <span class="ico" style="background:${style.gradientPolygonMinFill};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.${style.polygonMinFillMd.name}" value="${style.polygonMinFill}" />
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPolygonMinFillMd.name}" value="${style.gradientPolygonMinFill}" />
 	                            </a>
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <span>${style.polygonMaxFillMd.displayLabel}</span>
+	                          <span>${style.gradientPolygonMaxFillMd.displayLabel}</span>
 	                          <div class="color-holder">
 	                            <a href="#" class="color-choice">
-	                              <span class="ico" style="background:${style.polygonMaxFill};">icon</span>
+	                              <span class="ico" style="background:${style.gradientPolygonMaxFill};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.${style.polygonMaxFillMd.name}" value="${style.polygonMaxFill}" />
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPolygonMaxFillMd.name}" value="${style.gradientPolygonMaxFill}" />
 	                            </a>
 	                          </div>
 	                        </div>

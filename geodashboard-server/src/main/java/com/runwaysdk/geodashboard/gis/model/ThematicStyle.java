@@ -15,33 +15,36 @@ public interface ThematicStyle extends Style
 
   public Condition getCondition();
 
-  public Integer getPointMinSize();
-
-  public void setPointMinSize(Integer size);
-
-  public Integer getPointMaxSize();
-
-  public void setPointMaxSize(Integer size);
-
-  public String getPolygonMinFill();
-
-  public void setPolygonMinFill(String fill);
-
-  public String getPolygonMaxFill();
-
-  public void setPolygonMaxFill(String fill);
-
-  public String getStyleCategories();
-
+  public Integer getBubbleMinSize();
+  public void setBubbleMinSize(Integer size);
+  public Integer getBubbleMaxSize();
+  public void setBubbleMaxSize(Integer size);
+  public Integer getBubbleSize();
+  public String getBubbleStroke();
+  public Integer getBubbleStrokeWidth();
+  public Double getBubbleStrokeOpacity();
+  public String getBubbleWellKnownName();
+  public void setBubbleSize(Integer size);
+  public void setBubbleStroke(String stroke);
+  public void setBubbleStrokeWidth(Integer width);
+  public void setBubbleWellKnownName(String pointWellKnownName);
+  public void setBubbleFill(String fill);
+  public String getBubbleFill();
+  public void setBubbleOpacity(Double opacity);
+  public Double getBubbleOpacity();
+  public void setBubbleRotation(Integer rotation);
+  public Integer getBubbleRotation();
   public Boolean getBubbleContinuousSize();
 
-  public Integer getPointFixedSize();
+  public String getGradientPolygonMinFill();
+  public void setGradientPolygonMinFill(String fill);
+  public String getGradientPolygonMaxFill();
+  public void setGradientPolygonMaxFill(String fill);
+  public String getCategoryPolygonStyles();
 
-  public Boolean getPointFixed();
+//  public Integer getPointRadius();
 
   public MdAttributeDAOIF getSecondaryAttributeDAO();
-
   public AllAggregationType getSecondaryAttributeAggregationMethod();
-
   public JSONArray getSecondaryAttributeCategoriesAsJSON() throws JSONException;
 }

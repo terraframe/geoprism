@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 750544556)
+@com.runwaysdk.business.ClassSignature(hash = 48434189)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,18 +12,35 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
   public static java.lang.String BUBBLECONTINUOUSSIZE = "bubbleContinuousSize";
-  public static java.lang.String POINTFIXED = "pointFixed";
-  public static java.lang.String POINTFIXEDSIZE = "pointFixedSize";
-  public static java.lang.String POINTMAXSIZE = "pointMaxSize";
-  public static java.lang.String POINTMINSIZE = "pointMinSize";
-  public static java.lang.String POLYGONMAXFILL = "polygonMaxFill";
-  public static java.lang.String POLYGONMINFILL = "polygonMinFill";
+  public static java.lang.String BUBBLEFILL = "bubbleFill";
+  public static java.lang.String BUBBLEMAXSIZE = "bubbleMaxSize";
+  public static java.lang.String BUBBLEMINSIZE = "bubbleMinSize";
+  public static java.lang.String BUBBLEOPACITY = "bubbleOpacity";
+  public static java.lang.String BUBBLEROTATION = "bubbleRotation";
+  public static java.lang.String BUBBLESIZE = "bubbleSize";
+  public static java.lang.String BUBBLESTROKE = "bubbleStroke";
+  public static java.lang.String BUBBLESTROKEOPACITY = "bubbleStrokeOpacity";
+  public static java.lang.String BUBBLESTROKEWIDTH = "bubbleStrokeWidth";
+  public static java.lang.String BUBBLEWELLKNOWNNAME = "bubbleWellKnownName";
+  public static java.lang.String CATEGORYPOINTSTYLES = "categoryPointStyles";
+  public static java.lang.String CATEGORYPOLYGONFILLOPACITY = "categoryPolygonFillOpacity";
+  public static java.lang.String CATEGORYPOLYGONSTROKE = "categoryPolygonStroke";
+  public static java.lang.String CATEGORYPOLYGONSTROKEOPACITY = "categoryPolygonStrokeOpacity";
+  public static java.lang.String CATEGORYPOLYGONSTROKEWIDTH = "categoryPolygonStrokeWidth";
+  public static java.lang.String CATEGORYPOLYGONSTYLES = "categoryPolygonStyles";
+  public static java.lang.String GRADIENTPOINTMAXFILL = "gradientPointMaxFill";
+  public static java.lang.String GRADIENTPOINTMINFILL = "gradientPointMinFill";
+  public static java.lang.String GRADIENTPOLYGONFILLOPACITY = "gradientPolygonFillOpacity";
+  public static java.lang.String GRADIENTPOLYGONMAXFILL = "gradientPolygonMaxFill";
+  public static java.lang.String GRADIENTPOLYGONMINFILL = "gradientPolygonMinFill";
+  public static java.lang.String GRADIENTPOLYGONSTROKE = "gradientPolygonStroke";
+  public static java.lang.String GRADIENTPOLYGONSTROKEOPACITY = "gradientPolygonStrokeOpacity";
+  public static java.lang.String GRADIENTPOLYGONSTROKEWIDTH = "gradientPolygonStrokeWidth";
   public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
-  public static java.lang.String STYLECATEGORIES = "styleCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 750544556;
+  private static final long serialVersionUID = 48434189;
   
   public DashboardThematicStyleBase()
   {
@@ -58,171 +75,675 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     }
   }
   
-  public Boolean getPointFixed()
+  public String getBubbleFill()
   {
-    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(POINTFIXED));
+    return getValue(BUBBLEFILL);
   }
   
-  public void validatePointFixed()
+  public void validateBubbleFill()
   {
-    this.validateAttribute(POINTFIXED);
+    this.validateAttribute(BUBBLEFILL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getPointFixedMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getBubbleFillMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(POINTFIXED);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(BUBBLEFILL);
   }
   
-  public void setPointFixed(Boolean value)
+  public void setBubbleFill(String value)
   {
     if(value == null)
     {
-      setValue(POINTFIXED, "");
+      setValue(BUBBLEFILL, "");
     }
     else
     {
-      setValue(POINTFIXED, java.lang.Boolean.toString(value));
+      setValue(BUBBLEFILL, value);
     }
   }
   
-  public Integer getPointFixedSize()
+  public Integer getBubbleMaxSize()
   {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTFIXEDSIZE));
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BUBBLEMAXSIZE));
   }
   
-  public void validatePointFixedSize()
+  public void validateBubbleMaxSize()
   {
-    this.validateAttribute(POINTFIXEDSIZE);
+    this.validateAttribute(BUBBLEMAXSIZE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointFixedSizeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBubbleMaxSizeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTFIXEDSIZE);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BUBBLEMAXSIZE);
   }
   
-  public void setPointFixedSize(Integer value)
+  public void setBubbleMaxSize(Integer value)
   {
     if(value == null)
     {
-      setValue(POINTFIXEDSIZE, "");
+      setValue(BUBBLEMAXSIZE, "");
     }
     else
     {
-      setValue(POINTFIXEDSIZE, java.lang.Integer.toString(value));
+      setValue(BUBBLEMAXSIZE, java.lang.Integer.toString(value));
     }
   }
   
-  public Integer getPointMaxSize()
+  public Integer getBubbleMinSize()
   {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMAXSIZE));
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BUBBLEMINSIZE));
   }
   
-  public void validatePointMaxSize()
+  public void validateBubbleMinSize()
   {
-    this.validateAttribute(POINTMAXSIZE);
+    this.validateAttribute(BUBBLEMINSIZE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointMaxSizeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBubbleMinSizeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTMAXSIZE);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BUBBLEMINSIZE);
   }
   
-  public void setPointMaxSize(Integer value)
+  public void setBubbleMinSize(Integer value)
   {
     if(value == null)
     {
-      setValue(POINTMAXSIZE, "");
+      setValue(BUBBLEMINSIZE, "");
     }
     else
     {
-      setValue(POINTMAXSIZE, java.lang.Integer.toString(value));
+      setValue(BUBBLEMINSIZE, java.lang.Integer.toString(value));
     }
   }
   
-  public Integer getPointMinSize()
+  public Double getBubbleOpacity()
   {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTMINSIZE));
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(BUBBLEOPACITY));
   }
   
-  public void validatePointMinSize()
+  public void validateBubbleOpacity()
   {
-    this.validateAttribute(POINTMINSIZE);
+    this.validateAttribute(BUBBLEOPACITY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointMinSizeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getBubbleOpacityMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTMINSIZE);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(BUBBLEOPACITY);
   }
   
-  public void setPointMinSize(Integer value)
+  public void setBubbleOpacity(Double value)
   {
     if(value == null)
     {
-      setValue(POINTMINSIZE, "");
+      setValue(BUBBLEOPACITY, "");
     }
     else
     {
-      setValue(POINTMINSIZE, java.lang.Integer.toString(value));
+      setValue(BUBBLEOPACITY, java.lang.Double.toString(value));
     }
   }
   
-  public String getPolygonMaxFill()
+  public Integer getBubbleRotation()
   {
-    return getValue(POLYGONMAXFILL);
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BUBBLEROTATION));
   }
   
-  public void validatePolygonMaxFill()
+  public void validateBubbleRotation()
   {
-    this.validateAttribute(POLYGONMAXFILL);
+    this.validateAttribute(BUBBLEROTATION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPolygonMaxFillMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBubbleRotationMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(POLYGONMAXFILL);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BUBBLEROTATION);
   }
   
-  public void setPolygonMaxFill(String value)
+  public void setBubbleRotation(Integer value)
   {
     if(value == null)
     {
-      setValue(POLYGONMAXFILL, "");
+      setValue(BUBBLEROTATION, "");
     }
     else
     {
-      setValue(POLYGONMAXFILL, value);
+      setValue(BUBBLEROTATION, java.lang.Integer.toString(value));
     }
   }
   
-  public String getPolygonMinFill()
+  public Integer getBubbleSize()
   {
-    return getValue(POLYGONMINFILL);
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BUBBLESIZE));
   }
   
-  public void validatePolygonMinFill()
+  public void validateBubbleSize()
   {
-    this.validateAttribute(POLYGONMINFILL);
+    this.validateAttribute(BUBBLESIZE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPolygonMinFillMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBubbleSizeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(POLYGONMINFILL);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BUBBLESIZE);
   }
   
-  public void setPolygonMinFill(String value)
+  public void setBubbleSize(Integer value)
   {
     if(value == null)
     {
-      setValue(POLYGONMINFILL, "");
+      setValue(BUBBLESIZE, "");
     }
     else
     {
-      setValue(POLYGONMINFILL, value);
+      setValue(BUBBLESIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getBubbleStroke()
+  {
+    return getValue(BUBBLESTROKE);
+  }
+  
+  public void validateBubbleStroke()
+  {
+    this.validateAttribute(BUBBLESTROKE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getBubbleStrokeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(BUBBLESTROKE);
+  }
+  
+  public void setBubbleStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(BUBBLESTROKE, "");
+    }
+    else
+    {
+      setValue(BUBBLESTROKE, value);
+    }
+  }
+  
+  public Double getBubbleStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(BUBBLESTROKEOPACITY));
+  }
+  
+  public void validateBubbleStrokeOpacity()
+  {
+    this.validateAttribute(BUBBLESTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getBubbleStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(BUBBLESTROKEOPACITY);
+  }
+  
+  public void setBubbleStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(BUBBLESTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(BUBBLESTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public Integer getBubbleStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BUBBLESTROKEWIDTH));
+  }
+  
+  public void validateBubbleStrokeWidth()
+  {
+    this.validateAttribute(BUBBLESTROKEWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBubbleStrokeWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BUBBLESTROKEWIDTH);
+  }
+  
+  public void setBubbleStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(BUBBLESTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(BUBBLESTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getBubbleWellKnownName()
+  {
+    return getValue(BUBBLEWELLKNOWNNAME);
+  }
+  
+  public void validateBubbleWellKnownName()
+  {
+    this.validateAttribute(BUBBLEWELLKNOWNNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getBubbleWellKnownNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(BUBBLEWELLKNOWNNAME);
+  }
+  
+  public void setBubbleWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(BUBBLEWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(BUBBLEWELLKNOWNNAME, value);
+    }
+  }
+  
+  public String getCategoryPointStyles()
+  {
+    return getValue(CATEGORYPOINTSTYLES);
+  }
+  
+  public void validateCategoryPointStyles()
+  {
+    this.validateAttribute(CATEGORYPOINTSTYLES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getCategoryPointStylesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTSTYLES);
+  }
+  
+  public void setCategoryPointStyles(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTSTYLES, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTSTYLES, value);
+    }
+  }
+  
+  public Double getCategoryPolygonFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOLYGONFILLOPACITY));
+  }
+  
+  public void validateCategoryPolygonFillOpacity()
+  {
+    this.validateAttribute(CATEGORYPOLYGONFILLOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getCategoryPolygonFillOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(CATEGORYPOLYGONFILLOPACITY);
+  }
+  
+  public void setCategoryPolygonFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOLYGONFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOLYGONFILLOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public String getCategoryPolygonStroke()
+  {
+    return getValue(CATEGORYPOLYGONSTROKE);
+  }
+  
+  public void validateCategoryPolygonStroke()
+  {
+    this.validateAttribute(CATEGORYPOLYGONSTROKE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCategoryPolygonStrokeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CATEGORYPOLYGONSTROKE);
+  }
+  
+  public void setCategoryPolygonStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOLYGONSTROKE, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOLYGONSTROKE, value);
+    }
+  }
+  
+  public Double getCategoryPolygonStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOLYGONSTROKEOPACITY));
+  }
+  
+  public void validateCategoryPolygonStrokeOpacity()
+  {
+    this.validateAttribute(CATEGORYPOLYGONSTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getCategoryPolygonStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(CATEGORYPOLYGONSTROKEOPACITY);
+  }
+  
+  public void setCategoryPolygonStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOLYGONSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOLYGONSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public Integer getCategoryPolygonStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(CATEGORYPOLYGONSTROKEWIDTH));
+  }
+  
+  public void validateCategoryPolygonStrokeWidth()
+  {
+    this.validateAttribute(CATEGORYPOLYGONSTROKEWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getCategoryPolygonStrokeWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(CATEGORYPOLYGONSTROKEWIDTH);
+  }
+  
+  public void setCategoryPolygonStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOLYGONSTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOLYGONSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getCategoryPolygonStyles()
+  {
+    return getValue(CATEGORYPOLYGONSTYLES);
+  }
+  
+  public void validateCategoryPolygonStyles()
+  {
+    this.validateAttribute(CATEGORYPOLYGONSTYLES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getCategoryPolygonStylesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(CATEGORYPOLYGONSTYLES);
+  }
+  
+  public void setCategoryPolygonStyles(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOLYGONSTYLES, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOLYGONSTYLES, value);
+    }
+  }
+  
+  public String getGradientPointMaxFill()
+  {
+    return getValue(GRADIENTPOINTMAXFILL);
+  }
+  
+  public void validateGradientPointMaxFill()
+  {
+    this.validateAttribute(GRADIENTPOINTMAXFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPointMaxFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOINTMAXFILL);
+  }
+  
+  public void setGradientPointMaxFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOINTMAXFILL, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOINTMAXFILL, value);
+    }
+  }
+  
+  public String getGradientPointMinFill()
+  {
+    return getValue(GRADIENTPOINTMINFILL);
+  }
+  
+  public void validateGradientPointMinFill()
+  {
+    this.validateAttribute(GRADIENTPOINTMINFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPointMinFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOINTMINFILL);
+  }
+  
+  public void setGradientPointMinFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOINTMINFILL, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOINTMINFILL, value);
+    }
+  }
+  
+  public Double getGradientPolygonFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(GRADIENTPOLYGONFILLOPACITY));
+  }
+  
+  public void validateGradientPolygonFillOpacity()
+  {
+    this.validateAttribute(GRADIENTPOLYGONFILLOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getGradientPolygonFillOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONFILLOPACITY);
+  }
+  
+  public void setGradientPolygonFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONFILLOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public String getGradientPolygonMaxFill()
+  {
+    return getValue(GRADIENTPOLYGONMAXFILL);
+  }
+  
+  public void validateGradientPolygonMaxFill()
+  {
+    this.validateAttribute(GRADIENTPOLYGONMAXFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPolygonMaxFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONMAXFILL);
+  }
+  
+  public void setGradientPolygonMaxFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONMAXFILL, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONMAXFILL, value);
+    }
+  }
+  
+  public String getGradientPolygonMinFill()
+  {
+    return getValue(GRADIENTPOLYGONMINFILL);
+  }
+  
+  public void validateGradientPolygonMinFill()
+  {
+    this.validateAttribute(GRADIENTPOLYGONMINFILL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPolygonMinFillMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONMINFILL);
+  }
+  
+  public void setGradientPolygonMinFill(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONMINFILL, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONMINFILL, value);
+    }
+  }
+  
+  public String getGradientPolygonStroke()
+  {
+    return getValue(GRADIENTPOLYGONSTROKE);
+  }
+  
+  public void validateGradientPolygonStroke()
+  {
+    this.validateAttribute(GRADIENTPOLYGONSTROKE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPolygonStrokeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONSTROKE);
+  }
+  
+  public void setGradientPolygonStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONSTROKE, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONSTROKE, value);
+    }
+  }
+  
+  public Double getGradientPolygonStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(GRADIENTPOLYGONSTROKEOPACITY));
+  }
+  
+  public void validateGradientPolygonStrokeOpacity()
+  {
+    this.validateAttribute(GRADIENTPOLYGONSTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getGradientPolygonStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONSTROKEOPACITY);
+  }
+  
+  public void setGradientPolygonStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public Integer getGradientPolygonStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(GRADIENTPOLYGONSTROKEWIDTH));
+  }
+  
+  public void validateGradientPolygonStrokeWidth()
+  {
+    this.validateAttribute(GRADIENTPOLYGONSTROKEWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getGradientPolygonStrokeWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(GRADIENTPOLYGONSTROKEWIDTH);
+  }
+  
+  public void setGradientPolygonStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOLYGONSTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOLYGONSTROKEWIDTH, java.lang.Integer.toString(value));
     }
   }
   
@@ -329,34 +850,6 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(SECONDARYCATEGORIES, value);
-    }
-  }
-  
-  public String getStyleCategories()
-  {
-    return getValue(STYLECATEGORIES);
-  }
-  
-  public void validateStyleCategories()
-  {
-    this.validateAttribute(STYLECATEGORIES);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getStyleCategoriesMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(STYLECATEGORIES);
-  }
-  
-  public void setStyleCategories(String value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECATEGORIES, "");
-    }
-    else
-    {
-      setValue(STYLECATEGORIES, value);
     }
   }
   

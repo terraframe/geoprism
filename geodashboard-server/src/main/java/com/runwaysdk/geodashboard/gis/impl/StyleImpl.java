@@ -10,44 +10,28 @@ public class StyleImpl extends ComponentImpl implements Style
   private String polygonStroke;
   private Integer polygonStrokeWidth;
   private String polygonFill;
+  private Double polygonFillOpacity;
   
   private String pointStroke;
   private Integer pointStrokeWidth;
   private Integer pointSize;
   private String pointWellKnownName;
-
   private String pointFill;
-
   private Double pointOpacity;
-
   private Integer pointRotation;
-
-  private Double polygonFillOpacity;
-
-  private Integer labelHaloWidth;
-
-  private Boolean enableValue;
-
-  private String valueHalo;
-
-  private String valueColor;
-
   private Double pointStrokeOpacity;
   
+  private Integer labelHaloWidth;
+  private Boolean enableValue;
+  private String valueHalo;
+  private String valueColor;
   private Integer valueSize;
-
   private String valueFont;
-
   private Integer valueHaloWidth;
-
   private Boolean enableLabel;
-
   private String labelHalo;
-
   private String labelColor;
-
   private Integer labelSize;
-
   private String labelFont;
   
   
@@ -67,7 +51,6 @@ public class StyleImpl extends ComponentImpl implements Style
     this.name = name;
   }
   
-  @Override
   public Double getPointStrokeOpacity()
   {
     return this.pointStrokeOpacity;
@@ -98,22 +81,6 @@ public class StyleImpl extends ComponentImpl implements Style
     this.pointWellKnownName = pointWellKnownName;
   }
   
-  public void setPolygonFill(String polygonFill)
-  {
-    this.polygonFill = polygonFill;
-  }
-  
-  public void setPolygonStroke(String polygonStroke)
-  {
-    this.polygonStroke = polygonStroke;
-  }
-  
-  public void setPolygonStrokeWidth(Integer polygonStrokeWidth)
-  {
-    this.polygonStrokeWidth = polygonStrokeWidth;
-  }
-  
-  @Override
   public Integer getPointSize()
   {
     return pointSize;
@@ -137,31 +104,6 @@ public class StyleImpl extends ComponentImpl implements Style
     return pointWellKnownName;
   }
   
-  @Override
-  public String getPolygonFill()
-  {
-    return polygonFill;
-  }
-
-
-  @Override
-  public String getPolygonStroke()
-  {
-    return polygonStroke;
-  }
-  
-  @Override
-  public Integer getPolygonStrokeWidth()
-  {
-    return polygonStrokeWidth;
-  }
-  
-  @Override
-  public void accepts(MapVisitor visitor)
-  {
-    visitor.visit(this);
-  }
-
   @Override
   public void setPointFill(String fill)
   {
@@ -197,7 +139,66 @@ public class StyleImpl extends ComponentImpl implements Style
   {
     return this.pointRotation;
   }
+  
+  
+  public void setPolygonFill(String polygonFill)
+  {
+    this.polygonFill = polygonFill;
+  }
+  
+  public void setPolygonStroke(String polygonStroke)
+  {
+    this.polygonStroke = polygonStroke;
+  }
+  
+  public void setPolygonStrokeWidth(Integer polygonStrokeWidth)
+  {
+    this.polygonStrokeWidth = polygonStrokeWidth;
+  }
+  
+  @Override
+  public String getPolygonFill()
+  {
+    return polygonFill;
+  }
 
+  @Override
+  public String getPolygonStroke()
+  {
+    return polygonStroke;
+  }
+  
+  @Override
+  public Integer getPolygonStrokeWidth()
+  {
+    return polygonStrokeWidth;
+  }
+  
+  @Override
+  public Double getPolygonFillOpacity()
+  {
+    return this.polygonFillOpacity;
+  }
+
+  @Override
+  public void setPolygonFillOpacity(Double opacity)
+  {
+    this.polygonFillOpacity = opacity;
+  }
+  
+  @Override
+  public Double getPolygonStrokeOpacity()
+  {
+    return this.polygonFillOpacity;
+  }
+  
+  @Override
+  public void setPolygonStrokeOpacity(Double opacity)
+  {
+    this.polygonFillOpacity = opacity;
+  }
+  
+  
   @Override
   public void setEnableValue(Boolean enable)
   {
@@ -341,29 +342,12 @@ public class StyleImpl extends ComponentImpl implements Style
   {
     return this.labelHaloWidth;
   }
+  
+  
+  @Override
+  public void accepts(MapVisitor visitor)
+  {
+    visitor.visit(this);
+  }
 
-  @Override
-  public Double getPolygonFillOpacity()
-  {
-    return this.polygonFillOpacity;
-  }
-
-  @Override
-  public void setPolygonFillOpacity(Double opacity)
-  {
-    this.polygonFillOpacity = opacity;
-  }
-  
-  @Override
-  public Double getPolygonStrokeOpacity()
-  {
-    return this.polygonFillOpacity;
-  }
-  
-  @Override
-  public void setPolygonStrokeOpacity(Double opacity)
-  {
-    this.polygonFillOpacity = opacity;
-  }
-  
 }

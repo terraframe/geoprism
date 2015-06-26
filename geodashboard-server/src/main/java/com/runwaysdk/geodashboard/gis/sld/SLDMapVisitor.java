@@ -252,7 +252,54 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       node("FeatureTypeName").text(style.getName()).build(root);
 
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
+      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BASICPOINT)
+      {
+        ThematicLayer tLayer = (ThematicLayer) layer;
+        ThematicStyle tStyle = (ThematicStyle) style;
+
+        // attribute must be lowercase to work with postgres
+        String attribute = tLayer.getAttribute().toLowerCase();
+
+        int radius = style.getPointSize();
+
+        if (tStyle.getSecondaryAttributeDAO() != null)
+        {
+          try
+          {
+            String attributeName = tStyle.getSecondaryAttributeDAO().definesAttribute().toLowerCase();
+
+            JSONArray array = tStyle.getSecondaryAttributeCategoriesAsJSON();
+            for (int i = 0; i < array.length(); i++)
+            {
+              JSONObject category = array.getJSONObject(i);
+              String key = category.getString(ThematicStyle.VAL);
+              String color = category.getString(ThematicStyle.COLOR);
+
+              NodeBuilder[] filterNodes = new NodeBuilder[] { node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attributeName)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key))) };
+
+              this.createRule(root, filterNodes, color, key, radius);
+            }
+
+            String fill = this.style.getPointFill();
+            NodeBuilder[] filterNodes = this.getElseNode(attributeName, array);
+            String label = LocalizationFacade.getFromBundles("Other");
+
+            this.createRule(root, filterNodes, fill, label, radius);
+          }
+          catch (JSONException e)
+          {
+            throw new ProgrammingErrorException(e);
+          }
+        }
+        else
+        {
+          String fill = this.style.getPointFill();
+
+          createRule(root, null, fill, null, radius);
+        }
+
+      }
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         ThematicStyle tStyle = (ThematicStyle) style;
@@ -265,26 +312,20 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         // attribute must be lowercase to work with postgres
         String attribute = tLayer.getAttribute().toLowerCase();
 
-        if (tStyle.getPointFixed())
+        if(this.visitor.currentLayer instanceof ThematicLayer)
         {
-          int radius = tStyle.getPointFixedSize();
-          minSize = radius;
-          maxSize = radius;
-        }
-        else
-        {
-          if(this.visitor.currentLayer instanceof ThematicLayer)
-          {
-            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
-            HashMap<String, Double> minMaxMap = currentTLayer.getLayerMinMax(attribute);
-            minAttrVal = minMaxMap.get("min");
-            maxAttrVal = minMaxMap.get("max");
-          }
-
-          minSize = tStyle.getPointMinSize();
-          maxSize = tStyle.getPointMaxSize();
+          ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+          HashMap<String, Double> minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          minAttrVal = minMaxMap.get("min");
+          maxAttrVal = minMaxMap.get("max");
         }
 
+        minSize = tStyle.getBubbleMinSize();
+        maxSize = tStyle.getBubbleMaxSize();
+
+        // 
+        // Secondary attributes only apply to bubble layer types so calling createRule with bubble params is appropriate
+        //
         if (tStyle.getSecondaryAttributeDAO() != null)
         {
           try
@@ -316,7 +357,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         }
         else
         {
-          String fill = this.style.getPointFill();
+          String fill = tStyle.getBubbleFill();
 
           createRule(root, null, fill, null, minAttrVal, maxAttrVal, minSize, maxSize);
         }
@@ -349,8 +390,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       return list.toArray(new NodeBuilder[list.size()]);
     }
-
-    private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, double minAttrVal, double maxAttrVal, int minSize, int maxSize)
+    
+    private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, int radius)
     {
       ThematicLayer tLayer = (ThematicLayer) layer;
       ThematicStyle tStyle = (ThematicStyle) style;
@@ -367,39 +408,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       NumberFormat formatter = this.getRuleNumberFormatter();
 
-      if (tStyle.getBubbleContinuousSize() == true && !tStyle.getPointFixed())
-      {
-        NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
-        Node ruleNode = node("Rule").build(root);
-        String currentCatMinDisplay = formatter.format(minAttrVal);
-        String currentCatMaxDisplay = formatter.format(maxAttrVal);
-
-        String name = currentCatMinDisplay + " - " + currentCatMaxDisplay;
-
-        if (postfix != null)
-        {
-          name += " " + postfix;
-        }
-
-        node("Name").text(name).build(ruleNode);
-        node("Title").text(name).build(ruleNode);
-
-        if (filterNodes != null)
-        {
-          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
-
-          filterNode.build(ruleNode);
-        }
-
-        Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-
-        node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
-
-        // Adding labels
-        this.addLabelSymbolizer(ruleNode);
-      }
-      else if (tStyle.getPointFixed())
-      {
+//      else if (tStyle.getPointFixed())
+//      {
         String name = currentLayerName;
 
         if (postfix != null)
@@ -425,7 +435,142 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         node("WellKnownName").text("circle").build(markNode);
         node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
         node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
-        node("Size").text(tStyle.getPointFixedSize()).build(graphicNode);
+        node("Size").text(radius).build(graphicNode);
+
+        // Adding labels
+        this.addLabelSymbolizer(ruleNode);
+//      }
+        
+        
+//      else
+//      {
+//        int numCategories;
+//        if (minSize == maxSize || minAttrVal == maxAttrVal)
+//        {
+//          // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+//          numCategories = 1;
+//        }
+//        else
+//        {
+//          numCategories = 5;
+//        }
+//
+//        double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
+//        int pointSizeCatLen = ( maxSize - minSize ) / numCategories;
+//
+//        for (int i = 0; i < numCategories; i++)
+//        {
+//          double currentCatMin = minAttrVal + ( i * categoryLen );
+//          double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+//
+//          double currentPointSizeRaw = minSize + ( ( i + 1 ) * pointSizeCatLen );
+//          int currentPointSize = (int) Math.round(currentPointSizeRaw);
+//
+//          String currentCatMinDisplay = formatter.format(currentCatMin);
+//          String currentCatMaxDisplay = formatter.format(currentCatMax);
+//
+//          Node ruleNode = node("Rule").build(root);
+//          String name = currentCatMinDisplay + " - " + currentCatMaxDisplay;
+//
+//          if (postfix != null)
+//          {
+//            name += " " + postfix;
+//          }
+//
+//          node("Name").text(name).build(ruleNode);
+//          node("Title").text(name).build(ruleNode);
+//
+//          Node filterNode = node(OGC, "Filter").build(ruleNode);
+//          Node firstAndNode = node(OGC, "And").build(filterNode);
+//
+//          if (filterNodes != null)
+//          {
+//            for (NodeBuilder filter : filterNodes)
+//            {
+//              filter.build(firstAndNode);
+//            }
+//          }
+//
+//          Node notNode = node(OGC, "Not").build(firstAndNode);
+//          Node secondAndNode = node(OGC, "And").build(notNode);
+//
+//          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
+//          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+//          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
+//
+//          Node orNode = node(OGC, "Or").build(secondAndNode);
+//          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+//          node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
+//
+//          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
+//          node(OGC, "Literal").text("NEVER").build(propEqualToNode);
+//          node(OGC, "Literal").text("TRUE").build(propEqualToNode);
+//
+//          Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
+//          node(OGC, "PropertyName").text(attribute).build(propIsBetween);
+//          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
+//          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
+//
+//          // Point styles
+//          Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+//          Node graphicNode = node("Graphic").build(pointSymbolNode);
+//          Node markNode = node("Mark").build(graphicNode);
+//          node("WellKnownName").text("circle").build(markNode);
+//          node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
+//
+//          node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
+//          node("Size").text(currentPointSize).build(graphicNode);
+//
+//          // Adding labels
+//          this.addLabelSymbolizer(ruleNode);
+//        }
+//      }
+    }
+
+    private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, double minAttrVal, double maxAttrVal, int minSize, int maxSize)
+    {
+      ThematicLayer tLayer = (ThematicLayer) layer;
+      ThematicStyle tStyle = (ThematicStyle) style;
+
+      // attribute must be lowercase to work with postgres
+      String attribute = tLayer.getAttribute().toLowerCase();
+      Double opacity = tStyle.getBubbleOpacity();
+      String stroke = tStyle.getBubbleStroke();
+      Integer width = tStyle.getBubbleStrokeWidth();
+      Double strokeOpacity = tStyle.getBubbleStrokeOpacity();
+      String wkn = tStyle.getBubbleWellKnownName();
+      Integer rotation = tStyle.getBubbleRotation();
+      String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
+
+      NumberFormat formatter = this.getRuleNumberFormatter();
+
+      if (tStyle.getBubbleContinuousSize() == true)
+      {
+        NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
+        Node ruleNode = node("Rule").build(root);
+        String currentCatMinDisplay = formatter.format(minAttrVal);
+        String currentCatMaxDisplay = formatter.format(maxAttrVal);
+
+        String name = currentCatMinDisplay + " - " + currentCatMaxDisplay;
+
+        if (postfix != null)
+        {
+          name += " " + postfix;
+        }
+
+        node("Name").text(name).build(ruleNode);
+        node("Title").text(name).build(ruleNode);
+
+        if (filterNodes != null)
+        {
+          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
+
+          filterNode.build(ruleNode);
+        }
+
+        Node bubbleSymbolNode = node("PointSymbolizer").build(ruleNode);
+
+        node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(bubbleSymbolNode);
 
         // Adding labels
         this.addLabelSymbolizer(ruleNode);
@@ -569,14 +714,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         // thematic interpolation
         return node("Size").child(node(OGC, "Function").attr("name", "Interpolate").child(
         // property to interpolate
-            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getPointMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getPointMaxSize()),
+            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMaxSize()),
             // interpolation method
             node(OGC, "Literal").text("numeric")));
       }
       else
       {
         // non-thematic
-        return node("Size").text(style.getPointSize());
+//        return node("Size").text(style.getPointSize());
+        return node("Size").text(11);
       }
     }
   }
@@ -702,7 +848,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           NodeBuilder otherPolySymbolNode = node("PolygonSymbolizer");
 
           // ontology logic
-          String cats = dTStyle.getStyleCategories();
+          String cats = dTStyle.getCategoryPolygonStyles();
           if (cats.length() > 0)
           {
             try
@@ -841,8 +987,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
         ThematicStyle tStyle = (ThematicStyle) style;
 
-        String minFill = tStyle.getPolygonMinFill();
-        String maxFill = tStyle.getPolygonMaxFill();
+        String minFill = tStyle.getGradientPolygonMinFill();
+        String maxFill = tStyle.getGradientPolygonMaxFill();
 
         Color minFillRGB = Color.decode(minFill);
         Color maxFillRGB = Color.decode(maxFill);

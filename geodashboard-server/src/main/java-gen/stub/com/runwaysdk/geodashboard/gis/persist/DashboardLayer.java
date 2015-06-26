@@ -393,11 +393,11 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     if (types.size() > 0)
     {
       AllLayerType type = types.get(0);
-      if (type == AllLayerType.BUBBLE)
+      if (type == AllLayerType.BUBBLE || type == AllLayerType.BASICPOINT || type == AllLayerType.GRADIENTPOINT || type == AllLayerType.CATEGORYPOINT)
       {
         return FeatureType.POINT;
       }
-      else
+      else if (type == AllLayerType.BASICPOLYGON || type == AllLayerType.CATEGORYPOLYGON || type == AllLayerType.GRADIENTPOLYGON || type == AllLayerType.BASIC || type == AllLayerType.CATEGORY || type == AllLayerType.GRADIENT)
       {
         return FeatureType.POLYGON;
       }

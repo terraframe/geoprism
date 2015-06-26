@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1626618692)
+@com.runwaysdk.business.ClassSignature(hash = -1629573970)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public class LayerTypeQueryDTO extends com.runwaysdk.system.EnumerationMasterQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1626618692;
+private static final long serialVersionUID = -1629573970;
 
   protected LayerTypeQueryDTO(String type)
   {

@@ -13,26 +13,27 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 {
   private Condition          condition;
 
-  private String             polygonMinFill;
-
-  private String             polygonMaxFill;
-
+  private String             gradientPolygonMinFill;
+  private String             gradientPolygonMaxFill;
+  
   private Integer            pointMinSize;
-
   private Integer            pointMaxSize;
+//  private Integer            pointRadius;
 
-  private Integer            pointFixedSize;
-
-  private Boolean            pointFixed;
-
-  private String             styleCategories;
+  private String             categoryPolygonStyles;
 
   private Boolean            bubbleContinuousSize;
+  private String bubbleStroke;
+  private Integer bubbleStrokeWidth;
+  private Integer bubbleSize;
+  private String bubbleWellKnownName;
+  private String bubbleFill;
+  private Double bubbleOpacity;
+  private Integer bubbleRotation;
+  private Double bubbleStrokeOpacity;
 
   private MdAttributeDAOIF   secondaryAttribute;
-
   private AllAggregationType secondaryAttributeAggregationMethod;
-
   private JSONArray          secondaryAttributeCategories;
 
   public ThematicStyleImpl()
@@ -60,57 +61,145 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   }
 
   @Override
-  public Integer getPointMinSize()
+  public Integer getBubbleMinSize()
   {
     return pointMinSize;
   }
+  
+  @Override
+  public Double getBubbleStrokeOpacity()
+  {
+    return this.bubbleStrokeOpacity;
+  }
+  
+  public void setBubbleStrokeOpacity(Double bubbleStrokeOpacity)
+  {
+    this.bubbleStrokeOpacity = bubbleStrokeOpacity;
+  }
+  
+  public void setBubbleSize(Integer bubbleSize)
+  {
+    this.bubbleSize = bubbleSize;
+  }
+  
+  public void setBubbleStroke(String bubbleStroke)
+  {
+    this.bubbleStroke = bubbleStroke;
+  }
+  
+  public void setBubbleStrokeWidth(Integer bubbleStrokeWidth)
+  {
+    this.bubbleStrokeWidth = bubbleStrokeWidth;
+  }
+  
+  public void setBubbleWellKnownName(String bubbleWellKnownName)
+  {
+    this.bubbleWellKnownName = bubbleWellKnownName;
+  }
+  
+  @Override
+  public Integer getBubbleSize()
+  {
+    return bubbleSize;
+  }
+  
+  @Override
+  public String getBubbleStroke()
+  {
+    return bubbleStroke;
+  }
+  
+  @Override
+  public Integer getBubbleStrokeWidth()
+  {
+    return bubbleStrokeWidth;
+  }
+  
+  @Override
+  public String getBubbleWellKnownName()
+  {
+    return bubbleWellKnownName;
+  }
+  
+  @Override
+  public void setBubbleFill(String fill)
+  {
+    this.bubbleFill = fill;    
+  }
 
   @Override
-  public void setPointMinSize(Integer pointMinSize)
+  public String getBubbleFill()
+  {
+    return this.bubbleFill;
+  }
+
+  @Override
+  public void setBubbleOpacity(Double opacity)
+  {
+    this.bubbleOpacity = opacity;    
+  }
+
+  @Override
+  public Double getBubbleOpacity()
+  {
+    return this.bubbleOpacity;
+  }
+
+  @Override
+  public void setBubbleRotation(Integer rotation)
+  {
+    this.bubbleRotation = rotation;    
+  }
+
+  @Override
+  public Integer getBubbleRotation()
+  {
+    return this.bubbleRotation;
+  }
+
+  @Override
+  public void setBubbleMinSize(Integer pointMinSize)
   {
     this.pointMinSize = pointMinSize;
   }
 
   @Override
-  public Integer getPointMaxSize()
+  public Integer getBubbleMaxSize()
   {
     return pointMaxSize;
   }
 
   @Override
-  public void setPointMaxSize(Integer pointMaxSize)
+  public void setBubbleMaxSize(Integer pointMaxSize)
   {
     this.pointMaxSize = pointMaxSize;
   }
 
   @Override
-  public String getPolygonMinFill()
+  public String getGradientPolygonMinFill()
   {
-    return this.polygonMinFill;
+    return this.gradientPolygonMinFill;
   }
 
-  @Override
-  public void setPolygonMinFill(String polygonMinFill)
+  public void setGradientPolygonMinFill(String gradientPolygonMinFill)
   {
-    this.polygonMinFill = polygonMinFill;
+    this.gradientPolygonMinFill = gradientPolygonMinFill;
   }
 
-  @Override
-  public String getPolygonMaxFill()
+  
+  public String getGradientPolygonMaxFill()
   {
-    return polygonMaxFill;
+    return gradientPolygonMaxFill;
   }
 
-  @Override
-  public void setPolygonMaxFill(String fill)
+  public void setGradientPolygonMaxFill(String fill)
   {
-    this.polygonMaxFill = fill;
+    this.gradientPolygonMaxFill = fill;
   }
 
-  @Override
-  public String getStyleCategories()
+  public String getCategoryPolygonStyles()
   {
-    return styleCategories;
+    return categoryPolygonStyles;
   }
 
   @Override
@@ -119,17 +208,11 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
     return this.bubbleContinuousSize;
   }
 
-  @Override
-  public Integer getPointFixedSize()
-  {
-    return this.pointFixedSize;
-  }
-
-  @Override
-  public Boolean getPointFixed()
-  {
-    return this.pointFixed;
-  }
+//  @Override
+//  public Integer getPointRadius()
+//  {
+//    return this.pointRadius;
+//  }
 
   @Override
   public MdAttributeDAOIF getSecondaryAttributeDAO()
