@@ -253,8 +253,8 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       Map<String, String> labels = rLayer.getLayerTypeMd().getEnumItems();
 
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
-      layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-//      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+      layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+      layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
@@ -267,7 +267,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       }
       else
       {
-        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
+        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASICPOLYGON.getName());
       }
       
       req.setAttribute("universalId", universalId);

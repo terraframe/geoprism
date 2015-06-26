@@ -541,10 +541,10 @@
         else if (type === "BUBBLE") {
           $("#tab002bubble").show();
         }
-        else if (type === "GRADIENT") {
+        else if (type === "GRADIENTPOLYGON") {
           $("#tab004gradientpolygon").show();
         }
-        else if (type === "CATEGORY") {
+        else if (type === "CATEGORYPOLYGON") {
           $("#tab005categoriespolygon").show();
         }
       },
@@ -1104,8 +1104,8 @@
     			  }
     			  else if(geomType === "geoMultiPolygon"){
     				  $(".BASICPOLYGON").show();
-    				  $(".CATEGORY").show();
-    	    		  $(".GRADIENT").show();
+    				  $(".CATEGORYPOLYGON").show();
+    	    		  $(".GRADIENTPOLYGON").show();
     			  }
     			  else{
     				  //TODO: this needs to be an else if (geomType === "some geom type") which isnt defined yet

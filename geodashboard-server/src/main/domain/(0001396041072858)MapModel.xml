@@ -192,13 +192,6 @@
 
       <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
 
-      <object key="BASIC" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-        <attribute name="enumName" value="BASIC" />
-        <attributeStruct name="displayLabel">
-          <attribute name="defaultLocale" value="Basic" />
-        </attributeStruct>
-      </object>
-
       <object key="BUBBLE" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
         <attribute name="enumName" value="BUBBLE" />
         <attributeStruct name="displayLabel">

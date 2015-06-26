@@ -2074,14 +2074,14 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	top:12px;
 	background:url(../images/sprite.png) no-repeat -100px -50px;
 }
-.nav-tabs.type-tabs .GRADIENT label:after{
+.nav-tabs.type-tabs .GRADIENTPOLYGON label:after{
 	width:87px;
 	height:77px;
 	background:url(../images/sprite.png) no-repeat -200px -50px;
 	left:13px;
 	top:1px;
 }
-.nav-tabs.type-tabs .CATEGORY label:after{
+.nav-tabs.type-tabs .CATEGORYPOLYGON label:after{
 	width:87px;
 	height:80px;
 	background:url(../images/sprite.png) no-repeat -300px -50px;

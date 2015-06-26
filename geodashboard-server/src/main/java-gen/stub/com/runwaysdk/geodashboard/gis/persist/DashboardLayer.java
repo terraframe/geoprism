@@ -397,7 +397,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       {
         return FeatureType.POINT;
       }
-      else if (type == AllLayerType.BASICPOLYGON || type == AllLayerType.CATEGORYPOLYGON || type == AllLayerType.GRADIENTPOLYGON || type == AllLayerType.BASIC || type == AllLayerType.CATEGORY || type == AllLayerType.GRADIENT)
+      else if (type == AllLayerType.BASICPOLYGON || type == AllLayerType.CATEGORYPOLYGON || type == AllLayerType.GRADIENTPOLYGON || type == AllLayerType.CATEGORYPOLYGON || type == AllLayerType.GRADIENTPOLYGON)
       {
         return FeatureType.POLYGON;
       }

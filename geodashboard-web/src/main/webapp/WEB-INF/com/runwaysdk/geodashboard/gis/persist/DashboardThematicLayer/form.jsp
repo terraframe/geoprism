@@ -648,7 +648,7 @@
 	                  <!-- GRADIENT -->
 	                  <div
 	                    <c:choose>
-	                      <c:when test="${'GRADIENT' == activeLayerTypeName}">
+	                      <c:when test="${'GRADIENTPOLYGON' == activeLayerTypeName}">
 	                        class="tab-pane active"
 	                      </c:when>
 	                      <c:otherwise>
@@ -760,7 +760,7 @@
 	                  <!-- CATEGORIES -->
 	                  <div
 	                    <c:choose>
-	                      <c:when test="${'CATEGORY' == activeLayerTypeName}">
+	                      <c:when test="${'CATEGORYPOLYGON' == activeLayerTypeName}">
 	                        class="tab-pane active"
 	                      </c:when>
 	                      <c:otherwise>

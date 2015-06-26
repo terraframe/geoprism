@@ -754,7 +754,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       node("FeatureTypeName").text(style.getName()).build(root);
 
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
+      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOLYGON)
       {
         int numCategories;
         double categoryLen;
@@ -855,7 +855,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           }
         }
       }
-      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORYPOLYGON)
       {
         JSONArray catsArrJSON;
         String catVal;
@@ -1021,7 +1021,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     private HashMap<Integer, Color> interpolateColor(int numCategories)
     {
       HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
+      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOLYGON)
       {
 
         ThematicStyle tStyle = (ThematicStyle) style;
