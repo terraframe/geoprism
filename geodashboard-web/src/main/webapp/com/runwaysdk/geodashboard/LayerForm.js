@@ -538,6 +538,9 @@
         else if (type === "BASICPOINT") {
             $("#tab001basicpoint").show();
         }
+        else if (type === "GRADIENTPOINT") {
+            $("#tab006gradientpoint").show();
+        }
         else if (type === "BUBBLE") {
           $("#tab002bubble").show();
         }
@@ -648,6 +651,9 @@
         }
         else if (activeTab === "tab001basicpoint") {
         	$("#tab001basicpoint").show();
+        }
+        else if (activeTab === "tab006gradientpoint") {
+        	$("#tab006gradientpoint").show();
         }
         else if (activeTab === "tab004gradientpolygon") {
         	$("#tab004gradientpolygon").show();
@@ -1101,6 +1107,7 @@
     			  if(geomType === "geoPoint"){
     				  $(".BUBBLE").show();
     				  $(".BASICPOINT").show();
+    				  $(".GRADIENTPOINT").show();
     			  }
     			  else if(geomType === "geoMultiPolygon"){
     				  $(".BASICPOLYGON").show();

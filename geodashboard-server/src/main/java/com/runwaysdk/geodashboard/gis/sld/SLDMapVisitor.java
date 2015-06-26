@@ -248,6 +248,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     @Override
     protected Node getSLD()
     {
+      NumberFormat formatter = this.getRuleNumberFormatter();
       Node root = super.getSLD();
 
       node("FeatureTypeName").text(style.getName()).build(root);
@@ -275,7 +276,22 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               String key = category.getString(ThematicStyle.VAL);
               String color = category.getString(ThematicStyle.COLOR);
 
-              NodeBuilder[] filterNodes = new NodeBuilder[] { node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attributeName)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key))) };
+              NodeBuilder[] filterNodes = new NodeBuilder[] { 
+                  node(OGC, "PropertyIsEqualTo").child(
+                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                  node(OGC, "And").child(
+                      node(OGC, "Not").child(
+                          node(OGC, "Or").child(
+                              node(OGC, "PropertyIsNull").child(
+                                  node(OGC, "PropertyName").text(attributeName)), 
+                                  node(OGC, "PropertyIsEqualTo").child(
+                                      node(OGC, "Literal").text("NEVER"), 
+                                      node(OGC, "Literal").text("TRUE")))), 
+                                      node(OGC, "PropertyIsEqualTo").child(
+                                          node(OGC, "PropertyName").text(attributeName), 
+                                          node(OGC, "Literal").text(key))) 
+                                          };
 
               this.createRule(root, filterNodes, color, key, radius);
             }
@@ -297,7 +313,104 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           createRule(root, null, fill, null, radius);
         }
+      }
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOINT)
+      {
+        int numCategories;
+        double categoryLen;
+        
+        if(this.style instanceof ThematicStyle)
+        {
+          ThematicStyle tStyle = (ThematicStyle) this.style;
+          int radius = style.getPointSize();
 
+          Double fillOpacity = tStyle.getGradientPointFillOpacity();
+          String stroke = tStyle.getGradientPointStroke();
+          int width = tStyle.getGradientPointStrokeWidth();
+          Double strokeOpacity = tStyle.getGradientPointStrokeOpacity();
+          
+          // SLD generation
+          ThematicLayer tLayer = (ThematicLayer) layer;
+  
+          // attribute must be lowercase to work with postgres
+          String attribute = tLayer.getAttribute().toLowerCase();
+  
+          HashMap<String, Double> minMaxMap = null;
+          if(this.visitor.currentLayer instanceof ThematicLayer)
+          {
+            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+            minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          }
+          double minAttrVal = minMaxMap.get("min");
+          double maxAttrVal = minMaxMap.get("max");
+  
+          if (minAttrVal == maxAttrVal)
+          {
+            // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+            numCategories = 1;
+            categoryLen = 1.0;
+          }
+          else
+          {
+            numCategories = 5;
+            categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
+          }
+  
+          HashMap<Integer, Color> gradientColors = interpolateColor(numCategories, this.visitor.currentLayer.getFeatureStrategy(), tStyle);
+  
+          for (int i = 0; i < numCategories; i++)
+          {
+            double currentCatMin;
+            if (numCategories == 1)
+            {
+              currentCatMin = 0;
+            }
+            else
+            {
+              currentCatMin = minAttrVal + ( i * categoryLen );
+            }
+            double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+  
+            int currentColorPos = i + 1;
+            Color currentColor = gradientColors.get(currentColorPos);
+            String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
+  
+            String currentCatMinDisplay = formatter.format(currentCatMin);
+            String currentCatMaxDisplay = formatter.format(currentCatMax);
+            
+            Node ruleNode = node("Rule").child(
+                node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node(OGC, "Filter").child(
+                    node(OGC, "And").child(
+                        node(OGC, "Not").child(
+                            node(OGC, "And").child(
+                                node(OGC, "PropertyIsEqualTo").child(
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                                node(OGC, "Or").child(
+                                    node(OGC, "PropertyIsNull").child(
+                                        node(OGC, "PropertyName").text(attribute)),
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "Literal").text("NEVER"),
+                                        node(OGC, "Literal").text("TRUE"))))),
+                        node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
+                            node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
+                            node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
+                node("PointSymbolizer").child(
+                    node("Graphic").child(
+                        node("Mark").child(
+                            node("WellKnownName").text("circle"),
+                            node("Fill").child(css("fill", currentColorHex),
+                                css("fill-opacity", fillOpacity)),
+                            node("Stroke").child(css("stroke", stroke), css("stroke-width", width),
+                                css("stroke-opacity", strokeOpacity))), node("Size").text(radius))))
+                .build(root);
+  
+            // Adding labels
+            this.addLabelSymbolizer(ruleNode);
+          }
+        }
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
@@ -377,14 +490,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     private NodeBuilder[] getNotChildren(String attributeName, JSONArray array) throws JSONException
     {
       List<NodeBuilder> list = new LinkedList<NodeBuilder>();
-
       for (int i = 0; i < array.length(); i++)
       {
         JSONObject category = array.getJSONObject(i);
         String key = category.getString(ThematicStyle.VAL);
-
         NodeBuilder builder = node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key));
-
         list.add(builder);
       }
 
@@ -395,21 +505,17 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       ThematicLayer tLayer = (ThematicLayer) layer;
       ThematicStyle tStyle = (ThematicStyle) style;
-
-      // attribute must be lowercase to work with postgres
-      String attribute = tLayer.getAttribute().toLowerCase();
-      Double opacity = tStyle.getPointOpacity();
-      String stroke = tStyle.getPointStroke();
-      Integer width = tStyle.getPointStrokeWidth();
-      Double strokeOpacity = tStyle.getPointStrokeOpacity();
-      String wkn = tStyle.getPointWellKnownName();
-      Integer rotation = tStyle.getPointRotation();
-      String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
-
       NumberFormat formatter = this.getRuleNumberFormatter();
-
-//      else if (tStyle.getPointFixed())
-//      {
+      
+        // attribute must be lowercase to work with postgres
+        String attribute = tLayer.getAttribute().toLowerCase();
+        Double opacity = tStyle.getPointOpacity();
+        String stroke = tStyle.getPointStroke();
+        Integer width = tStyle.getPointStrokeWidth();
+        Double strokeOpacity = tStyle.getPointStrokeOpacity();
+        String wkn = tStyle.getPointWellKnownName();
+        Integer rotation = tStyle.getPointRotation();
+        String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
         String name = currentLayerName;
 
         if (postfix != null)
@@ -424,7 +530,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         if (filterNodes != null)
         {
           NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
-
           filterNode.build(ruleNode);
         }
 
@@ -439,92 +544,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
         // Adding labels
         this.addLabelSymbolizer(ruleNode);
-//      }
-        
-        
-//      else
-//      {
-//        int numCategories;
-//        if (minSize == maxSize || minAttrVal == maxAttrVal)
-//        {
-//          // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
-//          numCategories = 1;
-//        }
-//        else
-//        {
-//          numCategories = 5;
-//        }
-//
-//        double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
-//        int pointSizeCatLen = ( maxSize - minSize ) / numCategories;
-//
-//        for (int i = 0; i < numCategories; i++)
-//        {
-//          double currentCatMin = minAttrVal + ( i * categoryLen );
-//          double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
-//
-//          double currentPointSizeRaw = minSize + ( ( i + 1 ) * pointSizeCatLen );
-//          int currentPointSize = (int) Math.round(currentPointSizeRaw);
-//
-//          String currentCatMinDisplay = formatter.format(currentCatMin);
-//          String currentCatMaxDisplay = formatter.format(currentCatMax);
-//
-//          Node ruleNode = node("Rule").build(root);
-//          String name = currentCatMinDisplay + " - " + currentCatMaxDisplay;
-//
-//          if (postfix != null)
-//          {
-//            name += " " + postfix;
-//          }
-//
-//          node("Name").text(name).build(ruleNode);
-//          node("Title").text(name).build(ruleNode);
-//
-//          Node filterNode = node(OGC, "Filter").build(ruleNode);
-//          Node firstAndNode = node(OGC, "And").build(filterNode);
-//
-//          if (filterNodes != null)
-//          {
-//            for (NodeBuilder filter : filterNodes)
-//            {
-//              filter.build(firstAndNode);
-//            }
-//          }
-//
-//          Node notNode = node(OGC, "Not").build(firstAndNode);
-//          Node secondAndNode = node(OGC, "And").build(notNode);
-//
-//          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
-//          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-//          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-//
-//          Node orNode = node(OGC, "Or").build(secondAndNode);
-//          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
-//          node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-//
-//          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
-//          node(OGC, "Literal").text("NEVER").build(propEqualToNode);
-//          node(OGC, "Literal").text("TRUE").build(propEqualToNode);
-//
-//          Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
-//          node(OGC, "PropertyName").text(attribute).build(propIsBetween);
-//          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
-//          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
-//
-//          // Point styles
-//          Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-//          Node graphicNode = node("Graphic").build(pointSymbolNode);
-//          Node markNode = node("Mark").build(graphicNode);
-//          node("WellKnownName").text("circle").build(markNode);
-//          node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
-//
-//          node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
-//          node("Size").text(currentPointSize).build(graphicNode);
-//
-//          // Adding labels
-//          this.addLabelSymbolizer(ruleNode);
-//        }
-//      }
     }
 
     private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, double minAttrVal, double maxAttrVal, int minSize, int maxSize)
@@ -795,7 +814,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
           }
   
-          HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
+          HashMap<Integer, Color> gradientColors = interpolateColor(numCategories, this.visitor.currentLayer.getFeatureStrategy(), style);
   
           for (int i = 0; i < numCategories; i++)
           {
@@ -1018,48 +1037,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return root;
     }
 
-    private HashMap<Integer, Color> interpolateColor(int numCategories)
-    {
-      HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOLYGON)
-      {
-
-        ThematicStyle tStyle = (ThematicStyle) style;
-
-        String minFill = tStyle.getGradientPolygonMinFill();
-        String maxFill = tStyle.getGradientPolygonMaxFill();
-
-        Color minFillRGB = Color.decode(minFill);
-        Color maxFillRGB = Color.decode(maxFill);
-        colorRGBList.put(1, minFillRGB);
-        colorRGBList.put(numCategories, maxFillRGB);
-
-        // RGB color values
-        int r1 = minFillRGB.getRed();
-        int g1 = minFillRGB.getGreen();
-        int b1 = minFillRGB.getBlue();
-
-        int r2 = maxFillRGB.getRed();
-        int g2 = maxFillRGB.getGreen();
-        int b2 = maxFillRGB.getBlue();
-
-        double stepIncrease = ( 100.0 / numCategories ) / 100.0;
-        double stepVal = ( 100.0 / numCategories ) / 100.0;
-
-        // Build category colors between min/max category values.
-        // If only 1 category the color value will be the max color set by the user
-        for (int i = 0; i < numCategories; i++)
-        {
-          int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );
-          int green = (int) ( g1 + ( stepVal * ( g2 - g1 ) ) );
-          int blue = (int) ( b1 + ( stepVal * ( b2 - b1 ) ) );
-          Color newColor = new Color(red, green, blue);
-          colorRGBList.put(i + 1, newColor);
-          stepVal = stepVal + stepIncrease; // reseting stepVal to the next color increment value (i.e. .20 becomes .40)
-        }
-      }
-      return colorRGBList;
-    }
   }
 
   private static class LineSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -1618,6 +1595,61 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   {
     // TODO Auto-generated method stub
 
+  }
+  
+  public static HashMap<Integer, Color> interpolateColor(int numCategories, FeatureStrategy featureStrategy, Style style)
+  {
+    HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
+    
+    if(style instanceof ThematicStyle)
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      String minFill = null;
+      String maxFill = null;
+      
+      if (featureStrategy == FeatureStrategy.GRADIENTPOLYGON)
+      {
+        minFill = tStyle.getGradientPolygonMinFill();
+        maxFill = tStyle.getGradientPolygonMaxFill();
+        
+      }
+      else if (featureStrategy == FeatureStrategy.GRADIENTPOINT)
+      {
+        minFill = tStyle.getGradientPointMinFill();
+        maxFill = tStyle.getGradientPointMaxFill();
+      }
+
+      Color minFillRGB = Color.decode(minFill);
+      Color maxFillRGB = Color.decode(maxFill);
+      colorRGBList.put(1, minFillRGB);
+      colorRGBList.put(numCategories, maxFillRGB);
+
+      // RGB color values
+      int r1 = minFillRGB.getRed();
+      int g1 = minFillRGB.getGreen();
+      int b1 = minFillRGB.getBlue();
+
+      int r2 = maxFillRGB.getRed();
+      int g2 = maxFillRGB.getGreen();
+      int b2 = maxFillRGB.getBlue();
+
+      double stepIncrease = ( 100.0 / numCategories ) / 100.0;
+      double stepVal = ( 100.0 / numCategories ) / 100.0;
+
+      // Build category colors between min/max category values.
+      // If only 1 category the color value will be the max color set by the user
+      for (int i = 0; i < numCategories; i++)
+      {
+        int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );
+        int green = (int) ( g1 + ( stepVal * ( g2 - g1 ) ) );
+        int blue = (int) ( b1 + ( stepVal * ( b2 - b1 ) ) );
+        Color newColor = new Color(red, green, blue);
+        colorRGBList.put(i + 1, newColor);
+        stepVal = stepVal + stepIncrease; // reseting stepVal to the next color increment value (i.e. .20 becomes .40)
+      }
+    }
+    
+    return colorRGBList;
   }
 
 }

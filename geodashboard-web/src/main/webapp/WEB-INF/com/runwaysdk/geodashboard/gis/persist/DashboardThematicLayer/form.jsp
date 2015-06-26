@@ -298,7 +298,7 @@
 	                  >
 	                    <div class="fill-block">
 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
-	                      <div id="gdb-reusable-basic-point-fill-cell-holder" class="cell-holder">
+	                      <div class="cell-holder">
 		                        <div class="cell">
 		                          <span>${style.pointFillMd.displayLabel}</span>
 		                          <div class="color-holder">
@@ -332,7 +332,7 @@
 	                    
 	                    <div class="stroke-block">
 	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
-	                      <div id="gdb-reusable-basic-point-stroke-cell-holder" class="cell-holder">
+	                      <div class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.pointStrokeMd.displayLabel}</span>
 	                          <div class="color-holder">
@@ -369,6 +369,129 @@
 	                                
 	                                <c:choose>
 	                                  <c:when test="${style.pointStrokeOpacity*100 == size}">
+	                                    <option selected="selected" value="${potentialValue}">${size}</option>
+	                                  </c:when>
+	                                  <c:otherwise>
+	                                    <option value="${potentialValue}">${size}</option>
+	                                  </c:otherwise>
+	                                </c:choose>
+	                              </c:forEach>
+	                            </select>   
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="point-radius-select">${style.pointSizeMd.displayLabel}</label>
+		                          <div class="text">
+		                          	<input id="point-radius-select" name="style.${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+		                          </div>
+		                        </div>
+	                      </div>
+	                    </div>
+	                  </div>
+	                  
+	                  
+	                  <!-- GRADIENT POINT -->
+	                  <div
+	                    <c:choose>
+	                      <c:when test="${'GRADIENTPOINT' == activeLayerTypeName}">
+	                        class="tab-pane active"
+	                      </c:when>
+	                      <c:otherwise>
+	                        class="tab-pane" style="display: none;"
+	                      </c:otherwise>
+	                    </c:choose>
+	                    
+	                    id="tab006gradientpoint"
+	                  >
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
+
+						  <div class="cell-holder">
+	                        <div class="cell">
+	                          <span>${style.gradientPointMinFillMd.displayLabel}</span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:${style.gradientPointMinFill};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPointMinFillMd.name}" value="${style.gradientPointMinFill}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <span>${style.gradientPointMaxFillMd.displayLabel}</span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:${style.gradientPointMaxFill};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPointMaxFillMd.name}" value="${style.gradientPointMaxFill}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+			                    <label for="gradient-point-fill-opacity-select">${style.gradientPointFillOpacityMd.displayLabel}</label>
+			                    <div class="text">
+			                      <select id="gradient-point-fill-opacity-select" class="tab-select" name="style.${style.gradientPointFillOpacityMd.name}">
+			                        <c:forEach step="5" begin="0" end="100" var="size">
+			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+			                          <c:choose>
+			                            <c:when test="${style.gradientPointFillOpacity*100 == size}">
+			                              <option selected="selected" value="${potentialValue}">${size}</option>
+			                            </c:when>
+			                            <c:otherwise>
+			                              <option value="${potentialValue}">${size}</option>
+			                            </c:otherwise>
+			                          </c:choose>
+			                        </c:forEach>
+			                      </select>  
+			                    </div>
+			                  </div>
+	                      </div>
+	                    </div>
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span>${style.gradientPointStrokeMd.displayLabel}</span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:${style.gradientPointStroke};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPointStrokeMd.name}" value="${style.gradientPointStroke}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="gradient-point-stroke-select">${style.gradientPointStrokeWidthMd.displayLabel}</label>
+	                          <div class="select-holder">
+	                            <select name="style.${style.gradientPointStrokeWidthMd.name}" id="gradient-point-stroke-select" class="tab-select">
+	                              <c:forEach begin="0" end="15" var="size">
+	                                <c:choose>
+	                                  <c:when test="${style.gradientPointStrokeWidth == size}">
+	                                    <option selected="selected" value="${size}">${size}</option>
+	                                  </c:when>
+	                                  <c:otherwise>
+	                                    <option value="${size}">${size}</option>
+	                                  </c:otherwise>
+	                                </c:choose>
+	                              </c:forEach>
+	                            </select>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="gradient-point-stroke-opacity-select">${style.gradientPointStrokeOpacityMd.name}</label>
+	                          <div class="text">
+	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.${style.gradientPointStrokeOpacityMd.name}">
+	                              <c:forEach step="5" begin="0" end="100" var="size">
+	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+	                                
+	                                <c:choose>
+	                                  <c:when test="${style.gradientPointStrokeOpacity*100 == size}">
 	                                    <option selected="selected" value="${potentialValue}">${size}</option>
 	                                  </c:when>
 	                                  <c:otherwise>
@@ -643,7 +766,7 @@
 	                  </div>
 	                  
 	                  
-	                  <!-- GRADIENT -->
+	                  <!-- GRADIENT POLYGON -->
 	                  <div
 	                    <c:choose>
 	                      <c:when test="${'GRADIENTPOLYGON' == activeLayerTypeName}">
@@ -658,7 +781,7 @@
 	                  >
 	                    <div class="gradient-block">
 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong>
-	                      <div id="gdb-reusable-gradient-fill-cell-holder" class="cell-holder">
+	                      <div class="cell-holder">
 	                        <div class="cell">
 	                          <span>${style.gradientPolygonMinFillMd.displayLabel}</span>
 	                          <div class="color-holder">
@@ -752,10 +875,8 @@
 	                    </div>
 	                  </div>
 	                  
-	                  <gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>
-
 	                 
-	                  <!-- CATEGORIES -->
+	                  <!-- CATEGORIES POLYGON -->
 	                  <div
 	                    <c:choose>
 	                      <c:when test="${'CATEGORYPOLYGON' == activeLayerTypeName}">

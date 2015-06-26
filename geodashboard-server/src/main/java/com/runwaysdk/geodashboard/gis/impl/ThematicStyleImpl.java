@@ -22,7 +22,14 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   
   private Integer            pointMinSize;
   private Integer            pointMaxSize;
-
+  
+  private String             gradientPointMinFill;
+  private String             gradientPointMaxFill;
+  private Double             gradientPointFillOpacity;
+  private String             gradientPointStroke;
+  private Integer            gradientPointStrokeWidth;
+  private Double             gradientPointStrokeOpacity;
+  
   private String             categoryPolygonStyles;
   private String             categoryPolygonStroke;
   private Double             categoryPolygonFillOpacity;
@@ -332,5 +339,65 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void setCategoryPolygonStrokeOpacity(Double categoryPolygonStrokeOpacity)
   {
     this.categoryPolygonStrokeOpacity = categoryPolygonStrokeOpacity;
+  }
+
+  public String getGradientPointMaxFill()
+  {
+    return gradientPointMaxFill;
+  }
+
+  public void setGradientPointMaxFill(String gradientPointMaxFill)
+  {
+    this.gradientPointMaxFill = gradientPointMaxFill;
+  }
+
+  public String getGradientPointMinFill()
+  {
+    return gradientPointMinFill;
+  }
+
+  public void setGradientPointMinFill(String gradientPointMinFill)
+  {
+    this.gradientPointMinFill = gradientPointMinFill;
+  }
+
+  public Double getGradientPointFillOpacity()
+  {
+    return gradientPointFillOpacity;
+  }
+
+  public void setGradientPointFillOpacity(Double gradientPointFillOpacity)
+  {
+    this.gradientPointFillOpacity = gradientPointFillOpacity;
+  }
+
+  public String getGradientPointStroke()
+  {
+    return gradientPointStroke;
+  }
+
+  public void setGradientPointStroke(String gradientPointStroke)
+  {
+    this.gradientPointStroke = gradientPointStroke;
+  }
+
+  public Integer getGradientPointStrokeWidth()
+  {
+    return gradientPointStrokeWidth;
+  }
+
+  public void setGradientPointStrokeWidth(Integer gradientPointStrokeWidth)
+  {
+    this.gradientPointStrokeWidth = gradientPointStrokeWidth;
+  }
+
+  public Double getGradientPointStrokeOpacity()
+  {
+    return gradientPointStrokeOpacity;
+  }
+
+  public void setGradientPointStrokeOpacity(Double gradientPointStrokeOpacity)
+  {
+    this.gradientPointStrokeOpacity = gradientPointStrokeOpacity;
   }
 }

@@ -83,7 +83,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
     List<Selectable> selectables = new LinkedList<Selectable>();
     AllLayerType layerType = this.getLayerType().get(0);
-    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENTPOLYGON)
+    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENTPOLYGON || layerType == AllLayerType.GRADIENTPOINT)
     {
 
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));

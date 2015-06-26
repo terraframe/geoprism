@@ -226,6 +226,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       else
       {
         layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
         layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));

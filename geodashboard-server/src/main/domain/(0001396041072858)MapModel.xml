@@ -199,20 +199,6 @@
         </attributeStruct>
       </object>
 
-      <object key="GRADIENT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-        <attribute name="enumName" value="GRADIENT" />
-        <attributeStruct name="displayLabel">
-          <attribute name="defaultLocale" value="Gradient" />
-        </attributeStruct>
-      </object>
-
-      <object key="CATEGORY" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
-        <attribute name="enumName" value="CATEGORY" />
-        <attributeStruct name="displayLabel">
-          <attribute name="defaultLocale" value="Category" />
-        </attributeStruct>
-      </object>
-      
       <object key="BASICPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
         <attribute name="enumName" value="BASICPOINT" />
         <attributeStruct name="displayLabel">
@@ -310,9 +296,15 @@
         <attributes>
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
           
-          <!-- Gradient Basic Point Attributes -->
+          <!-- Gradient Point Attributes -->
           <char name="gradientPointMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
           <char name="gradientPointMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
+          <double name="gradientPointFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+ 		  <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <char name="gradientPointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="gradientPointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+          <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+ 
           
           <!-- Category Basic Point Attributes -->
           <text name="categoryPointStyles" label="Category styling for layers" required="false" />
