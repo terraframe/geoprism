@@ -527,36 +527,13 @@
         }); 
       },       
       
-      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-          if(strokeCellHolder != null) {        
-            var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-            strokeCellHolder.append(polyStroke);
-            polyStroke.show();
-            
-            var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-            strokeCellHolder.append(polyStrokeWidth);
-            polyStrokeWidth.show();
-            
-            var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-            strokeCellHolder.append(polyStrokeOpacity);
-            polyStrokeOpacity.show();
-          }
-            
-          if(fillCellHolder != null) {
-            var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-            fillCellHolder.append(polyFillOpacity);
-            polyFillOpacity.show();
-          }
-        },           
-        
       _onLayerTypeTabChange : function(e) {
         var activeTab = e.target;
           
         var type = activeTab.dataset["gdbTabType"];
           
         if (type === "BASICPOLYGON") {
-          this._attachDynamicCells($("#gdb-reusable-basic-polygon-stroke-cell-holder"), $("#gdb-reusable-basic-polygon-fill-cell-holder"));
-          $("#tab001basicpolygon").show();
+          $("#tab003basicpolygon").show();
         }
         else if (type === "BASICPOINT") {
             $("#tab001basicpoint").show();
@@ -565,16 +542,10 @@
           $("#tab002bubble").show();
         }
         else if (type === "GRADIENT") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-          $("#tab003gradient").show();
+          $("#tab004gradientpolygon").show();
         }
         else if (type === "CATEGORY") {
-          $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
-        }
-        else if (type === "FIXEDBUBBLE") {
-          $("#tab005bubble").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+          $("#tab005categoriespolygon").show();
         }
       },
         
@@ -672,21 +643,17 @@
         
         // Move reusable cells to active cell holder
         var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab001basicpolygon") {
-          this._attachDynamicCells($("#gdb-reusable-basic-polygon-stroke-cell-holder"), $("#gdb-reusable-basic-polygon-fill-cell-holder"));
+        if (activeTab === "tab003basicpolygon") {
+        	$("#tab003basicpolygon").show();
         }
         else if (activeTab === "tab001basicpoint") {
         	$("#tab001basicpoint").show();
         }
-        else if (activeTab === "tab003gradient") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+        else if (activeTab === "tab004gradientpolygon") {
+        	$("#tab004gradientpolygon").show();
         }
-        else if (activeTab === "tab004categories") {
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
-          
-          // Hide the reusable input cells that don't apply to categories
-          var polyFillOpacity = $("#gdb-reusable-cell-fillOpacity");
-          polyFillOpacity.hide();
+        else if (activeTab === "tab005categoriespolygon") {
+        	$("#tab005categoriespolygon").show();
         }
         
         // Attach listeners
@@ -937,9 +904,9 @@
           }
         });      
         
-        if($("#tab004categories").is(":visible")){
+        if($("#tab005categoriespolygon").is(":visible")){
           var catStyleArr = this._updateCategoriesJSON();
-          params['style.styleCategories'] = JSON.stringify(catStyleArr);
+          params['style.categoryPolygonStyles'] = JSON.stringify(catStyleArr);
         }
         
         // Check for existense of dynamic settings which may not exist 

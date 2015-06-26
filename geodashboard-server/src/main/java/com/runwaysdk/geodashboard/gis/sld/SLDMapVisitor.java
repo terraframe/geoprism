@@ -749,15 +749,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     protected Node getSLD()
     {
       NumberFormat formatter = this.getRuleNumberFormatter();
-
       Node root = super.getSLD();
-
-      Integer width = this.style.getPolygonStrokeWidth();
-      Double fillOpacity = this.style.getPolygonFillOpacity();
-      String stroke = this.style.getPolygonStroke();
-      Double strokeOpacity = this.style.getPolygonStrokeOpacity();
-      String fill = this.style.getPolygonFill();
-
       String currentLayerName = this.visitor.currentLayer.getName();
 
       node("FeatureTypeName").text(style.getName()).build(root);
@@ -766,64 +758,101 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         int numCategories;
         double categoryLen;
-
-        // SLD generation
-        ThematicLayer tLayer = (ThematicLayer) layer;
-
-        // attribute must be lowercase to work with postgres
-        String attribute = tLayer.getAttribute().toLowerCase();
-
-        HashMap<String, Double> minMaxMap = null;
-        if(this.visitor.currentLayer instanceof ThematicLayer)
+        
+        if(this.style instanceof ThematicStyle)
         {
-          ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
-          minMaxMap = currentTLayer.getLayerMinMax(attribute);
-        }
-        double minAttrVal = minMaxMap.get("min");
-        double maxAttrVal = minMaxMap.get("max");
-
-        if (minAttrVal == maxAttrVal)
-        {
-          // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
-          numCategories = 1;
-          categoryLen = 1.0;
-        }
-        else
-        {
-          numCategories = 5;
-          categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
-        }
-
-        HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
-
-        for (int i = 0; i < numCategories; i++)
-        {
-          double currentCatMin;
-
-          if (numCategories == 1)
+          ThematicStyle tStyle = (ThematicStyle) this.style;
+          
+          Double fillOpacity = tStyle.getGradientPolygonFillOpacity();
+          String stroke = tStyle.getGradientPolygonStroke();
+          int width = tStyle.getGradientPolygonStrokeWidth();
+          Double strokeOpacity = tStyle.getGradientPolygonStrokeOpacity();
+          
+          // SLD generation
+          ThematicLayer tLayer = (ThematicLayer) layer;
+  
+          // attribute must be lowercase to work with postgres
+          String attribute = tLayer.getAttribute().toLowerCase();
+  
+          HashMap<String, Double> minMaxMap = null;
+          if(this.visitor.currentLayer instanceof ThematicLayer)
           {
-            currentCatMin = 0;
+            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+            minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          }
+          double minAttrVal = minMaxMap.get("min");
+          double maxAttrVal = minMaxMap.get("max");
+  
+          if (minAttrVal == maxAttrVal)
+          {
+            // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+            numCategories = 1;
+            categoryLen = 1.0;
           }
           else
           {
-            currentCatMin = minAttrVal + ( i * categoryLen );
+            numCategories = 5;
+            categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
           }
-          double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
-
-          int currentColorPos = i + 1;
-
-          Color currentColor = gradientColors.get(currentColorPos);
-          String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
-
-          String currentCatMinDisplay = formatter.format(currentCatMin);
-          String currentCatMaxDisplay = formatter.format(currentCatMax);
-
-          Node ruleNode = node("Rule").child(node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay), node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
-              node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE"))))), node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute), node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)), node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
-              node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", currentColorHex), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
-
-          // Adding labels
-          this.addLabelSymbolizer(ruleNode);
+  
+          HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
+  
+          for (int i = 0; i < numCategories; i++)
+          {
+            double currentCatMin;
+  
+            if (numCategories == 1)
+            {
+              currentCatMin = 0;
+            }
+            else
+            {
+              currentCatMin = minAttrVal + ( i * categoryLen );
+            }
+            double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+  
+            int currentColorPos = i + 1;
+  
+            Color currentColor = gradientColors.get(currentColorPos);
+            String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
+  
+            String currentCatMinDisplay = formatter.format(currentCatMin);
+            String currentCatMaxDisplay = formatter.format(currentCatMax);
+  
+            Node ruleNode = node("Rule").child(node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay), 
+                node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node(OGC, "Filter").child(
+                    node(OGC, "And").child(
+                    node(OGC, "Not").child(
+                        node(OGC, "And").child(
+                        node(OGC, "PropertyIsEqualTo").child(
+                            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                            node(OGC, "Or").child(
+                                node(OGC, "PropertyIsNull").child(
+                                    node(OGC, "PropertyName").text(attribute)), 
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "Literal").text("NEVER"), 
+                                        node(OGC, "Literal").text("TRUE"))))), 
+                                        node(OGC, "PropertyIsBetween").child(
+                                            node(OGC, "PropertyName").text(attribute), 
+                                            node(OGC, "LowerBoundary").child(
+                                                node("Literal").text(currentCatMin)), 
+                                            node(OGC, "UpperBoundary").child(
+                                                node("Literal").text(currentCatMax))))),
+                node("PolygonSymbolizer").child(node("Geometry").child(
+                    node(OGC, "PropertyName").text("geom")), 
+                    node("Fill").child(
+                        css("fill", currentColorHex), 
+                        css("fill-opacity", fillOpacity)), 
+                        node("Stroke").child(
+                            css("stroke", stroke), 
+                            css("stroke-width", width), 
+                            css("stroke-opacity", strokeOpacity)))).build(root);
+  
+            // Adding labels
+            this.addLabelSymbolizer(ruleNode);
+          }
         }
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
@@ -838,15 +867,19 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
-        ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tLayer.getAttribute().toLowerCase();
 
         if (style instanceof DashboardThematicStyle)
         {
-          DashboardThematicStyle dTStyle = (DashboardThematicStyle) tStyle;
+          DashboardThematicStyle dTStyle = (DashboardThematicStyle) style;
           NodeBuilder otherPolySymbolNode = node("PolygonSymbolizer");
 
+          Double fillOpacity = dTStyle.getCategoryPolygonFillOpacity();
+          String stroke = dTStyle.getCategoryPolygonStroke();
+          int width = dTStyle.getCategoryPolygonStrokeWidth();
+          Double strokeOpacity = dTStyle.getCategoryPolygonStrokeOpacity();
+            
           // ontology logic
           String cats = dTStyle.getCategoryPolygonStyles();
           if (cats.length() > 0)
@@ -967,6 +1000,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else
       {
+        Integer width = this.style.getPolygonStrokeWidth();
+        Double fillOpacity = this.style.getPolygonFillOpacity();
+        String stroke = this.style.getPolygonStroke();
+        Double strokeOpacity = this.style.getPolygonStrokeOpacity();
+        String fill = this.style.getPolygonFill();
+        
         // Basic polygon
         Node ruleNode = node("Rule").child(node("Name").text("basic"), node("Title").text("basic"), node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", fill), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
 

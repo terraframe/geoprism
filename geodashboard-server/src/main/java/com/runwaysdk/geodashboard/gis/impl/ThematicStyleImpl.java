@@ -15,22 +15,29 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 
   private String             gradientPolygonMinFill;
   private String             gradientPolygonMaxFill;
+  private String             gradientPolygonStroke;
+  private Double             gradientPolygonFillOpacity;
+  private Integer            gradientPolygonStrokeWidth;
+  private Double             gradientPolygonStrokeOpacity;
   
   private Integer            pointMinSize;
   private Integer            pointMaxSize;
-//  private Integer            pointRadius;
 
   private String             categoryPolygonStyles;
+  private String             categoryPolygonStroke;
+  private Double             categoryPolygonFillOpacity;
+  private Integer            categoryPolygonStrokeWidth;
+  private Double             categoryPolygonStrokeOpacity;
 
   private Boolean            bubbleContinuousSize;
-  private String bubbleStroke;
-  private Integer bubbleStrokeWidth;
-  private Integer bubbleSize;
-  private String bubbleWellKnownName;
-  private String bubbleFill;
-  private Double bubbleOpacity;
-  private Integer bubbleRotation;
-  private Double bubbleStrokeOpacity;
+  private String             bubbleStroke;
+  private Integer            bubbleStrokeWidth;
+  private Integer            bubbleSize;
+  private String             bubbleWellKnownName;
+  private String             bubbleFill;
+  private Double             bubbleOpacity;
+  private Integer            bubbleRotation;
+  private Double             bubbleStrokeOpacity;
 
   private MdAttributeDAOIF   secondaryAttribute;
   private AllAggregationType secondaryAttributeAggregationMethod;
@@ -245,5 +252,85 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void setSecondaryAttributeCategories(JSONArray secondaryAttributeCategories)
   {
     this.secondaryAttributeCategories = secondaryAttributeCategories;
+  }
+
+  public String getGradientPolygonStroke()
+  {
+    return gradientPolygonStroke;
+  }
+
+  public void setGradientPolygonStroke(String gradientPolygonStroke)
+  {
+    this.gradientPolygonStroke = gradientPolygonStroke;
+  }
+
+  public Double getGradientPolygonFillOpacity()
+  {
+    return gradientPolygonFillOpacity;
+  }
+
+  public void setGradientPolygonFillOpacity(Double gradientPolygonFillOpacity)
+  {
+    this.gradientPolygonFillOpacity = gradientPolygonFillOpacity;
+  }
+
+  public Integer getGradientPolygonStrokeWidth()
+  {
+    return gradientPolygonStrokeWidth;
+  }
+
+  public void setGradientPolygonStrokeWidth(Integer gradientPolygonStrokeWidth)
+  {
+    this.gradientPolygonStrokeWidth = gradientPolygonStrokeWidth;
+  }
+
+  public Double getGradientPolygonStrokeOpacity()
+  {
+    return gradientPolygonStrokeOpacity;
+  }
+
+  public void setGradientPolygonStrokeOpacity(Double gradientPolygonStrokeOpacity)
+  {
+    this.gradientPolygonStrokeOpacity = gradientPolygonStrokeOpacity;
+  }
+
+  public String getCategoryPolygonStroke()
+  {
+    return categoryPolygonStroke;
+  }
+
+  public void setCategoryPolygonStroke(String categoryPolygonStroke)
+  {
+    this.categoryPolygonStroke = categoryPolygonStroke;
+  }
+
+  public Double getCategoryPolygonFillOpacity()
+  {
+    return categoryPolygonFillOpacity;
+  }
+
+  public void setCategoryPolygonFillOpacity(Double categoryPolygonFillOpacity)
+  {
+    this.categoryPolygonFillOpacity = categoryPolygonFillOpacity;
+  }
+
+  public Integer getCategoryPolygonStrokeWidth()
+  {
+    return categoryPolygonStrokeWidth;
+  }
+
+  public void setCategoryPolygonStrokeWidth(Integer categoryPolygonStrokeWidth)
+  {
+    this.categoryPolygonStrokeWidth = categoryPolygonStrokeWidth;
+  }
+
+  public Double getCategoryPolygonStrokeOpacity()
+  {
+    return categoryPolygonStrokeOpacity;
+  }
+
+  public void setCategoryPolygonStrokeOpacity(Double categoryPolygonStrokeOpacity)
+  {
+    this.categoryPolygonStrokeOpacity = categoryPolygonStrokeOpacity;
   }
 }

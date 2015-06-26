@@ -287,7 +287,7 @@
           <integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 
           <!-- basic point styles -->
-          <integer name="pointSize" label="Size" required="true" defaultValue="6" rejectNegative="true" />
+          <integer name="pointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
           <char name="pointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
           <char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />

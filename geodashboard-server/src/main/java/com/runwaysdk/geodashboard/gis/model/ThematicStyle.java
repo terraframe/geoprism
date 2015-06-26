@@ -40,9 +40,25 @@ public interface ThematicStyle extends Style
   public void setGradientPolygonMinFill(String fill);
   public String getGradientPolygonMaxFill();
   public void setGradientPolygonMaxFill(String fill);
+  public Double getGradientPolygonFillOpacity();
+  //public void setGradientPolygonFillOpacity();
+  public String getGradientPolygonStroke();
+  //public void setGradientPolygonStroke();
+  public Integer getGradientPolygonStrokeWidth();
+  //public void setGradientPolygonStrokeWidth();
+  public Double getGradientPolygonStrokeOpacity();
+  //public void setGradientPolygonStrokeOpacity();
+  
+  
   public String getCategoryPolygonStyles();
-
-//  public Integer getPointRadius();
+  public Double getCategoryPolygonFillOpacity();
+  //  public void setCategoryPolygonFillOpacity();
+  public String getCategoryPolygonStroke();
+  //  public void setCategoryPolygonStroke();
+  public Integer getCategoryPolygonStrokeWidth();
+  //  public void setCategoryPolygonStrokeWidth();
+  public Double getCategoryPolygonStrokeOpacity();
+  //  public void setCategoryPolygonStrokeOpacity();
 
   public MdAttributeDAOIF getSecondaryAttributeDAO();
   public AllAggregationType getSecondaryAttributeAggregationMethod();
