@@ -543,7 +543,6 @@
 	                  </div>
 	                  
 	                  
-	                  
 	                  <!-- BASICPOLYGON -->
 	                  <div
 	                    <c:choose>
@@ -642,7 +641,6 @@
 	                      </div>
 	                    </div>
 	                  </div>
-	                  
 	                  
 	                  
 	                  <!-- GRADIENT -->
@@ -780,7 +778,6 @@
 	                    <div class="category-block" id="category-colors-container">
 	                      	  
 	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${categories}' type="hidden" class="category-input" name="style.styleCategories" >
-		                      
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
@@ -823,7 +820,6 @@
 			                        </div>
 		                      	</c:otherwise>
 		                      </c:choose>
-	
 	                      </div>
 	                    </div>
 	                    
@@ -878,15 +874,6 @@
 			                  </div>
 	                      </div>
 	                    </div>
-	                    
-<!-- 	                    <div class="style-options-block"> -->
-<%-- 	                      <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
-<!-- 						  <div class="check-block"> -->
-<!-- 					      	<input id="f53" type="checkbox" name="" checked> -->
-<%-- 					        <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
-<!-- 					      </div> -->
-<!-- 	                    </div> -->
-	                  
 	                </div>
 	              </div>
 	            </div>
