@@ -2,6 +2,7 @@ package com.runwaysdk.geodashboard.report;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -12,7 +13,9 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
 
 /**
  * This class is responsible for forwarding an MdMethod request from BIRT for either a query (getValues) or a list of
@@ -87,6 +90,30 @@ public class ReportProviderBridge implements Reloadable
     }
 
     throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
+  }
+
+  public static PairView[] getGeoNodeIds(String queryId)
+  {
+    List<ReportProviderIF> providers = getReportProviders();
+
+    List<PairView> list = new LinkedList<PairView>();
+
+    for (ReportProviderIF provider : providers)
+    {
+      if (provider.hasSupport(queryId))
+      {
+        List<GeoNode> nodes = provider.getSupportedGeoNodes(queryId);
+
+        for (GeoNode node : nodes)
+        {
+          String displayLabel = AggregationStrategyView.getDisplayLabel(node);
+
+          list.add(PairView.createWithLabel(node.getId(), displayLabel));
+        }
+      }
+    }
+
+    return list.toArray(new PairView[list.size()]);
   }
 
   /**

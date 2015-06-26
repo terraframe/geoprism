@@ -38,7 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.constants.LocalProperties;
@@ -322,8 +321,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Override
-  @Transaction
-  @Authenticate
   public Long render(OutputStream outputStream, ReportParameter[] parameters, String baseURL, String reportURL)
   {
     /*
@@ -874,6 +871,11 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static PairView[] getSupportedAggregation(String queryId)
   {
     return ReportProviderBridge.getSupportedAggregation(queryId);
+  }
+
+  public static PairView[] getSupportedGeoNodes(String queryId)
+  {
+    return ReportProviderBridge.getGeoNodeIds(queryId);
   }
 
   public static PairView[] getGeoEntitySuggestions(String text, Integer limit)

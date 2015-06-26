@@ -36,7 +36,7 @@ import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.Constants;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.DriverLoader;
 
-public class GeodashboardSelectionPageHelper
+public class GeodashboardSelectionPageHelper implements ModifyListener
 {
   // constant string
   final private static String EMPTY_URL          = GeodashboardPlugin.getResourceString("error.emptyURL");     //$NON-NLS-1$
@@ -311,70 +311,16 @@ public class GeodashboardSelectionPageHelper
    */
   private void addControlListeners()
   {
-    url.addModifyListener(new ModifyListener()
-    {
-
-      public void modifyText(ModifyEvent e)
-      {
-        if (!url.isFocusControl() && url.getText().trim().length() == 0)
-        {
-          return;
-        }
-        verifyConnectionProperties();
-        updateTestButton();
-      }
-    });
+    userName.addModifyListener(this);
+    password.addModifyListener(this);
+    url.addModifyListener(this);
 
     testButton.addSelectionListener(new SelectionAdapter()
     {
 
       public void widgetSelected(SelectionEvent evt)
       {
-        testButton.setEnabled(false);
-
-        try
-        {
-          if (!isValidDataSource())
-          {
-            throw new OdaException(GeodashboardPlugin.getResourceString("dataset.error"));
-          }
-
-          final String connectionUrl = url.getText().trim();
-          final String userid = userName.getText().trim();
-          final String passwd = CryptographySingleton.encrypt(password.getText());
-
-          new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress()
-          {
-
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
-            {
-              monitor.beginTask(GeodashboardPlugin.getResourceString("connection.testing"), IProgressMonitor.UNKNOWN);
-
-              try
-              {
-                DriverLoader.testConnection(connectionUrl, userid, passwd, collectSpecifiedProperties());
-              }
-              catch (OdaException e)
-              {
-                ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-                    GeodashboardPlugin.getResourceString("connection.failed"), e);
-              }
-            }
-          });
-
-          MessageDialog.openInformation(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-              GeodashboardPlugin.getResourceString("connection.success"));//$NON-NLS-1$
-
-        }
-        catch (Exception e)
-        {
-          OdaException ex = new OdaException(GeodashboardPlugin.getResourceString("connection.failed"));
-          ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-              GeodashboardPlugin.getResourceString("connection.failed"), ex);
-        }
-
-        testButton.setEnabled(true);
+        handleTestButtonSelection();
       }
 
     });
@@ -401,37 +347,20 @@ public class GeodashboardSelectionPageHelper
    */
   private boolean isValidDataSource()
   {
-    return !isURLBlank();
+    Text[] elements = { userName, password, url };
+    boolean valid = true;
+
+    for (Text element : elements)
+    {
+      valid = valid && ! ( this.isBlank(element) );
+    }
+
+    return valid;
   }
 
-  /**
-   * Test if the input URL is blank
-   * 
-   * @return true url is blank
-   */
-  private boolean isURLBlank()
+  private boolean isBlank(Text element)
   {
-    return url == null || url.getText().trim().length() == 0;
-  }
-
-  /**
-   * Test if the input username is blank
-   * 
-   * @return true url is blank
-   */
-  private boolean isUsernameBlank()
-  {
-    return this.userName == null || this.userName.getText().trim().length() == 0;
-  }
-
-  /**
-   * Test if the input username is blank
-   * 
-   * @return true url is blank
-   */
-  private boolean isPasswordBlank()
-  {
-    return this.password == null || this.password.getText().trim().length() == 0;
+    return element == null || element.getText().trim().length() == 0;
   }
 
   /**
@@ -441,17 +370,17 @@ public class GeodashboardSelectionPageHelper
   private void updateTestButton()
   {
     // Geodashboard Url cannot be blank
-    if (isURLBlank())
+    if (this.isBlank(this.url))
     {
       setMessage(EMPTY_URL, IMessageProvider.ERROR);
       testButton.setEnabled(false);
     }
-    else if (isUsernameBlank())
+    else if (this.isBlank(this.userName))
     {
       setMessage(EMPTY_USERNAME, IMessageProvider.ERROR);
       testButton.setEnabled(false);
     }
-    else if (isPasswordBlank())
+    else if (this.isBlank(this.password))
     {
       setMessage(EMPTY_PASSWORD, IMessageProvider.ERROR);
       testButton.setEnabled(false);
@@ -477,7 +406,7 @@ public class GeodashboardSelectionPageHelper
 
   private void verifyConnectionProperties()
   {
-    setPageComplete(!isURLBlank());
+    setPageComplete(this.isValidDataSource());
   }
 
   /**
@@ -556,5 +485,60 @@ public class GeodashboardSelectionPageHelper
   public void setDefaultMessage(String message)
   {
     this.DEFAULT_MESSAGE = message;
+  }
+
+  private void handleTestButtonSelection()
+  {
+    this.testButton.setEnabled(false);
+
+    try
+    {
+      if (!isValidDataSource())
+      {
+        throw new OdaException(GeodashboardPlugin.getResourceString("dataset.error"));
+      }
+
+      final String connectionUrl = url.getText().trim();
+      final String userid = userName.getText().trim();
+      final String passwd = CryptographySingleton.encrypt(password.getText());
+
+      new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress()
+      {
+
+        @Override
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+        {
+          monitor.beginTask(GeodashboardPlugin.getResourceString("connection.testing"), IProgressMonitor.UNKNOWN);
+
+          try
+          {
+            DriverLoader.testConnection(connectionUrl, userid, passwd, collectSpecifiedProperties());
+          }
+          catch (OdaException e)
+          {
+            ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
+                GeodashboardPlugin.getResourceString("connection.failed"), e);
+          }
+        }
+      });
+
+      MessageDialog.openInformation(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
+          GeodashboardPlugin.getResourceString("connection.success"));//$NON-NLS-1$
+
+    }
+    catch (Exception e)
+    {
+      OdaException ex = new OdaException(GeodashboardPlugin.getResourceString("connection.failed"));
+      ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
+          GeodashboardPlugin.getResourceString("connection.failed"), ex);
+    }
+
+    this.testButton.setEnabled(true);
+  }
+
+  public void modifyText(ModifyEvent e)
+  {
+    updateTestButton();
+    verifyConnectionProperties();
   }
 }

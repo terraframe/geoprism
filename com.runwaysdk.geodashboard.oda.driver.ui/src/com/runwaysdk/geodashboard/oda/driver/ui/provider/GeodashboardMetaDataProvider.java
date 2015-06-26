@@ -142,7 +142,16 @@ public class GeodashboardMetaDataProvider
     return results.toArray(new LabelValuePair[results.size()]);
   }
 
-  public LabelValuePair[] getTypes(long milliSeconds)
+  public LabelValuePair[] getGeoNodes(final String queryId, long milliSeconds)
+  {
+    String queryText = QueryFacadeUtil.getGeoNodeQueryText(queryId);
+
+    List<LabelValuePair> results = new TempThread(queryText).execute(milliSeconds);
+
+    return results.toArray(new LabelValuePair[results.size()]);
+  }
+
+  public LabelValuePair[] getQueries(long milliSeconds)
   {
     String queryText = QueryFacadeUtil.getDashboardQueryText();
 
@@ -153,7 +162,7 @@ public class GeodashboardMetaDataProvider
 
   public LabelValuePair[] getEntitySuggestions(final String text, long milliSeconds)
   {
-    String queryText = QueryFacadeUtil.getEntitySuggestions(text);
+    String queryText = QueryFacadeUtil.getDefaultGeoIdQueryText(text);
     TempThread thread = new TempThread(queryText);
     List<LabelValuePair> results = thread.execute(milliSeconds);
 

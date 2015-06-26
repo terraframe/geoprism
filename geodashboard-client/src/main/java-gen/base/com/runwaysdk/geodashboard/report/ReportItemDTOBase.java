@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -2128709054)
+@com.runwaysdk.business.ClassSignature(hash = 1319419487)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = -2128709054;
+  private static final long serialVersionUID = 1319419487;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -722,6 +722,14 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{queryId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getSupportedAggregation", _declaredTypes);
+    return (com.runwaysdk.geodashboard.report.PairViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.geodashboard.report.PairViewDTO[] getSupportedGeoNodes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String queryId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{queryId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.report.ReportItemDTO.CLASS, "getSupportedGeoNodes", _declaredTypes);
     return (com.runwaysdk.geodashboard.report.PairViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

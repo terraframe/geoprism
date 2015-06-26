@@ -16,6 +16,8 @@ public interface BirtConstants
 
   public static final String DEFAULT_GEO_ID = "defaultGeoId";
 
+  public static final String GEO_NODE_ID    = "geoNodeId";
+
   public static final String BIRT_SUFFIX    = "imgs/birt";
 
   /**

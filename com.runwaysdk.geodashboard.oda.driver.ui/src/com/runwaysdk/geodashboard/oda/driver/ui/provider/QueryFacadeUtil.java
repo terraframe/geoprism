@@ -20,21 +20,46 @@ public class QueryFacadeUtil
     parameters.put(QueryFacade.QUERY_ID, queryId);
 
     JSONObject object = new JSONObject();
-    object.put(QueryFacade.ACTION, QueryFacade.AGGREGATIONS);
+    object.put(QueryFacade.ACTION, QueryFacade.GET_AGGREGATIONS);
     object.put(QueryFacade.PARAMETERS, parameters);
 
     return object.toString();
   }
 
-  public static String getValuesQueryText(String queryId, String aggregation, String defaultGeoId)
+  public static String getGeoNodeQueryText(String queryId)
   {
     JSONObject parameters = new JSONObject();
     parameters.put(QueryFacade.QUERY_ID, queryId);
 
+    JSONObject object = new JSONObject();
+    object.put(QueryFacade.ACTION, QueryFacade.GET_GEO_NODE);
+    object.put(QueryFacade.PARAMETERS, parameters);
+
+    return object.toString();
+  }
+
+  public static String getDefaultGeoIdQueryText(String text)
+  {
+    JSONObject parameters = new JSONObject();
+    parameters.put(QueryFacade.TEXT, text);
+
+    JSONObject object = new JSONObject();
+    object.put(QueryFacade.ACTION, QueryFacade.GET_ENTITY);
+    object.put(QueryFacade.PARAMETERS, parameters);
+
+    return object.toString();
+  }
+
+  public static String buildQueryText(String queryId, String aggregation, String defaultGeoId, String geoNodeId)
+  {
+    JSONObject parameters = new JSONObject();
+    parameters.put(QueryFacade.QUERY_ID, queryId);
+    parameters.put(QueryFacade.DEFAULT_GEO_ID, defaultGeoId);
+    parameters.put(QueryFacade.GEO_NODE_ID, geoNodeId);
+
     if (aggregation != null && aggregation.length() > 0)
     {
       parameters.put(QueryFacade.AGGREGATION, aggregation);
-      parameters.put(QueryFacade.DEFAULT_GEO_ID, defaultGeoId);
     }
 
     JSONObject object = new JSONObject();
@@ -69,7 +94,7 @@ public class QueryFacadeUtil
     return null;
   }
 
-  public static String getGeoIdFromQueryText(String queryText)
+  public static String getDefaultGeoIdFromQueryText(String queryText)
   {
     JSONObject object = new JSONObject(queryText);
     JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
@@ -84,15 +109,18 @@ public class QueryFacadeUtil
     return null;
   }
 
-  public static String getEntitySuggestions(String text)
+  public static String getGeoNodeIdFromQueryText(String queryText)
   {
-    JSONObject parameters = new JSONObject();
-    parameters.put(QueryFacade.TEXT, text);
+    JSONObject object = new JSONObject(queryText);
+    JSONObject parameters = object.getJSONObject(QueryFacade.PARAMETERS);
 
-    JSONObject object = new JSONObject();
-    object.put(QueryFacade.ACTION, QueryFacade.ENTITY);
-    object.put(QueryFacade.PARAMETERS, parameters);
+    if (parameters.has(QueryFacade.GEO_NODE_ID))
+    {
+      String geoNodeId = parameters.getString(QueryFacade.GEO_NODE_ID);
 
-    return object.toString();
+      return geoNodeId;
+    }
+
+    return null;
   }
 }

@@ -6,6 +6,7 @@ import org.json.JSONException;
 
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
 
 public interface ReportProviderIF extends Reloadable
 {
@@ -41,6 +42,14 @@ public interface ReportProviderIF extends Reloadable
    * @return
    */
   public PairView[] getSupportedAggregation(String queryId);
+
+  /**
+   * List of all of the geo nodes supported by the given query
+   * 
+   * @param queryId
+   * @return
+   */
+  public List<GeoNode> getSupportedGeoNodes(String queryId);
 
   /**
    * Returns a ValueQuery containing all of the results for the given query based upon the context in which the query is

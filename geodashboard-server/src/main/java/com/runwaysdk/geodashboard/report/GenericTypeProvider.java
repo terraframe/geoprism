@@ -20,6 +20,7 @@ import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.Coalesce;
@@ -53,6 +54,16 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
   }
 
   @Override
+  public List<GeoNode> getSupportedGeoNodes(String queryId)
+  {
+    /*
+     * We are making the assumption that the queryId is type
+     */
+
+    return MetadataWrapper.getGeoNodes(queryId);
+  }
+
+  @Override
   public ValueQuery getReportQuery(String queryId, String context) throws JSONException
   {
     QueryConfiguration config = new QueryConfiguration(queryId, context);
@@ -67,7 +78,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
     this.addSelectables(config, query);
 
     // For now we are assuming there is only one geo node per type
-    SelectableReference geoEntityAttribute = this.getGeoEntityAttribute(queryId, query);
+    SelectableReference geoEntityAttribute = this.getGeoEntityAttribute(config, query);
 
     this.addLocationQuery(config, query, geoEntityAttribute);
 
@@ -85,10 +96,10 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
     return vQuery;
   }
 
-  private SelectableReference getGeoEntityAttribute(String queryId, GeneratedComponentQuery query)
+  private SelectableReference getGeoEntityAttribute(QueryConfiguration config, GeneratedComponentQuery query)
   {
-    List<GeoNode> nodes = MetadataWrapper.getGeoNodes(queryId);
-    GeoNode node = nodes.get(0);
+    String geoNodeId = config.getGeoNodeId();
+    GeoNode node = GeoNode.get(geoNodeId);
 
     MdAttributeReference mdAttributeGeoEntity = node.getGeoEntityAttribute();
     String attributeName = mdAttributeGeoEntity.getAttributeName();
@@ -140,7 +151,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
             vQuery.WHERE(selectableReference.EQ(classifierQuery));
           }
         }
-        else if (mdAttribute instanceof MdAttributeLocalDAOIF)
+        else if (mdAttributeConcrete instanceof MdAttributeLocalDAOIF)
         {
           AttributeLocal selectableLocal = (AttributeLocal) selectable;
 
@@ -152,9 +163,13 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
 
           vQuery.SELECT(label);
         }
-        else if (mdAttribute instanceof MdAttributeEnumerationDAOIF)
+        else if (mdAttributeConcrete instanceof MdAttributeEnumerationDAOIF)
         {
           // Enumerations are not supported
+        }
+        else if (mdAttributeConcrete instanceof MdAttributeGeometryDAOIF)
+        {
+          // Geometry attributes not supported
         }
         else
         {

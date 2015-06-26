@@ -20,6 +20,8 @@ public class QueryConfiguration
 
   private String       defaultGeoId;
 
+  private String       geoNodeId;
+
   private ValueQuery   vQuery;
 
   private QueryFactory factory;
@@ -34,6 +36,7 @@ public class QueryConfiguration
     this.category = this.getCategory(object);
     this.layerId = this.getLayerId(object);
     this.defaultGeoId = this.getDefaultGeoId(object);
+    this.geoNodeId = this.getGeoNodeId(object);
 
     this.factory = new QueryFactory();
     this.vQuery = new ValueQuery(this.factory);
@@ -62,6 +65,11 @@ public class QueryConfiguration
   protected String getDefaultGeoId(JSONObject object) throws JSONException
   {
     return this.get(object, BirtConstants.DEFAULT_GEO_ID);
+  }
+
+  protected String getGeoNodeId(JSONObject object) throws JSONException
+  {
+    return this.get(object, BirtConstants.GEO_NODE_ID);
   }
 
   private String get(JSONObject object, String key) throws JSONException
@@ -137,6 +145,21 @@ public class QueryConfiguration
   public void setDefaultGeoId(String defaultGeoId)
   {
     this.defaultGeoId = defaultGeoId;
+  }
+
+  public String getGeoNodeId()
+  {
+    return this.geoNodeId;
+  }
+
+  public void setGeoNodeId(String geoNodeId)
+  {
+    this.geoNodeId = geoNodeId;
+  }
+  
+  public boolean hasGeoNodeId()
+  {
+    return ( this.geoNodeId != null && this.geoNodeId.length() > 0 );
   }
 
   public boolean hasDefaultGeoId()

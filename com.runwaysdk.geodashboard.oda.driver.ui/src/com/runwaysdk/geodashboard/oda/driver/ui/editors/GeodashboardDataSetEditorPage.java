@@ -44,7 +44,7 @@ import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
  * extends the <code>DataSetWizardPage</code> it could be loaded as a custom page for geodashboard ui.
  */
 
-public class GeodashboardDataSetEditorPage extends DataSetWizardPage
+public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements ISelectionChangedListener
 {
   /**
    * Time out in seconds
@@ -54,7 +54,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   /**
    * Combo viewer to select the query
    */
-  private ComboViewer                  schemaCombo;
+  private ComboViewer                  queryCombo;
 
   /**
    * Combo viewer of potential aggregation levels. Specific to a query.
@@ -62,9 +62,14 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private ComboViewer                  aggregationCombo;
 
   /**
-   * Combo for potential entities
+   * Combo for potential default entities
    */
   private ComboViewer                  entityCombo;
+
+  /**
+   * Combo for geo nodes
+   */
+  private ComboViewer                  nodeCombo;
 
   /**
    * Provider used to communicate with the server
@@ -120,10 +125,10 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     {
       if (this.aggregationCombo.getControl().getEnabled())
       {
-        return ( this.getAggregation() != null && this.getValue() != null && this.getDefaultGeoId() != null );
+        return ( this.getAggregation() != null && this.getQueryId() != null && this.getDefaultGeoId() != null );
       }
 
-      return ( this.getValue() != null && this.getDefaultGeoId() != null );
+      return ( this.getQueryId() != null && this.getDefaultGeoId() != null );
     }
 
     return false;
@@ -151,67 +156,66 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
 
     try
     {
-      LabelValuePair[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
+      LabelValuePair[] queries = this.provider.getQueries(TIME_OUT_LIMIT * 1000);
       LabelValuePair[] entities = provider.getEntitySuggestions("", TIME_OUT_LIMIT * 1000);
 
       GridData gd = new GridData(GridData.FILL_HORIZONTAL);
       gd.horizontalSpan = 2;
 
+      /*
+       * Create a combo viewer to select the query
+       */
       Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
       schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
 
-      this.schemaCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
-      this.schemaCombo.getControl().setLayoutData(gd);
-      this.schemaCombo.setContentProvider(new ArrayContentProvider());
-      this.schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
-      this.schemaCombo.setInput(input);
+      this.queryCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.queryCombo.getControl().setLayoutData(gd);
+      this.queryCombo.setContentProvider(new ArrayContentProvider());
+      this.queryCombo.setLabelProvider(new DataSetTypeLabelProvider());
+      this.queryCombo.setInput(queries);
+      this.queryCombo.addSelectionChangedListener(this);
 
-      Label depthLabel = new Label(selectTableGroup, SWT.LEFT);
-      depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
+      /*
+       * Create a combo viewer to select the geo node
+       */
+      Label geoNodeLabel = new Label(selectTableGroup, SWT.LEFT);
+      geoNodeLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.geoNode"));
 
-      // Create a single line text field
+      this.nodeCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.nodeCombo.getControl().setLayoutData(gd);
+      this.nodeCombo.setContentProvider(new ArrayContentProvider());
+      this.nodeCombo.setLabelProvider(new DataSetTypeLabelProvider());
+
+      /*
+       * Create a combo viewer to select the aggregation level
+       */
+      Label aggregationLabel = new Label(selectTableGroup, SWT.LEFT);
+      aggregationLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
+
       this.aggregationCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.aggregationCombo.getControl().setLayoutData(gd);
       this.aggregationCombo.setContentProvider(new ArrayContentProvider());
       this.aggregationCombo.setLabelProvider(new DataSetTypeLabelProvider());
 
-      this.schemaCombo.addSelectionChangedListener(new ISelectionChangedListener()
-      {
-        @Override
-        public void selectionChanged(SelectionChangedEvent event)
-        {
-          IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-          LabelValuePair element = (LabelValuePair) selection.getFirstElement();
-
-          LabelValuePair[] input = provider.getSupportedAggregation(element.getValue(), TIME_OUT_LIMIT * 1000);
-
-          aggregationCombo.setInput(input);
-
-          if (input.length > 0)
-          {
-            aggregationCombo.setSelection(new StructuredSelection(input[0]));
-          }
-          else
-          {
-            aggregationCombo.getControl().setEnabled(true);
-          }
-        }
-      });
-
+      /*
+       * Create a combo viewer to select the default geo id
+       */
       Label entityLabel = new Label(selectTableGroup, SWT.LEFT);
-      entityLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectentity"));
+      entityLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.defaultGeoId"));
 
-      // Create a single line text field
       this.entityCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.entityCombo.getControl().setLayoutData(gd);
       this.entityCombo.setContentProvider(new ArrayContentProvider());
       this.entityCombo.setLabelProvider(new DataSetTypeLabelProvider());
       this.entityCombo.setInput(entities);
 
-      // Initialize the drop down selectables
-      if (input.length > 0)
+      /*
+       * Initialize all of the combo views with the first selection. This must be done after the viewers have been
+       * created because setting the selection will invoke any selection handler.
+       */
+      if (queries.length > 0)
       {
-        this.schemaCombo.setSelection(new StructuredSelection(input[0]));
+        this.queryCombo.setSelection(new StructuredSelection(queries[0]));
       }
 
       if (entities.length > 0)
@@ -238,6 +242,41 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     }
 
     return selectTableGroup;
+  }
+
+  @Override
+  public void selectionChanged(SelectionChangedEvent event)
+  {
+    IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    LabelValuePair element = (LabelValuePair) selection.getFirstElement();
+
+    String queryId = element.getValue();
+
+    this.setQuerySelection(queryId);
+  }
+
+  private void setQuerySelection(String queryId)
+  {
+    LabelValuePair[] aggregations = provider.getSupportedAggregation(queryId, TIME_OUT_LIMIT * 1000);
+    LabelValuePair[] geoNodes = provider.getGeoNodes(queryId, TIME_OUT_LIMIT * 1000);
+
+    this.aggregationCombo.setInput(aggregations);
+
+    if (aggregations.length > 0)
+    {
+      this.aggregationCombo.setSelection(new StructuredSelection(aggregations[0]));
+    }
+    else
+    {
+      this.aggregationCombo.getControl().setEnabled(true);
+    }
+
+    this.nodeCombo.setInput(geoNodes);
+
+    if (geoNodes.length > 0)
+    {
+      this.nodeCombo.setSelection(new StructuredSelection(geoNodes[0]));
+    }
   }
 
   /*
@@ -329,34 +368,37 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
    */
   private String getQueryText()
   {
-    if (this.schemaCombo != null)
+    if (this.queryCombo != null)
     {
-      String value = this.getValue();
+      String queryId = this.getQueryId();
       String aggregation = this.getAggregation();
       String defaultGeoId = this.getDefaultGeoId();
+      String geoNodeId = this.getGeoNodeId();
 
-      return QueryFacadeUtil.getValuesQueryText(value, aggregation, defaultGeoId);
+      return QueryFacadeUtil.buildQueryText(queryId, aggregation, defaultGeoId, geoNodeId);
     }
 
     return null;
   }
 
-  private String getValue()
+  private String getValue(ComboViewer viewer)
   {
-    StructuredSelection selection = (StructuredSelection) this.schemaCombo.getSelection();
+    StructuredSelection selection = (StructuredSelection) viewer.getSelection();
     LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
 
     return datasetType.getValue();
+  }
+
+  private String getQueryId()
+  {
+    return this.getValue(this.queryCombo);
   }
 
   private String getAggregation()
   {
     if (this.aggregationCombo.getControl().getEnabled())
     {
-      StructuredSelection selection = (StructuredSelection) this.aggregationCombo.getSelection();
-      LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
-
-      return datasetType.getValue();
+      return this.getValue(this.aggregationCombo);
     }
 
     return null;
@@ -364,21 +406,25 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
 
   private String getDefaultGeoId()
   {
-    StructuredSelection selection = (StructuredSelection) this.entityCombo.getSelection();
-    LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
+    return this.getValue(this.entityCombo);
+  }
 
-    return datasetType.getValue();
+  private String getGeoNodeId()
+  {
+    return this.getValue(this.nodeCombo);
   }
 
   private void updateFromQueryText(String queryText)
   {
     if (queryText != null && queryText.length() > 0)
     {
-      this.updateComboSelection(QueryFacadeUtil.getQueryIdFromQueryText(queryText), this.schemaCombo);
+      this.updateComboSelection(QueryFacadeUtil.getQueryIdFromQueryText(queryText), this.queryCombo);
 
       this.updateComboSelection(QueryFacadeUtil.getAggregationFromQueryText(queryText), this.aggregationCombo);
 
-      this.updateComboSelection(QueryFacadeUtil.getGeoIdFromQueryText(queryText), this.entityCombo);
+      this.updateComboSelection(QueryFacadeUtil.getDefaultGeoIdFromQueryText(queryText), this.entityCombo);
+
+      this.updateComboSelection(QueryFacadeUtil.getGeoNodeIdFromQueryText(queryText), this.nodeCombo);
     }
   }
 
