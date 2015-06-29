@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -57,6 +59,8 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
@@ -871,6 +875,86 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   {
     return ReportProviderBridge.getSupportedAggregation(queryId);
   }
+
+  public static PairView[] getGeoEntitySuggestions(String text, Integer limit)
+  {
+    GeoEntity root = GeoEntity.getRoot();
+
+    QueryFactory factory = new QueryFactory();
+
+    LocatedInQuery lQuery = new LocatedInQuery(factory);
+    lQuery.WHERE(lQuery.getParent().EQ(root));
+
+    GeoEntityQuery query = new GeoEntityQuery(factory);
+    query.WHERE(query.EQ(lQuery.getChild()));
+
+    OIterator<? extends GeoEntity> iterator = query.getIterator();
+
+    try
+    {
+      List<PairView> list = new LinkedList<PairView>();
+
+      while (iterator.hasNext())
+      {
+        GeoEntity entity = iterator.next();
+
+        list.add(PairView.createWithLabel(entity.getId(), entity.getDisplayLabel().getValue()));
+      }
+
+      return list.toArray(new PairView[list.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+  }
+
+  // public static PairView[] getGeoEntitySuggestions(String text, Integer limit)
+  // {
+  // ValueQuery query = new ValueQuery(new QueryFactory());
+  //
+  // GeoEntityQuery entityQuery = new GeoEntityQuery(query);
+  //
+  // SelectableChar id = entityQuery.getId();
+  // Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
+  // Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
+  // SelectableChar geoId = entityQuery.getGeoId();
+  //
+  // CONCAT label = F.CONCAT(F.CONCAT(F.CONCAT(F.CONCAT(geoLabel, " ("), F.CONCAT(universalLabel, ")")), " : "), geoId);
+  // label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+  // label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+  // label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
+  //
+  // query.SELECT(id, label);
+  // query.WHERE(label.LIKEi("%" + text + "%"));
+  //
+  // query.ORDER_BY_ASC(geoLabel);
+  //
+  // query.restrictRows(limit, 1);
+  //
+  // OIterator<ValueObject> iterator = query.getIterator();
+  //
+  // try
+  // {
+  // List<PairView> list = new LinkedList<PairView>();
+  //
+  // while (iterator.hasNext())
+  // {
+  // ValueObject vObject = iterator.next();
+  // String vId = vObject.getValue(GeoEntity.ID);
+  // String vLabel = vObject.getValue(GeoEntity.DISPLAYLABEL);
+  //
+  // list.add(PairView.createWithLabel(vId, vLabel));
+  // }
+  //
+  // return list.toArray(new PairView[list.size()]);
+  // }
+  // finally
+  // {
+  // iterator.close();
+  // }
+  // }
 
   public static ReportItem getByDashboard(String dashboardId)
   {

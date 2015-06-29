@@ -24,12 +24,12 @@ public class QueryFacade
   /**
    * Mapping to the action which should be executed
    */
-  public static final String ACTION       = "ACTION";
+  public static final String ACTION         = "ACTION";
 
   /**
    * Mapping to the parameters used by the action
    */
-  public static final String PARAMETERS   = "PARAMETERS";
+  public static final String PARAMETERS     = "PARAMETERS";
 
   /*
    * Actions supported by the driver
@@ -38,17 +38,22 @@ public class QueryFacade
   /**
    * Query for the potential data set queries
    */
-  public static final String QUERIES      = "QUERIES";
+  public static final String QUERIES        = "QUERIES";
 
   /**
    * Query for the potential data set aggregation levels
    */
-  public static final String AGGREGATIONS = "AGGREGATIONS";
+  public static final String AGGREGATIONS   = "AGGREGATIONS";
+
+  /**
+   * Query for all the geo entities
+   */
+  public static final String ENTITY         = "ENTITY";
 
   /**
    * Execute a query for a data set type to get actual values
    */
-  public static final String QUERY        = "QUERY";
+  public static final String QUERY          = "QUERY";
 
   /*
    * Parameter constants
@@ -57,12 +62,19 @@ public class QueryFacade
   /**
    * TYPE parameter used in the QUERY action
    */
-  public static final String QUERY_ID     = "TYPE";
+  public static final String QUERY_ID       = "TYPE";
 
   /**
-   * DEPTH parameter used in the QUERY action
+   * Aggregation parameter used in the QUERY action
    */
-  public static final String AGGREGATION  = "AGGREGATION";
+  public static final String AGGREGATION    = "AGGREGATION";
+
+  /**
+   * Geo entity text parameter used in the
+   */
+  public static final String TEXT           = "TEXT";
+
+  public static final String DEFAULT_GEO_ID = "DEFAULT_GEO_ID";
 
   public IResultSet invoke(ClientRequestIF request, String query, Map<String, Object> parameters, boolean queryMetadata) throws OdaException
   {
@@ -78,6 +90,14 @@ public class QueryFacade
           PairViewDTO[] results = ReportItemDTO.getQueriesForReporting(request);
 
           return new ArrayResultSet(results);
+        }
+        else if (action.equals(ENTITY))
+        {
+          JSONObject params = object.getJSONObject(QueryFacade.PARAMETERS);
+
+          String text = params.getString(QueryFacade.TEXT);
+
+          return this.getEntitySuggestions(request, text);
         }
         else if (action.equals(AGGREGATIONS))
         {
@@ -95,14 +115,21 @@ public class QueryFacade
 
           String queryId = params.getString(QueryFacade.QUERY_ID);
           String aggregation = null;
+          String defaultGeoId = null;
 
           if (params.has(QueryFacade.AGGREGATION))
           {
             aggregation = params.getString(QueryFacade.AGGREGATION);
           }
 
+          if (params.has(QueryFacade.DEFAULT_GEO_ID))
+          {
+            defaultGeoId = params.getString(QueryFacade.DEFAULT_GEO_ID);
+          }
+
           JSONObject context = getContext(parameters);
           context.put(BirtConstants.AGGREGATION, aggregation);
+          context.put(BirtConstants.DEFAULT_GEO_ID, defaultGeoId);
 
           if (queryMetadata)
           {
@@ -125,6 +152,13 @@ public class QueryFacade
     }
 
     throw new OdaException("Unable to execute an empty query");
+  }
+
+  private IResultSet getEntitySuggestions(ClientRequestIF request, String text)
+  {
+    PairViewDTO[] results = ReportItemDTO.getGeoEntitySuggestions(request, text, 10);
+
+    return new ArrayResultSet(results);
   }
 
   private JSONObject getContext(Map<String, Object> parameters)

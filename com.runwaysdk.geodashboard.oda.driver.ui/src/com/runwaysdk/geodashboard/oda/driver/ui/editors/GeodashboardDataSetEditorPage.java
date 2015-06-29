@@ -30,9 +30,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.runwaysdk.geodashboard.oda.driver.Driver;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
+import com.runwaysdk.geodashboard.oda.driver.ui.provider.ConnectionException;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.GeodashboardMetaDataProvider;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.LabelValuePair;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
@@ -60,9 +62,16 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   private ComboViewer                  aggregationCombo;
 
   /**
+   * Combo for potential entities
+   */
+  private ComboViewer                  entityCombo;
+
+  /**
    * Provider used to communicate with the server
    */
   private GeodashboardMetaDataProvider provider;
+
+  private boolean                      initialized;
 
   /**
    * constructor
@@ -72,6 +81,8 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
   public GeodashboardDataSetEditorPage(String pageName)
   {
     super(pageName);
+
+    this.initialized = false;
   }
 
   @Override
@@ -82,6 +93,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     this.prepareGeodashboardMetaDataProvider(dataSetDesign);
 
     this.setControl(this.createPageControl(parent));
+
     this.initializeControl(dataSetDesign);
   }
 
@@ -101,8 +113,24 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     this.updateFromQueryText(queryText);
   }
 
+  @Override
+  protected boolean canLeave()
+  {
+    if (this.initialized)
+    {
+      if (this.aggregationCombo.getControl().getEnabled())
+      {
+        return ( this.getAggregation() != null && this.getValue() != null && this.getDefaultGeoId() != null );
+      }
+
+      return ( this.getValue() != null && this.getDefaultGeoId() != null );
+    }
+
+    return false;
+  }
+
   /**
-   * create page control for sql edit page
+   * Create page for the geodashbaord dataset definition
    * 
    * @param parent
    * @return
@@ -123,14 +151,20 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
 
     try
     {
-      Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
-      schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
+      LabelValuePair[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
+      LabelValuePair[] entities = provider.getEntitySuggestions("", TIME_OUT_LIMIT * 1000);
 
       GridData gd = new GridData(GridData.FILL_HORIZONTAL);
       gd.horizontalSpan = 2;
 
+      Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
+      schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
+
       this.schemaCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.schemaCombo.getControl().setLayoutData(gd);
+      this.schemaCombo.setContentProvider(new ArrayContentProvider());
+      this.schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
+      this.schemaCombo.setInput(input);
 
       Label depthLabel = new Label(selectTableGroup, SWT.LEFT);
       depthLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
@@ -164,26 +198,43 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
         }
       });
 
-      LabelValuePair[] input = this.provider.getTypes(TIME_OUT_LIMIT * 1000);
+      Label entityLabel = new Label(selectTableGroup, SWT.LEFT);
+      entityLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectentity"));
 
-      schemaCombo.setContentProvider(new ArrayContentProvider());
-      schemaCombo.setLabelProvider(new DataSetTypeLabelProvider());
-      schemaCombo.setInput(input);
+      // Create a single line text field
+      this.entityCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
+      this.entityCombo.getControl().setLayoutData(gd);
+      this.entityCombo.setContentProvider(new ArrayContentProvider());
+      this.entityCombo.setLabelProvider(new DataSetTypeLabelProvider());
+      this.entityCombo.setInput(entities);
 
+      // Initialize the drop down selectables
       if (input.length > 0)
       {
-        schemaCombo.setSelection(new StructuredSelection(input[0]));
+        this.schemaCombo.setSelection(new StructuredSelection(input[0]));
       }
+
+      if (entities.length > 0)
+      {
+        this.entityCombo.setSelection(new StructuredSelection(entities[0]));
+      }
+
+      this.initialized = true;
     }
-    catch (Exception ex)
+    catch (ConnectionException ex)
     {
-      String label = GeodashboardPlugin.getResourceString("dataset.error");
-      String message = ex.getLocalizedMessage();
       Shell shell = parent.getShell();
+      String label = GeodashboardPlugin.getResourceString("dataset.error");
+      String message = GeodashboardPlugin.getResourceString("dashboardpage.label.connectionerror");
+      // String message = ex.getLocalizedMessage();
 
       ExceptionHandler.showException(shell, label, message, ex);
 
-      this.setPageComplete(false);
+      Text exceptionLabel = new Text(selectTableGroup, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
+      exceptionLabel.setLayoutData(new GridData(GridData.FILL_BOTH));
+      exceptionLabel.setText(message);
+
+      return null;
     }
 
     return selectTableGroup;
@@ -282,8 +333,9 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     {
       String value = this.getValue();
       String aggregation = this.getAggregation();
+      String defaultGeoId = this.getDefaultGeoId();
 
-      return QueryFacadeUtil.getValuesQueryText(value, aggregation);
+      return QueryFacadeUtil.getValuesQueryText(value, aggregation, defaultGeoId);
     }
 
     return null;
@@ -310,6 +362,14 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
     return null;
   }
 
+  private String getDefaultGeoId()
+  {
+    StructuredSelection selection = (StructuredSelection) this.entityCombo.getSelection();
+    LabelValuePair datasetType = (LabelValuePair) selection.getFirstElement();
+
+    return datasetType.getValue();
+  }
+
   private void updateFromQueryText(String queryText)
   {
     if (queryText != null && queryText.length() > 0)
@@ -317,20 +377,25 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage
       this.updateComboSelection(QueryFacadeUtil.getQueryIdFromQueryText(queryText), this.schemaCombo);
 
       this.updateComboSelection(QueryFacadeUtil.getAggregationFromQueryText(queryText), this.aggregationCombo);
+
+      this.updateComboSelection(QueryFacadeUtil.getGeoIdFromQueryText(queryText), this.entityCombo);
     }
   }
 
   private void updateComboSelection(String value, ComboViewer comboViewer)
   {
-    LabelValuePair[] pairs = (LabelValuePair[]) comboViewer.getInput();
-
-    if (pairs != null)
+    if (comboViewer != null)
     {
-      for (LabelValuePair pair : pairs)
+      LabelValuePair[] pairs = (LabelValuePair[]) comboViewer.getInput();
+
+      if (pairs != null)
       {
-        if (pair.getValue().equals(value))
+        for (LabelValuePair pair : pairs)
         {
-          comboViewer.setSelection(new StructuredSelection(pair));
+          if (pair.getValue().equals(value))
+          {
+            comboViewer.setSelection(new StructuredSelection(pair));
+          }
         }
       }
     }

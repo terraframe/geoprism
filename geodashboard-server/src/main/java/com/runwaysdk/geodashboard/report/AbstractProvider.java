@@ -3,18 +3,18 @@ package com.runwaysdk.geodashboard.report;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategy;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
@@ -63,41 +63,22 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
   public static final String TYPE         = "8";
 
-  protected abstract String getDefaultGeoId();
-
-  protected String getCategory(JSONObject object) throws JSONException
+  @Override
+  public boolean hasSupport(String queryId)
   {
-    return this.get(object, BirtConstants.CATEGORY);
-  }
+    List<PairView> views = this.getSupportedQueryDescriptors();
 
-  protected String getCriteria(JSONObject object) throws JSONException
-  {
-    return this.get(object, BirtConstants.CRITERIA);
-  }
-
-  protected String getAggregation(JSONObject object) throws JSONException
-  {
-    return this.get(object, BirtConstants.AGGREGATION);
-  }
-
-  protected String getLayerId(JSONObject object) throws JSONException
-  {
-    return this.get(object, BirtConstants.LAYER_ID);
-  }
-
-  private String get(JSONObject object, String key) throws JSONException
-  {
-    if (object.has(key))
+    for (PairView view : views)
     {
-      return object.getString(key);
+      String value = view.getValue();
+
+      if (value.equals(queryId))
+      {
+        return true;
+      }
     }
 
-    return null;
-  }
-
-  protected GeoEntity getGeoEntity(String category)
-  {
-    return ReportProviderUtil.getGeoEntity(category, this.getDefaultGeoId());
+    return false;
   }
 
   protected void addSelectables(GeneratedBusinessQuery query, List<ReportAttributeMetadata> attributes, ValueQuery vQuery)
@@ -122,7 +103,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     }
   }
 
-  protected SelectablePrimitive getSelectable(ValueQuery vQuery, GeneratedBusinessQuery query, ReportAttributeMetadata attribute)
+  protected SelectablePrimitive getSelectable(ValueQuery vQuery, GeneratedComponentQuery query, ReportAttributeMetadata attribute)
   {
     Attribute selectable = query.get(attribute.getAttributeName());
 
@@ -178,30 +159,35 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     return parentDepth;
   }
 
-  protected void addLocationQuery(ValueQuery vQuery, String category, String layerId, String aggregation, GeneratedComponentQuery query, GeoEntityQueryReferenceIF geoAttribute)
+  protected void addLocationQuery(QueryConfiguration config, GeneratedComponentQuery query, SelectableReference geoEntityAttribute)
   {
-    if (layerId != null && layerId.length() > 0)
+    if (config.hasLayerId())
     {
+      String layerId = config.getLayerId();
+
       DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
       AggregationStrategy strategy = layer.getAggregationStrategy();
 
       if (strategy instanceof GeometryAggregationStrategy)
       {
-        this.addGeometryQuery(vQuery, query, layer, aggregation);
+        this.addGeometryQuery(config, query, layer);
       }
       else
       {
-        this.addGeoEntityQuery(vQuery, category, aggregation, geoAttribute);
+        this.addGeoEntityQuery(config, geoEntityAttribute);
       }
     }
     else
     {
-      this.addGeoEntityQuery(vQuery, category, aggregation, geoAttribute);
+      this.addGeoEntityQuery(config, geoEntityAttribute);
     }
   }
 
-  private void addGeometryQuery(ValueQuery vQuery, GeneratedComponentQuery query, DashboardThematicLayer layer, String aggregation)
+  private void addGeometryQuery(QueryConfiguration config, GeneratedComponentQuery query, DashboardThematicLayer layer)
   {
+    ValueQuery vQuery = config.getValueQuery();
+    String aggregation = config.getAggregation();
+
     GeoNode geoNode = layer.getGeoNode();
     MdAttribute identifierAttribute = geoNode.getIdentifierAttribute();
     MdAttribute displayLabelAttribute = geoNode.getDisplayLabelAttribute();
@@ -257,13 +243,15 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
   }
 
-  protected void addGeoEntityQuery(ValueQuery vQuery, String category, String aggregation, GeoEntityQueryReferenceIF geoAttribute)
+  private void addGeoEntityQuery(QueryConfiguration config, SelectableReference geoEntityAttribute)
   {
-    GeoEntity geoEntity = this.getGeoEntity(category);
+    ValueQuery vQuery = config.getValueQuery();
+    String aggregation = config.getAggregation();
+    GeoEntity geoEntity = this.getGeoEntity(config);
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(vQuery);
 
-    MdAttributeConcreteDAOIF mdAttribute = geoAttribute.getMdAttributeIF();
+    MdAttributeConcreteDAOIF mdAttribute = geoEntityAttribute.getMdAttributeIF();
 
     Coalesce geoLocation = entityQuery.getDisplayLabel().localize();
     geoLocation.setColumnAlias(mdAttribute.definesAttribute());
@@ -292,7 +280,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.AND(cuzQuery.getParent().EQ(uncleQuery.getChild()));
       vQuery.AND(aptQuery.getParentTerm().EQ(cuzQuery.getChild()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
 
       this.addGeoLabel(vQuery, "parent", parentQuery.getParent());
       this.addGeoLabel(vQuery, "grandparent", grandParentQuery.getParent());
@@ -308,7 +296,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.AND(siblingQuery.getParent().EQ(parentQuery.getParent()));
       vQuery.AND(aptQuery.getParentTerm().EQ(siblingQuery.getChild()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
 
       this.addGeoLabel(vQuery, "parent", parentQuery.getParent());
     }
@@ -321,7 +309,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.WHERE(kidsQuery.getParent().EQ(geoEntity));
       vQuery.AND(aptQuery.getParentTerm().EQ(kidsQuery.getChild()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
     }
     else if (aggregation != null && aggregation.equals(PARENTS) && this.hasDepth(geoEntity, 1))
     {
@@ -331,7 +319,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.WHERE(lQuery.getChild().EQ(geoEntity));
       vQuery.AND(aptQuery.getParentTerm().EQ(lQuery.getParent()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
     }
     else if (aggregation != null && aggregation.equals(GRANDPARENTS) && this.hasDepth(geoEntity, 2))
     {
@@ -343,7 +331,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.AND(lQuery2.getChild().EQ(lQuery1.getParent()));
       vQuery.AND(aptQuery.getParentTerm().EQ(lQuery2.getParent()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
     }
     else if (aggregation != null && aggregation.equals(TYPE))
     {
@@ -354,7 +342,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.WHERE(gQuery.getUniversal().EQ(geoEntity.getUniversal()));
       vQuery.AND(aptQuery.getParentTerm().EQ(gQuery));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
 
       this.addUniversalLabel(vQuery, "universal", gQuery.getUniversal());
     }
@@ -365,7 +353,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       vQuery.WHERE(aptQuery.getParentTerm().EQ(geoEntity));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
-      vQuery.AND(geoAttribute.EQ(aptQuery.getChildTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
     }
   }
 
@@ -401,7 +389,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
   }
 
   @Override
-  public PairView[] getSupportedAggregation()
+  public PairView[] getSupportedAggregation(String queryId)
   {
     List<PairView> list = new LinkedList<PairView>();
 
@@ -417,4 +405,37 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     return list.toArray(new PairView[list.size()]);
   }
 
+  private GeoEntity getGeoEntity(QueryConfiguration config)
+  {
+    if (config.hasCategory())
+    {
+      String category = config.getCategory();
+
+      try
+      {
+        return GeoEntity.getByKey(category);
+      }
+      catch (Exception e)
+      {
+        // Incoming data is bad, just use the default geo id
+      }
+    }
+
+    if (config.hasLayerId())
+    {
+      String layerId = config.getLayerId();
+      DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
+      DashboardMap map = layer.getDashboardMap();
+      Dashboard dashboard = map.getDashboard();
+
+      return dashboard.getCountry();
+    }
+
+    if (config.hasDefaultGeoId())
+    {
+      return GeoEntity.get(config.getDefaultGeoId());
+    }
+
+    throw new ProgrammingErrorException("No default geo entity has been provided");
+  }
 }

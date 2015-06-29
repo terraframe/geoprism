@@ -32,11 +32,16 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   {
     super();
   }
-  
-  
+
   public static AggregationStrategyView[] getAggregationStrategies(String nodeId)
   {
-    GeoNode node = GeoNode.get(nodeId); 
+    GeoNode node = GeoNode.get(nodeId);
+
+    return AggregationStrategyView.getAggregationStrategies(node);
+  }
+
+  public static AggregationStrategyView[] getAggregationStrategies(GeoNode node)
+  {
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
     MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
@@ -77,21 +82,26 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       view.setAggregationType(GeometryAggregationStrategy.CLASS);
       view.setValue(GeometryAggregationStrategy.VALUE);
       view.setDisplayLabel(label);
-      
+
       JSONArray geomTypesJSONArr = new JSONArray();
       MdAttribute geomAttr = node.getGeometryAttribute();
-      if(geomAttr != null){
+      if (geomAttr != null)
+      {
         geomTypesJSONArr.put(geomAttr.getAttributeName());
       }
+
       MdAttributePoint pointAttr = node.getPointAttribute();
-      if(pointAttr != null){
+      if (pointAttr != null)
+      {
         geomTypesJSONArr.put(pointAttr.getAttributeName());
       }
+
       MdAttributeMultiPolygon polyAttr = node.getMultiPolygonAttribute();
-      if(polyAttr != null){
+      if (polyAttr != null)
+      {
         geomTypesJSONArr.put(polyAttr.getAttributeName());
       }
-      
+
       view.setAvailableGeometryTypes(encode(geomTypesJSONArr.toString()));
 
       list.add(view);
@@ -100,7 +110,6 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
     return list.toArray(new AggregationStrategyView[list.size()]);
   }
 
-  
   private static String encode(String value)
   {
     if (value != null)
@@ -117,7 +126,6 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
 
     return "";
   }
-
 
   public static String getDisplayLabel(GeoNode node)
   {
