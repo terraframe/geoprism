@@ -182,13 +182,7 @@
   <servlet-mapping>
     <servlet-name>CSSServlet</servlet-name>
     <url-pattern>*.css</url-pattern>
-  </servlet-mapping>   
-	
-	<listener>
-    <listener-class>
-    com.runwaysdk.geodashboard.gis.web.session.GISHttpSessionListener
-    </listener-class>
-  </listener>
+  </servlet-mapping>
 	
 	<filter>
 	  <filter-name>EncodingFilter</filter-name>

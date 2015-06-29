@@ -13,6 +13,5 @@ public class SessionMap extends SessionMapBase implements com.runwaysdk.generati
   {
     this(parent.getId(), child.getId());
   }
-
   
 }
