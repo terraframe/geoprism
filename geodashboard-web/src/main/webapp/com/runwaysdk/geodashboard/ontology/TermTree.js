@@ -62,17 +62,37 @@
   
   var tree = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.TermNode', {
     Instance : {
-      initialize : function(id, label) {
-        this._id = id;
-        this._label = new com.runwaysdk.geodashboard.ontology.TermNodeLabel(label);
+      initialize : function(id, label, type) {
+        /*
+         * IMPORTANT : Do not change field names it will break JSON serialization
+         */
+        this.id = id;
+        this.label = new com.runwaysdk.geodashboard.ontology.TermNodeLabel(label);
+        this._type = type;
+        
+        /*
+         * The following fields are included for JSON serialization.
+         * They are not required or used in the actual TermNode object.
+         */ 
+        this.newInstance = false;
+        this.attributeMap = {};
+        this.dto_type = type;
       },
         
       getId : function() {
-        return this._id;
+        return this.id;
       },
         
       getDisplayLabel : function() {
-        return this._label;
+        return this.label;
+      }, 
+      
+      isNewInstance : function() {
+        return false;
+      },
+      
+      getType : function() {
+        return this._type;
       }
     }    
   });
@@ -1365,7 +1385,7 @@
           if(this.__getNodesById(node.id) == null) {
             
             // Create the cached term
-            var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label);
+            var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label, node.type);
           
             // Populate the caches
             this.termCache[term.getId()] = term;

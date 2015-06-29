@@ -295,6 +295,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       JSONObject object = new JSONObject();
       object.put("label", label);
       object.put("id", _entity.getId());
+      object.put("type", _entity.getType());
       object.put("children", children);
       object.put("fetched", ( children.length() > 0 ));
 

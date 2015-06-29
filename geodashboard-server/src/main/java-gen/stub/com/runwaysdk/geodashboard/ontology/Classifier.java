@@ -188,6 +188,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       JSONObject object = new JSONObject();
       object.put("label", this.getDisplayLabel().getValue());
       object.put("id", this.getId());
+      object.put("type", this.getType());
       object.put("children", children);
       object.put("fetched", true);
 
