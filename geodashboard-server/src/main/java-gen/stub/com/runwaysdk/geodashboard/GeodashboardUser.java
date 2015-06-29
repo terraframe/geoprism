@@ -36,8 +36,6 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     this.setOwner(Users.get(UserDAO.PUBLIC_USER_ID));
     this.apply();
 
-    SessionEntry.deleteByUser(this);
-
     super.delete();
   }
 
@@ -47,8 +45,6 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
   {
     boolean firstApply = this.isNew() && !this.isAppliedToDB();
     this.setSessionLimit(40);
-
-    SessionEntry.deleteByUser(this);
 
     super.apply();
 

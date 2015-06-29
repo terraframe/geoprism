@@ -2,7 +2,6 @@
 <server-context-listeners>
   <server-context-listener class="com.runwaysdk.geodashboard.StrategyContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.SchedulerContextListener" /> 
-  <server-context-listener class="com.runwaysdk.geodashboard.SessionEntryContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.GeoserverContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.CacheDocumentManagerContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.RMIContextListener" /> 
