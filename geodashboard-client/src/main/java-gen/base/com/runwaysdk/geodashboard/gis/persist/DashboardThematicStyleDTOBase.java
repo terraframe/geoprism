@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 858272011)
+@com.runwaysdk.business.ClassSignature(hash = -368617983)
 public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = 858272011;
+  private static final long serialVersionUID = -368617983;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -44,6 +44,7 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String CATEGORYPOINTSTROKEOPACITY = "categoryPointStrokeOpacity";
   public static java.lang.String CATEGORYPOINTSTROKEWIDTH = "categoryPointStrokeWidth";
   public static java.lang.String CATEGORYPOINTSTYLES = "categoryPointStyles";
+  public static java.lang.String CATEGORYPOINTWELLKNOWNNAME = "categoryPointWellKnownName";
   public static java.lang.String CATEGORYPOLYGONFILLOPACITY = "categoryPolygonFillOpacity";
   public static java.lang.String CATEGORYPOLYGONSTROKE = "categoryPolygonStroke";
   public static java.lang.String CATEGORYPOLYGONSTROKEOPACITY = "categoryPolygonStrokeOpacity";
@@ -56,6 +57,7 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public static java.lang.String GRADIENTPOINTSTROKE = "gradientPointStroke";
   public static java.lang.String GRADIENTPOINTSTROKEOPACITY = "gradientPointStrokeOpacity";
   public static java.lang.String GRADIENTPOINTSTROKEWIDTH = "gradientPointStrokeWidth";
+  public static java.lang.String GRADIENTPOINTWELLKNOWNNAME = "gradientPointWellKnownName";
   public static java.lang.String GRADIENTPOLYGONFILLOPACITY = "gradientPolygonFillOpacity";
   public static java.lang.String GRADIENTPOLYGONMAXFILL = "gradientPolygonMaxFill";
   public static java.lang.String GRADIENTPOLYGONMINFILL = "gradientPolygonMinFill";
@@ -695,6 +697,43 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(CATEGORYPOINTSTYLES).getAttributeMdDTO();
   }
   
+  public String getCategoryPointWellKnownName()
+  {
+    return getValue(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public void setCategoryPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTWELLKNOWNNAME, value);
+    }
+  }
+  
+  public boolean isCategoryPointWellKnownNameWritable()
+  {
+    return isWritable(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public boolean isCategoryPointWellKnownNameReadable()
+  {
+    return isReadable(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public boolean isCategoryPointWellKnownNameModified()
+  {
+    return isModified(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getCategoryPointWellKnownNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(CATEGORYPOINTWELLKNOWNNAME).getAttributeMdDTO();
+  }
+  
   public Double getCategoryPolygonFillOpacity()
   {
     return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOLYGONFILLOPACITY));
@@ -1137,6 +1176,43 @@ public abstract class DashboardThematicStyleDTOBase extends com.runwaysdk.geodas
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getGradientPointStrokeWidthMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(GRADIENTPOINTSTROKEWIDTH).getAttributeMdDTO();
+  }
+  
+  public String getGradientPointWellKnownName()
+  {
+    return getValue(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public void setGradientPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOINTWELLKNOWNNAME, value);
+    }
+  }
+  
+  public boolean isGradientPointWellKnownNameWritable()
+  {
+    return isWritable(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public boolean isGradientPointWellKnownNameReadable()
+  {
+    return isReadable(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public boolean isGradientPointWellKnownNameModified()
+  {
+    return isModified(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getGradientPointWellKnownNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(GRADIENTPOINTWELLKNOWNNAME).getAttributeMdDTO();
   }
   
   public Double getGradientPolygonFillOpacity()

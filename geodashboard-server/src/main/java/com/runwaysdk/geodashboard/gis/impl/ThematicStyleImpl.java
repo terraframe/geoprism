@@ -30,6 +30,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private String             gradientPointStroke;
   private Integer            gradientPointStrokeWidth;
   private Double             gradientPointStrokeOpacity;
+  private String             gradientPointWellKnownName;
   
   private Integer            categoryPointSize;
   private String             categoryPolygonStyles;
@@ -37,6 +38,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Double             categoryPolygonFillOpacity;
   private Integer            categoryPolygonStrokeWidth;
   private Double             categoryPolygonStrokeOpacity;
+  private String             categoryPointWellKnownName;
 
   private Boolean            bubbleContinuousSize;
   private String             bubbleStroke;
@@ -421,5 +423,25 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void setCategoryPointSize(Integer categoryPointSize)
   {
     this.categoryPointSize = categoryPointSize;
+  }
+
+  public String getGradientPointWellKnownName()
+  {
+    return gradientPointWellKnownName;
+  }
+
+  public void setGradientPointWellKnownName(String gradientPointWellKnownName)
+  {
+    this.gradientPointWellKnownName = gradientPointWellKnownName;
+  }
+
+  public String getCategoryPointWellKnownName()
+  {
+    return categoryPointWellKnownName;
+  }
+
+  public void setCategoryPointWellKnownName(String categoryPointWellKnownName)
+  {
+    this.categoryPointWellKnownName = categoryPointWellKnownName;
   }
 }

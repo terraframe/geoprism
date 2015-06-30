@@ -274,7 +274,6 @@
           <double name="pointOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <integer name="pointRotation" label="Point Rotation" required="false" defaultValue="0" />
           <double name="pointStrokeOpacity" label="Opacity" required="true" length="2" decimal="2" defaultValue=".7" rejectNegative="true" />
-<!--           <integer name="pointRadius" label="Radius" required="true" defaultValue="5" rejectNegative="true" /> -->
           
           <!-- basic line styles -->
           <char name="lineStroke" label="Color" size="7" required="true" defaultValue="#000000" />
@@ -304,7 +303,7 @@
  		  <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <char name="gradientPointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="gradientPointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-<!--           <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" /> -->
+          <char name="gradientPointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
  
           
           <!-- Category Basic Point Attributes -->
@@ -314,7 +313,7 @@
  		  <double name="categoryPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <char name="categoryPointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="categoryPointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-<!--           <double name="categoryPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" /> -->
+          <char name="categoryPointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
  
 		  
 		  <!-- Thematic Bubble Attributes -->

@@ -2937,6 +2937,16 @@ span.select-area span.center {
   		margin: 10px 0 0 0;
 	}
 	
+	#gradient-point-type-container {
+	  width: 105px;
+	  margin: 10px 0 0 0;
+	}
+	
+	#category-point-type-container {
+	  width: 105px;
+	  margin: 10px 0 0 0;
+	}
+	
 .ui-autocomplete {
 	z-index: 999999 !important;
 }
@@ -3017,6 +3027,9 @@ a.filters-button {
 	padding-right: 10px;
 }
 
+div.secondary-box {
+	  margin-top: 150px;
+}
 div.secondary-box label {
 	float: left;
 	font-size: 13px;

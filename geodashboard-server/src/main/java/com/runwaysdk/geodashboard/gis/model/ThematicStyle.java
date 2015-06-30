@@ -54,6 +54,9 @@ public interface ThematicStyle extends Style
   public Double getGradientPointStrokeOpacity();
   
   public Integer getCategoryPointSize();
+  public String getGradientPointWellKnownName();
+  
+  public String getCategoryPointWellKnownName();
   
   public String getCategoryPolygonStyles();
   public Double getCategoryPolygonFillOpacity();

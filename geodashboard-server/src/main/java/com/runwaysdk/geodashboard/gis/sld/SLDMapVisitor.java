@@ -335,6 +335,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         {
           ThematicStyle tStyle = (ThematicStyle) this.style;
           int radius = tStyle.getGradientPointSize();
+          String wkn = tStyle.getGradientPointWellKnownName();
 
           Double fillOpacity = tStyle.getGradientPointFillOpacity();
           String stroke = tStyle.getGradientPointStroke();
@@ -409,7 +410,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
                             node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
                             node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
-                            this.getSymbolNode("circle", currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius)
+                            this.getSymbolNode(wkn, currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius)
                             
                 ).build(root);
   
@@ -500,7 +501,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         if (style instanceof DashboardThematicStyle)
         {
           DashboardThematicStyle dTStyle = (DashboardThematicStyle) style;
-//          NodeBuilder otherPointSymbolNode = node("PointSymbolizer");
 
           Double fillOpacity = dTStyle.getCategoryPointFillOpacity();
           String stroke = dTStyle.getCategoryPointStroke();
@@ -508,6 +508,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           Double strokeOpacity = dTStyle.getCategoryPointStrokeOpacity();
           int radius = dTStyle.getCategoryPointSize();
           String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
+          String wkn = dTStyle.getCategoryPointWellKnownName();
             
           // ontology logic
           String cats = dTStyle.getCategoryPointStyles();
@@ -588,7 +589,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 )
                             )
                         ),
-                        this.getSymbolNode("circle", catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                        this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
                 
                 //
                 // Adding labels
@@ -631,7 +632,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                              )
                                          )
                                      ),
-                                     this.getSymbolNode("circle", catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                                     this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
                    
                 }
               }

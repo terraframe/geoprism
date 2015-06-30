@@ -1,6 +1,7 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,6 +252,16 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
 
       // layer types
       Map<String, String> labels = rLayer.getLayerTypeMd().getEnumItems();
+      
+      List<String> pointTypes = new ArrayList<String>();
+      pointTypes.add("CIRCLE");
+      pointTypes.add("STAR");
+      pointTypes.add("SQUARE");
+      pointTypes.add("TRIANGLE");
+      pointTypes.add("CROSS");
+      pointTypes.add("X");
+      req.setAttribute("pointTypes", pointTypes);
+      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
 
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
       layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));

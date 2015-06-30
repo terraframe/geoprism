@@ -304,7 +304,7 @@
 	                      </div>
 	                    </div>
 	                    <div class="fill-block">
-	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
+	                      <strong class="title"><gdb:localize var="shape_heading" key="DashboardThematicLayer.form.shapeHeading"/>${shape_heading}</strong>
 	                      <div class="cell-holder">
 		                    	<div class="cell">
 		                          <label for="basic-point-radius-select">${style.basicPointSizeMd.displayLabel}</label>
@@ -313,6 +313,27 @@
 		                          </div>
 		                        </div>
 	                      </div>
+	                      <div id="point-type-container" class="cell">
+			                  <label for="point-type"><gdb:localize var="pt_type" key="DashboardLayer.form.pointType"/>${pt_type}</label>
+			                  <div class="select-box">
+			                    <select id="point-type" class="method-select" name="style.pointWellKnownName">
+			                      <c:forEach items="${pointTypes}" var="type">
+			                         	<c:choose>
+			                           		<c:when test="${type == activeBasicPointType}">
+			                             		<option value="${type}" selected="selected">
+			                               			${type}
+			                             		</option>
+			                           		</c:when>
+			                           		<c:otherwise>
+			                             		<option value="${type}">
+			                               			${type}
+			                             		</option>
+			                           		</c:otherwise>
+			                         	</c:choose>
+			                      </c:forEach>
+			                    </select>
+			                  </div>
+			                </div>
 	                    </div>
 	                  </div>
 	                  

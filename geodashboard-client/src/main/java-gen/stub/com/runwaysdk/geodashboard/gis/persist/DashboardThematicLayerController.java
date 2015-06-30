@@ -214,7 +214,9 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       pointTypes.add("CROSS");
       pointTypes.add("X");
       req.setAttribute("pointTypes", pointTypes);
-      req.setAttribute("activePointType", style.getPointWellKnownName());
+      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
+      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
+      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
 
       // layer types
       Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();

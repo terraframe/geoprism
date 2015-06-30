@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 177739380)
+@com.runwaysdk.business.ClassSignature(hash = 1269698602)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -327,6 +327,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTYLES, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName()
+  {
+    return getCategoryPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity()
   {
     return getCategoryPolygonFillOpacity(null);
@@ -529,6 +546,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName()
+  {
+    return getGradientPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity()
@@ -834,6 +868,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles();
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity();
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity(String alias);
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity(String alias, String displayLabel);
@@ -870,6 +907,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity();
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity(String alias);
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity(String alias, String displayLabel);
@@ -1224,6 +1264,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTYLES, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName()
+  {
+    return getCategoryPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity()
   {
     return getCategoryPolygonFillOpacity(null);
@@ -1426,6 +1483,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName()
+  {
+    return getGradientPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity()
@@ -1690,6 +1764,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles();
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity();
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity(String alias);
     public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity(String alias, String displayLabel);
@@ -1726,6 +1803,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName();
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias);
+    public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity();
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity(String alias);
     public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity(String alias, String displayLabel);
@@ -2129,6 +2209,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTYLES, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName()
+  {
+    return getCategoryPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTWELLKNOWNNAME, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableDouble getCategoryPolygonFillOpacity()
   {
     return getCategoryPolygonFillOpacity(null);
@@ -2331,6 +2428,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableInteger getGradientPointStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName()
+  {
+    return getGradientPointWellKnownName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getGradientPointWellKnownName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTWELLKNOWNNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableDouble getGradientPolygonFillOpacity()

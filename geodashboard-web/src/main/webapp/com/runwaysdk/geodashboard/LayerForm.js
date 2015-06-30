@@ -1132,7 +1132,7 @@
     	    		  $(".GRADIENTPOLYGON").show();
     			  }
     			  else{
-    				  //TODO: this needs to be an else if (geomType === "some geom type") which isnt defined yet
+    				  //TODO: this needs to be an else if (geomType === "some line geom type") which isnt defined yet
     			  }
     		  }
     	  }

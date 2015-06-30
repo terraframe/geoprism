@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2013216117)
+@com.runwaysdk.business.ClassSignature(hash = 1450051457)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,6 +28,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String CATEGORYPOINTSTROKEOPACITY = "categoryPointStrokeOpacity";
   public static java.lang.String CATEGORYPOINTSTROKEWIDTH = "categoryPointStrokeWidth";
   public static java.lang.String CATEGORYPOINTSTYLES = "categoryPointStyles";
+  public static java.lang.String CATEGORYPOINTWELLKNOWNNAME = "categoryPointWellKnownName";
   public static java.lang.String CATEGORYPOLYGONFILLOPACITY = "categoryPolygonFillOpacity";
   public static java.lang.String CATEGORYPOLYGONSTROKE = "categoryPolygonStroke";
   public static java.lang.String CATEGORYPOLYGONSTROKEOPACITY = "categoryPolygonStrokeOpacity";
@@ -40,6 +41,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String GRADIENTPOINTSTROKE = "gradientPointStroke";
   public static java.lang.String GRADIENTPOINTSTROKEOPACITY = "gradientPointStrokeOpacity";
   public static java.lang.String GRADIENTPOINTSTROKEWIDTH = "gradientPointStrokeWidth";
+  public static java.lang.String GRADIENTPOINTWELLKNOWNNAME = "gradientPointWellKnownName";
   public static java.lang.String GRADIENTPOLYGONFILLOPACITY = "gradientPolygonFillOpacity";
   public static java.lang.String GRADIENTPOLYGONMAXFILL = "gradientPolygonMaxFill";
   public static java.lang.String GRADIENTPOLYGONMINFILL = "gradientPolygonMinFill";
@@ -50,7 +52,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = -2013216117;
+  private static final long serialVersionUID = 1450051457;
   
   public DashboardThematicStyleBase()
   {
@@ -533,6 +535,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     }
   }
   
+  public String getCategoryPointWellKnownName()
+  {
+    return getValue(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public void validateCategoryPointWellKnownName()
+  {
+    this.validateAttribute(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCategoryPointWellKnownNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTWELLKNOWNNAME);
+  }
+  
+  public void setCategoryPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTWELLKNOWNNAME, value);
+    }
+  }
+  
   public Double getCategoryPolygonFillOpacity()
   {
     return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOLYGONFILLOPACITY));
@@ -866,6 +896,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(GRADIENTPOINTSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getGradientPointWellKnownName()
+  {
+    return getValue(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public void validateGradientPointWellKnownName()
+  {
+    this.validateAttribute(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getGradientPointWellKnownNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(GRADIENTPOINTWELLKNOWNNAME);
+  }
+  
+  public void setGradientPointWellKnownName(String value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOINTWELLKNOWNNAME, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOINTWELLKNOWNNAME, value);
     }
   }
   
