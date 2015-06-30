@@ -2013,24 +2013,21 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .modal-form .label-holder.style02{padding-top:12px;}
 .modal-form .label-holder.style03{padding-top:9px;}
 .nav-tabs.type-tabs{
-/* 	padding:0; */
-/* 	margin:0; */
-/* 	list-style:none; */
-/* 	border:none; */
-/* 	box-shadow:none; */
-/* 	border-radius:0; */
+	padding:0;
+	margin:0;
+	list-style:none;
+	border:none;
+	box-shadow:none;
+	border-radius:0;
   height: 140px;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   white-space: nowrap;
   overflow-y: hidden;
 }
 .nav-tabs.type-tabs li{
 /* 	float:left; */
-/* 	border:none; */
-/* 	padding:0; */
-/* 	margin:0 0 0 20px; */
-/* 	border-radius:0; */
+  border:none;
   border: none;
   padding: 0;
   margin: 0 0 0 20px;
