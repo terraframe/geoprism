@@ -220,6 +220,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       else if( mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO )
       {
         layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
       }
@@ -227,6 +228,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       {
         layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
         layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
         layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
@@ -321,7 +323,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("categories", this.encode(style.getCategoryPolygonStyles()));
+      req.setAttribute("polygoncategories", this.encode(style.getCategoryPolygonStyles()));
+      req.setAttribute("pointcategories", this.encode(style.getCategoryPointStyles()));
       req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
 
       /*

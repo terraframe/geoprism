@@ -45,12 +45,15 @@ public interface ThematicStyle extends Style
   public Integer getGradientPolygonStrokeWidth();
   public Double getGradientPolygonStrokeOpacity();
   
+  public Integer getGradientPointSize();
   public String getGradientPointMinFill();
   public String getGradientPointMaxFill();
   public Double getGradientPointFillOpacity();
   public String getGradientPointStroke();
   public Integer getGradientPointStrokeWidth();
   public Double getGradientPointStrokeOpacity();
+  
+  public Integer getCategoryPointSize();
   
   public String getCategoryPolygonStyles();
   public Double getCategoryPolygonFillOpacity();

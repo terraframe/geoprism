@@ -2013,19 +2013,32 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .modal-form .label-holder.style02{padding-top:12px;}
 .modal-form .label-holder.style03{padding-top:9px;}
 .nav-tabs.type-tabs{
-	padding:0;
-	margin:0;
-	list-style:none;
-	border:none;
-	box-shadow:none;
-	border-radius:0;
+/* 	padding:0; */
+/* 	margin:0; */
+/* 	list-style:none; */
+/* 	border:none; */
+/* 	box-shadow:none; */
+/* 	border-radius:0; */
+  height: 140px;
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+  overflow-y: hidden;
 }
 .nav-tabs.type-tabs li{
-	float:left;
-	border:none;
-	padding:0;
-	margin:0 0 0 20px;
-	border-radius:0;
+/* 	float:left; */
+/* 	border:none; */
+/* 	padding:0; */
+/* 	margin:0 0 0 20px; */
+/* 	border-radius:0; */
+  border: none;
+  padding: 0;
+  margin: 0 0 0 20px;
+  border-radius: 0;
+  display: inline-block;
+  width: 125px;
+  height: 100px;
+  float: none;
 }
 .nav-tabs.type-tabs .BUBBLE{margin-left:20px;}
 .nav-tabs.type-tabs .GRADIENT{margin-left:20px;}
@@ -3103,6 +3116,29 @@ div.secondary-box label {
 	background: rgb(244, 244, 184);
 }
 
+#category-point-radius-block{
+  margin-top: 30px;
+  margin-left: 0px;
+  width: 100%;
+}
 
+
+/*
+* Scroll bar styling
+*
+*/
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
 
 

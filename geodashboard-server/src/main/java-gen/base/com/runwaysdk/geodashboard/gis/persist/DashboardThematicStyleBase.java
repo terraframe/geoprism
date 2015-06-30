@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1365270677)
+@com.runwaysdk.business.ClassSignature(hash = -2013216117)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -22,6 +22,11 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String BUBBLESTROKEOPACITY = "bubbleStrokeOpacity";
   public static java.lang.String BUBBLESTROKEWIDTH = "bubbleStrokeWidth";
   public static java.lang.String BUBBLEWELLKNOWNNAME = "bubbleWellKnownName";
+  public static java.lang.String CATEGORYPOINTFILLOPACITY = "categoryPointFillOpacity";
+  public static java.lang.String CATEGORYPOINTSIZE = "categoryPointSize";
+  public static java.lang.String CATEGORYPOINTSTROKE = "categoryPointStroke";
+  public static java.lang.String CATEGORYPOINTSTROKEOPACITY = "categoryPointStrokeOpacity";
+  public static java.lang.String CATEGORYPOINTSTROKEWIDTH = "categoryPointStrokeWidth";
   public static java.lang.String CATEGORYPOINTSTYLES = "categoryPointStyles";
   public static java.lang.String CATEGORYPOLYGONFILLOPACITY = "categoryPolygonFillOpacity";
   public static java.lang.String CATEGORYPOLYGONSTROKE = "categoryPolygonStroke";
@@ -31,6 +36,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String GRADIENTPOINTFILLOPACITY = "gradientPointFillOpacity";
   public static java.lang.String GRADIENTPOINTMAXFILL = "gradientPointMaxFill";
   public static java.lang.String GRADIENTPOINTMINFILL = "gradientPointMinFill";
+  public static java.lang.String GRADIENTPOINTSIZE = "gradientPointSize";
   public static java.lang.String GRADIENTPOINTSTROKE = "gradientPointStroke";
   public static java.lang.String GRADIENTPOINTSTROKEOPACITY = "gradientPointStrokeOpacity";
   public static java.lang.String GRADIENTPOINTSTROKEWIDTH = "gradientPointStrokeWidth";
@@ -44,7 +50,7 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
   public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 1365270677;
+  private static final long serialVersionUID = -2013216117;
   
   public DashboardThematicStyleBase()
   {
@@ -359,6 +365,146 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     }
   }
   
+  public Double getCategoryPointFillOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOINTFILLOPACITY));
+  }
+  
+  public void validateCategoryPointFillOpacity()
+  {
+    this.validateAttribute(CATEGORYPOINTFILLOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getCategoryPointFillOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTFILLOPACITY);
+  }
+  
+  public void setCategoryPointFillOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTFILLOPACITY, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTFILLOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public Integer getCategoryPointSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(CATEGORYPOINTSIZE));
+  }
+  
+  public void validateCategoryPointSize()
+  {
+    this.validateAttribute(CATEGORYPOINTSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getCategoryPointSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTSIZE);
+  }
+  
+  public void setCategoryPointSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTSIZE, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public String getCategoryPointStroke()
+  {
+    return getValue(CATEGORYPOINTSTROKE);
+  }
+  
+  public void validateCategoryPointStroke()
+  {
+    this.validateAttribute(CATEGORYPOINTSTROKE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getCategoryPointStrokeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTSTROKE);
+  }
+  
+  public void setCategoryPointStroke(String value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTSTROKE, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTSTROKE, value);
+    }
+  }
+  
+  public Double getCategoryPointStrokeOpacity()
+  {
+    return com.runwaysdk.constants.MdAttributeDoubleUtil.getTypeSafeValue(getValue(CATEGORYPOINTSTROKEOPACITY));
+  }
+  
+  public void validateCategoryPointStrokeOpacity()
+  {
+    this.validateAttribute(CATEGORYPOINTSTROKEOPACITY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF getCategoryPointStrokeOpacityMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTSTROKEOPACITY);
+  }
+  
+  public void setCategoryPointStrokeOpacity(Double value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTSTROKEOPACITY, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTSTROKEOPACITY, java.lang.Double.toString(value));
+    }
+  }
+  
+  public Integer getCategoryPointStrokeWidth()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(CATEGORYPOINTSTROKEWIDTH));
+  }
+  
+  public void validateCategoryPointStrokeWidth()
+  {
+    this.validateAttribute(CATEGORYPOINTSTROKEWIDTH);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getCategoryPointStrokeWidthMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(CATEGORYPOINTSTROKEWIDTH);
+  }
+  
+  public void setCategoryPointStrokeWidth(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORYPOINTSTROKEWIDTH, "");
+    }
+    else
+    {
+      setValue(CATEGORYPOINTSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
   public String getCategoryPointStyles()
   {
     return getValue(CATEGORYPOINTSTYLES);
@@ -608,6 +754,34 @@ public abstract class DashboardThematicStyleBase extends com.runwaysdk.geodashbo
     else
     {
       setValue(GRADIENTPOINTMINFILL, value);
+    }
+  }
+  
+  public Integer getGradientPointSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(GRADIENTPOINTSIZE));
+  }
+  
+  public void validateGradientPointSize()
+  {
+    this.validateAttribute(GRADIENTPOINTSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getGradientPointSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(GRADIENTPOINTSIZE);
+  }
+  
+  public void setGradientPointSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(GRADIENTPOINTSIZE, "");
+    }
+    else
+    {
+      setValue(GRADIENTPOINTSIZE, java.lang.Integer.toString(value));
     }
   }
   

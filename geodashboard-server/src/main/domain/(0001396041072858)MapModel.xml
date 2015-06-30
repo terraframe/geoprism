@@ -266,7 +266,7 @@
           <integer name="labelHaloWidth" label="Halo Width" required="true" defaultValue="0" rejectNegative="true" />
 
           <!-- basic point styles -->
-          <integer name="pointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
+          <integer name="basicPointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
           <char name="pointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="pointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
           <char name="pointWellKnownName" label="Well Known Name" size="50" required="true" defaultValue="circle" />
@@ -297,17 +297,25 @@
           <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
           
           <!-- Gradient Point Attributes -->
+          <integer name="gradientPointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
           <char name="gradientPointMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
           <char name="gradientPointMaxFill" label="Max" size="7" required="true" defaultValue="#505050" />
           <double name="gradientPointFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
  		  <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
           <char name="gradientPointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
           <integer name="gradientPointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
-          <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+<!--           <double name="gradientPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" /> -->
  
           
           <!-- Category Basic Point Attributes -->
+          <integer name="categoryPointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
           <text name="categoryPointStyles" label="Category styling for layers" required="false" />
+          <double name="categoryPointFillOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+ 		  <double name="categoryPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" />
+          <char name="categoryPointStroke" label="Color" size="7" required="false" defaultValue="#000000" />
+          <integer name="categoryPointStrokeWidth" label="Width" required="true" defaultValue="2" rejectNegative="true" />
+<!--           <double name="categoryPointStrokeOpacity" label="Opacity" required="true" length="3" decimal="2" defaultValue=".9" rejectNegative="true" /> -->
+ 
 		  
 		  <!-- Thematic Bubble Attributes -->
           <boolean name="bubbleContinuousSize" label="Continuous Size" required="false" defaultValue="true" />

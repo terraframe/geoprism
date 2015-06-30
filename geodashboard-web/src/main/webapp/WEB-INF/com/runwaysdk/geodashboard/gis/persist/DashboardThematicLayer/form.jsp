@@ -244,7 +244,7 @@
 	              <div class="holder style04">
 	                <ul class="nav-tabs type-tabs">
 		                <c:forEach items="${layerTypeNames}" var="layerTypeName" varStatus="loop">
-			                  <li class="${layerTypeName}  
+			                  <li id="${layerTypeName}"  class="${layerTypeName}  
 			                    <c:if test="${layerTypeName == activeLayerTypeName}">
 			                        active
 			                    </c:if>
@@ -275,13 +275,6 @@
 	              </div>
 	              <div class="holder">
 	                <div id="layer-type-styler-container" class="tab-content">
-	                  <%-- 
-	                    These are reusable cell components that are used across multiple tabs. These are inserted on tab change by custom javascript in DynamicMap.js
-	                  --%>
-	                  <%--
-	                    End Reusable Cell Components
-	                  --%>
-	                  
 	                  
 	                  <!-- BASICPOINT -->
 	                  <div
@@ -385,9 +378,9 @@
 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
 	                      <div class="cell-holder">
 		                    	<div class="cell">
-		                          <label for="point-radius-select">${style.pointSizeMd.displayLabel}</label>
+		                          <label for="basic-point-radius-select">${style.basicPointSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                          	<input id="point-radius-select" name="style.${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+		                          	<input id="basic-point-radius-select" name="style.${style.basicPointSizeMd.name}" type="text" value="${style.basicPointSize}">
 		                          </div>
 		                        </div>
 	                      </div>
@@ -508,15 +501,167 @@
 	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
 	                      <div class="cell-holder">
 		                    	<div class="cell">
-		                          <label for="point-radius-select">${style.pointSizeMd.displayLabel}</label>
+		                          <label for="gradient-point-radius-select">${style.gradientPointSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                          	<input id="point-radius-select" name="style.${style.pointSizeMd.name}" type="text" value="${style.pointSize}">
+		                          	<input id="gradient-point-radius-select" name="style.${style.gradientPointSizeMd.name}" type="text" value="${style.gradientPointSize}">
 		                          </div>
 		                        </div>
 	                      </div>
 	                    </div>
 	                  </div>
 	                  
+	                  
+	                  <!-- CATEGORY POINT -->
+	                  <div
+	                    <c:choose>
+	                      <c:when test="${'CATEGORYPOINT' == activeLayerTypeName}">
+	                        class="tab-pane active"
+	                      </c:when>
+	                      <c:otherwise>
+	                        class="tab-pane" style="display: none;"
+	                      </c:otherwise>
+	                    </c:choose>
+	                  	id="tab007categoriespoint" 
+	                  >
+	                  
+	                    <div class="color-section">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+	                      <div class="heading-list">
+	                        <span><gdb:localize key="DashboardThematicLayer.form.category"/></span>
+	                        <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
+	                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardThematicLayer.form.catInputPlaceholder"/></span>
+	                      </div>
+	                    <div class="category-block" id="category-point-colors-container">
+	                      	  
+	                    <input id="categories-point-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${pointcategories}' type="hidden" class="category-input" name="style.categoryPointStyles" >
+		                     <c:choose>
+		                      	<c:when test="${'true' == isOntologyAttribute}">
+		                      		<!-- RENDER ONTOLOGY TREE DATA -->
+		                      		<div class="ontology-category-input-container">
+										<div id="points-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
+										<div id="other-cat-point-container">
+											<ul class="color-list other-cat">							                       <li>
+						                         <div class="category-container">
+							                       	 <div class="text category-input-container">
+							                       	    <gdb:localize var="other" key="Other"/>								                       	 
+							                       	 	<p id="cat-point-other-basic-label" >${other}</p>
+							                       	 </div>
+							                       	 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+	                  									<span id="cat-point-other-color-selector" class="ico ontology-category-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
+	                								 </a>
+					                   	 		 </div>
+						                       </li>	                       
+						                    </ul>
+						                </div>
+									  	<div class="check-block">
+								      		<input id="ont-cat-point-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
+								        	<label for="ont-cat-point-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+								      	</div>
+									</div>
+		                      	</c:when>
+		                      	<c:otherwise>
+		                      		<!-- RENDER BASIC CATEGORIES -->
+			                        <div class="panel-group choice-color category-group">
+										<div class="panel">
+					                    	<div id="choice-color02" class="panel-collapse">
+	  					                    </div>
+							            </div>
+							            <div class="style-options-block">
+<%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
+										  <div class="check-block">
+										    <input id="basic-cat-point-other-option" class="other-option-check-box" type="checkbox" name="" checked>
+										    <label for="basic-cat-point-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+										  </div>
+						                </div>
+			                        </div>
+		                      	</c:otherwise>
+		                      </c:choose>
+	                      </div>
+	                    </div>
+	                    
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong>
+	                      <div class="cell-holder">
+	                        	<div class="cell">
+				                    <span>${style.categoryPointStrokeMd.displayLabel}</span>
+				                    <div class="color-holder">
+				                      <a href="#" class="color-choice">
+				                       	<span class="ico" style="background:${style.categoryPointStroke};">icon</span>
+				                       	<span class="arrow">arrow</span>
+				                       	<input type="hidden" class="color-input" name="style.${style.categoryPointStrokeMd.name}" value="${style.categoryPointStroke}" />
+					                  </a>
+					                </div>
+				                </div>
+				                <div class="cell">
+			                    <label for="category-point-stroke-width-select">${style.categoryPointStrokeWidthMd.displayLabel}</label>
+			                    <div class="select-holder">
+			                      <select id="category-point-stroke-width-select" class="tab-select" name="style.${style.categoryPointStrokeWidthMd.name}">
+			                        <c:forEach begin="0" end="15" var="size">
+			                          <c:choose>
+			                            <c:when test="${style.categoryPointStrokeWidth == size}">
+			                              <option selected="selected" value="${size}">${size}</option>
+			                            </c:when>
+			                            <c:otherwise>
+			                              <option value="${size}">${size}</option>
+			                            </c:otherwise>
+			                          </c:choose>
+			                        </c:forEach>
+			                      </select>
+			                    </div>
+			                  </div>
+			                  <div class="cell">
+			                    <label for="category-point-stroke-opacity-select">${style.categoryPointStrokeOpacityMd.displayLabel}</label>
+			                    <div class="text">
+			                      <select id="category-point-stroke-opacity-select" class="tab-select" name="style.${style.categoryPointStrokeOpacityMd.name}">
+			                        <c:forEach step="5" begin="0" end="100" var="size">
+			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+			                          <c:choose>
+			                            <c:when test="${style.categoryPointStrokeOpacity*100 == size}">
+			                              <option selected="selected" value="${potentialValue}">${size}</option>
+			                            </c:when>
+			                            <c:otherwise>
+			                              <option value="${potentialValue}">${size}</option>
+			                            </c:otherwise>
+			                          </c:choose>
+			                        </c:forEach>
+			                      </select>
+			                    </div>
+			                  </div>
+	                      </div>
+<!-- 	                    </div> -->
+	                    <div id="category-point-radius-block" class="fill-block">
+	                      <strong class="title"><gdb:localize var="dl_form_radius" key="DashboardThematicLayer.form.radius"/>${dl_form_radius}</strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="category-point-radius-select">${style.categoryPointSizeMd.displayLabel}</label>
+		                          <div class="text">
+		                          	<input id="category-point-radius-select" name="style.${style.categoryPointSizeMd.name}" type="text" value="${style.categoryPointSize}">
+		                          </div>
+		                        </div>
+		                        <div class="cell">
+			                    <label for="category-point-fill-opacity-select">${style.categoryPointFillOpacityMd.displayLabel}</label>
+			                    <div class="text">
+			                      <select id="category-point-fill-opacity-select" class="tab-select" name="style.${style.categoryPointFillOpacityMd.name}">
+			                        <c:forEach step="5" begin="0" end="100" var="size">
+			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+			                          <c:choose>
+			                            <c:when test="${style.categoryPointFillOpacity*100 == size}">
+			                              <option selected="selected" value="${potentialValue}">${size}</option>
+			                            </c:when>
+			                            <c:otherwise>
+			                              <option value="${potentialValue}">${size}</option>
+			                            </c:otherwise>
+			                          </c:choose>
+			                        </c:forEach>
+			                      </select>  
+			                    </div>
+			                  </div>
+	                      </div>
+	                    </div>
+	                    </div>
+	                </div>
+	                
 	                  
 	                  <!-- BUBBLE -->
 	                  <div
@@ -876,7 +1021,7 @@
 	                  </div>
 	                  
 	                 
-	                  <!-- CATEGORIES POLYGON -->
+	                  <!-- CATEGORY POLYGON -->
 	                  <div
 	                    <c:choose>
 	                      <c:when test="${'CATEGORYPOLYGON' == activeLayerTypeName}">
@@ -898,12 +1043,12 @@
 	                      </div>
 	                    <div class="category-block" id="category-colors-container">
 	                      	  
-	                    <input id="categories-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${categories}' type="hidden" class="category-input" name="style.styleCategories" >
+	                    <input id="categories-polygon-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${polygoncategories}' type="hidden" class="category-input" name="style.styleCategories" >
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
-										<div id="ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
+										<div id="polygon-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
 										<div id="other-cat-container">
 											<ul class="color-list other-cat">							                       <li>
 						                         <div class="category-container">
@@ -928,8 +1073,7 @@
 		                      		<!-- RENDER BASIC CATEGORIES -->
 			                        <div class="panel-group choice-color category-group">
 										<div class="panel">
-					                    	<div id="choice-color01" class="panel-collapse">
-	  					                    </div>
+					                    	<div id="choice-color01" class="panel-collapse"></div>
 							            </div>
 							            <div class="style-options-block">
 <%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>

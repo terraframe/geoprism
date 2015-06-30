@@ -127,7 +127,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.setBubbleMaxSize(tSource.getBubbleMaxSize());
       this.setBubbleMinSize(tSource.getBubbleMinSize());
 //      this.setPointRadius(tSource.getPointRadius());
-      this.setPointSize(tSource.getPointSize());
+      this.setBasicPointSize(tSource.getBasicPointSize());
       this.setGradientPolygonMaxFill(tSource.getGradientPolygonMaxFill());
       this.setGradientPolygonMinFill(tSource.getGradientPolygonMinFill());
       this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());

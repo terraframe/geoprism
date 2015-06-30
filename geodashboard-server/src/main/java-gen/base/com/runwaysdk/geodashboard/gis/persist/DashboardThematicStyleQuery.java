@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1091992844)
+@com.runwaysdk.business.ClassSignature(hash = 177739380)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -225,6 +225,91 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLEWELLKNOWNNAME, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity()
+  {
+    return getCategoryPointFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize()
+  {
+    return getCategoryPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke()
+  {
+    return getCategoryPointStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity()
+  {
+    return getCategoryPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth()
+  {
+    return getCategoryPointStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getCategoryPointStyles()
   {
     return getCategoryPointStyles(null);
@@ -376,6 +461,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTMINFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize()
+  {
+    return getGradientPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGradientPointStroke()
@@ -714,6 +816,21 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName();
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName(String alias);
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity();
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize();
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke();
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias);
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth();
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles();
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias, String displayLabel);
@@ -741,6 +858,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill();
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize();
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getGradientPointStroke();
     public com.runwaysdk.query.SelectableChar getGradientPointStroke(String alias);
     public com.runwaysdk.query.SelectableChar getGradientPointStroke(String alias, String displayLabel);
@@ -1002,6 +1122,91 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLEWELLKNOWNNAME, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity()
+  {
+    return getCategoryPointFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize()
+  {
+    return getCategoryPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke()
+  {
+    return getCategoryPointStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity()
+  {
+    return getCategoryPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth()
+  {
+    return getCategoryPointStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getCategoryPointStyles()
   {
     return getCategoryPointStyles(null);
@@ -1153,6 +1358,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTMINFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize()
+  {
+    return getGradientPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGradientPointStroke()
@@ -1450,6 +1672,21 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName();
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName(String alias);
     public com.runwaysdk.query.SelectableChar getBubbleWellKnownName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity();
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize();
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke();
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias);
+    public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity();
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias);
+    public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth();
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias);
+    public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles();
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias);
     public com.runwaysdk.query.SelectableChar getCategoryPointStyles(String alias, String displayLabel);
@@ -1477,6 +1714,9 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill();
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias);
     public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize();
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias);
+    public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getGradientPointStroke();
     public com.runwaysdk.query.SelectableChar getGradientPointStroke(String alias);
     public com.runwaysdk.query.SelectableChar getGradientPointStroke(String alias, String displayLabel);
@@ -1787,6 +2027,91 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.BUBBLEWELLKNOWNNAME, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity()
+  {
+    return getCategoryPointFillOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointFillOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTFILLOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize()
+  {
+    return getCategoryPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSIZE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke()
+  {
+    return getCategoryPointStroke(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getCategoryPointStroke(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKE, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity()
+  {
+    return getCategoryPointStrokeOpacity(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableDouble getCategoryPointStrokeOpacity(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableDouble)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEOPACITY, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth()
+  {
+    return getCategoryPointStrokeWidth(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getCategoryPointStrokeWidth(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.CATEGORYPOINTSTROKEWIDTH, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getCategoryPointStyles()
   {
     return getCategoryPointStyles(null);
@@ -1938,6 +2263,23 @@ public  class DashboardThematicStyleQuery extends com.runwaysdk.geodashboard.gis
   public com.runwaysdk.query.SelectableChar getGradientPointMinFill(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTMINFILL, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize()
+  {
+    return getGradientPointSize(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getGradientPointSize(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.GRADIENTPOINTSIZE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getGradientPointStroke()

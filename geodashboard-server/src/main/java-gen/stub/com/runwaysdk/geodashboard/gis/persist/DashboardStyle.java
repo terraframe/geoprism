@@ -211,8 +211,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     this.setPointWellKnownName(source.getPointWellKnownName());
     this.setPointStrokeWidth(source.getPointStrokeWidth());
     this.setPointStrokeOpacity(source.getPointStrokeOpacity());
-    this.setPointSize(source.getPointSize());
-//    this.setPointRadius(source.getPointRadius());
+    this.setBasicPointSize(source.getBasicPointSize());
     this.setPointRotation(source.getPointRotation());
     this.setPointOpacity(source.getPointOpacity());
     this.setPointFill(source.getPointFill());

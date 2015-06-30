@@ -23,6 +23,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Integer            pointMinSize;
   private Integer            pointMaxSize;
   
+  private Integer            gradientPointSize;
   private String             gradientPointMinFill;
   private String             gradientPointMaxFill;
   private Double             gradientPointFillOpacity;
@@ -30,6 +31,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   private Integer            gradientPointStrokeWidth;
   private Double             gradientPointStrokeOpacity;
   
+  private Integer            categoryPointSize;
   private String             categoryPolygonStyles;
   private String             categoryPolygonStroke;
   private Double             categoryPolygonFillOpacity;
@@ -399,5 +401,25 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   public void setGradientPointStrokeOpacity(Double gradientPointStrokeOpacity)
   {
     this.gradientPointStrokeOpacity = gradientPointStrokeOpacity;
+  }
+
+  public Integer getGradientPointSize()
+  {
+    return gradientPointSize;
+  }
+
+  public void setGradientPointSize(Integer gradientPointSize)
+  {
+    this.gradientPointSize = gradientPointSize;
+  }
+
+  public Integer getCategoryPointSize()
+  {
+    return categoryPointSize;
+  }
+
+  public void setCategoryPointSize(Integer categoryPointSize)
+  {
+    this.categoryPointSize = categoryPointSize;
   }
 }

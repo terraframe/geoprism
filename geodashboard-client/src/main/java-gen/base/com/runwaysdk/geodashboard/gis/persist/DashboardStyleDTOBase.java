@@ -1,10 +1,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 980271892)
+@com.runwaysdk.business.ClassSignature(hash = -1393686042)
 public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
-  private static final long serialVersionUID = 980271892;
+  private static final long serialVersionUID = -1393686042;
   
   protected DashboardStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -27,6 +27,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return CLASS;
   }
   
+  public static java.lang.String BASICPOINTSIZE = "basicPointSize";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENABLELABEL = "enableLabel";
@@ -51,7 +52,6 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String POINTFILL = "pointFill";
   public static java.lang.String POINTOPACITY = "pointOpacity";
   public static java.lang.String POINTROTATION = "pointRotation";
-  public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
   public static java.lang.String POINTSTROKEOPACITY = "pointStrokeOpacity";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
@@ -69,6 +69,43 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
+  public Integer getBasicPointSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BASICPOINTSIZE));
+  }
+  
+  public void setBasicPointSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(BASICPOINTSIZE, "");
+    }
+    else
+    {
+      setValue(BASICPOINTSIZE, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isBasicPointSizeWritable()
+  {
+    return isWritable(BASICPOINTSIZE);
+  }
+  
+  public boolean isBasicPointSizeReadable()
+  {
+    return isReadable(BASICPOINTSIZE);
+  }
+  
+  public boolean isBasicPointSizeModified()
+  {
+    return isModified(BASICPOINTSIZE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getBasicPointSizeMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(BASICPOINTSIZE).getAttributeMdDTO();
+  }
+  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -918,43 +955,6 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointRotationMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTROTATION).getAttributeMdDTO();
-  }
-  
-  public Integer getPointSize()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTSIZE));
-  }
-  
-  public void setPointSize(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(POINTSIZE, "");
-    }
-    else
-    {
-      setValue(POINTSIZE, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public boolean isPointSizeWritable()
-  {
-    return isWritable(POINTSIZE);
-  }
-  
-  public boolean isPointSizeReadable()
-  {
-    return isReadable(POINTSIZE);
-  }
-  
-  public boolean isPointSizeModified()
-  {
-    return isModified(POINTSIZE);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPointSizeMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(POINTSIZE).getAttributeMdDTO();
   }
   
   public String getPointStroke()

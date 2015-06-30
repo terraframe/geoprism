@@ -48,12 +48,12 @@ public interface Style extends Component
   
   // Point styles
   
-  public Integer getPointSize();
+  public Integer getBasicPointSize();
   public String getPointStroke();
   public Integer getPointStrokeWidth();
   public Double getPointStrokeOpacity();
   public String getPointWellKnownName();
-  public void setPointSize(Integer size);
+  public void setBasicPointSize(Integer size);
   public void setPointStroke(String stroke);
   public void setPointStrokeWidth(Integer width);
   public void setPointWellKnownName(String pointWellKnownName);

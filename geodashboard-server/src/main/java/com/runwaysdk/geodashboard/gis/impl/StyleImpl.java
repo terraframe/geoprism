@@ -14,7 +14,7 @@ public class StyleImpl extends ComponentImpl implements Style
   
   private String pointStroke;
   private Integer pointStrokeWidth;
-  private Integer pointSize;
+  private Integer basicPointSize;
   private String pointWellKnownName;
   private String pointFill;
   private Double pointOpacity;
@@ -61,9 +61,9 @@ public class StyleImpl extends ComponentImpl implements Style
     this.pointStrokeOpacity = pointStrokeOpacity;
   }
   
-  public void setPointSize(Integer pointSize)
+  public void setBasicPointSize(Integer pointSize)
   {
-    this.pointSize = pointSize;
+    this.basicPointSize = pointSize;
   }
   
   public void setPointStroke(String pointStroke)
@@ -81,9 +81,9 @@ public class StyleImpl extends ComponentImpl implements Style
     this.pointWellKnownName = pointWellKnownName;
   }
   
-  public Integer getPointSize()
+  public Integer getBasicPointSize()
   {
-    return pointSize;
+    return basicPointSize;
   }
   
   @Override
