@@ -3,6 +3,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -204,6 +205,16 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("aggregations", aggregations);
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
+      
+      List<String> pointTypes = new ArrayList<String>();
+      pointTypes.add("CIRCLE");
+      pointTypes.add("STAR");
+      pointTypes.add("SQUARE");
+      pointTypes.add("TRIANGLE");
+      pointTypes.add("CROSS");
+      pointTypes.add("X");
+      req.setAttribute("pointTypes", pointTypes);
+      req.setAttribute("activePointType", style.getPointWellKnownName());
 
       // layer types
       Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();

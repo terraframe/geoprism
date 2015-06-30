@@ -2932,6 +2932,11 @@ span.select-area span.center {
 	  overflow-y: hidden;
 	}
 	
+	#point-type-container{
+	 	width: 105px;
+  		margin: 10px 0 0 0;
+	}
+	
 .ui-autocomplete {
 	z-index: 999999 !important;
 }
