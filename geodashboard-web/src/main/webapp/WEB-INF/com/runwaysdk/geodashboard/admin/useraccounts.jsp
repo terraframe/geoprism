@@ -30,7 +30,7 @@
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 
-<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+<jwr:style src="font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
 
 
 <!-- User account Javascript -->
