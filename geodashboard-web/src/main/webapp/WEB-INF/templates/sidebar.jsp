@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
     This file is part of Runway SDK(tm).
 
@@ -18,7 +18,6 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
 <%@page import="com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO"%>
 <%@page import="com.runwaysdk.geodashboard.GeodashboardUserDTO"%>
