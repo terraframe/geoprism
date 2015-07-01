@@ -374,7 +374,7 @@
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <label for="basic-point-stroke-opacity-select">${style.pointStrokeOpacityMd.name}</label>
+	                          <label for="basic-point-stroke-opacity-select">${style.pointStrokeOpacityMd.displayLabel}</label>
 	                          <div class="text">
 	                             <select id="basic-point-stroke-opacity-select" class="tab-select" name="style.${style.pointStrokeOpacityMd.name}">
 	                              <c:forEach step="5" begin="0" end="100" var="size">
@@ -469,7 +469,7 @@
 	                            </a>
 	                          </div>
 	                        </div>
-	                        <div class="cell">
+	                        <div id="gradient-point-fill-opacity-cell" class="cell">
 			                    <label for="gradient-point-fill-opacity-select">${style.gradientPointFillOpacityMd.displayLabel}</label>
 			                    <div class="text">
 			                      <select id="gradient-point-fill-opacity-select" class="tab-select" name="style.${style.gradientPointFillOpacityMd.name}">
@@ -521,7 +521,7 @@
 	                          </div>
 	                        </div>
 	                        <div class="cell">
-	                          <label for="gradient-point-stroke-opacity-select">${style.gradientPointStrokeOpacityMd.name}</label>
+	                          <label for="gradient-point-stroke-opacity-select">${style.gradientPointStrokeOpacityMd.displayLabel}</label>
 	                          <div class="text">
 	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.${style.gradientPointStrokeOpacityMd.name}">
 	                              <c:forEach step="5" begin="0" end="100" var="size">

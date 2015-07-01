@@ -2624,6 +2624,14 @@ span.select-area span.center {
 	.modal-form .check-block label[for=f53] {
 		margin-top: 10px;
 	}
+	.modal-form .check-block label[for=basic-cat-point-other-option] {
+  		margin-top: 12px;
+	}
+	
+	#gradient-point-fill-opacity-cell{
+	  margin-left: 0;
+  	  margin-top: 10px;
+	}
 /**
 *
 * JQTree
