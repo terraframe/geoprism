@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.UnsupportedEncodingException;
@@ -32,11 +50,16 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   {
     super();
   }
-  
-  
+
   public static AggregationStrategyView[] getAggregationStrategies(String nodeId)
   {
-    GeoNode node = GeoNode.get(nodeId); 
+    GeoNode node = GeoNode.get(nodeId);
+
+    return AggregationStrategyView.getAggregationStrategies(node);
+  }
+
+  public static AggregationStrategyView[] getAggregationStrategies(GeoNode node)
+  {
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
     MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
@@ -77,21 +100,26 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       view.setAggregationType(GeometryAggregationStrategy.CLASS);
       view.setValue(GeometryAggregationStrategy.VALUE);
       view.setDisplayLabel(label);
-      
+
       JSONArray geomTypesJSONArr = new JSONArray();
       MdAttribute geomAttr = node.getGeometryAttribute();
-      if(geomAttr != null){
+      if (geomAttr != null)
+      {
         geomTypesJSONArr.put(geomAttr.getAttributeName());
       }
+
       MdAttributePoint pointAttr = node.getPointAttribute();
-      if(pointAttr != null){
+      if (pointAttr != null)
+      {
         geomTypesJSONArr.put(pointAttr.getAttributeName());
       }
+
       MdAttributeMultiPolygon polyAttr = node.getMultiPolygonAttribute();
-      if(polyAttr != null){
+      if (polyAttr != null)
+      {
         geomTypesJSONArr.put(polyAttr.getAttributeName());
       }
-      
+
       view.setAvailableGeometryTypes(encode(geomTypesJSONArr.toString()));
 
       list.add(view);
@@ -100,7 +128,6 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
     return list.toArray(new AggregationStrategyView[list.size()]);
   }
 
-  
   private static String encode(String value)
   {
     if (value != null)
@@ -117,7 +144,6 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
 
     return "";
   }
-
 
   public static String getDisplayLabel(GeoNode node)
   {

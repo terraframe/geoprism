@@ -1,3 +1,23 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -84,6 +104,105 @@
 				</executions>
 			</plugin>
 
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.11</version>
+        <configuration>
+          <header>${basedir}/LICENSE_HEADER</header>
+          <excludes>
+            <exclude>target/**</exclude>
+            <exclude>m2-target/**</exclude>
+            <exclude>**/*.properties</exclude>
+            <exclude>**/*.launch</exclude>
+            <exclude>**/*.vsd</exclude>
+            <exclude>**/*.gitignore</exclude>
+            <exclude>**/*.LESSER</exclude>
+            <exclude>**/*.xls</exclude>
+            <exclude>**/doc/**</exclude>
+            <exclude>**/launches/**</exclude>
+            <exclude>**/*.jar</exclude>
+            <exclude>LICENSE_HEADER</exclude>
+            <exclude>**/*.markdown</exclude>
+            <exclude>**/COPYING</exclude>
+            <exclude>**/logs/**</exclude>
+            <exclude>**/*.png</exclude>
+            <exclude>**/thirdparty/**</exclude>
+            <exclude>**/yui2/**</exclude>
+            <exclude>**/yui3/**</exclude>
+            <exclude>**/.git/**</exclude>
+            <exclude>**/ajcore*.txt</exclude>
+            <exclude>**/.directory</exclude>
+            <exclude>**/.keystore</exclude>
+            <exclude>**/.keyStore</exclude>
+            
+            <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
+            <exclude>**/webapp/jstree/**</exclude>
+            <exclude>**/webapp/leaflet/**</exclude>
+            <exclude>**/webapp/leaflet_plugins/**</exclude>
+            <exclude>**/webapp/jquery/**</exclude>
+            <exclude>**/webapp/jquerytree/**</exclude>
+            <exclude>**/webapp/jquery-colorpicker/**</exclude>
+            <exclude>**/webapp/cldrjs-0.4.0/**</exclude>
+            <exclude>**/webapp/bootstrap/**</exclude>
+            <exclude>**/webapp/font-awesome-font-icons/**</exclude>
+            <exclude>**/webapp/globalize-1.0.0-alpha.17/**</exclude>
+            <exclude>**/webapp/com/runwaysdk/geodashboard/fonts/**</exclude>
+            <exclude>**/webapp/ie.js</exclude>
+          </excludes>
+          <properties>
+            <name>${project.name}</name>
+            <year>${project.inceptionYear}</year>
+            <holder>Terraframe</holder>
+            <contact>terraframe.com</contact>
+          </properties>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 		</plugins>
+		<pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      com.mycila
+                    </groupId>
+                    <artifactId>
+                      license-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.4.0,)
+                    </versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 	</build>
 </project>

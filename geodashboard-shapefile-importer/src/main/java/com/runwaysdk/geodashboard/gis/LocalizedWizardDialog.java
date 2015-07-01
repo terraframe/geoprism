@@ -1,15 +1,21 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others. All rights reserved.
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: IBM Corporation - initial API and implementation Chris Gross
- * (schtoo@schtoo.com) - patch for bug 16179 Eugene Ostroukhov
- * <eugeneo@symbian.org> - Bug 287887 [Wizards] [api] Cancel button has two
- * distinct roles Paul Adams <padams@ittvis.com> - Bug 202534 - [Dialogs] SWT
- * error in Wizard dialog when help is displayed and "Finish" is pressed
- *******************************************************************************/
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis;
 
 import java.lang.reflect.InvocationTargetException;

@@ -1,6 +1,24 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 574046926)
+@com.runwaysdk.business.ClassSignature(hash = -2146840609)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +49,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 574046926;
+  private static final long serialVersionUID = -2146840609;
   
   public ReportItemBase()
   {
@@ -553,6 +571,12 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getDocumentAsStream();
   }
   
+  public static com.runwaysdk.geodashboard.report.PairView[] getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static com.runwaysdk.query.ValueQuery getMetadataForReporting(java.lang.String queryId, java.lang.String context)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
@@ -590,6 +614,12 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   }
   
   public static com.runwaysdk.geodashboard.report.PairView[] getSupportedAggregation(java.lang.String queryId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.geodashboard.report.PairView[] getSupportedGeoNodes(java.lang.String queryId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
     This file is part of Runway SDK(tm).
 
@@ -31,7 +31,7 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
-<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
+<jwr:style src="font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
 
 <!-- Universal Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>

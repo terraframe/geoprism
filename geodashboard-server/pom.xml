@@ -1,3 +1,23 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -50,8 +70,16 @@
     <dependency>
       <groupId>com.runwaysdk.geodashboard</groupId>
       <artifactId>oda.driver</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.7</version>
     </dependency>
+
+    <!-- This jar autogenerates meta-inf service provider configuration files (used with the BIRT Report Provider) More information on services loaders: https://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html http://www.oracle.com/technetwork/articles/javase/extensible-137159.html plugin 
+      blog: https://weblogs.java.net/blog/kohsuke/archive/2009/03/my_project_of_t.html -->
+    <dependency>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <version>1.1</version>
+    </dependency>    
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->

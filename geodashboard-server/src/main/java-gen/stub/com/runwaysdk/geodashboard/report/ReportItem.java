@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.report;
 
 import java.io.File;
@@ -8,6 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -36,7 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.constants.LocalProperties;
@@ -57,6 +76,8 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
@@ -318,8 +339,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Override
-  @Transaction
-  @Authenticate
   public Long render(OutputStream outputStream, ReportParameter[] parameters, String baseURL, String reportURL)
   {
     /*
@@ -871,6 +890,91 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   {
     return ReportProviderBridge.getSupportedAggregation(queryId);
   }
+
+  public static PairView[] getSupportedGeoNodes(String queryId)
+  {
+    return ReportProviderBridge.getGeoNodeIds(queryId);
+  }
+
+  public static PairView[] getGeoEntitySuggestions(String text, Integer limit)
+  {
+    GeoEntity root = GeoEntity.getRoot();
+
+    QueryFactory factory = new QueryFactory();
+
+    LocatedInQuery lQuery = new LocatedInQuery(factory);
+    lQuery.WHERE(lQuery.getParent().EQ(root));
+
+    GeoEntityQuery query = new GeoEntityQuery(factory);
+    query.WHERE(query.EQ(lQuery.getChild()));
+
+    OIterator<? extends GeoEntity> iterator = query.getIterator();
+
+    try
+    {
+      List<PairView> list = new LinkedList<PairView>();
+
+      while (iterator.hasNext())
+      {
+        GeoEntity entity = iterator.next();
+
+        list.add(PairView.createWithLabel(entity.getId(), entity.getDisplayLabel().getValue()));
+      }
+
+      return list.toArray(new PairView[list.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+  }
+
+  // public static PairView[] getGeoEntitySuggestions(String text, Integer limit)
+  // {
+  // ValueQuery query = new ValueQuery(new QueryFactory());
+  //
+  // GeoEntityQuery entityQuery = new GeoEntityQuery(query);
+  //
+  // SelectableChar id = entityQuery.getId();
+  // Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
+  // Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
+  // SelectableChar geoId = entityQuery.getGeoId();
+  //
+  // CONCAT label = F.CONCAT(F.CONCAT(F.CONCAT(F.CONCAT(geoLabel, " ("), F.CONCAT(universalLabel, ")")), " : "), geoId);
+  // label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+  // label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+  // label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
+  //
+  // query.SELECT(id, label);
+  // query.WHERE(label.LIKEi("%" + text + "%"));
+  //
+  // query.ORDER_BY_ASC(geoLabel);
+  //
+  // query.restrictRows(limit, 1);
+  //
+  // OIterator<ValueObject> iterator = query.getIterator();
+  //
+  // try
+  // {
+  // List<PairView> list = new LinkedList<PairView>();
+  //
+  // while (iterator.hasNext())
+  // {
+  // ValueObject vObject = iterator.next();
+  // String vId = vObject.getValue(GeoEntity.ID);
+  // String vLabel = vObject.getValue(GeoEntity.DISPLAYLABEL);
+  //
+  // list.add(PairView.createWithLabel(vId, vLabel));
+  // }
+  //
+  // return list.toArray(new PairView[list.size()]);
+  // }
+  // finally
+  // {
+  // iterator.close();
+  // }
+  // }
 
   public static ReportItem getByDashboard(String dashboardId)
   {
