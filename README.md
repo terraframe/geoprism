@@ -45,6 +45,12 @@ In GeoDashboard a Universal represents a feature set type to which data points c
 * Assign users privileges to dashboards.
 
 
+### Developer Features Overview
+* Metadata driven development environment.
+* Integrated Object Relational Mapping (ORM).
+* Full localization support.
+
+
 ### General Software Requirements
 * Java 6 or 7 (Oracle jre recommended)
 * Tomcat 6 
