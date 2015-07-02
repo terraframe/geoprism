@@ -830,7 +830,7 @@
         var layer = this._map._layerCache.get(id);
         that._layer = layer;
       
-        this._LayerController.edit(new Mojo.ClientRequest({
+        this._LayerController.edit(new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, that._layer);
             that._addLayerFormControls();
@@ -838,13 +838,13 @@
           onFailure : function(e){
             that.handleException(e);
           }
-        }), id);  
+        }, this.getImpl()[0]), id);  
       },
       
       open : function(thematicAttributeId) {
         var that = this;
           
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, "");
             that._addLayerFormControls();              
@@ -853,7 +853,7 @@
             that._closeLayerModal();
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
           
         this._LayerController.newThematicInstance(request, thematicAttributeId, this._mapId);      
       },
@@ -1718,7 +1718,7 @@
         var that = this;
       
         // edit the layer
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
             that._addLayerFormControls();
@@ -1726,7 +1726,7 @@
           onFailure : function(e){
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
       
         this._ReferenceLayerController.edit(request, id);
       },
@@ -1734,7 +1734,7 @@
       open : function(universalId){
         var that = this;
       
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
             that._addLayerFormControls();
@@ -1744,7 +1744,7 @@
             that._closeLayerModal();
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
               
         this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);        
       }

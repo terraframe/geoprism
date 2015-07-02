@@ -2736,17 +2736,17 @@ span.select-area span.center {
 */
 	div.standby-overlay {
 		background-color: #CCCCCC;
-		background-image: url('../images/transparent_spinner.gif');
+		background-image: url('../images/loading_spinner_splitring.gif');
 		background-repeat: no-repeat;
 		background-position: center center;
 		position: absolute;
 		display: block;
-		opacity: 0.5
+		opacity: 0.8;
 	}
 	
 	div.gdb-maincontent-busy {
 		background-color: #CCCCCC;
-		background-image: url('../images/transparent_spinner.gif');
+		background-image: url('../images/loading_spinner_splitring.gif');
 		background-repeat: no-repeat;
 		background-position: center center;
 		position: absolute;
@@ -2755,7 +2755,7 @@ span.select-area span.center {
 		left: 275px;
 		right: 0px;
 		height: 100%;
-		opacity: 0.5;
+		opacity: 0.8;
 	}
 
 /* 

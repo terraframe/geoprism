@@ -2422,8 +2422,8 @@
         else {
           this._criteria = this._reloadCriteria();
           var conditions = this._getConditionsFromCriteria(this._criteria);
-            
-          var clientRequest = new Mojo.ClientRequest({
+          
+          var clientRequest = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function(json, calledObj, response) {
               var jsonObj = Mojo.Util.toObject(json);
                
@@ -2439,7 +2439,7 @@
             onFailure : function(e) {
               that.handleException(e);
             }
-          });
+          }, $(DynamicMap.DASHBOARD_MODAL)[0]);
             
           com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
           
