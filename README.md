@@ -43,3 +43,12 @@ In GeoDashboard a Universal represents a feature set type to which data points c
 * Create and administer new users to the system. 
 * Assing users to system roles.
 * Assign users privileges to dashboards.
+
+
+### General Software Requirements
+* Java 6 or 7 (Oracle jre recommended)
+* Tomcat 6 
+* GeoServer 2.5 +
+* PostgreSQL 9.0 +
+* PostGIS 2.0 +
+
