@@ -25,15 +25,23 @@ GeoNode
 
 ### Data Management Features Overview
 * Visualize Universal relationship heirarchy. 
-* Edit Universal relationship heirarchy.
-* Edit Unversals. 
+* Edit Universals and Universal relationship heirarchy.
 * Create Universal subtypes.
-* Export Universal definitions
-
+* Export Universal definitions.
 * Visualize GeoEntity relationship heirarchy. 
-* Edit GeoEntity relationship heirarchy.
-* Edit GeoEntities including their geometry. 
+* Edit GeoEntities (including their geometry) and GeoEntity relationship heirarchy.
 * Create GeoEntity synonyms.
-* Export GeoEntity definitions
-* Identify system detected data issues.
-* Fix system identified data issues.
+* Export GeoEntity definitions.
+* Identify system detected GeoEntity data issues.
+* Fix system identified GeoEntity data issues.
+* Edit ontology term and term heirarchy.
+* Export ontology term definitions.
+* Visualize data in a tabular form.
+* Create and edit scheduled data upload jobs. 
+* View scheduled data upload job execution history.
+
+
+### System Administration Features Overview
+* Create and administer new users to the system. 
+* Assing users to system roles.
+* Assign users privileges to dashboards.
