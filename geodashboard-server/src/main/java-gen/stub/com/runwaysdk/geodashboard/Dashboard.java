@@ -785,12 +785,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     for (int i = 0; i < gdUsers.length; i++)
     {
       JSONObject userObj = new JSONObject();
-
+      boolean isAdmin = false;
       GeodashboardUser user = gdUsers[i];
+      
+      List<? extends Roles> userRoles = user.getAllAssignedRole().getAll();
+      for(Roles role : userRoles)
+      {
+        if(role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
+        {
+          isAdmin = true;
+        }
+      }
+      
       boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
 
-      if (!inactive)
+      if (!inactive && !isAdmin)
       {
         try
         {

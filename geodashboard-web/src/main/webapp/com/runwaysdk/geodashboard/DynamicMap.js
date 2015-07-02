@@ -2176,20 +2176,26 @@
               onSuccess : function(usersJSON){     
                 var users = JSON.parse(usersJSON);
                 var html = '<div id="add-users-modal"><div class="holder"><div class="row-holder">';
-                for(var i=0; i<users.length; i++){
-                  var user = users[i];
-                  var userId = user.id;
-                  var checked = "";
-                  
-                  if(user.hasAccess){
-                    checked = "checked";
-                  }
-                      var chk = '<div class="check-block">' +
-                      '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
-                      '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
-                      '</div>';
-                      
-                      html += chk;
+                
+                if(users.length > 0){
+	                for(var i=0; i<users.length; i++){
+	                  var user = users[i];
+	                  var userId = user.id;
+	                  var checked = "";
+	                  
+	                  if(user.hasAccess){
+	                    checked = "checked";
+	                  }
+	                      var chk = '<div class="check-block">' +
+	                      '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
+	                      '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
+	                      '</div>';
+	                      
+	                      html += chk;
+	                }
+                }
+                else{
+                	html += '<p class="dialog-msg">'+ com.runwaysdk.Localize.localize("dashboard", "noUsersMsg") +'</p>';
                 }
                 
                 html += '</div></div></div>';
