@@ -5,7 +5,13 @@ Runway GeoDashboard is an integrated platform for data management and visualizat
 ### An Ontological Approach to GIS Development
 By utilizing an ontological approach to software development Runway GeoDashboard enables the utilization of almost any data set even if no geometries exist for data points.  This is one of the great strengths of Runway GeoDashboard as it allows for analysing and visuzlizing data in a geographic context even when geometry information is lacking.  Additionally, ontologies and geo-ontologies allow for navigating relationship hierarchies (including spatial) where such relationships would typically be computationally derived from geometric relationships or manually assigned by an individual.  
 
-### Visualization Feature Overview
+### Important Concepts of Runway GeoDashboard
+Universal
+GeoEntity
+GeoNode
+
+
+### Visualization Features Overview
 * Dynamically map and style layers based on data attributes.
 * Dynamically aggregate layers by spatial boundaries.
 * Enable/disable reference boundary layers for gegraphic context and cartography.
@@ -15,3 +21,19 @@ By utilizing an ontological approach to software development Runway GeoDashboard
 * Export maps to .png file format.
 * Create and clone new dashboards.
 * Switch between different saved dashboards and maps.
+
+
+### Data Management Features Overview
+* Visualize Universal relationship heirarchy. 
+* Edit Universal relationship heirarchy.
+* Edit Unversals. 
+* Create Universal subtypes.
+* Export Universal definitions
+
+* Visualize GeoEntity relationship heirarchy. 
+* Edit GeoEntity relationship heirarchy.
+* Edit GeoEntities including their geometry. 
+* Create GeoEntity synonyms.
+* Export GeoEntity definitions
+* Identify system detected data issues.
+* Fix system identified data issues.
