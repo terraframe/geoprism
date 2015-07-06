@@ -2776,6 +2776,7 @@ span.select-area span.center {
 */
 	#map-tools-collapse-container{
 		  padding: 5px;
+		  width: 80px; /* Simply remove this for full width */
 	}
 	
 	div#collapse-map-tools.accordion-body{
@@ -2788,9 +2789,20 @@ span.select-area span.center {
 		color: #bababa;
 		cursor: pointer;
 	}
-	
 	i.fa.fa-file-image-o.map-tool-icon:hover,
 	i.fa.fa-file-image-o.map-tool-icon:focus{
+		color: #00bfff;
+	}
+	
+	.fa.fa-arrows-alt.map-tool-icon{
+		font-size: 30px;
+	    margin: 2px;
+	    margin-left: 5px;
+		color: #bababa;
+		cursor: pointer;
+	}
+	i.fa.fa-arrows-alt.map-tool-icon:hover,
+	i.fa.fa-arrows-alt.map-tool-icon:focus{
 		color: #00bfff;
 	}
 

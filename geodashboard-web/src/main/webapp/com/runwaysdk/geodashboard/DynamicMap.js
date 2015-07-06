@@ -389,10 +389,10 @@
             
             this._refLayerCache.put(refView.universalId, refView);
           }
-          
-          if (json.bbox != null) {
+        }
+        
+        if (json.bbox != null) {
             this._bBox = json.bbox;
-          }
         }
       },
                  
@@ -2278,6 +2278,10 @@
         this._exportMap();
       },
       
+      _onClickZoomMapToExtent : function(e) {
+    	  this._configureMap();
+      },      
+      
       _onClickToggleLeftPanel : function(e) {
         var target = $(e.target);
         var speed = 500;
@@ -2615,7 +2619,8 @@
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
-        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
+        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap)); 
+        $('#map-zoom-to-extent-btn').on('click', Mojo.Util.bind(this, this._onClickZoomMapToExtent));
         
         $('#add-dashboard-user-btn').on('click', Mojo.Util.bind(this, this._onClickAddDashboardUsers)); 
         

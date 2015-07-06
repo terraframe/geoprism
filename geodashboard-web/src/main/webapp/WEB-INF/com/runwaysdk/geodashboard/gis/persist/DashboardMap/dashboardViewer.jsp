@@ -139,6 +139,7 @@ $(document).ready(function(){
               	<div id="collapse-map-tools" class="accordion-body">
               		<div class="accordion-inner holder" id="mapToolsContainer">
               			<i id="map-export-btn" class="fa fa-file-image-o map-tool-icon" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></i>
+              			<i id="map-zoom-to-extent-btn" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></i>
               		</div>
               
 			    </div>
