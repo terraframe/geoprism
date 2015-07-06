@@ -3004,35 +3004,68 @@ div.alert.alertbox {
 
 .fa.fa-refresh.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
 .fa.fa-floppy-o.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
 .fa.fa-globe.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
-.fa.fa-tachometer.filters-button{
-  color: #bababa;
-  font-size: 30px;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
+
+/* 
+* Custom Dashboard SVG Font Icon 
+*/
+	@font-face {
+	  font-family: 'geoDashboardFonts';
+	  src: url('../custom-fonts/gdb.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	       url('../custom-fonts/gdb.ttf') format('truetype'), /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+	       url('../custom-fonts/gdb.eot') format('embedded-opentype'),
+	       url('../custom-fonts/gdb.svg') format('svg');
+	}
+	
+	[class^="icon-"], [class*=" icon-"] {
+		font-family: 'geoDashboardFonts';
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+	
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	
+	.icon-dashboard-icons:before {
+	    content: "\e600";
+	}
+	
+	.icon-dashboard-icons {
+	  	color: #bababa;
+  		font-size: 32px;
+  		position: relative;
+  		top: 46%;
+  		transform: translateY(-50%);
+  		display: inline-block;
+  		cursor: pointer;
+	}
+	
 
 .filters-button:hover{
 	color: #00bfff !important;
@@ -3182,5 +3215,6 @@ div.secondary-box label {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
+
 
 

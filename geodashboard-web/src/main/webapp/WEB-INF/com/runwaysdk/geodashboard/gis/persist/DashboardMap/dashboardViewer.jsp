@@ -324,9 +324,12 @@ $(document).ready(function(){
 	      </a>
 	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
 	      </a>
+	      
 	      <c:if test="${hasAccess}">
-	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left"">
-	          </a>
+	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
+	      
+<%-- 	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left""> --%>
+<!-- 	          </a> -->
 	      </c:if>
 	    </div>
     
