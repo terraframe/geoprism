@@ -41,7 +41,7 @@
     <h1><gdb:localize key="error.header" /></h1>
   </header>
     
-  <div name = "main-content" style="color: #F6F3F3;text-align: center;">
+  <div name = "main-content" style="color: red;text-align: center;">
     
   <c:if test="${exception != null}">
       <gdb:localize key="error.message" />

@@ -19,9 +19,13 @@
 package com.runwaysdk.geodashboard;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -47,6 +51,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   {
     this.edit(dto.getId());
   }
+  
 
   public void create(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -98,6 +103,13 @@ public class DashboardController extends DashboardControllerBase implements com.
   {
     com.runwaysdk.geodashboard.DashboardDTO dto = com.runwaysdk.geodashboard.DashboardDTO.lock(super.getClientRequest(), id);
     req.setAttribute("item", dto);
+    
+    DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), id);
+    req.setAttribute("dashboard", dashboard);
+    
+    String dashboardUsersJSON = dashboard.getAllDashboardUsersJSON();
+    req.setAttribute("dashboardUsersJSON", encode(dashboardUsersJSON));
+    
     render("editComponent.jsp");
   }
 
@@ -185,5 +197,22 @@ public class DashboardController extends DashboardControllerBase implements com.
     req.setAttribute("dashboard", dashboard);
     
     render("newClone.jsp");
+  }
+  
+  private String encode(String value)
+  {
+    if (value != null)
+    {
+      try
+      {
+        return URLEncoder.encode(value, "UTF-8");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+        throw new ProgrammingErrorExceptionDTO(e.getClass().getName(), e.getLocalizedMessage(), e.getMessage());
+      }
+    }
+
+    return "";
   }
 }

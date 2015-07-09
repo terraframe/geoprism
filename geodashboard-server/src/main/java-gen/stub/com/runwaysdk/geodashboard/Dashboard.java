@@ -305,6 +305,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       map.apply();
     }
   }
+  
+  @Override
+  @Transaction
+  public void applyWithOptions(String[] userIds, String name)
+  {
+    this.lock();
+    this.getDisplayLabel().setValue(name);
+    this.apply();
+    this.unlock();
+    
+    assignUsers(this.getId(), userIds);
+  }
 
   @Override
   @Transaction
@@ -775,16 +787,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return true;
   }
-
+  
+  /*
+   * Gets all active geodashboard users in the system who are not Administrators 
+   * 
+   */
   @Override
-  public String getAllDashboardUsers()
-  {
-    JSONArray usersArr = new JSONArray();
-
+  public GeodashboardUser[] getAllDashboardUsers() {
+    ArrayList<GeodashboardUser> nonAdminGDUsers = new ArrayList<GeodashboardUser>();
     GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
     for (int i = 0; i < gdUsers.length; i++)
     {
-      JSONObject userObj = new JSONObject();
       boolean isAdmin = false;
       GeodashboardUser user = gdUsers[i];
       
@@ -797,10 +810,39 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
       
-      boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
 
       if (!inactive && !isAdmin)
+      {
+       nonAdminGDUsers.add(user);
+      }
+    }
+    
+    GeodashboardUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeodashboardUser[nonAdminGDUsers.size()]);
+    
+    return nonAdminGDUsersArr;
+  }
+
+  /*
+   * Gets all active geodashboard users in the system who are not Administrators 
+   * and whether they already have access to a given dashboard.
+   * 
+   */
+  @Override
+  public String getAllDashboardUsersJSON()
+  {
+    JSONArray usersArr = new JSONArray();
+
+    GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
+    for (int i = 0; i < gdUsers.length; i++)
+    {
+      JSONObject userObj = new JSONObject();
+      GeodashboardUser user = gdUsers[i];
+      
+      boolean hasAccess = this.userHasAccess(user);
+      Boolean inactive = user.getInactive();
+
+      if (!inactive)
       {
         try
         {

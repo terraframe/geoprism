@@ -31,6 +31,10 @@
         <mdMethod name="getSortedTypes" label="Get Sorted Types" description="Returns a sorted list of de-referenced MdClasses stored by MetadataWrapper" returnType="com.runwaysdk.system.metadata.MdClass[]" />
         <mdMethod name="applyConditions" label="Apply conditions" static="false" returnType="void">
           <mdParameter order="0" description="Conditions" name="conditions" label="Conditions" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
+        </mdMethod>
+        <mdMethod name="applyWithOptions" label="Apply With Options" static="false" returnType="void">
+          <mdParameter order="0" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />
+        	<mdParameter name="name" label="Dashboard Name" order="1" type="java.lang.String" />
         </mdMethod>        
         <mdMethod name="getConditions" label="Get conditions" static="false" returnType="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
         <mdMethod static="true" description="Creates a new dashboard." name="create" label="create" returnType="com.runwaysdk.geodashboard.Dashboard">
@@ -40,7 +44,8 @@
           <mdParameter order="0" description="Dashboard Id" name="dashboardId" label="Dashboard Id." type="java.lang.String" />
           <mdParameter order="1" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />
         </mdMethod>
-        <mdMethod static="false" description="Get all dashboard users and their access status" name="getAllDashboardUsers" label="Get all dashboard users" returnType="java.lang.String"></mdMethod>
+        <mdMethod static="false" description="Get all dashboard users and their access status" name="getAllDashboardUsersJSON" label="Get all dashboard users" returnType="java.lang.String"></mdMethod>
+      	<mdMethod static="false" description="Get all dashboard users" name="getAllDashboardUsers" label="Get all dashboard users" returnType="com.runwaysdk.geodashboard.GeodashboardUser[]"></mdMethod>
       </mdBusiness>
 
       <mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata" cacheAlgorithm="everything">

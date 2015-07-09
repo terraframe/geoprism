@@ -157,8 +157,8 @@ $(document).ready(function(){
 		<div class="nav-bar">
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
-			<div class="sales-menu dropdown">
-				<a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
+			<div id="dashboard-dropdown" class="sales-menu dropdown">
+				<a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
 					<c:forEach items="${dashboards}" var="dashboard" varStatus="status">
 						<li><a class="gdb-dashboard" id="${dashboard.id}">${dashboard.displayLabel.value}</a></li>
@@ -176,7 +176,8 @@ $(document).ready(function(){
 <!--   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
   		      </span>
   		      
-  		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i>
+<%--   		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i> --%>
+		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
   		    </c:if>
 		</div>
 		
@@ -411,6 +412,6 @@ $(document).ready(function(){
 
 <!-- Dialog for cloning a dashboard  -->
 <div id="clone-container"></div>  
-<div id="add-dashboard-users-container"></div>
+<div id="dashboard-edit-container"></div>  
 
 </html>

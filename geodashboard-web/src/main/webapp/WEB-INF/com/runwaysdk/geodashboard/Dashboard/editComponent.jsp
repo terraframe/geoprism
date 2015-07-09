@@ -18,14 +18,36 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="page_title" scope="request" value="Edit an existing Dashboard"/>
-<dl>
-  <mjl:form id="com.runwaysdk.geodashboard.Dashboard.form.id" name="com.runwaysdk.geodashboard.Dashboard.form.name" method="POST">
-    <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.Dashboard.form.update.button" value="Update" action="com.runwaysdk.geodashboard.DashboardController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.Dashboard.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.DashboardController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.Dashboard.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.DashboardController.cancel.mojo" />
-  </mjl:form>
-</dl>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
+<gdb:localize var="dashboardEditLabel" key="dashboard.edit.label"/>
+<gdb:localize var="dashboardLabel" key="dashboard.label"/>
+
+<div id="dashboard-dialog" class="modal-content" title="${dashboardEditLabel} ${dashboard.displayLabel}">
+  <form class="submit-form clone-form" action="#">
+    <input id="dashboard-id" type="hidden" value="${dashboard.id}">
+    <fieldset>
+      <section class="form-container">
+        <div class="field-row clearfix" id="dashboard-label-field-row" >
+          <label for="dashboard-label">${dashboardLabel} *</label>
+          <input id="dashboard-label" type="text" value="${dashboard.displayLabel}">
+          <div class="error-message" id="dashboard-label-error" ></div>
+        </div>
+        
+        <div class="field-row clearfix" id="add-dashboard-users-field-row" >
+			<div class="holder">
+				<div class="row-holder">
+					<label><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></label>
+					<!-- Attaching users json to the container element because user json contains attribution for if a user already has privileges -->
+					<div id="add-dashboard-users-container" class="accordion-inner holder ui-sortable" data-dashboarduserjson="${dashboardUsersJSON}">
+			 		</div>
+			  	</div>
+	    	</div>
+		</section>
+    </fieldset>
+  </form>
+</div>
+

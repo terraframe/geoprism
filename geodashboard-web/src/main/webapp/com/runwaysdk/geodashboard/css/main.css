@@ -34,8 +34,8 @@ body{
 }
 
 body.iFrameBody {
-	overflow: hidden;
-/* 	overflow-y: auto; */
+/* 	overflow: hidden; */
+	overflow-y: auto;
 	background-color: inherit;
 }
 
@@ -2525,6 +2525,19 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
+	i.fa.fa-cog.ico-dashboard-options {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-cog.ico-dashboard-options:hover,
+	i.fa.fa-cog.ico-dashboard-options:focus{
+		color: #00bfff;
+	}
+	
 	i.fa.fa-user-plus.ico-add-dashboard-user {
 		margin-left: 5px;
 		vertical-align: bottom;
@@ -2549,6 +2562,10 @@ span.select-area span.center {
 	i.fa.fa-external-link.ico-new-dashboard-tab:hover,
 	i.fa.fa-external-link.ico-new-dashboard-tab:focus{
 		color: #00bfff;
+	}
+	
+	#add-dashboard-users-container{
+		float: left;
 	}
 	
 	#dashboardMetadata {

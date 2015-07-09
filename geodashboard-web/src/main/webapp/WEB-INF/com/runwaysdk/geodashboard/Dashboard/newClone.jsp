@@ -25,7 +25,7 @@
 <gdb:localize var="cloneLabel" key="dashboard.clone.label"/>
 <gdb:localize var="dashboardLabel" key="dashboard.label"/>
 
-<div id="clone-dialog" class="modal-content" title="${cloneLabel} ${dashboard.displayLabel}">
+<div id="dashboard-dialog" class="modal-content" title="${cloneLabel} ${dashboard.displayLabel}">
   <form class="submit-form clone-form" action="#">
     <input id="clone-dashboard-id" type="hidden" value="${dashboard.id}">
     <fieldset>
