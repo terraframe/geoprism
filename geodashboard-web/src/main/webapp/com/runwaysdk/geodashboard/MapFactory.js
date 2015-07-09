@@ -424,12 +424,12 @@
               var featureDisplayName = featureLayer.properties.displaylabel;
               
               if(typeof attributeValue === 'number'){
-                attributeValue = that._formatter(attributeValue);
+                attributeValue = callingThisRef._formatter(attributeValue);
               }
               else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
                 var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
                 var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                attributeValue = that._formatDate(parsedAttr);
+                attributeValue = callingThisRef._formatDate(parsedAttr);
               }
               
               popupContent += '<h3 class="popup-heading">'+layerDisplayName+'</h3>';
@@ -458,7 +458,7 @@
               if(currGeoId != null)
               {                 
             	callingThisRef._currGeoId = currGeoId;
-                callingThisRef._renderReport(layer.getLayerId(), that._currGeoId, that._criteria);
+                callingThisRef._renderReport(layer.getLayerId(), callingThisRef._currGeoId, callingThisRef._criteria);
               }            
             }
             

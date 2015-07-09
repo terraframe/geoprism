@@ -34,8 +34,8 @@ body{
 }
 
 body.iFrameBody {
-/* 	overflow: hidden; */
-	overflow-y: auto;
+	overflow: hidden; /* This ensures the report panel doesn't force a scroll bar on render */
+/* 	overflow-y: auto; */
 	background-color: inherit;
 }
 
