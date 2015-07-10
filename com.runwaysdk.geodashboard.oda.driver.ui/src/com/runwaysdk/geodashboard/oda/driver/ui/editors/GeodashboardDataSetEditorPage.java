@@ -166,7 +166,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
        * Create a combo viewer to select the query
        */
       Label schemaLabel = new Label(selectTableGroup, SWT.LEFT);
-      schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard"));
+      schemaLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.selectdashboard")); //$NON-NLS-1$
 
       this.queryCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.queryCombo.getControl().setLayoutData(gd);
@@ -179,7 +179,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
        * Create a combo viewer to select the geo node
        */
       Label geoNodeLabel = new Label(selectTableGroup, SWT.LEFT);
-      geoNodeLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.geoNode"));
+      geoNodeLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.geoNode")); //$NON-NLS-1$
 
       this.nodeCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.nodeCombo.getControl().setLayoutData(gd);
@@ -190,7 +190,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
        * Create a combo viewer to select the aggregation level
        */
       Label aggregationLabel = new Label(selectTableGroup, SWT.LEFT);
-      aggregationLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation"));
+      aggregationLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.aggregation")); //$NON-NLS-1$
 
       this.aggregationCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.aggregationCombo.getControl().setLayoutData(gd);
@@ -201,7 +201,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
        * Create a combo viewer to select the default geo id
        */
       Label entityLabel = new Label(selectTableGroup, SWT.LEFT);
-      entityLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.defaultGeoId"));
+      entityLabel.setText(GeodashboardPlugin.getResourceString("dashboardpage.label.defaultGeoId")); //$NON-NLS-1$
 
       this.entityCombo = new ComboViewer(selectTableGroup, SWT.READ_ONLY);
       this.entityCombo.getControl().setLayoutData(gd);
@@ -228,8 +228,8 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
     catch (ConnectionException ex)
     {
       Shell shell = parent.getShell();
-      String label = GeodashboardPlugin.getResourceString("dataset.error");
-      String message = GeodashboardPlugin.getResourceString("dashboardpage.label.connectionerror");
+      String label = GeodashboardPlugin.getResourceString("dataset.error"); //$NON-NLS-1$
+      String message = GeodashboardPlugin.getResourceString("dashboardpage.label.connectionerror"); //$NON-NLS-1$
       // String message = ex.getLocalizedMessage();
 
       ExceptionHandler.showException(shell, label, message, ex);
