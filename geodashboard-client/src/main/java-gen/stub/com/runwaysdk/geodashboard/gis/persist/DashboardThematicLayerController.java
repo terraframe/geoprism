@@ -1,8 +1,27 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -204,6 +223,18 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("aggregations", aggregations);
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
+      
+      List<String> pointTypes = new ArrayList<String>();
+      pointTypes.add("CIRCLE");
+      pointTypes.add("STAR");
+      pointTypes.add("SQUARE");
+      pointTypes.add("TRIANGLE");
+      pointTypes.add("CROSS");
+      pointTypes.add("X");
+      req.setAttribute("pointTypes", pointTypes);
+      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
+      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
+      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
 
       // layer types
       Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
@@ -214,20 +245,25 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
       if (mdAttributeConcrete instanceof MdAttributeDateDTO )
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
       }
       else if( mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO )
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
       }
       else
       {
-        layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
-        layerTypes.put(AllLayerTypeDTO.GRADIENT.getName(), labels.get(AllLayerTypeDTO.GRADIENT.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORY.getName(), labels.get(AllLayerTypeDTO.CATEGORY.getName()));
+        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+        layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
+        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
       }
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
@@ -243,7 +279,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
       else
       {
-        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
+        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASICPOINT.getName());
       }
 
       // Determine if the attribute is an ontology attribute
@@ -318,7 +354,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("categories", this.encode(style.getStyleCategories()));
+      req.setAttribute("polygoncategories", this.encode(style.getCategoryPolygonStyles()));
+      req.setAttribute("pointcategories", this.encode(style.getCategoryPointStyles()));
       req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
 
       /*

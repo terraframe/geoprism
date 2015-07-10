@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 (function(){
   var CategoryWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryWidget', {
     IsAbstract : true,
@@ -271,11 +289,11 @@
         
         // Default values for the category tree widget
         if(this._elementId == null) {
-          this._elementId = "#ontology-tree";
+          this._elementId = "#polygon-ontology-tree";
         }
         
         if(this._storeId == null ) {
-          this._storeId = "#categories-input";
+          this._storeId = "#categories-input"; // THIS MAY NEVER BE VALID
         }
       },
       
@@ -527,51 +545,31 @@
         }); 
       },       
       
-      _attachDynamicCells : function(strokeCellHolder, fillCellHolder) {
-        if(strokeCellHolder != null) {        
-          var polyStroke = $("#gdb-reusable-cell-polygonStroke");
-          strokeCellHolder.append(polyStroke);
-          polyStroke.show();
-          
-          var polyStrokeWidth = $("#gdb-reusable-cell-polygonStrokeWidth");
-          strokeCellHolder.append(polyStrokeWidth);
-          polyStrokeWidth.show();
-          
-          var polyStrokeOpacity = $("#gdb-reusable-cell-polygonStrokeOpacity");
-          strokeCellHolder.append(polyStrokeOpacity);
-          polyStrokeOpacity.show();
-        }
-          
-        if(fillCellHolder != null) {
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          fillCellHolder.append(polyFillOpacity);
-          polyFillOpacity.show();
-        }
-      },          
-        
       _onLayerTypeTabChange : function(e) {
         var activeTab = e.target;
           
         var type = activeTab.dataset["gdbTabType"];
           
-        if (type === "BASIC") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
-          $("#tab001basic").show();
+        if (type === "BASICPOLYGON") {
+          $("#tab003basicpolygon").show();
+        }
+        else if (type === "BASICPOINT") {
+            $("#tab001basicpoint").show();
+        }
+        else if (type === "GRADIENTPOINT") {
+            $("#tab006gradientpoint").show();
+        }
+        else if (type === "CATEGORYPOINT") {
+            $("#tab007categoriespoint").show();
         }
         else if (type === "BUBBLE") {
           $("#tab002bubble").show();
         }
-        else if (type === "GRADIENT") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
-          $("#tab003gradient").show();
+        else if (type === "GRADIENTPOLYGON") {
+          $("#tab004gradientpolygon").show();
         }
-        else if (type === "CATEGORY") {
-          $("#tab004categories").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), null);
-        }
-        else if (type === "FIXEDBUBBLE") {
-          $("#tab005bubble").show();
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
+        else if (type === "CATEGORYPOLYGON") {
+          $("#tab005categoriespolygon").show();
         }
       },
         
@@ -626,7 +624,7 @@
       
       /**
        * Handles the selection of layer type representation in the layer create/edit form
-       * i.e. basic, bubble, gradient, category
+       * i.e. basic polygon, basic point, bubble, gradient, category, etc...
        * 
        */
       _selectLayerType : function(){
@@ -635,28 +633,12 @@
         
         $('input:radio[name="layer.'+layerType+'"]').change(function(){   
               
-          var targetRadio = $(this);
-              
           // hide all the styling options
           $.each($('.tab-pane'), function(){
             if($(this).is(":visible")){
               $(this).hide(); 
             }
           });
-            
-          // add the relevant styling options for the layer type
-          if (targetRadio.attr("id") === "radio1") {
-            $("#tab001").show();
-          }
-          else if (targetRadio.attr("id") === "radio2") {
-            $("#tab002").show();
-          }
-          else if (targetRadio.attr("id") === "radio3") {
-            $("#tab003").show();
-          }
-          else if (targetRadio.attr("id") === "radio4") {
-            $("#tab004").show();
-          }
         });
       },
       
@@ -685,18 +667,23 @@
         
         // Move reusable cells to active cell holder
         var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab001basic") {
-          this._attachDynamicCells($("#gdb-reusable-basic-stroke-cell-holder"), $("#gdb-reusable-basic-fill-cell-holder"));
+        if (activeTab === "tab003basicpolygon") {
+        	$("#tab003basicpolygon").show();
         }
-        else if (activeTab === "tab003gradient") {
-          this._attachDynamicCells($("#gdb-reusable-gradient-stroke-cell-holder"), $("#gdb-reusable-gradient-fill-cell-holder"));
+        else if (activeTab === "tab001basicpoint") {
+        	$("#tab001basicpoint").show();
         }
-        else if (activeTab === "tab004categories") {
-          this._attachDynamicCells($("#gdb-reusable-categories-stroke-cell-holder"), $("#gdb-reusable-categories-fill-cell-holder"));
-          
-          // Hide the reusable input cells that don't apply to categories
-          var polyFillOpacity = $("#gdb-reusable-cell-polygonFillOpacity");
-          polyFillOpacity.hide();
+        else if (activeTab === "tab006gradientpoint") {
+        	$("#tab006gradientpoint").show();
+        }
+        else if (activeTab === "tab007categoriespoint") {
+        	$("#tab007categoriespoint").show();
+        }
+        else if (activeTab === "tab004gradientpolygon") {
+        	$("#tab004gradientpolygon").show();
+        }
+        else if (activeTab === "tab005categoriespolygon") {
+        	$("#tab005categoriespolygon").show();
         }
         
         // Attach listeners
@@ -834,7 +821,7 @@
         	that._getGeographicAggregationOptions(layer);
         });
         
-        this._thematicAttributeId = $("#categories-input").data('mdattributeid');
+        this._thematicAttributeId = $(".category-input").data("mdattributeid"); // There can be multiple elements matching but all have same mdattributeid val
       },
       
       edit : function(id) {
@@ -843,7 +830,7 @@
         var layer = this._map._layerCache.get(id);
         that._layer = layer;
       
-        this._LayerController.edit(new Mojo.ClientRequest({
+        this._LayerController.edit(new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, that._layer);
             that._addLayerFormControls();
@@ -851,13 +838,13 @@
           onFailure : function(e){
             that.handleException(e);
           }
-        }), id);  
+        }, this.getImpl()[0]), id);  
       },
       
       open : function(thematicAttributeId) {
         var that = this;
           
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, "");
             that._addLayerFormControls();              
@@ -866,11 +853,16 @@
             that._closeLayerModal();
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
           
         this._LayerController.newThematicInstance(request, thematicAttributeId, this._mapId);      
       },
       
+      _getActiveLayerType : function(){
+    	     var layerType = $(".nav-tabs.type-tabs").find(".active").attr("id");
+    	  
+    	     return layerType;
+      },
       
       /**
        * 
@@ -947,21 +939,21 @@
           }
         });      
         
-        if($("#tab004categories").is(":visible")){
-          var catStyleArr = this._updateCategoriesJSON();
-          params['style.styleCategories'] = JSON.stringify(catStyleArr);
+        if($("#tab005categoriespolygon").is(":visible")){
+          var catStyleArr = this._updateCategoriesJSON("#categories-polygon-input");
+          params['style.categoryPolygonStyles'] = JSON.stringify(catStyleArr);
         }
+        
+        if($("#tab007categoriespoint").is(":visible")){
+            var catStyleArr = this._updateCategoriesJSON("#categories-point-input");
+            params['style.categoryPointStyles'] = JSON.stringify(catStyleArr);
+          }
         
         // Check for existense of dynamic settings which may not exist 
         if(params['style.bubbleContinuousSize']){
           params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
         }
         
-        if($("#f79").is(":visible")){
-          params['style.pointFixedSize'] = params['style.pointFixedSize'];
-          params['style.pointFixed'] = true;
-        }
-                
         var secondaryAttribute = $("#secondaryAttribute").val();
         
         if(secondaryAttribute != null && secondaryAttribute.length > 0) {
@@ -1148,14 +1140,17 @@
     			  var geomType = geomTypes[i];
     			  if(geomType === "geoPoint"){
     				  $(".BUBBLE").show();
+    				  $(".BASICPOINT").show();
+    				  $(".GRADIENTPOINT").show();
+    				  $(".CATEGORYPOINT").show();
     			  }
     			  else if(geomType === "geoMultiPolygon"){
-    				  $(".BASIC").show();
-    				  $(".CATEGORY").show();
-    	    		  $(".GRADIENT").show();
+    				  $(".BASICPOLYGON").show();
+    				  $(".CATEGORYPOLYGON").show();
+    	    		  $(".GRADIENTPOLYGON").show();
     			  }
     			  else{
-    				  //TODO: this needs to be an else if (geomType === "some geom type") which isnt defined yet
+    				  //TODO: this needs to be an else if (geomType === "some line geom type") which isnt defined yet
     			  }
     		  }
     	  }
@@ -1165,64 +1160,129 @@
 
       
       _addLayerFormControls : function(){
-          
+    	this._categoryWidgets = [];
         $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
           
-        if($("#ontology-tree").length > 0){
-          
-          this._categoryWidget = new CategoryTreeWidget("#ontology-tree", "#categories-input");
-          this._categoryWidget.render();
-          
-          // category 'other' option
-          $(".other-option-check-box").change(function() {
-            if($(this).is(":checked")) {
-              $("#other-cat-container").show();
-            }
-            else{
-              $("#other-cat-container").hide();
-            }     
-          });
-            
-          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-          // The 'other' option is checked by default making this a valid sequence
-          var otherEnabled = true;
-          
-          var catStore = $("#categories-input").data("categoriesstore");
-          
-          if(catStore.length > 0){
-            var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
-            
-            for(var i=0; i<catJSON.length; i++){
-              var cat = catJSON[i];
-              
-              if(cat.id === "cat-other-color-selector"){
-                otherEnabled = cat.otherEnabled;
-              }
-            }
-          }
-            
-          if(!otherEnabled){
-            $(".other-option-check-box").click();
-          }
+        if($("#tab005categoriespolygon").length > 0){
+	        if($("#polygon-ontology-tree").length > 0){
+	          
+	          var categoryWidget = new CategoryTreeWidget("#polygon-ontology-tree", "#categories-polygon-input");
+	          this._categoryWidgets.push(categoryWidget);
+	          categoryWidget.render();
+	          
+	          // category 'other' option
+	          $(".other-option-check-box").change(function() {
+	            if($(this).is(":checked")) {
+	              $("#other-cat-container").show();
+	            }
+	            else{
+	              $("#other-cat-container").hide();
+	            }     
+	          });
+	            
+	          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
+	          // The 'other' option is checked by default making this a valid sequence
+	          var otherEnabled = true;
+	          
+	          var catStore = $("#categories-polygon-input").data("categoriesstore");
+	          
+	          if(catStore !== null && catStore.length > 0){
+	            var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+	            
+	            for(var i=0; i<catJSON.length; i++){
+	              var cat = catJSON[i];
+	              
+	              if(cat.id === "cat-other-color-selector"){
+	                otherEnabled = cat.otherEnabled;
+	              }
+	            }
+	          }
+	            
+	          if(!otherEnabled){
+	            $(".other-option-check-box").click();
+	          }
+	        }
+	        else{
+	          var categoryType = $("#categories-polygon-input").data('type');
+	          
+	          var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-polygon-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
+	          this._categoryWidgets.push(categoryWidget);
+	          categoryWidget.render();
+	          
+	          // category 'other' option
+	          $(".other-option-check-box").change(function() {
+	            if($(this).is(":checked")) {
+	              $("#cat-other").parent().parent().show();
+	            }
+	            else{
+	              $("#cat-other").parent().parent().hide();
+	            }     
+	          });
+	           
+	          attachCategoryColorPickers();
+	        }
         }
-        else if($(".category-input").length > 0){
-          var categoryType = $("#categories-input").data('type');
-          
-          this._categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
-          this._categoryWidget.render();
-          
-          // category 'other' option
-          $(".other-option-check-box").change(function() {
-            if($(this).is(":checked")) {
-              $("#cat-other").parent().parent().show();
-            }
-            else{
-              $("#cat-other").parent().parent().hide();
-            }     
-          });
-           
-          attachCategoryColorPickers();
-        }
+        
+        
+        if($("#tab007categoriespoint").length > 0){
+        	if($("#points-ontology-tree").length > 0){
+        		
+    		  var categoryWidget = new CategoryTreeWidget("#points-ontology-tree", "#categories-point-input");
+    		  this._categoryWidgets.push(categoryWidget);
+    		  categoryWidget.render();
+	          
+	          // category 'other' option
+	          $(".other-option-check-box").change(function() {
+	            if($(this).is(":checked")) {
+	              $("#other-cat-container").show();
+	            }
+	            else{
+	              $("#other-cat-container").hide();
+	            }     
+	          });
+	            
+	          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
+	          // The 'other' option is checked by default making this a valid sequence
+	          var otherEnabled = true;
+	          
+	          var catStore = $("#categories-point-input").data("categoriesstore");
+	          
+	          if(catStore !== null && catStore.length > 0){
+	            var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+	            
+	            for(var i=0; i<catJSON.length; i++){
+	              var cat = catJSON[i];
+	              
+	              if(cat.id === "cat-other-color-selector"){
+	                otherEnabled = cat.otherEnabled;
+	              }
+	            }
+	          }
+	            
+	          if(!otherEnabled){
+	            $(".other-option-check-box").click();
+	          }
+        	}
+        	else{
+	            var categoryType = $("#categories-point-input").data('type');
+	            
+	            var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color02", "#categories-point-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
+	            this._categoryWidgets.push(categoryWidget);
+	            categoryWidget.render();
+	            
+	            // category 'other' option
+	            $(".other-option-check-box").change(function() {
+	              if($(this).is(":checked")) {
+	                $("#cat-other").parent().parent().show();
+	              }
+	              else{
+	                $("#cat-other").parent().parent().hide();
+	              }     
+	            });
+        	}
+             
+            attachCategoryColorPickers();
+          }
           
         function attachCategoryColorPickers(){
           // ontology category layer type colors
@@ -1329,7 +1389,7 @@
 
       /**
        * Handles the selection of layer type representation in the layer create/edit form
-       * i.e. basic, bubble, gradient, category
+       * i.e. basic point, basic polygon, bubble, gradient, category, etc...
        * 
        */
       _selectLayerType : function(){
@@ -1338,28 +1398,12 @@
         
         $('input:radio[name="layer.'+layerType+'"]').change(function(){   
               
-          var targetRadio = $(this);
-              
           // hide all the styling options
           $.each($('.tab-pane'), function(){
             if($(this).is(":visible")){
               $(this).hide(); 
             }
           });
-            
-          // add the relevant styling options for the layer type
-          if (targetRadio.attr("id") === "radio1") {
-            $("#tab001").show();
-          }
-          else if (targetRadio.attr("id") === "radio2") {
-            $("#tab002").show();
-          }
-          else if (targetRadio.attr("id") === "radio3") {
-            $("#tab003").show();
-          }
-          else if (targetRadio.attr("id") === "radio4") {
-            $("#tab004").show();
-          }
         });
       },
       
@@ -1582,13 +1626,19 @@
       /**
        * Scrapes categories on the layer creation/edit form
        * 
+       * @inputId - The id for the <input> element used to store categories data
        */
-      _updateCategoriesJSON : function() {
+      _updateCategoriesJSON : function(inputId) {
         var styleArr = new Object();
-        styleArr.catLiElems = this._categoryWidget.getCategories();
+        
+        for(var i=0; i<this._categoryWidgets.length; i++){
+        	if(this._categoryWidgets[i]._storeId === inputId){
+        		styleArr.catLiElems = this._categoryWidgets[i].getCategories();
            
-        // set the hidden input element in the layer creation/edit form 
-        $("#categories-input").data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
+        		// set the hidden input element in the layer creation/edit form 
+        		$(this._categoryWidgets[i]._storeId).data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
+        	}
+        }
            
         return  styleArr;
       }
@@ -1668,7 +1718,7 @@
         var that = this;
       
         // edit the layer
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
             that._addLayerFormControls();
@@ -1676,7 +1726,7 @@
           onFailure : function(e){
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
       
         this._ReferenceLayerController.edit(request, id);
       },
@@ -1684,7 +1734,7 @@
       open : function(universalId){
         var that = this;
       
-        var request = new Mojo.ClientRequest({
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html);
             that._addLayerFormControls();
@@ -1694,7 +1744,7 @@
             that._closeLayerModal();
             that.handleException(e);
           }
-        });
+        }, this.getImpl()[0]);  
               
         this._ReferenceLayerController.newReferenceInstance(request, universalId, this._mapId);        
       }

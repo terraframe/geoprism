@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard;
 
 import java.util.ArrayList;
@@ -286,6 +304,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       map.setDashboard(this);
       map.apply();
     }
+  }
+  
+  @Override
+  @Transaction
+  public void applyWithOptions(String[] userIds, String name)
+  {
+    this.lock();
+    this.getDisplayLabel().setValue(name);
+    this.apply();
+    this.unlock();
+    
+    assignUsers(this.getId(), userIds);
   }
 
   @Override
@@ -757,18 +787,58 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return true;
   }
-
+  
+  /*
+   * Gets all active geodashboard users in the system who are not Administrators 
+   * 
+   */
   @Override
-  public String getAllDashboardUsers()
-  {
-    JSONArray usersArr = new JSONArray();
-
+  public GeodashboardUser[] getAllDashboardUsers() {
+    ArrayList<GeodashboardUser> nonAdminGDUsers = new ArrayList<GeodashboardUser>();
     GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
     for (int i = 0; i < gdUsers.length; i++)
     {
-      JSONObject userObj = new JSONObject();
-
+      boolean isAdmin = false;
       GeodashboardUser user = gdUsers[i];
+      
+      List<? extends Roles> userRoles = user.getAllAssignedRole().getAll();
+      for(Roles role : userRoles)
+      {
+        if(role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
+        {
+          isAdmin = true;
+        }
+      }
+      
+      Boolean inactive = user.getInactive();
+
+      if (!inactive && !isAdmin)
+      {
+       nonAdminGDUsers.add(user);
+      }
+    }
+    
+    GeodashboardUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeodashboardUser[nonAdminGDUsers.size()]);
+    
+    return nonAdminGDUsersArr;
+  }
+
+  /*
+   * Gets all active geodashboard users in the system who are not Administrators 
+   * and whether they already have access to a given dashboard.
+   * 
+   */
+  @Override
+  public String getAllDashboardUsersJSON()
+  {
+    JSONArray usersArr = new JSONArray();
+
+    GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
+    for (int i = 0; i < gdUsers.length; i++)
+    {
+      JSONObject userObj = new JSONObject();
+      GeodashboardUser user = gdUsers[i];
+      
       boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
 

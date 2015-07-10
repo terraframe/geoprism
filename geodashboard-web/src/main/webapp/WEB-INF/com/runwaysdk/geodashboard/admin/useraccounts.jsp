@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
     This file is part of Runway SDK(tm).
 
@@ -18,7 +18,6 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
@@ -31,7 +30,7 @@
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 
-<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
 
 
 <!-- User account Javascript -->

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
  *
  * This file is part of Runway SDK(tm).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-
 //define(["../../ClassFramework", "../../Util", "../RunwaySDK_UI", "../factory/runway/widget/Widget", "../datatable/datasource/InstanceQueryDataSource"], function(ClassFramework, Util, UI, Widget, InstanceQueryDataSource) {
 (function(){  
 

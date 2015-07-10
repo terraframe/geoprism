@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.sld;
 
 import java.awt.Color;
@@ -58,6 +76,7 @@ import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.NotEqual;
 import com.runwaysdk.geodashboard.gis.model.condition.Or;
 import com.runwaysdk.geodashboard.gis.model.condition.Primitive;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -248,11 +267,177 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     @Override
     protected Node getSLD()
     {
+      NumberFormat formatter = this.getRuleNumberFormatter();
       Node root = super.getSLD();
 
       node("FeatureTypeName").text(style.getName()).build(root);
 
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
+      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BASICPOINT)
+      {
+//        ThematicLayer tLayer = (ThematicLayer) layer;
+//        ThematicStyle tStyle = (ThematicStyle) style;
+
+        // attribute must be lowercase to work with postgres
+//        String attribute = tLayer.getAttribute().toLowerCase();
+
+        int radius = style.getBasicPointSize();
+
+        if (style instanceof ThematicStyle)
+        {
+          ThematicStyle tStyle = (ThematicStyle) style;
+          
+          if (tStyle.getSecondaryAttributeDAO() != null)
+          {
+            try
+            {
+              String attributeName = tStyle.getSecondaryAttributeDAO().definesAttribute().toLowerCase();
+  
+              JSONArray array = tStyle.getSecondaryAttributeCategoriesAsJSON();
+              for (int i = 0; i < array.length(); i++)
+              {
+                JSONObject category = array.getJSONObject(i);
+                String key = category.getString(ThematicStyle.VAL);
+                String color = category.getString(ThematicStyle.COLOR);
+  
+                NodeBuilder[] filterNodes = new NodeBuilder[] { 
+                    node(OGC, "PropertyIsEqualTo").child(
+                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                    node(OGC, "And").child(
+                        node(OGC, "Not").child(
+                            node(OGC, "Or").child(
+                                node(OGC, "PropertyIsNull").child(
+                                    node(OGC, "PropertyName").text(attributeName)), 
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "Literal").text("NEVER"), 
+                                        node(OGC, "Literal").text("TRUE")))), 
+                                        node(OGC, "PropertyIsEqualTo").child(
+                                            node(OGC, "PropertyName").text(attributeName), 
+                                            node(OGC, "Literal").text(key))) 
+                                            };
+  
+                this.createRule(root, filterNodes, color, key, radius);
+              }
+  
+              String fill = this.style.getPointFill();
+              NodeBuilder[] filterNodes = this.getElseNode(attributeName, array);
+              String label = LocalizationFacade.getFromBundles("Other");
+  
+              this.createRule(root, filterNodes, fill, label, radius);
+            }
+            catch (JSONException e)
+            {
+              throw new ProgrammingErrorException(e);
+            }
+          }
+          else
+          {
+            String fill = this.style.getPointFill();
+
+            createRule(root, null, fill, null, radius);
+          }
+        }
+        else if (style instanceof DashboardStyle)
+        {
+          String fill = this.style.getPointFill();
+
+          createRule(root, null, fill, null, radius);
+        }
+      }
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOINT)
+      {
+        int numCategories;
+        double categoryLen;
+        
+        if(this.style instanceof ThematicStyle)
+        {
+          ThematicStyle tStyle = (ThematicStyle) this.style;
+          int radius = tStyle.getGradientPointSize();
+          String wkn = tStyle.getGradientPointWellKnownName();
+
+          Double fillOpacity = tStyle.getGradientPointFillOpacity();
+          String stroke = tStyle.getGradientPointStroke();
+          int width = tStyle.getGradientPointStrokeWidth();
+          Double strokeOpacity = tStyle.getGradientPointStrokeOpacity();
+          
+          // SLD generation
+          ThematicLayer tLayer = (ThematicLayer) layer;
+  
+          // attribute must be lowercase to work with postgres
+          String attribute = tLayer.getAttribute().toLowerCase();
+  
+          HashMap<String, Double> minMaxMap = null;
+          if(this.visitor.currentLayer instanceof ThematicLayer)
+          {
+            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+            minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          }
+          double minAttrVal = minMaxMap.get("min");
+          double maxAttrVal = minMaxMap.get("max");
+  
+          if (minAttrVal == maxAttrVal)
+          {
+            // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+            numCategories = 1;
+            categoryLen = 1.0;
+          }
+          else
+          {
+            numCategories = 5;
+            categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
+          }
+  
+          HashMap<Integer, Color> gradientColors = interpolateColor(numCategories, this.visitor.currentLayer.getFeatureStrategy(), tStyle);
+  
+          for (int i = 0; i < numCategories; i++)
+          {
+            double currentCatMin;
+            if (numCategories == 1)
+            {
+              currentCatMin = 0;
+            }
+            else
+            {
+              currentCatMin = minAttrVal + ( i * categoryLen );
+            }
+            double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+  
+            int currentColorPos = i + 1;
+            Color currentColor = gradientColors.get(currentColorPos);
+            String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
+  
+            String currentCatMinDisplay = formatter.format(currentCatMin);
+            String currentCatMaxDisplay = formatter.format(currentCatMax);
+            
+            Node ruleNode = node("Rule").child(
+                node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node(OGC, "Filter").child(
+                    node(OGC, "And").child(
+                        node(OGC, "Not").child(
+                            node(OGC, "And").child(
+                                node(OGC, "PropertyIsEqualTo").child(
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                                node(OGC, "Or").child(
+                                    node(OGC, "PropertyIsNull").child(
+                                        node(OGC, "PropertyName").text(attribute)),
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "Literal").text("NEVER"),
+                                        node(OGC, "Literal").text("TRUE"))))),
+                        node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
+                            node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
+                            node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
+                            this.getSymbolNode(wkn, currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius)
+                            
+                ).build(root);
+  
+            // Adding labels
+            this.addLabelSymbolizer(ruleNode);
+          }
+        }
+      }
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BUBBLE)
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         ThematicStyle tStyle = (ThematicStyle) style;
@@ -265,26 +450,20 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         // attribute must be lowercase to work with postgres
         String attribute = tLayer.getAttribute().toLowerCase();
 
-        if (tStyle.getPointFixed())
+        if(this.visitor.currentLayer instanceof ThematicLayer)
         {
-          int radius = tStyle.getPointFixedSize();
-          minSize = radius;
-          maxSize = radius;
-        }
-        else
-        {
-          if(this.visitor.currentLayer instanceof ThematicLayer)
-          {
-            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
-            HashMap<String, Double> minMaxMap = currentTLayer.getLayerMinMax(attribute);
-            minAttrVal = minMaxMap.get("min");
-            maxAttrVal = minMaxMap.get("max");
-          }
-
-          minSize = tStyle.getPointMinSize();
-          maxSize = tStyle.getPointMaxSize();
+          ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+          HashMap<String, Double> minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          minAttrVal = minMaxMap.get("min");
+          maxAttrVal = minMaxMap.get("max");
         }
 
+        minSize = tStyle.getBubbleMinSize();
+        maxSize = tStyle.getBubbleMaxSize();
+
+        // 
+        // Secondary attributes only apply to bubble layer types so calling createRule with bubble params is appropriate
+        //
         if (tStyle.getSecondaryAttributeDAO() != null)
         {
           try
@@ -316,11 +495,185 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         }
         else
         {
-          String fill = this.style.getPointFill();
+          String fill = tStyle.getBubbleFill();
 
           createRule(root, null, fill, null, minAttrVal, maxAttrVal, minSize, maxSize);
         }
+      }
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORYPOINT)
+      {
 
+        JSONArray catsArrJSON;
+        String catVal;
+        String catTitle;
+        String catColor;
+        boolean catOtherCat = false;
+        boolean catOtherEnabled = true;
+        boolean isOntologyCat;
+        ArrayList<String> catValTracking = new ArrayList<String>();
+
+        ThematicLayer tLayer = (ThematicLayer) layer;
+        // attribute must be lowercase to work with postgres
+        String attribute = tLayer.getAttribute().toLowerCase();
+
+        if (style instanceof DashboardThematicStyle)
+        {
+          DashboardThematicStyle dTStyle = (DashboardThematicStyle) style;
+
+          Double fillOpacity = dTStyle.getCategoryPointFillOpacity();
+          String stroke = dTStyle.getCategoryPointStroke();
+          int width = dTStyle.getCategoryPointStrokeWidth();
+          Double strokeOpacity = dTStyle.getCategoryPointStrokeOpacity();
+          int radius = dTStyle.getCategoryPointSize();
+          String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
+          String wkn = dTStyle.getCategoryPointWellKnownName();
+            
+          // ontology logic
+          String cats = dTStyle.getCategoryPointStyles();
+          if (cats.length() > 0)
+          {
+            try
+            {
+              JSONObject catsJSON = new JSONObject(cats);
+              catsArrJSON = catsJSON.getJSONArray("catLiElems");
+            }
+            catch (JSONException e)
+            {
+              throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
+            }
+
+            // SLD for all the categories scraped from the client
+            for (int i = 0; i < catsArrJSON.length(); i++)
+            {
+              try
+              {
+                JSONObject thisObj = catsArrJSON.getJSONObject(i);
+                catVal = thisObj.getString("val");
+                catTitle = catVal;
+                catColor = thisObj.getString("color");
+                isOntologyCat = thisObj.getBoolean("isOntologyCat");
+
+                if (isOntologyCat == false)
+                {
+                  // 'other' attributes only relevant for non-ontology categories
+                  catOtherCat = thisObj.getBoolean("otherCat");
+                  catOtherEnabled = thisObj.getBoolean("otherEnabled");
+                }
+              }
+              catch (JSONException e)
+              {
+                String msg = "Can not parse JSON during SLD generation.";
+                throw new ProgrammingErrorException(msg, e);
+              }
+
+              // If not the 'OTHER' category
+              if (catOtherCat == false)
+              {
+                if (tLayer.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+                {
+                  try
+                  {
+                    catTitle = formatter.format(new Double(catVal));
+                  }
+                  catch (Exception e)
+                  {
+                    // The category isn't actually a number so it can't be localized
+                  }
+                }
+
+                Node ruleNode = node("Rule").child(
+                    node("Name").text(catVal),
+                    node("Title").text(catTitle),
+                    node(OGC, "Filter").child(
+                        node(OGC, "And").child(
+                            node(OGC, "PropertyIsEqualTo").child(
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                            node(OGC, "And").child(
+                                node(OGC, "Not").child(
+                                    node(OGC, "Or").child(
+                                        node(OGC, "PropertyIsNull").child(
+                                            node(OGC, "PropertyName").text(attribute)),
+                                        node(OGC, "PropertyIsEqualTo").child(
+                                            node(OGC, "Literal").text("NEVER"),
+                                            node(OGC, "Literal").text("TRUE")
+                                            )
+                                        )
+                                    ),
+                                node(OGC, "PropertyIsEqualTo").child(
+                                    node(OGC, "PropertyName").text(attribute),
+                                    node(OGC, "Literal").text(catVal)
+                                    )
+                                )
+                            )
+                        ),
+                        this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                
+                //
+                // Adding labels
+                //
+                this.addLabelSymbolizer(ruleNode);
+
+                catValTracking.add(catVal);
+              }
+              else
+              {
+                // 'OTHER' Point styles
+                if (catOtherEnabled == true)
+                {
+                     NodeBuilder otherOrNode = node(OGC, "Or");
+
+                     // Build 'OTHER' exclusion fragments
+                     for (String otherCatVal : catValTracking)
+                     {
+                       otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(
+                           node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
+                     }
+
+                     String label = LocalizationFacade.getFromBundles("Other");
+
+                     node("Rule").child(
+                         node("Name").text(label), 
+                         node("Title").text(label), 
+                                     node(OGC, "Filter").child(
+                                         node(OGC, "And").child(
+                                         node(OGC, "PropertyIsEqualTo").child(
+                                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                                             node(OGC, "Not").child(
+                                                 otherOrNode.child(
+                                                 node(OGC, "Or").child(
+                                                 node(OGC, "PropertyIsNull").child(
+                                                     node(OGC, "PropertyName").text(attribute)))
+                                                     
+                                                 )
+                                             )
+                                         )
+                                     ),
+                                     this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                   
+                }
+              }
+            }
+          }
+          else
+          {
+            //
+            // The categories data does not exist. Rather than throwing an error which will make the map unusable
+            // and prevent the user from fixing the issue without help from a developer we will render basic polygons.
+            // This isn't the prettiest way to handle this but helps to maintain app uptime in obscure situations.
+            //
+            node("Rule").child(
+                node("Name").text(currentLayerName),
+                node("Title").text(currentLayerName),
+                node("PolygonSymbolizer").child(
+                    node("Geometry").child(node(OGC, "PropertyName").text("geom")),
+                    node("Fill").child(css("fill", "#E60000"), css("fill-opacity", "0.6")),
+                    node("Stroke").child(css("stroke", "#8A0000"), css("stroke-width", "1"),
+                        css("stroke-opacity", "0.6")))).build(root);
+
+          }
+        }
       }
 
       return root;
@@ -336,18 +689,62 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     private NodeBuilder[] getNotChildren(String attributeName, JSONArray array) throws JSONException
     {
       List<NodeBuilder> list = new LinkedList<NodeBuilder>();
-
       for (int i = 0; i < array.length(); i++)
       {
         JSONObject category = array.getJSONObject(i);
         String key = category.getString(ThematicStyle.VAL);
-
         NodeBuilder builder = node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key));
-
         list.add(builder);
       }
 
       return list.toArray(new NodeBuilder[list.size()]);
+    }
+    
+    private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, int radius)
+    {
+      //NumberFormat formatter = this.getRuleNumberFormatter();
+      
+        // attribute must be lowercase to work with postgres
+        //String attribute = tLayer.getAttribute().toLowerCase();
+        Double opacity = style.getPointOpacity();
+        String stroke = style.getPointStroke();
+        Integer width = style.getPointStrokeWidth();
+        Double strokeOpacity = style.getPointStrokeOpacity();
+        String wkn = style.getPointWellKnownName();
+        //Integer rotation = style.getPointRotation();
+        String name = layer.getName();
+
+        if (postfix != null)
+        {
+          name += " " + postfix;
+        }
+
+        Node ruleNode = node("Rule").build(root);
+        node("Name").text(name).build(ruleNode);
+        node("Title").text(name).build(ruleNode);
+
+        if (filterNodes != null)
+        {
+          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
+          filterNode.build(ruleNode);
+        }
+
+        // Point styles
+        Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+        Node graphicNode = node("Graphic").build(pointSymbolNode);
+        Node markNode = node("Mark").build(graphicNode);
+        node("WellKnownName").text(wkn).build(markNode);
+        node("Fill").child(
+            this.getFillNode(style, fill), 
+            css("fill-opacity", opacity)).build(markNode);
+        node("Stroke").child(
+            css("stroke", stroke), 
+            css("stroke-width", width), 
+            css("stroke-opacity", strokeOpacity)).build(markNode);
+        node("Size").text(radius).build(graphicNode);
+
+        // Adding labels
+        this.addLabelSymbolizer(ruleNode);
     }
 
     private void createRule(Node root, NodeBuilder[] filterNodes, String fill, String postfix, double minAttrVal, double maxAttrVal, int minSize, int maxSize)
@@ -357,17 +754,17 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       // attribute must be lowercase to work with postgres
       String attribute = tLayer.getAttribute().toLowerCase();
-      Double opacity = tStyle.getPointOpacity();
-      String stroke = tStyle.getPointStroke();
-      Integer width = tStyle.getPointStrokeWidth();
-      Double strokeOpacity = tStyle.getPointStrokeOpacity();
-      String wkn = tStyle.getPointWellKnownName();
-      Integer rotation = tStyle.getPointRotation();
+      Double opacity = tStyle.getBubbleOpacity();
+      String stroke = tStyle.getBubbleStroke();
+      Integer width = tStyle.getBubbleStrokeWidth();
+      Double strokeOpacity = tStyle.getBubbleStrokeOpacity();
+      String wkn = tStyle.getBubbleWellKnownName();
+      Integer rotation = tStyle.getBubbleRotation();
       String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
 
       NumberFormat formatter = this.getRuleNumberFormatter();
 
-      if (tStyle.getBubbleContinuousSize() == true && !tStyle.getPointFixed())
+      if (tStyle.getBubbleContinuousSize() == true)
       {
         NodeBuilder sizeNode = interpolateSize(minAttrVal, maxAttrVal);
         Node ruleNode = node("Rule").build(root);
@@ -391,41 +788,21 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           filterNode.build(ruleNode);
         }
 
-        Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
+        Node bubbleSymbolNode = node("PointSymbolizer").build(ruleNode);
 
-        node("Graphic").child(node("Mark").child(node("WellKnownName").text(wkn), node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity))), sizeNode, node("Rotation").text(rotation)).build(pointSymbolNode);
-
-        // Adding labels
-        this.addLabelSymbolizer(ruleNode);
-      }
-      else if (tStyle.getPointFixed())
-      {
-        String name = currentLayerName;
-
-        if (postfix != null)
-        {
-          name += " " + postfix;
-        }
-
-        Node ruleNode = node("Rule").build(root);
-        node("Name").text(name).build(ruleNode);
-        node("Title").text(name).build(ruleNode);
-
-        if (filterNodes != null)
-        {
-          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
-
-          filterNode.build(ruleNode);
-        }
-
-        // Point styles
-        Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
-        Node graphicNode = node("Graphic").build(pointSymbolNode);
-        Node markNode = node("Mark").build(graphicNode);
-        node("WellKnownName").text("circle").build(markNode);
-        node("Fill").child(this.getFillNode(tStyle, fill), css("fill-opacity", opacity)).build(markNode);
-        node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)).build(markNode);
-        node("Size").text(tStyle.getPointFixedSize()).build(graphicNode);
+        node("Graphic").child(
+            node("Mark").child(
+                node("WellKnownName").text(wkn),
+                node("Fill").child(
+                    this.getFillNode(tStyle, fill), 
+                    css("fill-opacity", opacity)),
+                node("Stroke").child(
+                    css("stroke", stroke), 
+                    css("stroke-width", width),
+                    css("stroke-opacity", strokeOpacity))), 
+                    sizeNode, 
+                    node("Rotation").text(rotation))
+            .build(bubbleSymbolNode);
 
         // Adding labels
         this.addLabelSymbolizer(ruleNode);
@@ -514,14 +891,48 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         }
       }
     }
-
-    private NodeBuilder getFillNode(ThematicStyle tStyle, String fill)
+    
+    private NodeBuilder getSymbolNode(String wellKnownType, String fill, Double fillOpacity, String strokeColor, int width, Double strokeOpacity, int radius)
     {
-      if (tStyle.getSecondaryAttributeDAO() != null)
-      {
-        NodeBuilder node = css("fill").child(node(OGC, "Function").attr("name", "if_then_else").child(node(OGC, "Function").attr("name", "isNull").child(this.getRecodeNode(tStyle)), node("ogc:Literal").text(fill), this.getRecodeNode(tStyle)));
+      NodeBuilder symbolNode = node("PointSymbolizer").child(
+                    node("Graphic").child(
+                        node("Mark").child(
+                            node("WellKnownName").text(wellKnownType),
+                            node("Fill").child(
+                                css("fill", fill),
+                                css("fill-opacity", fillOpacity)),
+                            node("Stroke").child(
+                                css("stroke", strokeColor), 
+                                css("stroke-width", width),
+                                css("stroke-opacity", strokeOpacity)
+                                )
+                            ), 
+                            node("Size").text(radius))
+                            
+                );
+      
+      return symbolNode;
+    }
 
-        return node;
+    private NodeBuilder getFillNode(Style style, String fill)
+    {
+      if(layer instanceof ThematicLayer)
+      {
+        if(style instanceof ThematicStyle)
+        {
+          ThematicStyle tStyle = (ThematicStyle) style;
+          if (tStyle.getSecondaryAttributeDAO() != null)
+          {
+            NodeBuilder node = css("fill").child(
+                node(OGC, "Function").attr("name", "if_then_else").child(
+                    node(OGC, "Function").attr("name", "isNull").child(
+                        this.getRecodeNode(tStyle)),
+                    node("ogc:Literal").text(fill), 
+                    this.getRecodeNode(tStyle)));
+    
+            return node;
+          }
+        }
       }
 
       return css("Fill", fill);
@@ -569,14 +980,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         // thematic interpolation
         return node("Size").child(node(OGC, "Function").attr("name", "Interpolate").child(
         // property to interpolate
-            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getPointMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getPointMaxSize()),
+            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMaxSize()),
             // interpolation method
             node(OGC, "Literal").text("numeric")));
       }
       else
       {
         // non-thematic
-        return node("Size").text(style.getPointSize());
+//        return node("Size").text(style.getPointSize());
+        return node("Size").text(11);
       }
     }
   }
@@ -603,84 +1015,113 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     protected Node getSLD()
     {
       NumberFormat formatter = this.getRuleNumberFormatter();
-
       Node root = super.getSLD();
-
-      Integer width = this.style.getPolygonStrokeWidth();
-      Double fillOpacity = this.style.getPolygonFillOpacity();
-      String stroke = this.style.getPolygonStroke();
-      Double strokeOpacity = this.style.getPolygonStrokeOpacity();
-      String fill = this.style.getPolygonFill();
-
       String currentLayerName = this.visitor.currentLayer.getName();
 
       node("FeatureTypeName").text(style.getName()).build(root);
 
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
+      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOLYGON)
       {
         int numCategories;
         double categoryLen;
-
-        // SLD generation
-        ThematicLayer tLayer = (ThematicLayer) layer;
-
-        // attribute must be lowercase to work with postgres
-        String attribute = tLayer.getAttribute().toLowerCase();
-
-        HashMap<String, Double> minMaxMap = null;
-        if(this.visitor.currentLayer instanceof ThematicLayer)
+        
+        if(this.style instanceof ThematicStyle)
         {
-          ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
-          minMaxMap = currentTLayer.getLayerMinMax(attribute);
-        }
-        double minAttrVal = minMaxMap.get("min");
-        double maxAttrVal = minMaxMap.get("max");
-
-        if (minAttrVal == maxAttrVal)
-        {
-          // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
-          numCategories = 1;
-          categoryLen = 1.0;
-        }
-        else
-        {
-          numCategories = 5;
-          categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
-        }
-
-        HashMap<Integer, Color> gradientColors = this.interpolateColor(numCategories);
-
-        for (int i = 0; i < numCategories; i++)
-        {
-          double currentCatMin;
-
-          if (numCategories == 1)
+          ThematicStyle tStyle = (ThematicStyle) this.style;
+          
+          Double fillOpacity = tStyle.getGradientPolygonFillOpacity();
+          String stroke = tStyle.getGradientPolygonStroke();
+          int width = tStyle.getGradientPolygonStrokeWidth();
+          Double strokeOpacity = tStyle.getGradientPolygonStrokeOpacity();
+          
+          // SLD generation
+          ThematicLayer tLayer = (ThematicLayer) layer;
+  
+          // attribute must be lowercase to work with postgres
+          String attribute = tLayer.getAttribute().toLowerCase();
+  
+          HashMap<String, Double> minMaxMap = null;
+          if(this.visitor.currentLayer instanceof ThematicLayer)
           {
-            currentCatMin = 0;
+            ThematicLayer currentTLayer = (ThematicLayer) this.visitor.currentLayer;
+            minMaxMap = currentTLayer.getLayerMinMax(attribute);
+          }
+          double minAttrVal = minMaxMap.get("min");
+          double maxAttrVal = minMaxMap.get("max");
+  
+          if (minAttrVal == maxAttrVal)
+          {
+            // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
+            numCategories = 1;
+            categoryLen = 1.0;
           }
           else
           {
-            currentCatMin = minAttrVal + ( i * categoryLen );
+            numCategories = 5;
+            categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
           }
-          double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
-
-          int currentColorPos = i + 1;
-
-          Color currentColor = gradientColors.get(currentColorPos);
-          String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
-
-          String currentCatMinDisplay = formatter.format(currentCatMin);
-          String currentCatMaxDisplay = formatter.format(currentCatMax);
-
-          Node ruleNode = node("Rule").child(node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay), node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
-              node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE"))))), node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute), node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)), node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
-              node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", currentColorHex), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
-
-          // Adding labels
-          this.addLabelSymbolizer(ruleNode);
+  
+          HashMap<Integer, Color> gradientColors = interpolateColor(numCategories, this.visitor.currentLayer.getFeatureStrategy(), style);
+  
+          for (int i = 0; i < numCategories; i++)
+          {
+            double currentCatMin;
+  
+            if (numCategories == 1)
+            {
+              currentCatMin = 0;
+            }
+            else
+            {
+              currentCatMin = minAttrVal + ( i * categoryLen );
+            }
+            double currentCatMax = minAttrVal + ( ( i + 1 ) * categoryLen );
+  
+            int currentColorPos = i + 1;
+  
+            Color currentColor = gradientColors.get(currentColorPos);
+            String currentColorHex = String.format("#%02x%02x%02x", currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue());
+  
+            String currentCatMinDisplay = formatter.format(currentCatMin);
+            String currentCatMaxDisplay = formatter.format(currentCatMax);
+  
+            Node ruleNode = node("Rule").child(node("Name").text(currentCatMinDisplay + " - " + currentCatMaxDisplay), 
+                node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
+                node(OGC, "Filter").child(
+                    node(OGC, "And").child(
+                    node(OGC, "Not").child(
+                        node(OGC, "And").child(
+                        node(OGC, "PropertyIsEqualTo").child(
+                            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                            node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                            node(OGC, "Or").child(
+                                node(OGC, "PropertyIsNull").child(
+                                    node(OGC, "PropertyName").text(attribute)), 
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "Literal").text("NEVER"), 
+                                        node(OGC, "Literal").text("TRUE"))))), 
+                                        node(OGC, "PropertyIsBetween").child(
+                                            node(OGC, "PropertyName").text(attribute), 
+                                            node(OGC, "LowerBoundary").child(
+                                                node("Literal").text(currentCatMin)), 
+                                            node(OGC, "UpperBoundary").child(
+                                                node("Literal").text(currentCatMax))))),
+                node("PolygonSymbolizer").child(node("Geometry").child(
+                    node(OGC, "PropertyName").text("geom")), 
+                    node("Fill").child(
+                        css("fill", currentColorHex), 
+                        css("fill-opacity", fillOpacity)), 
+                        node("Stroke").child(
+                            css("stroke", stroke), 
+                            css("stroke-width", width), 
+                            css("stroke-opacity", strokeOpacity)))).build(root);
+  
+            // Adding labels
+            this.addLabelSymbolizer(ruleNode);
+          }
         }
       }
-      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORY)
+      else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORYPOLYGON)
       {
         JSONArray catsArrJSON;
         String catVal;
@@ -692,17 +1133,21 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
-        ThematicStyle tStyle = (ThematicStyle) style;
         // attribute must be lowercase to work with postgres
         String attribute = tLayer.getAttribute().toLowerCase();
 
         if (style instanceof DashboardThematicStyle)
         {
-          DashboardThematicStyle dTStyle = (DashboardThematicStyle) tStyle;
+          DashboardThematicStyle dTStyle = (DashboardThematicStyle) style;
           NodeBuilder otherPolySymbolNode = node("PolygonSymbolizer");
 
+          Double fillOpacity = dTStyle.getCategoryPolygonFillOpacity();
+          String stroke = dTStyle.getCategoryPolygonStroke();
+          int width = dTStyle.getCategoryPolygonStrokeWidth();
+          Double strokeOpacity = dTStyle.getCategoryPolygonStrokeOpacity();
+            
           // ontology logic
-          String cats = dTStyle.getStyleCategories();
+          String cats = dTStyle.getCategoryPolygonStyles();
           if (cats.length() > 0)
           {
             try
@@ -821,6 +1266,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else
       {
+        Integer width = this.style.getPolygonStrokeWidth();
+        Double fillOpacity = this.style.getPolygonFillOpacity();
+        String stroke = this.style.getPolygonStroke();
+        Double strokeOpacity = this.style.getPolygonStrokeOpacity();
+        String fill = this.style.getPolygonFill();
+        
         // Basic polygon
         Node ruleNode = node("Rule").child(node("Name").text("basic"), node("Title").text("basic"), node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", fill), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
 
@@ -833,48 +1284,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return root;
     }
 
-    private HashMap<Integer, Color> interpolateColor(int numCategories)
-    {
-      HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
-      if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENT)
-      {
-
-        ThematicStyle tStyle = (ThematicStyle) style;
-
-        String minFill = tStyle.getPolygonMinFill();
-        String maxFill = tStyle.getPolygonMaxFill();
-
-        Color minFillRGB = Color.decode(minFill);
-        Color maxFillRGB = Color.decode(maxFill);
-        colorRGBList.put(1, minFillRGB);
-        colorRGBList.put(numCategories, maxFillRGB);
-
-        // RGB color values
-        int r1 = minFillRGB.getRed();
-        int g1 = minFillRGB.getGreen();
-        int b1 = minFillRGB.getBlue();
-
-        int r2 = maxFillRGB.getRed();
-        int g2 = maxFillRGB.getGreen();
-        int b2 = maxFillRGB.getBlue();
-
-        double stepIncrease = ( 100.0 / numCategories ) / 100.0;
-        double stepVal = ( 100.0 / numCategories ) / 100.0;
-
-        // Build category colors between min/max category values.
-        // If only 1 category the color value will be the max color set by the user
-        for (int i = 0; i < numCategories; i++)
-        {
-          int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );
-          int green = (int) ( g1 + ( stepVal * ( g2 - g1 ) ) );
-          int blue = (int) ( b1 + ( stepVal * ( b2 - b1 ) ) );
-          Color newColor = new Color(red, green, blue);
-          colorRGBList.put(i + 1, newColor);
-          stepVal = stepVal + stepIncrease; // reseting stepVal to the next color increment value (i.e. .20 becomes .40)
-        }
-      }
-      return colorRGBList;
-    }
   }
 
   private static class LineSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -1433,6 +1842,61 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   {
     // TODO Auto-generated method stub
 
+  }
+  
+  public static HashMap<Integer, Color> interpolateColor(int numCategories, FeatureStrategy featureStrategy, Style style)
+  {
+    HashMap<Integer, Color> colorRGBList = new HashMap<Integer, Color>();
+    
+    if(style instanceof ThematicStyle)
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      String minFill = null;
+      String maxFill = null;
+      
+      if (featureStrategy == FeatureStrategy.GRADIENTPOLYGON)
+      {
+        minFill = tStyle.getGradientPolygonMinFill();
+        maxFill = tStyle.getGradientPolygonMaxFill();
+        
+      }
+      else if (featureStrategy == FeatureStrategy.GRADIENTPOINT)
+      {
+        minFill = tStyle.getGradientPointMinFill();
+        maxFill = tStyle.getGradientPointMaxFill();
+      }
+
+      Color minFillRGB = Color.decode(minFill);
+      Color maxFillRGB = Color.decode(maxFill);
+      colorRGBList.put(1, minFillRGB);
+      colorRGBList.put(numCategories, maxFillRGB);
+
+      // RGB color values
+      int r1 = minFillRGB.getRed();
+      int g1 = minFillRGB.getGreen();
+      int b1 = minFillRGB.getBlue();
+
+      int r2 = maxFillRGB.getRed();
+      int g2 = maxFillRGB.getGreen();
+      int b2 = maxFillRGB.getBlue();
+
+      double stepIncrease = ( 100.0 / numCategories ) / 100.0;
+      double stepVal = ( 100.0 / numCategories ) / 100.0;
+
+      // Build category colors between min/max category values.
+      // If only 1 category the color value will be the max color set by the user
+      for (int i = 0; i < numCategories; i++)
+      {
+        int red = (int) ( r1 + ( stepVal * ( r2 - r1 ) ) );
+        int green = (int) ( g1 + ( stepVal * ( g2 - g1 ) ) );
+        int blue = (int) ( b1 + ( stepVal * ( b2 - b1 ) ) );
+        Color newColor = new Color(red, green, blue);
+        colorRGBList.put(i + 1, newColor);
+        stepVal = stepVal + stepIncrease; // reseting stepVal to the next color increment value (i.e. .20 becomes .40)
+      }
+    }
+    
+    return colorRGBList;
   }
 
 }

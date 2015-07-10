@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2013 TerraFrame, Inc. All rights reserved.
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
     This file is part of Runway SDK(tm).
 
@@ -33,7 +33,7 @@
 <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
-<jwr:style src="/com/runwaysdk/geodashboard/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
 
 <!-- Dynamic map Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
@@ -139,6 +139,7 @@ $(document).ready(function(){
               	<div id="collapse-map-tools" class="accordion-body">
               		<div class="accordion-inner holder" id="mapToolsContainer">
               			<i id="map-export-btn" class="fa fa-file-image-o map-tool-icon" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></i>
+              			<i id="map-zoom-to-extent-btn" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></i>
               		</div>
               
 			    </div>
@@ -156,8 +157,8 @@ $(document).ready(function(){
 		<div class="nav-bar">
 		    
 			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
-			<div class="sales-menu dropdown">
-				<a href="#" class="link-opener dropdown-toggle" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
+			<div id="dashboard-dropdown" class="sales-menu dropdown">
+				<a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
 					<c:forEach items="${dashboards}" var="dashboard" varStatus="status">
 						<li><a class="gdb-dashboard" id="${dashboard.id}">${dashboard.displayLabel.value}</a></li>
@@ -175,7 +176,8 @@ $(document).ready(function(){
 <!--   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
   		      </span>
   		      
-  		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i>
+<%--   		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i> --%>
+		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
   		    </c:if>
 		</div>
 		
@@ -324,9 +326,12 @@ $(document).ready(function(){
 	      </a>
 	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
 	      </a>
+	      
 	      <c:if test="${hasAccess}">
-	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left"">
-	          </a>
+	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
+	      
+<%-- 	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left""> --%>
+<!-- 	          </a> -->
 	      </c:if>
 	    </div>
     
@@ -407,6 +412,6 @@ $(document).ready(function(){
 
 <!-- Dialog for cloning a dashboard  -->
 <div id="clone-container"></div>  
-<div id="add-dashboard-users-container"></div>
+<div id="dashboard-edit-container"></div>  
 
 </html>

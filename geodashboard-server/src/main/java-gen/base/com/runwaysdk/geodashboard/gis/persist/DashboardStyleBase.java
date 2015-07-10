@@ -1,6 +1,24 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1147202412)
+@com.runwaysdk.business.ClassSignature(hash = 1431545958)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,6 +29,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardStyleBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
+  public static java.lang.String BASICPOINTSIZE = "basicPointSize";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENABLELABEL = "enableLabel";
@@ -35,7 +54,6 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String POINTFILL = "pointFill";
   public static java.lang.String POINTOPACITY = "pointOpacity";
   public static java.lang.String POINTROTATION = "pointRotation";
-  public static java.lang.String POINTSIZE = "pointSize";
   public static java.lang.String POINTSTROKE = "pointStroke";
   public static java.lang.String POINTSTROKEOPACITY = "pointStrokeOpacity";
   public static java.lang.String POINTSTROKEWIDTH = "pointStrokeWidth";
@@ -53,11 +71,39 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = -1147202412;
+  private static final long serialVersionUID = 1431545958;
   
   public DashboardStyleBase()
   {
     super();
+  }
+  
+  public Integer getBasicPointSize()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(BASICPOINTSIZE));
+  }
+  
+  public void validateBasicPointSize()
+  {
+    this.validateAttribute(BASICPOINTSIZE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getBasicPointSizeMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(BASICPOINTSIZE);
+  }
+  
+  public void setBasicPointSize(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(BASICPOINTSIZE, "");
+    }
+    else
+    {
+      setValue(BASICPOINTSIZE, java.lang.Integer.toString(value));
+    }
   }
   
   public java.util.Date getCreateDate()
@@ -717,34 +763,6 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     else
     {
       setValue(POINTROTATION, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public Integer getPointSize()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(POINTSIZE));
-  }
-  
-  public void validatePointSize()
-  {
-    this.validateAttribute(POINTSIZE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getPointSizeMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(POINTSIZE);
-  }
-  
-  public void setPointSize(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(POINTSIZE, "");
-    }
-    else
-    {
-      setValue(POINTSIZE, java.lang.Integer.toString(value));
     }
   }
   

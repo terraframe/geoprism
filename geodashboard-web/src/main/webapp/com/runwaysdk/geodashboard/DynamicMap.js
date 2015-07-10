@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 (function(){
   
   var Component = com.runwaysdk.ui.Component;  
@@ -217,14 +235,10 @@
         
         // Handler for the clone dashboard button
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
+        $("#dashboard-options-btn").on("click", Mojo.Util.bind(this, this._dashboardEditHandler));  
         
-        this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
-        
-        // set controller listeners
-        this._DashboardController.setCancelListener(Mojo.Util.bind(this, this._cancelDashboardListener));
-        this._DashboardController.setCreateListener(Mojo.Util.bind(this, this._applyDashboardListener));
         
         overlayLayerContainer.sortable({
           update: Mojo.Util.bind(this, this._overlayLayerSortUpdate)
@@ -371,10 +385,10 @@
             
             this._refLayerCache.put(refView.universalId, refView);
           }
-          
-          if (json.bbox != null) {
+        }
+        
+        if (json.bbox != null) {
             this._bBox = json.bbox;
-          }
         }
       },
                  
@@ -981,7 +995,7 @@
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
             
-            html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+              html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
               html += '<a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
               html += '</div>';
           }
@@ -1168,70 +1182,20 @@
       _dashboardCloneHandler : function(e) {
         e.preventDefault();      
           
-        var that = this;
+        var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(this, this._dashboardId);
+        dashboardForm.open();
+      },
+      
+      /**
+       * 
+       * @e
+       */
+      _dashboardEditHandler : function(e) {
+        e.preventDefault();      
           
-        var request = new Mojo.ClientRequest({
-          onSuccess : function(html){     
-          // Remove the internal form div if it exists
-            $( "#clone-dialog" ).remove();
-            
-            // Set the html of the dialog
-            $( "#clone-container" ).html(html);
-            
-            // Show the dialog
-            $( "#clone-dialog" ).dialog({
-              resizable: false,
-              height:200,
-              width:730,
-              modal: true,
-              buttons: [{
-                text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
-                "class": 'btn btn-primary',
-                click : function() {
-                  var createRequest = new com.runwaysdk.geodashboard.StandbyClientRequest({
-                    onSuccess : function(dashboard){
-                      $( "#clone-dialog" ).dialog( "close" );
-                      
-                      window.location = "?dashboard=" + dashboard.getId();
-                    },
-                    onFailure : function(e){
-                      $( "#clone-dialog" ).dialog( "close" );
-                      
-                      that.handleException(e);
-                    }
-                  }, $("#clone-dialog").parent().get(0));
-                  
-                  var dashboardId = $('#clone-dashboard-id').val();
-                  var label = $('#clone-label').val();
-                  
-                  if(label != null && label.length > 0)
-                  {
-                    com.runwaysdk.geodashboard.Dashboard.clone(createRequest, dashboardId, label);                    
-                  }
-                  else
-                  {
-                    var msg = com.runwaysdk.Localize.localize("dashboard", "Required");
-                    
-                    $('#clone-label-error').html(msg);        
-                    $('#clone-label-field-row').addClass('field-error');                    
-                  }
-                }
-              },
-              {
-                text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
-                "class": 'btn btn-default',
-                click : function() {
-                   $( this ).dialog( "close" );
-                }
-              }]
-            });
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        });
+        var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(this, this._dashboardId);
+        dashboardForm.edit(this._dashboardId);
         
-        this._DashboardController.newClone(request, this._dashboardId);
       },
       
       _renderMessage : function(message) {
@@ -1860,41 +1824,7 @@
           modal.modal('show');
         },
         
-        /**
-         * Called when a user submits a new dashboard.
-         * 
-         */
-        _applyDashboardListener : function(){
-          
-          var that = this;
-          
-          var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-            onSuccess : function(html, response){
-              if (response.isJSON()) {
-                that._closeDashboardModal();
-                
-                window.location = "?dashboard=" + html.getId();
-              }
-              else if (response.isHTML()) {
-                // we got html back, meaning there was an error
-                that._displayDashboardForm(html);
-              }
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          }, $(DynamicMap.DASHBOARD_MODAL)[0]);
-                   
-          return request;
-        },
         
-      /**
-       * Closes the new dashboard CRUD.
-       */
-      _closeDashboardModal : function(){
-        $(DynamicMap.DASHBOARD_MODAL).modal('hide').html('');
-      },
-      
       /**
        * Gets the html for and calls the layer creation/edit form 
        * 
@@ -2151,108 +2081,16 @@
         return conditions;
       },
       
-      _onClickAddDashboardUsers : function(e) {
-        var that = this;
-        
-        var clientRequest = new Mojo.ClientRequest({
-              onSuccess : function(usersJSON){     
-                var users = JSON.parse(usersJSON);
-                var html = '<div id="add-users-modal"><div class="holder"><div class="row-holder">';
-                for(var i=0; i<users.length; i++){
-                  var user = users[i];
-                  var userId = user.id;
-                  var checked = "";
-                  
-                  if(user.hasAccess){
-                    checked = "checked";
-                  }
-                      var chk = '<div class="check-block">' +
-                      '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
-                      '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
-                      '</div>';
-                      
-                      html += chk;
-                }
-                
-                html += '</div></div></div>';
-                
-                // Set the html
-                $( "#add-dashboard-users-container" ).html(html);
-                
-                jcf.customForms.replaceAll($( "#add-dashboard-users-container" )[0]);
-                
-                $("#add-dashboard-users-container").dialog({
-                  draggable: false,
-                      resizable: false,
-                      maxHeight: 300,
-                      modal: true,
-                      title: com.runwaysdk.Localize.localize("dashboard", "assignUsersHeading") + " " + $(".sales-menu.dropdown > a").text(),
-                      create: function (e, ui) {
-                          $(".add-user-checkbox").change( function(e){
-                            if ($(this).is(":checked")){
-                              $(this).attr("checked", true);
-                            }
-                            else{
-                              $(this).attr("checked", false);
-                            }
-                          });
-                      },
-                  buttons: [
-                            {
-                        text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
-                        "class": 'btn btn-primary',
-                              click: function() {
-                              var thatThis = this;
-                              var checkedInputs = $("#add-users-modal input");
-                              var userIds = [];
-                              for(var i=0; i<checkedInputs.length; i++){
-                                var input = checkedInputs[i];
-                                var userObj = {};
-                                
-                                if(input.checked){
-                                  userObj[input.id] = true;
-                                }
-                                else{
-                                  userObj[input.id] = false;
-                                }
-                                userIds.push(userObj);
-                              }
-                                
-                                var request = new Mojo.ClientRequest({
-                                    onSuccess : function(){     
-                                      $( thatThis ).dialog( "close" );
-                                    },
-                                    onFailure : function(e){
-                                      that.handleException(e);
-                                    }
-                                  });
-                                
-                                com.runwaysdk.geodashboard.Dashboard.assignUsers(request, that._dashboardId, userIds);
-                              }
-                            },
-                              {
-                          text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
-                          "class": 'btn btn-primarybtn btn-default',
-                          click : function() {
-                             $( this ).dialog( "close" );
-                          }
-                      }
-                          ]
-                 });
-              },
-              onFailure : function(e){
-                that.handleException(e);
-              }
-            });
-        
-        com.runwaysdk.geodashboard.Dashboard.getAllDashboardUsers(clientRequest, this._dashboardId);
-      },
       
       _onClickExportMap : function(e) {
         var format = $(e.target).data('format');  
         
         this._exportMap();
       },
+      
+      _onClickZoomMapToExtent : function(e) {
+    	  this._configureMap();
+      },      
       
       _onClickToggleLeftPanel : function(e) {
         var target = $(e.target);
@@ -2404,8 +2242,8 @@
         else {
           this._criteria = this._reloadCriteria();
           var conditions = this._getConditionsFromCriteria(this._criteria);
-            
-          var clientRequest = new Mojo.ClientRequest({
+          
+          var clientRequest = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function(json, calledObj, response) {
               var jsonObj = Mojo.Util.toObject(json);
                
@@ -2421,7 +2259,7 @@
             onFailure : function(e) {
               that.handleException(e);
             }
-          });
+          }, $(DynamicMap.DASHBOARD_MODAL)[0]);
             
           com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
           
@@ -2591,9 +2429,8 @@
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
-        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap));  
-        
-        $('#add-dashboard-user-btn').on('click', Mojo.Util.bind(this, this._onClickAddDashboardUsers)); 
+        $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap)); 
+        $('#map-zoom-to-extent-btn').on('click', Mojo.Util.bind(this, this._onClickZoomMapToExtent));
         
         $('#control-form-collapse-button').on('click', Mojo.Util.bind(this, this._onClickToggleLeftPanel));
         $('#data-panel-expand-toggle').on('click', Mojo.Util.bind(this, this._onClickToggleRightPanel));

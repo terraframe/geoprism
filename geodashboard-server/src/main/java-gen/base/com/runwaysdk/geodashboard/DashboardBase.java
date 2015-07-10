@@ -1,6 +1,24 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1549455694)
+@com.runwaysdk.business.ClassSignature(hash = -1949352239)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +49,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1549455694;
+  private static final long serialVersionUID = -1949352239;
   
   public DashboardBase()
   {
@@ -593,6 +611,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     _instance.applyGlobalConditions(conditions);
   }
   
+  public void applyWithOptions(java.lang.String[] userIds, java.lang.String name)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void applyWithOptions(java.lang.String id, java.lang.String[] userIds, java.lang.String name)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.applyWithOptions(userIds, name);
+  }
+  
   public static void assignUsers(java.lang.String dashboardId, java.lang.String[] userIds)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
@@ -617,16 +647,28 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public java.lang.String getAllDashboardUsers()
+  public com.runwaysdk.geodashboard.GeodashboardUser[] getAllDashboardUsers()
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.lang.String getAllDashboardUsers(java.lang.String id)
+  public static final com.runwaysdk.geodashboard.GeodashboardUser[] getAllDashboardUsers(java.lang.String id)
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getAllDashboardUsers();
+  }
+  
+  public java.lang.String getAllDashboardUsersJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getAllDashboardUsersJSON(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getAllDashboardUsersJSON();
   }
   
   public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)

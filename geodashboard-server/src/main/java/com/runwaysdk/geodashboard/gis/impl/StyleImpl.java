@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.impl;
 
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -10,44 +28,28 @@ public class StyleImpl extends ComponentImpl implements Style
   private String polygonStroke;
   private Integer polygonStrokeWidth;
   private String polygonFill;
+  private Double polygonFillOpacity;
   
   private String pointStroke;
   private Integer pointStrokeWidth;
-  private Integer pointSize;
+  private Integer basicPointSize;
   private String pointWellKnownName;
-
   private String pointFill;
-
   private Double pointOpacity;
-
   private Integer pointRotation;
-
-  private Double polygonFillOpacity;
-
-  private Integer labelHaloWidth;
-
-  private Boolean enableValue;
-
-  private String valueHalo;
-
-  private String valueColor;
-
   private Double pointStrokeOpacity;
   
+  private Integer labelHaloWidth;
+  private Boolean enableValue;
+  private String valueHalo;
+  private String valueColor;
   private Integer valueSize;
-
   private String valueFont;
-
   private Integer valueHaloWidth;
-
   private Boolean enableLabel;
-
   private String labelHalo;
-
   private String labelColor;
-
   private Integer labelSize;
-
   private String labelFont;
   
   
@@ -67,7 +69,6 @@ public class StyleImpl extends ComponentImpl implements Style
     this.name = name;
   }
   
-  @Override
   public Double getPointStrokeOpacity()
   {
     return this.pointStrokeOpacity;
@@ -78,9 +79,9 @@ public class StyleImpl extends ComponentImpl implements Style
     this.pointStrokeOpacity = pointStrokeOpacity;
   }
   
-  public void setPointSize(Integer pointSize)
+  public void setBasicPointSize(Integer pointSize)
   {
-    this.pointSize = pointSize;
+    this.basicPointSize = pointSize;
   }
   
   public void setPointStroke(String pointStroke)
@@ -98,25 +99,9 @@ public class StyleImpl extends ComponentImpl implements Style
     this.pointWellKnownName = pointWellKnownName;
   }
   
-  public void setPolygonFill(String polygonFill)
+  public Integer getBasicPointSize()
   {
-    this.polygonFill = polygonFill;
-  }
-  
-  public void setPolygonStroke(String polygonStroke)
-  {
-    this.polygonStroke = polygonStroke;
-  }
-  
-  public void setPolygonStrokeWidth(Integer polygonStrokeWidth)
-  {
-    this.polygonStrokeWidth = polygonStrokeWidth;
-  }
-  
-  @Override
-  public Integer getPointSize()
-  {
-    return pointSize;
+    return basicPointSize;
   }
   
   @Override
@@ -137,31 +122,6 @@ public class StyleImpl extends ComponentImpl implements Style
     return pointWellKnownName;
   }
   
-  @Override
-  public String getPolygonFill()
-  {
-    return polygonFill;
-  }
-
-
-  @Override
-  public String getPolygonStroke()
-  {
-    return polygonStroke;
-  }
-  
-  @Override
-  public Integer getPolygonStrokeWidth()
-  {
-    return polygonStrokeWidth;
-  }
-  
-  @Override
-  public void accepts(MapVisitor visitor)
-  {
-    visitor.visit(this);
-  }
-
   @Override
   public void setPointFill(String fill)
   {
@@ -197,7 +157,66 @@ public class StyleImpl extends ComponentImpl implements Style
   {
     return this.pointRotation;
   }
+  
+  
+  public void setPolygonFill(String polygonFill)
+  {
+    this.polygonFill = polygonFill;
+  }
+  
+  public void setPolygonStroke(String polygonStroke)
+  {
+    this.polygonStroke = polygonStroke;
+  }
+  
+  public void setPolygonStrokeWidth(Integer polygonStrokeWidth)
+  {
+    this.polygonStrokeWidth = polygonStrokeWidth;
+  }
+  
+  @Override
+  public String getPolygonFill()
+  {
+    return polygonFill;
+  }
 
+  @Override
+  public String getPolygonStroke()
+  {
+    return polygonStroke;
+  }
+  
+  @Override
+  public Integer getPolygonStrokeWidth()
+  {
+    return polygonStrokeWidth;
+  }
+  
+  @Override
+  public Double getPolygonFillOpacity()
+  {
+    return this.polygonFillOpacity;
+  }
+
+  @Override
+  public void setPolygonFillOpacity(Double opacity)
+  {
+    this.polygonFillOpacity = opacity;
+  }
+  
+  @Override
+  public Double getPolygonStrokeOpacity()
+  {
+    return this.polygonFillOpacity;
+  }
+  
+  @Override
+  public void setPolygonStrokeOpacity(Double opacity)
+  {
+    this.polygonFillOpacity = opacity;
+  }
+  
+  
   @Override
   public void setEnableValue(Boolean enable)
   {
@@ -341,29 +360,12 @@ public class StyleImpl extends ComponentImpl implements Style
   {
     return this.labelHaloWidth;
   }
+  
+  
+  @Override
+  public void accepts(MapVisitor visitor)
+  {
+    visitor.visit(this);
+  }
 
-  @Override
-  public Double getPolygonFillOpacity()
-  {
-    return this.polygonFillOpacity;
-  }
-
-  @Override
-  public void setPolygonFillOpacity(Double opacity)
-  {
-    this.polygonFillOpacity = opacity;
-  }
-  
-  @Override
-  public Double getPolygonStrokeOpacity()
-  {
-    return this.polygonFillOpacity;
-  }
-  
-  @Override
-  public void setPolygonStrokeOpacity(Double opacity)
-  {
-    this.polygonFillOpacity = opacity;
-  }
-  
 }

@@ -1,6 +1,25 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,10 +270,20 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
 
       // layer types
       Map<String, String> labels = rLayer.getLayerTypeMd().getEnumItems();
+      
+      List<String> pointTypes = new ArrayList<String>();
+      pointTypes.add("CIRCLE");
+      pointTypes.add("STAR");
+      pointTypes.add("SQUARE");
+      pointTypes.add("TRIANGLE");
+      pointTypes.add("CROSS");
+      pointTypes.add("X");
+      req.setAttribute("pointTypes", pointTypes);
+      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
 
       Map<String, String> layerTypes = new LinkedHashMap<String, String>();
-      layerTypes.put(AllLayerTypeDTO.BASIC.getName(), labels.get(AllLayerTypeDTO.BASIC.getName()));
-//      layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+      layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+      layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
@@ -267,7 +296,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       }
       else
       {
-        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASIC.getName());
+        req.setAttribute("activeLayerTypeName", AllLayerTypeDTO.BASICPOLYGON.getName());
       }
       
       req.setAttribute("universalId", universalId);

@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 /* ---------------------------------------------------------
 	Common site styles
 	---------------------------------------------------------*/
@@ -16,8 +34,8 @@ body{
 }
 
 body.iFrameBody {
-	overflow: hidden;
-/* 	overflow-y: auto; */
+/* 	overflow: hidden; */
+	overflow-y: auto;
 	background-color: inherit;
 }
 
@@ -2019,13 +2037,23 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	border:none;
 	box-shadow:none;
 	border-radius:0;
+  height: 140px;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  overflow-y: hidden;
 }
 .nav-tabs.type-tabs li{
-	float:left;
-	border:none;
-	padding:0;
-	margin:0 0 0 20px;
-	border-radius:0;
+/* 	float:left; */
+  border:none;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 20px;
+  border-radius: 0;
+  display: inline-block;
+  width: 125px;
+  height: 100px;
+  float: none;
 }
 .nav-tabs.type-tabs .BUBBLE{margin-left:20px;}
 .nav-tabs.type-tabs .GRADIENT{margin-left:20px;}
@@ -2060,6 +2088,27 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	top:1px;
 	background:url(../images/sprite.png) no-repeat 0 -50px;
 }
+.nav-tabs.type-tabs .BASICPOINT label:after{
+	width:87px;
+	height:77px;
+	left:28px;
+	top:12px;
+	background:url(../images/point-layer-type-icons.png) no-repeat -11px -10px;
+}
+.nav-tabs.type-tabs .GRADIENTPOINT label:after{
+	width:87px;
+	height:77px;
+	left:28px;
+	top:12px;
+	background:url(../images/point-layer-type-icons.png) no-repeat -11px -101px;
+}
+.nav-tabs.type-tabs .CATEGORYPOINT label:after{
+	width:87px;
+	height:77px;
+	left:28px;
+	top:12px;
+	background:url(../images/point-layer-type-icons.png) no-repeat -100px -10px;
+}
 .nav-tabs.type-tabs .BUBBLE label:after{
 	width:60px;
 	height:58px;
@@ -2067,14 +2116,14 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	top:12px;
 	background:url(../images/sprite.png) no-repeat -100px -50px;
 }
-.nav-tabs.type-tabs .GRADIENT label:after{
+.nav-tabs.type-tabs .GRADIENTPOLYGON label:after{
 	width:87px;
 	height:77px;
 	background:url(../images/sprite.png) no-repeat -200px -50px;
 	left:13px;
 	top:1px;
 }
-.nav-tabs.type-tabs .CATEGORY label:after{
+.nav-tabs.type-tabs .CATEGORYPOLYGON label:after{
 	width:87px;
 	height:80px;
 	background:url(../images/sprite.png) no-repeat -300px -50px;
@@ -2476,6 +2525,19 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
+	i.fa.fa-cog.ico-dashboard-options {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-cog.ico-dashboard-options:hover,
+	i.fa.fa-cog.ico-dashboard-options:focus{
+		color: #00bfff;
+	}
+	
 	i.fa.fa-user-plus.ico-add-dashboard-user {
 		margin-left: 5px;
 		vertical-align: bottom;
@@ -2502,6 +2564,10 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
+	#add-dashboard-users-container{
+		float: left;
+	}
+	
 	#dashboardMetadata {
 		z-index: 16;
 	}
@@ -2526,9 +2592,9 @@ span.select-area span.center {
 		  text-align: center;
 		  width: 20px;
 		  height: 40px;
-		  background: rgba(0, 0, 0, 0.8);
+		  background: rgba(66, 66, 66, 0.9);
 		  border: 1px solid black;
-		  border-right: none;
+		  border-right: solid black 2px;
 		  border-top-left-radius: 3px;
 		  border-bottom-left-radius: 3px;
 	}
@@ -2574,6 +2640,14 @@ span.select-area span.center {
 	}
 	.modal-form .check-block label[for=f53] {
 		margin-top: 10px;
+	}
+	.modal-form .check-block label[for=basic-cat-point-other-option] {
+  		margin-top: 12px;
+	}
+	
+	#gradient-point-fill-opacity-cell{
+	  margin-left: 0;
+  	  margin-top: 10px;
 	}
 /**
 *
@@ -2679,17 +2753,17 @@ span.select-area span.center {
 */
 	div.standby-overlay {
 		background-color: #CCCCCC;
-		background-image: url('../images/transparent_spinner.gif');
+		background-image: url('../images/loading_spinner_splitring.gif');
 		background-repeat: no-repeat;
 		background-position: center center;
 		position: absolute;
 		display: block;
-		opacity: 0.5
+		opacity: 0.8;
 	}
 	
 	div.gdb-maincontent-busy {
 		background-color: #CCCCCC;
-		background-image: url('../images/transparent_spinner.gif');
+		background-image: url('../images/loading_spinner_splitring.gif');
 		background-repeat: no-repeat;
 		background-position: center center;
 		position: absolute;
@@ -2698,7 +2772,7 @@ span.select-area span.center {
 		left: 275px;
 		right: 0px;
 		height: 100%;
-		opacity: 0.5;
+		opacity: 0.8;
 	}
 
 /* 
@@ -2719,6 +2793,7 @@ span.select-area span.center {
 */
 	#map-tools-collapse-container{
 		  padding: 5px;
+		  width: 80px; /* Simply remove this for full width */
 	}
 	
 	div#collapse-map-tools.accordion-body{
@@ -2731,9 +2806,20 @@ span.select-area span.center {
 		color: #bababa;
 		cursor: pointer;
 	}
-	
 	i.fa.fa-file-image-o.map-tool-icon:hover,
 	i.fa.fa-file-image-o.map-tool-icon:focus{
+		color: #00bfff;
+	}
+	
+	.fa.fa-arrows-alt.map-tool-icon{
+		font-size: 30px;
+	    margin: 2px;
+	    margin-left: 5px;
+		color: #bababa;
+		cursor: pointer;
+	}
+	i.fa.fa-arrows-alt.map-tool-icon:hover,
+	i.fa.fa-arrows-alt.map-tool-icon:focus{
 		color: #00bfff;
 	}
 
@@ -2898,6 +2984,21 @@ span.select-area span.center {
 	  overflow-y: hidden;
 	}
 	
+	#point-type-container{
+	 	width: 105px;
+  		margin: 10px 0 0 0;
+	}
+	
+	#gradient-point-type-container {
+	  width: 105px;
+	  margin: 10px 0 0 0;
+	}
+	
+	#category-point-type-container {
+	  width: 105px;
+	  margin: 10px 0 0 0;
+	}
+	
 .ui-autocomplete {
 	z-index: 999999 !important;
 }
@@ -2921,45 +3022,79 @@ div.alert.alertbox {
   margin-bottom: 0px;
   bottom: 0px;
   position: absolute;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(66,66,66,0.9);
   width: 100%;
   height: 40px;
   left: 0;
   padding: 5px;
   text-align: center;
+  z-index: 999;
 }
 
 .fa.fa-refresh.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
 .fa.fa-floppy-o.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
 .fa.fa-globe.filters-button{
   color: #bababa;
-  font-size: 30px;
+  font-size: 28px;
   position: relative;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
 }
 
-.fa.fa-tachometer.filters-button{
-  color: #bababa;
-  font-size: 30px;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-}
+
+/* 
+* Custom Dashboard SVG Font Icon 
+*/
+	@font-face {
+	  font-family: 'geoDashboardFonts';
+	  src: url('../custom-fonts/gdb.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	       url('../custom-fonts/gdb.ttf') format('truetype'), /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+	       url('../custom-fonts/gdb.eot') format('embedded-opentype'),
+	       url('../custom-fonts/gdb.svg') format('svg');
+	}
+	
+	[class^="icon-"], [class*=" icon-"] {
+		font-family: 'geoDashboardFonts';
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+	
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	
+	.icon-dashboard-icons:before {
+	    content: "\e600";
+	}
+	
+	.icon-dashboard-icons {
+	  	color: #bababa;
+  		font-size: 32px;
+  		position: relative;
+  		top: 46%;
+  		transform: translateY(-50%);
+  		display: inline-block;
+  		cursor: pointer;
+	}
+	
 
 .filters-button:hover{
 	color: #00bfff !important;
@@ -2978,6 +3113,9 @@ a.filters-button {
 	padding-right: 10px;
 }
 
+div.secondary-box {
+	  margin-top: 150px;
+}
 div.secondary-box label {
 	float: left;
 	font-size: 13px;
@@ -3082,6 +3220,30 @@ div.secondary-box label {
 	background: rgb(244, 244, 184);
 }
 
+#category-point-radius-block{
+  margin-top: 30px;
+  margin-left: 0px;
+  width: 100%;
+}
+
+
+/*
+* Scroll bar styling
+*
+*/
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
 
 
 
