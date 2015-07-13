@@ -93,7 +93,7 @@ window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
 
   <div class="pageContent">
     <header id="header">
-      <h1>${page_title}</h1>
+		<%-- <h1>${page_title}</h1> --%>
     </header>
     <%= innerHTML %>
   </div>

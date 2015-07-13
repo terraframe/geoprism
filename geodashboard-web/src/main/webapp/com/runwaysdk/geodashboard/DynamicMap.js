@@ -289,22 +289,14 @@
       
       handleLayerEvent : function(jsonObj) {
         this._updateCacheFromJSONResponse(jsonObj);
-          
         this._drawUserLayersHTML();
-            
-        // Close any info window popups if they exist
         this._mapFactory.removeClickPopup();
-          
-        // Update leaflet
         this._addUserLayersToMap(true);    
       },
       
       handleReferenceLayerEvent : function(jsonObj) {
         this._updateCacheFromJSONResponse(jsonObj);
-        
         this._drawReferenceLayersHTML();
-        
-        // Update leaflet
         this._addUserLayersToMap(true);    
       },
       
@@ -357,7 +349,7 @@
             
             var oldLayer = this._layerCache.get(view.getLayerId());
             if (oldLayer != null) {
-              view.leafletLayer = oldLayer.leafletLayer;
+              view.wmsLayerObj = oldLayer.wmsLayerObj;
             }
             this._layerCache.put(view.getLayerId(), view);        
           }
@@ -372,7 +364,7 @@
             var refView = LayerViewFactory.createLayerView(refLayer);
             var oldLayer = this._refLayerCache.get(refView.universalId);
             if (oldLayer != null) {
-              refView.leafletLayer = oldLayer.leafletLayer;
+              refView.wmsLayerObj = oldLayer.wmsLayerObj;
             }
             
             this._refLayerCache.put(refView.universalId, refView);
@@ -385,18 +377,18 @@
       },
                  
       /**
-       * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
+       * Creates a new map. If one already exists the existing one will be cleaned up and removed.
        * 
        */
       _renderMap : function() {
         var center = null;
         var zoomLevel = null;
         var enableClickEvents = true;
-        this._mapFactory = new com.runwaysdk.geodashboard.gis.LeafletMap(this._mapDivId, center, zoomLevel, enableClickEvents, this);
+        this._mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap(this._mapDivId, center, zoomLevel, enableClickEvents, this);
 
         if (this._mapFactory.getMap() != null) {
             $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
-          }
+        }
       },
       
       /**
@@ -515,12 +507,12 @@
        * 
        */
       _configureMap : function() {
-    	  this._mapFactory.setView(this._bBox, null);
+    	  this._mapFactory.setView(this._bBox, null, null);
       },
       
       
       /**
-       * Adds leaflet layers to the map and builds the base layer checkboxes
+       * Adds layer objects to the map and builds the base layer checkboxes
        * 
        */
       _renderBaseLayers : function() {
@@ -537,7 +529,7 @@
       
       
       /**
-       * Redraws the HTML representing the user-defined layers and adds the layers to Leaflet.
+       * Redraws the HTML representing the user-defined layers and adds the layers to the map.
        */
       _renderUserLayers : function() {
         this._drawUserLayersHTML();
@@ -698,7 +690,7 @@
       
       _constructLegendItem : function(layer, legendDragStopDragBound) {
           var displayInLegend = layer.getDisplayInLegend();
-
+          //TODO: these if checks for layer types are out dated
           if(displayInLegend)
           {
               var layerId = layer.getLayerId();
@@ -1003,14 +995,14 @@
       
       
       /**
-       * Adds all layers in the layerCache to leaflet, in the proper ordering.
+       * Adds all layers in the layerCache to the map, in the proper ordering.
        * 
-       * @param boolean removeExisting Optional, if unspecified all existing layers will be removed first. If set to false, only layers that leaflet
-       *   does not already know about will be added.
+       * @param boolean removeExisting Optional, if unspecified all existing layers will be removed first. If set to false, only layers that are not
+       * already added to the map will be added.
        */
       _addUserLayersToMap : function(removeExisting) {
         var layers = this._layerCache.values();
-        var refLayers = this._refLayerCache.values();
+        var refLayers = this._refLayerCache.values().reverse();
         
         this._mapFactory.createUserLayers(layers, this._workspace, removeExisting);
         this._mapFactory.createReferenceLayers(refLayers, this._workspace, removeExisting);
@@ -1045,13 +1037,13 @@
             }
             that._layerCache = reorderedLayerCache;
             
-            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform leaflet of the new ordering.
+            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
             that._addUserLayersToMap(true);
           },
           onFailure : function(e) {
             that.handleException(e);
             
-            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update leaflet because that ordering is still correct.
+            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update the map because that ordering is still correct.
             that._drawUserLayersHTML();
           }
         });
@@ -1248,8 +1240,8 @@
               el.parent().parent().remove();
               
               // remove the actual layer from the map
-            if(toRemove.leafletLayer){
-              this._mapFactory.hideLayer(toRemove.leafletLayer);
+            if(toRemove.wmsLayerObj){
+              this._mapFactory.hideLayer(toRemove.wmsLayerObj);
             }
             
             // Remove associated legend and legend container
@@ -1263,9 +1255,9 @@
           toDisable.setLayerIsActive(false);
           toDisable.layerExists = false;
           
-              // remove the leaflet map layer from the map
-            if(toDisable.leafletLayer){
-              this._mapFactory.hideLayer(toDisable.leafletLayer);
+              // remove the map layer from the map
+            if(toDisable.wmsLayerObj){
+              this._mapFactory.hideLayer(toDisable.wmsLayerObj);
             }
           
             // change the ui back to disabled
@@ -1299,7 +1291,7 @@
        * Renders each base layer as a checkable option in
        * the layer switcher.
        * 
-       * @base - array of leaflet basemap layer objects
+       * @base - array of basemap layer objects
        */
       _renderBaseLayerSwitcher : function(base){
         
@@ -1327,7 +1319,7 @@
             checkbox.setId(id);
             if(i === 0){
               checkbox.setChecked(checkbox);
-              this._mapFactory.showLayer(b);
+              this._mapFactory.showLayer(b, 0);
             }
             checkbox.addOnCheckListener(function(event){
               target = event.getCheckBox();   
@@ -1363,7 +1355,7 @@
             }
             else {
               var newBaselayer = this._baseLayers.get(targetId);
-              this._mapFactory.showLayer(newBaselayer);
+              this._mapFactory.showLayer(newBaselayer, 0);
             }
           }
         }
@@ -1400,7 +1392,7 @@
         }
         else {
           layer.setLayerIsActive(false);
-          this._mapFactory.hideLayer(layer.leafletLayer);          
+          this._mapFactory.hideLayer(layer.wmsLayerObj);          
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.hide();
@@ -1431,7 +1423,7 @@
         }
         else {
           layer.setLayerIsActive(false);
-          this._mapFactory.hideLayer(layer.leafletLayer);          
+          this._mapFactory.hideLayer(layer.wmsLayerObj);          
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.hide()
@@ -1814,6 +1806,7 @@
       },      
       
       _onClickToggleLeftPanel : function(e) {
+    	// TODO: change these classes to not be leaflet specific
         var target = $(e.target);
         var speed = 500;
         
@@ -1832,6 +1825,10 @@
           $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
               left: "-=236",
           }, speed );
+          
+          $(".ol-zoom.ol-unselectable.ol-control").animate({
+              left: "-=236",
+          }, speed );
         }
         else{
           $("#control-form").animate({
@@ -1846,6 +1843,10 @@
           
           // toggle the map zoom buttons
           $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
+              left: "+=236",
+          }, speed );
+          
+          $(".ol-zoom.ol-unselectable.ol-control").animate({
               left: "+=236",
           }, speed );
         }

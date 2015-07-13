@@ -29,102 +29,184 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	margin: 5px 11px 0 0;
 }
 
-/***** 
-**** Leaflet overrides 
-******/
-.leaflet-top, .leaflet-bottom {
-	position: absolute;
-	z-index: 10;
-	pointer-events: none;
-}
 
-.leaflet-control-zoom.leaflet-bar.leaflet-control {
-	margin-left: 245px;
-	margin-top: 0px;
-	top: 23px;
-	box-shadow: none;
-	border: solid 1px #ddd;
-}
+/*****
+**** Both Open Layers and Leaflet CSS
+*****/
+	h3.popup-heading {
+		margin: 0;
+		text-align: center;
+		color: #666666;
+		font-weight: bold;
+	}
+	
+	.popup-table-heading {
+		font-style: italic;
+	}
 
-.leaflet-bar a:first-child {
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-	color: rgba(0, 0, 0, 0.7);
-	width: 35px;
-	height: 35px;
-	line-height: 33px;
-}
 
-.leaflet-bar a:last-child {
-	border-bottom-left-radius: 2px;
-	border-bottom-right-radius: 2px;
-	color: rgba(0, 0, 0, 0.7);
-	width: 35px;
-	height: 35px;
-	line-height: 33px;
-}
+/*****
+**** Leaflet CSS
+*****/
 
-.leaflet-control-zoom-in, .leaflet-control-zoom-out {
-	font: bold 30px 'Lucida Console', Monaco, monospace;
-	text-indent: 1px;
-}
+	.leaflet-top, .leaflet-bottom {
+		position: absolute;
+		z-index: 10;
+		pointer-events: none;
+	}
+	
+	.leaflet-control-zoom.leaflet-bar.leaflet-control {
+		margin-left: 245px;
+		margin-top: 0px;
+		top: 23px;
+		box-shadow: none;
+		border: solid 1px #ddd;
+	}
+	
+	.leaflet-bar a:first-child {
+		border-top-left-radius: 2px;
+		border-top-right-radius: 2px;
+		color: rgba(0, 0, 0, 0.7);
+		width: 35px;
+		height: 35px;
+		line-height: 33px;
+	}
+	
+	.leaflet-bar a:last-child {
+		border-bottom-left-radius: 2px;
+		border-bottom-right-radius: 2px;
+		color: rgba(0, 0, 0, 0.7);
+		width: 35px;
+		height: 35px;
+		line-height: 33px;
+	}
+	
+	.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+		font: bold 30px 'Lucida Console', Monaco, monospace;
+		text-indent: 1px;
+	}
+	
+	a.leaflet-control-zoom-out:hover, a.leaflet-control-zoom-in:hover {
+		color: #00bfff;
+		background-color: #fff;
+	}
 
-a.leaflet-control-zoom-out:hover, a.leaflet-control-zoom-in:hover {
-	color: #00bfff;
-	background-color: #fff;
-}
+	.leaflet-popup-content p {
+		margin: 0;
+	}
+	
+	.leaflet-popup-content .table{
+		font-size: 17px;
+	}
+	
+	.leaflet-bottom.leaflet-right {
+		bottom: 0px;
+	    right: 335px;
+	}
+	
+	.leaflet-control-attribution.leaflet-control{
+		color: gray;
+		background: rgba(255, 255, 255, 0.5);
+	}
+	
+	.leaflet-control-attribution.leaflet-control > a{
+		color: gray;
+	}
 
-h3.popup-heading {
-	margin: 0;
-	text-align: center;
-	color: #666666;
-	font-weight: bold;
-}
 
-.popup-table-heading {
-	font-style: italic;
-}
+/*****
+**** Google Maps CSS
+*****/
 
-.leaflet-popup-content p {
-	margin: 0;
-}
+	.gmnoprint {
+		bottom: 0px !important;
+		right: 406px !important;
+	}
+	
+	.gmnoprint.gm-style-cc {
+		bottom: 0px !important;
+		right: 335px !important;
+	}
 
-.leaflet-popup-content .table{
-	font-size: 17px;
-}
 
-.leaflet-bottom.leaflet-right {
-	bottom: 0px;
-    right: 335px;
-}
 
-.leaflet-control-attribution.leaflet-control{
-	color: gray;
-	background: rgba(255, 255, 255, 0.5);
-}
+/*****
+**** Open Layers CSS
+*****/
 
-.leaflet-control-attribution.leaflet-control > a{
-	color: gray;
-}
+    .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+      }
+      .ol-popup:after, .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+        color: #c3c3c3;
+          font-size: 15px;
+      }
+      .ol-popup-closer:after {
+        content: "✖";
+      }
+      
+      .ol-zoom.ol-unselectable.ol-control{
+      	  left: 245px;
+      	  top: 22px;
+      	  padding: 0;
+      }
+      button.ol-zoom-in, button.ol-zoom-out{
+      	  width: 37px;
+  		  height: 36px;
+  		  font: bold 30px 'Lucida Console', Monaco, monospace;
+		  color: rgba(0, 0, 0, 0.7);
+		  background-color: #fff;
+		  border: solid 1px #ddd;
+		  margin: 0;
+      }
+      
+      button.ol-zoom-in:hover, button.ol-zoom-out:hover{
+      	color: #00bfff;
+		background-color: #fff;
+      }
 
-.gmnoprint {
-	bottom: 0px !important;
-	right: 406px !important;
-}
-
-.gmnoprint.gm-style-cc {
-	bottom: 0px !important;
-	right: 335px !important;
-}
 
 /***** 
 **** UX team delivery overrides (relevant to map page)
 ******/
-.control-form h3 {
-	font-size: 15px;
-}
-
-.control-form {
-	width: 235px;
-	padding: 0 0 0 0;
-}
+	.control-form h3 {
+		font-size: 15px;
+	}
+	
+	.control-form {
+		width: 235px;
+		padding: 0 0 0 0;
+	}
