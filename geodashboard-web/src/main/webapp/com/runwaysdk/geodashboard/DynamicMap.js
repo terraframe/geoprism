@@ -507,7 +507,12 @@
        * 
        */
       _configureMap : function() {
-    	  this._mapFactory.setView(this._bBox, null, null);
+    	  if(this._bBox.length === 2){
+    		  this._mapFactory.setView(null, this._bBox, 5);
+    	  }
+    	  else if(this._bBox.length === 4){
+    		  this._mapFactory.setView(this._bBox, null, null);
+    	  }
       },
       
       
@@ -1002,11 +1007,12 @@
        */
       _addUserLayersToMap : function(removeExisting) {
         var layers = this._layerCache.values();
-        var refLayers = this._refLayerCache.values().reverse();
+        var refLayers = this._refLayerCache.values();
         
-        this._mapFactory.createUserLayers(layers, this._workspace, removeExisting);
+        // Create reference layers before user layers to control stacking order.
+        // This could be done in a better way by setting a type and potentially z-index on the layers
         this._mapFactory.createReferenceLayers(refLayers, this._workspace, removeExisting);
-        
+        this._mapFactory.createUserLayers(layers, this._workspace, removeExisting);
       },
       
       

@@ -197,6 +197,16 @@ div.row-holder .chk-area, div.row-holder .rad-area {
       	color: #00bfff;
 		background-color: #fff;
       }
+      
+      .ol-attribution.ol-unselectable.ol-control{
+/*       	  margin-right: 325px; */
+  			right: inherit;
+  			margin-left: 5px;
+      }
+      
+      .ol-attribution.ol-unselectable.ol-control button{
+      	background: rgba(0,0,0,0.7);
+	  }
 
 
 /***** 

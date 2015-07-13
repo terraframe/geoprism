@@ -30,7 +30,8 @@
 	   "aggregationMethod" : "Aggregation Method", 
 	   "aggregateValue" : "Value",
 	   "mqAerial" : "MapQuest Satellite",
-	   "mqHybrid" : "MapQuest Hybrid"
+	   "mqHybrid" : "MapQuest Hybrid",
+	   "attributionELTooltip" : "Map Attribution"
   });
 	  
   var MapWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.MapWidget', {
@@ -94,10 +95,22 @@
     	  var bounds = this._bounds;
     	  
     	  // Constructing a standard format
-    	  var boundsFormatted = {
-    			  _southWest : {lat : bounds[0], lng : bounds[1]},
-    			  _northEast : {lat: bounds[2], lng : bounds[3]}
-    			  };
+    	  var boundsFormatted = {};
+    	  
+    	  
+    	  // Handle points (2 coord sets) & polygons (4 coord sets)
+    	  // Point occurances are rare and would mean the data includes only a single point or overlapping points
+          if (bounds.length === 2){
+        	  boundsFormatted = {
+        			lat : bounds[1], lng : bounds[0]
+        	  };
+          }
+          else if (bounds.length === 4){
+        	  boundsFormatted = {
+        			  _southWest : {lat : bounds[1], lng : bounds[0]},
+        			  _northEast : {lat: bounds[3], lng : bounds[2]}
+        	  };
+          }
     	  
     	  return boundsFormatted;
       },
@@ -264,7 +277,7 @@
       getCurrentBounds : function() {
     	  var map = this.getMap();
     	  var bounds = map.getBounds();
-          
+    	  
     	  // Constructing a standard format
     	  var boundsFormatted = {
     			  _southWest : {lat : bounds._southWest.lat, lng : bounds._southWest.lng},
@@ -810,8 +823,8 @@
 	          
 	    	  // Constructing a standard format
 	    	  var boundsFormatted = {
-	    			  _southWest : {lat : boundsTransformed[0], lng : boundsTransformed[1]},
-	    			  _northEast : {lat: boundsTransformed[2], lng : boundsTransformed[3]}
+	    			  _southWest : {lng : boundsTransformed[0], lat : boundsTransformed[1]},
+	    			  _northEast : {lng: boundsTransformed[2], lat : boundsTransformed[3]}
 	    			  };
 	    	  
 	    	  return boundsFormatted;
@@ -825,7 +838,7 @@
 	       */
 	      getCurrentBoundsAsString : function() {
 	    	  var bounds = this.getCurrentBounds();
-	    	  var boundsStr = [bounds._southWest.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._northEast.lng].toString();
+	    	  var boundsStr = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].toString();
 	    	  return boundsStr;
 	      },
 	      
@@ -845,19 +858,8 @@
 	    	  map.on('pointerup', function(evt) {
 	    	      map.getViewport().style.cursor = "-webkit-grab";
 	    	  });
-	    	  
-	    	  //TODO: set attribution and other properties
-	    	  
 	      },
 	      
-	      /**
-	       * Get point position relative to map size and zoom level
-	       * 
-	       * @latLng - array of coord point in form [lat, lng]
-	       */
-	      coordToMapPoint : function(latLng) {
-	    	  // TODO: add openlayers code
-	      },
 	      
 	      /**
 	       * Display the layer on the map
@@ -934,7 +936,7 @@
 	        	source: new ol.source.OSM({ 
   					  attributions: [ 
   					                  new ol.Attribution({
-  					                	  html: 'All maps © ' + '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+  					                	  html: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
   					                  }),
   					                  ol.source.OSM.ATTRIBUTION
   					                ]
@@ -1065,17 +1067,19 @@
               var geoserverName = geoserverWorkspace + ":" + viewName;
               
               var mapBounds = this.getCurrentBounds();
+              var mapSWOrigin = [mapBounds._southWest.lng, mapBounds._southWest.lat].toString();
                 
               var wmsLayer = new ol.layer.Tile({
 			    		source: new ol.source.TileWMS(({
 			    			url: window.location.origin+"/geoserver/wms/",
 			    			params: {
 			    				'LAYERS': geoserverName, 
+			    				'SRS': MapWidget.SRID,
 			    				'TILED': true,
 			    				'STYLES': layer.getSldName() || "",
 			    				'TILESIZE': 256,
 			    				'FORMAT': 'image/png',
-			    				'TILESORIGIN': mapBounds._southWest.lng + "," + mapBounds._southWest.lat
+			    				'TILESORIGIN': mapSWOrigin
 			    			},
 			    			serverType: 'geoserver'
 			    		})),
@@ -1087,10 +1091,12 @@
 	      },
 	      
 	      /**
-	       * Sets the bounds and zoom level of the map
+	       * Sets the bounds and zoom level of the map. 
+	       * @bounds can be set independanty.
+	       * @center & @zoomLevel must be set together
 	       * 
 	       * @bounds - <OPTIONAL> array of coordinates [southwest long, southwest lat, northeast long, northeast lat]
-	       * @center - <OPTIONAL> array of coordintes [lat, long]
+	       * @center - <OPTIONAL> array of coordintes [long, lat]
 	       * @zoomLevel - <OPTIONAL> integer zoom level
 	       * 
 	       * <public> - called externally
@@ -1098,26 +1104,20 @@
 	      setView : function(bounds, center, zoomLevel) {
 	    	  var map = this.getMap();
 	    	  
-	    	  if(zoomLevel){
+	    	  if(center && zoomLevel){
+	    		  map.getView().setCenter(center, MapWidget.SRID, 'EPSG:3857');
 	    		  map.getView().setZoom(zoomLevel);
 	    	  }
-	    	  if(center){
-	    		  map.getView().setCenter(center, MapWidget.SRID, 'EPSG:3857');
-	    	  }
-	    	  if(bounds){
-	    	  
+	    	  else if(bounds){
 		          // Handle points (2 coord sets) & polygons (4 coord sets)
 		          if (bounds.length === 2){
-		        	// TODO: decide if this should be set as bounds  
-		            //this.setBounds(bounds[0], bounds[1]);
+		            this.setBounds(bounds[0], bounds[1]);
 		            
-		        	// TODO: test 2 coordinate bounds input
 		            map.getView().setCenter(bounds, MapWidget.SRID, 'EPSG:3857');
 		          }
 		          else if (bounds.length === 4){
 		        	// OpenLayers 3 standard format = [minx, miny, maxx, maxy]
-		            var bounds = [bounds[1], bounds[0], bounds[3], bounds[2]];
-		            this.setBounds(bounds);
+		            this.setBounds([bounds[0], bounds[1], bounds[2], bounds[3]]);
 		          
 			    	var fromattedBounds = this.getBounds();
 			    	var bBox = [
@@ -1164,7 +1164,6 @@
 	          if(layers.length > 0) {
 	            
 	            // Construct a GetFeatureInfo request URL given a point        
-//	            var point = this.coordToMapPoint([ e.latlng.lat, e.latlng.lng ]);
 	            var size = this.getMapSize();        
 	            var mapBbox = this.getCurrentBoundsAsString();
 	            var layerMap = new Object();
@@ -1325,15 +1324,21 @@
 	    		  this.removeStaleMapFragments();
 	    	  }
 	    	  
+	    	  var attribution = new ol.control.Attribution({
+	    		  collapsible: true,
+	    		  tipLabel: this.localize("attributionELTooltip")
+	    		});
+	    	  
 	    	  var map = new ol.Map({
 	    		  layers: [ ], // base maps will be added later
-	    		  //controls: ol.control.defaults({ attribution: true }).extend([attribution]),
+	    		  controls: ol.control.defaults({ attribution: false }).extend([attribution]),
 	    		  target: this.getMapElementId(),
+	    		  loadTilesWhileInteracting: true,
+	    		  loadTilesWhileAnimating: true,
 	    		  view: new ol.View({ 
 	    			  center: this.getCenter(), 
 	    			  zoom: this.getZoomLevel()
-//	    			  projection: MapWidget.SRID
-	    			  })
+	    		  })
 	    	  });
 	    	  
 	    	  this.setMap(map);
