@@ -38,7 +38,8 @@
 	Extends : com.runwaysdk.ui.Component,  
     IsAbstract : true,
     Constants : {
-    	SRID : "EPSG:4326"
+    	DATASRID : "EPSG:4326",
+    	MAPSRID : "EPSG:3857"
     },    
     Instance : {
       
@@ -87,7 +88,7 @@
       },
       
       /**
-       * Returns the full extent of the map data
+       * Returns the full extent of the map data in the data projection
        * 
        * <public> - called externally
        */
@@ -572,7 +573,7 @@
           "&INFO_FORMAT=application/json" +
           "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
           "&SERVICE=WMS" +
-          "&SRS="+MapWidget.SRID +
+          "&SRS="+MapWidget.DATASRID +
           "&VERSION=1.1.1" +
           "&height=" + size.y +
           "&width=" + size.x +
@@ -812,19 +813,28 @@
 	      
 	      
 	      /**
-	       * Return bounds as an object
+	       * Return bounds as an object in the map projection (epsg:3857 by default)
+	       * 
+	       * @epsgCode - target projection for the bounds
 	       * 
 	       * <private> - internal method
 	       */
-	      getCurrentBounds : function() {
+	      getCurrentBounds : function(epsgCode) {
 	    	  var map = this.getMap();
-	    	  var bounds = map.getView().calculateExtent(map.getSize());
-	    	  var boundsTransformed = ol.extent.applyTransform(bounds, ol.proj.getTransform('EPSG:3857', MapWidget.SRID));
+	    	  var mapBounds = map.getView().calculateExtent(map.getSize());
+	    	  var bounds = {};
 	          
+	    	  if(epsgCode !== MapWidget.MAPSRID){
+	    		  bounds = ol.extent.applyTransform(mapBounds, ol.proj.getTransform(MapWidget.MAPSRID, epsgCode));
+	    	  }
+	    	  else{
+	    		  bounds = mapBounds;
+	    	  }
+	    	  
 	    	  // Constructing a standard format
 	    	  var boundsFormatted = {
-	    			  _southWest : {lng : boundsTransformed[0], lat : boundsTransformed[1]},
-	    			  _northEast : {lng: boundsTransformed[2], lat : boundsTransformed[3]}
+	    			  _southWest : {lng : bounds[0], lat : bounds[1]},
+	    			  _northEast : {lng: bounds[2], lat : bounds[3]}
 	    			  };
 	    	  
 	    	  return boundsFormatted;
@@ -833,11 +843,13 @@
 	      /**
 	       * Return bounds as a string. The order of the bounds is required by OpenLayers 3
 	       *  =  [sw lat, sw long, ne lat, ne long]
+	       *  
+	       * @epsgCode - target projection for the bounds
 	       * 
 	       * <private> - internal method
 	       */
-	      getCurrentBoundsAsString : function() {
-	    	  var bounds = this.getCurrentBounds();
+	      getCurrentBoundsAsString : function(epsgCode) {
+	    	  var bounds = this.getCurrentBounds(epsgCode);
 	    	  var boundsStr = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].toString();
 	    	  return boundsStr;
 	      },
@@ -1066,25 +1078,65 @@
 	    	  var viewName = layer.getViewName();
               var geoserverName = geoserverWorkspace + ":" + viewName;
               
-              var mapBounds = this.getCurrentBounds();
+              var mapBounds = this.getCurrentBounds(MapWidget.DATASRID);
               var mapSWOrigin = [mapBounds._southWest.lng, mapBounds._southWest.lat].toString();
                 
+//              var wmsLayer = new ol.layer.Tile({
+//			    		source: new ol.source.TileWMS(({
+//			    			url: window.location.origin+"/geoserver/wms/",
+//			    			params: {
+//			    				'LAYERS': geoserverName, 
+//			    				'SRS': MapWidget.DATASRID,
+//			    				'TILED': true,
+//			    				'STYLES': layer.getSldName() || "",
+//			    				'TILESIZE': 256,
+//			    				'FORMAT': 'image/png',
+//			    				'TILESORIGIN': mapSWOrigin
+//			    			},
+//			    			serverType: 'geoserver'
+//			    		})),
+//			    		visible: true
+//			  	});
+              
+              var fullExtent = this.getBounds();
+              var ext = [fullExtent._southWest.lng, fullExtent._southWest.lat, fullExtent._northEast.lng, fullExtent._northEast.lat];
+//              var mapSWOrigin = [ext[0], ext[1]].toString();
+              var projectionExtent = [-20026376.39, -20048966.10, 20026376.39, 20048966.10]; //epsg:3857 extent
+              
               var wmsLayer = new ol.layer.Tile({
-			    		source: new ol.source.TileWMS(({
-			    			url: window.location.origin+"/geoserver/wms/",
-			    			params: {
-			    				'LAYERS': geoserverName, 
-			    				'SRS': MapWidget.SRID,
-			    				'TILED': true,
-			    				'STYLES': layer.getSldName() || "",
-			    				'TILESIZE': 256,
-			    				'FORMAT': 'image/png',
-			    				'TILESORIGIN': mapSWOrigin
-			    			},
-			    			serverType: 'geoserver'
-			    		})),
-			    		visible: true
-			  	});
+            	  	extent: projectionExtent, 
+            	  	preload: true,
+		    		source: new ol.source.TileWMS({
+		    			url: window.location.origin+"/geoserver/wms/",
+		    			params: {
+		    				'LAYERS': geoserverName, 
+		    				'VERSION': '1.3',
+		    				'SRS': MapWidget.MAPSRID,
+		    				'BBOX': ext,
+		    				'TILED': true,
+		    				'STYLES': layer.getSldName() || "",
+		    				'TILESIZE': 256,
+		    				'FORMAT': 'image/png',
+		    				'TILESORIGIN': mapSWOrigin
+		    			},
+		    			serverType: 'geoserver'
+		    		}),
+		    		visible: true
+		  	});
+              // Single Tile format
+//              var wmsLayer = new ol.layer.Image({
+//		    		source: new ol.source.ImageWMS({
+//		    			url: window.location.origin+"/geoserver/wms/",
+//		    			params: {
+//		    				'LAYERS': geoserverName, 
+//		    				'TILED': true,
+//		    				'STYLES': layer.getSldName() || "",
+//		    				'FORMAT': 'image/png'
+//		    			},
+//		    			serverType: 'geoserver'
+//		    		}),
+//		    		visible: true
+//		  	});
 	            
 	            this.showLayer(wmsLayer, null);
 	            layer.wmsLayerObj = wmsLayer;
@@ -1105,7 +1157,7 @@
 	    	  var map = this.getMap();
 	    	  
 	    	  if(center && zoomLevel){
-	    		  map.getView().setCenter(center, MapWidget.SRID, 'EPSG:3857');
+	    		  map.getView().setCenter(center, MapWidget.DATASRID, MapWidget.MAPSRID);
 	    		  map.getView().setZoom(zoomLevel);
 	    	  }
 	    	  else if(bounds){
@@ -1113,7 +1165,7 @@
 		          if (bounds.length === 2){
 		            this.setBounds(bounds[0], bounds[1]);
 		            
-		            map.getView().setCenter(bounds, MapWidget.SRID, 'EPSG:3857');
+		            map.getView().setCenter(bounds, MapWidget.DATASRID, MapWidget.MAPSRID);
 		          }
 		          else if (bounds.length === 4){
 		        	// OpenLayers 3 standard format = [minx, miny, maxx, maxy]
@@ -1126,10 +1178,16 @@
 		                         fromattedBounds._northEast.lng, 
 		                         fromattedBounds._northEast.lat
 		                         ];
-			    	var areaExtent = ol.extent.applyTransform(bBox, ol.proj.getTransform(MapWidget.SRID, 'EPSG:3857'));
+			    	var areaExtent = ol.extent.applyTransform(bBox, ol.proj.getTransform(MapWidget.DATASRID, MapWidget.MAPSRID));
 			    	map.getView().fit(areaExtent, map.getSize());
 		          };
 	    	  };
+	    	  
+	    	  var that = this;
+	    	  map.on("moveend", function() {
+	    		  console.log("this bounds = ", [bounds[0], bounds[1], bounds[2], bounds[3]]);
+	    		  console.log("map bounds = ", map.getView().calculateExtent(map.getSize()));
+	    		});
 	      },
 	      
 	      /**
@@ -1165,7 +1223,7 @@
 	            
 	            // Construct a GetFeatureInfo request URL given a point        
 	            var size = this.getMapSize();        
-	            var mapBbox = this.getCurrentBoundsAsString();
+	            var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
 	            var layerMap = new Object();
 	            var layerStringList = '';
 	            var that = this;
@@ -1197,7 +1255,7 @@
 	            "&INFO_FORMAT=application/json" +
 	            "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
 	            "&SERVICE=WMS" +
-	            "&SRS="+MapWidget.SRID +
+	            "&SRS="+MapWidget.DATASRID +
 	            "&VERSION=1.1.1" +
 	            "&height=" + size.y +
 	            "&width=" + size.x +
@@ -1343,7 +1401,6 @@
 	    	  
 	    	  this.setMap(map);
 	    	  this.configureMap();
-	    	  
 	    	  
 	    	  if(this.getEnableClickEvents()){
 	    		  this.setCallingThisRef(callingThisRef);
