@@ -354,9 +354,9 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("polygoncategories", style.getCategoryPolygonStyles().toString());
-      req.setAttribute("pointcategories", style.getCategoryPointStyles().toString());
-      req.setAttribute("secondaryCategories", style.getSecondaryCategories().toString());
+      req.setAttribute("polygoncategories", this.encode(style.getCategoryPolygonStyles()));
+      req.setAttribute("pointcategories", this.encode(style.getCategoryPointStyles()));
+      req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
 
       /*
        * Secondary attribute objects

@@ -228,7 +228,7 @@
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
         if(catsJSONObj){
-            
+          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
           var catsJSONArr = catsJSONObj.catLiElems;
             
           if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
@@ -250,7 +250,8 @@
             }
                 
             var catColorSelectorId = catInputId + "-color-selector";
-            $("#"+catInputId).val(cat.val);
+            // replace() is due to a encoding/decoding issue where spaces are replaced with + signs and not decoded in js
+            $("#"+catInputId).val(cat.val.replace("+", " "));
             $("#"+catColorSelectorId).css("background", cat.color);
             catOtherEnabled = cat.otherEnabled;
           }
@@ -449,7 +450,7 @@
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
         if(catsJSONObj){
-            
+          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
           var catsJSONArr = catsJSONObj.catLiElems;
           
           if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
@@ -1256,8 +1257,9 @@
 	          var otherEnabled = true;
 	          
 	          var catStore = $("#categories-polygon-input").data("categoriesstore");
+	          catStore = JSON.parse(decodeURIComponent(catStore));
 	          
-	          if(catStore !== null && catStore !== "" && catStore.catLiElems.length > 0){
+	          if(catStore !== null && catStore !== "" && catStore.length > 0){
 	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
@@ -1317,8 +1319,9 @@
 	          var otherEnabled = true;
 	          
 	          var catStore = $("#categories-point-input").data("categoriesstore");
+	          catStore = JSON.parse(decodeURIComponent(catStore));
 	          
-	          if(catStore !== null && catStore !== "" && catStore.catLiElems.length > 0){
+	          if(catStore !== null && catStore !== "" && catStore.length > 0){
 	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
@@ -1386,7 +1389,7 @@
           }
           else {
             this._renderSecondaryCategoryGroup(secondaryAttribute, type);
-            this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
+            //this._loadExistingCategories("#secondaryCategories", "secondaryCat", "#secondary-tree", false);
           }
         }
           
