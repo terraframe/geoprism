@@ -56,7 +56,7 @@
   var CategoryTreeWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryListWidget', {
     Extends : CategoryWidget,    
     Instance : {
-      initialize : function(map, elementId, storeId, checkOther, prefix, mdAttributeId, categoryType, aggregationId){
+      initialize : function(map, elementId, storeId, checkOther, prefix, mdAttributeId, categoryType, aggregationId, geomType){
         this._map = map;
         this._elementId = elementId;
         this._storeId = storeId;        
@@ -65,7 +65,9 @@
         this._mdAttributeId = mdAttributeId;
         this._categoryType = categoryType;
         this._aggregationId = aggregationId;
+        this._geomType = geomType;
         
+        this._otherCatInputId = null;
         this._parser = Globalize.numberParser();
         this._formatter = Globalize.numberFormatter();
       },
@@ -75,6 +77,24 @@
       setCheckOther : function(checkOther) {
         this._checkOther = checkOther;  
       },
+      getGeomType : function() {
+    	  var type = this._geomType.toLowerCase();
+    	  if(type === "poly" || type === "polygon"){
+    		  return "polygon";
+    	  }
+    	  else if(type === "point"){
+    		  return "point";
+    	  }
+    	  else{
+    		  return null;
+    	  }
+      },
+      setOtherCatInputId : function(id){
+    	 this._otherCatInputId = id;
+      },
+      getOtherCatInputId : function(){
+     	 return this._otherCatInputId;
+       },
       
       _getCategoryHTML : function(index) {
             	  
@@ -91,6 +111,15 @@
           disabled = "disabled";
           value = "other";
           color = "#737678";
+          if(this.getGeomType() === "polygon"){
+        	  id += "-poly";
+          }
+          else if(this.getGeomType() === "point"){
+        	  id += "-point";
+          }
+          
+          // TODO: move this outside of this method
+          this.setOtherCatInputId(id);
         }       
                   
         var html = '<li>' +
@@ -190,11 +219,15 @@
           });
         });
       },
+      
+      
+      /**
+       * Add existing categories to the ui
+       */
       _loadExistingCategories : function() {
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
         if(catsJSONObj){
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
             
           var catsJSONArr = catsJSONObj.catLiElems;
             
@@ -210,7 +243,7 @@
                 
             // Controlling for 'other' category 
             if(cat.otherCat){
-              catInputId = this._prefix + "-" + CategoryWidget.OTHER;
+              catInputId = this.getOtherCatInputId();
             }
             else{
               catInputId = this._prefix + "-" + (i+1);
@@ -225,12 +258,22 @@
           // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
           // The 'other' option is checked by default making this a valid sequence
           if(this._checkOther && !catOtherEnabled){
-            $(".other-option-check-box").click();
-            $("#" + this._prefix + "-" + CategoryWidget.OTHER).parent().parent().hide();
+        	  
+        	if(this.getGeomType() === "polygon"){
+          		$("#basic-cat-poly-other-option").click();
+          	}
+          	else if(this.getGeomType() === "point"){
+          		$("#basic-cat-point-other-option").click();
+          	}
+            $("#" + catInputId).parent().parent().hide();
           }
         }
       },        
-      getCategories: function () {    
+      
+      /**
+       * Scrape categries for values and colors
+       */
+      getCategories : function () {    
         var elements = this.getImpl().find(".category-container");
         var categories = [];        
             
@@ -257,9 +300,14 @@
             category.isOntologyCat = false;
                 
             if(this._checkOther) {
-              category.otherEnabled = $(".other-option-check-box").prop("checked");
-                 
-              if(catInputElem[0].id === "cat-other"){
+            	if(this.getGeomType() === "polygon"){
+            		category.otherEnabled = $("#basic-cat-poly-other-option").prop("checked");
+            	}
+            	else if(this.getGeomType() === "point"){
+            		category.otherEnabled = $("#basic-cat-point-other-option").prop("checked");
+            	}
+            	
+              if(catInputElem[0].id === this.getOtherCatInputId()){
                 category.otherCat = true;
               }
               else{
@@ -282,10 +330,16 @@
   
   var CategoryTreeWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryTreeWidget', {
     Extends : CategoryWidget,    
+    Constants : {
+        POLYGON_INPUT_EL : '#ont-cat-poly-other-option',
+        POINT_INPUT_EL : '#ont-cat-point-other-option'
+      },
     Instance : {
-      initialize : function(elementId, storeId){
+      initialize : function(elementId, storeId, geomType){
         this._elementId = elementId;
         this._storeId = storeId;
+        this._otherCatInputId;
+        this._geomType;
         
         // Default values for the category tree widget
         if(this._elementId == null) {
@@ -299,6 +353,18 @@
       
       getImpl : function() {        
         return $(this._elementId);
+      },
+      getGeomType : function() {
+    	  var type = this._geomType.toLowerCase();
+    	  if(type === "poly" || type === "polygon"){
+    		  return "polygon";
+    	  }
+    	  else if(type === "point"){
+    		  return "point";
+    	  }
+    	  else{
+    		  return null;
+    	  }
       },
       
       /**
@@ -371,9 +437,6 @@
         });
         tree.render(this._elementId, nodes);
         
-        // Set the color of the 'other' category selector icon
-        $("#cat-other-color-selector").css('background', this._getCategoryColor(""));
-        
         this.attachCategoryColorPickers();
       },
       
@@ -386,7 +449,6 @@
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
         if(catsJSONObj){
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
             
           var catsJSONArr = catsJSONObj.catLiElems;
           
@@ -405,6 +467,9 @@
               else if(catId === "cat-other-color-selector"){
                 return cat.color;
               }
+              else if(catId === "cat-point-other-color-selector"){
+                  return cat.color;
+              }
             }
           }
         }
@@ -420,8 +485,6 @@
           var elements = this.getImpl().find(".ontology-category-color-icon");
               
           $.each(elements, function( index, element ) {
-            var rwId = element.dataset.rwid;
-                  
             var category = new Object();
             category.id = element.dataset.rwid; 
             category.val = element.parentElement.previousSibling.textContent;
@@ -432,16 +495,26 @@
           });
               
           // Get the other category for the a layer create/edit form term tree
-          if(this.getImpl().next().attr('id') === "other-cat-container"){
+          var thisId = this.getImpl().next().attr('id');
+          if(thisId === "other-cat-point-container"){
             var otherCat = new Object();
-            otherCat.id = "cat-other-color-selector"; 
+            otherCat.id = "cat-point-other-color-selector"; 
             otherCat.val = "Other";
-            otherCat.color = LayerForm.rgb2hex($("#cat-other-color-selector").css("background-color"));
+            otherCat.color = LayerForm.rgb2hex($("#cat-point-other-color-selector").css("background-color"));
             otherCat.isOntologyCat = false;
             otherCat.otherCat = true;
-            otherCat.otherEnabled =  $(".other-option-check-box").prop("checked");
-                            
+            otherCat.otherEnabled =  $("#ont-cat-point-other-option").prop("checked");
             categories.push(otherCat);
+          }
+          else if(thisId === "other-cat-poly-container"){
+        	  var otherCat = new Object();
+              otherCat.id = "cat-other-color-selector"; 
+              otherCat.val = "Other";
+              otherCat.color = LayerForm.rgb2hex($("#cat-other-color-selector").css("background-color"));
+              otherCat.isOntologyCat = false;
+              otherCat.otherCat = true;
+              otherCat.otherEnabled =  $("#ont-cat-poly-other-option").prop("checked");
+              categories.push(otherCat);
           }
                     
           return categories;
@@ -579,8 +652,6 @@
        * 
        */
       _selectColor : function(){
-        var that = this;
-        
         this._setupCategoryColorPicker($('.color-holder'));
         
         // category layer type colors
@@ -1166,28 +1237,28 @@
         if($("#tab005categoriespolygon").length > 0){
 	        if($("#polygon-ontology-tree").length > 0){
 	          
-	          var categoryWidget = new CategoryTreeWidget("#polygon-ontology-tree", "#categories-polygon-input");
+	          var categoryWidget = new CategoryTreeWidget("#polygon-ontology-tree", "#categories-polygon-input", "polygon");
 	          this._categoryWidgets.push(categoryWidget);
 	          categoryWidget.render();
 	          
 	          // category 'other' option
 	          $(".other-option-check-box").change(function() {
 	            if($(this).is(":checked")) {
-	              $("#other-cat-container").show();
+	              $("#other-cat-poly-container").show();
 	            }
 	            else{
-	              $("#other-cat-container").hide();
+	              $("#other-cat-poly-container").hide();
 	            }     
 	          });
-	            
+	          
 	          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
 	          // The 'other' option is checked by default making this a valid sequence
 	          var otherEnabled = true;
 	          
 	          var catStore = $("#categories-polygon-input").data("categoriesstore");
 	          
-	          if(catStore !== null && catStore.length > 0){
-	            var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+	          if(catStore !== null && catStore !== "" && catStore.catLiElems.length > 0){
+	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
 	              var cat = catJSON[i];
@@ -1199,23 +1270,23 @@
 	          }
 	            
 	          if(!otherEnabled){
-	            $(".other-option-check-box").click();
+	            $("#ont-cat-poly-other-option").click();
 	          }
 	        }
 	        else{
 	          var categoryType = $("#categories-polygon-input").data('type');
 	          
-	          var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-polygon-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
+	          var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color01", "#categories-polygon-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD, "polygon");
 	          this._categoryWidgets.push(categoryWidget);
 	          categoryWidget.render();
 	          
 	          // category 'other' option
-	          $(".other-option-check-box").change(function() {
+	          $("#basic-cat-poly-other-option").change(function() {
 	            if($(this).is(":checked")) {
-	              $("#cat-other").parent().parent().show();
+	              $("#cat-other-poly").parent().parent().show();
 	            }
 	            else{
-	              $("#cat-other").parent().parent().hide();
+	              $("#cat-other-poly").parent().parent().hide();
 	            }     
 	          });
 	           
@@ -1227,19 +1298,19 @@
         if($("#tab007categoriespoint").length > 0){
         	if($("#points-ontology-tree").length > 0){
         		
-    		  var categoryWidget = new CategoryTreeWidget("#points-ontology-tree", "#categories-point-input");
+    		  var categoryWidget = new CategoryTreeWidget("#points-ontology-tree", "#categories-point-input", "point");
     		  this._categoryWidgets.push(categoryWidget);
     		  categoryWidget.render();
 	          
 	          // category 'other' option
-	          $(".other-option-check-box").change(function() {
-	            if($(this).is(":checked")) {
-	              $("#other-cat-container").show();
-	            }
-	            else{
-	              $("#other-cat-container").hide();
-	            }     
-	          });
+	          $("#ont-cat-point-other-option").change(function() {
+		            if($(this).is(":checked")) {
+		              $("#other-cat-point-container").show();
+		            }
+		            else{
+		              $("#other-cat-point-container").hide();
+		            }     
+			  });
 	            
 	          // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
 	          // The 'other' option is checked by default making this a valid sequence
@@ -1247,36 +1318,36 @@
 	          
 	          var catStore = $("#categories-point-input").data("categoriesstore");
 	          
-	          if(catStore !== null && catStore.length > 0){
-	            var catJSON = JSON.parse(decodeURIComponent(catStore)).catLiElems;
+	          if(catStore !== null && catStore !== "" && catStore.catLiElems.length > 0){
+	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
 	              var cat = catJSON[i];
 	              
-	              if(cat.id === "cat-other-color-selector"){
+	              if(cat.id === "cat-point-other-color-selector"){
 	                otherEnabled = cat.otherEnabled;
 	              }
 	            }
 	          }
 	            
 	          if(!otherEnabled){
-	            $(".other-option-check-box").click();
+	            $("#ont-cat-point-other-option").click();
 	          }
         	}
         	else{
 	            var categoryType = $("#categories-point-input").data('type');
 	            
-	            var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color02", "#categories-point-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD);
+	            var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color02", "#categories-point-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD, "point");
 	            this._categoryWidgets.push(categoryWidget);
 	            categoryWidget.render();
 	            
 	            // category 'other' option
-	            $(".other-option-check-box").change(function() {
+	            $("#basic-cat-point-other-option").change(function() {
 	              if($(this).is(":checked")) {
-	                $("#cat-other").parent().parent().show();
+	                $("#cat-other-point").parent().parent().show();
 	              }
 	              else{
-	                $("#cat-other").parent().parent().hide();
+	                $("#cat-other-point").parent().parent().hide();
 	              }     
 	            });
         	}
@@ -1344,8 +1415,6 @@
        * 
        */
       _selectColor : function(){
-        var that = this;
-        
         this._setupCategoryColorPicker($('.color-holder'));
         
         // category layer type colors
@@ -1372,6 +1441,9 @@
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onShow:function(colPickObj){
         	  var that = this;
+        	  var currColor = LayerForm.rgb2hex($(this).css("background-color"));
+              $(this).colpickSetColor(currColor,false);
+              
               $(LayerForm.LAYER_MODAL).scroll(function(){  
               	var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
               	var colPick = $(that);
@@ -1455,7 +1527,7 @@
           });
 
           this._setupCategoryColorPicker($("#choice-color01").find('.color-holder'));
-        })
+        });
           
         // Load the secondary values
         var secondaryAttribute = $("#secondaryAttribute").val();
@@ -1529,7 +1601,7 @@
         $('#secondary-cateogries').html(html);
         
         
-        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation");
+        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation", null);
         this._secondaryWidget.render();
         
         this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
@@ -1571,7 +1643,7 @@
               rootTerms.push({termId : id});
             }
             
-            that._secondaryWidget = new CategoryTreeWidget("#secondary-tree", '#secondaryCategories');
+            that._secondaryWidget = new CategoryTreeWidget("#secondary-tree", '#secondaryCategories', null);
             that._secondaryWidget.render(rootTerms, nodes);
             
             $('#secondary-content').show();
