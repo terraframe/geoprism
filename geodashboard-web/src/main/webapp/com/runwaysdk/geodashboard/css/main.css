@@ -2638,7 +2638,7 @@ span.select-area span.center {
 	.style-options-block > .check-block > .chk-area {
 		margin-top: 10px;
 	}
-	.modal-form .check-block label[for=f53] {
+	.modal-form .check-block label[for=basic-cat-poly-other-option] {
 		margin-top: 10px;
 	}
 	.modal-form .check-block label[for=basic-cat-point-other-option] {
@@ -3231,19 +3231,19 @@ div.secondary-box label {
 * Scroll bar styling
 *
 */
-::-webkit-scrollbar {
-    width: 12px;
-}
+/* ::-webkit-scrollbar { */
+/*     width: 12px; */
+/* } */
  
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-    border-radius: 10px;
-}
+/* ::-webkit-scrollbar-track { */
+/*     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  */
+/*     border-radius: 10px; */
+/* } */
  
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-}
+/* ::-webkit-scrollbar-thumb { */
+/*     border-radius: 10px; */
+/*     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);  */
+/* } */
 
 
 

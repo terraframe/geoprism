@@ -604,7 +604,7 @@
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="points-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
-										<div id="other-cat-point-container">
+										<div id="other-cat-point-container" class="other-cat-container">
 											<ul class="color-list other-cat">							                       <li>
 						                         <div class="category-container">
 							                       	 <div class="text category-input-container">
@@ -1136,7 +1136,7 @@
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="polygon-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
-										<div id="other-cat-container">
+										<div id="other-cat-poly-container" class="other-cat-container">
 											<ul class="color-list other-cat">							                       <li>
 						                         <div class="category-container">
 							                       	 <div class="text category-input-container">
@@ -1151,8 +1151,8 @@
 						                    </ul>
 						                </div>
 									  	<div class="check-block">
-								      		<input id="f56" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
-								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+								      		<input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
+								        	<label for="ont-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 								      	</div>
 									</div>
 		                      	</c:when>
@@ -1165,8 +1165,8 @@
 							            <div class="style-options-block">
 <%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
 										  <div class="check-block">
-										    <input id="f53" class="other-option-check-box" type="checkbox" name="" checked>
-										    <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+										    <input id="basic-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="" checked>
+										    <label for="basic-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 										  </div>
 						                </div>
 			                        </div>

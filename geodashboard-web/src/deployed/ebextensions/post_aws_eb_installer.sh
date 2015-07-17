@@ -26,8 +26,8 @@ mv /usr/share/tomcat6/conf/geoserver.war /usr/share/tomcat6/webapps/geoserver.wa
 
 # Make vault directory
 mkdir /usr/share/tomcat6/vault
-chmod 770 /usr/share/tomcat6/vault
-# chown tomcat:tomcat /usr/share/tomcat6/vault
+chmod 700 /usr/share/tomcat6/vault
+chown tomcat:tomcat /usr/share/tomcat6/vault
 
 # Application context
 # mv /usr/share/tomcat6/webapps/ROOT /usr/share/tomcat6/webapps/e3rrl
