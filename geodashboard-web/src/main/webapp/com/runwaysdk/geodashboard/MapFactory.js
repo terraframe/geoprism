@@ -980,6 +980,7 @@
 	          });
 	        mqHybrid._gdbCustomLabel = this.localize("mqHybrid");
 	        
+	        
 	        var base = [osm, mqAerial, mqHybrid];
 	        
 	        return base;
@@ -1078,65 +1079,54 @@
 	    	  var viewName = layer.getViewName();
               var geoserverName = geoserverWorkspace + ":" + viewName;
               
-              var mapBounds = this.getCurrentBounds(MapWidget.DATASRID);
-              var mapSWOrigin = [mapBounds._southWest.lng, mapBounds._southWest.lat].toString();
-                
+              
+              //
+              //  Implementation of meta-tiling is not working. Until a fix is found we will use single tile requests
+              //
+//              var mapBounds = this.getCurrentBounds(MapWidget.DATASRID);
+//              var mapSWOrigin = [mapBounds._southWest.lng, mapBounds._southWest.lat].toString();
+//                
+//              var fullExtent = this.getBounds();
+//              var ext = [fullExtent._southWest.lng, fullExtent._southWest.lat, fullExtent._northEast.lng, fullExtent._northEast.lat];
+//              var projectionExtent = [-20026376.39, -20048966.10, 20026376.39, 20048966.10]; //epsg:3857 extent
 //              var wmsLayer = new ol.layer.Tile({
-//			    		source: new ol.source.TileWMS(({
-//			    			url: window.location.origin+"/geoserver/wms/",
-//			    			params: {
-//			    				'LAYERS': geoserverName, 
-//			    				'SRS': MapWidget.DATASRID,
-//			    				'TILED': true,
-//			    				'STYLES': layer.getSldName() || "",
-//			    				'TILESIZE': 256,
-//			    				'FORMAT': 'image/png',
-//			    				'TILESORIGIN': mapSWOrigin
-//			    			},
-//			    			serverType: 'geoserver'
-//			    		})),
-//			    		visible: true
-//			  	});
-              
-              var fullExtent = this.getBounds();
-              var ext = [fullExtent._southWest.lng, fullExtent._southWest.lat, fullExtent._northEast.lng, fullExtent._northEast.lat];
-//              var mapSWOrigin = [ext[0], ext[1]].toString();
-              var projectionExtent = [-20026376.39, -20048966.10, 20026376.39, 20048966.10]; //epsg:3857 extent
-              
-              var wmsLayer = new ol.layer.Tile({
-            	  	extent: projectionExtent, 
-            	  	preload: true,
-		    		source: new ol.source.TileWMS({
-		    			url: window.location.origin+"/geoserver/wms/",
-		    			params: {
-		    				'LAYERS': geoserverName, 
-		    				'VERSION': '1.3',
-		    				'SRS': MapWidget.MAPSRID,
-		    				'BBOX': ext,
-		    				'TILED': true,
-		    				'STYLES': layer.getSldName() || "",
-		    				'TILESIZE': 256,
-		    				'FORMAT': 'image/png',
-		    				'TILESORIGIN': mapSWOrigin
-		    			},
-		    			serverType: 'geoserver'
-		    		}),
-		    		visible: true
-		  	});
-              // Single Tile format
-//              var wmsLayer = new ol.layer.Image({
-//		    		source: new ol.source.ImageWMS({
+//            	  	extent: projectionExtent, 
+//            	  	preload: true,
+//		    		source: new ol.source.TileWMS({
 //		    			url: window.location.origin+"/geoserver/wms/",
 //		    			params: {
 //		    				'LAYERS': geoserverName, 
+//		    				'VERSION': '1.3',
+//		    				'CRS': MapWidget.MAPSRID,
+//		    				'BBOX': ext,
 //		    				'TILED': true,
 //		    				'STYLES': layer.getSldName() || "",
-//		    				'FORMAT': 'image/png'
+//		    				'TILESIZE': 256,
+//		    				'FORMAT': 'image/png',
+//		    				'TILESORIGIN': mapSWOrigin
 //		    			},
 //		    			serverType: 'geoserver'
 //		    		}),
 //		    		visible: true
 //		  	});
+              //
+              // end of meta-tiling block
+              //
+              
+              // Single Tile format
+              var wmsLayer = new ol.layer.Image({
+		    		source: new ol.source.ImageWMS({
+		    			url: window.location.origin+"/geoserver/wms/",
+		    			params: {
+		    				'LAYERS': geoserverName, 
+		    				'TILED': true,
+		    				'STYLES': layer.getSldName() || "",
+		    				'FORMAT': 'image/png'
+		    			},
+		    			serverType: 'geoserver'
+		    		}),
+		    		visible: true
+		  	});
 	            
 	            this.showLayer(wmsLayer, null);
 	            layer.wmsLayerObj = wmsLayer;
@@ -1182,12 +1172,6 @@
 			    	map.getView().fit(areaExtent, map.getSize());
 		          };
 	    	  };
-	    	  
-	    	  var that = this;
-	    	  map.on("moveend", function() {
-	    		  console.log("this bounds = ", [bounds[0], bounds[1], bounds[2], bounds[3]]);
-	    		  console.log("map bounds = ", map.getView().calculateExtent(map.getSize()));
-	    		});
 	      },
 	      
 	      /**

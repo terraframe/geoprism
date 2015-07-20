@@ -433,7 +433,7 @@
         var outFileName = "GeoDashboard_Map";
         var outFileFormat = "png";
         var mapBounds = {};
-        var mapExtent = this._mapFactory.getBounds();
+        var mapExtent = this._mapFactory.getCurrentBounds(DynamicMap.SRID);
         mapBounds.left = mapExtent._southWest.lng;
         mapBounds.bottom = mapExtent._southWest.lat;
         mapBounds.right = mapExtent._northEast.lng;
