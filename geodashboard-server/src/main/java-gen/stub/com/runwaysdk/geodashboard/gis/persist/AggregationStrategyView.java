@@ -134,7 +134,15 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
     {
       try
       {
-        return URLEncoder.encode(value, "UTF-8");
+        String encoded = URLEncoder.encode(value, "UTF-8");
+        encoded = encoded.replaceAll("\\+", "%20");
+        encoded = encoded.replaceAll("\\%21", "!");
+        encoded = encoded.replaceAll("\\%27", "'");
+        encoded = encoded.replaceAll("\\%28", "(");
+        encoded = encoded.replaceAll("\\%29", ")");
+        encoded = encoded.replaceAll("\\%7E", "~");
+
+        return encoded;
       }
       catch (UnsupportedEncodingException e)
       {

@@ -125,7 +125,7 @@
         var html = '<li>' +
           '<div class="category-container">' +
             '<div class="text category-input-container">' +
-              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" name="" type="text" value="' + value + '" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
+              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" type="text" value="' + value + '" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
             '</div>' +
             '<div class="cell">' +
               '<div class="color-holder">' +
@@ -237,7 +237,7 @@
             
           var catInputId;
           var catOtherEnabled = true;
-              
+          
           for(var i=0; i<catsJSONArr.length; i++){
             var cat = catsJSONArr[i];
                 
@@ -250,8 +250,19 @@
             }
                 
             var catColorSelectorId = catInputId + "-color-selector";
-            // replace() is due to a encoding/decoding issue where spaces are replaced with + signs and not decoded in js
-            $("#"+catInputId).val(cat.val.replace("+", " "));
+            
+            var value = cat.val;            
+            var categoryType = $("#"+catInputId).data("type");
+            
+            // Localize any existing number category values
+            if(!cat.otherCat && categoryType == "number") {
+              var number = parseFloat(value);
+              var localized = this._formatter(number);
+                
+              value = localized;
+            }            
+            
+            $("#"+catInputId).val(value);
             $("#"+catColorSelectorId).css("background", cat.color);
             catOtherEnabled = cat.otherEnabled;
           }

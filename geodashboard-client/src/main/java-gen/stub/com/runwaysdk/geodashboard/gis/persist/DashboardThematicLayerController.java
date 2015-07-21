@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,7 +45,6 @@ import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.GeoNodeDTO;
-import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
@@ -214,7 +212,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
       req.setAttribute("nodes", nodes);
-      
+
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
 
@@ -223,7 +221,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("aggregations", aggregations);
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
-      
+
       List<String> pointTypes = new ArrayList<String>();
       pointTypes.add("CIRCLE");
       pointTypes.add("STAR");
@@ -243,12 +241,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       // Set possible layer types based on attribute type
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
-      if (mdAttributeConcrete instanceof MdAttributeDateDTO )
+      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
       {
         layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
       }
-      else if( mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO )
+      else if (mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO)
       {
         layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
         layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
@@ -268,7 +266,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-      
+
       req.setAttribute("layerTypeNamesJSON", encode(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
@@ -372,7 +370,15 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     {
       try
       {
-        return URLEncoder.encode(value, "UTF-8");
+        String encoded = URLEncoder.encode(value, "UTF-8");
+        encoded = encoded.replaceAll("\\+", "%20");
+        encoded = encoded.replaceAll("\\%21", "!");
+        encoded = encoded.replaceAll("\\%27", "'");
+        encoded = encoded.replaceAll("\\%28", "(");
+        encoded = encoded.replaceAll("\\%29", ")");
+        encoded = encoded.replaceAll("\\%7E", "~");
+
+        return encoded;
       }
       catch (UnsupportedEncodingException e)
       {
