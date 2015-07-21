@@ -611,7 +611,16 @@
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onShow:function(colPickObj) {
         	var that = this;
-            var currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
+        	var icoEl;
+        	var currColor;
+        	
+        	if($(this).find(".ico")){
+        		currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
+        	}
+        	else if($(this).hasClass("ico")){
+        		currColor = LayerForm.rgb2hex($(this).css("background-color"));
+        	}
+        	
             $(this).colpickSetColor(currColor,false);
             
             $(LayerForm.LAYER_MODAL).scroll(function(){  
@@ -1270,7 +1279,7 @@
 	          var catStore = $("#categories-polygon-input").data("categoriesstore");
 	          catStore = JSON.parse(decodeURIComponent(catStore));
 	          
-	          if(catStore !== null && catStore !== "" && catStore.length > 0){
+	          if(catStore !== null && catStore !== ""){
 	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
@@ -1332,7 +1341,7 @@
 	          var catStore = $("#categories-point-input").data("categoriesstore");
 	          catStore = JSON.parse(decodeURIComponent(catStore));
 	          
-	          if(catStore !== null && catStore !== "" && catStore.length > 0){
+	          if(catStore !== null && catStore !== ""){
 	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
