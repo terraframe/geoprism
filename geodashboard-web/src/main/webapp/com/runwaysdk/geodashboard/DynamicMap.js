@@ -25,14 +25,6 @@
   * LANGUAGE
   */
   com.runwaysdk.Localize.defineLanguage(DynamicMapName, {
-   "googleStreets" : "Google Streets",
-   "googleSatellite" : "Google Satellite",
-   "googleHybrid" : "Google Hybrid",
-   "googleTerrain" : "Google Terrain",
-   "osmBasic" : "Open Street Map",
-   "location" : "Location",
-   "aggregationMethod" : "Aggregation Method", 
-   "aggregateValue" : "Value",
    "deleteLayerTooltip" : "Delete layer"
   });
     
@@ -209,7 +201,7 @@
         
         this._defaultOverlay = null;
         this._currentOverlay = null;
-        this._map = null;
+        this._mapFactory = null;
         
         this._layerCache = new com.runwaysdk.structure.LinkedHashMap();
         this._refLayerCache = new com.runwaysdk.structure.LinkedHashMap();
@@ -225,8 +217,8 @@
         this._bBox = null;
         this._reportPanelState = 'min';
         
-        var overlayBound = Mojo.Util.bind(this, this._overlayHandler);
-        var refBound = Mojo.Util.bind(this, this._referenceHandler);
+        var overlayBound = Mojo.Util.bind(this, this._overlayEditHandler);
+        var refBound = Mojo.Util.bind(this, this._referenceEditHandler);
         overlayLayerContainer.on('click', 'a', overlayBound);
         referenceLayerContainer.on('click', 'a', refBound);
         
@@ -297,22 +289,14 @@
       
       handleLayerEvent : function(jsonObj) {
         this._updateCacheFromJSONResponse(jsonObj);
-          
         this._drawUserLayersHTML();
-            
-        // Close any info window popups if they exist
-        this._map.closePopup();
-          
-        // Update leaflet
+        this._mapFactory.removeClickPopup();
         this._addUserLayersToMap(true);    
       },
       
       handleReferenceLayerEvent : function(jsonObj) {
         this._updateCacheFromJSONResponse(jsonObj);
-        
         this._drawReferenceLayersHTML();
-        
-        // Update leaflet
         this._addUserLayersToMap(true);    
       },
       
@@ -365,7 +349,7 @@
             
             var oldLayer = this._layerCache.get(view.getLayerId());
             if (oldLayer != null) {
-              view.leafletLayer = oldLayer.leafletLayer;
+              view.wmsLayerObj = oldLayer.wmsLayerObj;
             }
             this._layerCache.put(view.getLayerId(), view);        
           }
@@ -380,7 +364,7 @@
             var refView = LayerViewFactory.createLayerView(refLayer);
             var oldLayer = this._refLayerCache.get(refView.universalId);
             if (oldLayer != null) {
-              refView.leafletLayer = oldLayer.leafletLayer;
+              refView.wmsLayerObj = oldLayer.wmsLayerObj;
             }
             
             this._refLayerCache.put(refView.universalId, refView);
@@ -393,21 +377,18 @@
       },
                  
       /**
-       * Creates a new Leaflet map. If one already exists the existing one will be cleaned up and removed.
+       * Creates a new map. If one already exists the existing one will be cleaned up and removed.
        * 
        */
       _renderMap : function() {
-        if (this._map != null) {
-          $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
-          this._map.remove();
-          $('#'+this._mapDivId).html('');
+        var center = null;
+        var zoomLevel = null;
+        var enableClickEvents = true;
+        this._mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap(this._mapDivId, center, zoomLevel, enableClickEvents, this);
+
+        if (this._mapFactory.getMap() != null) {
+            $('#'+DynamicMap.BASE_LAYER_CONTAINER).html('');
         }
-        
-        this._map = new L.Map(this._mapDivId, {zoomAnimation: false, zoomControl: true, attributionControl: true});
-        this._map.attributionControl.setPrefix('');
-        
-        var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
-        this._map.on("click", mapClickHandlerBound);
       },
       
       /**
@@ -448,13 +429,11 @@
       
       _exportMap : function() {
         
-        var that = this;
-        
         var mapId = this._mapId;
         var outFileName = "GeoDashboard_Map";
         var outFileFormat = "png";
         var mapBounds = {};
-        var mapExtent = this._map.getBounds();
+        var mapExtent = this._mapFactory.getCurrentBounds(DynamicMap.SRID);
         mapBounds.left = mapExtent._southWest.lng;
         mapBounds.bottom = mapExtent._southWest.lat;
         mapBounds.right = mapExtent._northEast.lng;
@@ -528,32 +507,25 @@
        * 
        */
       _configureMap : function() {
-        // Handle points (2 coord sets) & polygons (4 coord sets)
-        if (this._bBox.length === 2){
-          var center = L.latLng(this._bBox[1], this._bBox[0]);
-          this._map.setView(center, 9);
-        }
-        else if (this._bBox.length === 4){
-          var swLatLng = L.latLng(this._bBox[1], this._bBox[0]);
-          var neLatLng = L.latLng(this._bBox[3], this._bBox[2]);            
-          var bounds = L.latLngBounds(swLatLng, neLatLng);   
-
-          this._map.fitBounds(bounds);
-        }
+    	  if(this._bBox.length === 2){
+    		  this._mapFactory.setView(null, this._bBox, 5);
+    	  }
+    	  else if(this._bBox.length === 4){
+    		  this._mapFactory.setView(this._bBox, null, null);
+    	  }
       },
       
       
       /**
-       * Adds leaflet layers to the map and builds the base layer checkboxes
+       * Adds layer objects to the map and builds the base layer checkboxes
        * 
        */
       _renderBaseLayers : function() {
         this._baseLayers.clear();
         
         try {
-          var base = this._getBaseLayers();                                
-          this._map.addLayer(base[0]);
-          this._renderBaseLayerSwitcher(base);
+          var baseLayers = this._mapFactory.createBaseLayers();                                
+          this._renderBaseLayerSwitcher(baseLayers);
         }
         catch (ex) {
           // If we don't have internet, rendering the base layer will fail.
@@ -562,7 +534,7 @@
       
       
       /**
-       * Redraws the HTML representing the user-defined layers and adds the layers to Leaflet.
+       * Redraws the HTML representing the user-defined layers and adds the layers to the map.
        */
       _renderUserLayers : function() {
         this._drawUserLayersHTML();
@@ -723,7 +695,7 @@
       
       _constructLegendItem : function(layer, legendDragStopDragBound) {
           var displayInLegend = layer.getDisplayInLegend();
-
+          //TODO: these if checks for layer types are out dated
           if(displayInLegend)
           {
               var layerId = layer.getLayerId();
@@ -1028,93 +1000,19 @@
       
       
       /**
-       * Adds all layers in the layerCache to leaflet, in the proper ordering.
+       * Adds all layers in the layerCache to the map, in the proper ordering.
        * 
-       * @param boolean removeExisting Optional, if unspecified all existing layers will be removed first. If set to false, only layers that leaflet
-       *   does not already know about will be added.
+       * @param boolean removeExisting Optional, if unspecified all existing layers will be removed first. If set to false, only layers that are not
+       * already added to the map will be added.
        */
       _addUserLayersToMap : function(removeExisting) {
         var layers = this._layerCache.values();
         var refLayers = this._refLayerCache.values();
         
-        // Remove any already rendered layers from the leaflet map
-        if (removeExisting === true) {
-          for (var i = 0; i < layers.length; i++) {
-            var layer = layers[i];
-            
-            if (layer.leafletLayer != null) {
-              this._map.removeLayer(layer.leafletLayer);
-            }
-          }
-          
-          for (var i = 0; i < refLayers.length; i++) {
-              var layer = refLayers[i];
-              
-              if (layer.leafletLayer && layer.leafletLayer != null) {
-                this._map.removeLayer(layer.leafletLayer);
-              }
-            }
-        }
-        
-        //
-        // Add reference layers to leaflet map
-        //
-        for (var i = 0; i < refLayers.length; i++) {
-          var layer = refLayers[i];
-          
-          // Since REFERENCEJSON layers are basic placeholders for actual mappable layers we will make sure none of them
-          // get through here.
-          if(layer.layerType !== "REFERENCEJSON"){
-            if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
-              var viewName = layer.getViewName();
-              var geoserverName = this._workspace + ":" + viewName;
-              
-                var mapBounds = this._map.getBounds();
-                var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-                var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-                  layers: geoserverName,
-                  format: 'image/png',
-                  transparent: true,
-                  tiled: true,
-                  tileSize: 256,
-                  tilesorigin: mapSWOrigin,
-                  styles: layer.getSldName() || "" 
-                });
-            
-                this._map.addLayer(leafletLayer);
-                layer.leafletLayer = leafletLayer;
-            }
-          }
-        }
-        
-        //
-        // Add thematic layers to leaflet map
-        //
-        for (var i = 0; i < layers.length; i++) {
-          var layer = layers[i];
-          var viewName = layer.getViewName();
-          var geoserverName = this._workspace + ":" + viewName;
-          if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.leafletLayer == null))) {
-              // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
-            // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO PREVENT BUBBLE CHOPPING.
-            // We could get slightly better performance by setting tiled: false for non-bubble layers but 
-            // this is currently unnecessary addition of code for relatively small performance gain.
-              var mapBounds = this._map.getBounds();
-              var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-              var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-                layers: geoserverName,
-                format: 'image/png',
-                transparent: true,
-                tiled: true,
-                tileSize: 256,
-                tilesorigin: mapSWOrigin,
-                styles: layer.getSldName() || "" 
-              });
-          
-              this._map.addLayer(leafletLayer);
-              layer.leafletLayer = leafletLayer;
-          }
-        }
+        // Create reference layers before user layers to control stacking order.
+        // This could be done in a better way by setting a type and potentially z-index on the layers
+        this._mapFactory.createReferenceLayers(refLayers, this._workspace, removeExisting);
+        this._mapFactory.createUserLayers(layers, this._workspace, removeExisting);
       },
       
       
@@ -1145,13 +1043,13 @@
             }
             that._layerCache = reorderedLayerCache;
             
-            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform leaflet of the new ordering.
+            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
             that._addUserLayersToMap(true);
           },
           onFailure : function(e) {
             that.handleException(e);
             
-            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update leaflet because that ordering is still correct.
+            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update the map because that ordering is still correct.
             that._drawUserLayersHTML();
           }
         });
@@ -1213,7 +1111,7 @@
        * 
        * @param e
        */
-      _overlayHandler : function(e){       
+      _overlayEditHandler : function(e){       
         var that = this;     
         var el = $(e.currentTarget);
         
@@ -1244,7 +1142,7 @@
        * 
        * @param e
        */
-      _referenceHandler : function(e){       
+      _referenceEditHandler : function(e){       
         var that = this;     
         var el = $(e.currentTarget);
         
@@ -1329,138 +1227,6 @@
 
       
       /**
-       * Performs the identify request when a user clicks on the map
-       * 
-       * This is a first version and will likely need to be rewritten using custom
-       * backend logic (i.e. mdmethod/sql) to allow for more flexibility
-       * 
-       * @param id
-       */
-      _mapClickHandler : function(e) {
-        
-        var layers = this._layerCache.$values().reverse();
-        
-        if(layers.length > 0) {
-          
-          // Construct a GetFeatureInfo request URL given a point        
-          var point = this._map.latLngToContainerPoint(e.latlng, this._map.getZoom());
-          var size = this._map.getSize();        
-          var mapBbox = this._map.getBounds().toBBoxString();
-          var map = this._map;
-          var layerMap = new Object();
-          var layerStringList = '';
-          var popup = L.popup().setLatLng(e.latlng);
-          var that = this;
-        
-          // Build a string of layers to query against but geoserver will only return the 
-          // first entry in the array if anything is found. Otherwise it will query the next layer
-          // until something is found.
-          var firstAdded = false;
-          for (var i = 0; i < layers.length; i++) { 
-            var layer = layers[i];
-          
-            // If the layer object is active (visible on the map)
-            if(layer.getLayerIsActive()){
-              var layerId = layer.attributeMap.viewName.value;              
-              layerMap[layerId] = layer;              
-                
-              if(firstAdded){
-                layerStringList += "," + layerId;
-              }
-              else{
-                layerStringList += layerId;
-                firstAdded = true;
-              }
-            }
-          }
-        
-        var requestURL = window.location.origin+"/geoserver/" + this._workspace +"/wms?" +
-          "REQUEST=GetFeatureInfo" +
-          "&INFO_FORMAT=application/json" +
-          "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
-          "&SERVICE=WMS" +
-          "&SRS="+DynamicMap.SRID +
-          "&VERSION=1.1.1" +
-          "&height=" + size.y +
-          "&width=" + size.x +
-          "&X="+ point.x +
-          "&Y="+ point.y +
-          "&BBOX="+ mapBbox +
-          "&LAYERS=geodashboard:"+ layerStringList +
-          "&QUERY_LAYERS=geodashboard:"+ layerStringList +
-          "&TYPENAME=geodashboard:"+ layerStringList;
-      
-        DynamicMap.that = this;
-          $.ajax({
-              url: requestURL,
-              context: document.body 
-          }).done(function(json) {
-            var popupContent = '';
-            
-            // The getfeatureinfo request will return only 1 feature
-            for(var i = 0; i < json.features.length; i++){
-              var featureLayer = json.features[i];
-              var featureLayerIdReturn = featureLayer.id;
-              var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
-              
-              var layer = layerMap[featureLayerId];
-              var layerDisplayName = layer.getLayerName();
-              var aggregationMethod = layer.getAggregationMethod();
-              var attributeName = layer.getAggregationAttribute().toLowerCase();
-              
-              var attributeValue = featureLayer.properties[attributeName];                            
-              var featureDisplayName = featureLayer.properties.displaylabel;
-              
-              if(typeof attributeValue === 'number'){
-                attributeValue = that._formatter(attributeValue);
-              }
-              else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
-                var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
-                var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                attributeValue = that._formatDate(parsedAttr);
-              }
-              
-              popupContent += '<h3 class="popup-heading">'+layerDisplayName+'</h3>';
-              
-              var html = '';
-              html += '<table class="table">';
-              html += '<thead class="popup-table-heading">';
-              html += '<tr>'; 
-              html += '<th>'+DynamicMap.that.localize("location")+'</th>';  
-              html += '<th>'+DynamicMap.that.localize("aggregationMethod")+'</th>'; 
-              html += '<th>'+DynamicMap.that.localize("aggregateValue")+'</th>'; 
-              html += '</tr>';  
-              html += '</thead>';
-              html += '<tbody>';  
-              html += '<tr>'; 
-              html += '<td>'+ featureDisplayName +'</td>';  
-              html += '<td>' + aggregationMethod + '</td>'; 
-              html += '<td>' + attributeValue + '</td>';  
-              html += '</tr>';  
-              html += '</tbody>';  
-              html += '</table>';  
-                      
-              popupContent += html;
-              
-              var currGeoId = featureLayer.properties.geoid;
-              
-              if(currGeoId != null)
-              {                 
-                that._currGeoId = currGeoId;
-              
-                that._renderReport(layer.getLayerId(), that._currGeoId, that._criteria);
-              }            
-            }
-            
-            if(popupContent.length > 0){
-              popup.setContent(popupContent).openOn(map);
-            }
-          });
-        }
-      },
-      
-      
-      /**
        * Removes the Layer with the given object id (Runway Id)
        * from all caches, the sidebar, and the map itself.
        * 
@@ -1471,7 +1237,7 @@
         if(this._layerCache.get(id) !== null){
           
             // Close any info window popups if they exist
-            this._map.closePopup();
+            this._mapFactory.removeClickPopup();
             
           var toRemove = this._layerCache.get(id);
           // remove layer from our cache
@@ -1480,8 +1246,8 @@
               el.parent().parent().remove();
               
               // remove the actual layer from the map
-            if(toRemove.leafletLayer){
-              this._map.removeLayer(toRemove.leafletLayer);
+            if(toRemove.wmsLayerObj){
+              this._mapFactory.hideLayer(toRemove.wmsLayerObj);
             }
             
             // Remove associated legend and legend container
@@ -1495,17 +1261,16 @@
           toDisable.setLayerIsActive(false);
           toDisable.layerExists = false;
           
-              // remove the leaflet map layer from the map
-            if(toDisable.leafletLayer){
-              this._map.removeLayer(toDisable.leafletLayer);
+              // remove the map layer from the map
+            if(toDisable.wmsLayerObj){
+              this._mapFactory.hideLayer(toDisable.wmsLayerObj);
             }
           
-              // change the ui back to disabled
+            // change the ui back to disabled
             $(el).hide();
             $(el).parent().find(".ico-edit").hide();
             $(el).parent().find(".ico-enable").show();
             $(el).parent().parent().find(".check").removeClass("checked").hide();
-          //this._drawReferenceLayersHTML(); 
             
             $('*[data-parentlayerid="'+ $(el).data("id") +'"]').remove();
         }
@@ -1529,36 +1294,10 @@
       
       
       /**
-       * Return all allowable base maps.
-       * 
-       */
-      _getBaseLayers : function(){
-        
-        // the SATELLITE layer has all 22 zoom level, so we add it first to
-        // become the internal base layer that determines the zoom levels of the
-        // map.
-        
-        //var gsat = new L.Google('SATELLITE');         
-        var gphy = new L.Google('TERRAIN');       
-        var gmap = new L.Google('ROADMAP');       
-        var ghyb = new L.Google('HYBRID');
-        
-        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-          }); 
-        osm._gdbcustomtype = 'OSM';
-        
-        var base = [osm, gmap, ghyb, gphy];
-        
-        return base;
-      },
-      
-      
-      /**
        * Renders each base layer as a checkable option in
        * the layer switcher.
        * 
-       * @base - array of leaflet basemap layer objects
+       * @base - array of basemap layer objects
        */
       _renderBaseLayerSwitcher : function(base){
         
@@ -1579,28 +1318,14 @@
             var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
             
             // Assigning better display labels.
-            var label = '';        
-            if(b._type === 'ROADMAP'){
-              label = this.localize("googleStreets");
-            }
-            else if(b._type === 'SATELLITE'){
-              label = this.localize("googleSatellite");
-            }
-            else if(b._type === 'TERRAIN'){
-               label = this.localize("googleTerrain"); 
-            }
-            else if(b._type === 'HYBRID'){
-              label = this.localize("googleHybrid");
-            }
-            else if(b._gdbcustomtype === 'OSM'){
-              label = this.localize("osmBasic");
-            }
+            var label = b._gdbCustomLabel;        
             
             com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
             var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
             checkbox.setId(id);
             if(i === 0){
               checkbox.setChecked(checkbox);
+              this._mapFactory.showLayer(b, 0);
             }
             checkbox.addOnCheckListener(function(event){
               target = event.getCheckBox();   
@@ -1632,23 +1357,17 @@
             if (ids[i] !== targetId) {
               $("#"+ids[i]).removeClass('checked');
               var otherBaselayer = this._baseLayers.get(ids[i]);
-              this._map.removeLayer(otherBaselayer);
+              this._mapFactory.hideLayer(otherBaselayer);
             }
             else {
               var newBaselayer = this._baseLayers.get(targetId);
-              this._map.addLayer(newBaselayer);
-              
-              // The osm tileLayer isnt set at the bottom by default so this sets it as so
-              if(newBaselayer._gdbcustomtype === "OSM"){
-                this._map.attributionControl.setPrefix('');
-                newBaselayer.bringToBack();
-              }
+              this._mapFactory.showLayer(newBaselayer, 0);
             }
           }
         }
         else {
           var unchecklayer = this._baseLayers.get(targetId);
-          this._map.removeLayer(unchecklayer);
+          this._mapFactory.hideLayer(unchecklayer);
         }
       },
       
@@ -1660,8 +1379,8 @@
        */
       _toggleOverlayLayer : function(e){
         
-      // Close any info window popups if they exist
-      this._map.closePopup();
+    	  // Close any info window popups if they exist
+    	  this._mapFactory.removeClickPopup();
         
         var cbox = e.getCheckBox();
         var checked = cbox.isChecked();
@@ -1679,10 +1398,10 @@
         }
         else {
           layer.setLayerIsActive(false);
-          this._map.removeLayer(layer.leafletLayer);          
+          this._mapFactory.hideLayer(layer.wmsLayerObj);          
           if(layer.getDisplayInLegend())
           {
-            layer.layerLegend.hide()
+            layer.layerLegend.hide();
           }
         }
       },
@@ -1710,7 +1429,7 @@
         }
         else {
           layer.setLayerIsActive(false);
-          this._map.removeLayer(layer.leafletLayer);          
+          this._mapFactory.hideLayer(layer.wmsLayerObj);          
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.hide()
@@ -1740,8 +1459,8 @@
           select : function(value, data){          
             var loc = data.item.value;
             var lonlat = that._suggestionCoords.get(loc);
-
-            that._map.setView(new L.LatLng(lonlat[1], lonlat[0]), 13);
+            var focusCoords = [ lonlat[1], lonlat[0] ];
+            that._mapFactory.setView(focusCoords, 13);
             
             that._suggestionCoords.clear();
           },
@@ -2093,6 +1812,7 @@
       },      
       
       _onClickToggleLeftPanel : function(e) {
+    	// TODO: change these classes to not be leaflet specific
         var target = $(e.target);
         var speed = 500;
         
@@ -2111,6 +1831,10 @@
           $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
               left: "-=236",
           }, speed );
+          
+          $(".ol-zoom.ol-unselectable.ol-control").animate({
+              left: "-=236",
+          }, speed );
         }
         else{
           $("#control-form").animate({
@@ -2125,6 +1849,10 @@
           
           // toggle the map zoom buttons
           $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
+              left: "+=236",
+          }, speed );
+          
+          $(".ol-zoom.ol-unselectable.ol-control").animate({
               left: "+=236",
           }, speed );
         }
@@ -2229,7 +1957,7 @@
         var that = this;
         
         // Close any info window popups if they exist
-        that._map.closePopup();
+        that._mapFactory.removeClickPopup();
         
         // Validate there are no existing errors
         var errorCount = $('.gdb-attr-filter.field-error').length

@@ -140,6 +140,7 @@
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
             <exclude>**/webapp/jstree/**</exclude>
             <exclude>**/webapp/leaflet/**</exclude>
+            <exclude>**/webapp/openlayers/**</exclude>
             <exclude>**/webapp/leaflet_plugins/**</exclude>
             <exclude>**/webapp/jquery/**</exclude>
             <exclude>**/webapp/jquerytree/**</exclude>

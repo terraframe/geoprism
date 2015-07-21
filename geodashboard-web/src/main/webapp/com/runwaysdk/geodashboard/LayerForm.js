@@ -1254,7 +1254,7 @@
 	          categoryWidget.render();
 	          
 	          // category 'other' option
-	          $(".other-option-check-box").change(function() {
+	          $("#ont-cat-poly-other-option").change(function() {
 	            if($(this).is(":checked")) {
 	              $("#other-cat-poly-container").show();
 	            }
