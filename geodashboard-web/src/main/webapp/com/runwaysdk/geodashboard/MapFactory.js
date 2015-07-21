@@ -1305,7 +1305,7 @@
 	                var currGeoId = featureLayer.properties.geoid;
 	                if(currGeoId != null)
 	                {                 
-	              	callingThisRef._currGeoId = currGeoId;
+	              	  callingThisRef._currGeoId = currGeoId;
 	                  callingThisRef._renderReport(layer.getLayerId(), callingThisRef._currGeoId, callingThisRef._criteria);
 	                }            
 	              }

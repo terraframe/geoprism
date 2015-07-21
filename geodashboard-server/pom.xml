@@ -70,7 +70,7 @@
     <dependency>
       <groupId>com.runwaysdk.geodashboard</groupId>
       <artifactId>oda.driver</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
     </dependency>
 
     <!-- This jar autogenerates meta-inf service provider configuration files (used with the BIRT Report Provider) More information on services loaders: https://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html http://www.oracle.com/technetwork/articles/javase/extensible-137159.html plugin 
