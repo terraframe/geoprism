@@ -982,7 +982,7 @@
         for(var i = 0; i < layers.length; i++){
           var layer = layers[i];
           
-          var chexd = layer.checked === false || layer.checked === true ? layer.checked : true;
+          var chexd = layer.checked === false || layer.checked === true ? layer.checked : layer.getLayerIsActive();  //layerIsActive should be false if unchecked
           
           com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(layer.getLayerId());
           var checkbox = this.getFactory().newCheckBox({el: "#"+layer.getLayerId(), data: {runwayId: layer.getLayerId()}, checked: chexd, classes: ["check"]});
