@@ -1341,9 +1341,9 @@
 	          var otherEnabled = true;
 	          
 	          var catStore = $("#categories-point-input").data("categoriesstore");
-	          catStore = JSON.parse(decodeURIComponent(catStore));
 	          
 	          if(catStore !== null && catStore !== ""){
+	        	catStore = JSON.parse(decodeURIComponent(catStore));
 	            var catJSON = catStore.catLiElems;
 	            
 	            for(var i=0; i<catJSON.length; i++){
