@@ -1287,6 +1287,8 @@
 	              
 	              if(cat.id === "cat-other-color-selector"){
 	                otherEnabled = cat.otherEnabled;
+	                
+	                $("#"+cat.id).css('background',cat.color);
 	              }
 	            }
 	          }
@@ -1349,6 +1351,8 @@
 	              
 	              if(cat.id === "cat-point-other-color-selector"){
 	                otherEnabled = cat.otherEnabled;
+	                
+	                $("#"+cat.id).css('background',cat.color);
 	              }
 	            }
 	          }
