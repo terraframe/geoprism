@@ -157,13 +157,14 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
 
     createPropertiesComposite(content);
 
-    sshButton = new Button(content, SWT.PUSH);
-    sshButton.setText(GeodashboardPlugin.getResourceString("wizard.label.configureSSH"));//$NON-NLS-1$
-    sshButton.setLayoutData(new GridData(GridData.CENTER));
-
     testButton = new Button(content, SWT.PUSH);
     testButton.setText(GeodashboardPlugin.getResourceString("wizard.label.testConnection"));//$NON-NLS-1$
-    testButton.setLayoutData(new GridData(GridData.END));
+    testButton.setLayoutData(new GridData(GridData.CENTER));
+
+//    sshButton = new Button(content, SWT.PUSH);
+//    sshButton.setText(GeodashboardPlugin.getResourceString("wizard.label.configureSSH"));//$NON-NLS-1$
+//    sshButton.setLayoutData(new GridData(GridData.END));
+//    sshButton.setVisible(false);
 
     Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
     content.setSize(size.x, size.y);
@@ -358,14 +359,14 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
 
     });
 
-    sshButton.addSelectionListener(new SelectionAdapter()
-    {
-      public void widgetSelected(SelectionEvent evt)
-      {
-        handleSSHButtonSelection();
-      }
-
-    });
+//    sshButton.addSelectionListener(new SelectionAdapter()
+//    {
+//      public void widgetSelected(SelectionEvent evt)
+//      {
+//        handleSSHButtonSelection();
+//      }
+//
+//    });
   }
 
   private Properties collectSpecifiedProperties()

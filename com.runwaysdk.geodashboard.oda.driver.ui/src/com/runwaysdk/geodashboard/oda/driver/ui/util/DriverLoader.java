@@ -23,7 +23,6 @@ import java.util.Properties;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
 import com.runwaysdk.geodashboard.oda.driver.Connection;
-import com.runwaysdk.geodashboard.oda.driver.ui.ssl.SecureKeystoreManager;
 
 public class DriverLoader
 {
@@ -34,11 +33,6 @@ public class DriverLoader
 
   public static Connection getConnection(Properties props) throws OdaException
   {
-    /*
-     * Before a connection can be attempted we must ensure that the SSLContext has been configured
-     */
-    SecureKeystoreManager.getInstance().configureSSLContext();
-
     Connection connection = new Connection();
     connection.open(props);
 

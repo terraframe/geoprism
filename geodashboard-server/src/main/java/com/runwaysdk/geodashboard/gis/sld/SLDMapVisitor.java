@@ -249,6 +249,25 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     {
       return new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(LocalizationFacade.getLocale()));
     }
+    
+    protected JSONArray getCategories(String cats)
+    {
+      try
+      {
+        JSONObject catsJSON = new JSONObject(cats);
+        
+        if(catsJSON.has("catLiElems"))
+        {
+          return catsJSON.getJSONArray("catLiElems");
+        }
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
+      }
+      
+      return new JSONArray();
+    }
   }
 
   private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -503,7 +522,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORYPOINT)
       {
 
-        JSONArray catsArrJSON;
         String catVal;
         String catTitle;
         String catColor;
@@ -532,15 +550,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String cats = dTStyle.getCategoryPointStyles();
           if (cats.length() > 0)
           {
-            try
-            {
-              JSONObject catsJSON = new JSONObject(cats);
-              catsArrJSON = catsJSON.getJSONArray("catLiElems");
-            }
-            catch (JSONException e)
-            {
-              throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
-            }
+            JSONArray catsArrJSON = this.getCategories(cats);
 
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
@@ -679,6 +689,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return root;
     }
 
+
     private NodeBuilder[] getElseNode(String attributeName, JSONArray array) throws JSONException
     {
       NodeBuilder[] nodes = new NodeBuilder[] { node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "Or").child(node(OGC, "Not").child(node(OGC, "Or").child(this.getNotChildren(attributeName, array))), node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attributeName))) };
@@ -760,7 +771,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       Double strokeOpacity = tStyle.getBubbleStrokeOpacity();
       String wkn = tStyle.getBubbleWellKnownName();
       Integer rotation = tStyle.getBubbleRotation();
-      String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
 
       NumberFormat formatter = this.getRuleNumberFormatter();
 
@@ -1123,7 +1133,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.CATEGORYPOLYGON)
       {
-        JSONArray catsArrJSON;
         String catVal;
         String catTitle;
         String catColor;
@@ -1150,15 +1159,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String cats = dTStyle.getCategoryPolygonStyles();
           if (cats.length() > 0)
           {
-            try
-            {
-              JSONObject catsJSON = new JSONObject(cats);
-              catsArrJSON = catsJSON.getJSONArray("catLiElems");
-            }
-            catch (JSONException e)
-            {
-              throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
-            }
+            JSONArray catsArrJSON = this.getCategories(cats);
 
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
@@ -1481,8 +1482,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   private java.util.Map<Node, LinkedList<DocumentFragment>> layers;
 
-  private Boolean                                           virtual;
-
   private FeatureType                                       featureType;
 
   private java.util.Map<Condition, Node>                    conditions;
@@ -1493,7 +1492,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   
   public SLDMapVisitor()
   {
-    this.virtual = false;
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
@@ -1618,7 +1616,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     this.parents.clear();
     this.conditions.clear();
 
-    this.virtual = layer.getVirtual();
     this.featureType = layer.getFeatureType();
 
     Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();
@@ -1647,7 +1644,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     this.parents.clear();
     this.conditions.clear();
 
-    this.virtual = layer.getVirtual();
     this.featureType = layer.getFeatureType();
 
     Node layerNode = this.node("NamedLayer").child(this.node("Name").text(layer.getName())).build();

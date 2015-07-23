@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.oda.IConnection;
-import org.eclipse.datatools.connectivity.oda.IDriver;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
@@ -50,12 +49,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.runwaysdk.geodashboard.oda.driver.Driver;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.ConnectionException;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.GeodashboardMetaDataProvider;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.LabelValuePair;
 import com.runwaysdk.geodashboard.oda.driver.ui.provider.QueryFacadeUtil;
+import com.runwaysdk.geodashboard.oda.driver.ui.util.DriverLoader;
 
 /**
  * The Geodashborad DatasetEditor page which enable user to browse the catalog of the selected data source. The page
@@ -139,6 +138,10 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
   @Override
   protected boolean canLeave()
   {
+    /*
+     * Page might not be initialized if the user is looking at a different page of the dataset editor. In this case just
+     * assume the user can leave the page.
+     */
     if (this.initialized)
     {
       if (this.aggregationCombo.getControl().getEnabled())
@@ -149,7 +152,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
       return ( this.getQueryId() != null && this.getDefaultGeoId() != null );
     }
 
-    return false;
+    return true;
   }
 
   /**
@@ -354,13 +357,11 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
 
     try
     {
-      // instantiate your custom ODA runtime driver class
-      IDriver driver = new Driver();
-
       // obtain and open a live connection
       Properties props = DesignSessionUtil.getEffectiveDataSourceProperties(getInitializationDesign().getDataSourceDesign());
-      connection = driver.getConnection(null);
-      connection.open(props);
+
+      // instantiate your custom ODA runtime driver class
+      connection = DriverLoader.getConnection(props);
 
       // update the data set design with the
       // query's current runtime metadata

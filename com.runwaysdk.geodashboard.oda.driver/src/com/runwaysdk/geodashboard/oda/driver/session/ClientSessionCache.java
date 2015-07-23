@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.configuration.CommonsConfigurationResolver;
 import com.runwaysdk.request.ClientRequestManager;

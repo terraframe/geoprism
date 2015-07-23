@@ -31,12 +31,14 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -78,13 +80,33 @@ public class SecureKeystoreManager
     {
       try
       {
-        KeyStore ts = this.getKeystore();
+        TrustManager trm = new X509TrustManager()
+        {
+          public X509Certificate[] getAcceptedIssuers()
+          {
+            return null;
+          }
 
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(ts);
+          public void checkClientTrusted(X509Certificate[] certs, String authType)
+          {
+
+          }
+
+          public void checkServerTrusted(X509Certificate[] certs, String authType)
+          {
+          }
+        };
+
+        // KeyStore ts = this.getKeystore();
+        //
+        // TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        // tmf.init(ts);
+
+        // SSLContext context = SSLContext.getInstance("SSL");
+        // context.init(new KeyManager[] {}, tmf.getTrustManagers(), new SecureRandom());
 
         SSLContext context = SSLContext.getInstance("SSL");
-        context.init(new KeyManager[] {}, tmf.getTrustManagers(), new SecureRandom());
+        context.init(new KeyManager[] {}, new TrustManager[] { trm }, new SecureRandom());
 
         SSLContextConfiguration.configure(context);
 
@@ -94,10 +116,10 @@ public class SecureKeystoreManager
       {
         throw new SSLContextException(e);
       }
-      catch (KeyStoreException e)
-      {
-        throw new SSLContextException(e);
-      }
+//      catch (KeyStoreException e)
+//      {
+//        throw new SSLContextException(e);
+//      }
       catch (KeyManagementException e)
       {
         throw new SSLContextException(e);
