@@ -1729,6 +1729,7 @@
        */
       _updateCategoriesJSON : function(inputId) {
         var styleArr = new Object();
+        styleArr.catLiElems = []; // create an empty array to prevent system errors if the ontolgy tree doesnt render leaving catLiElems undefined
         
         for(var i=0; i<this._categoryWidgets.length; i++){
         	if(this._categoryWidgets[i]._storeId === inputId){
