@@ -703,7 +703,7 @@
               var fac = that.getFactory();
               var table = that._table;
         
-              var dialog = fac.newDialog(label, {minHeight:520, minWidth:730});   
+              var dialog = fac.newDialog(label, {minHeight:250, maxHeight:$(window).height() - 75, minWidth:730, resizable: false});   
               dialog.setId(id);
             
               var builder = that._configuator.get(fac, user, rolesMap);
