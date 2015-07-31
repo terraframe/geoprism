@@ -1011,7 +1011,8 @@
                       matrixIds: matrixIds
                   }),
                   dimensions: {
-	            	  'connectid' : '97cacf6d-f1fd-4ed2-8c2e-ea5509d34fae',
+                	  // id from MyDigitalGlobe = 97cacf6d-f1fd-4ed2-8c2e-ea5509d34fae
+	            	  'connectid' : '51836806-fddc-458e-9ce1-ec0a92f274fb', // id given in an email
 	            	  'featureProfile' : 'Consumer_Profile'
 	              },
 	              style : 'default',
