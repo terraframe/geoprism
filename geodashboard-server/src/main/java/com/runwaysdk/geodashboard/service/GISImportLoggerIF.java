@@ -16,37 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.shapefile;
+package com.runwaysdk.geodashboard.service;
 
-import com.runwaysdk.geodashboard.gis.LocalizedException;
-
-public class AmbigiousGeoEntityException extends LocalizedException
+public interface GISImportLoggerIF
 {
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5764187692708424880L;
+  public void log(String featureId, Throwable t);
 
-  private String            entityName;
+  public void log(String featureId, String message);
 
-  private String            type;
+  public boolean hasLogged();
 
-  public AmbigiousGeoEntityException(String msg, String entityName, String type)
-  {
-    super(msg);
-
-    this.entityName = entityName;
-    this.type = type;
-  }
-
-  @Override
-  public String getLocalizedMessage()
-  {
-    if (this.type != null)
-    {
-      return super.getLocalizedMessage() + " [" + this.entityName + ", " + this.type + "]";
-    }
-
-    return super.getLocalizedMessage() + " [" + this.entityName + "]";
-  }
+  public void close();
 }

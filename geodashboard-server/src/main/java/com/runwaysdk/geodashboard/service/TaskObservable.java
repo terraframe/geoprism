@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis;
+package com.runwaysdk.geodashboard.service;
 
 import java.util.LinkedList;
 import java.util.List;

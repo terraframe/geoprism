@@ -31,11 +31,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.MockTaskListener;
 import com.runwaysdk.geodashboard.gis.Task;
 import com.runwaysdk.geodashboard.gis.TransactionExecuter;
+import com.runwaysdk.geodashboard.service.AmbigiousGeoEntityException;
+import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
+import com.runwaysdk.geodashboard.service.GeoEntityShapefileImporter;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -170,7 +172,7 @@ public class ShapeFileImporterTest
   {
     new ShapeFileBuilder(SHAPE_FILE, parent).build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
 
     List<String> attributes = importer.getAttributes();
 
@@ -192,7 +194,7 @@ public class ShapeFileImporterTest
 
     GISImportLoggerIF logger = new MockLogger();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(country.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.run(logger);
@@ -208,7 +210,7 @@ public class ShapeFileImporterTest
       {
         try
         {
-          Assert.assertNotNull(ShapeFileImporter.getByEntityName(builder.getName(i)));
+          Assert.assertNotNull(GeoEntityShapefileImporter.getByEntityName(builder.getName(i)));
         }
         catch (AmbigiousGeoEntityException e)
         {
@@ -240,7 +242,7 @@ public class ShapeFileImporterTest
 
     GISImportLoggerIF logger = new MockLogger();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(country.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -255,7 +257,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -294,7 +296,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(country.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -309,7 +311,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getValue());
@@ -345,7 +347,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(country.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -360,7 +362,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
         Assert.assertEquals(builder.getName(i), entity.getDisplayLabel().getDefaultValue());
@@ -387,7 +389,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, parent);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -403,7 +405,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -436,7 +438,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, parent);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -454,7 +456,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -487,7 +489,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, parent);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -504,7 +506,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -543,7 +545,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -561,7 +563,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -600,7 +602,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -617,7 +619,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -656,7 +658,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -673,7 +675,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -710,7 +712,7 @@ public class ShapeFileImporterTest
 
     MockTaskListener listener = new MockTaskListener();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(facility.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -726,7 +728,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -772,7 +774,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, entity1);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
 
     try
     {
@@ -818,7 +820,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, entity1);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     try
     {
       importer.setUniversalId(facility.getId());
@@ -874,7 +876,7 @@ public class ShapeFileImporterTest
     builder.build();
 
     MockLogger logger = new MockLogger();
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
 
     try
     {
@@ -921,7 +923,7 @@ public class ShapeFileImporterTest
     ShapeFileBuilder builder = new ShapeFileBuilder(SHAPE_FILE, parent);
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(settlement.getId());
     importer.setType(ShapeFileBuilder.TYPE_ATTRIBUTE);
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
@@ -939,7 +941,7 @@ public class ShapeFileImporterTest
 
       for (int i = 0; i < 100; i++)
       {
-        GeoEntity entity = ShapeFileImporter.getByEntityName(builder.getName(i));
+        GeoEntity entity = GeoEntityShapefileImporter.getByEntityName(builder.getName(i));
 
         Assert.assertNotNull(entity);
 
@@ -980,7 +982,7 @@ public class ShapeFileImporterTest
     };
     builder.build();
 
-    ShapeFileImporter importer = new ShapeFileImporter(url);
+    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
     importer.setUniversalId(settlement.getId());
     importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
     importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);

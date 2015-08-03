@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import com.runwaysdk.dataaccess.io.FileWriteException;
+import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
 import com.runwaysdk.util.FileIO;
 
 public class GISImportLogger implements GISImportLoggerIF

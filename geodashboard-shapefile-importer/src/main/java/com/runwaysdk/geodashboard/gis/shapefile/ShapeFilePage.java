@@ -44,6 +44,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.IInitPage;
 import com.runwaysdk.geodashboard.gis.LocalizedException;
 import com.runwaysdk.geodashboard.gis.Localizer;
+import com.runwaysdk.geodashboard.service.GeoEntityShapefileImporter;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 
@@ -165,7 +166,7 @@ public class ShapeFilePage extends WizardPage implements Reloadable
 
         try
         {
-          ShapeFileImporter facade = new ShapeFileImporter(data.getShapeFile());
+          GeoEntityShapefileImporter facade = new GeoEntityShapefileImporter(data.getShapeFile());
           List<String> attributes = facade.getAttributes();
           data.setAttributes(attributes);
         }

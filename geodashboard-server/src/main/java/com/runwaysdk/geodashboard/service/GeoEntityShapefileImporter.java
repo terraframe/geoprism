@@ -3,20 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.shapefile;
+package com.runwaysdk.geodashboard.service;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -40,9 +38,7 @@ import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
-import com.runwaysdk.geodashboard.gis.Localizer;
-import com.runwaysdk.geodashboard.gis.TaskObservable;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -61,7 +57,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Justin Smethie
  */
-public class ShapeFileImporter extends TaskObservable implements Reloadable
+public class GeoEntityShapefileImporter extends TaskObservable implements Reloadable
 {
   /**
    * URL of the file being imported
@@ -79,22 +75,20 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
   private String              name;
 
   /**
-   * Optional name of the shapefile attribute which is used to derive the geo
-   * id. If this value is null then the geo id is auto-generated.
+   * Optional name of the shapefile attribute which is used to derive the geo id. If this value is null then the geo id
+   * is auto-generated.
    */
   private String              id;
 
   /**
-   * Optional name of the shapefile attribute which is used to specify the
-   * entity name or geo id of the parent entity for the entity being imported.
-   * If this value is null than the parent is assumed to be Earth.
+   * Optional name of the shapefile attribute which is used to specify the entity name or geo id of the parent entity
+   * for the entity being imported. If this value is null than the parent is assumed to be Earth.
    */
   private String              parent;
 
   /**
-   * Optional name of the shapefile attribute which is used to restrict the
-   * parent to a specific universal type when searching for the parent entity.
-   * If this value is null than the search does not restrict by type.
+   * Optional name of the shapefile attribute which is used to restrict the parent to a specific universal type when
+   * searching for the parent entity. If this value is null than the search does not restrict by type.
    */
   private String              parentType;
 
@@ -122,7 +116,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
    * @param url
    *          URL of the shapefile
    */
-  public ShapeFileImporter(URL url)
+  public GeoEntityShapefileImporter(URL url)
   {
     super();
 
@@ -132,7 +126,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
     this.entityIdMap = new HashMap<String, String>();
   }
 
-  public ShapeFileImporter(File file) throws MalformedURLException
+  public GeoEntityShapefileImporter(File file) throws MalformedURLException
   {
     this(file.toURI().toURL());
   }
@@ -219,7 +213,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         {
           GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
         }
-        
+
         if (!Universal.getStrategy().isInitialized())
         {
           Universal.getStrategy().initialize(AllowedIn.CLASS);
@@ -227,7 +221,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
 
         this.createEntities(logger);
 
-        this.fireStartTask(Localizer.getMessage("REBUILD_ALL_PATHS"), -1);
+        this.fireStartTask(LocalizationFacade.getFromBundles("REBUILD_ALL_PATHS"), -1);
 
         // Rebuild the all paths table
         // GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
@@ -279,7 +273,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
 
           FeatureIterator<SimpleFeature> iterator = collection.features();
 
-          this.fireStartTask(Localizer.getMessage("IMPORT_ENTITIES"), collection.size());
+          this.fireStartTask(LocalizationFacade.getFromBundles("IMPORT_ENTITIES"), collection.size());
 
           try
           {
@@ -321,8 +315,8 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
   }
 
   /**
-   * Imports a GeoEntity based on the given SimpleFeature. If a matching
-   * GeoEntity already exists then it is simply updated.
+   * Imports a GeoEntity based on the given SimpleFeature. If a matching GeoEntity already exists then it is simply
+   * updated.
    * 
    * @param feature
    * @throws Exception
@@ -371,7 +365,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
     {
       entity.apply();
     }
-    catch(Exception e)
+    catch (Exception e)
     {
       throw new RuntimeException(e);
     }
@@ -470,8 +464,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
       }
       else
       {
-        String msg = "Unable to find a universal with the name [" + universalId + "]";
-        throw new UnknownUniversalException(msg, universalId);
+        throw new UnknownUniversalException(universalId);
       }
     }
 
@@ -479,11 +472,9 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
   }
 
   /**
-   * Returns the entity as defined by the 'parent' and 'parentType' attributes
-   * of the given feature. If an entity is not found then Earth is returned by
-   * default. The 'parent' value of the feature must define an entity name or a
-   * geo id. The 'parentType' value of the feature must define the localized
-   * display label of the universal.
+   * Returns the entity as defined by the 'parent' and 'parentType' attributes of the given feature. If an entity is not
+   * found then Earth is returned by default. The 'parent' value of the feature must define an entity name or a geo id.
+   * The 'parentType' value of the feature must define the localized display label of the universal.
    * 
    * @param feature
    *          Shapefile feature used to determine the parent
@@ -502,7 +493,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
         String type = _type.toString();
         String entityName = _entityName.toString();
 
-        GeoEntity parent = ShapeFileImporter.getByEntityNameAndUniversal(entityName, type);
+        GeoEntity parent = GeoEntityShapefileImporter.getByEntityNameAndUniversal(entityName, type);
 
         if (parent != null)
         {
@@ -519,7 +510,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
       {
         String entityName = _entityName.toString();
 
-        GeoEntity parent = ShapeFileImporter.getByEntityName(entityName);
+        GeoEntity parent = GeoEntityShapefileImporter.getByEntityName(entityName);
 
         if (parent != null)
         {
@@ -535,8 +526,8 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
    * @param feature
    *          Shapefile feature
    * 
-   * @return The geoId as defined by the 'id' attribute on the feature. If the
-   *         geoId is null then a blank geoId is returned.
+   * @return The geoId as defined by the 'id' attribute on the feature. If the geoId is null then a blank geoId is
+   *         returned.
    */
   private String getGeoId(SimpleFeature feature)
   {
@@ -567,8 +558,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
    *          Entity name or geo Id.
    * @param type
    *          Localized display label of the entity type
-   * @return GeoEntity which satisfies the search criteria, or null of no
-   *         entities meet the criteria.
+   * @return GeoEntity which satisfies the search criteria, or null of no entities meet the criteria.
    */
   @Request
   public static GeoEntity getByEntityNameAndUniversal(String entityName, String type)
@@ -608,8 +598,7 @@ public class ShapeFileImporter extends TaskObservable implements Reloadable
   /**
    * @param entityName
    *          Entity name or geo Id.
-   * @return GeoEntity which satisfies the search criteria, or null of no
-   *         entities meet the criteria.
+   * @return GeoEntity which satisfies the search criteria, or null of no entities meet the criteria.
    */
   @Request
   public static GeoEntity getByEntityName(String entityName)
