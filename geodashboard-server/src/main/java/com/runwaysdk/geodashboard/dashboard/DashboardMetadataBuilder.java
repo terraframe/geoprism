@@ -20,6 +20,7 @@ package com.runwaysdk.geodashboard.dashboard;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -139,7 +140,7 @@ public class DashboardMetadataBuilder
         mWrapper.setWrappedMdClass(mdClass);
         mWrapper.setUniversal(_universal);
         mWrapper.apply();
-
+        
         return mWrapper;
       }
     }
@@ -243,12 +244,12 @@ public class DashboardMetadataBuilder
   {
     MdView mdView = this.getOrCreateMdView();
 
-    build(_dashboard, mdView, this.universal);
+    build(_dashboard, mdView, this.universal, this.typeInformation);
   }
 
-  public void build(Dashboard _dashboard, MdClass mdClass, Universal uni)
+  public void build(Dashboard _dashboard, MdClass mdClass, Universal uni, Map<String, DashboardTypeInfo> information)
   {
-    Set<Entry<String, DashboardTypeInfo>> entries = this.typeInformation.entrySet();
+    Set<Entry<String, DashboardTypeInfo>> entries = information.entrySet();
 
     for (Entry<String, DashboardTypeInfo> entry : entries)
     {
