@@ -981,9 +981,53 @@
 	        mqHybrid._gdbCustomLabel = this.localize("mqHybrid");
 	        
 	        
-	        var base = [osm, mqAerial, mqHybrid];
+	        ////
+	        // REMOVE AFTER DIGITAL GLOBE DEMO
+	        ////
+	        var projection = ol.proj.get('EPSG:3857');
+	        var projectionExtent = projection.getExtent();
+	        var size = ol.extent.getWidth(projectionExtent) / 256;
+	        var resolutions = new Array(20);
+	        var matrixIds = new Array(20);
 	        
-	        return base;
+	        for (var z = 0; z < 20; ++z) {
+	        	// generate resolutions and matrixIds arrays for this WMTS
+	        	resolutions[z] = size / Math.pow(2, z);
+	        	matrixIds[z] = MapWidget.MAPSRID + ":" + z.toString();
+	        }
+	        
+	        var digitalGlobe = new ol.layer.Tile({
+	        	extent: projectionExtent,
+	            source: new ol.source.WMTS({
+	              url: 'https://services.digitalglobe.com/earthservice/wmtsaccess',
+	              layer: '0',
+	              matrixSet : MapWidget.MAPSRID,
+	              format : 'image/png',
+	              projection : projection,
+	              layer: 'DigitalGlobe:ImageryTileService',
+	        	  tileGrid: new ol.tilegrid.WMTS({
+                      origin: ol.extent.getTopLeft(projectionExtent),
+                      resolutions: resolutions,
+                      matrixIds: matrixIds
+                  }),
+                  dimensions: {
+                	  // id from MyDigitalGlobe = 97cacf6d-f1fd-4ed2-8c2e-ea5509d34fae
+	            	  'connectid' : '51836806-fddc-458e-9ce1-ec0a92f274fb', // id given in an email
+	            	  'featureProfile' : 'Consumer_Profile'
+	              },
+	              style : 'default',
+	              attributions: [ new ol.Attribution({
+					              	html: '&copy; <a href="https://www.digitalglobe.com"> Digital Globe </a>'
+					              })
+					            ]
+	            })
+	        });
+	        digitalGlobe._gdbCustomLabel  = "Digital Globe";
+	        ////
+	        ////
+	        ////
+	        
+	        return [osm, mqAerial, mqHybrid, digitalGlobe];
 	      },
 	      
 	      
