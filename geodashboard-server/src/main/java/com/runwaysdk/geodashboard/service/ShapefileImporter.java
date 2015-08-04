@@ -53,6 +53,7 @@ import com.runwaysdk.gis.dataaccess.MdAttributeMultiPolygonDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributePointDAOIF;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -61,6 +62,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityProblemType;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
+import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -422,10 +424,13 @@ public class ShapefileImporter implements Reloadable
     LocatedInQuery lQuery = new LocatedInQuery(factory);
     lQuery.WHERE(lQuery.parentId().EQ(parent.getId()));
 
+    SynonymQuery synonymQuery = new SynonymQuery(factory);
+    synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQ(label));
+
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.getUniversal().getKeyName().EQ(universal));
-    query.AND(query.getDisplayLabel().localize().EQ(label));
     query.AND(query.locatedIn(lQuery));
+    query.AND(OR.get(query.getDisplayLabel().localize().EQ(label), query.synonym(synonymQuery)));
 
     OIterator<? extends GeoEntity> iterator = query.getIterator();
 

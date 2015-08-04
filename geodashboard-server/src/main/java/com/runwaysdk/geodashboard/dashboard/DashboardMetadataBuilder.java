@@ -243,10 +243,10 @@ public class DashboardMetadataBuilder
   {
     MdView mdView = this.getOrCreateMdView();
 
-    build(_dashboard, mdView);
+    build(_dashboard, mdView, this.universal);
   }
 
-  public void build(Dashboard _dashboard, MdClass mdClass)
+  public void build(Dashboard _dashboard, MdClass mdClass, Universal uni)
   {
     Set<Entry<String, DashboardTypeInfo>> entries = this.typeInformation.entrySet();
 
@@ -257,7 +257,7 @@ public class DashboardMetadataBuilder
       DashboardTypeInfo info = entry.getValue();
       List<String> attributes = info.getAttributes();
 
-      MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdClass, this.universal);
+      MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdClass, uni);
 
       DashboardMetadata dm = _dashboard.addMetadata(mWrapper);
       dm.setListOrder(info.getIndex());
