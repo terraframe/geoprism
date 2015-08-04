@@ -28,10 +28,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.GISImportLogger;
 import com.runwaysdk.geodashboard.gis.GISManagerWindow;
 import com.runwaysdk.geodashboard.gis.Localizer;
 import com.runwaysdk.geodashboard.gis.TaskListener;
+import com.runwaysdk.geodashboard.service.FileImportLogger;
 import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.service.GeoEntityShapefileImporter;
 import com.runwaysdk.logging.LogLevel;
@@ -110,7 +110,7 @@ public class ShapeFileWizard extends Wizard implements Reloadable
 
       file.getParentFile().mkdirs();
 
-      GISImportLogger logger = new GISImportLogger(file);
+      FileImportLogger logger = new FileImportLogger(file);
 
       GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(data.getShapeFile());
 

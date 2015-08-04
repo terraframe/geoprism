@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.LabeledValueBean;
 import com.runwaysdk.geodashboard.gis.Localizer;
+import com.runwaysdk.geodashboard.service.LocatedInBean;
 
 
 public class OptionContentProvider implements IStructuredContentProvider, Reloadable

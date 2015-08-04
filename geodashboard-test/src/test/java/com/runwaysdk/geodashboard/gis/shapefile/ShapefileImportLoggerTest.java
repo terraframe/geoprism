@@ -27,7 +27,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.runwaysdk.geodashboard.gis.GISImportLogger;
+import com.runwaysdk.geodashboard.service.FileImportLogger;
 import com.runwaysdk.util.FileIO;
 
 public class ShapefileImportLoggerTest
@@ -52,8 +52,7 @@ public class ShapefileImportLoggerTest
   }
 
   /**
-   * Ensure that a log file is created on the file system and the contents of
-   * the file are logged correctly.
+   * Ensure that a log file is created on the file system and the contents of the file are logged correctly.
    * 
    * @throws Exception
    */
@@ -62,7 +61,7 @@ public class ShapefileImportLoggerTest
   {
     File file = new File(FILE);
 
-    GISImportLogger logger = new GISImportLogger(file);
+    FileImportLogger logger = new FileImportLogger(file);
 
     logger.log("123", new RuntimeException("This is a test log"));
 
@@ -73,11 +72,19 @@ public class ShapefileImportLoggerTest
 
     BufferedReader reader = new BufferedReader(new FileReader(file));
 
-    Assert.assertTrue(reader.ready());
-
-    while (reader.ready())
+    try
     {
-      Assert.assertEquals("123 : This is a test log", reader.readLine());
+
+      Assert.assertTrue(reader.ready());
+
+      while (reader.ready())
+      {
+        Assert.assertEquals("123 : This is a test log", reader.readLine());
+      }
+    }
+    finally
+    {
+      reader.close();
     }
   }
 
@@ -93,7 +100,7 @@ public class ShapefileImportLoggerTest
 
     Assert.assertFalse(file.exists());
 
-    GISImportLogger logger = new GISImportLogger(file);
+    FileImportLogger logger = new FileImportLogger(file);
     logger.close();
 
     Assert.assertFalse(logger.hasLogged());

@@ -18,26 +18,12 @@
  */
 package com.runwaysdk.geodashboard.service;
 
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
+import com.runwaysdk.business.Business;
+import com.runwaysdk.generation.loader.Reloadable;
 
-public class UnknownUniversalException extends RuntimeException
+public interface ShapefileAttributeHandler extends Reloadable
 {
+  public Object transform(Object value);
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -4900063662064622215L;
-
-  private String            universalName;
-
-  public UnknownUniversalException(String universalName)
-  {
-    this.universalName = universalName;
-  }
-
-  public String getLocalizedMessage()
-  {
-    return LocalizationFacade.getFromBundles("error.unknownUniversal").replace("{0}", universalName);
-  }
-
+  public void handle(Business business, Object value);
 }

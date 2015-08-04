@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis;
+package com.runwaysdk.geodashboard.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,10 +25,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import com.runwaysdk.dataaccess.io.FileWriteException;
-import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
 import com.runwaysdk.util.FileIO;
 
-public class GISImportLogger implements GISImportLoggerIF
+public class FileImportLogger implements GISImportLoggerIF
 {
   private File           file;
 
@@ -36,7 +35,7 @@ public class GISImportLogger implements GISImportLoggerIF
 
   private boolean        logged;
 
-  public GISImportLogger(File file)
+  public FileImportLogger(File file)
   {
     try
     {

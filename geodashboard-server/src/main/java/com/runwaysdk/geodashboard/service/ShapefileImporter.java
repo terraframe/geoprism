@@ -41,7 +41,6 @@ import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.feature.type.Name;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -98,7 +97,7 @@ public class ShapefileImporter implements Reloadable
 
     File directory = null;
 
-    File file = null;
+    File first = null;
 
     try
     {
@@ -111,9 +110,12 @@ public class ShapefileImporter implements Reloadable
 
       while ( ( entry = zstream.getNextEntry() ) != null)
       {
-        file = new File(directory, entry.getName());
+        File file = new File(directory, entry.getName());
 
-        System.out.println("Writing file [" + file.getAbsolutePath() + "]");
+        if (first == null && file.getName().endsWith("dbf"))
+        {
+          first = file;
+        }
 
         FileOutputStream output = null;
 
@@ -137,9 +139,9 @@ public class ShapefileImporter implements Reloadable
         }
       }
 
-      if (file != null)
+      if (first != null)
       {
-        this.createBusiness(file.toURI().toURL());
+        this.createFeatures(first.toURI().toURL());
       }
       else
       {
@@ -176,7 +178,7 @@ public class ShapefileImporter implements Reloadable
    * @throws InvocationTargetException
    */
   @Transaction
-  private void createBusiness(URL url) throws InvocationTargetException
+  private void createFeatures(URL url) throws InvocationTargetException
   {
     try
     {
@@ -206,96 +208,7 @@ public class ShapefileImporter implements Reloadable
             {
               SimpleFeature feature = iterator.next();
 
-              // Create a new object
-              Business business = BusinessFacade.newBusiness(this.configuration.getType());
-
-              Geometry geometry = null;
-              String entityAttribute = null;
-
-              Map<LocationColumn, String> locations = new HashMap<LocationColumn, String>();
-
-              for (AttributeDescriptor descriptor : descriptors)
-              {
-                Name name = descriptor.getName();
-                Object value = feature.getAttribute(name);
-
-                if (value != null)
-                {
-                  if (value instanceof Geometry)
-                  {
-                    geometry = (Geometry) value;
-                  }
-                  else if (this.configuration.isLocationColumn(descriptor))
-                  {
-                    /*
-                     * All location columns will map to the same attribute
-                     */
-                    entityAttribute = configuration.getAttributeName(descriptor);
-                    LocationColumn column = this.configuration.getLocationColumn(descriptor);
-
-                    locations.put(column, value.toString());
-                  }
-                  else
-                  {
-                    String attributeName = configuration.getAttributeName(descriptor);
-
-                    MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
-
-                    if (mdAttribute instanceof MdAttributeTermDAOIF)
-                    {
-                      MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
-
-                      String packageString = this.configuration.getClassifierPackage(mdAttributeTerm);
-
-                      Classifier classifier = Classifier.findClassifierAddIfNotExist(packageString, value.toString(), mdAttributeTerm);
-
-                      business.setValue(attributeName, classifier.getId());
-                    }
-                    else
-                    {
-                      ShapefileTransform transform = this.configuration.getTransform(attributeName);
-
-                      if (transform != null)
-                      {
-                        value = transform.transform(value);
-                      }
-
-                      business.setValue(attributeName, value.toString());
-                    }
-
-                    // System.out.print("[" + attributeName + ", " + mdAttribute.getType() + ", " + value + "]");
-                  }
-                }
-              }
-
-              GeoEntity entity = this.getOrCreateLocation(configuration.getRootEntity(), locations);
-
-              if (entity != null)
-              {
-                business.setValue(entityAttribute, entity.getId());
-              }
-
-              if (geometry != null)
-              {
-                MultiPolygon multipolygon = this.geometryHelper.getGeoMultiPolygon(geometry);
-                Point point = this.geometryHelper.getGeoPoint(geometry);
-
-                List<? extends MdAttributeConcreteDAOIF> mdAttributes = business.getMdAttributeDAOs();
-
-                for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
-                {
-                  if (mdAttribute instanceof MdAttributePointDAOIF)
-                  {
-                    business.setValue(mdAttribute.definesAttribute(), point);
-                  }
-                  else if (mdAttribute instanceof MdAttributeMultiPolygonDAOIF)
-                  {
-                    business.setValue(mdAttribute.definesAttribute(), multipolygon);
-                  }
-                }
-              }
-
-              business.apply();
+              this.createFeature(descriptors, feature);
             }
           }
           finally
@@ -316,6 +229,135 @@ public class ShapefileImporter implements Reloadable
     catch (Exception e)
     {
       throw new InvocationTargetException(e);
+    }
+  }
+
+  private void createFeature(List<AttributeDescriptor> descriptors, SimpleFeature feature)
+  {
+    // Create a new object
+    Business business = BusinessFacade.newBusiness(this.configuration.getType());
+
+    Geometry geometry = null;
+    String entityAttribute = null;
+
+    Map<LocationColumn, String> locations = new HashMap<LocationColumn, String>();
+
+    for (AttributeDescriptor descriptor : descriptors)
+    {
+      Object value = this.getValue(feature, descriptor);
+
+      if (value != null)
+      {
+        if (value instanceof Geometry)
+        {
+          geometry = (Geometry) value;
+        }
+        else if (this.configuration.isLocationColumn(descriptor))
+        {
+          /*
+           * All location columns will map to the same attribute
+           */
+          entityAttribute = configuration.getAttributeName(descriptor);
+          LocationColumn column = this.configuration.getLocationColumn(descriptor);
+
+          locations.put(column, value.toString());
+        }
+        else
+        {
+          String attributeName = configuration.getAttributeName(descriptor);
+
+          if (attributeName != null)
+          {
+            MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
+
+            if (mdAttribute instanceof MdAttributeTermDAOIF)
+            {
+              MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
+
+              String packageString = this.configuration.getClassifierPackage(mdAttributeTerm);
+
+              Classifier classifier = Classifier.findClassifierAddIfNotExist(packageString, value.toString(), mdAttributeTerm);
+
+              this.setValue(business, attributeName, classifier.getId());
+            }
+            else
+            {
+              this.setValue(business, attributeName, value);
+            }
+          }
+        }
+      }
+    }
+
+    GeoEntity entity = this.getOrCreateLocation(configuration.getRootEntity(), locations);
+
+    if (entity != null)
+    {
+      this.setValue(business, entityAttribute, entity.getId());
+    }
+
+    if (geometry != null)
+    {
+      MultiPolygon multipolygon = this.geometryHelper.getGeoMultiPolygon(geometry);
+      Point point = this.geometryHelper.getGeoPoint(geometry);
+
+      List<? extends MdAttributeConcreteDAOIF> mdAttributes = business.getMdAttributeDAOs();
+
+      for (MdAttributeConcreteDAOIF mdAttribute : mdAttributes)
+      {
+        if (mdAttribute instanceof MdAttributePointDAOIF)
+        {
+          this.setValue(business, mdAttribute.definesAttribute(), point);
+        }
+        else if (mdAttribute instanceof MdAttributeMultiPolygonDAOIF)
+        {
+          this.setValue(business, mdAttribute.definesAttribute(), multipolygon);
+        }
+      }
+    }
+
+    String id = feature.getID();
+
+    ShapefileAttributeHandler handler = this.configuration.getIdHandler();
+
+    if (handler != null)
+    {
+      handler.handle(business, id);
+    }
+
+    business.apply();
+  }
+
+  private Object getValue(SimpleFeature feature, AttributeDescriptor descriptor)
+  {
+    Object value = feature.getAttribute(descriptor.getName());
+
+    String attributeName = this.configuration.getAttributeName(descriptor);
+
+    if (attributeName != null)
+    {
+      ShapefileAttributeHandler handler = this.configuration.getHandler(attributeName);
+
+      if (handler != null)
+      {
+        return handler.transform(value);
+      }
+    }
+
+    return value;
+  }
+
+  private void setValue(Business business, String attributeName, Object value)
+  {
+    ShapefileAttributeHandler handler = this.configuration.getHandler(attributeName);
+
+    if (handler != null)
+    {
+      handler.handle(business, value);
+    }
+    else
+    {
+      business.setValue(attributeName, value.toString());
     }
   }
 
@@ -359,7 +401,7 @@ public class ShapefileImporter implements Reloadable
             entity.getDisplayLabel().setDefaultValue(label);
             entity.apply();
 
-            entity.addLink(root, LocatedIn.CLASS);
+            entity.addLink(parent, LocatedIn.CLASS);
 
             // Create a new geo entity problem
             GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);

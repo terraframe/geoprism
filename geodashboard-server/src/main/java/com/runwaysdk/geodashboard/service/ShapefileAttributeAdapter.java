@@ -16,27 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis;
+package com.runwaysdk.geodashboard.service;
 
-public class Pair<T, S>
+import com.runwaysdk.business.Business;
+import com.runwaysdk.generation.loader.Reloadable;
+
+public abstract class ShapefileAttributeAdapter implements ShapefileAttributeHandler, Reloadable
 {
-  private T key;
 
-  private S value;
-
-  public Pair(T key, S value)
-  {
-    this.key = key;
-    this.value = value;
-  }
-
-  public T getKey()
-  {
-    return key;
-  }
-
-  public S getValue()
+  @Override
+  public Object transform(Object value)
   {
     return value;
   }
+
+  @Override
+  public void handle(Business business, Object value)
+  {
+  }
+
 }

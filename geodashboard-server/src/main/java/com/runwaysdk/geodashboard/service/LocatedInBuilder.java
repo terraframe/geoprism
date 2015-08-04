@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.locatedIn;
+package com.runwaysdk.geodashboard.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean.BuildTypes;
+import com.runwaysdk.geodashboard.service.LocatedInBean.BuildTypes;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
@@ -102,11 +102,11 @@ public class LocatedInBuilder implements Reloadable
 
     try
     {
-      String id = QueryUtil.getIdColumn();
+      String id = LocatedInQueryUtil.getIdColumn();
 
       String geoEntity = MdEntity.getMdEntity(GeoEntity.CLASS).getTableName();
-      String geoMultiPolygonAttr = QueryUtil.getColumnName(GeoEntity.getGeoMultiPolygonMd());
-      String geoDataAttr = QueryUtil.getColumnName(GeoEntity.getWktMd());
+      String geoMultiPolygonAttr = LocatedInQueryUtil.getColumnName(GeoEntity.getGeoMultiPolygonMd());
+      String geoDataAttr = LocatedInQueryUtil.getColumnName(GeoEntity.getWktMd());
 
       String allowedIn = MdEntity.getMdEntity(AllowedIn.CLASS).getTableName();
 
@@ -219,7 +219,7 @@ public class LocatedInBuilder implements Reloadable
 
   private void buildFunction()
   {
-    String id = QueryUtil.getIdColumn();
+    String id = LocatedInQueryUtil.getIdColumn();
     String locatedIn = MdEntity.getMdEntity(LocatedIn.CLASS).getTableName();
 
     StringBuffer sql = new StringBuffer();

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.locatedIn;
+package com.runwaysdk.geodashboard.service;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -55,8 +55,7 @@ public class LocatedInBean implements Reloadable
   private BuildTypes            option;
 
   /**
-   * Percent of area two entites must over lap before one is considered located
-   * in the other.
+   * Percent of area two entites must over lap before one is considered located in the other.
    */
   private int                   overlapPercent;
 

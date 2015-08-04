@@ -28,11 +28,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.GISImportLogger;
 import com.runwaysdk.geodashboard.gis.GISManagerWindow;
 import com.runwaysdk.geodashboard.gis.Localizer;
 import com.runwaysdk.geodashboard.gis.TaskListener;
+import com.runwaysdk.geodashboard.service.FileImportLogger;
 import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
+import com.runwaysdk.geodashboard.service.LocatedInBean;
+import com.runwaysdk.geodashboard.service.LocatedInManager;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 
@@ -96,7 +98,7 @@ public class LocatedInWizard extends Wizard implements Reloadable
 
       file.getParentFile().mkdirs();
 
-      final GISImportLogger logger = new GISImportLogger(file);
+      final FileImportLogger logger = new FileImportLogger(file);
 
       try
       {

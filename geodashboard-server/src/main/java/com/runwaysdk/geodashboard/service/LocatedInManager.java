@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.locatedIn;
+package com.runwaysdk.geodashboard.service;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -27,11 +27,8 @@ import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.Localizer;
-import com.runwaysdk.geodashboard.gis.Pair;
-import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean.BuildTypes;
-import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
-import com.runwaysdk.geodashboard.service.TaskObservable;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
+import com.runwaysdk.geodashboard.service.LocatedInBean.BuildTypes;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -60,8 +57,8 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
     {
       this.fireStart();
 
-//      MdBusiness mdBusiness = MdBusiness.getMdBusiness(GeoEntityAllPathsTable.CLASS);
-//      mdBusiness.deleteAllTableRecords();
+      // MdBusiness mdBusiness = MdBusiness.getMdBusiness(GeoEntityAllPathsTable.CLASS);
+      // mdBusiness.deleteAllTableRecords();
 
       if (bean.getOption().equals(BuildTypes.REBUILD_ALL))
       {
@@ -94,12 +91,12 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
   }
 
   @Transaction
-  protected void deleteExisting()
+  public void deleteExisting()
   {
     LocatedInQuery query = new LocatedInQuery(new QueryFactory());
     int count = (int) query.getCount();
 
-    this.fireStartTask(Localizer.getMessage("DELETE_EXISTING"), count);
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.deleteExisting"), count);
 
     OIterator<? extends LocatedIn> it = query.getIterator();
 
@@ -120,7 +117,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
   }
 
   @Transaction
-  protected void handleOrphanedEntities()
+  public void handleOrphanedEntities()
   {
     GeoEntity root = GeoEntity.getRoot();
 
@@ -128,7 +125,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
     int count = (int) query.getCount();
 
-    this.fireStartTask(Localizer.getMessage("FIXING_ORPHANED_CHILDREN"), count);
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.fixingOrphanedChildren"), count);
 
     OIterator<? extends GeoEntity> it = query.getIterator();
 
@@ -149,7 +146,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
     }
   }
 
-  protected GeoEntityQuery getOrphanedChildren()
+  public GeoEntityQuery getOrphanedChildren()
   {
     String earthId = GeoEntity.getRoot().getId();
 
@@ -166,7 +163,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
   private void rebuildAllPaths()
   {
-    this.fireStartTask(Localizer.getMessage("REBUILD_ALL_PATHS"), -1);
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.rebuildAllPaths"), -1);
 
     // Rebuild the all paths table
     GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
@@ -174,7 +171,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
   private void build(List<Pair<String, String>> pairs, GISImportLoggerIF logger)
   {
-    this.fireStartTask(Localizer.getMessage("BUILD_LOCATED_IN"), pairs.size());
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.buildLocatedIn"), pairs.size());
 
     for (Pair<String, String> pair : pairs)
     {
@@ -221,7 +218,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
   private List<Pair<String, String>> computeLocatedInRelationship(GISImportLoggerIF logger) throws InvocationTargetException
   {
-    this.fireStartTask(Localizer.getMessage("PREPARE_COMPUTATION"), -1);
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.prepareComputation"), -1);
 
     LocatedInBuilder builder = new LocatedInBuilder(bean.getOption(), bean.getOverlapPercent());
     ComputeLocatedInRunner runner = new ComputeLocatedInRunner(builder);
@@ -288,7 +285,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
     }
     finally
     {
-      this.fireStartTask(Localizer.getMessage("CLEANUP_COMPUTATION"), -1);
+      this.fireStartTask(LocalizationFacade.getFromBundles("builder.cleanupComputation"), -1);
 
       builder.cleanup();
     }
@@ -298,7 +295,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
   private void processInvalidGeometries(LocatedInBuilder builder, GISImportLoggerIF logger)
   {
-    this.fireStartTask(Localizer.getMessage("PROCESS_INVALID_GEOMETRIES"), -1);
+    this.fireStartTask(LocalizationFacade.getFromBundles("builder.processInvalidGeometries"), -1);
 
     OIterator<ValueObject> it = builder.getFailedEntities();
 
@@ -313,11 +310,11 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
         {
           GeoEntity entity = GeoEntity.get(id);
 
-          logger.log(entity.getGeoId(), Localizer.getMessage("UNABLE_TO_COMPUTE_GEOMETRY"));
+          logger.log(entity.getGeoId(), LocalizationFacade.getFromBundles("builder.unableToComputeGeometry"));
         }
         catch (Exception e)
         {
-          logger.log(id, Localizer.getMessage("UNABLE_TO_COMPUTE_GEOMETRY"));
+          logger.log(id, LocalizationFacade.getFromBundles("builder.unableToComputeGeometry"));
         }
       }
     }
@@ -336,7 +333,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
       ValueObject progressObject = progress.next();
       String total = progressObject.getValue(LocatedInBuilder.TOTAL);
 
-      this.fireStartTask(Localizer.getMessage("COMPUTE_LOCATED_IN"), Integer.parseInt(total));
+      this.fireStartTask(LocalizationFacade.getFromBundles("builder.computeLocatedIn"), Integer.parseInt(total));
     }
     finally
     {

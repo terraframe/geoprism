@@ -33,32 +33,37 @@ public class ShapefileImportConfiguration implements Reloadable
   /**
    * Type being imported
    */
-  private String                          type;
+  private String                                 type;
 
   /**
    * Mapping between shapefile-columsn and attributes
    */
-  private Map<String, String>             attributeMapping;
+  private Map<String, String>                    attributeMapping;
 
   /**
    * Mapping between Classifier columns and classifier packages
    */
-  private Map<String, String>             classifierMapping;
+  private Map<String, String>                    classifierMapping;
 
   /**
    * Map between shapefile column name and the location column information
    */
-  private Map<String, LocationColumn>     locationMapping;
+  private Map<String, LocationColumn>            locationMapping;
 
   /**
-   * Map between attribute name and data transform function
+   * Map between attribute name and data handler functions
    */
-  private Map<String, ShapefileTransform> transforms;
+  private Map<String, ShapefileAttributeHandler> handlers;
+
+  /**
+   * Custom attribute handler for the shapefile ID column
+   */
+  private ShapefileAttributeHandler              idHandler;
 
   /**
    * Root geo entity for the data being imported
    */
-  private GeoEntity                       root;
+  private GeoEntity                              root;
 
   public ShapefileImportConfiguration(String type)
   {
@@ -66,7 +71,7 @@ public class ShapefileImportConfiguration implements Reloadable
     this.attributeMapping = new HashMap<String, String>();
     this.classifierMapping = new HashMap<String, String>();
     this.locationMapping = new HashMap<String, LocationColumn>();
-    this.transforms = new HashMap<String, ShapefileTransform>();
+    this.handlers = new HashMap<String, ShapefileAttributeHandler>();
   }
 
   public String getType()
@@ -88,10 +93,8 @@ public class ShapefileImportConfiguration implements Reloadable
     {
       return this.attributeMapping.get(key);
     }
-    else
-    {
-      throw new ProgrammingErrorException("Unknown shapefile-type mapping for the shapefile attribute [" + key + "]");
-    }
+    
+    return null;
   }
 
   public void addAttributeMapping(String key, String attributeName)
@@ -147,14 +150,24 @@ public class ShapefileImportConfiguration implements Reloadable
     this.root = root;
   }
 
-  public void addTransform(String attributeName, ShapefileTransform transform)
+  public void addHandler(String attributeName, ShapefileAttributeHandler handler)
   {
-    this.transforms.put(attributeName, transform);
+    this.handlers.put(attributeName, handler);
   }
 
-  public ShapefileTransform getTransform(String attributeName)
+  public ShapefileAttributeHandler getHandler(String attributeName)
   {
-    return this.transforms.get(attributeName);
+    return this.handlers.get(attributeName);
+  }
+
+  public ShapefileAttributeHandler getIdHandler()
+  {
+    return this.idHandler;
+  }
+
+  public void setIdHandler(ShapefileAttributeHandler idHandler)
+  {
+    this.idHandler = idHandler;
   }
 
 }
