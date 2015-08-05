@@ -25,5 +25,5 @@ public interface ShapefileAttributeHandler extends Reloadable
 {
   public Object transform(Object value);
 
-  public void handle(Business business, Object value);
+  public void handle(Business business, String attributeName, Object value);
 }

@@ -324,7 +324,7 @@ public class ShapefileImporter implements Reloadable
 
     if (handler != null)
     {
-      handler.handle(business, id);
+      handler.handle(business, null, id);
     }
 
     business.apply();
@@ -355,7 +355,7 @@ public class ShapefileImporter implements Reloadable
 
     if (handler != null)
     {
-      handler.handle(business, value);
+      handler.handle(business, attributeName, value);
     }
     else
     {

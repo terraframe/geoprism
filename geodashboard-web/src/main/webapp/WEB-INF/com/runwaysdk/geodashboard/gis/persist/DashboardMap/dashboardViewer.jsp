@@ -200,8 +200,8 @@ $(document).ready(function(){
 	        -->
 	        <c:forEach items="${types}" var="type" varStatus="typeStatus">
 	          <div class="panel panel-default">
-	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}-${attrStatus.index}">${type.displayLabel.value}</a>
-	            <div id="collapse${typeStatus.index}-${attrStatus.index}" class="panel-collapse collapse">
+	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}">${type.displayLabel.value}</a>
+	            <div id="collapse${typeStatus.index}" class="panel-collapse collapse">
 	              <div class="panel-body">
 	              <!-- slide block -->
 	              <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
