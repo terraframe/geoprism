@@ -16,19 +16,66 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
+
+import com.runwaysdk.facade.Facade;
+import com.runwaysdk.system.metadata.MdBusiness;
 
 public class Sandbox
 {
   public static void main(String[] args) throws Exception
   {
-    GeometryFactory gf = new GeometryFactory();
+//    GeometryFactory gf = new GeometryFactory();
+//
+//    Coordinate coord = new Coordinate(1,1);
+//    Point point = gf.createPoint(coord);
+//
+//    System.out.println(point);
+    
+    Locale[] locales = new Locale[1];
+    
+    locales[0] = Locale.ENGLISH;
+    
+    System.out.println("Logging in");
+    String sessionId = Facade.login("admin", "_nm8P4gfdWxGqNRQ#8", locales);
+    
+    System.out.println("Logged in");
+    
+    String[] params = new String[0];
+    
+    InputStream inputStream = Facade.exportExcelFile(sessionId, MdBusiness.CLASS, null, null);
+    
+    System.out.println(inputStream);
 
-    Coordinate coord = new Coordinate(1,1);
-    Point point = gf.createPoint(coord);
+    OutputStream outputStream = 
+        new FileOutputStream(new File("/Users/nathan/git/geodashboard/geodashboard-test/excelTemplate.xls"));   
+    
+    try
+    {
+      int read = 0;
+      byte[] bytes = new byte[1024];
 
-    System.out.println(point);
+      while ((read = inputStream.read(bytes)) != -1) 
+      {
+        outputStream.write(bytes, 0, read);
+      }
+    }
+    finally
+    {
+      outputStream.close();
+      
+      System.out.println("Logging out");
+      Facade.logout(sessionId);
+    }
+      
+    System.out.println("Logging out");
+    Facade.logout(sessionId);
+
+    System.out.println("Logged out");
+    
   }
 }
