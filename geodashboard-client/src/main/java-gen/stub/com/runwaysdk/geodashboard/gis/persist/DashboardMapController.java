@@ -235,19 +235,19 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       MdClassDTO[] types = activeDashboard.getSortedTypes();
       req.setAttribute("types", types);
 
-      List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
       Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
 
       for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
       {
-        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
-
+        List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
         MdAttributeViewDTO[] views = mdDTO.getSortedAttributes();
 
         for (MdAttributeViewDTO mdAttrView : views)
         {
           attrs.add(mdAttrView);
         }
+
+        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
       }
 
       req.setAttribute("attrMap", attrMap);

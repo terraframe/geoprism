@@ -172,7 +172,7 @@ public class Sandbox
 
     DashboardThematicLayer layer = new DashboardThematicLayer();
     layer.setName("aa_test_data");
-//    layer.addLayerType(AllLayerType.BASIC);
+    layer.addLayerType(AllLayerType.BASIC);
     layer.setDisplayInLegend(false);
     layer.setVirtual(false);
 //    layer.setUniversal(null);

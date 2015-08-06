@@ -92,14 +92,14 @@
 	              <div class="holder">
 	                <div class="row-holder">
 	                  <div class="check-block">
-	                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue">
+	                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue"></input>
 	                    <label for="f51">${style.enableValueMd.displayLabel}</label>
 	                    <mjl:messages attribute="enableValue" classes="error-message">
 	                      <mjl:message />
 	                    </mjl:messages>
 	                  </div>
 	                  <div class="check-block">
-	                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}">
+	                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}"></input>
 	                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
 	                  </div>              
 	                </div>
@@ -400,7 +400,7 @@
 		                    	<div class="cell">
 		                          <label for="basic-point-radius-select">${style.basicPointSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                          	<input id="basic-point-radius-select" name="style.${style.basicPointSizeMd.name}" type="text" value="${style.basicPointSize}">
+		                          	<input id="basic-point-radius-select" name="style.${style.basicPointSizeMd.name}" type="text" value="${style.basicPointSize}"></input>
 		                          </div>
 		                        </div>
 	                      </div>
@@ -547,7 +547,7 @@
 		                    	<div class="cell">
 		                          <label for="gradient-point-radius-select">${style.gradientPointSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                          	<input id="gradient-point-radius-select" name="style.${style.gradientPointSizeMd.name}" type="text" value="${style.gradientPointSize}">
+		                          	<input id="gradient-point-radius-select" name="style.${style.gradientPointSizeMd.name}" type="text" value="${style.gradientPointSize}"></input>
 		                          </div>
 		                        </div>
 	                      </div>
@@ -598,13 +598,13 @@
 	                      </div>
 	                    <div class="category-block" id="category-point-colors-container">
 	                      	  
-	                    <input id="categories-point-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${pointcategories}' type="hidden" class="category-input" name="style.categoryPointStyles" >
+	                    <input id="categories-point-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${pointcategories}' type="hidden" class="category-input" name="style.categoryPointStyles" ></input>
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="points-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
-										<div id="other-cat-point-container">
+										<div id="other-cat-point-container" class="other-cat-container">
 											<ul class="color-list other-cat">							                       <li>
 						                         <div class="category-container">
 							                       	 <div class="text category-input-container">
@@ -634,7 +634,7 @@
 							            <div class="style-options-block">
 <%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
 										  <div class="check-block">
-										    <input id="basic-cat-point-other-option" class="other-option-check-box" type="checkbox" name="" checked>
+										    <input id="basic-cat-point-other-option" class="other-option-check-box" type="checkbox" name="" checked></input>
 										    <label for="basic-cat-point-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 										  </div>
 						                </div>
@@ -701,7 +701,7 @@
 		                    	<div class="cell">
 		                          <label for="category-point-radius-select">${style.categoryPointSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                          	<input id="category-point-radius-select" name="style.${style.categoryPointSizeMd.name}" type="text" value="${style.categoryPointSize}">
+		                          	<input id="category-point-radius-select" name="style.${style.categoryPointSizeMd.name}" type="text" value="${style.categoryPointSize}"></input>
 		                          </div>
 		                        </div>
 		                        <div class="cell">
@@ -852,17 +852,17 @@
 	                      <div class="cell-holder">
 		                        <div class="cell">
 		                          <label for="f76">${style.bubbleMinSizeMd.displayLabel}</label>
-		                          <div class="text"><input id="f76" name="style.${style.bubbleMinSizeMd.name}" type="text" value="${style.bubbleMinSize}"></div>
+		                          <div class="text"><input id="f76" name="style.${style.bubbleMinSizeMd.name}" type="text" value="${style.bubbleMinSize}"/></div>
 		                        </div>
 		                        <div class="cell">
 		                          <label for="f77">${style.bubbleMaxSizeMd.displayLabel}</label>
 		                          <div class="text">
-		                            <input id="f77" name="style.${style.bubbleMaxSizeMd.name}" type="text" value="${style.bubbleMaxSize}">
+		                            <input id="f77" name="style.${style.bubbleMaxSizeMd.name}" type="text" value="${style.bubbleMaxSize}"></input>
 		                          </div>
 		                        </div>
 		                        
 		                        <div class="check-block">
-				                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize">
+				                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize"></input>
 				                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label>
 				                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message">
 				                      <mjl:message />
@@ -1130,13 +1130,13 @@
 	                      </div>
 	                    <div class="category-block" id="category-colors-container">
 	                      	  
-	                    <input id="categories-polygon-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${polygoncategories}' type="hidden" class="category-input" name="style.styleCategories" >
+	                    <input id="categories-polygon-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${polygoncategories}' type="hidden" class="category-input" name="style.styleCategories" ></input>
 		                     <c:choose>
 		                      	<c:when test="${'true' == isOntologyAttribute}">
 		                      		<!-- RENDER ONTOLOGY TREE DATA -->
 		                      		<div class="ontology-category-input-container">
 										<div id="polygon-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div>
-										<div id="other-cat-container">
+										<div id="other-cat-poly-container" class="other-cat-container">
 											<ul class="color-list other-cat">							                       <li>
 						                         <div class="category-container">
 							                       	 <div class="text category-input-container">
@@ -1151,8 +1151,8 @@
 						                    </ul>
 						                </div>
 									  	<div class="check-block">
-								      		<input id="f56" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
-								        	<label for="f56"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+								      		<input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
+								        	<label for="ont-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 								      	</div>
 									</div>
 		                      	</c:when>
@@ -1165,8 +1165,8 @@
 							            <div class="style-options-block">
 <%-- 						              <strong class="title"><gdb:localize var="dl_form_options_heading" key="DashboardThematicLayer.form.categoryOptionsHeading"/>${dl_form_options_heading}</strong> --%>
 										  <div class="check-block">
-										    <input id="f53" class="other-option-check-box" type="checkbox" name="" checked>
-										    <label for="f53"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
+										    <input id="basic-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="" checked ></input>
+										    <label for="basic-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label>
 										  </div>
 						                </div>
 			                        </div>
@@ -1236,7 +1236,7 @@
                 <div class="row-holder">
                   <div class="check-block style02">
 					<mjl:component param="layer" item="${layer}">
-                    	<input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}">
+                    	<input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}" ></input>
                     	<label for="f65">${layer.displayInLegendMd.displayLabel}</label>
 					</mjl:component>
                   </div>

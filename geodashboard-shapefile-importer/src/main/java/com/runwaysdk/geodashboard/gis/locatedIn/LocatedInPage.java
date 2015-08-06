@@ -44,7 +44,8 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.LabelProvider;
 import com.runwaysdk.geodashboard.gis.LabeledValueBean;
 import com.runwaysdk.geodashboard.gis.Localizer;
-import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean.BuildTypes;
+import com.runwaysdk.geodashboard.service.LocatedInBean;
+import com.runwaysdk.geodashboard.service.LocatedInBean.BuildTypes;
 
 
 public class LocatedInPage extends WizardPage implements PropertyChangeListener, Reloadable

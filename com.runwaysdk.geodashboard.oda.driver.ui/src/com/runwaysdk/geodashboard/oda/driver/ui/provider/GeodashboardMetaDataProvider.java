@@ -25,14 +25,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.datatools.connectivity.oda.IConnection;
-import org.eclipse.datatools.connectivity.oda.IDriver;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.design.DataSetDesign;
 import org.eclipse.datatools.connectivity.oda.design.ui.designsession.DesignSessionUtil;
 
-import com.runwaysdk.geodashboard.oda.driver.Driver;
+import com.runwaysdk.geodashboard.oda.driver.ui.util.DriverLoader;
 
 public class GeodashboardMetaDataProvider
 {
@@ -127,13 +126,10 @@ public class GeodashboardMetaDataProvider
   {
     if (this.connection == null)
     {
-      IDriver driver = new Driver();
-
       // obtain and open a live connection
       Properties props = DesignSessionUtil.getEffectiveDataSourceProperties(this.design.getDataSourceDesign());
 
-      this.connection = driver.getConnection(null);
-      this.connection.open(props);
+      this.connection = DriverLoader.getConnection(props);
     }
 
     return this.connection;

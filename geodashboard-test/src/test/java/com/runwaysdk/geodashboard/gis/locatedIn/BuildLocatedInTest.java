@@ -25,12 +25,14 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.runwaysdk.geodashboard.gis.Localizer;
 import com.runwaysdk.geodashboard.gis.MockLogger;
 import com.runwaysdk.geodashboard.gis.MockTaskListener;
 import com.runwaysdk.geodashboard.gis.Task;
 import com.runwaysdk.geodashboard.gis.TransactionExecuter;
-import com.runwaysdk.geodashboard.gis.locatedIn.LocatedInBean.BuildTypes;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
+import com.runwaysdk.geodashboard.service.LocatedInBean;
+import com.runwaysdk.geodashboard.service.LocatedInBean.BuildTypes;
+import com.runwaysdk.geodashboard.service.LocatedInManager;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -105,7 +107,7 @@ public class BuildLocatedInTest
 
     for (Task task : tasks)
     {
-      Assert.assertFalse(Localizer.getMessage("DELETE_EXISTING").equals(task.getTaskName()));
+      Assert.assertFalse(LocalizationFacade.getFromBundles("builder.deleteExisting").equals(task.getTaskName()));
     }
 
     // Assert.assertFalse(logger.hasLogged());

@@ -20,6 +20,8 @@ package com.runwaysdk.geodashboard.gis;
 
 import java.util.HashMap;
 
+import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
+
 public class MockLogger implements GISImportLoggerIF
 {
   private HashMap<String, Throwable> map;

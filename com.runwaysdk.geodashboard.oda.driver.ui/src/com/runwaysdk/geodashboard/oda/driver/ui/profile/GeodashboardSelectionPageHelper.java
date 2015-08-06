@@ -19,9 +19,13 @@
 package com.runwaysdk.geodashboard.oda.driver.ui.profile;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
+import java.security.InvalidAlgorithmParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.net.ssl.SSLHandshakeException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
@@ -31,6 +35,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -51,6 +56,10 @@ import org.eclipse.swt.widgets.Text;
 
 import com.runwaysdk.geodashboard.oda.driver.CryptographySingleton;
 import com.runwaysdk.geodashboard.oda.driver.ui.GeodashboardPlugin;
+import com.runwaysdk.geodashboard.oda.driver.ui.editors.ConfigureSSHFormDialog;
+import com.runwaysdk.geodashboard.oda.driver.ui.editors.IPageWrapper;
+import com.runwaysdk.geodashboard.oda.driver.ui.editors.PreferencePageWrapper;
+import com.runwaysdk.geodashboard.oda.driver.ui.editors.WizardPageWrapper;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.Constants;
 import com.runwaysdk.geodashboard.oda.driver.ui.util.DriverLoader;
 
@@ -67,32 +76,37 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
 
   private static final String EMPTY_STRING       = "";                                                         //$NON-NLS-1$
 
-  private WizardPage          m_wizardPage;
+  private IPageWrapper        page;
 
-  private PreferencePage      m_propertyPage;
+  private String              defaultMessage;
 
   // Text of url, name and password
-  private Text                url, userName, password;
+  private Text                url;
+
+  private Text                userName;
+
+  private Text                password;
 
   private Composite           porpertyGroupComposite;
 
-  // Button of test connection
+  // Button to test connection
   private Button              testButton;
 
-  private String              DEFAULT_MESSAGE;
+  // Button to configure SSH settings
+  private Button              sshButton;
 
   private Map<String, String> databaseProperties = new HashMap<String, String>();
 
   public GeodashboardSelectionPageHelper(WizardPage page)
   {
-    DEFAULT_MESSAGE = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
-    m_wizardPage = page;
+    this.page = new WizardPageWrapper(page);
+    this.defaultMessage = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
   }
 
   public GeodashboardSelectionPageHelper(PreferencePage page)
   {
-    DEFAULT_MESSAGE = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
-    m_propertyPage = page;
+    this.page = new PreferencePageWrapper(page);
+    this.defaultMessage = GeodashboardPlugin.getResourceString("wizard.message.createDataSource"); //$NON-NLS-1$
   }
 
   public Composite createCustomControl(Composite parent)
@@ -147,6 +161,11 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
     testButton.setText(GeodashboardPlugin.getResourceString("wizard.label.testConnection"));//$NON-NLS-1$
     testButton.setLayoutData(new GridData(GridData.CENTER));
 
+//    sshButton = new Button(content, SWT.PUSH);
+//    sshButton.setText(GeodashboardPlugin.getResourceString("wizard.label.configureSSH"));//$NON-NLS-1$
+//    sshButton.setLayoutData(new GridData(GridData.END));
+//    sshButton.setVisible(false);
+
     Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
     content.setSize(size.x, size.y);
 
@@ -163,26 +182,24 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
 
   private void createPropertiesComposite(Composite content)
   {
-    GridData gridData;
-
-    porpertyGroupComposite = new Composite(content, SWT.NONE);
-
-    gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+    GridData gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
     gridData.horizontalSpan = 4;
     gridData.horizontalAlignment = SWT.FILL;
     gridData.exclude = true;
-    porpertyGroupComposite.setLayoutData(gridData);
+
     GridLayout layout = new GridLayout();
-    // layout.horizontalSpacing = layout.verticalSpacing = 0;
     layout.marginWidth = layout.marginHeight = 0;
     layout.numColumns = 5;
-    Layout parentLayout = porpertyGroupComposite.getParent().getLayout();
+
+    Layout parentLayout = content.getLayout();
 
     if (parentLayout instanceof GridLayout)
     {
       layout.horizontalSpacing = ( (GridLayout) parentLayout ).horizontalSpacing;
     }
 
+    porpertyGroupComposite = new Composite(content, SWT.NONE);
+    porpertyGroupComposite.setLayoutData(gridData);
     porpertyGroupComposite.setLayout(layout);
   }
 
@@ -335,13 +352,21 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
 
     testButton.addSelectionListener(new SelectionAdapter()
     {
-
       public void widgetSelected(SelectionEvent evt)
       {
         handleTestButtonSelection();
       }
 
     });
+
+//    sshButton.addSelectionListener(new SelectionAdapter()
+//    {
+//      public void widgetSelected(SelectionEvent evt)
+//      {
+//        handleSSHButtonSelection();
+//      }
+//
+//    });
   }
 
   private Properties collectSpecifiedProperties()
@@ -405,7 +430,7 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
     }
     else
     {
-      setMessage(DEFAULT_MESSAGE);
+      setMessage(defaultMessage);
 
       if (!testButton.isEnabled())
       {
@@ -434,13 +459,9 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
    */
   private Shell getShell()
   {
-    if (m_wizardPage != null)
+    if (page != null)
     {
-      return m_wizardPage.getShell();
-    }
-    else if (m_propertyPage != null)
-    {
-      return m_propertyPage.getShell();
+      return page.getShell();
     }
     else
     {
@@ -455,13 +476,9 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
    */
   private void setPageComplete(boolean complete)
   {
-    if (m_wizardPage != null)
+    if (page != null)
     {
-      m_wizardPage.setPageComplete(complete);
-    }
-    else if (m_propertyPage != null)
-    {
-      m_propertyPage.setValid(complete);
+      page.setPageComplete(complete);
     }
   }
 
@@ -472,13 +489,9 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
    */
   private void setMessage(String message)
   {
-    if (m_wizardPage != null)
+    if (page != null)
     {
-      m_wizardPage.setMessage(message);
-    }
-    else if (m_propertyPage != null)
-    {
-      m_propertyPage.setMessage(message);
+      page.setMessage(message);
     }
   }
 
@@ -490,19 +503,33 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
    */
   private void setMessage(String message, int type)
   {
-    if (m_wizardPage != null)
+    if (page != null)
     {
-      m_wizardPage.setMessage(message, type);
-    }
-    else if (m_propertyPage != null)
-    {
-      m_propertyPage.setMessage(message, type);
+      page.setMessage(message, type);
     }
   }
 
   public void setDefaultMessage(String message)
   {
-    this.DEFAULT_MESSAGE = message;
+    this.defaultMessage = message;
+  }
+
+  private void handleSSHButtonSelection()
+  {
+    this.sshButton.setEnabled(false);
+
+    try
+    {
+      ConfigureSSHFormDialog dialog = new ConfigureSSHFormDialog(this.getShell());
+
+      if (dialog.open() == Window.OK)
+      {
+      }
+    }
+    finally
+    {
+      this.sshButton.setEnabled(true);
+    }
   }
 
   private void handleTestButtonSelection()
@@ -534,24 +561,61 @@ public class GeodashboardSelectionPageHelper implements ModifyListener
           }
           catch (OdaException e)
           {
-            ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-                GeodashboardPlugin.getResourceString("connection.failed"), e);
+            handleException(e);
           }
         }
       });
 
-      MessageDialog.openInformation(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-          GeodashboardPlugin.getResourceString("connection.success"));//$NON-NLS-1$
+      String title = GeodashboardPlugin.getResourceString("connection.test"); //$NON-NLS-1$
+      String message = GeodashboardPlugin.getResourceString("connection.message.success"); //$NON-NLS-1$
 
+      MessageDialog.openInformation(getShell(), title, message);
     }
     catch (Exception e)
     {
-      OdaException ex = new OdaException(GeodashboardPlugin.getResourceString("connection.failed"));
-      ExceptionHandler.showException(getShell(), GeodashboardPlugin.getResourceString("connection.test"),//$NON-NLS-1$
-          GeodashboardPlugin.getResourceString("connection.failed"), ex);
+      this.handleException(e);
+    }
+    finally
+    {
+      this.testButton.setEnabled(true);
+    }
+  }
+
+  private void handleException(Exception e)
+  {
+    Throwable root = this.getRootCause(e);
+
+    if (root instanceof SSLHandshakeException || root instanceof InvalidAlgorithmParameterException)
+    {
+      String title = GeodashboardPlugin.getResourceString("connection.test"); //$NON-NLS-1$
+      String message = GeodashboardPlugin.getResourceString("connection.message.handshake"); //$NON-NLS-1$
+
+      ExceptionHandler.showException(getShell(), title, message, e);
+    }
+    else if (root instanceof ConnectException && root.getMessage().startsWith("Connection refused")) //$NON-NLS-1$
+    {
+      String title = GeodashboardPlugin.getResourceString("connection.test"); //$NON-NLS-1$
+      String message = GeodashboardPlugin.getResourceString("connection.message.hosterror"); //$NON-NLS-1$
+
+      ExceptionHandler.showException(getShell(), title, message, e);
+    }
+    else
+    {
+      String title = GeodashboardPlugin.getResourceString("connection.test"); //$NON-NLS-1$
+      String message = GeodashboardPlugin.getResourceString("connection.message.failed"); //$NON-NLS-1$
+
+      ExceptionHandler.showException(getShell(), title, message, e);
+    }
+  }
+
+  private Throwable getRootCause(Throwable t)
+  {
+    if (t.getCause() != null && !t.getCause().equals(t))
+    {
+      return this.getRootCause(t.getCause());
     }
 
-    this.testButton.setEnabled(true);
+    return t;
   }
 
   public void modifyText(ModifyEvent e)

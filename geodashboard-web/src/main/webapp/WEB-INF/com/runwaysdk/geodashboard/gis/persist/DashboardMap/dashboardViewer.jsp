@@ -199,17 +199,14 @@ $(document).ready(function(){
 	        TEST
 	        -->
 	        <c:forEach items="${types}" var="type" varStatus="typeStatus">
-	          <c:choose>
-	            <c:when test="${typeStatus.index == 0}">
-	            
 	          <div class="panel panel-default">
-	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse01">${type.displayLabel.value}</a>
-	            <div id="collapse01" class="panel-collapse collapse">
+	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}">${type.displayLabel.value}</a>
+	            <div id="collapse${typeStatus.index}" class="panel-collapse collapse">
 	              <div class="panel-body">
 	              <!-- slide block -->
 	              <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
 	                <div class="panel">
-	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${attrStatus.index}" href="#collapse00${attrStatus.index}">${attr.displayLabel}</a>
+	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${typeStatus.index}-${attrStatus.index}" href="#collapse00${typeStatus.index}-${attrStatus.index}">${attr.displayLabel}</a>
                            <c:if test="${hasAccess}">
                              <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
                                <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
@@ -218,11 +215,11 @@ $(document).ready(function(){
 						</h4>
 										
 	                  <!-- slide block -->
-	                  <div id="collapse00${attrStatus.index}" class="panel-collapse collapse">
+	                  <div id="collapse00${typeStatus.index}-${attrStatus.index}" class="panel-collapse collapse">
 	                    <div class="panel-body">
 	                      <div class="filter-block">
 	                        <div class="row-holder">
-	                          <label for="f${attrStatus.index}"><gdb:localize var="dbviewer_filter" key="dashboardViewer.filter"/>${dbviewer_filter}</label>
+	                          <label for="f${typeStatus.index}-${attrStatus.index}"><gdb:localize var="dbviewer_filter" key="dashboardViewer.filter"/>${dbviewer_filter}</label>
 	                        </div>
 	                        <div class="row-holder">
 	                          <c:choose>
@@ -311,13 +308,6 @@ $(document).ready(function(){
 	                </div>
 	              </c:forEach>
 	            </div></div></div>
-	            
-	            
-	            </c:when>
-	            <c:otherwise>
-	              
-	            </c:otherwise>
-	          </c:choose>
 	        </c:forEach>
        </div> <!-- END sales-accortion panel-group -->
     
@@ -329,27 +319,8 @@ $(document).ready(function(){
 	      
 	      <c:if test="${hasAccess}">
 	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
-	      
-<%-- 	          <a href="#" class="fa fa-globe filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>" data-placement="left""> --%>
-<!-- 	          </a> -->
 	      </c:if>
 	    </div>
-    
-<!--     <span id="filter-buttons"> -->
-<!--       <a href="#" class="opener filters-button apply-filters-button" data-toggle="tooltip" data-placement="left""> -->
-<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.applyFilters"/></span> --%>
-<!--       </a> -->
-<!--       <a href="#" class="opener filters-button save-filters-button" data-toggle="tooltip" data-placement="left""> -->
-<%--         <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveFilters"/></span> --%>
-<!--       </a> -->
-<%--       <c:if test="${hasAccess}"> --%>
-<!--         <div> -->
-<!--           <a href="#" class="opener filters-button save-global-filters-button" data-toggle="tooltip" data-placement="left""> -->
-<%--             <span style="color:white;font-weight:bold;"><gdb:localize key="dashboardViewer.saveGlobalFilters"/></span> --%>
-<!--           </a> -->
-<!--         </div> -->
-<%--       </c:if> --%>
-<!--     </span> -->
   </aside>
   
   <!-- modal -->

@@ -128,7 +128,8 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
   {
     AggregationTypeQuery q;
 
-    MdAttributeConcrete mdAttrConcrete = ( (MdAttributeVirtual) MdAttribute.get(thematicAttributeId) ).getMdAttributeConcrete();
+    MdAttributeConcrete mdAttrConcrete = DashboardStyle.getMdAttributeConcrete(thematicAttributeId);
+
     if (mdAttrConcrete instanceof MdAttributeTerm || mdAttrConcrete instanceof MdAttributeText || mdAttrConcrete instanceof MdAttributeChar)
     {
       QueryFactory f = new QueryFactory();
@@ -139,7 +140,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
       // q.OR(q.getEnumName().EQ(AllAggregationType.DISTRIBUTION.name()));
       // q.ORDER_BY_ASC(q.getDisplayLabel().localize());
     }
-    else if(mdAttrConcrete instanceof MdAttributeMoment) 
+    else if (mdAttrConcrete instanceof MdAttributeMoment)
     {
       QueryFactory f = new QueryFactory();
       q = new AggregationTypeQuery(f);
@@ -158,6 +159,18 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     }
 
     return q;
+  }
+
+  private static MdAttributeConcrete getMdAttributeConcrete(String thematicAttributeId)
+  {
+    MdAttribute mdAttribute = MdAttribute.get(thematicAttributeId);
+
+    if (mdAttribute instanceof MdAttributeVirtual)
+    {
+      return ( (MdAttributeVirtual) mdAttribute ).getMdAttributeConcrete();
+    }
+
+    return (MdAttributeConcrete) mdAttribute;
   }
 
   public static String getAggregationJSON()

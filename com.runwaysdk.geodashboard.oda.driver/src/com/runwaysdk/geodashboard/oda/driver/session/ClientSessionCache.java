@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.runwaysdk.ClientSession;
+import com.runwaysdk.configuration.CommonsConfigurationResolver;
 import com.runwaysdk.request.ClientRequestManager;
 import com.runwaysdk.request.ConnectionLabel;
 import com.runwaysdk.request.ConnectionLabel.Type;
@@ -76,6 +77,9 @@ public class ClientSessionCache
     {
       long time = System.currentTimeMillis();
       String label = "BIRT-RMI-" + time;
+
+      CommonsConfigurationResolver.setIncludeRuntimeProperties(false);
+
       ClientRequestManager.addConnection(new ConnectionLabel(label, Type.RMI, url));
 
       ClientSession session = ClientSession.createUserSession(label, username, password, new Locale[] { Locale.US });

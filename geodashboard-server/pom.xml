@@ -38,7 +38,7 @@
     <root.user>postgres</root.user>
     <root.pass>postgres</root.pass>
   </properties>
-
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>com.runwaysdk.geodashboard</groupId>
       <artifactId>oda.driver</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
     </dependency>
 
     <!-- This jar autogenerates meta-inf service provider configuration files (used with the BIRT Report Provider) More information on services loaders: https://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html http://www.oracle.com/technetwork/articles/javase/extensible-137159.html plugin 
@@ -80,6 +80,17 @@
       <artifactId>metainf-services</artifactId>
       <version>1.1</version>
     </dependency>    
+    
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-shapefile</artifactId>
+      <version>${geotools.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-epsg-hsql</artifactId>
+      <version>${geotools.version}</version>
+    </dependency>
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->

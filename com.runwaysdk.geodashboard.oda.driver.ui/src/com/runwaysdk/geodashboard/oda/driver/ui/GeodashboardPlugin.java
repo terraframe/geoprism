@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.runwaysdk.geodashboard.oda.driver.ui.ssl.SecureKeystoreManager;
+
 public class GeodashboardPlugin extends AbstractUIPlugin
 {
   // The plug-in ID
@@ -47,7 +49,7 @@ public class GeodashboardPlugin extends AbstractUIPlugin
 
     try
     {
-      resourceBundle = ResourceBundle.getBundle("com.runwaysdk.geodashboard.oda.driver.ui.nls.GeodashboardPluginResources");
+      resourceBundle = ResourceBundle.getBundle("com.runwaysdk.geodashboard.oda.driver.ui.nls.GeodashboardPluginResources"); //$NON-NLS-1$
     }
     catch (MissingResourceException x)
     {
@@ -55,13 +57,22 @@ public class GeodashboardPlugin extends AbstractUIPlugin
     }
   }
 
+  @Override
+  public void start(BundleContext context) throws Exception
+  {
+    super.start(context);
+
+    /*
+     * Before a connection can be attempted we must ensure that the SSLContext has been configured
+     */
+    SecureKeystoreManager.getInstance().configureSSLContext();
+  }
+
   /**
    * This method is called when the plug-in is stopped
    */
   public void stop(BundleContext context) throws Exception
   {
-    // ConnectionMetaDataManager.getInstance().clearCache();
-
     super.stop(context);
   }
 
@@ -82,8 +93,7 @@ public class GeodashboardPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Returns the string from the plugin's resource bundle, or 'key' if not
-   * found.
+   * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
   public static String getResourceString(String key)
   {
@@ -100,8 +110,7 @@ public class GeodashboardPlugin extends AbstractUIPlugin
   }
 
   /**
-   * Returns the string from the Resource bundle, formatted according to the
-   * arguments specified
+   * Returns the string from the Resource bundle, formatted according to the arguments specified
    */
   public static String getFormattedString(String key, Object[] arguments)
   {

@@ -32,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessFacade;
-import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
@@ -40,6 +39,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -47,6 +47,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemView;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
@@ -231,6 +232,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.locatedIn(lQuery));
+    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
 
     OIterator<? extends GeoEntity> entityIt = query.getIterator();
 
@@ -270,17 +272,22 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       if (_ids.contains(_entity.getId()))
       {
-        OIterator<? extends Relationship> iterator = null;
+        OIterator<? extends LocatedIn> iterator = null;
 
         try
         {
-          iterator = _entity.getChildRelationships(LocatedIn.CLASS);
+          // Get the relationships where this object is the parent
 
-          List<? extends Relationship> relationships = iterator.getAll();
+          LocatedInQuery query = new LocatedInQuery(new QueryFactory());
+          query.WHERE(query.getParent().EQ(_entity));
+          query.ORDER_BY_ASC(( (AttributeReference) query.getChild() ).aLocalCharacter(GeoEntity.DISPLAYLABEL).localize());
+          iterator = query.getIterator();
 
-          for (Relationship relationship : relationships)
+          List<? extends LocatedIn> relationships = iterator.getAll();
+
+          for (LocatedIn relationship : relationships)
           {
-            GeoEntity child = (GeoEntity) relationship.getChild();
+            GeoEntity child = relationship.getChild();
 
             JSONObject parentRecord = new JSONObject();
             parentRecord.put("parentId", relationship.getParentId());

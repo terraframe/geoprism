@@ -28,9 +28,9 @@ public class GeodashboardSelectionWizardPage extends DataSourceWizardPage
   /**
    * helper object
    */
-  private GeodashboardSelectionPageHelper m_pageHelper;
+  private GeodashboardSelectionPageHelper pageHelper;
 
-  private Properties                      m_folderProperties;
+  private Properties                      folderProperties;
 
   public GeodashboardSelectionWizardPage(String pageName)
   {
@@ -41,20 +41,19 @@ public class GeodashboardSelectionWizardPage extends DataSourceWizardPage
   /*
    * (non-Javadoc)
    * 
-   * @see org.eclipse.datatools.connectivity.oda.design.ui.profile.wizards.
-   * DataSourceWizardPage
+   * @see org.eclipse.datatools.connectivity.oda.design.ui.profile.wizards. DataSourceWizardPage
    * #createPageCustomControl(org.eclipse.swt.widgets.Composite)
    */
   public void createPageCustomControl(Composite parent)
   {
-    if (m_pageHelper == null)
+    if (pageHelper == null)
     {
-      m_pageHelper = new GeodashboardSelectionPageHelper(this);
+      pageHelper = new GeodashboardSelectionPageHelper(this);
     }
 
-    m_pageHelper.createCustomControl(parent);
-    m_pageHelper.initCustomControl(m_folderProperties); // in case init was
-                                                        // called before create
+    pageHelper.createCustomControl(parent);
+    pageHelper.initCustomControl(folderProperties); // in case init was
+                                                    // called before create
     this.setPingButtonVisible(false);
   }
 
@@ -66,14 +65,14 @@ public class GeodashboardSelectionWizardPage extends DataSourceWizardPage
    */
   public void setInitialProperties(Properties dataSourceProps)
   {
-    m_folderProperties = dataSourceProps;
+    folderProperties = dataSourceProps;
 
-    if (m_pageHelper == null)
+    if (pageHelper == null)
     {
       return; // ignore, wait till createPageCustomControl to initialize
     }
 
-    m_pageHelper.initCustomControl(m_folderProperties);
+    pageHelper.initCustomControl(folderProperties);
   }
 
   /*
@@ -84,12 +83,12 @@ public class GeodashboardSelectionWizardPage extends DataSourceWizardPage
    */
   public Properties collectCustomProperties()
   {
-    if (m_pageHelper != null)
+    if (pageHelper != null)
     {
-      return m_pageHelper.collectCustomProperties(m_folderProperties);
+      return pageHelper.collectCustomProperties(folderProperties);
     }
 
-    return ( m_folderProperties != null ) ? m_folderProperties : new Properties();
+    return ( folderProperties != null ) ? folderProperties : new Properties();
   }
 
   /*
@@ -106,18 +105,16 @@ public class GeodashboardSelectionWizardPage extends DataSourceWizardPage
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSourceWizardPage
-   * #refresh()
+   * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSourceWizardPage #refresh()
    */
   public void refresh()
   {
     // enable/disable all controls on page in respect of the editable session
     // state
     enableAllControls(getControl(), isSessionEditable());
-    if (m_pageHelper != null)
+    if (pageHelper != null)
     {
-      m_pageHelper.resetTestAndMngButton();
+      pageHelper.resetTestAndMngButton();
     }
   }
 

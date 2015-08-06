@@ -20,6 +20,7 @@ package com.runwaysdk.geodashboard.dashboard;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -42,9 +43,12 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
 import com.runwaysdk.system.metadata.MdAttributeVirtualQuery;
+import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdView;
 
 public class DashboardMetadataBuilder
@@ -117,10 +121,10 @@ public class DashboardMetadataBuilder
     return false;
   }
 
-  protected MetadataWrapper getOrCreateMetadataWrapper(MdView _mdView, Universal _universal)
+  protected MetadataWrapper getOrCreateMetadataWrapper(MdClass mdClass, Universal _universal)
   {
     MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
-    query.WHERE(query.getWrappedMdClass().EQ(_mdView));
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
 
     OIterator<? extends MetadataWrapper> iterator = query.getIterator();
 
@@ -133,10 +137,10 @@ public class DashboardMetadataBuilder
       else
       {
         MetadataWrapper mWrapper = new MetadataWrapper();
-        mWrapper.setWrappedMdClass(_mdView);
+        mWrapper.setWrappedMdClass(mdClass);
         mWrapper.setUniversal(_universal);
         mWrapper.apply();
-
+        
         return mWrapper;
       }
     }
@@ -147,9 +151,9 @@ public class DashboardMetadataBuilder
 
   }
 
-  protected AttributeWrapper getOrCreateAttributeWrapper(DashboardTypeInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
+  protected AttributeWrapper getOrCreateAttributeWrapper(DashboardTypeInfo info, MdClass mdClass, MdBusinessDAOIF mdBusinessDAO, String attributeName)
   {
-    MdAttributeVirtual mdAttributeVirtual = getOrCreateMdAttributeVirtual(info, mdView, mdBusinessDAO, attributeName);
+    MdAttribute mdAttributeVirtual = getOrCreateMdAttribute(info, mdClass, mdBusinessDAO, attributeName);
 
     AttributeWrapperQuery query = new AttributeWrapperQuery(new QueryFactory());
     query.WHERE(query.getWrappedMdAttribute().EQ(mdAttributeVirtual));
@@ -176,13 +180,18 @@ public class DashboardMetadataBuilder
     }
   }
 
-  private MdAttributeVirtual getOrCreateMdAttributeVirtual(DashboardTypeInfo info, MdView mdView, MdBusinessDAOIF mdBusinessDAO, String attributeName)
+  private MdAttribute getOrCreateMdAttribute(DashboardTypeInfo info, MdClass mdClass, MdBusinessDAOIF mdBusinessDAO, String attributeName)
   {
     MdAttributeConcrete mdAttributeConcrete = DashboardMetadataBuilder.getMdAttributeConcrete(mdBusinessDAO, attributeName);
 
+    if (mdClass instanceof MdBusiness)
+    {
+      return MdAttribute.get(mdAttributeConcrete.getId());
+    }
+
     MdAttributeVirtualQuery query = new MdAttributeVirtualQuery(new QueryFactory());
     query.WHERE(query.getMdAttributeConcrete().EQ(mdAttributeConcrete));
-    query.AND(query.getDefiningMdView().EQ(mdView));
+    query.AND(query.getDefiningMdView().EQ(mdClass));
 
     OIterator<? extends MdAttributeVirtual> iterator = query.getIterator();
 
@@ -196,7 +205,7 @@ public class DashboardMetadataBuilder
       {
         MdAttributeVirtual virtual = new MdAttributeVirtual();
         virtual.setMdAttributeConcrete(mdAttributeConcrete);
-        virtual.setDefiningMdView(mdView);
+        virtual.setDefiningMdView((MdView) mdClass);
 
         if (info.getLabel(attributeName) != null)
         {
@@ -235,7 +244,12 @@ public class DashboardMetadataBuilder
   {
     MdView mdView = this.getOrCreateMdView();
 
-    Set<Entry<String, DashboardTypeInfo>> entries = this.typeInformation.entrySet();
+    build(_dashboard, mdView, this.universal, this.typeInformation);
+  }
+
+  public void build(Dashboard _dashboard, MdClass mdClass, Universal uni, Map<String, DashboardTypeInfo> information)
+  {
+    Set<Entry<String, DashboardTypeInfo>> entries = information.entrySet();
 
     for (Entry<String, DashboardTypeInfo> entry : entries)
     {
@@ -244,7 +258,7 @@ public class DashboardMetadataBuilder
       DashboardTypeInfo info = entry.getValue();
       List<String> attributes = info.getAttributes();
 
-      MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdView, this.universal);
+      MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdClass, uni);
 
       DashboardMetadata dm = _dashboard.addMetadata(mWrapper);
       dm.setListOrder(info.getIndex());
@@ -254,7 +268,7 @@ public class DashboardMetadataBuilder
 
       for (String attributeName : attributes)
       {
-        AttributeWrapper unitWrapper = this.getOrCreateAttributeWrapper(info, mdView, mdBusinessDAO, attributeName);
+        AttributeWrapper unitWrapper = this.getOrCreateAttributeWrapper(info, mdClass, mdBusinessDAO, attributeName);
 
         MdAttributeConcreteDAOIF mdAttribute = mdBusinessDAO.definesAttribute(attributeName);
 

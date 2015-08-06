@@ -28,11 +28,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.GISImportLogger;
-import com.runwaysdk.geodashboard.gis.GISImportLoggerIF;
 import com.runwaysdk.geodashboard.gis.GISManagerWindow;
 import com.runwaysdk.geodashboard.gis.Localizer;
 import com.runwaysdk.geodashboard.gis.TaskListener;
+import com.runwaysdk.geodashboard.service.FileImportLogger;
+import com.runwaysdk.geodashboard.service.GISImportLoggerIF;
+import com.runwaysdk.geodashboard.service.GeoEntityShapefileImporter;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -41,11 +42,11 @@ public class ShapeFileWizard extends Wizard implements Reloadable
 {
   class ShapefileImportRunner implements IRunnableWithProgress, Reloadable
   {
-    private ShapeFileImporter importer;
+    private GeoEntityShapefileImporter importer;
 
     private GISImportLoggerIF logger;
 
-    public ShapefileImportRunner(ShapeFileImporter importer, GISImportLoggerIF logger)
+    public ShapefileImportRunner(GeoEntityShapefileImporter importer, GISImportLoggerIF logger)
     {
       this.importer = importer;
       this.logger = logger;
@@ -109,9 +110,9 @@ public class ShapeFileWizard extends Wizard implements Reloadable
 
       file.getParentFile().mkdirs();
 
-      GISImportLogger logger = new GISImportLogger(file);
+      FileImportLogger logger = new FileImportLogger(file);
 
-      ShapeFileImporter importer = new ShapeFileImporter(data.getShapeFile());
+      GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(data.getShapeFile());
 
       // Run the importer
       getContainer().run(true, false, new ShapefileImportRunner(importer, logger));
