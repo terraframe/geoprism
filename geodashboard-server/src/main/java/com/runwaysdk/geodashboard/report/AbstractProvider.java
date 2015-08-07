@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -188,7 +189,16 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       if (strategy instanceof GeometryAggregationStrategy)
       {
-        this.addGeometryQuery(config, query, layer);
+        MdAttributeDAOIF mdAttribute = query.getMdClassIF().definesAttribute(layer.getMdAttribute().getAttributeName());
+
+        if (mdAttribute != null)
+        {
+          this.addGeometryQuery(config, query, layer);
+        }
+        else
+        {
+          this.addGeoEntityQuery(config, geoEntityAttribute);
+        }
       }
       else
       {
@@ -258,7 +268,6 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       GeoEntityQueryReferenceIF parent = (GeoEntityQueryReferenceIF) query.get(entityAttribute.getAttributeName());
       this.addGeoLabel(vQuery, "parent", parent);
     }
-
   }
 
   private void addGeoEntityQuery(QueryConfiguration config, SelectableReference geoEntityAttribute)
@@ -326,6 +335,19 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       vQuery.WHERE(kidsQuery.getParent().EQ(geoEntity));
       vQuery.AND(aptQuery.getParentTerm().EQ(kidsQuery.getChild()));
+      vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
+      vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
+    }
+    else if (aggregation != null && aggregation.equals(GRANDKIDS))
+    {
+      // Kids
+      LocatedInQuery kidsQuery = new LocatedInQuery(vQuery);
+      LocatedInQuery grandKidQuery = new LocatedInQuery(vQuery);
+      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+
+      vQuery.WHERE(kidsQuery.getParent().EQ(geoEntity));
+      vQuery.WHERE(grandKidQuery.getParent().EQ(kidsQuery.getChild()));
+      vQuery.AND(aptQuery.getParentTerm().EQ(grandKidQuery.getChild()));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
       vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
     }

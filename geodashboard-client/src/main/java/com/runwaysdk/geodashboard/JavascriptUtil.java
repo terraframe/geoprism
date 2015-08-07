@@ -229,6 +229,5 @@ public class JavascriptUtil implements Reloadable
     types.add(AggregationStrategyViewDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
-  }
-
+  }  
 }

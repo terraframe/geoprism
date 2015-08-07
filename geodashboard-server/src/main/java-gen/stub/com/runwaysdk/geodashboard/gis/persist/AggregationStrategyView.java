@@ -18,8 +18,6 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,11 +25,11 @@ import java.util.List;
 import org.json.JSONArray;
 
 import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.MetadataGeoNode;
 import com.runwaysdk.geodashboard.MetadataGeoNodeQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
+import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -120,37 +118,12 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
         geomTypesJSONArr.put(polyAttr.getAttributeName());
       }
 
-      view.setAvailableGeometryTypes(encode(geomTypesJSONArr.toString()));
+      view.setAvailableGeometryTypes(EscapeUtil.escapeHTMLAttribut(geomTypesJSONArr.toString()));
 
       list.add(view);
     }
 
     return list.toArray(new AggregationStrategyView[list.size()]);
-  }
-
-  private static String encode(String value)
-  {
-    if (value != null)
-    {
-      try
-      {
-        String encoded = URLEncoder.encode(value, "UTF-8");
-        encoded = encoded.replaceAll("\\+", "%20");
-        encoded = encoded.replaceAll("\\%21", "!");
-        encoded = encoded.replaceAll("\\%27", "'");
-        encoded = encoded.replaceAll("\\%28", "(");
-        encoded = encoded.replaceAll("\\%29", ")");
-        encoded = encoded.replaceAll("\\%7E", "~");
-
-        return encoded;
-      }
-      catch (UnsupportedEncodingException e)
-      {
-        throw new ProgrammingErrorException(e.getLocalizedMessage());
-      }
-    }
-
-    return "";
   }
 
   public static String getDisplayLabel(GeoNode node)

@@ -50,7 +50,19 @@
           }
         });
       }
-    }
+    },
+    Static : {
+      getValueFromHTML : function(html)
+      {
+        if(typeof html === 'string' || html instanceof String) {
+          return JSON.parse(decodeURIComponent(html));                
+        }
+      
+        // The html variable has already been converted into an object
+        // Nothing else is required.
+        return html;
+      }      
+    }    
   });
   
   var CategoryTreeWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.CategoryListWidget', {
@@ -228,7 +240,7 @@
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
         if(catsJSONObj){
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
+          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
           var catsJSONArr = catsJSONObj.catLiElems;
             
           if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
@@ -236,7 +248,7 @@
           }          
                       
           if(catsJSONArr != null) {
-        	  
+            
             var catInputId;
             var catOtherEnabled = true;
           
@@ -463,8 +475,8 @@
       _getCategoryColor : function(termId) {
         var catsJSONObj = $(this._storeId).data("categoriesstore");
           
-        if(catsJSONObj){        	
-          catsJSONObj = JSON.parse(decodeURIComponent(catsJSONObj));
+        if(catsJSONObj){          
+          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
           
           var catsJSONArr = catsJSONObj.catLiElems;
           
@@ -472,7 +484,7 @@
             catsJSONArr = catsJSONObj;
           }          
 
-          if(catsJSONArr != null) {        	  
+          if(catsJSONArr != null) {            
             if(this.getImpl().length > 0){
               for(var i=0; i<catsJSONArr.length; i++){
                 var cat = catsJSONArr[i];
@@ -1217,7 +1229,7 @@
       _setLayerTypeOptions : function(selectedOption) {
         var type = selectedOption.data('type');
         var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
-        var layerTypesJSON = JSON.parse(decodeURIComponent(layerTypes));
+        var layerTypesJSON = CategoryWidget.getValueFromHTML(layerTypes);
         
         if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
           for(var i=0; i<layerTypesJSON.length; i++){
@@ -1233,7 +1245,7 @@
             $("." + lType).hide();
           }
           
-          var geomTypes = JSON.parse(decodeURIComponent(selectedOption.data("geomtypes")));
+          var geomTypes = CategoryWidget.getValueFromHTML(selectedOption.data("geomtypes"));
           
           for(var i=0; i<geomTypes.length; i++){
             var geomType = geomTypes[i];
@@ -1286,11 +1298,11 @@
             var catStore = $("#categories-polygon-input").data("categoriesstore");
             
             if(catStore !== null && catStore !== ""){
-              catStore = JSON.parse(decodeURIComponent(catStore));
+              catStore = CategoryWidget.getValueFromHTML(catStore);
               
               var catJSON = catStore.catLiElems;
               
-              if(catJSON != null) {            	  
+              if(catJSON != null) {                
                 for(var i=0; i<catJSON.length; i++){
                   var cat = catJSON[i];
                 
@@ -1353,10 +1365,10 @@
             var catStore = $("#categories-point-input").data("categoriesstore");
             
             if(catStore !== null && catStore !== ""){
-              catStore = JSON.parse(decodeURIComponent(catStore));
+              catStore = CategoryWidget.getValueFromHTML(catStore);
               var catJSON = catStore.catLiElems;
               
-              if(catJSON != null) {            	  
+              if(catJSON != null) {                
                 for(var i=0; i<catJSON.length; i++){
                   var cat = catJSON[i];
                 
