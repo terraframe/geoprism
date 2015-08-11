@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
@@ -78,12 +79,7 @@ public class LocationCondition extends LocationConditionBase implements com.runw
 
     if (entity != null)
     {
-      StringBuffer buffer = new StringBuffer();
-      buffer.append(entity.getDisplayLabel().getValue());
-      buffer.append(" (" + entity.getUniversal().getDisplayLabel().getValue() + ")");
-      buffer.append(" : " + entity.getGeoId());
-
-      return buffer.toString();
+      return GeoEntityUtil.getEntityLabel(entity);
     }
 
     return "";

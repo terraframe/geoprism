@@ -227,6 +227,7 @@ public class JavascriptUtil implements Reloadable
     types.addAll(JavascriptUtil.getOntologyTypes());
     types.add(GeoNodeDTO.CLASS);
     types.add(AggregationStrategyViewDTO.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }  

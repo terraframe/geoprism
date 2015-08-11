@@ -107,7 +107,10 @@
       _setRendered : function(rendered)
       {
         this._rendered = rendered;
-      }        
+      },
+      addValidator(validator, message) {
+        
+      }
     }
   }); 
   
@@ -157,7 +160,10 @@
         
         this.setId(id);
       },
-      _buildOptionInput : function (option) { IsAbstract : true;},      
+      _buildOptionInput : function (option)
+      {
+        IsAbstract : true;
+      },      
       getName : function()
       {
         return this.getId();
@@ -227,6 +233,278 @@
     }
   });  
   
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.DateFormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Instance : {
+      initialize : function(displayLabel, name, config)
+      {
+        this.$initialize();
+        
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix form-block');
+        
+        this._span = this.getFactory().newElement('span');
+        this._span.setAttribute('class', 'data-text');
+
+        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name, config);
+        
+        this._a = this.getFactory().newElement('a');
+        this._a.setAttribute('class', 'datapicker-opener');
+        this._a.setAttribute('href', '#');
+        
+        this._span.appendChild(this._widget);
+        this._span.appendChild(this._a);
+        
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        this._label.setAttribute('for', this._widget.getName());
+        
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
+        
+        this._div.appendChild(this._label);
+        this._div.appendChild(this._span);
+        this._div.appendChild(this._error);   
+        
+        this.setId(this._widget.getId());
+      },
+      render : function() {
+        // Setup the date picker
+        var element = $( this._widget.getRawEl() );
+        element.datepicker($.datepicker.regional.local);
+        element.datepicker("option", {
+          showOtherMonths: true,
+          selectOtherMonths: true
+        });
+        
+        var link = $( this._a.getRawEl())
+        link.click(function(e) {
+          e.preventDefault();          
+          element.datepicker('show');          
+        });  
+        
+        this.$render();
+      },
+      getDiv : function()
+      {
+        return this._div;
+      },
+      getLabel : function()
+      {
+        return this._label;
+      },
+      getWidget : function()
+      {
+        return this._widget;
+      },
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      accept : function(visitor) {
+        this._widget.accept(visitor);
+      }     
+    }
+  });  
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.TermEntry', {
+    IsAbstract : true,    
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Instance : {
+      initialize : function(attributeMd, value)
+      {
+        this.$initialize();
+        
+        var name = attributeMd.getName();
+        var displayLabel = attributeMd.getDisplayLabel();
+        
+        if(attributeMd.isRequired()) {
+          displayLabel += " *";
+        }
+
+        this._attributeMd = attributeMd;
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix form-block');
+        
+        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name + '-auto', {attributes:{type:'text', id:'form-' + name}});
+        this._widget.setValue('');
+        
+        this._hidden = new com.runwaysdk.ui.factory.runway.HiddenInput(name, {attributes:{type:'hidden'}});
+        this._hidden.setValue(value);
+        
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        this._label.setAttribute('for', this._widget.getName());
+        
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
+        
+        this._div.appendChild(this._label);
+        this._div.appendChild(this._widget);
+        this._div.appendChild(this._hidden);
+        this._div.appendChild(this._error);   
+        
+        this.setId(this._widget.getId());
+      },
+      _loadTerm : function(termId) {
+        IsAbstract : true
+      },
+      _getSuggestions : function(request, response ) {
+        IsAbstract : true
+      },      
+      render : function() {
+        var that = this;
+        var id = this._hidden.getValue();
+      
+        // Load the data for the existing value
+        if(id != null && id.length > 0) {
+          this._loadTerm(id);
+        }
+        
+        // Setup the auto-complete
+        $(this._widget.getRawEl()).autocomplete({
+          source: function( request, response ) {
+            that._getSuggestions(request, response);
+          },
+          select: function(event, ui) {
+            $(that._hidden.getRawEl() ).val(ui.item.id);
+          }, 
+          change : function(event, ui) {
+            var value = $(that._widget.getRawEl()).val();
+            
+            if(value == null || value == '') {                
+              $(that._hidden.getRawEl()).val('');
+            }
+          },
+          minLength: 2
+        });        
+      },
+      getDiv : function()
+      {
+        return this._div;
+      },
+      getLabel : function()
+      {
+        return this._label;
+      },
+      getWidget : function()
+      {
+        return this._widget;
+      },
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      accept : function(visitor) {
+        this._hidden.accept(visitor);
+      }     
+    }
+  });  
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ClassifierEntry', {
+    Extends : com.runwaysdk.geodashboard.TermEntry,  
+    Instance : {
+      initialize : function(attributeMd, value)
+      {
+        this.$initialize(attributeMd, value);
+      },
+      _loadTerm : function(termId) {
+        var that = this;
+      
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(classifier){
+            that._widget.setValue(classifier.getDisplayLabel().getLocalizedValue());
+          },
+          onFailure : function(ex){
+            that.addInlineError(ex.getLocalizedMessage());
+          }
+        });
+                
+        com.runwaysdk.geodashboard.ontology.Classifier.get(request, termId);         
+      },
+      _getSuggestions : function(request, response) {
+      var that = this;
+      
+        var req = new Mojo.ClientRequest({
+          onSuccess : function(resultSet){
+                                                      
+            var results = [];
+                    
+            $.each(resultSet, function( index, classifier ) {
+              var label = classifier.getDisplayLabel().getLocalizedValue()
+              var id = classifier.getId();
+                      
+              results.push({'label':label, 'value':label, 'id':id});
+            });
+                    
+            response( results );
+          },
+          onFailure : function(e){
+            that.handleException(e);
+          }
+        });
+
+        com.runwaysdk.geodashboard.Dashboard.getClassifierSuggestions(req, that._attributeMd.getId(), request.term, 10);        
+      }
+    }
+  });
+  
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.GeoEntityEntry', {
+    Extends : com.runwaysdk.geodashboard.TermEntry,  
+    Instance : {
+      initialize : function(attributeMd, value, dashboardId)
+      {
+        this.$initialize(attributeMd, value);
+        
+        this._dashboardId = dashboardId;
+      },
+      _loadTerm : function(termId) {
+        var that = this;
+        
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(label){
+            that._widget.setValue(label);
+          },
+          onFailure : function(ex){
+            that.addInlineError(ex.getLocalizedMessage());
+          }
+        });
+        
+        com.runwaysdk.geodashboard.GeoEntityUtil.getEntityLabel(request, termId);         
+      },
+      _getSuggestions : function(request, response) {
+      var that = this;
+        var req = new Mojo.ClientRequest({
+          onSuccess : function(query){
+            var resultSet = query.getResultSet()
+                                    
+            var results = [];
+                  
+            $.each(resultSet, function( index, result ) {
+              var label = result.getValue('displayLabel');
+              var id = result.getValue('id');
+                    
+              results.push({'label':label, 'value':label, 'id':id});
+            });
+                  
+            response( results );
+          },
+          onFailure : function(e){
+            that.addInlineError(ex.getLocalizedMessage());
+          }
+        });
+        
+        com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, that._dashboardId, request.term, 10);
+      }
+    }
+  });
+  
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
     Instance : {
@@ -273,7 +551,21 @@
       },
       accept : function(visitor) {
         this._widget.accept(visitor);
-      }     
+      },
+      addValidator : function(validator, message) {
+        var that = this;
+      
+        $(this._widget.getRawEl()).keyup(function (event) {
+          var value = $(this).val();
+              
+          if (validator(value)) {            
+            that.addInlineError(message);
+          }
+          else {
+            that.removeInlineError();
+          }
+        });        
+      }
     },
     Static : {
       newInput : function(type, name, config) {
@@ -529,8 +821,11 @@
         if(attributeMdDTO.isRequired()) {
           label += " *";
         }
-         
-        this.addEntry(new com.runwaysdk.geodashboard.FormEntry(label, input));        
+                 
+        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input)
+        this.addEntry(entry);        
+        
+        return entry;
       },      
       getEntries : function()
       {
@@ -549,6 +844,13 @@
         var formListChildren = this._formList.getChildren();
         children = children.concat(formListChildren);
         return children;
+      },
+      render : function() {
+        var entries = this.getEntries().values();
+          
+        for (var i = 0; i < entries.length; ++i) {
+          entries[i].render();
+        }          
       },
       accept : function(visitor)
       {

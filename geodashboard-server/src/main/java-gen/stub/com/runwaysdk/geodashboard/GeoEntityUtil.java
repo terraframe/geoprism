@@ -47,7 +47,6 @@ import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemView;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
@@ -280,7 +279,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
           LocatedInQuery query = new LocatedInQuery(new QueryFactory());
           query.WHERE(query.getParent().EQ(_entity));
-          query.ORDER_BY_ASC(( (AttributeReference) query.getChild() ).aLocalCharacter(GeoEntity.DISPLAYLABEL).localize());
+          query.ORDER_BY_ASC( ( (AttributeReference) query.getChild() ).aLocalCharacter(GeoEntity.DISPLAYLABEL).localize());
           iterator = query.getIterator();
 
           List<? extends LocatedIn> relationships = iterator.getAll();
@@ -432,6 +431,23 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     }
 
     return map.values();
+  }
+
+  public static String getEntityLabel(String entityId)
+  {
+    GeoEntity entity = GeoEntity.get(entityId);
+
+    return GeoEntityUtil.getEntityLabel(entity);
+  }
+
+  public static String getEntityLabel(GeoEntity entity)
+  {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append(entity.getDisplayLabel().getValue());
+    buffer.append(" (" + entity.getUniversal().getDisplayLabel().getValue() + ")");
+    buffer.append(" : " + entity.getGeoId());
+
+    return buffer.toString();
   }
 
 }

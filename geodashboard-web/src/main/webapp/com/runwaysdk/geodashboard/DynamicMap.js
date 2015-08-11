@@ -238,6 +238,10 @@
         overlayLayerContainer.disableSelection();      
       },
       
+      getCachedLayers : function() {
+        return this._layerCache.$values();
+      },
+      
       getLayer : function(layerId) {
         return this._layerCache.get(layerId);        
       },
@@ -246,12 +250,41 @@
         return this._aggregationMap;  
       },
       
+      getDashboardId : function() {
+        return this._dashboardId;
+      },
+      
+      setCurrGeoId : function(currGeoId) {
+        this._currGeoId = currGeoId;        
+      },
+      
+      getCurrGeoId : function() {
+        return this._currGeoId;        
+      },
+      
       getParser : function() {
         return this._parser;
       },
       
       getFormatter : function() {
         return this._formatter;
+      },
+      
+      editFeature : function(layerId, geoId) {
+        var that = this;
+        
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(json) {
+            var information = JSON.parse(json);
+            
+            new com.runwaysdk.geodashboard.gis.FeatureForm(that, information).render();
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);
       },
       
       /**
@@ -507,12 +540,12 @@
        * 
        */
       _configureMap : function() {
-    	  if(this._bBox.length === 2){
-    		  this._mapFactory.setView(null, this._bBox, 5);
-    	  }
-    	  else if(this._bBox.length === 4){
-    		  this._mapFactory.setView(this._bBox, null, null);
-    	  }
+        if(this._bBox.length === 2){
+          this._mapFactory.setView(null, this._bBox, 5);
+        }
+        else if(this._bBox.length === 4){
+          this._mapFactory.setView(this._bBox, null, null);
+        }
       },
       
       
@@ -1379,8 +1412,8 @@
        */
       _toggleOverlayLayer : function(e){
         
-    	  // Close any info window popups if they exist
-    	  this._mapFactory.removeClickPopup();
+        // Close any info window popups if they exist
+        this._mapFactory.removeClickPopup();
         
         var cbox = e.getCheckBox();
         var checked = cbox.isChecked();
@@ -1808,11 +1841,11 @@
       },
       
       _onClickZoomMapToExtent : function(e) {
-    	  this._configureMap();
+        this._configureMap();
       },      
       
       _onClickToggleLeftPanel : function(e) {
-    	// TODO: change these classes to not be leaflet specific
+        // TODO: change these classes to not be leaflet specific
         var target = $(e.target);
         var speed = 500;
         

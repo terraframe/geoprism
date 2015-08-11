@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 430609979)
+@com.runwaysdk.business.ClassSignature(hash = -1902250607)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,7 +33,7 @@ public abstract class DashboardThematicLayerBase extends com.runwaysdk.geodashbo
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String GEONODE = "geoNode";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
-  private static final long serialVersionUID = 430609979;
+  private static final long serialVersionUID = -1902250607;
   
   public DashboardThematicLayerBase()
   {
@@ -230,6 +230,18 @@ public abstract class DashboardThematicLayerBase extends com.runwaysdk.geodashbo
   {
     DashboardThematicLayer _instance = DashboardThematicLayer.get(id);
     return _instance.applyWithStyleAndStrategy(style, mapId, strategy, conditions);
+  }
+  
+  public java.lang.String getFeatureInformation(java.lang.String featureId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getFeatureInformation(java.lang.String id, java.lang.String featureId)
+  {
+    DashboardThematicLayer _instance = DashboardThematicLayer.get(id);
+    return _instance.getFeatureInformation(featureId);
   }
   
   public static java.lang.String getGeoNodeGeometryTypesJSON(java.lang.String geoNodeId)
