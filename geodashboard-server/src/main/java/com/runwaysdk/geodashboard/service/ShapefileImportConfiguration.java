@@ -1,21 +1,3 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard.service;
 
 import java.util.HashMap;
@@ -26,6 +8,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.KeyGeneratorIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ShapefileImportConfiguration implements Reloadable
@@ -65,9 +48,20 @@ public class ShapefileImportConfiguration implements Reloadable
    */
   private GeoEntity                              root;
 
+  /**
+   * Generator used for generating geo ids of unmatched entities
+   */
+  private KeyGeneratorIF                         generator;
+
   public ShapefileImportConfiguration(String type)
   {
+    this(type, new SeedKeyGenerator());
+  }
+
+  public ShapefileImportConfiguration(String type, KeyGeneratorIF generator)
+  {
     this.type = type;
+    this.generator = generator;
     this.attributeMapping = new HashMap<String, String>();
     this.classifierMapping = new HashMap<String, String>();
     this.locationMapping = new HashMap<String, LocationColumn>();
@@ -93,7 +87,7 @@ public class ShapefileImportConfiguration implements Reloadable
     {
       return this.attributeMapping.get(key);
     }
-    
+
     return null;
   }
 
@@ -168,6 +162,11 @@ public class ShapefileImportConfiguration implements Reloadable
   public void setIdHandler(ShapefileAttributeHandler idHandler)
   {
     this.idHandler = idHandler;
+  }
+
+  public KeyGeneratorIF getGenerator()
+  {
+    return generator;
   }
 
 }

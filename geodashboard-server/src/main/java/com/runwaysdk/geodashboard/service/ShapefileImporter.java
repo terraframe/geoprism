@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard.service;
 
@@ -29,7 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,6 +45,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.KeyGeneratorIF;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.gis.dataaccess.MdAttributeMultiPolygonDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributePointDAOIF;
@@ -75,8 +73,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ShapefileImporter implements Reloadable
 {
-  private static final Random          RANDOM = new Random();
-
   /**
    * Configuration object containing shapefile column to type attribute mapping
    */
@@ -103,7 +99,7 @@ public class ShapefileImporter implements Reloadable
 
     try
     {
-      directory = new File(FileUtils.getTempDirectory(), new Long(RANDOM.nextLong()).toString());
+      directory = new File(FileUtils.getTempDirectory(), new Long(configuration.getGenerator().next()).toString());
       directory.mkdirs();
 
       ZipInputStream zstream = new ZipInputStream(iStream);
@@ -463,8 +459,9 @@ public class ShapefileImporter implements Reloadable
    */
   public String generateGeoId()
   {
-    String geoId = Long.toString(RANDOM.nextLong(), 36).toUpperCase();
+    String prefix = this.configuration.getRootEntity().getKey();
 
-    return GeoEntity.buildGeoIdFromCountryId(this.configuration.getRootEntity().getKey(), geoId);
+    KeyGeneratorIF generator = this.configuration.getGenerator();
+    return generator.generateKey(prefix);
   }
 }
