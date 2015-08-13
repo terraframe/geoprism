@@ -60,7 +60,8 @@ $(document).ready(function(){
     workspace : '${workspace}',
     aggregationMap : ${aggregationMap},
     criteria : ${conditions},
-    editable : ${hasAccess},
+    editDashboard : ${editDashboard},
+    editData : ${editData},
     layerCategoriesTree: {
       termType : '${type}',
       relationshipTypes : [ '${relationType}' ],
@@ -170,7 +171,7 @@ $(document).ready(function(){
 			<i class="fa fa-external-link ico-new-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
 			
 			<!-- Clone dashboard button -->
-		    <c:if test="${hasAccess}">
+		    <c:if test="${editDashboard}">
 		      <span id="clone-dashboard" class="">
   		          <i class="fa fa-plus ico-new-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
 <!--   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
@@ -207,7 +208,7 @@ $(document).ready(function(){
 	              <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
 	                <div class="panel">
 	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${typeStatus.index}-${attrStatus.index}" href="#collapse00${typeStatus.index}-${attrStatus.index}">${attr.displayLabel}</a>
-                           <c:if test="${hasAccess}">
+                           <c:if test="${editDashboard}">
                              <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
                                <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
                              </a>
@@ -317,7 +318,7 @@ $(document).ready(function(){
 	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
 	      </a>
 	      
-	      <c:if test="${hasAccess}">
+	      <c:if test="${editDashboard}">
 	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
 	      </c:if>
 	    </div>
@@ -342,14 +343,14 @@ $(document).ready(function(){
   
   <!-- reporting container -->
   <article id="reporticng-container" class="reporticng-container report-panel-closed">
-    <c:if test="${hasAccess || hasReport}">
+    <c:if test="${editDashboard || hasReport}">
       <div id="report-toolbar">
         <div id="report-toggle-container">
         	<i id="report-collapse-toggle" class="fa fa-angle-double-down report-height-toggle" style="display:none;"></i>
       		<i id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
       	</div>
       
-        <c:if test="${hasAccess}">
+        <c:if test="${editDashboard}">
           <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
         </c:if>
       

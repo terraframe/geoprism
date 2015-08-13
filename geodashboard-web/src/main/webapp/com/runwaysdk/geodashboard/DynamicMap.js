@@ -186,7 +186,8 @@
         this._dashboardId = config.dashboardId;
         this._workspace = config.workspace;
         this._aggregationMap = config.aggregationMap;
-        this._editable = config.editable;
+        this._editDashboard = config.editDashboard;
+        this._editData = config.editData;
         
         // Default criteria for filtering
         this._criteria = config.criteria;
@@ -260,6 +261,14 @@
       
       getCurrGeoId : function() {
         return this._currGeoId;        
+      },
+      
+      canEditDashboards : function() {
+        return this._editDashboard;
+      },
+      
+      canEditData : function() {
+        return this._editData;
       },
       
       getParser : function() {
@@ -926,12 +935,12 @@
           html += '<div id=' + id + ' data-universalid="'+layer.universalId+'"/>';
           html += '<label for="'+id+'">'+displayName+'</label>';
           html += '<div class="cell">';
-          if(layer.layerExists && this._editable){
+          if(layer.layerExists && this.canEditDashboards()){
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
             html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
           }
-          else if(this._editable) {              
+          else if(this.canEditDashboards()) {              
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;"></a>';
             html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
@@ -995,7 +1004,7 @@
           html += "<div id=" + layer.getLayerId() + "/>";
           html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
           
-          if(this._editable) {
+          if(this.canEditDashboards()) {
             //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';

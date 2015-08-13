@@ -24,5 +24,7 @@ public interface AccessConstants extends Reloadable
 {
   public static final String EDIT_DASHBOARD = "Edit-Dashboard";
 
+  public static final String EDIT_DATA      = "Edit-Data";
+
   public static final String ADMIN          = "Admin";
 }

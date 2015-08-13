@@ -265,7 +265,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
        */
       req.setAttribute("conditions", activeDashboard.getConditionsJSON());
       req.setAttribute("hasReport", activeDashboard.hasReport());
-      req.setAttribute("hasAccess", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
+      req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
+      req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
       req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
 
