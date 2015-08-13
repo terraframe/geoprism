@@ -1343,8 +1343,8 @@
                     html += '</thead>';
                     html += '<tbody>';  
                     html += '<tr>'; 
-                    html += '<td>'+ featureDisplayName +'</td>';  
-                    html += '<td>' + aggregationMethod + '</td>'; 
+                    html += '<td>'+ (featureDisplayName == null ? '' : featureDisplayName) +'</td>';  
+                    html += '<td>' + (aggregationMethod == null ? '' : aggregationMethod) + '</td>'; 
                     html += '<td>' + (attributeValue == null ? '' : attributeValue) + '</td>';  
                     html += '</tr>';  
                       
