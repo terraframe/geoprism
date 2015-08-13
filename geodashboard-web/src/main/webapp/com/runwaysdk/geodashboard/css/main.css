@@ -551,6 +551,23 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	overflow:hidden;
 	background:url(../images/sprite.png) no-repeat -21px -20px;
 }
+.submit-form .form-block input[type="text"].hasDatepicker{
+  width:106px;
+  height:28px;
+  margin:0;
+  padding:5px 26px 5px 6px;
+  font-size:13px;
+}
+.submit-form .form-block .datapicker-opener{
+	position:absolute;
+	right:6px;
+	top:6px;
+	width:18px;
+	height:18px;
+	text-indent:-9999px;
+	overflow:hidden;
+	background:url(../images/sprite.png) no-repeat -21px -20px;
+}
 /* datapicker styles */
 .ui-widget{
 	font-size:12px;

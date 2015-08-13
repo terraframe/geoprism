@@ -26,6 +26,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.KeyGeneratorIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class ShapefileImportConfiguration implements Reloadable
@@ -65,9 +66,20 @@ public class ShapefileImportConfiguration implements Reloadable
    */
   private GeoEntity                              root;
 
+  /**
+   * Generator used for generating geo ids of unmatched entities
+   */
+  private KeyGeneratorIF                         generator;
+
   public ShapefileImportConfiguration(String type)
   {
+    this(type, new SeedKeyGenerator());
+  }
+
+  public ShapefileImportConfiguration(String type, KeyGeneratorIF generator)
+  {
     this.type = type;
+    this.generator = generator;
     this.attributeMapping = new HashMap<String, String>();
     this.classifierMapping = new HashMap<String, String>();
     this.locationMapping = new HashMap<String, LocationColumn>();
@@ -93,7 +105,7 @@ public class ShapefileImportConfiguration implements Reloadable
     {
       return this.attributeMapping.get(key);
     }
-    
+
     return null;
   }
 
@@ -168,6 +180,11 @@ public class ShapefileImportConfiguration implements Reloadable
   public void setIdHandler(ShapefileAttributeHandler idHandler)
   {
     this.idHandler = idHandler;
+  }
+
+  public KeyGeneratorIF getGenerator()
+  {
+    return generator;
   }
 
 }

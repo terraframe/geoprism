@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -114101714)
+@com.runwaysdk.business.ClassSignature(hash = -238508601)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.GeoEntityUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -114101714;
+  private static final long serialVersionUID = -238508601;
   
   public GeoEntityUtilBase()
   {
@@ -70,6 +70,12 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   }
   
   public static com.runwaysdk.system.gis.geo.GeoEntityProblemView[] getAllProblems()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getEntityLabel(java.lang.String entityId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

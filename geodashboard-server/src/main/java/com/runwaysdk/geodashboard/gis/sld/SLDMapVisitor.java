@@ -988,16 +988,24 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String attribute = tLayer.getAttribute().toLowerCase();
 
         // thematic interpolation
-        return node("Size").child(node(OGC, "Function").attr("name", "Interpolate").child(
-        // property to interpolate
-            node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(minAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMinSize()), node(OGC, "Literal").text(maxAttrVal), node(OGC, "Literal").text(tStyle.getBubbleMaxSize()),
-            // interpolation method
-            node(OGC, "Literal").text("numeric")));
+        NodeBuilder builder = node("Size").child(
+            node(OGC, "Function").attr("name", "if_then_else").child(
+                node(OGC, "Function").attr("name", "isNull").child(
+                    node(OGC, "PropertyName").text(attribute)),
+                node(OGC, "Literal").text(minAttrVal),
+                node(OGC, "Function").attr("name", "Interpolate").child(
+                    node(OGC, "PropertyName").text(attribute),
+                    node(OGC, "Literal").text(minAttrVal),   // property to interpolate
+                    node(OGC, "Literal").text(tStyle.getBubbleMinSize()), 
+                    node(OGC, "Literal").text(maxAttrVal), 
+                    node(OGC, "Literal").text(tStyle.getBubbleMaxSize()),
+                    node(OGC, "Literal").text("numeric"))));  // interpolation method
+        
+        return builder;
       }
       else
       {
         // non-thematic
-//        return node("Size").text(style.getPointSize());
         return node("Size").text(11);
       }
     }

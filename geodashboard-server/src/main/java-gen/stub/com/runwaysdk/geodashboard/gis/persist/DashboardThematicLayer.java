@@ -26,27 +26,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.constants.ComponentInfo;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
+import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -305,29 +312,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     return new DashboardThematicLayer();
   }
-  
-  
-  public static String getGeoNodeGeometryTypesJSON(String geoNodeId)
-  {
-    JSONArray geomTypesJSONArr = new JSONArray();
-    JSONObject geomTypesJSON = new JSONObject();
-    
-    GeoNode geoNode = GeoNode.get(geoNodeId);
-    MdAttribute geomAttr = geoNode.getGeometryAttribute();
-    if(geomAttr != null){
-      geomTypesJSONArr.put(geomAttr.getType());
-    }
-    MdAttributePoint pointAttr = geoNode.getPointAttribute();
-    if(pointAttr != null){
-      geomTypesJSONArr.put(pointAttr.getType());
-    }
-    MdAttributeMultiPolygon polyAttr = geoNode.getMultiPolygonAttribute();
-    if(polyAttr != null){
-      geomTypesJSONArr.put(polyAttr.getType());
-    }
-    
-    return geomTypesJSONArr.toString();
-  }
 
   public String getCategoryLabel(String categoryId)
   {
@@ -337,4 +321,98 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     return strategy.getCategoryLabel(geoNode, categoryId);
   }
 
+//  @Override
+  public String getFeatureInformation(String featureId)
+  {
+    GeoNode geoNode = this.getGeoNode();
+    AggregationStrategy strategy = this.getAggregationStrategy();
+
+    if (geoNode instanceof GeoNodeGeometry && strategy instanceof GeometryAggregationStrategy)
+    {
+      String mdAttributeId = geoNode.getValue(GeoNodeGeometry.IDENTIFIERATTRIBUTE);
+      MdAttributeConcreteDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+      MdClassDAOIF mdClass = mdAttribute.definedByClass();
+
+      ValueQuery vQuery = new ValueQuery(new QueryFactory());
+      GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, vQuery);
+
+      Selectable geoId = query.get(mdAttribute.definesAttribute());
+      geoId.setColumnAlias(GeoEntity.GEOID);
+      geoId.setUserDefinedAlias(GeoEntity.GEOID);
+      geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
+
+      Selectable id = query.get(ComponentInfo.ID);
+      id.setColumnAlias(ComponentInfo.ID);
+      id.setUserDefinedAlias(ComponentInfo.ID);
+      id.setUserDefinedDisplayLabel(GeoEntity.getIdMd().getDisplayLabel(Session.getCurrentLocale()));
+
+      vQuery.SELECT(id, geoId);
+      vQuery.WHERE(geoId.EQ(featureId));
+
+      OIterator<ValueObject> iterator = null;
+
+      try
+      {
+        iterator = vQuery.getIterator();
+
+        if (iterator.hasNext())
+        {
+          ValueObject vObject = iterator.next();
+
+          JSONObject json = new JSONObject();
+          json.put(ComponentInfo.ID, vObject.getValue(ComponentInfo.ID));
+          json.put(ComponentInfo.TYPE, mdClass.definesType());
+          json.put(GeoEntity.GEOID, vObject.getValue(GeoEntity.GEOID));
+
+          return json.toString();
+        }
+        else
+        {
+          throw new ProgrammingErrorException("Unable to find a feature with the feature id of [" + featureId + "] for layer [" + this.getId() + "]");
+        }
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
+      finally
+      {
+        if (iterator != null)
+        {
+          iterator.close();
+        }
+      }
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Feature information is unsupported for layers which do not use the geometry aggregation strategy.");
+    }
+
+  }
+
+  public static String getGeoNodeGeometryTypesJSON(String geoNodeId)
+  {
+    JSONArray json = new JSONArray();
+    GeoNode geoNode = GeoNode.get(geoNodeId);
+
+    MdAttribute mdAttributeGeometry = geoNode.getGeometryAttribute();
+    if (mdAttributeGeometry != null)
+    {
+      json.put(mdAttributeGeometry.getType());
+    }
+
+    MdAttributePoint mdAttributePoint = geoNode.getPointAttribute();
+    if (mdAttributePoint != null)
+    {
+      json.put(mdAttributePoint.getType());
+    }
+
+    MdAttributeMultiPolygon mdAttributeMultiPolygon = geoNode.getMultiPolygonAttribute();
+    if (mdAttributeMultiPolygon != null)
+    {
+      json.put(mdAttributeMultiPolygon.getType());
+    }
+
+    return json.toString();
+  }
 }

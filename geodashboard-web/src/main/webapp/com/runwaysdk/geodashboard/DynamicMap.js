@@ -186,7 +186,8 @@
         this._dashboardId = config.dashboardId;
         this._workspace = config.workspace;
         this._aggregationMap = config.aggregationMap;
-        this._editable = config.editable;
+        this._editDashboard = config.editDashboard;
+        this._editData = config.editData;
         
         // Default criteria for filtering
         this._criteria = config.criteria;
@@ -238,6 +239,10 @@
         overlayLayerContainer.disableSelection();      
       },
       
+      getCachedLayers : function() {
+        return this._layerCache.$values();
+      },
+      
       getLayer : function(layerId) {
         return this._layerCache.get(layerId);        
       },
@@ -246,12 +251,49 @@
         return this._aggregationMap;  
       },
       
+      getDashboardId : function() {
+        return this._dashboardId;
+      },
+      
+      setCurrGeoId : function(currGeoId) {
+        this._currGeoId = currGeoId;        
+      },
+      
+      getCurrGeoId : function() {
+        return this._currGeoId;        
+      },
+      
+      canEditDashboards : function() {
+        return this._editDashboard;
+      },
+      
+      canEditData : function() {
+        return this._editData;
+      },
+      
       getParser : function() {
         return this._parser;
       },
       
       getFormatter : function() {
         return this._formatter;
+      },
+      
+      editFeature : function(layerId, geoId) {
+        var that = this;
+        
+        var request = new Mojo.ClientRequest({
+          onSuccess : function(json) {
+            var information = JSON.parse(json);
+            
+            new com.runwaysdk.geodashboard.gis.FeatureForm(that, information).render();
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        });
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);
       },
       
       /**
@@ -507,12 +549,12 @@
        * 
        */
       _configureMap : function() {
-    	  if(this._bBox.length === 2){
-    		  this._mapFactory.setView(null, this._bBox, 5);
-    	  }
-    	  else if(this._bBox.length === 4){
-    		  this._mapFactory.setView(this._bBox, null, null);
-    	  }
+        if(this._bBox.length === 2){
+          this._mapFactory.setView(null, this._bBox, 5);
+        }
+        else if(this._bBox.length === 4){
+          this._mapFactory.setView(this._bBox, null, null);
+        }
       },
       
       
@@ -893,12 +935,12 @@
           html += '<div id=' + id + ' data-universalid="'+layer.universalId+'"/>';
           html += '<label for="'+id+'">'+displayName+'</label>';
           html += '<div class="cell">';
-          if(layer.layerExists && this._editable){
+          if(layer.layerExists && this.canEditDashboards()){
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
             html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
           }
-          else if(this._editable) {              
+          else if(this.canEditDashboards()) {              
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-times ico-remove" style="display:none;" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
             html += '<a href="#" data-id="'+id+'" data-universalid="'+layer.universalId+'" class="fa fa-pencil ico-edit title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"" style="display:none;"></a>';
             html += '<a data-universalid="'+layer.universalId+'" class="fa fa-plus referenceLayer ico-enable" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "refLayerEnableTooltip")+'" ></a> ';
@@ -962,7 +1004,7 @@
           html += "<div id=" + layer.getLayerId() + "/>";
           html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
           
-          if(this._editable) {
+          if(this.canEditDashboards()) {
             //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
             //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
@@ -1379,8 +1421,8 @@
        */
       _toggleOverlayLayer : function(e){
         
-    	  // Close any info window popups if they exist
-    	  this._mapFactory.removeClickPopup();
+        // Close any info window popups if they exist
+        this._mapFactory.removeClickPopup();
         
         var cbox = e.getCheckBox();
         var checked = cbox.isChecked();
@@ -1808,11 +1850,11 @@
       },
       
       _onClickZoomMapToExtent : function(e) {
-    	  this._configureMap();
+        this._configureMap();
       },      
       
       _onClickToggleLeftPanel : function(e) {
-    	// TODO: change these classes to not be leaflet specific
+        // TODO: change these classes to not be leaflet specific
         var target = $(e.target);
         var speed = 500;
         

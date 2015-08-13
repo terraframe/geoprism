@@ -19,8 +19,6 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,7 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ProblemExceptionDTO;
-import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
@@ -44,6 +41,7 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
+import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.system.gis.geo.GeoNodeDTO;
 import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
@@ -266,8 +264,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-
-      req.setAttribute("layerTypeNamesJSON", encode(new JSONArray(layerTypes.keySet()).toString()));
+      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribut(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)
@@ -352,9 +349,9 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("polygoncategories", this.encode(style.getCategoryPolygonStyles()));
-      req.setAttribute("pointcategories", this.encode(style.getCategoryPointStyles()));
-      req.setAttribute("secondaryCategories", this.encode(style.getSecondaryCategories()));
+      req.setAttribute("polygoncategories", EscapeUtil.escapeHTMLAttribut(style.getCategoryPolygonStyles()));
+      req.setAttribute("pointcategories", EscapeUtil.escapeHTMLAttribut(style.getCategoryPointStyles()));
+      req.setAttribute("secondaryCategories", EscapeUtil.escapeHTMLAttribut(style.getSecondaryCategories()));
 
       /*
        * Secondary attribute objects
@@ -362,31 +359,6 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       req.setAttribute("secondaryAttributes", DashboardMapDTO.getSecondaryAttributes(this.getClientRequest(), mapId, mdAttributeId));
       req.setAttribute("secondaryAggregation", style.getSecondaryAggregationType().size() > 0 ? style.getSecondaryAggregationType().get(0).getName() : "");
     }
-  }
-
-  private String encode(String value)
-  {
-    if (value != null)
-    {
-      try
-      {
-        String encoded = URLEncoder.encode(value, "UTF-8");
-        encoded = encoded.replaceAll("\\+", "%20");
-        encoded = encoded.replaceAll("\\%21", "!");
-        encoded = encoded.replaceAll("\\%27", "'");
-        encoded = encoded.replaceAll("\\%28", "(");
-        encoded = encoded.replaceAll("\\%29", ")");
-        encoded = encoded.replaceAll("\\%7E", "~");
-
-        return encoded;
-      }
-      catch (UnsupportedEncodingException e)
-      {
-        throw new ProgrammingErrorExceptionDTO(e.getClass().getName(), e.getLocalizedMessage(), e.getMessage());
-      }
-    }
-
-    return "";
   }
 
   private String getDisplayLabel(MdAttributeDTO mdAttr)

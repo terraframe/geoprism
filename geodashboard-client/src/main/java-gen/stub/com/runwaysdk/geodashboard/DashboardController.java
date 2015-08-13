@@ -19,13 +19,10 @@
 package com.runwaysdk.geodashboard;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
+import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -108,7 +105,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     req.setAttribute("dashboard", dashboard);
     
     String dashboardUsersJSON = dashboard.getAllDashboardUsersJSON();
-    req.setAttribute("dashboardUsersJSON", encode(dashboardUsersJSON));
+    req.setAttribute("dashboardUsersJSON", EscapeUtil.escapeHTMLAttribut(dashboardUsersJSON));
     
     render("editComponent.jsp");
   }
@@ -197,30 +194,5 @@ public class DashboardController extends DashboardControllerBase implements com.
     req.setAttribute("dashboard", dashboard);
     
     render("newClone.jsp");
-  }
-  
-  private String encode(String value)
-  {
-    if (value != null)
-    {
-      try
-      {
-        String encoded = URLEncoder.encode(value, "UTF-8");
-        encoded = encoded.replaceAll("\\+", "%20");
-        encoded = encoded.replaceAll("\\%21", "!");
-        encoded = encoded.replaceAll("\\%27", "'");
-        encoded = encoded.replaceAll("\\%28", "(");
-        encoded = encoded.replaceAll("\\%29", ")");
-        encoded = encoded.replaceAll("\\%7E", "~");
-
-        return encoded;
-      }
-      catch (UnsupportedEncodingException e)
-      {
-        throw new ProgrammingErrorExceptionDTO(e.getClass().getName(), e.getLocalizedMessage(), e.getMessage());
-      }
-    }
-
-    return "";
   }
 }

@@ -16,15 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.util;
 
-import com.runwaysdk.generation.loader.Reloadable;
+import org.apache.commons.lang.StringEscapeUtils;
 
-public interface AccessConstants extends Reloadable
+public class EscapeUtil
 {
-  public static final String EDIT_DASHBOARD = "Edit-Dashboard";
+  public static String escapeHTMLAttribut(String value)
+  {
+    if (value != null)
+    {
+      String encoded = StringEscapeUtils.escapeHtml(value);
+      encoded = encoded.replaceAll("'", "&#x27;");
+      encoded = encoded.replaceAll("/", "&#x2F;");
 
-  public static final String EDIT_DATA      = "Edit-Data";
+      return encoded;
+    }
 
-  public static final String ADMIN          = "Admin";
+    return "";
+  }
 }

@@ -1,0 +1,46 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+        <create>
+          <mdMethod name="getFeatureInformation" label="Get feature information" returnType="java.lang.String">
+            <mdParameter name="featureId" order="1" type="java.lang.String" label="Feature id" />
+          </mdMethod>          
+        </create>
+      </mdBusiness>
+      <mdUtil name="com.runwaysdk.geodashboard.GeoEntityUtil">
+        <create>
+          <mdMethod name="getEntityLabel" label="Get entity label" returnType="java.lang.String" static="true">
+            <mdParameter name="entityId" order="1" type="java.lang.String" label="Entity id" />
+          </mdMethod>          
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
+    </delete>
+  </undoIt>
+</version>

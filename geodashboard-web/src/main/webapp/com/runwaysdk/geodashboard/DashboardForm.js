@@ -35,7 +35,7 @@
       _addDashboardUsersHTML : function() {
           
     	  var usersJSON = $("#add-dashboard-users-container").data("dashboarduserjson");
-          var users = JSON.parse(decodeURIComponent(usersJSON));
+          var users = com.runwaysdk.geodashboard.gis.CategoryWidget.getValueFromHTML(usersJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
           if(users.length > 0){
