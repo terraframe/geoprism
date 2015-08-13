@@ -36,6 +36,9 @@
       addInlineError : {
         IsAbstract : true
       },
+      hasError : {
+        IsAbstract : true
+      },
       accept : {
         IsAbstract : true
       },
@@ -108,7 +111,7 @@
       {
         this._rendered = rendered;
       },
-      addValidator(validator, message) {
+      addValidator : function(validator, message) {
         
       }
     }
@@ -172,6 +175,10 @@
       {
         return this._div;
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       removeInlineError : function ()
       {
         this._error.setInnerHTML('');              
@@ -236,9 +243,15 @@
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.DateFormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
     Instance : {
-      initialize : function(displayLabel, name, config)
+      initialize : function(attributeMd, name, value)
       {
         this.$initialize();
+                
+        var label = attributeMd.getDisplayLabel();
+        
+        if(attributeMd.isRequired()) {
+          label += " *";
+        }        
         
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix form-block');
@@ -246,16 +259,21 @@
         this._span = this.getFactory().newElement('span');
         this._span.setAttribute('class', 'data-text');
 
-        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name, config);
+        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name, {attributes:{type:'text'}});
+        this._widget.setValue(value);
+
+//        this._widget.addClassName('hasDatepicker');
+//        this._widget.addClassName('date-field');
         
-        this._a = this.getFactory().newElement('a');
-        this._a.setAttribute('class', 'datapicker-opener');
-        this._a.setAttribute('href', '#');
+//        this._a = this.getFactory().newElement('a');
+//        this._a.addClassName('datapicker-opener');
+//        this._a.addClassName('date-field-opener');
+//        this._a.setAttribute('href', '#');
         
         this._span.appendChild(this._widget);
-        this._span.appendChild(this._a);
+//        this._span.appendChild(this._a);
         
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        this._label = new com.runwaysdk.ui.factory.runway.Label(label, this._widget.getId());
         this._label.setAttribute('for', this._widget.getName());
         
         this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
@@ -267,19 +285,21 @@
         this.setId(this._widget.getId());
       },
       render : function() {
-        // Setup the date picker
-        var element = $( this._widget.getRawEl() );
-        element.datepicker($.datepicker.regional.local);
-        element.datepicker("option", {
-          showOtherMonths: true,
-          selectOtherMonths: true
-        });
-        
-        var link = $( this._a.getRawEl())
-        link.click(function(e) {
-          e.preventDefault();          
-          element.datepicker('show');          
-        });  
+//        var that = this;
+//        
+//        if(!this.isRendered()) {
+//          // Setup the date picker
+//          $('.date-field').datepicker($.datepicker.regional.local);
+//          $('.date-field').datepicker("option", {
+//            showOtherMonths: true,
+//            selectOtherMonths: true
+//          });
+//            
+//          $('.date-field-opener').click(function(e) {
+//            e.preventDefault();
+//            $(this).prev().datepicker('show');
+//          });          
+//        }
         
         this.$render();
       },
@@ -287,6 +307,20 @@
       {
         return this._div;
       },
+      addValidator : function(validator, message) {
+        var that = this;
+        
+        $(this._widget.getRawEl()).keyup(function (event) {
+          var value = $(this).val();
+                
+          if (validator(value)) {            
+            that.addInlineError(message);
+          }
+          else {
+            that.removeInlineError();
+          }
+        });        
+      },      
       getLabel : function()
       {
         return this._label;
@@ -295,6 +329,10 @@
       {
         return this._widget;
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       removeInlineError : function ()
       {
         this._error.setInnerHTML('');              
@@ -329,7 +367,7 @@
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix form-block');
         
-        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name + '-auto', {attributes:{type:'text', id:'form-' + name}});
+        this._widget = new com.runwaysdk.ui.factory.runway.TextInput(name + '-auto', {attributes:{type:'text'}});
         this._widget.setValue('');
         
         this._hidden = new com.runwaysdk.ui.factory.runway.HiddenInput(name, {attributes:{type:'hidden'}});
@@ -401,6 +439,10 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       accept : function(visitor) {
         this._hidden.accept(visitor);
       }     
@@ -479,7 +521,7 @@
         com.runwaysdk.geodashboard.GeoEntityUtil.getEntityLabel(request, termId);         
       },
       _getSuggestions : function(request, response) {
-      var that = this;
+        var that = this;
         var req = new Mojo.ClientRequest({
           onSuccess : function(query){
             var resultSet = query.getResultSet()
@@ -549,6 +591,10 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       accept : function(visitor) {
         this._widget.accept(visitor);
       },
@@ -642,6 +688,10 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       accept : function(visitor) {
         visitor.visitDefaultInput(this);
       }     
@@ -700,6 +750,10 @@
         this._error.setInnerHTML(msg);        
         this._div.addClassName('field-error');
       },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
       accept : function(visitor) {
         visitor.visitDefaultInput(this);
       }     
@@ -885,6 +939,18 @@
         {
           entries[i].removeInlineError();
         }      
+      },
+      hasError : function() {
+        var entries = this.getEntries().values();
+        
+        var hasError = false;
+          
+        for (var i = 0; i < entries.length; ++i)
+        {
+          hasError = (hasError || entries[i].hasError());
+        }  
+        
+        return hasError;
       },
       handleException : function(ex, throwIt)
       {

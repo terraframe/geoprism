@@ -27,6 +27,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.Dashboard;
@@ -189,7 +190,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       if (strategy instanceof GeometryAggregationStrategy)
       {
-        MdAttributeDAOIF mdAttribute = query.getMdClassIF().definesAttribute(layer.getMdAttribute().getAttributeName());
+        MdAttributeDAOIF layerAttribute = MdAttributeDAO.get(layer.getMdAttribute().getId());
+        MdAttributeDAOIF mdAttribute = query.getMdClassIF().definesAttribute(layerAttribute.definesAttribute());
 
         if (mdAttribute != null)
         {
