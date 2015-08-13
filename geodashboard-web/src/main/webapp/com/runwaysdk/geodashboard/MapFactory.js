@@ -1304,65 +1304,67 @@
               }).done(function(json) {
                 var popupContent = '';
                 
-                // The getfeatureinfo request will return only 1 feature
-                for(var i = 0; i < json.features.length; i++){
-                  var featureLayer = json.features[i];
-                  var featureLayerIdReturn = featureLayer.id;
-                  var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
-                  var geoId = featureLayer.properties.geoid;
-                  
-                  var layer = layerMap[featureLayerId];
-                  var layerDisplayName = layer.getLayerName();
-                  var aggregationMethod = layer.getAggregationMethod();
-                  var attributeName = layer.getAggregationAttribute().toLowerCase();
-                  
-                  var attributeValue = featureLayer.properties[attributeName];                            
-                  var featureDisplayName = featureLayer.properties.displaylabel;
+                if(json.features != null) {
+                  // The getfeatureinfo request will return only 1 feature
+                  for(var i = 0; i < json.features.length; i++){
+                    var featureLayer = json.features[i];
+                    var featureLayerIdReturn = featureLayer.id;
+                    var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
+                    var geoId = featureLayer.properties.geoid;
+                      
+                    var layer = layerMap[featureLayerId];
+                    var layerDisplayName = layer.getLayerName();
+                    var aggregationMethod = layer.getAggregationMethod();
+                    var attributeName = layer.getAggregationAttribute().toLowerCase();
+                      
+                    var attributeValue = featureLayer.properties[attributeName];                            
+                    var featureDisplayName = featureLayer.properties.displaylabel;
 
-                  
-                  if(typeof attributeValue === 'number'){
-                    attributeValue = dynamicMap._formatter(attributeValue);
-                  }
-                  else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
-                    var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
-                    var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                    attributeValue = dynamicMap._formatDate(parsedAttr);
-                  }
-                  
-                  popupContent += '<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><h3 class="popup-heading">'+layerDisplayName+'</h3>';
-                  
-                  var html = '';
-                  html += '<table class="table">';
-                  html += '<thead class="popup-table-heading">';
-                  html += '<tr>'; 
-                  html += '<th>'+that.localize("location")+'</th>';  
-                  html += '<th>'+that.localize("aggregationMethod")+'</th>'; 
-                  html += '<th>'+that.localize("aggregateValue")+'</th>'; 
-                  html += '</tr>';  
-                  html += '</thead>';
-                  html += '<tbody>';  
-                  html += '<tr>'; 
-                  html += '<td>'+ featureDisplayName +'</td>';  
-                  html += '<td>' + aggregationMethod + '</td>'; 
-                  html += '<td>' + attributeValue + '</td>';  
-                  html += '</tr>';  
-                  
-                  if((layer.aggregationStrategy.type == 'GeometryAggregationStrategy' || layer.aggregationStrategy.type == 'GEOMETRY') && geoId != null) {
+                      
+                    if(typeof attributeValue === 'number'){
+                      attributeValue = dynamicMap._formatter(attributeValue);
+                    }
+                    else if(attributeValue != null && !isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
+                      var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
+                      var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
+                      attributeValue = dynamicMap._formatDate(parsedAttr);
+                    }
+                      
+                    popupContent += '<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><h3 class="popup-heading">'+layerDisplayName+'</h3>';
+                      
+                    var html = '';
+                    html += '<table class="table">';
+                    html += '<thead class="popup-table-heading">';
                     html += '<tr>'; 
-                    html += '<td colspan="3"><a class="edit-feature" data-layerid="' + layer.getLayerId() + '" data-geoid="' + geoId + '">' + that.localize("editFeature") + '</a></td>';  
+                    html += '<th>'+that.localize("location")+'</th>';  
+                    html += '<th>'+that.localize("aggregationMethod")+'</th>'; 
+                    html += '<th>'+that.localize("aggregateValue")+'</th>'; 
                     html += '</tr>';  
-                  }
-                  
-                  html += '</tbody>';  
-                  html += '</table></div>';  
-                          
-                  popupContent += html;
-                  
-                  if(geoId != null)
-                  {                 
-                    dynamicMap.setCurrGeoId(geoId);
-                    dynamicMap._renderReport(layer.getLayerId(), geoId, dynamicMap._criteria);
-                  }            
+                    html += '</thead>';
+                    html += '<tbody>';  
+                    html += '<tr>'; 
+                    html += '<td>'+ featureDisplayName +'</td>';  
+                    html += '<td>' + aggregationMethod + '</td>'; 
+                    html += '<td>' + (attributeValue == null ? '' : attributeValue) + '</td>';  
+                    html += '</tr>';  
+                      
+                    if((layer.aggregationStrategy.type == 'GeometryAggregationStrategy' || layer.aggregationStrategy.type == 'GEOMETRY') && geoId != null) {
+                      html += '<tr>'; 
+                      html += '<td colspan="3"><a class="edit-feature" data-layerid="' + layer.getLayerId() + '" data-geoid="' + geoId + '">' + that.localize("editFeature") + '</a></td>';  
+                      html += '</tr>';  
+                    }
+                      
+                    html += '</tbody>';  
+                    html += '</table></div>';  
+                              
+                    popupContent += html;
+                      
+                    if(geoId != null)
+                    {                 
+                      dynamicMap.setCurrGeoId(geoId);
+                      dynamicMap._renderReport(layer.getLayerId(), geoId, dynamicMap._criteria);
+                    }            
+                  }                	
                 }
                 
                 if(popupContent.length > 0){
