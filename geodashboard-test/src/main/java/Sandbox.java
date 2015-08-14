@@ -16,15 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
-import com.runwaysdk.generation.loader.Reloadable;
-
-public interface AccessConstants extends Reloadable
+public class Sandbox
 {
-  public static final String EDIT_DASHBOARD = "Edit-Dashboard";
+  public static void main(String[] args) throws Exception
+  {
+    GeometryFactory gf = new GeometryFactory();
 
-  public static final String EDIT_DATA      = "Edit-Data";
+    Coordinate coord = new Coordinate(1,1);
+    Point point = gf.createPoint(coord);
 
-  public static final String ADMIN          = "Admin";
+    System.out.println(point);
+  }
 }

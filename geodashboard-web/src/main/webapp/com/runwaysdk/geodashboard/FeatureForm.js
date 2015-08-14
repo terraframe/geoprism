@@ -29,7 +29,9 @@
     "submit" : "Submit",
     "cancel" : "Cancel",
     "integerError" : "Value is not a valid whole number",
-    "numberError" : "Value is not a valid number"
+    "numberError" : "Value is not a valid number",
+    "dateError" : "Value is not a date",
+    "formErrors" : "Form errors must be corrected before the form can be submitted"
   });
       
   var FeatureForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.FeatureForm', {
@@ -58,6 +60,11 @@
         var number = this._parser( value );
           
         return (value != '' && !$.isNumeric(number));        
+      },      
+      _validateDate : function (value) {
+        var date = this._parseDate( value );
+        
+        return (value != '' && (date == null));        
       },      
       /*
        * Format dates
@@ -134,7 +141,7 @@
           if(attributeDTO.isReadable() && attributeDTO.isWritable() && this.isValid(attributeMd)) {
             
             if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeCharacterDTO) {                
-              var input = FormEntry.newInput('text', attributeName, {attributes:{type:'text', id:'form-' + attributeName}});
+              var input = FormEntry.newInput('text', attributeName, {attributes:{type:'text'}});
               input.setValue(attributeDTO.getValue());
                 
               this._form.addFormEntry(attributeMd, input);
@@ -146,7 +153,7 @@
                 value = this._formatter(value);                
               }
                 
-              var input = FormEntry.newInput('text', attributeName, {attributes:{type:'text', id:'form-' + attributeName}});
+              var input = FormEntry.newInput('text', attributeName, {attributes:{type:'text'}});
               input.setValue(value);
               
               var entry = this._form.addFormEntry(attributeMd, input);
@@ -171,22 +178,14 @@
               }
             }
             else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeDateDTO) {                
-//              // Normalize the incoming date to a standard format regardless of the locale                              
-//              var date = attributeDTO.getValue();
-//              var value = this._formatDate(date);
-//              
-//              var label = attributeMd.getDisplayLabel();
-//              
-//              if(attributeMd.isRequired()) {
-//                label += " *";
-//              }
-//              
-//              var config = {attributes:{type:'text', id:'form-' + attributeName, 'class':'hasDatepicker'}};
-//              
-//              var entry = new com.runwaysdk.geodashboard.DateFormEntry(label, attributeName, config);
-//              entry.getWidget().setValue(value);
-//              
-//              this._form.addEntry(entry);
+              // Normalize the incoming date to a standard format regardless of the locale                              
+              var date = attributeDTO.getValue();
+              var value = this._formatDate(date);
+              
+              var entry = new com.runwaysdk.geodashboard.DateFormEntry(attributeMd, attributeName, value);
+              entry.addValidator(Mojo.Util.bind(this, this._validateDate), this.localize("dateError"));
+              
+              this._form.addEntry(entry);
             }
           }
         }
@@ -203,50 +202,65 @@
         
         this._form.render();        
       },
+      handleException : function(ex, throwIt) {
+        this._form.handleException(ex, throwIt); 
+      },
+      handleErrorMessage : function(message) {
+        var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.render();        
+      },
       _onSubmit : function() {
-        var that = this;
-        var values = this._form.getValues();        
-        var attributeNames = values.keySet();
         
-        $.each(attributeNames, function( index, attributeName ) {          
-          var attributeDTO = that._object.getAttributeDTO(attributeName);
+        if(this._form.hasError()) {
+          this.handleErrorMessage(this.localize("formErrors"));  
+        }
+        else {
+          var that = this;
+          var values = this._form.getValues();        
+          var attributeNames = values.keySet();
+        
+          $.each(attributeNames, function( index, attributeName ) {          
+            var attributeDTO = that._object.getAttributeDTO(attributeName);
           
-          if(attributeDTO != null) {
-            var attributeMd = attributeDTO.getAttributeMdDTO();
-            var value = values.get(attributeName);
+            if(attributeDTO != null) {
+              var attributeMd = attributeDTO.getAttributeMdDTO();
+              var value = values.get(attributeName);
             
-            if(attributeDTO.isWritable() && that.isValid(attributeMd)) {
+              if(attributeDTO.isWritable() && that.isValid(attributeMd)) {
               
-              if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeDateDTO) {
-                var date = that._parseDate(value);                                
-                
-                attributeDTO.setValue(date);
-              }
-              else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeNumberDTO) {
-                if(value != null) {
-                  value = that._parser(value);
+                if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeDateDTO) {
+                  var date = that._parseDate(value);                                
+                 
+                  attributeDTO.setValue(date);
                 }
+                else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeNumberDTO) {
+                  if(value != null) {
+                    value = that._parser(value);
+                  }
                 
-                attributeDTO.setValue(value);
+                  attributeDTO.setValue(value);
+                }
+                else {                
+                  attributeDTO.setValue(value);            
+                }
               }
-              else {                
-                attributeDTO.setValue(value);            
-              }
+            } 
+          });
+        
+          var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            onSuccess : function(object){
+              that._dialog.close();
+              that._dynamicMap._onClickApplyFilters();
+            },
+            onFailure : function(e){
+              that.handleException(e);
             }
-          } 
-        });
+          }, '#' + this._dialog.getId());
         
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-          onSuccess : function(object){
-            that._dialog.close();
-            that._dynamicMap._onClickApplyFilters();
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        }, '#' + this._dialog.getId());
-        
-        this._object.apply(request);
+          this._object.apply(request);
+        }
       },
       _onCancel : function() {
         var that = this;

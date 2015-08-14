@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,6 +47,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.KeyGeneratorIF;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.gis.dataaccess.MdAttributeMultiPolygonDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributePointDAOIF;
@@ -75,8 +75,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ShapefileImporter implements Reloadable
 {
-  private static final Random          RANDOM = new Random();
-
   /**
    * Configuration object containing shapefile column to type attribute mapping
    */
@@ -103,7 +101,7 @@ public class ShapefileImporter implements Reloadable
 
     try
     {
-      directory = new File(FileUtils.getTempDirectory(), new Long(RANDOM.nextLong()).toString());
+      directory = new File(FileUtils.getTempDirectory(), new Long(configuration.getGenerator().next()).toString());
       directory.mkdirs();
 
       ZipInputStream zstream = new ZipInputStream(iStream);
@@ -463,8 +461,9 @@ public class ShapefileImporter implements Reloadable
    */
   public String generateGeoId()
   {
-    String geoId = Long.toString(RANDOM.nextLong(), 36).toUpperCase();
+    String prefix = this.configuration.getRootEntity().getKey();
 
-    return GeoEntity.buildGeoIdFromCountryId(this.configuration.getRootEntity().getKey(), geoId);
+    KeyGeneratorIF generator = this.configuration.getGenerator();
+    return generator.generateKey(prefix);
   }
 }

@@ -20,11 +20,9 @@ package com.runwaysdk.geodashboard;
 
 import com.runwaysdk.generation.loader.Reloadable;
 
-public interface AccessConstants extends Reloadable
+public interface KeyGeneratorIF extends Reloadable
 {
-  public static final String EDIT_DASHBOARD = "Edit-Dashboard";
+  public Long next();
 
-  public static final String EDIT_DATA      = "Edit-Data";
-
-  public static final String ADMIN          = "Admin";
+  public String generateKey(String prefix);
 }

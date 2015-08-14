@@ -172,11 +172,11 @@ public class Sandbox
 
     DashboardThematicLayer layer = new DashboardThematicLayer();
     layer.setName("aa_test_data");
-    layer.addLayerType(AllLayerType.BASICPOLYGON);
+    layer.addLayerType(AllLayerType.BASIC);
     layer.setDisplayInLegend(false);
     layer.setVirtual(false);
-    // layer.setUniversal(null);
-    // layer.setGeoEntity(null);
+//    layer.setUniversal(null);
+//    layer.setGeoEntity(null);
     layer.apply();
 
     HasLayer hasLayer = map.addHasLayer(layer);

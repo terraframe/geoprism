@@ -16,15 +16,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package com.runwaysdk.geodashboard.service;
+
+import java.util.Random;
 
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.KeyGeneratorIF;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public interface AccessConstants extends Reloadable
+public class SeedKeyGenerator implements KeyGeneratorIF, Reloadable
 {
-  public static final String EDIT_DASHBOARD = "Edit-Dashboard";
+  private Random random;
 
-  public static final String EDIT_DATA      = "Edit-Data";
+  public SeedKeyGenerator()
+  {
+    this.random = new Random();
+  }
 
-  public static final String ADMIN          = "Admin";
+  @Override
+  public Long next()
+  {
+    return this.random.nextLong();
+  }
+
+  @Override
+  public String generateKey(String prefix)
+  {
+    String geoId = Long.toString(this.random.nextLong(), 36).toUpperCase();
+
+    return GeoEntity.buildGeoIdFromCountryId(prefix, geoId);
+
+  }
+
 }
