@@ -25,5 +25,5 @@
   <server-context-listener class="com.runwaysdk.geodashboard.context.GeoserverContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.context.CacheDocumentManagerContextListener" /> 
   <server-context-listener class="com.runwaysdk.geodashboard.context.RMIContextListener" />
-  <server-context-listener class="com.runwaysdk.geodashboard.context.PatchingContextListener" />
+<!--   <server-context-listener class="com.runwaysdk.geodashboard.context.PatchingContextListener" /> -->
 </server-context-listeners>

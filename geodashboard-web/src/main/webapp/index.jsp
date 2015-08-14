@@ -48,7 +48,10 @@
 				//// Add iframe with hash src based on browser memory hash
 				$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src='+window.location.hash.substring(1)+'></iframe>');
 			}
-			else {				
+			else if (document.referrer.substr(document.referrer.lastIndexOf('/') + 1) === "login") {
+				window.open(window.location.origin +"${pageContext.request.contextPath}/geodashboardLanding.jsp", "_self");	
+			}
+			else {			
 				//// Add main page if no hash exists
 				$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="${pageContext.request.contextPath}/jsp/mainContent.jsp"></iframe>');			
 			}
