@@ -147,6 +147,18 @@ public class SessionFilter implements Filter, Reloadable
     {
       return true;
     }
+    
+    // They're allowed to hit the login view page, otherwise its a redirect loop
+    if (uri.equals(req.getContextPath() + "/geodashboard"))
+    {
+      return true;
+    }
+    
+    // They're allowed to hit the login view page, otherwise its a redirect loop
+    if (uri.equals(req.getContextPath() + "/geodashboardLanding"))
+    {
+      return true;
+    }
 
     // They're allowed to hit the login view page, otherwise its a redirect loop
     if (uri.equals(req.getContextPath() + "/loginRedirect"))
@@ -169,6 +181,18 @@ public class SessionFilter implements Filter, Reloadable
 
     // Allow style files for GIS maps
     if (uri.endsWith(".sld"))
+    {
+      return true;
+    }
+    
+    // Allow style files for GIS maps
+    if (uri.endsWith(".png"))
+    {
+      return true;
+    }
+    
+    // Allow style files for GIS maps
+    if (uri.endsWith(".js"))
     {
       return true;
     }
