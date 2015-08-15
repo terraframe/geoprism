@@ -240,7 +240,7 @@
       },
       
       getCachedLayers : function() {
-        return this._layerCache.$values();
+        return this._layerCache.values();
       },
       
       getLayer : function(layerId) {
