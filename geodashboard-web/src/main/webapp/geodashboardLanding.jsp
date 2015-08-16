@@ -166,6 +166,7 @@
     		margin-left: -401px;
     		left: 50%;
     		position: absolute;
+    		width: 960px;
 		}
 		
 		.nav-option{
