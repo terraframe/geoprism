@@ -2162,7 +2162,8 @@
     	  var containerHeight = $(".aside.animated").height();
           var navBarHeight = $(".nav-bar").height();
           var filterHeight = $(".filter-block").height();
-          var currHeight = containerHeight - navBarHeight - filterHeight;
+          var filterButtonCont = $("#filter-buttons-container").height();
+          var currHeight = containerHeight - navBarHeight - filterHeight - filterButtonCont - 8 ;
           
           $(".sales-accortion.panel-group").height(currHeight + "px");
       },
