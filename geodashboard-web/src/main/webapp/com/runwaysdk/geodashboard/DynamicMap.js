@@ -2157,6 +2157,16 @@
         }          
       },
       
+      _setAttributeSidbarHeight : function(){
+    	  
+    	  var containerHeight = $(".aside.animated").height();
+          var navBarHeight = $(".nav-bar").height();
+          var filterHeight = $(".filter-block").height();
+          var currHeight = containerHeight - navBarHeight - filterHeight;
+          
+          $(".sales-accortion.panel-group").height(currHeight + "px");
+      },
+      
       /**
        * Renders the mapping widget, performing a full refresh.
        */
@@ -2194,6 +2204,19 @@
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
         $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
+        
+        ////
+        // setting scroll bar for attribute sidebar
+        ////
+        that._setAttributeSidbarHeight();
+        
+        $( window ).resize(function() {
+        	that._setAttributeSidbarHeight();
+        });
+        //
+        // end
+        //
+        
         
         // Reporting events
         $('.report-export').on('click', Mojo.Util.bind(this, this._onClickExportReport));        

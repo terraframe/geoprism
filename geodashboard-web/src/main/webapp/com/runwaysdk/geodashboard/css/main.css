@@ -1480,7 +1480,8 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .sales-accortion.panel-group{
 	border:solid;
 	border-width:1px 0 0;
-	border-color:rgba(0,0,0,0.2)
+	border-color:rgba(0,0,0,0.2);
+	overflow-y: auto;
 }
 .sales-accortion.panel-group .panel .panel{
 	border:solid;
