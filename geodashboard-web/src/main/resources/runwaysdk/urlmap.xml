@@ -28,8 +28,7 @@
 
   <map uri="login" forward="/login.jsp"/>
   <map uri="loginRedirect" forward="/loginRedirect.jsp"/>
-  <map uri="geodashboard" forward="/geodashboardLanding.jsp"/>
-  <map uri="geoprism" forward="/geoprismLanding.jsp"/>
+  <map uri="menu" forward="/geodashboardLanding.jsp"/>
   <map uri="session" controller="com.runwaysdk.geodashboard.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
