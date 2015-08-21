@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.dashboard;
+package com.runwaysdk.geodashboard;
 
 import java.util.Collection;
 import java.util.Set;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.Dashboard;
 
 /**
  * Interface for dependency injection for configuring the system

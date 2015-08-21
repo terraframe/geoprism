@@ -16,27 +16,32 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.io;
+package com.runwaysdk.geodashboard.service;
 
-import java.util.List;
+import org.apache.poi.ss.usermodel.Cell;
 
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.io.ExcelExportListener;
-import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
-import com.runwaysdk.dataaccess.io.excel.ImportListener;
-import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
+import com.runwaysdk.geodashboard.ontology.Classifier;
 
-public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener, Reloadable
+public class ClassifierColumn extends ExcelColumn
 {
-  private MdAttributeTermDAOIF mdAttributeTermDAOIF;
+  public ClassifierColumn(String attributeName, String displayLabel)
+  {
+    super(attributeName, displayLabel);
+  }
 
-  private String             excelType;
-  
-  private List<Universal>    heierarchyList;
-  
-//  private List<Universal> buildHierarchy(Universal universal, List<Universal> _heierarchyList)
-//  {
-//    
-//  }
+  @Override
+  public void setValue(Cell cell, String value)
+  {
+    if (value != null && value.length() > 0)
+    {
+      Classifier classifier = Classifier.get(value);
+
+      super.setValue(cell, classifier.getDisplayLabel().getValue());
+    }
+    else
+    {
+      super.setValue(cell, value);
+    }
+  }
 }

@@ -16,20 +16,43 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.dashboard;
+package com.runwaysdk.geodashboard.service;
 
-import java.util.Comparator;
-
-import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.ComponentIF;
+import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTWriter;
 
-public class TermComparator implements Comparator<Term>, Reloadable
+public class GeometryColumn extends ExcelColumn implements Reloadable
 {
 
-  @Override
-  public int compare(Term o1, Term o2)
+  private WKTWriter writer;
+
+  public GeometryColumn(String attributeName, String displayLabel, WKTWriter writer)
   {
-    return o1.getDisplayLabel().getValue().compareTo(o2.getDisplayLabel().getValue());
+    super(attributeName, displayLabel);
+
+    this.writer = writer;
   }
 
+  @Override
+  public String getValue(ComponentIF component)
+  {
+    Object value = component.getObjectValue(this.attributeName);
+    
+    if(this.getTransform() != null)
+    {
+      value = this.getTransform().transform(value);
+    }
+
+    if (value != null)
+    {
+      String wkt = this.writer.writeFormatted((Geometry) value);
+
+      return wkt;
+    }
+
+    return null;
+  }
 }

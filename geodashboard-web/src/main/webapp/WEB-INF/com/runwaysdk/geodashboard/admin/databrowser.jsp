@@ -32,13 +32,11 @@
 <jwr:style src="/com/runwaysdk/geodashboard/databrowser/databrowser.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
-
-
 <!-- Databrowser Javascript -->
 <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
+<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
 <jwr:script src="/bundles/databrowser.js" useRandomParam="false"/>
 
 <script type="text/javascript">${js}</script>
@@ -55,3 +53,5 @@
   });
   db.render("#databrowser");
 </script>
+
+<iframe id="result_iframe" name="result_iframe" style="visibility: hidden;"></iframe>

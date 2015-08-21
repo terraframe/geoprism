@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.dashboard;
+package com.runwaysdk.geodashboard;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +32,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 public class ConfigurationService implements Reloadable
 {
   /**
-   * Retrieve all implementations of ReportProviderIF.
+   * Retrieve all implementations of ConfigurationIF.
    */
   public static List<ConfigurationIF> getConfigurations()
   {

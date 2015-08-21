@@ -211,10 +211,6 @@
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-	<listener>
-    <listener-class>com.runwaysdk.web.context.SchedulerContextListener</listener-class>
-  </listener>
-  
   <listener>
     <listener-class>com.runwaysdk.geodashboard.gis.web.context.GeodashboardContextListener</listener-class>
   </listener>

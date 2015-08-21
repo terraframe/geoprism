@@ -21,8 +21,8 @@ package com.runwaysdk.geodashboard.databrowser;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.runwaysdk.geodashboard.dashboard.ConfigurationIF;
-import com.runwaysdk.geodashboard.dashboard.ConfigurationService;
+import com.runwaysdk.geodashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.ConfigurationService;
 import com.runwaysdk.query.QueryFactory;
 
 public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysdk.generation.loader.Reloadable

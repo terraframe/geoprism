@@ -178,7 +178,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
     try
     {
       LabelValuePair[] queries = this.provider.getQueries(TIME_OUT_LIMIT * 1000);
-      LabelValuePair[] entities = provider.getEntitySuggestions("", TIME_OUT_LIMIT * 1000);
+      LabelValuePair[] entities = this.provider.getEntitySuggestions("", TIME_OUT_LIMIT * 1000);
 
       GridData gd = new GridData(GridData.FILL_HORIZONTAL);
       gd.horizontalSpan = 2;
