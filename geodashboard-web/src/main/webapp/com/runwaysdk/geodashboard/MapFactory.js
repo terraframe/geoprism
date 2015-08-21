@@ -1034,17 +1034,17 @@
                 },
                 style : 'default',
                 attributions: [ new ol.Attribution({
-                          html: '&copy; <a href="https://www.digitalglobe.com"> Digital Globe </a>'
+                          html: '&copy; <a href="https://www.digitalglobe.com"> DigitalGlobe </a>'
                         })
                       ]
               })
           });
-          digitalGlobe._gdbCustomLabel  = "Digital Globe";
+          digitalGlobe._gdbCustomLabel  = "DigitalGlobe";
           ////
           ////
           ////
           
-          return [osm, mqAerial, mqHybrid, digitalGlobe];
+          return [digitalGlobe, osm, mqAerial, mqHybrid];
         },
         
         

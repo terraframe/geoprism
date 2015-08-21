@@ -156,8 +156,8 @@
 			width: 100%;
     		height: 100%;
     		position: absolute;
-			opacity: 0.50;
-    		filter: alpha(opacity=50); /* For IE8 and earlier */
+			opacity: 0.70;
+    		filter: alpha(opacity=70); /* For IE8 and earlier */
 		}
 		
 		#option-container{
@@ -166,6 +166,7 @@
     		margin-left: -401px;
     		left: 50%;
     		position: absolute;
+    		width: 960px;
 		}
 		
 		.nav-option{
@@ -188,6 +189,11 @@
 			cursor: pointer;
 		}
 		
+		.nav-icon-img-label{
+			text-align: center;
+			margin-top: 10px;
+			max-width: 250px;
+		}
 		
 		.error-message{
 			color: red;
@@ -216,12 +222,15 @@
 			<div id="option-container">
 				<div id="dashboard-link" class="nav-option">
 					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/map_chart.png" alt="Navigation" />
+					<h5 class="nav-icon-img-label">GEODASHBOARDS</h5>
 				</div>
 				<div class="nav-option">
 					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/aerial_map.png" alt="Navigation" />
+					<h5 class="nav-icon-img-label">DIGITAL IMAGERY MARKETPLACE</h5>
 				</div>
 				<div class="nav-option">
 					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/FACES.png" alt="Navigation" />
+					<h5 class="nav-icon-img-label">HUMAN GEOGRAPHY MARKETPLACE</h5>
 				</div>
 			</div>
 			<img id="background-img" src="com/runwaysdk/geodashboard/images/globe.png" alt="background" />
