@@ -148,19 +148,6 @@ public class SessionFilter implements Filter, Reloadable
       return true;
     }
     
-    // They're allowed to hit the login view page, otherwise its a redirect loop
-    if (uri.equals(req.getContextPath() + "/geodashboard"))
-    {
-      return true;
-    }
-    
-    // They're allowed to hit the login view page, otherwise its a redirect loop
-    if (uri.equals(req.getContextPath() + "/menu"))
-    {
-      return true;
-    }
-
-    // They're allowed to hit the login view page, otherwise its a redirect loop
     if (uri.equals(req.getContextPath() + "/loginRedirect"))
     {
       return true;
