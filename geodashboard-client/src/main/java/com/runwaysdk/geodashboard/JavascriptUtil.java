@@ -56,6 +56,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierController;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
+import com.runwaysdk.geodashboard.report.PairViewDTO;
 import com.runwaysdk.geodashboard.report.ReportItemController;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
 import com.runwaysdk.geodashboard.report.ReportItemViewDTO;
@@ -153,6 +154,8 @@ public class JavascriptUtil implements Reloadable
     Set<String> types = new HashSet<String>();
     types.add(DataBrowserUtilDTO.CLASS);
     types.add(MetadataTypeDTO.CLASS);
+    types.add(PairViewDTO.CLASS);
+    types.add(ReportItemDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

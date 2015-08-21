@@ -30,9 +30,13 @@
    * LANGUAGE
    */
   com.runwaysdk.Localize.defineLanguage(dataBrowserName, {
-    tableTitle : "Records",
-    treeTitle : "System Types",
-    noTypeSelected : "No type selected."
+    'tableTitle' : "Records",
+    'treeTitle' : "System Types",
+    'noTypeSelected' : "No type selected.",
+    'export' : "Template",
+    'import' : "Import",
+    'message' : 'Message',
+    'success' : 'Upload complete'
   });
   
   var dataBrowser = ClassFramework.newClass(dataBrowserName, {
@@ -122,6 +126,95 @@
         return null;
       },
       
+      _onContextTreeNode : function(event) {
+        var node = event.node;          
+        var type = node.type;
+        
+        var items = [];
+        items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this._onContextExportClick, type)});
+        items.push({label:this.localize("import"), id:"import", handler:Mojo.Util.bind(this, this._onContextImportClick, type)});
+        
+        var cm = this.getFactory().newContextMenu(node);
+        
+        for(var i = 0; i < items.length; i++) {
+          var item = items[i];
+          
+          var menuItem = cm.addItem(item.label, item.id, item.handler);
+          
+          if (item.enabled === false) {
+            menuItem.setEnabled(false);
+          }
+        }
+        
+        cm.render();
+      },
+      
+      _onContextExportClick : function(type) {
+        var that = this;
+          
+        var title = this.localize("export")
+          
+        var config = {
+          type: 'com.runwaysdk.geodashboard.service.Excel',
+          title: title,
+          viewParams: {},
+          action: "exportExcelFile",
+          viewAction: "exportExcelForm",
+          actionParams: {type: type},
+          width: 560,
+          onSuccess : function(responseObj) {
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+          
+        new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();               
+      },      
+      
+      
+      _onContextImportClick : function(type) {
+        var that = this;
+        
+        var title = this.localize("import")
+        
+        $("#result_iframe").contents().find("body").html('');
+        
+        var config = {
+          type: 'com.runwaysdk.geodashboard.service.Excel',
+          title: title,
+          viewParams: {},
+          action: "importExcelFile",
+          viewAction: "excelImportForm",
+          actionParams: {},
+          width: 560,
+          onSuccess : function() {
+            var result = $('#result_iframe').contents().find("#upload_result")
+            var message = result.html();
+            
+            if(result.hasClass('error')) {
+              that.handleErrorMessage(message);              
+            }
+          },
+          onFailure : function(e) {
+            that.handleException(e);
+          }
+        };
+        
+        new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();  
+      },      
+      handleMessage : function(message) {
+        var dialog = this.getFactory().newDialog(this.localize("Message"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.render();        
+      },      
+      handleErrorMessage : function(message) {
+        var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.render();        
+      },      
       _onSelectTreeNode : function(event) {
         var selectedNode = event.node;
         
@@ -242,6 +335,10 @@
         that._tree.bind(
           'tree.select',
           Mojo.Util.bind(that, that._onSelectTreeNode)
+        );
+        that._tree.bind(
+          'tree.contextmenu',
+          Mojo.Util.bind(that, that._onContextTreeNode)
         );
       },
       

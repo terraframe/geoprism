@@ -72,15 +72,15 @@
        */
       _formatDate : function(value) {
           
-          if(this._dateFormatter == null) {
-            this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
-          }
+        if(this._dateFormatter == null) {
+          this._dateFormatter = Globalize.dateFormatter({ date: "short" });                         
+        }
           
-          if(value != null) {
-            return this._dateFormatter(value);          
-          }
+        if(value != null) {
+          return this._dateFormatter(value);          
+        }
           
-          return null;
+        return null;
       },      
       _parseDate : function(value) {
         
