@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
+import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
 import com.runwaysdk.geodashboard.report.PairViewDTO;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
 
@@ -135,8 +136,7 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
     {
       if (file == null)
       {
-        // TODO Change exception type
-        throw new RuntimeException("File is required");
+        throw new RuntimeException(LocalizationFacadeDTO.getFromBundles(this.getClientRequest(), "file.required"));
       }
 
       InputStream istream = file.getInputStream();
@@ -157,6 +157,8 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
         {
           this.resp.getWriter().print("<p id=\"upload_result\" class=\"success\"></p>");
         }
+        
+        this.resp.flushBuffer();
       }
       finally
       {

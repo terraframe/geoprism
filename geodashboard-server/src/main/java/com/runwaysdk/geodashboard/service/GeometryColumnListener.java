@@ -25,7 +25,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import com.runwaysdk.business.Mutable;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.ExcelExportListener;
 import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
@@ -68,16 +67,20 @@ public class GeometryColumnListener extends ExcelAdapter implements ExcelExportL
   @Override
   public void handleExtraColumns(Mutable instance, List<ExcelColumn> extraColumns, Row row) throws Exception
   {
-    String attributeName = this.mdAttributeGeometry.definesAttribute();
     ExcelColumn column = this.getColumn(extraColumns);
-    Cell cell = row.getCell(column.getIndex());
-    String value = ExcelUtil.getString(cell);
 
-    if (value != null && value.length() > 0)
+    if (column != null)
     {
-      Geometry geometry = reader.read(value);
+      String attributeName = this.mdAttributeGeometry.definesAttribute();
+      Cell cell = row.getCell(column.getIndex());
+      String value = ExcelUtil.getString(cell);
 
-      instance.setValue(attributeName, geometry);
+      if (value != null && value.length() > 0)
+      {
+        Geometry geometry = reader.read(value);
+
+        instance.setValue(attributeName, geometry);
+      }
     }
   }
 
@@ -93,6 +96,6 @@ public class GeometryColumnListener extends ExcelAdapter implements ExcelExportL
       }
     }
 
-    throw new ProgrammingErrorException("Unable to find the excel column for attribute [" + attributeName + "]");
+    return null;
   }
 }
