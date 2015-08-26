@@ -213,7 +213,9 @@ public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExport
 
         if (iterator.hasNext())
         {
-          throw new RuntimeException("Ambigious entity with the label [" + _label + " (" + _universal + ")] and ancestor [" + _parent.getDisplayLabel().getValue() + "]");
+          String message = "Ambigious entity with the label [" + _label + " (" + _universal + ")] and ancestor [" + _parent.getDisplayLabel().getValue() + "]";
+
+          throw new AmbigiousGeoEntityException(message, _label, _universal);
         }
 
         return entity;

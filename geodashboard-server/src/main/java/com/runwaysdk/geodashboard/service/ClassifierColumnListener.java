@@ -70,16 +70,20 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
   public void handleExtraColumns(Mutable instance, List<ExcelColumn> extraColumns, Row row) throws Exception
   {
     ExcelColumn column = this.getColumn(extraColumns);
-    Cell cell = row.getCell(column.getIndex());
-    String value = ExcelUtil.getString(cell);
 
-    if (value != null && value.length() > 0)
+    if (column != null)
     {
-      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.classifierPackage, value, this.mdAttributeTermDAOIF);
+      Cell cell = row.getCell(column.getIndex());
+      String value = ExcelUtil.getString(cell);
 
-      if (classifier != null)
+      if (value != null && value.length() > 0)
       {
-        instance.setValue(attributeName, classifier.getId());
+        Classifier classifier = Classifier.findClassifierAddIfNotExist(this.classifierPackage, value, this.mdAttributeTermDAOIF);
+
+        if (classifier != null)
+        {
+          instance.setValue(attributeName, classifier.getId());
+        }
       }
     }
   }
@@ -94,7 +98,8 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
       }
     }
 
-    throw new ProgrammingErrorException("Unable to find the excel column for attribute [" + this.attributeName + "]");
+    // This might happen if the user column isn't included in the file
+    return null;
   }
 
   public static String getClassifierPackage(MdAttributeTermDAOIF mdAttributeTerm)

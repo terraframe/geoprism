@@ -30,7 +30,7 @@
   <fieldset class="com-runwaysdk-geodashboard-FormList">
     <section class="form-container">
       <div class="field-row clearfix">
-        <label for="country">* <gdb:localize key="country"/> </label>
+        <label for="country">* <gdb:localize key="excel.country"/> </label>
         <select id="country" name="country">
           <c:forEach items="${countries}" var="country">
             <option value="${country.value}">${country.label}</option>            
@@ -39,7 +39,7 @@
         <div id="country-error" class="error-message"></div>
       </div>      
       <div class="field-row clearfix">
-        <label for="file">* <gdb:localize key="file"/></label>
+        <label for="file">* <gdb:localize key="excel.file"/></label>
         <mjl:input param="file" type="file" id="file" />
         <div id="file-error" class="error-message"></div>
       </div>         

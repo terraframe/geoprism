@@ -27,7 +27,7 @@
   <fieldset class="com-runwaysdk-geodashboard-FormList">
     <section class="form-container">
       <div class="field-row clearfix">
-        <label for="country">* <gdb:localize key="country"/> </label>
+        <label for="country">* <gdb:localize key="excel.country"/> </label>
         <select id="country" name="country">
           <c:forEach items="${countries}" var="country">
             <option value="${country.value}">${country.label}</option>            

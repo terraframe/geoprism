@@ -26,6 +26,37 @@
   
   var dataBrowserName = "com.runwaysdk.geodashboard.databrowser.DataBrowser";
   
+  var Form = ClassFramework.newClass('com.runwaysdk.geodashboard.IFrameResponseFormDialogDownloader', {
+    Extends : com.runwaysdk.ui.RunwayControllerFormDialogDownloader,
+    Instance : {
+        
+      initialize : function(config, iframeId, contentId) {
+        this.$initialize(config);
+        
+        this._iframeId = iframeId;
+        this._contentId = contentId;
+      },
+      _onClickSubmit : function() {
+        // Reset the result HTML
+        $('#' + this._iframeId).contents().find("body").html('');
+        
+        this.$_onClickSubmit();                  
+      },
+      _onActionSuccess : function(type) {
+        var result = $('#' + this._iframeId).contents().find("#" + this._contentId);
+        var message = result.html();
+        
+        if(result.hasClass('error')) {
+          this.$_onFailure(message);          
+        }
+        else {
+          this.$_onActionSuccess(type);
+        }
+      },      
+      
+    }
+  });
+  
   /**
    * LANGUAGE
    */
@@ -178,8 +209,6 @@
         
         var title = this.localize("import")
         
-        $("#result_iframe").contents().find("body").html('');
-        
         var config = {
           type: 'com.runwaysdk.geodashboard.service.Excel',
           title: title,
@@ -189,26 +218,22 @@
           actionParams: {},
           width: 560,
           onSuccess : function() {
-            var result = $('#result_iframe').contents().find("#upload_result")
-            var message = result.html();
-            
-            if(result.hasClass('error')) {
-              that.handleErrorMessage(message);              
-            }
           },
           onFailure : function(e) {
-            that.handleException(e);
+            that.handleException(e);            
           }
         };
         
-        new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();  
-      },      
-      handleMessage : function(message) {
-        var dialog = this.getFactory().newDialog(this.localize("Message"), {modal: true});
-        dialog.appendContent(message);
-        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
-        dialog.render();        
-      },      
+        new Form(config, 'result_iframe', 'upload_result').render();  
+      },
+      handleException : function(e) {
+        if($.type( e ) === "string") {
+          this.handleErrorMessage(e);
+        }
+        else {
+          this.handleErrorMessage(e.getLocalizedMessage());
+        }
+      },
       handleErrorMessage : function(message) {
         var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
         dialog.appendContent(message);
