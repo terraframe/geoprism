@@ -41,7 +41,7 @@
 
 	<style>
 		body {
-		    background-color: black;
+		    background-color: #333;
 		    margin: 0;
 		}
 		
@@ -121,7 +121,7 @@
 			width: 150px;
 			float: left;
     		margin-top: 10px;
-    		background-color: #898787;
+    		background-color: #9F9D9D;
     		border: none;
     		padding: 3px;
 		}

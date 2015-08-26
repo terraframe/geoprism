@@ -20,10 +20,13 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 
@@ -39,6 +42,7 @@ import com.runwaysdk.geodashboard.MdAttributeViewDTO;
 import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.metadata.MdClassDTO;
@@ -267,6 +271,23 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       req.setAttribute("hasReport", activeDashboard.hasReport());
       req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
       req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+      
+      GeodashboardUserDTO currentUser = GeodashboardUserDTO.getCurrentUser(this.getClientRequest());
+      boolean isAdmin = false;
+      List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
+      for(RolesDTO role : userRoles)
+      {
+        Pattern regex = Pattern.compile("\\.(\\S+)");
+        Matcher match = regex.matcher(role.getRoleName());
+        if (match.find())
+        {
+          if(match.group(1).equals("admin.Administrator"))
+          {
+            isAdmin = true;
+          }
+        }
+      }
+      req.setAttribute("isAdmin", isAdmin);
 
       req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
 

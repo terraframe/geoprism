@@ -29,6 +29,11 @@
         </create>
       </mdBusiness>
     </update>
+    <create>
+        <mdController name="com.runwaysdk.geodashboard.UserMenuController" label="User menu controller">
+        <mdAction name="getSortedDashboards" label="Get sorted dashboards" />
+      </mdController>
+    </create>
   </doIt>
   <undoIt>
   </undoIt>

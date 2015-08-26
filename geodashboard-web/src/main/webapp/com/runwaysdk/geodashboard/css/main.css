@@ -2824,8 +2824,8 @@ span.select-area span.center {
 		color: #bababa;
 		cursor: pointer;
 	}
-	i.fa.fa-file-image-o.map-tool-icon:hover,
-	i.fa.fa-file-image-o.map-tool-icon:focus{
+	a.fa.fa-file-image-o.map-tool-icon:hover,
+	a.fa.fa-file-image-o.map-tool-icon:focus{
 		color: #00bfff;
 	}
 	

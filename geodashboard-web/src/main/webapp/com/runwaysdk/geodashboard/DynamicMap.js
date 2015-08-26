@@ -470,6 +470,19 @@
       },
       
       _exportMap : function() {
+    	  var map = this._mapFactory.getMap();
+    	 
+    	  ////
+    	  // openlayers 3 map export functionality. 
+    	  // Poorly supported in safari and cant include non-map elements.
+    	  ////
+    	  // this element must be an <a> tag
+    	  //var exportPNGElement = document.getElementById('map-export-btn');
+    	  //map.once('postcompose', function(event) {
+    	  //	  var canvas = event.context.canvas;
+    	  // 	  exportPNGElement.href = canvas.toDataURL('image/png');
+    	  //});
+    	  //map.renderSync();
         
         var mapId = this._mapId;
         var outFileName = "GeoDashboard_Map";

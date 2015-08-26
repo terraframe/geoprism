@@ -34,21 +34,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="login.title" /></title>
   
-<%--     <jwr:style src="/bundles/main.css" useRandomParam="false" />   --%>
+  <jwr:style src="/bundles/main.css" useRandomParam="false" />  
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
-<%--   <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/> --%>
-  
-<!--   <script type="text/javascript">${js}</script> -->
   
   <style>
 		body {
-		    background-color: black;
+		    background-color: #333;
 		    margin: 0;
 		}
 		
 		html, body, #container {
  		    height: 100%; 
 			overflow: hidden;
+			overflow-y: auto;
 		}
 		
 		h1 {
@@ -56,65 +54,20 @@
 		    margin-left: 40px;
 		} 
 		
-		
-		/* unvisited link */
-		a:link {
-		    color: grey;
-		    text-decoration: none;
-		    font-size: 18px;
+		#header{
+	    	padding: 10px;
 		}
 		
-		/* visited link */
-		a:visited {
-		    color: grey;
+		.user-command-link{
+			color: white;
+			padding: 5px;
+    		font-size: 15px;
 		}
 		
-		/* mouse over link */
-		a:hover {
-		    color: darkgrey;
-		}
-		
-		/* selected link */
-		a:active {
-		    color: darkgrey;
-		}
-		
-		
-		
-		#option-container{
-    		top: 50%;
-    		margin: 0 auto;
-    		margin-left: -401px;
-    		left: 50%;
-    		position: absolute;
-    		width: 650px;
-		}
-		
-		.nav-option{
-    		margin-left: 50px;
-    		float: left;
-		}
-		
-		.nav-icon-img{
-	    	height: 150px;
-	    	border: solid white 5px;
-    		border-radius: 23px;
-    		cursor: pointer;
-    		background-color: white;
-		}
-		
-		.nav-icon-img:hover{
-	    	border: solid #019edc 5px;
-		}
-		
-		#dashboard-link{
-			cursor: pointer;
-		}
-		
-		.nav-icon-img-label{
-			text-align: center;
-			margin-top: 10px;
-			max-width: 250px;
+		.heading{
+		    font-size: 35px;
+    		color: white;
+    		padding: 20px;
 		}
 		
 		.error-message{
@@ -133,31 +86,36 @@
     </div>
   </c:if>
   
+  
   <div id="container">
-	
-<!-- 		<div id="geodash-landing-top-div"> -->
-<!-- 	    	<header id="header"></header> -->
-<!-- 			<img id="logo" src="com/runwaysdk/geodashboard/images/terraframe_logo_h.png" alt="logo" /> -->
-<!-- 		</div>     -->
-<!-- 		<div id="geodash-landing-bottom-div"> -->
-<!-- 			<div id="mask"></div> -->
-<!-- 			<div id="option-container"> -->
-<!-- 				<div id="dashboard-link" class="nav-option"> -->
-<!-- 					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" /> -->
-<!-- 					<h5 class="nav-icon-img-label">GEODASHBOARDS</h5> -->
-<!-- 				</div> -->
-<!-- 				<div class="nav-option"> -->
-<!-- 					<img id="geodashboard-admin" class="nav-icon-img" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" /> -->
-<!-- 					<h5 class="nav-icon-img-label">ADMINISTRATION</h5> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 			<img id="background-img" src="com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" /> -->
-			
-<!-- 			<div id="geodash-landing-footer"> -->
-<!-- 				<h4>"COMBINE DATA FROM MULTIPLE SOURCES TO LEARN THE REAL MEANING BEHIND THE BIG PICTURE"</h4> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-	
+<!--   <div class="row"> -->
+  	<header id="header">
+  	    <p class="text-right">
+ 			<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+ 		</p>
+ 		<div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
+	</header>
+<!--   </div> -->
+  	<div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          	<c:forEach items="${dashboards}" var="dashboard">
+				<!-- <div class="row"> -->
+				  <div class="col-sm-6 col-md-4">
+				    <div class="thumbnail text-center">
+				      <img src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
+				      <div class="caption">
+				        <h3>${dashboard.displayLabel.value}</h3>
+						<!-- <p>Dashboard body</p> -->
+				        <p><a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a></p>
+				      </div>
+				    </div>
+				  </div>
+				<!-- </div> -->
+  			</c:forEach>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
   </div>
 
 </body>
@@ -165,34 +123,8 @@
 
   <script type="text/javascript">	   
 		$(document).ready(function(){
-				$("#dashboard-link").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}/DashboardViewer", "_self");
-				});	
-
-				$("#geodashboard-admin").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}", "_self");
-				});	
-
-				  //responsive code begin
-			      //you can remove responsive code if you don't want the slider scales while window resizes
-			      function ScaleBackgroundImg() {
-			          var bodyWidth = document.body.clientWidth;
-			          var elWidth = $("#option-container").width();
-			          var adjusted = elWidth / 2;
-			          
-			          if(bodyWidth){
-		              	  $("#option-container").css('margin-left', '-'+adjusted+'px')
-			          }	  
-			          else{
-			              window.setTimeout(ScaleSlider, 30);
-			          }
-			      }
-				  ScaleBackgroundImg();
-
-			      $(window).bind("load", ScaleBackgroundImg);
-			      $(window).bind("resize", ScaleBackgroundImg);
-			      $(window).bind("orientationchange", ScaleBackgroundImg);
-		})
+			
+		});
   </script>
   
   
