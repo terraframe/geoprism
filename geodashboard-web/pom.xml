@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-core</artifactId>
-			<version>[3,]</version>
+			<version>[3.7]</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.lesscss</groupId>
