@@ -139,8 +139,9 @@ $(document).ready(function(){
 <!--         		</div>	 -->
               	<div id="collapse-map-tools" class="accordion-body">
               		<div class="accordion-inner holder" id="mapToolsContainer">
-              			<i id="map-export-btn" class="fa fa-file-image-o map-tool-icon" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></i>
-              			<i id="map-zoom-to-extent-btn" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></i>
+						<!-- map-export-btn must be an <a> tag if we want to use openlayers export functionality -->
+              			<a id="map-export-btn" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
+              			<a id="map-zoom-to-extent-btn" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></a>
               		</div>
               
 			    </div>
@@ -156,8 +157,14 @@ $(document).ready(function(){
       		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
       	</div>
 		<div class="nav-bar">
-		    
-			<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
+		  <c:choose>
+			  <c:when test="${isAdmin}">
+		      	<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
+		      </c:when>
+		      <c:otherwise>
+		      	<a href="<%=request.getContextPath() + "/dashboards"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
+		      </c:otherwise>
+	      </c:choose>
 			<div id="dashboard-dropdown" class="sales-menu dropdown">
 				<a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
@@ -317,7 +324,6 @@ $(document).ready(function(){
 	      </a>
 	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
 	      </a>
-	      
 	      <c:if test="${editDashboard}">
 	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
 	      </c:if>

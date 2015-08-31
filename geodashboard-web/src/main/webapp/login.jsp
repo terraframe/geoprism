@@ -41,7 +41,7 @@
 
 	<style>
 		body {
-		    background-color: black;
+		    background-color: #333;
 		    margin: 0;
 		}
 		
@@ -56,15 +56,18 @@
 		} 
 		
 		#logo{
-	    	margin-top: 80px;
 	    	margin-left: 50px;
-	    	width: 150px;
+	    	width: 250px;
+	    	position: absolute;
+  			top: 50%;
+  			transform: translateY(-50%);
 		}
 		
 		#geoprism-landing-top-div{
 	    	border-bottom: grey solid 3px;
 			/* height: 30%; */
 			height: 200px;
+			position: relative;
 		}
 		
 		#geoprism-landing-bottom-div{
@@ -118,7 +121,7 @@
 			width: 150px;
 			float: left;
     		margin-top: 10px;
-    		background-color: #898787;
+    		background-color: #9F9D9D;
     		border: none;
     		padding: 3px;
 		}
@@ -151,6 +154,7 @@
 		
 		#background-img{
  	    	width: 100%; 
+ 	    	margin-top: 100px;
 		}
 		
 		
@@ -190,23 +194,23 @@
 					      <button type="submit" class="login-button"><gdb:localize key="login.button" /></button>
 					    </p>
 					 </div>
-					   
 				
 				<!--     TODO: Forgot password and remember me functionality.
 				<!--     <div> -->
 				<!--       <a class="forgot-password" href="index.html">Forgot your password?</a> -->
 				<!--       <label class="remember-me">&nbsp;Remember me<input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever"/></label> -->
 				<!--     </div> -->
+				
 				<!--     --> 
 				  </form>
 	    	</header>
-			<img id="logo" src="com/runwaysdk/geodashboard/images/DigitalGlobe_logo_grey.png" alt="logo" />
+			<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
-		    <img id="background-img" src="com/runwaysdk/geodashboard/images/globe.png" alt="background" />
+		    <img id="background-img" src="com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">
-				<h4>"COMBINE DATA FROM MULTIPLE SOURCES TO LEARN THE REAL MEANING BEHIND THE BIG PICTURE"</h4>
+				<h4><gdb:localize key="login.footerMessage"/></h4>
 			</div>
 		</div>
 	

@@ -54,15 +54,19 @@
 		} 
 		
 		#logo{
-	    	margin-top: 80px;
 	    	margin-left: 50px;
-	    	width: 150px;
+	    	width: 250px;
+	    	position: absolute;
+  			top: 50%;
+  			transform: translateY(-50%);
 		}
 		
 		#geodash-landing-top-div{
 	    	border-bottom: grey solid 3px;
 			/* height: 30%; */
 			height: 200px;
+			position: relative;
+			    background-color: #333;
 		}
 		
 		#geodash-landing-bottom-div{
@@ -149,6 +153,7 @@
 		
 		#background-img{
  	    	width: 100%; 
+ 	    	margin-top: 100px;
 		}
 		
 		#mask{
@@ -166,7 +171,7 @@
     		margin-left: -401px;
     		left: 50%;
     		position: absolute;
-    		width: 960px;
+    		width: 650px;
 		}
 		
 		.nav-option{
@@ -177,8 +182,9 @@
 		.nav-icon-img{
 	    	height: 150px;
 	    	border: solid white 5px;
-    		border-radius: 6px;
+    		border-radius: 10px;
     		cursor: pointer;
+    		background-color: white;
 		}
 		
 		.nav-icon-img:hover{
@@ -214,49 +220,36 @@
   <div id="container">
 	
 		<div id="geodash-landing-top-div">
-<!-- 	    	<header id="header"></header> -->
-			<img id="logo" src="com/runwaysdk/geodashboard/images/zero_epidemics_logo.png" alt="logo" />
+			<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
 		</div>    
 		<div id="geodash-landing-bottom-div">
 			<div id="mask"></div>
 			<div id="option-container">
 				<div id="dashboard-link" class="nav-option">
-					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/map_chart.png" alt="Navigation" />
-					<h5 class="nav-icon-img-label">GEODASHBOARDS</h5>
+					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
+					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h4>
 				</div>
 				<div class="nav-option">
-					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/aerial_map.png" alt="Navigation" />
-					<h5 class="nav-icon-img-label">DIGITAL IMAGERY MARKETPLACE</h5>
-				</div>
-				<div class="nav-option">
-					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/FACES.png" alt="Navigation" />
-					<h5 class="nav-icon-img-label">HUMAN GEOGRAPHY MARKETPLACE</h5>
+					<img id="geodashboard-admin" class="nav-icon-img" src="com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
+					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h4>
 				</div>
 			</div>
-			<img id="background-img" src="com/runwaysdk/geodashboard/images/globe.png" alt="background" />
+			<img id="background-img" src="com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" />
 			
 			<div id="geodash-landing-footer">
-				<h4>"COMBINE DATA FROM MULTIPLE SOURCES TO LEARN THE REAL MEANING BEHIND THE BIG PICTURE"</h4>
+				<h4><gdb:localize key="geodashboardLanding.footerMessage"/></h4>
 			</div>
 		</div>
 	
   </div>
 
-<!--   <div> -->
-<!--   	<a id="default-geodashboard" href="#">GeoDashboard</a> -->
-<!--   </div> -->
-  
-<!--   <div> -->
-<!--   	<a id="geodashboard-admin" href="#">Administration</a> -->
-<!--   </div> -->
-  
 </body>
 </html>
 
   <script type="text/javascript">	   
 		$(document).ready(function(){
 				$("#dashboard-link").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}/DashboardViewer", "_self");
+					window.open(window.location.origin +"${pageContext.request.contextPath}/dashboards", "_self");
 				});	
 
 				$("#geodashboard-admin").click(function(){
