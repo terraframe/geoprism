@@ -20,6 +20,7 @@ package com.runwaysdk.geodashboard.oda.driver;
 
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -36,7 +37,14 @@ public class ResultSetMetaData implements IResultSetMetaData
 
   public ResultSetMetaData(JSONObject json)
   {
-    this.dashboardName = json.getString("dashboardName");
+    try
+    {
+      this.dashboardName = json.getString("dashboardName");
+    }
+    catch (JSONException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 
   /*
