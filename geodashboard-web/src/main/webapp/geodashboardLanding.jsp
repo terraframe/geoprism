@@ -34,7 +34,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="login.title" /></title>
   
-<%--     <jwr:style src="/bundles/main.css" useRandomParam="false" />   --%>
+    <jwr:style src="/bundles/main.css" useRandomParam="false" />  
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
   
   <style>
@@ -72,35 +72,7 @@
 		#geodash-landing-bottom-div{
 			overflow: hidden;
 		}
-		
-		#login-btn{
-			right: 10px;
-			top: 5px;
-    		position: absolute;
-		}
-		
-		/* unvisited link */
-		a:link {
-		    color: grey;
-		    text-decoration: none;
-		    font-size: 18px;
-		}
-		
-		/* visited link */
-		a:visited {
-		    color: grey;
-		}
-		
-		/* mouse over link */
-		a:hover {
-		    color: darkgrey;
-		}
-		
-		/* selected link */
-		a:active {
-		    color: darkgrey;
-		}
-		
+			
 		#geodash-landing-footer{
 			height: 100px;
 			background-color: #019edc;
@@ -110,41 +82,7 @@
     		opacity: 0.6;
     		filter: alpha(opacity=60); /* For IE8 and earlier */
 		}
-		
-		#login-form{
-			float: right;
-			width: 250px;
-		}
-		
-		#login-form input{
-			width: 150px;
-			float: left;
-    		margin-top: 10px;
-    		background-color: #898787;
-    		border: none;
-    		padding: 3px;
-		}
-		
-		.login-button{
-			text-decoration: none;
-    		border: none;
-    		background-color: transparent;
-    		color: white;
-    		cursor: pointer;
-    		font-size: 16px;
-		}
-		
-		.login-button:hover{
-			color: grey;
-		}
-		
-		.login-submit{
-    		margin: 0 0 0 0;
-    		position: absolute;
-    		right: 30px;
-   			top: 43px;
-		}
-		
+			
 		#geodash-landing-footer h4{
 			color: white;
 			text-align: center;
@@ -201,6 +139,16 @@
 			max-width: 250px;
 		}
 		
+		#header{
+	    	padding: 10px;
+		}
+		
+		.user-command-link{
+			color: white;
+			padding: 5px;
+    		font-size: 15px;
+		}
+		
 		.error-message{
 			color: red;
 			text-align: center;
@@ -220,7 +168,14 @@
   <div id="container">
 	
 		<div id="geodash-landing-top-div">
-			<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
+			<header id="header">
+				<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
+				<p class="text-right">
+<!-- 					<a class="user-command-link" href="/account" class="link-active">Account</a> -->
+<!-- 					<i class="user-command-link"> | </i> -->
+ 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+ 				</p>
+ 			</header>
 		</div>    
 		<div id="geodash-landing-bottom-div">
 			<div id="mask"></div>

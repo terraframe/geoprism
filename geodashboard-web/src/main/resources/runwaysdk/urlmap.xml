@@ -28,8 +28,11 @@
 
   <map uri="login" forward="/login.jsp"/>
   <map uri="loginRedirect" forward="/loginRedirect.jsp"/>
+  <map uri="account" controller="com.runwaysdk.geodashboard.AdminController">
+  	<action method="account" uri=""/> 
+  </map>
   <map uri="menu" forward="/geodashboardLanding.jsp"/>
-<!--   <map uri="dashboards" forward="/userDashboards.jsp"/> -->
+
   <map uri="dashboards" controller="com.runwaysdk.geodashboard.UserMenuController">
     <action method="getSortedDashboards" uri=""/>    
   </map>
