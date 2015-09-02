@@ -172,13 +172,13 @@ public class SessionFilter implements Filter, Reloadable
       return true;
     }
     
-    // Allow style files for GIS maps
+    // Allow images for the login page
     if (uri.endsWith(".png"))
     {
       return true;
     }
     
-    // Allow style files for GIS maps
+    // Allow javascript files for the login page
     if (uri.endsWith(".js"))
     {
       return true;

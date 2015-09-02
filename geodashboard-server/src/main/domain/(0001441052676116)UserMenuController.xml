@@ -20,18 +20,16 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser">
-        <create>
-          <mdMethod name="hasAccess" label="hasAccess" returnType="java.lang.Boolean" static="true">
-            <mdParameter name="functionality" label="Functionality" order="0" type="java.lang.String" />
-          </mdMethod>
-        </create>
-      </mdBusiness>
-    </update>
     <create>
+      <mdController name="com.runwaysdk.geodashboard.UserMenuController" label="User menu controller">
+        <mdAction name="dashboards" label="Dashboards for a user" />
+        <mdAction name="menu" label="Menu landing page" />
+      </mdController>
     </create>
+    <update>
+    </update>
   </doIt>
   <undoIt>
+    <delete></delete>
   </undoIt>
 </version>

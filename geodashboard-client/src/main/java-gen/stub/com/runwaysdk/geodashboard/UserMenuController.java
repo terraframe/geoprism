@@ -20,9 +20,12 @@ package com.runwaysdk.geodashboard;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.DashboardDTO;
+import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
 import javax.servlet.ServletException;
@@ -31,15 +34,19 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 {
   public static final String JSP_DIR   = "/WEB-INF/";
   
-  public static final String JSP = "/userDashboards.jsp";
+  public static final String LAYOUT  = "WEB-INF/templates/basicLayout.jsp";
+  
+  public static final String MENU  = "com/runwaysdk/geodashboard/userMenu/userMenu.jsp";
+  
+  public static final String DASHBOARDS  = "com/runwaysdk/geodashboard/userMenu/userDashboards.jsp";
   
   public UserMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
-    super(req, resp, isAsynchronous, JSP_DIR, JSP);
+    super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
   
   @Override
-  public void getSortedDashboards() throws IOException, ServletException
+  public void dashboards() throws IOException, ServletException
   {
     
     ClientRequestIF clientRequest = super.getClientRequest();
@@ -47,9 +54,41 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     DashboardQueryDTO dashboardsQ = DashboardDTO.getSortedDashboards(clientRequest);
     List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet(); 
     
-    this.req.setAttribute("dashboards", dashboards);
+    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
     
-    render("userDashboards.jsp");
+    this.req.setAttribute("dashboards", dashboards);
+    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    
+    render(DASHBOARDS);
+  }
+  
+  @Override
+  public void menu() throws IOException, ServletException
+  {
+   
+    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    
+    render(MENU);
+  }
+  
+  private boolean userIsAdmin() 
+  {
+    GeodashboardUserDTO currentUser = GeodashboardUserDTO.getCurrentUser(this.getClientRequest());
+    
+    List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
+    for(RolesDTO role : userRoles)
+    {
+      Pattern regex = Pattern.compile("\\.(\\S+)");
+      Matcher match = regex.matcher(role.getRoleName());
+      if (match.find())
+      {
+        if(match.group(1).equals("admin.Administrator"))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
   }
   
 }

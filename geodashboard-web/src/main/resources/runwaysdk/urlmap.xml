@@ -31,11 +31,15 @@
   <map uri="account" controller="com.runwaysdk.geodashboard.AdminController">
   	<action method="account" uri=""/> 
   </map>
-  <map uri="menu" forward="/geodashboardLanding.jsp"/>
 
-  <map uri="dashboards" controller="com.runwaysdk.geodashboard.UserMenuController">
-    <action method="getSortedDashboards" uri=""/>    
+  <map uri="menu" controller="com.runwaysdk.geodashboard.UserMenuController">
+    <action method="menu" uri=""/>    
   </map>
+  
+  <map uri="dashboards" controller="com.runwaysdk.geodashboard.UserMenuController">
+    <action method="dashboards" uri=""/>    
+  </map>
+
   <map uri="session" controller="com.runwaysdk.geodashboard.SessionController">
     <action method=".*" uri="${method}"/>
   </map>

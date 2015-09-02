@@ -34,8 +34,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="login.title" /></title>
   
-    <jwr:style src="/bundles/main.css" useRandomParam="false" />  
-  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+    <!-- User account CSS -->
+	<jwr:style src="/bundles/main.css" useRandomParam="false" />  
+	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+	
+	<!-- CSS -->
+<%-- 	<jwr:style src="/bundles/main.css" useRandomParam="false" /> --%>
+<%-- 	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>   --%>
+	    
+	<!-- JS -->
+<%-- 	<jwr:script src="/bundles/runway.js" useRandomParam="false"/>  --%>
+<%-- 	<jwr:script src="/bundles/main.js" useRandomParam="false"/>   --%>
+<%-- 	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	 --%>
+	<%-- 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/> --%>
+	  
+	  <!-- User account Javascript -->
+	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
   
   <style>
 		body {
@@ -169,10 +186,19 @@
 	
 		<div id="geodash-landing-top-div">
 			<header id="header">
-				<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
+				<img id="logo" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
 				<p class="text-right">
-<!-- 					<a class="user-command-link" href="/account" class="link-active">Account</a> -->
-<!-- 					<i class="user-command-link"> | </i> -->
+		  	        <c:choose>
+					  <c:when test="${isAdmin}">
+				      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
+							<i class="user-command-link"> | </i>
+				      </c:when>
+				      <c:otherwise>
+				      </c:otherwise>
+			        </c:choose>
+			        
+			        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+					<i class="user-command-link"> | </i>
  					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
  				</p>
  			</header>
@@ -181,15 +207,15 @@
 			<div id="mask"></div>
 			<div id="option-container">
 				<div id="dashboard-link" class="nav-option">
-					<img class="nav-icon-img" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
+					<img class="nav-icon-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
 					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h4>
 				</div>
 				<div class="nav-option">
-					<img id="geodashboard-admin" class="nav-icon-img" src="com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
+					<img id="geodashboard-admin" class="nav-icon-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
 					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h4>
 				</div>
 			</div>
-			<img id="background-img" src="com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" />
+			<img id="background-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" />
 			
 			<div id="geodash-landing-footer">
 				<h4><gdb:localize key="geodashboardLanding.footerMessage"/></h4>
@@ -230,6 +256,22 @@
 			      $(window).bind("load", ScaleBackgroundImg);
 			      $(window).bind("resize", ScaleBackgroundImg);
 			      $(window).bind("orientationchange", ScaleBackgroundImg);
+
+
+						com.runwaysdk.ui.Manager.setFactory("JQuery");
+						
+						$("#account-btn").on("click", function(){
+
+							var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
+							dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+						          dialog.close();
+						        }, null, {primary: true});
+							dialog.setStyle("z-index", 2001);
+				        	dialog.render();    
+				        	
+						  var ut = new com.runwaysdk.ui.userstable.UserForm();  
+						  ut.render("#"+dialog.getContentEl().getId());
+						})
 		})
   </script>
   

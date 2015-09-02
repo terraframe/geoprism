@@ -157,14 +157,7 @@ $(document).ready(function(){
       		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
       	</div>
 		<div class="nav-bar">
-		  <c:choose>
-			  <c:when test="${isAdmin}">
-		      	<a href="<%=request.getContextPath() + "/"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
-		      </c:when>
-		      <c:otherwise>
-		      	<a href="<%=request.getContextPath() + "/dashboards"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
-		      </c:otherwise>
-	      </c:choose>
+		    <a href="<%=request.getContextPath() + "/menu"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
 			<div id="dashboard-dropdown" class="sales-menu dropdown">
 				<a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">

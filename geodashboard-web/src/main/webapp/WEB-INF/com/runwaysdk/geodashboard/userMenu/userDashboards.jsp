@@ -34,8 +34,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="login.title" /></title>
   
-  <jwr:style src="/bundles/main.css" useRandomParam="false" />  
-  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+<!-- User account CSS -->
+<jwr:style src="/bundles/main.css" useRandomParam="false" />  
+<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+
+<!-- CSS -->
+<%-- <jwr:style src="/bundles/main.css" useRandomParam="false" /> --%>
+<%-- <jwr:style src="/bundles/widget.css" useRandomParam="false"/>   --%>
+
+<!-- JS -->
+<%-- <jwr:script src="/bundles/runway.js" useRandomParam="false"/>  --%>
+<%-- <jwr:script src="/bundles/main.js" useRandomParam="false"/>   --%>
+<%-- <jwr:script src="/bundles/widget.js" useRandomParam="false"/>	 --%>
+<%-- 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/> --%>
+
+<!-- User account Javascript -->
+<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
+<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
+  
+  
+<script type="text/javascript">${js}</script>
   
   <style>
 		body {
@@ -91,19 +111,30 @@
 <!--   <div class="row"> -->
   	<header id="header">
   	    <p class="text-right">
+  	        <c:choose>
+			  <c:when test="${isAdmin}">
+		      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
+					<i class="user-command-link"> | </i>
+		      </c:when>
+		      <c:otherwise>
+		      </c:otherwise>
+	        </c:choose>
+	        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+			<i class="user-command-link"> | </i>
  			<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
  		</p>
  		<div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
 	</header>
 <!--   </div> -->
   	<div class="row">
+  	</div>
         <div class="col-md-3"></div>
         <div class="col-md-6">
           	<c:forEach items="${dashboards}" var="dashboard">
 				<!-- <div class="row"> -->
 				  <div class="col-sm-6 col-md-4">
 				    <div class="thumbnail text-center">
-				      <img src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
+				      <img src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
 				      <div class="caption">
 				        <h3>${dashboard.displayLabel.value}</h3>
 						<!-- <p>Dashboard body</p> -->
@@ -123,7 +154,21 @@
 
   <script type="text/javascript">	   
 		$(document).ready(function(){
+
+			com.runwaysdk.ui.Manager.setFactory("JQuery");
 			
+			$("#account-btn").on("click", function(){
+
+				var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
+				dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+			          dialog.close();
+			        }, null, {primary: true});
+				dialog.setStyle("z-index", 2001);
+	        	dialog.render();    
+	        	
+			  var ut = new com.runwaysdk.ui.userstable.UserForm();  
+			  ut.render("#"+dialog.getContentEl().getId());
+			})
 		});
   </script>
   
