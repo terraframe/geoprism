@@ -34,33 +34,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="login.title" /></title>
   
-<!-- User account CSS -->
-<jwr:style src="/bundles/main.css" useRandomParam="false" />  
-<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
-
-<!-- CSS -->
-<%-- <jwr:style src="/bundles/main.css" useRandomParam="false" /> --%>
-<%-- <jwr:style src="/bundles/widget.css" useRandomParam="false"/>   --%>
-
-<!-- JS -->
-<%-- <jwr:script src="/bundles/runway.js" useRandomParam="false"/>  --%>
-<%-- <jwr:script src="/bundles/main.js" useRandomParam="false"/>   --%>
-<%-- <jwr:script src="/bundles/widget.js" useRandomParam="false"/>	 --%>
-<%-- 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/> --%>
-
-<!-- User account Javascript -->
-<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
-<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
-  
-  
-<script type="text/javascript">${js}</script>
+	<!-- User account CSS -->
+	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+	
+	<!-- User account Javascript -->
+	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
+	  
+	<script type="text/javascript">${js}</script>
   
   <style>
 		body {
 		    background-color: #333;
 		    margin: 0;
+		    min-width: 100%;
 		}
 		
 		html, body, #container {
@@ -108,7 +97,6 @@
   
   
   <div id="container">
-<!--   <div class="row"> -->
   	<header id="header">
   	    <p class="text-right">
   	        <c:choose>
@@ -125,27 +113,25 @@
  		</p>
  		<div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
 	</header>
-<!--   </div> -->
-  	<div class="row">
-  	</div>
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-          	<c:forEach items="${dashboards}" var="dashboard">
-				<!-- <div class="row"> -->
-				  <div class="col-sm-6 col-md-4">
-				    <div class="thumbnail text-center">
-				      <img src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
-				      <div class="caption">
-				        <h3>${dashboard.displayLabel.value}</h3>
-						<!-- <p>Dashboard body</p> -->
-				        <p><a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a></p>
-				      </div>
-				    </div>
-				  </div>
-				<!-- </div> -->
-  			</c:forEach>
-        </div>
-        <div class="col-md-3"></div>
+  	<div class="row"></div>
+       <div class="col-md-3"></div>
+       <div class="col-md-6">
+         	<c:forEach items="${dashboards}" var="dashboard">
+			<!-- <div class="row"> -->
+			  <div class="col-sm-6 col-md-4">
+			    <div class="thumbnail text-center">
+			      <img src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
+			      <div class="caption">
+			        <h3>${dashboard.displayLabel.value}</h3>
+					<!-- <p>Dashboard body</p> -->
+			        <p><a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a></p>
+			      </div>
+			    </div>
+			  </div>
+			<!-- </div> -->
+ 			</c:forEach>
+       </div>
+       <div class="col-md-3"></div>
     </div>
   </div>
 

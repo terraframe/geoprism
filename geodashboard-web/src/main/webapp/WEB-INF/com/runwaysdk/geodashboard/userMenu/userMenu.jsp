@@ -35,29 +35,21 @@
   <title><gdb:localize key="login.title" /></title>
   
     <!-- User account CSS -->
-	<jwr:style src="/bundles/main.css" useRandomParam="false" />  
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 	
-	<!-- CSS -->
-<%-- 	<jwr:style src="/bundles/main.css" useRandomParam="false" /> --%>
-<%-- 	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>   --%>
-	    
-	<!-- JS -->
-<%-- 	<jwr:script src="/bundles/runway.js" useRandomParam="false"/>  --%>
-<%-- 	<jwr:script src="/bundles/main.js" useRandomParam="false"/>   --%>
-<%-- 	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	 --%>
-	<%-- 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/> --%>
-	  
-	  <!-- User account Javascript -->
+    <!-- User account Javascript -->
 	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
 	<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
+	
+	<script type="text/javascript">${js}</script>
   
   <style>
 		body {
 		    background-color: black;
 		    margin: 0;
+		    min-width: 100%;
 		}
 		
 		html, body, #container {
@@ -71,23 +63,23 @@
 		} 
 		
 		#logo{
-	    	margin-left: 50px;
-	    	width: 250px;
-	    	position: absolute;
-  			top: 50%;
-  			transform: translateY(-50%);
 		}
 		
 		#geodash-landing-top-div{
 	    	border-bottom: grey solid 3px;
-			/* height: 30%; */
-			height: 200px;
+			height: 30%; 
 			position: relative;
 			    background-color: #333;
 		}
 		
 		#geodash-landing-bottom-div{
 			overflow: hidden;
+			height: 70%;
+			overflow-y: auto;
+    		background-image: url(com/runwaysdk/geodashboard/images/globe_thematic.png);
+    		background-size: 100%;
+    		background-repeat: no-repeat;
+    		background-position-y: -10%;
 		}
 			
 		#geodash-landing-footer{
@@ -130,14 +122,12 @@
 		}
 		
 		.nav-option{
-    		margin-left: 50px;
-    		float: left;
+
 		}
 		
 		.nav-icon-img{
-	    	height: 150px;
 	    	border: solid white 5px;
-    		border-radius: 10px;
+    		border-radius: 20px;
     		cursor: pointer;
     		background-color: white;
 		}
@@ -153,22 +143,39 @@
 		.nav-icon-img-label{
 			text-align: center;
 			margin-top: 10px;
-			max-width: 250px;
 		}
 		
 		#header{
 	    	padding: 10px;
+	    	height: 100%
 		}
 		
 		.user-command-link{
 			color: white;
 			padding: 5px;
     		font-size: 15px;
+    		white-space: nowrap;
+  			overflow: hidden;
 		}
 		
 		.error-message{
 			color: red;
 			text-align: center;
+		}
+		
+		.vertical-center-row{
+			margin-top: 10%;
+		}
+		
+		.nav-icon-container{
+    		vertical-align: middle;
+    		width: 100%;
+    		height: 70%;
+		}
+		
+		.logo-row{
+		  			top: 50%; 
+   			transform: translateY(-50%); 
 		}
 		
 	</style>
@@ -183,40 +190,59 @@
   </c:if>
   
   <div id="container">
-	
 		<div id="geodash-landing-top-div">
 			<header id="header">
-				<img id="logo" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
-				<p class="text-right">
-		  	        <c:choose>
-					  <c:when test="${isAdmin}">
-				      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
+				<div id="header-link-container" class="text-right">
+						<p class="text-right">
+				  	        <c:choose>
+							  <c:when test="${isAdmin}">
+						      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
+									<i class="user-command-link"> | </i>
+						      </c:when>
+						      <c:otherwise>
+						      </c:otherwise>
+					        </c:choose>
+					        
+					        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
 							<i class="user-command-link"> | </i>
-				      </c:when>
-				      <c:otherwise>
-				      </c:otherwise>
-			        </c:choose>
-			        
-			        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-					<i class="user-command-link"> | </i>
- 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
- 				</p>
+		 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+		 				</p>
+		 			</div>
+				<div class="row">
+       				<div class="col-md-4">
+       					<img id="logo" class="pull-left img-responsive" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
+       				</div>
+       				<div class="hidden-xs col-md-8"></div>
+		 		</div>
+		 		
  			</header>
 		</div>    
 		<div id="geodash-landing-bottom-div">
 			<div id="mask"></div>
-			<div id="option-container">
-				<div id="dashboard-link" class="nav-option">
-					<img class="nav-icon-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
-					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h4>
-				</div>
-				<div class="nav-option">
-					<img id="geodashboard-admin" class="nav-icon-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
-					<h4 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h4>
-				</div>
-			</div>
-			<img id="background-img" src="<%=request.getContextPath()%>/com/runwaysdk/geodashboard/images/globe_thematic.png" alt="background" />
-			
+			<div class="nav-icon-container container-fluid">
+			  	<div class="row-fluid vertical-center-row">
+			        <div class="col-sm-2 hidden-xs"></div>
+			        <div class="col-xs-12 col-sm-8">
+							<div class="row-fluid">
+							  <div class="col-xs-12 col-sm-6 text-center">
+								<div id="dashboard-link" class="nav-option">
+									<img class="nav-icon-img img-responsive" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
+									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h3>
+								</div>
+								</div>
+							  <div class="col-xs-12 col-sm-6 text-center">
+								<div class="nav-option">
+									<img id="geodashboard-admin" class="nav-icon-img img-responsive" src="com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
+									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h3>
+								</div>
+							  </div>
+							</div>
+							<!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
+			        </div>
+			        <div class="col-sm-2 hidden-xs"></div>
+		        </div>
+		     </div>
+						
 			<div id="geodash-landing-footer">
 				<h4><gdb:localize key="geodashboardLanding.footerMessage"/></h4>
 			</div>
@@ -237,42 +263,21 @@
 					window.open(window.location.origin +"${pageContext.request.contextPath}", "_self");
 				});	
 
-				  //responsive code begin
-			      //you can remove responsive code if you don't want the slider scales while window resizes
-			      function ScaleBackgroundImg() {
-			          var bodyWidth = document.body.clientWidth;
-			          var elWidth = $("#option-container").width();
-			          var adjusted = elWidth / 2;
-			          
-			          if(bodyWidth){
-		              	  $("#option-container").css('margin-left', '-'+adjusted+'px')
-			          }	  
-			          else{
-			              window.setTimeout(ScaleSlider, 30);
-			          }
-			      }
-				  ScaleBackgroundImg();
+					com.runwaysdk.ui.Manager.setFactory("JQuery");
+					
+					$("#account-btn").on("click", function(){
 
-			      $(window).bind("load", ScaleBackgroundImg);
-			      $(window).bind("resize", ScaleBackgroundImg);
-			      $(window).bind("orientationchange", ScaleBackgroundImg);
-
-
-						com.runwaysdk.ui.Manager.setFactory("JQuery");
-						
-						$("#account-btn").on("click", function(){
-
-							var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
-							dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
-						          dialog.close();
-						        }, null, {primary: true});
-							dialog.setStyle("z-index", 2001);
-				        	dialog.render();    
-				        	
-						  var ut = new com.runwaysdk.ui.userstable.UserForm();  
-						  ut.render("#"+dialog.getContentEl().getId());
-						})
-		})
+						var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
+						dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+					          dialog.close();
+					        }, null, {primary: true});
+						dialog.setStyle("z-index", 2001);
+			        	dialog.render();    
+			        	
+					  var ut = new com.runwaysdk.ui.userstable.UserForm();  
+					  ut.render("#"+dialog.getContentEl().getId());
+					});
+		});
   </script>
   
   

@@ -34,10 +34,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <%--   <title><gdb:localize key="login.title" /></title> --%>
   
-<%--   <jwr:style src="/com/runwaysdk/geodashboard/login/login.css" />   --%>
-
 	<script src="jquery/jquery-1.9.0.min.js"></script>
-	<script src="jssor-slider/js/jssor.slider.mini.js"></script>
 
 	<style>
 		body {

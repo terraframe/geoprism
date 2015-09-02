@@ -66,6 +66,8 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   public void menu() throws IOException, ServletException
   {
    
+    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
+    
     this.req.setAttribute("isAdmin", this.userIsAdmin());
     
     render(MENU);
