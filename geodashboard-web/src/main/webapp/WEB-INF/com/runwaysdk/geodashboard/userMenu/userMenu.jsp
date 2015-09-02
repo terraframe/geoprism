@@ -76,7 +76,7 @@
 			overflow: hidden;
 			height: 70%;
 			overflow-y: auto;
-    		background-image: url(com/runwaysdk/geodashboard/images/globe_thematic.png);
+    		background-image: url(com/runwaysdk/geodashboard/images/theme_background.png);
     		background-size: 100%;
     		background-repeat: no-repeat;
     		background-position-y: -10%;
@@ -127,7 +127,7 @@
 		
 		.nav-icon-img{
 	    	border: solid white 5px;
-    		border-radius: 20px;
+    		border-radius: 15px;
     		cursor: pointer;
     		background-color: white;
 		}
@@ -164,18 +164,13 @@
 		}
 		
 		.vertical-center-row{
-			margin-top: 10%;
+			margin-top: 5%;
 		}
 		
 		.nav-icon-container{
     		vertical-align: middle;
     		width: 100%;
-    		height: 70%;
-		}
-		
-		.logo-row{
-		  			top: 50%; 
-   			transform: translateY(-50%); 
+    		height: 75%;
 		}
 		
 	</style>
@@ -209,10 +204,11 @@
 		 				</p>
 		 			</div>
 				<div class="row">
+					<div class="hidden-xs col-md-1"></div>
        				<div class="col-md-4">
        					<img id="logo" class="pull-left img-responsive" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
        				</div>
-       				<div class="hidden-xs col-md-8"></div>
+       				<div class="hidden-xs col-md-7"></div>
 		 		</div>
 		 		
  			</header>
@@ -221,8 +217,8 @@
 			<div id="mask"></div>
 			<div class="nav-icon-container container-fluid">
 			  	<div class="row-fluid vertical-center-row">
-			        <div class="col-sm-2 hidden-xs"></div>
-			        <div class="col-xs-12 col-sm-8">
+			        <div class="col-sm-3 hidden-xs"></div>
+			        <div class="col-xs-12 col-sm-6">
 							<div class="row-fluid">
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div id="dashboard-link" class="nav-option">
@@ -239,7 +235,7 @@
 							</div>
 							<!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
 			        </div>
-			        <div class="col-sm-2 hidden-xs"></div>
+			        <div class="col-sm-3 hidden-xs"></div>
 		        </div>
 		     </div>
 						
