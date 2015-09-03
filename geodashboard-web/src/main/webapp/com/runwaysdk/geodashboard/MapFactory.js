@@ -997,22 +997,6 @@
             });
           mqHybrid._gdbCustomLabel = this.localize("mqHybrid");
           
-          
-          ////
-          // REMOVE AFTER DIGITAL GLOBE DEMO
-          ////
-          var projection = ol.proj.get('EPSG:3857');
-          var projectionExtent = projection.getExtent();
-          var size = ol.extent.getWidth(projectionExtent) / 256;
-          var resolutions = new Array(20);
-          var matrixIds = new Array(20);
-          
-          for (var z = 0; z < 20; ++z) {
-            // generate resolutions and matrixIds arrays for this WMTS
-            resolutions[z] = size / Math.pow(2, z);
-            matrixIds[z] = MapWidget.MAPSRID + ":" + z.toString();
-          }
-                 
           return [osm, mqAerial, mqHybrid];
         },
         

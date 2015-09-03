@@ -173,6 +173,12 @@
     		height: 75%;
 		}
 		
+		.header-logo-row{
+			position: absolute;
+  			top: 50%;
+  			transform: translateY(-50%);
+		}
+		
 	</style>
 	
 </head>
@@ -203,12 +209,12 @@
 		 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 		 				</p>
 		 			</div>
-				<div class="row">
+				<div class="row-fluid header-logo-row">
 					<div class="hidden-xs col-md-1"></div>
-       				<div class="col-md-4">
+       				<div class="col-md-8">
        					<img id="logo" class="pull-left img-responsive" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
        				</div>
-       				<div class="hidden-xs col-md-7"></div>
+       				<div class="hidden-xs col-md-3"></div>
 		 		</div>
 		 		
  			</header>
