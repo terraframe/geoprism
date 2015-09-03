@@ -157,7 +157,7 @@ $(document).ready(function(){
       		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
       	</div>
 		<div class="nav-bar">
-		    <a href="<%=request.getContextPath() + "/menu"%>" class="opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a>
+<%-- 		    <a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop" data-toggle="tooltip" data-placement="bottom" title="Menu"><gdb:localize key="dashboardViewer.opener"/></a> --%>
 			<div id="dashboard-dropdown" class="sales-menu dropdown">
 				<a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown" data-id="${activeDashboard.id}">${activeDashboard.displayLabel.value}</a>
 				<ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
@@ -179,6 +179,7 @@ $(document).ready(function(){
   		      
 <%--   		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i> --%>
 		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
+  		    	<a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
   		    </c:if>
 		</div>
 		
