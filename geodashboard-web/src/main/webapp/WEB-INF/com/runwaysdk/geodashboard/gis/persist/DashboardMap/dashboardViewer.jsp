@@ -43,6 +43,9 @@
 
 <script type="text/javascript">${js}</script>
 
+<%-- <jwr:style src="/com/runwaysdk/geodashboard/MapConfig.json" useRandomParam="false"/>   --%>
+<script src="/com/runwaysdk/geodashboard/MapConfig.json"></script>
+
 <!-- Google maps API -->
 <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 

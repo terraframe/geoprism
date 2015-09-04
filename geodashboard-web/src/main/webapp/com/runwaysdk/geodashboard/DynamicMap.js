@@ -1378,7 +1378,7 @@
             com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
             var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
             checkbox.setId(id);
-            if(i === 0){
+            if(b._gdbisdefault === "true"){
               checkbox.setChecked(checkbox);
               this._mapFactory.showLayer(b, 0);
             }

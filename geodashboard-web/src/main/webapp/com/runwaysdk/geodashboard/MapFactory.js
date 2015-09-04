@@ -930,74 +930,71 @@
          * <public> - called externally
          */
         createBaseLayers : function(){
-          
-          // A hack to use google maps :(
-//          var gmap = new google.maps.Map(document.getElementById('mapDivId'), {
-//            center: new google.maps.LatLng(0, 0),
-//            zoom: this.getZoomLevel(),
-//            disableDefaultUI: true,
-//            keyboardShortcuts: false,
-//            draggable: true,
-//            disableDoubleClickZoom: false,
-//            scrollwheel: true,
-//            streetViewControl: false
-//          });
-//          gmap._gdbCustomLabel = this.localize("googleStreets");
-//          
-//          gmap.controls[google.maps.ControlPosition.TOP_LEFT].push(olmap);
-//          
-//          var map = this.getMap();
-//          var view = map.getView();
-//          
-//          view.on('change:center', function() {
-//            var center = ol.proj.transform(view.getCenter(),
-//                'EPSG:3857', 'EPSG:4326');
-//            gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
-//          });
-//          view.on('change:resolution', function() {
-//            gmap.setZoom(view.getZoom());
-//          });
-          
-          
+	        var baseObjArr = [];
+	        var baseMapsArr = MapConfig._BASEMAPS;
+	        for(var i=0; i<baseMapsArr.length; i++){
+	        	var base = baseMapsArr[i];
+	        	if(base.LAYER_TYPE.toLowerCase() === "tile"){
+	        		var baseObj = new ol.layer.Tile(
+	        				{visible: base.VISIBLE},
+	        				base.CUSTOM_TYPE_OPTIONS
+	        			);
+	        		
+	        		if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
+	        			
+	        			baseObj.setSource( 
+	        				new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
+	        			);
+	        		}
+	        		else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	        			baseObj.setSource( 
+	        				new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
+	        			);
+	        		}
+	        		
+        			baseObj._gdbisdefault = base.DEFAULT;
+        			baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+            		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+            		
+	        		baseObjArr.push(baseObj);
+	        	}
+	        	else if(base.LAYER_TYPE.toLowerCase() === "group"){
+	        		var layersArr = [];
+	        		
+	        		var baseObj = new ol.layer.Group(
+	        				{visible: base.VISIBLE},
+	        				{isdefault: base.DEFAULT},
+	        				base.CUSTOM_TYPE_OPTIONS);
+	        		
+	        		for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
+	        			var layer = base.GROUP_LAYERS[gi];
+	        			
+	        			if(layer.LAYER_TYPE.toLowerCase() === "tile"){
+	        				var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
+	        				
+	        				if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	        					layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
+	        				}
+	        				
+	        				layersArr.push(layerObj);
+	        			}
+	        		}
+	        		
+	        		baseObj.setLayers(new ol.Collection(layersArr));
+	        		
+	        		baseObj._gdbisdefault = base.DEFAULT;
+	        		baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+	        		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+	        		
+	        		baseObjArr.push(baseObj);
+	        	}
+        }
+        	
+        	
         // TODO: Set min/max zoom levels or on zoom behavior to account for mapquest not displaying 
          // at low zoom levels
-          var osm = new ol.layer.Tile({ 
-            source: new ol.source.OSM({ 
-              attributions: [ 
-                              new ol.Attribution({
-                                html: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-                              }),
-                              ol.source.OSM.ATTRIBUTION
-                            ]
-            })
-          });
-          osm._gdbcustomtype = 'OSM';
-          osm._gdbCustomLabel = this.localize("osmBasic");
           
-          var mqAerial = new ol.layer.Tile({ 
-            style: 'Aerial',
-            visible: true,
-            source: new ol.source.MapQuest({
-                layer: 'sat'
-            })
-          });
-          mqAerial._gdbCustomLabel = this.localize("mqAerial");
-          
-          var mqHybrid = new ol.layer.Group({
-              style: 'AerialWithLabels',
-              visible: true,
-              layers: [
-                new ol.layer.Tile({
-                  source: new ol.source.MapQuest({layer: 'sat'})
-                }),
-                new ol.layer.Tile({
-                  source: new ol.source.MapQuest({layer: 'hyb'})
-                })
-              ]
-            });
-          mqHybrid._gdbCustomLabel = this.localize("mqHybrid");
-          
-          return [osm, mqAerial, mqHybrid];
+          return baseObjArr;
         },
         
         
