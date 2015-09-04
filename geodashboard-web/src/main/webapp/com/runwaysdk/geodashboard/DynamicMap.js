@@ -1867,7 +1867,7 @@
       },      
       
       _onClickToggleLeftPanel : function(e) {
-        // TODO: change these classes to not be leaflet specific
+        
         var target = $(e.target);
         var speed = 500;
         
@@ -1881,12 +1881,7 @@
               target.toggleClass("fa-angle-double-left fa-angle-double-right");
             }
            );
-          
-          // toggle the map zoom buttons
-          $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
-              left: "-=236",
-          }, speed );
-          
+                  
           $(".ol-zoom.ol-unselectable.ol-control").animate({
               left: "-=236",
           }, speed );
@@ -1901,11 +1896,6 @@
               target.toggleClass("fa-angle-double-right fa-angle-double-left");
             }
           );
-          
-          // toggle the map zoom buttons
-          $(".leaflet-control-zoom.leaflet-bar.leaflet-control").animate({
-              left: "+=236",
-          }, speed );
           
           $(".ol-zoom.ol-unselectable.ol-control").animate({
               left: "+=236",
