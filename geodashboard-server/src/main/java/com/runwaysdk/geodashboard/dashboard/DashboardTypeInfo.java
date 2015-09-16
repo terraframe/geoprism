@@ -38,9 +38,15 @@ public class DashboardTypeInfo implements Reloadable
 
   private List<GeoNode>       nodes;
 
-  public DashboardTypeInfo(Integer _index)
+  private String              type;
+
+  private String              universal;
+
+  public DashboardTypeInfo(String _type, Integer _index, String _universal)
   {
+    this.type = _type;
     this.index = _index;
+    this.universal = _universal;
     this.labels = new HashMap<String, String>();
     this.nodes = new LinkedList<GeoNode>();
     this.attributes = new LinkedList<String>();
@@ -63,6 +69,16 @@ public class DashboardTypeInfo implements Reloadable
     {
       this.attributes.add(attributeName);
     }
+  }
+
+  public String getType()
+  {
+    return type;
+  }
+
+  public String getUniversal()
+  {
+    return universal;
   }
 
   public Integer getIndex()

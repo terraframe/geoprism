@@ -49,11 +49,11 @@
       </mdBusiness>
 
       <mdRelationship name="com.runwaysdk.geodashboard.DashboardMetadata" label="Dashboard Metadata" cacheAlgorithm="everything">
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.Dashboard" method="Dashboard" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="Metadata" />
         <attributes>
           <integer name="listOrder" required="true" />
         </attributes>
-        <parent cardinality="*" name="com.runwaysdk.geodashboard.Dashboard" method="Dashboard" />
-        <child cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="Metadata" />
       </mdRelationship>
 
       <mdBusiness name="com.runwaysdk.geodashboard.MetadataWrapper" label="Dashboard Wrapper" cacheAlgorithm="everything">
@@ -73,11 +73,11 @@
       </mdView>
 
       <mdRelationship name="com.runwaysdk.geodashboard.DashboardAttributes" label="Dashboard Attributes" cacheAlgorithm="everything">
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="DashboardMetadata" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.AttributeWrapper" method="AttributeWrapper" />
         <attributes>
           <integer name="listOrder" required="true" />
         </attributes>
-        <parent cardinality="*" name="com.runwaysdk.geodashboard.MetadataWrapper" method="DashboardMetadata" />
-        <child cardinality="*" name="com.runwaysdk.geodashboard.AttributeWrapper" method="AttributeWrapper" />
       </mdRelationship>
 
       <mdRelationship name="com.runwaysdk.geodashboard.MetadataGeoNode" label="Wrapper Geo node" cacheAlgorithm="everything">
