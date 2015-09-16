@@ -1217,30 +1217,20 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	display:block;
 	clear:both;
 }
-.aside .nav-bar .opener-drop{
-	float:right; 
-	width:37px;
-	height:21px;
-	text-indent:-9999px;
-	overflow:hidden;
-	background:url(../images/sprite.png) no-repeat -315px 5px;
-	margin:0 -13px 0 0;
-	position:relative;
-}
-.aside .nav-bar .opener-drop:after{
-	content:'';
-	position:absolute;
-	right:0;
-	top:50%;
-	width:5px;
-	height:6px;
-	background:url(../images/sprite.png) no-repeat -200px -25px;
-	margin:-3px 0 0;
-	display:none;
-}
-.aside .nav-bar .opener-drop:hover:after,
-.aside .nav-bar .opener-drop.active:after{display:block;}
-.aside .nav-bar .opener-drop:hover{background:url(../images/sprite.png) no-repeat -315px -20px;}
+
+	a.fa.fa-bars.opener-drop {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 19px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	a.fa.fa-bars.opener-drop:hover,
+	a.fa.fa-bars.opener-drop:focus{
+		color: #00bfff;
+	}
+	
 .sales-menu{
 	float:left;
 	position:relative;
@@ -1252,15 +1242,6 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	padding:0 10px 0 1px;
 	color:#26c9ff;
 }
-/* .sales-menu .link-opener:after{ */
-/* 	content:''; */
-/* 	position:absolute; */
-/* 	right:0; */
-/* 	top:7px; */
-/* 	width:10px; */
-/* 	height:7px; */
-/* 	background:url(../images/sprite.png) no-repeat -225px -25px; */
-/* } */
 
 .sales-menu .link-opener:before{
 	content:'';

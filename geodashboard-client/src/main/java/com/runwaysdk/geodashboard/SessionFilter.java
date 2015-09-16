@@ -165,25 +165,25 @@ public class SessionFilter implements Filter, Reloadable
     {
       return true;
     }
-
+    
+    // Allow images for the login page
+    if (uri.contains("jquery"))
+    {
+      return true;
+    }
+    
     // Allow style files for GIS maps
     if (uri.endsWith(".sld"))
     {
       return true;
     }
     
-    // Allow style files for GIS maps
+    // Allow images for the login page
     if (uri.endsWith(".png"))
     {
       return true;
     }
     
-    // Allow style files for GIS maps
-    if (uri.endsWith(".js"))
-    {
-      return true;
-    }
-
     // Login/Logout requests for mojax/mojo extensions.
     if (uri.endsWith(SessionController.LOGIN_ACTION) || uri.endsWith(SessionController.LOGOUT_ACTION))
     {
