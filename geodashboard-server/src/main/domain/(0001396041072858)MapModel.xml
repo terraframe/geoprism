@@ -203,11 +203,11 @@
       </mdStruct>
 
       <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
+        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
+        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
         <attributes>
           <integer name="layerIndex" required="true" rejectNegative="true" />
         </attributes>
-        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
-        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
       </mdRelationship>
 
       <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
