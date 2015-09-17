@@ -25,12 +25,14 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.io.ImportManager;
 import com.runwaysdk.dataaccess.io.dataDefinition.CreateHandler;
+import com.runwaysdk.dataaccess.io.dataDefinition.CreateOrUpdateHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.HandlerFactory;
 import com.runwaysdk.dataaccess.io.dataDefinition.HandlerFactoryIF;
 import com.runwaysdk.dataaccess.io.dataDefinition.ImportPluginIF;
 import com.runwaysdk.dataaccess.io.dataDefinition.SearchHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.TagContext;
 import com.runwaysdk.dataaccess.io.dataDefinition.TagHandler;
+import com.runwaysdk.dataaccess.io.dataDefinition.UpdateHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.XMLTags;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
@@ -43,10 +45,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
-import com.runwaysdk.system.gis.geo.GeoNodeEntity;
-import com.runwaysdk.system.gis.geo.GeoNodeEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
-import com.runwaysdk.system.gis.geo.GeoNodeGeometryQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 
 public class GeodashboardImportPlugin implements ImportPluginIF
@@ -312,6 +311,8 @@ public class GeodashboardImportPlugin implements ImportPluginIF
   public void register(ImportManager manager)
   {
     manager.register(CreateHandler.class.getName(), new CreateHandlerFactory(manager));
+    manager.register(CreateOrUpdateHandler.class.getName(), new CreateHandlerFactory(manager));
+    manager.register(UpdateHandler.class.getName(), new CreateHandlerFactory(manager));
   }
 
   @Override

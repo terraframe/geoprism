@@ -23,12 +23,16 @@ import java.util.List;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.AttributeWrapper;
 import com.runwaysdk.geodashboard.AttributeWrapperQuery;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardAttributes;
+import com.runwaysdk.geodashboard.DashboardAttributesQuery;
 import com.runwaysdk.geodashboard.DashboardMetadata;
+import com.runwaysdk.geodashboard.DashboardMetadataQuery;
 import com.runwaysdk.geodashboard.MetadataGeoNode;
+import com.runwaysdk.geodashboard.MetadataGeoNodeQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
@@ -38,7 +42,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class DashboardBuilder
+public class DashboardBuilder implements Reloadable
 {
 
   private boolean isGeoEntityAttribute(MdAttributeDAOIF mdAttribute)
@@ -128,9 +132,7 @@ public class DashboardBuilder
 
     MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdClass, uni);
 
-    DashboardMetadata dm = _dashboard.addMetadata(mWrapper);
-    dm.setListOrder(info.getIndex());
-    dm.apply();
+    this.createOrUpdateDashboardMetadata(_dashboard, mWrapper, info);
 
     int listOrder = 0;
 
@@ -142,9 +144,7 @@ public class DashboardBuilder
 
       if (info.isDashboardAttribute(attributeName) && !this.isGeoEntityAttribute(mdAttribute))
       {
-        DashboardAttributes unitWrapperRel = mWrapper.addAttributeWrapper(unitWrapper);
-        unitWrapperRel.setListOrder(listOrder++);
-        unitWrapperRel.apply();
+        this.createOrUpdateDashboardAttributes(mWrapper, unitWrapper, listOrder++);
       }
     }
 
@@ -153,8 +153,88 @@ public class DashboardBuilder
     for (GeoNode node : nodes)
     {
       // Associate the node with the MetadataWrapper
-      MetadataGeoNode relationship = new MetadataGeoNode(mWrapper, node);
-      relationship.apply();
+      createOrUpdateMetadataGeoNode(mWrapper, node);
+    }
+  }
+
+  private void createOrUpdateMetadataGeoNode(MetadataWrapper _mWrapper, GeoNode _node)
+  {
+    MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(_mWrapper));
+    query.AND(query.getChild().EQ(_node));
+
+    OIterator<? extends MetadataGeoNode> iterator = query.getIterator();
+
+    try
+    {
+      if (!iterator.hasNext())
+      {
+        MetadataGeoNode relationship = new MetadataGeoNode(_mWrapper, _node);
+        relationship.apply();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  private void createOrUpdateDashboardAttributes(MetadataWrapper _mWrapper, AttributeWrapper _unitWrapper, int _listOrder)
+  {
+    DashboardAttributesQuery query = new DashboardAttributesQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(_mWrapper));
+    query.AND(query.getChild().EQ(_unitWrapper));
+
+    OIterator<? extends DashboardAttributes> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        DashboardAttributes dm = iterator.next();
+        dm.lock();
+        dm.setListOrder(_listOrder);
+        dm.apply();
+      }
+      else
+      {
+        DashboardAttributes unitWrapperRel = _mWrapper.addAttributeWrapper(_unitWrapper);
+        unitWrapperRel.setListOrder(_listOrder);
+        unitWrapperRel.apply();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  private void createOrUpdateDashboardMetadata(Dashboard _dashboard, MetadataWrapper _mWrapper, DashboardTypeInfo _info)
+  {
+    DashboardMetadataQuery query = new DashboardMetadataQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(_dashboard));
+    query.AND(query.getChild().EQ(_mWrapper));
+    OIterator<? extends DashboardMetadata> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        DashboardMetadata dm = iterator.next();
+        dm.lock();
+        dm.setListOrder(_info.getIndex());
+        dm.apply();
+      }
+      else
+      {
+        DashboardMetadata dm = _dashboard.addMetadata(_mWrapper);
+        dm.setListOrder(_info.getIndex());
+        dm.apply();
+      }
+    }
+    finally
+    {
+      iterator.close();
     }
   }
 }
