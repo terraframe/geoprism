@@ -20,10 +20,10 @@
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:redefine schemaLocation="datatype.xsd">
-  
-  <!-- GIS Module -->
-  
-    <!--A list of all possible attributes-->
+
+    <!-- GIS Module -->
+
+    <!--A list of all possible attributes -->
     <xs:complexType name="attributes">
       <xs:complexContent>
         <xs:extension base="attributes">
@@ -38,27 +38,48 @@
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
-    </xs:redefine>
-  
-   <!--Common Attributes of all attributes-->
+    <xs:complexType name="create">
+      <xs:complexContent>
+        <xs:extension base="create">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="geoNodeEntity" type="geoNodeEntity" />
+            <xs:element name="geoNodeGeometry" type="geoNodeGeometry" />
+          </xs:choice>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="update">
+      <xs:complexContent>
+        <xs:extension base="update">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="geoNodeEntity" type="geoNodeEntity" />
+            <xs:element name="geoNodeGeometry" type="geoNodeGeometry" />
+          </xs:choice>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>    
+    
+  </xs:redefine>
+
+  <!--Common Attributes of all attributes -->
   <xs:attributeGroup name="attributeSpatial">
     <xs:attributeGroup ref="attribute" />
     <xs:attribute name="srid" type="xs:integer" use="required" />
     <xs:attribute name="dimension" type="xs:integer" use="required" />
   </xs:attributeGroup>
-  
+
   <xs:complexType name="point">
     <xs:attributeGroup ref="attributeSpatial" />
   </xs:complexType>
-  
+
   <xs:complexType name="linestring">
     <xs:attributeGroup ref="attributeSpatial" />
   </xs:complexType>
-  
+
   <xs:complexType name="polygon">
     <xs:attributeGroup ref="attributeSpatial" />
   </xs:complexType>
-  
+
   <xs:complexType name="multipoint">
     <xs:attributeGroup ref="attributeSpatial" />
   </xs:complexType>
@@ -69,6 +90,21 @@
 
   <xs:complexType name="multipolygon">
     <xs:attributeGroup ref="attributeSpatial" />
-  </xs:complexType> 
-  
+  </xs:complexType>
+
+  <xs:complexType name="geoNodeEntity">
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:attribute name="geoEntityAttribute" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="geoNodeGeometry">
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:attribute name="geoEntityAttribute" type="xs:string" use="required" />
+    <xs:attribute name="identifierAttribute" type="xs:string" />
+    <xs:attribute name="displayLabelAttribute" type="xs:string" />
+    <xs:attribute name="geometryAttribute" type="xs:string" />
+    <xs:attribute name="multipolygonAttribute" type="xs:string" />
+    <xs:attribute name="pointAttribute" type="xs:string" />
+  </xs:complexType>
+
 </xs:schema>
