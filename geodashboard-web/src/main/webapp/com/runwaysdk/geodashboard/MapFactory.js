@@ -21,10 +21,6 @@
   var MapWidgetName = GDB.Constants.GIS_PACKAGE+'MapWidget';
   
   com.runwaysdk.Localize.defineLanguage(MapWidgetName, {
-     "googleStreets" : "Google Streets",
-     "googleSatellite" : "Google Satellite",
-     "googleHybrid" : "Google Hybrid",
-     "googleTerrain" : "Google Terrain",
      "osmBasic" : "Open Street Map",
      "location" : "Location",
      "aggregationMethod" : "Aggregation Method", 
@@ -173,551 +169,6 @@
       }
     }
   });
-  
-  var LeafletMap = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.LeafletMap', {
-    Extends : MapWidget,  
-    IsAbstract : false,
-    Constants : {
-      
-    },   
-    Instance : {
-      initialize : function(elementId, center, zoomLevel, enableClickEvents, dynamicMap){
-        this._center = center;
-        this._zoomLevel = zoomLevel;
-        this._elementId = elementId;    
-        this._map = null;
-        this.enableClickEvents = enableClickEvents;
-        this._dynamicMap = dynamicMap;
-        this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
-        
-        this.renderMap(dynamicMap);
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      setMap : function(map) {
-        this._map = map;
-      },
-      
-      /**
-       * <public> - called externally
-       */
-      getMap : function() {
-        return this._map;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getCenter : function() {
-        return this._center;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getZoomLevel : function() {
-        return this.zoomLevel;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getMapElementId : function() {
-        return this._elementId;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getMapConfig : function() {
-        return this._configuration;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getEnableClickEvents : function() {
-        return this.enableClickEvents;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getDynamicMap : function() {
-        return this._dynamicMap;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      setDynamicMap : function(thisRef) {
-        this._dynamicMap = thisRef;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      getImpl : function() {        
-          return $(this._elementId);
-      },    
-      
-      /**
-       * <private> - internal method
-       */
-      getMapSize : function() {
-        var map = this.getMap();
-        var mapSize = map.getSize();  
-        var mapSizeFormatted = {"x": mapSize.x, "y": mapSize.y};
-        return mapSizeFormatted;
-      },
-      
-      /**
-       * Return bounds as an object
-       */
-      getCurrentBounds : function() {
-        var map = this.getMap();
-        var bounds = map.getBounds();
-        
-        // Constructing a standard format
-        var boundsFormatted = {
-            _southWest : {lat : bounds._southWest.lat, lng : bounds._southWest.lng},
-            _northEast : {lat: bounds._northEast.lat, lng : bounds._northEast.lng}
-            };
-        
-        return boundsFormatted;
-      },
-      
-      /**
-       * Return bounds as a string 
-       * 
-       * <private> - internal method
-       */
-      getCurrentBoundsAsString : function() {
-        var bounds = this.getCurrentBounds();
-        var boundsStr = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].toString();
-        return boundsStr;
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      configureMap : function() {
-        var map = this.getMap();
-        map.attributionControl.setPrefix('');
-      },
-      
-      /**
-       * Get point position relative to map size and zoom level
-       * 
-       * @latLng - array of coord point in form [lat, lng]
-       * 
-       * <private> - internal method
-       */
-      coordToMapPoint : function(latLng) {
-        var map = this.getMap();
-        var latLngPt = new L.LatLng(latLng[0], latLng[1]);
-        
-        return map.latLngToContainerPoint(latLngPt, map.getZoom());
-      },
-      
-      /**
-       * Display the layer on the map
-       * 
-       * @layer - layer object
-       * @stackIndex - integer value z-index of the layer 
-       * 
-       * <public> - called externally
-       */
-      showLayer : function(layer) {
-        var map = this.getMap();
-        map.addLayer(layer);
-        
-        // The OSM tileLayer isn't set at the bottom by default so this sets it as so
-          if(layer._gdbcustomtype === "OSM"){
-            map.attributionControl.setPrefix('');
-            layer.bringToBack();
-          }
-      },
-      
-      /**
-       * Hide the layer on the map
-       * 
-       * @layer - layer object
-       * 
-       * <public> - called externally
-       */
-      hideLayer : function(layer) {
-        var map = this.getMap();
-        map.removeLayer(layer);
-      },
-      
-      /**
-       * Create and return an array of all base layer objects.
-       * 
-       * <public> - called externally
-       */
-      createBaseLayers : function(){
-        
-        // the SATELLITE layer has all 22 zoom level, so we add it first to
-        // become the internal base layer that determines the zoom levels of the
-        // map.
-        
-        //var gsat = new L.Google('SATELLITE');   
-      //gsat._gdbcustomlabel = this.localize("googleSatellite");
-        var gphy = new L.Google('TERRAIN');     
-        gphy._gdbCustomLabel = this.localize("googleTerrain"); 
-        
-        var gmap = new L.Google('ROADMAP');    
-        gmap._gdbCustomLabel = this.localize("googleStreets");
-        
-        var ghyb = new L.Google('HYBRID');
-        ghyb._gdbCustomLabel = this.localize("googleHybrid");
-        
-        var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-          }); 
-        osm._gdbcustomtype = 'OSM';
-        osm._gdbCustomLabel = this.localize("osmBasic");
-        
-        var base = [osm, gmap, ghyb, gphy];
-        
-        return base;
-      },
-      
-      
-      /**
-       * Create and return an array of all user defined layer objects.
-       * 
-       * <public> - called externally
-       */
-      createUserLayers : function(layers, geoserverWorkspace, removeExisting) {
-        // Remove any already rendered layers from the leaflet map
-          if (removeExisting === true) {
-            for (var i = 0; i < layers.length; i++) {
-              var layer = layers[i];
-              
-              if (layer.wmsLayerObj != null) {
-                this.hideLayer(layer.wmsLayerObj);
-              }
-            }
-          }
-          
-          
-          //
-          // Add thematic layers to leaflet map
-          //
-          for (var i = 0; i < layers.length; i++) {
-            var layer = layers[i];
-            if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.wmsLayerObj == null))) {
-              this.constructLayerObj(layer, geoserverWorkspace);
-            }
-          }
-      },
-      
-      
-      /**
-       * Create and return an array of all reference layer objects.
-       * 
-       * <public> - called externally
-       */
-      createReferenceLayers : function(refLayers, geoserverWorkspace, removeExisting) {
-          // Remove any already rendered layers from the leaflet map
-          if (removeExisting === true) {
-            for (var i = 0; i < refLayers.length; i++) {
-                var layer = refLayers[i];
-                
-                if (layer.wmsLayerObj && layer.wmsLayerObj != null) {
-                  this.hideLayer(layer.wmsLayerObj);
-                }
-              }
-          }
-          
-          //
-          // Add reference layers to leaflet map
-          //
-          for (var i = 0; i < refLayers.length; i++) {
-            var layer = refLayers[i];
-            
-            // Since REFERENCEJSON layers are basic placeholders for actual mappable layers we will make sure none of them
-            // get through here.
-            if(layer.layerType !== "REFERENCEJSON"){
-              this.constructLayerObj(layer, geoserverWorkspace);
-            }
-          }
-      },
-      
-      
-      /**
-       * Build the wms layer object
-       * 
-       * @layer - layer object
-       * @geoserverWorkspace = name of the geoserver workspace
-       * 
-       * <private> - internal method
-       */
-      constructLayerObj : function(layer, geoserverWorkspace){
-        var viewName = layer.getViewName();
-          var geoserverName = geoserverWorkspace + ":" + viewName;
-        
-          // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
-          // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO REDUCE BUBBLE CHOPPING.
-          // We could get slightly better performance by setting tiled: false for non-bubble layers but 
-          // this is currently unnecessary addition of code for relatively small performance gain.
-            var mapBounds = this.getCurrentBounds();
-            var mapSWOrigin = [mapBounds._southWest.lat, mapBounds._southWest.lng];
-            var leafletLayer = L.tileLayer.wms(window.location.origin+"/geoserver/wms/", {
-              layers: geoserverName,
-              format: 'image/png',
-              transparent: true,
-              tiled: true,
-              tileSize: 256,
-              tilesorigin: mapSWOrigin,
-              styles: layer.getSldName() || "" 
-            });
-        
-            this.showLayer(leafletLayer);
-            layer.wmsLayerObj = leafletLayer;
-      },
-      
-      /**
-       * Sets the bounds and zoom level of the map
-       * 
-       * @bounds - JSON array of coordinates {southwest lat, southwest long, northeast lat, northeast long}
-       * @zoomLevel - integer zoom level
-       * 
-       * <public> - called externally
-       */
-      setView : function(bounds, zoomLevel) {
-        var map = this.getMap();
-        
-        if(!zoomLevel){
-          zoomLevel = 9;
-        }
-        
-          // Handle points (2 coord sets) & polygons (4 coord sets)
-          if (bounds.length === 2){
-            var center = L.latLng(bounds[1], bounds[0]);
-            
-            map.setView(center, zoomLevel);
-          }
-          else if (bounds.length === 4){
-            var swLatLng = L.latLng(bounds[1], bounds[0]);
-            var neLatLng = L.latLng(bounds[3], bounds[2]);            
-            var lBounds = L.latLngBounds(swLatLng, neLatLng);   
-
-            map.fitBounds(lBounds);
-          }
-      },
-      
-      /**
-       * <private> - internal method
-       */
-      removeStaleMapFragments : function() {
-        var map = this.getMap();
-          map.remove();
-          
-        $('#'+this.getMapElementId()).html('');
-      },
-      
-      
-      /**
-       * Performs the identify request when a user clicks on the map
-       * 
-       * @param id
-       * 
-       * <private> - internal method
-       */
-      _mapClickHandler : function(e) {
-        
-        var dynamicMap = this.getDynamicMap();
-        
-        // The 'this' is a this reference from the calling code to get access to the layer cache
-        var layers = dynamicMap.getCachedLayers().reverse();
-        
-        if(layers.length > 0) {
-          
-          // Construct a GetFeatureInfo request URL given a point        
-          var point = this.coordToMapPoint([ e.latlng.lat, e.latlng.lng ]);
-          var size = this.getMapSize();        
-          var mapBbox = this.getCurrentBoundsAsString();
-          var map = this.getMap();
-          var layerMap = new Object();
-          var layerStringList = '';
-          var that = this;
-        
-          // Build a string of layers to query against but geoserver will only return the 
-          // first entry in the array if anything is found. Otherwise it will query the next layer
-          // until something is found.
-          var firstAdded = false;
-          for (var i = 0; i < layers.length; i++) { 
-            var layer = layers[i];
-          
-            // If the layer object is active (visible on the map)
-            if(layer.getLayerIsActive()){
-              var layerId = layer.attributeMap.viewName.value;              
-              layerMap[layerId] = layer;              
-                
-              if(firstAdded){
-                layerStringList += "," + layerId;
-              }
-              else{
-                layerStringList += layerId;
-                firstAdded = true;
-              }
-            }
-          }
-        
-        var requestURL = window.location.origin+"/geoserver/" + dynamicMap._workspace +"/wms?" +
-          "REQUEST=GetFeatureInfo" +
-          "&INFO_FORMAT=application/json" +
-          "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
-          "&SERVICE=WMS" +
-          "&SRS="+MapWidget.DATASRID +
-          "&VERSION=1.1.1" +
-          "&height=" + size.y +
-          "&width=" + size.x +
-          "&X="+ point.x +
-          "&Y="+ point.y +
-          "&BBOX="+ mapBbox +
-          "&LAYERS=geodashboard:"+ layerStringList +
-          "&QUERY_LAYERS=geodashboard:"+ layerStringList +
-          "&TYPENAME=geodashboard:"+ layerStringList;
-      
-          LeafletMap.that = this;
-          $.ajax({
-              url: requestURL,
-              context: document.body 
-          }).done(function(json) {
-            var popupContent = '';
-            
-            // The getfeatureinfo request will return only 1 feature
-            for(var i = 0; i < json.features.length; i++){
-              var featureLayer = json.features[i];
-              var featureLayerIdReturn = featureLayer.id;
-              var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
-              var geoId = featureLayer.properties.geoid;
-              
-              var layer = layerMap[featureLayerId];
-              var layerDisplayName = layer.getLayerName();
-              var aggregationMethod = layer.getAggregationMethod();
-              var attributeName = layer.getAggregationAttribute().toLowerCase();
-              
-              var attributeValue = featureLayer.properties[attributeName];                            
-              var featureDisplayName = featureLayer.properties.displaylabel;
-              
-              if(typeof attributeValue === 'number'){
-                attributeValue = dynamicMap._formatter(attributeValue);
-              }
-              else if(!isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
-                var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
-                var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                attributeValue = dynamicMap._formatDate(parsedAttr);
-              }
-              
-              popupContent += '<h3 class="popup-heading">'+layerDisplayName+'</h3>';
-              
-              var html = '';
-              html += '<table class="table">';
-              html += '<thead class="popup-table-heading">';
-              html += '<tr>'; 
-              html += '<th>'+LeafletMap.that.localize("location")+'</th>';  
-              html += '<th>'+LeafletMap.that.localize("aggregationMethod")+'</th>'; 
-              html += '<th>'+LeafletMap.that.localize("aggregateValue")+'</th>'; 
-              html += '</tr>';  
-              html += '</thead>';
-              html += '<tbody>';  
-              html += '<tr>'; 
-              html += '<td>'+ featureDisplayName +'</td>';  
-              html += '<td>' + aggregationMethod + '</td>'; 
-              html += '<td>' + attributeValue + '</td>';  
-              html += '</tr>';  
-              
-              if(dynamicMap.canEditData() && geoId != null && (layer.aggregationStrategy.type == 'GeometryAggregationStrategy' || layer.aggregationStrategy.type == 'GEOMETRY') ) {
-                  html += '<tr>'; 
-                  html += '<td colspan="3"><a class="edit-feature" data-layerid="' + layer.getLayerId() + '" data-geoid="' + geoId + '">' + that.localize("editFeature") + '</a></td>';  
-                  html += '</tr>';  
-                }              
-              
-              html += '</tbody>';  
-              html += '</table>';  
-                      
-              popupContent += html;
-              
-              if(geoId != null)
-              {                 
-                dynamicMap.setCurrGeoId(currGeoId);
-                dynamicMap._renderReport(layer.getLayerId(), geoId, dynamicMap._criteria);
-              }            
-            }
-            
-            if(popupContent.length > 0){
-              that.showClickPopup(popupContent, [ e.latlng.lat, e.latlng.lng ]);
-              
-              
-              // Hook-up the edit click event
-              $(".edit-feature").click(function(e){
-                var layerId = $(this).data("layerid");
-                var geoId = $(this).data("geoid");
-                
-                dynamicMap.editFeature(layerId, geoId);
-              });              
-            }
-          });
-        }
-      },
-      
-      /**
-       * Open a popup on the map
-       * 
-       * <private> - internal method
-       */
-      showClickPopup : function(content, latLng) {
-        var map = this.getMap();
-        var popup = L.popup().setLatLng(new L.LatLng(latLng[0], latLng[1]));
-        popup.setContent(content).openOn(map);
-      },
-      
-      /**
-       * Close all popups on the map
-       * 
-       * <public> - called externally
-       */
-      removeClickPopup : function() {
-        var map = this.getMap();
-        map.closePopup();
-      },
-      
-      
-      /**
-       * Instantiate a new map
-       * 
-       * @dynamicMap - the this refernce from calling code which is needed to gain access to DynamicMap scope
-       * 
-       */
-      renderMap : function(dynamicMap) {
-        if(this.getMap() != null){
-          this.removeStaleMapFragments();
-        }
-        var map = new L.Map(this.getMapElementId(), this.getMapConfig());
-        this.setMap(map);
-        this.configureMap();
-        
-        
-        if(this.getEnableClickEvents()){
-          this.setDynamicMap(dynamicMap);
-          
-          var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
-          map.on("click", mapClickHandlerBound);
-        }
-      }
-    },
-    Static : {
-      // Static methods
-      }
-  });
-  
   
   
   var OpenLayersMap = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.OpenLayersMap', {
@@ -930,90 +381,71 @@
          * <public> - called externally
          */
         createBaseLayers : function(){
-          
-          // A hack to use google maps :(
-//          var gmap = new google.maps.Map(document.getElementById('mapDivId'), {
-//            center: new google.maps.LatLng(0, 0),
-//            zoom: this.getZoomLevel(),
-//            disableDefaultUI: true,
-//            keyboardShortcuts: false,
-//            draggable: true,
-//            disableDoubleClickZoom: false,
-//            scrollwheel: true,
-//            streetViewControl: false
-//          });
-//          gmap._gdbCustomLabel = this.localize("googleStreets");
-//          
-//          gmap.controls[google.maps.ControlPosition.TOP_LEFT].push(olmap);
-//          
-//          var map = this.getMap();
-//          var view = map.getView();
-//          
-//          view.on('change:center', function() {
-//            var center = ol.proj.transform(view.getCenter(),
-//                'EPSG:3857', 'EPSG:4326');
-//            gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
-//          });
-//          view.on('change:resolution', function() {
-//            gmap.setZoom(view.getZoom());
-//          });
-          
-          
+	        var baseObjArr = [];
+	        var baseMapsArr = MapConfig._BASEMAPS;
+	        for(var i=0; i<baseMapsArr.length; i++){
+	        	var base = baseMapsArr[i];
+	        	if(base.LAYER_TYPE.toLowerCase() === "tile"){
+	        		var baseObj = new ol.layer.Tile(
+	        				{visible: base.VISIBLE},
+	        				base.CUSTOM_TYPE_OPTIONS
+	        			);
+	        		
+	        		if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
+	        			
+	        			baseObj.setSource( 
+	        				new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
+	        			);
+	        		}
+	        		else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	        			baseObj.setSource( 
+	        				new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
+	        			);
+	        		}
+	        		
+        			baseObj._gdbisdefault = base.DEFAULT;
+        			baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+            		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+            		
+	        		baseObjArr.push(baseObj);
+	        	}
+	        	else if(base.LAYER_TYPE.toLowerCase() === "group"){
+	        		var layersArr = [];
+	        		
+	        		var baseObj = new ol.layer.Group(
+	        				{visible: base.VISIBLE},
+	        				{isdefault: base.DEFAULT},
+	        				base.CUSTOM_TYPE_OPTIONS);
+	        		
+	        		for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
+	        			var layer = base.GROUP_LAYERS[gi];
+	        			
+	        			if(layer.LAYER_TYPE.toLowerCase() === "tile"){
+	        				var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
+	        				
+	        				if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	        					layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
+	        				}
+	        				
+	        				layersArr.push(layerObj);
+	        			}
+	        		}
+	        		
+	        		baseObj.setLayers(new ol.Collection(layersArr));
+	        		
+	        		baseObj._gdbisdefault = base.DEFAULT;
+	        		baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+	        		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+	        		
+	        		baseObjArr.push(baseObj);
+	        	}
+        }
+        	
+        	
         // TODO: Set min/max zoom levels or on zoom behavior to account for mapquest not displaying 
          // at low zoom levels
-          var osm = new ol.layer.Tile({ 
-            source: new ol.source.OSM({ 
-              attributions: [ 
-                              new ol.Attribution({
-                                html: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-                              }),
-                              ol.source.OSM.ATTRIBUTION
-                            ]
-            })
-          });
-          osm._gdbcustomtype = 'OSM';
-          osm._gdbCustomLabel = this.localize("osmBasic");
           
-          var mqAerial = new ol.layer.Tile({ 
-            style: 'Aerial',
-            visible: true,
-            source: new ol.source.MapQuest({
-                layer: 'sat'
-            })
-          });
-          mqAerial._gdbCustomLabel = this.localize("mqAerial");
-          
-          var mqHybrid = new ol.layer.Group({
-              style: 'AerialWithLabels',
-              visible: true,
-              layers: [
-                new ol.layer.Tile({
-                  source: new ol.source.MapQuest({layer: 'sat'})
-                }),
-                new ol.layer.Tile({
-                  source: new ol.source.MapQuest({layer: 'hyb'})
-                })
-              ]
-            });
-          mqHybrid._gdbCustomLabel = this.localize("mqHybrid");
-          
-          
-          ////
-          // REMOVE AFTER DIGITAL GLOBE DEMO
-          ////
-          var projection = ol.proj.get('EPSG:3857');
-          var projectionExtent = projection.getExtent();
-          var size = ol.extent.getWidth(projectionExtent) / 256;
-          var resolutions = new Array(20);
-          var matrixIds = new Array(20);
-          
-          for (var z = 0; z < 20; ++z) {
-            // generate resolutions and matrixIds arrays for this WMTS
-            resolutions[z] = size / Math.pow(2, z);
-            matrixIds[z] = MapWidget.MAPSRID + ":" + z.toString();
-          }
-                 
-          return [osm, mqAerial, mqHybrid];
+          return baseObjArr;
         },
         
         
@@ -1027,7 +459,7 @@
          * <public> - called externally
          */
         createUserLayers : function(layers, geoserverWorkspace, removeExisting) {
-          // Remove any already rendered layers from the leaflet map
+          // Remove any already rendered layers from the map
             if (removeExisting === true) {
               for (var i = 0; i < layers.length; i++) {
                 var layer = layers[i];
@@ -1040,7 +472,7 @@
             
             
             //
-            // Add thematic layers to leaflet map
+            // Add thematic layers to map
             //
             for (var i = 0; i < layers.length; i++) {
               var layer = layers[i];
@@ -1064,7 +496,7 @@
          */
         createReferenceLayers : function(refLayers, geoserverWorkspace, removeExisting) {
           
-          // Remove any already rendered layers from the leaflet map
+          // Remove any already rendered layers from the map
             if (removeExisting === true) {
               for (var i = 0; i < refLayers.length; i++) {
                   var layer = refLayers[i];

@@ -31,7 +31,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 
 
 /*****
-**** Both Open Layers and Leaflet CSS
+**** Open Layers CSS
 *****/
 	h3.popup-heading {
 		margin: 0;
@@ -42,75 +42,6 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	
 	.popup-table-heading {
 		font-style: italic;
-	}
-
-
-/*****
-**** Leaflet CSS
-*****/
-
-	.leaflet-top, .leaflet-bottom {
-		position: absolute;
-		z-index: 10;
-		pointer-events: none;
-	}
-	
-	.leaflet-control-zoom.leaflet-bar.leaflet-control {
-		margin-left: 245px;
-		margin-top: 0px;
-		top: 23px;
-		box-shadow: none;
-		border: solid 1px #ddd;
-	}
-	
-	.leaflet-bar a:first-child {
-		border-top-left-radius: 2px;
-		border-top-right-radius: 2px;
-		color: rgba(0, 0, 0, 0.7);
-		width: 35px;
-		height: 35px;
-		line-height: 33px;
-	}
-	
-	.leaflet-bar a:last-child {
-		border-bottom-left-radius: 2px;
-		border-bottom-right-radius: 2px;
-		color: rgba(0, 0, 0, 0.7);
-		width: 35px;
-		height: 35px;
-		line-height: 33px;
-	}
-	
-	.leaflet-control-zoom-in, .leaflet-control-zoom-out {
-		font: bold 30px 'Lucida Console', Monaco, monospace;
-		text-indent: 1px;
-	}
-	
-	a.leaflet-control-zoom-out:hover, a.leaflet-control-zoom-in:hover {
-		color: #00bfff;
-		background-color: #fff;
-	}
-
-	.leaflet-popup-content p {
-		margin: 0;
-	}
-	
-	.leaflet-popup-content .table{
-		font-size: 17px;
-	}
-	
-	.leaflet-bottom.leaflet-right {
-		bottom: 0px;
-	    right: 335px;
-	}
-	
-	.leaflet-control-attribution.leaflet-control{
-		color: gray;
-		background: rgba(255, 255, 255, 0.5);
-	}
-	
-	.leaflet-control-attribution.leaflet-control > a{
-		color: gray;
 	}
 
 

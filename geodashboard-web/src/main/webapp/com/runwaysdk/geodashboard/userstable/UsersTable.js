@@ -540,7 +540,7 @@
             onFailure : function(ex) {
               that.handleException(ex);
             }
-          }, document.getElementById('userForm'));
+          }, e.getContainer().getRawEl());
               
           user.lock(lockCallback);
         }
