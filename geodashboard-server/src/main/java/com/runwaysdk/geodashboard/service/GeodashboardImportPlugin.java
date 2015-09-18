@@ -223,6 +223,7 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
   private static class DashboardHandler extends TagHandler
   {
+    private static final String NAME    = "name";
     private static final String LABEL    = "label";
 
     private static final String COUNTRY  = "country";
@@ -241,20 +242,23 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       String label = attributes.getValue(LABEL);
       String country = attributes.getValue(COUNTRY);
+      String name = attributes.getValue(NAME);
 
-      Dashboard dashboard = this.getOrCreateDashboard(label);
+      Dashboard dashboard = this.getOrCreateDashboard(name);
       dashboard.getDisplayLabel().setDefaultValue(label);
       dashboard.setCountry(GeoEntity.getByKey(country));
+      dashboard.setName(name);
+      
       dashboard.apply();
 
       context.setObject(Dashboard.CLASS, dashboard);
     }
 
-    private Dashboard getOrCreateDashboard(String label)
+    private Dashboard getOrCreateDashboard(String name)
     {
       if (this.getManager().isUpdateState() || this.getManager().isCreateOrUpdateState())
       {
-        Dashboard dashboard = this.getDashboard(label);
+        Dashboard dashboard = this.getDashboard(name);
 
         if (dashboard != null)
         {
@@ -264,7 +268,7 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         }
         else if (this.getManager().isUpdateState())
         {
-          String message = "Unable to find a [" + Dashboard.CLASS + "] with a default locale of [" + label + "]";
+          String message = "Unable to find a [" + Dashboard.CLASS + "] with a name of [" + name + "]";
           MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO(Dashboard.CLASS);
 
           throw new DataNotFoundException(message, mdClass);
@@ -274,10 +278,10 @@ public class GeodashboardImportPlugin implements ImportPluginIF
       return new Dashboard();
     }
 
-    private Dashboard getDashboard(String label)
+    private Dashboard getDashboard(String name)
     {
       DashboardQuery query = new DashboardQuery(new QueryFactory());
-      query.WHERE(query.getDisplayLabel().getDefaultLocale().EQ(label));
+      query.WHERE(query.getName().EQ(name));
       OIterator<? extends Dashboard> iterator = query.getIterator();
 
       try
