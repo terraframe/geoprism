@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 733487185)
+@com.runwaysdk.business.ClassSignature(hash = 259991696)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 733487185;
+  private static final long serialVersionUID = 259991696;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -58,6 +58,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
@@ -517,6 +518,43 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getLockedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
+  }
+  
+  public String getName()
+  {
+    return getValue(NAME);
+  }
+  
+  public void setName(String value)
+  {
+    if(value == null)
+    {
+      setValue(NAME, "");
+    }
+    else
+    {
+      setValue(NAME, value);
+    }
+  }
+  
+  public boolean isNameWritable()
+  {
+    return isWritable(NAME);
+  }
+  
+  public boolean isNameReadable()
+  {
+    return isReadable(NAME);
+  }
+  
+  public boolean isNameModified()
+  {
+    return isModified(NAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(NAME).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.ActorDTO getOwner()
