@@ -517,34 +517,6 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
     }
   }
   
-  public com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot addClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
-  {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot) addParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
-  }
-  
-  public void removeClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
-  {
-    removeAllParents(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm> getAllClassifierAttributeRoots()
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm>) getParents(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot> getAllClassifierAttributeRootsRel()
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot>) getParentRelationships(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot> getClassifierAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot>) getRelationshipsWithParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
-  }
-  
   public com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship addIsAParent(com.runwaysdk.geodashboard.ontology.Classifier classifier)
   {
     return (com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship) addParent(classifier, com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship.CLASS);

@@ -38,7 +38,6 @@ import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.util.EscapeUtil;
@@ -302,22 +301,22 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
             throw new RuntimeException(e);
           }
 
-          List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
-          for (ClassifierAttributeRootDTO relationship : relationships)
-          {
-            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
-            {
-              try
-              {
-                newJSON.put("selectable", relationship.getSelectable());
-              }
-              catch (JSONException e)
-              {
-                throw new RuntimeException(e);
-              }
-              selectableMap.put(root.getId(), relationship.getSelectable());
-            }
-          }
+//          List<? extends ClassifierAttributeRootDTO> relationships = root.getAllClassifierAttributeRootsRelationships();
+//          for (ClassifierAttributeRootDTO relationship : relationships)
+//          {
+//            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
+//            {
+//              try
+//              {
+//                newJSON.put("selectable", relationship.getSelectable());
+//              }
+//              catch (JSONException e)
+//              {
+//                throw new RuntimeException(e);
+//              }
+//              selectableMap.put(root.getId(), relationship.getSelectable());
+//            }
+//          }
 
           ids.put(newJSON);
         }
