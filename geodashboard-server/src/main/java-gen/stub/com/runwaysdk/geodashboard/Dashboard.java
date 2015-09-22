@@ -61,6 +61,11 @@ import com.runwaysdk.geodashboard.gis.persist.ThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
+import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
+import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
@@ -279,7 +284,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       map.apply();
     }
   }
-  
+
   @Override
   @Transaction
   public void applyWithOptions(String[] userIds, String name)
@@ -288,7 +293,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     this.getDisplayLabel().setValue(name);
     this.apply();
     this.unlock();
-    
+
     assignUsers(this.getId(), userIds);
   }
 
@@ -402,123 +407,120 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static final com.runwaysdk.geodashboard.ontology.Classifier[] getClassifierRoots(String mdAttributeId)
   {
-//    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-//
-//    QueryFactory factory = new QueryFactory();
-//
-//    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
-//    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
-//
-//    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-//    classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
-//
-//    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
-//
-//    try
-//    {
-//      LinkedList<Classifier> roots = new LinkedList<Classifier>(iterator.getAll());
-//      return roots.toArray(new Classifier[roots.size()]);
-//    }
-//    finally
-//    {
-//      iterator.close();
-//    }
-    return null;
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+
+    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+    classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
+
+    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+
+    try
+    {
+      LinkedList<Classifier> roots = new LinkedList<Classifier>(iterator.getAll());
+      return roots.toArray(new Classifier[roots.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
   public static String getClassifierTree(String mdAttributeId)
   {
-//    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-//    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(new QueryFactory());
-//
-//    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
-//
-//    OIterator<? extends ClassifierAttributeRoot> iterator = null;
-//
-//    try
-//    {
-//      iterator = rootQuery.getIterator();
-//
-//      JSONArray nodes = new JSONArray();
-//
-//      while (iterator.hasNext())
-//      {
-//        ClassifierAttributeRoot relationship = iterator.next();
-//        Classifier classifier = relationship.getChild();
-//
-//        if (relationship.getSelectable())
-//        {
-//          nodes.put(classifier.getJSONObject());
-//        }
-//        else
-//        {
-//          OIterator<Term> children = null;
-//
-//          try
-//          {
-//            children = classifier.getDirectDescendants(ClassifierIsARelationship.CLASS);
-//
-//            List<Term> list = children.getAll();
-//
-//            Collections.sort(list, new TermComparator());
-//
-//            for (Term term : list)
-//            {
-//              Classifier child = (Classifier) term;
-//
-//              nodes.put(child.getJSONObject());
-//            }
-//          }
-//          finally
-//          {
-//            if (children != null)
-//            {
-//              children.close();
-//            }
-//          }
-//        }
-//      }
-//
-//      return nodes.toString();
-//    }
-//    finally
-//    {
-//      if (iterator != null)
-//      {
-//        iterator.close();
-//      }
-//    }
-    return null;
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(new QueryFactory());
+
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+
+    OIterator<? extends ClassifierAttributeRoot> iterator = null;
+
+    try
+    {
+      iterator = rootQuery.getIterator();
+
+      JSONArray nodes = new JSONArray();
+
+      while (iterator.hasNext())
+      {
+        ClassifierAttributeRoot relationship = iterator.next();
+        Classifier classifier = relationship.getChild();
+
+        if (relationship.getSelectable())
+        {
+          nodes.put(classifier.getJSONObject());
+        }
+        else
+        {
+          OIterator<Term> children = null;
+
+          try
+          {
+            children = classifier.getDirectDescendants(ClassifierIsARelationship.CLASS);
+
+            List<Term> list = children.getAll();
+
+            Collections.sort(list, new TermComparator());
+
+            for (Term term : list)
+            {
+              Classifier child = (Classifier) term;
+
+              nodes.put(child.getJSONObject());
+            }
+          }
+          finally
+          {
+            if (children != null)
+            {
+              children.close();
+            }
+          }
+        }
+      }
+
+      return nodes.toString();
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
   }
 
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
   {
-//    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-//
-//    QueryFactory factory = new QueryFactory();
-//    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
-//    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-//    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
-//
-//    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
-//    allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
-//
-//    classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
-//    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().LIKEi("%" + text + "%"));
-//    classifierQuery.restrictRows(limit, 1);
-//
-//    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
-//
-//    try
-//    {
-//      LinkedList<Classifier> suggestions = new LinkedList<Classifier>(iterator.getAll());
-//      return suggestions.toArray(new Classifier[suggestions.size()]);
-//    }
-//    finally
-//    {
-//      iterator.close();
-//    }
-    return null;
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+    QueryFactory factory = new QueryFactory();
+    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
+
+    classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
+    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().LIKEi("%" + text + "%"));
+    classifierQuery.restrictRows(limit, 1);
+
+    OIterator<? extends Classifier> iterator = classifierQuery.getIterator();
+
+    try
+    {
+      LinkedList<Classifier> suggestions = new LinkedList<Classifier>(iterator.getAll());
+      return suggestions.toArray(new Classifier[suggestions.size()]);
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 
   public static String[] getCategoryInputSuggestions(String mdAttributeId, String geoNodeId, String universalId, String aggregationVal, String text, Integer limit, DashboardCondition[] conditions)
@@ -765,46 +767,45 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return true;
   }
-  
+
   /*
-   * Gets all active geodashboard users in the system who are not Administrators 
-   * 
+   * Gets all active geodashboard users in the system who are not Administrators
    */
   @Override
-  public GeodashboardUser[] getAllDashboardUsers() {
+  public GeodashboardUser[] getAllDashboardUsers()
+  {
     ArrayList<GeodashboardUser> nonAdminGDUsers = new ArrayList<GeodashboardUser>();
     GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
     for (int i = 0; i < gdUsers.length; i++)
     {
       boolean isAdmin = false;
       GeodashboardUser user = gdUsers[i];
-      
+
       List<? extends Roles> userRoles = user.getAllAssignedRole().getAll();
-      for(Roles role : userRoles)
+      for (Roles role : userRoles)
       {
-        if(role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
+        if (role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
         {
           isAdmin = true;
         }
       }
-      
+
       Boolean inactive = user.getInactive();
 
       if (!inactive && !isAdmin)
       {
-       nonAdminGDUsers.add(user);
+        nonAdminGDUsers.add(user);
       }
     }
-    
+
     GeodashboardUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeodashboardUser[nonAdminGDUsers.size()]);
-    
+
     return nonAdminGDUsersArr;
   }
 
   /*
-   * Gets all active geodashboard users in the system who are not Administrators 
-   * and whether they already have access to a given dashboard.
-   * 
+   * Gets all active geodashboard users in the system who are not Administrators and whether they already have access to
+   * a given dashboard.
    */
   @Override
   public String getAllDashboardUsersJSON()
@@ -816,7 +817,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       JSONObject userObj = new JSONObject();
       GeodashboardUser user = gdUsers[i];
-      
+
       boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
 

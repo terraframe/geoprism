@@ -92,36 +92,36 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
    */
   public static Classifier findMatchingTerm(String sfTermToMatch, MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
-//    QueryFactory qf = new QueryFactory();
-//
-//    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-//    ClassifierAttributeRootQuery carQ = new ClassifierAttributeRootQuery(qf);
-//    ClassifierQuery classifierQ = new ClassifierQuery(qf);
-//    ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
-//    ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
-//
-//    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
-//
-//    classifierRootQ.WHERE(classifierRootQ.classifierAttributeRoots(carQ));
-//
-//    allPathsQ.WHERE(allPathsQ.getParentTerm().EQ(classifierRootQ));
-//
-//    synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
-//
-//    classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch), classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
-//    
-//    OIterator<? extends Classifier> i = classifierQ.getIterator();
-//    try
-//    {
-//      for (Classifier classifier : i)
-//      {
-//        return classifier;
-//      }
-//    }
-//    finally
-//    {
-//      i.close();
-//    }
+    QueryFactory qf = new QueryFactory();
+
+    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
+    ClassifierQuery classifierQ = new ClassifierQuery(qf);
+    ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
+
+    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+
+    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+
+    allPathsQ.WHERE(allPathsQ.getParentTerm().EQ(classifierRootQ));
+
+    synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
+
+    classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch), classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
+    
+    OIterator<? extends Classifier> i = classifierQ.getIterator();
+    try
+    {
+      for (Classifier classifier : i)
+      {
+        return classifier;
+      }
+    }
+    finally
+    {
+      i.close();
+    }
     return null;
   }
 
@@ -229,40 +229,39 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public static Classifier findClassifierAddIfNotExist(String packageString, String classifierLabel, MdAttributeTermDAOIF mdAttributeTermDAO)
   {
-//    Classifier classifier = findMatchingTerm(classifierLabel, mdAttributeTermDAO);
-//  
-//    if (classifier == null)
-//    {
-//      classifier = new Classifier();
-//      classifier.getDisplayLabel().setDefaultValue(classifierLabel);
-//      classifier.setClassifierId(classifierLabel);
-//      classifier.setClassifierPackage(packageString);
-//      classifier.apply();
-//  
-//      QueryFactory qf = new QueryFactory();
-//  
-//      ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-//      ClassifierAttributeRootQuery carQ = new ClassifierAttributeRootQuery(qf);
-//  
-//      carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
-//  
-//      classifierRootQ.WHERE(classifierRootQ.classifierAttributeRoots(carQ));
-//  
-//      OIterator<? extends Classifier> i = classifierRootQ.getIterator();
-//      try
-//      {
-//        for (Classifier classifierRoot : i)
-//        {
-//          classifier.addLink(classifierRoot, ClassifierIsARelationship.CLASS);
-//        }
-//      }
-//      finally
-//      {
-//        i.close();
-//      }
-//    }
-//  
-//    return classifier;
-    return null;
+    Classifier classifier = findMatchingTerm(classifierLabel, mdAttributeTermDAO);
+  
+    if (classifier == null)
+    {
+      classifier = new Classifier();
+      classifier.getDisplayLabel().setDefaultValue(classifierLabel);
+      classifier.setClassifierId(classifierLabel);
+      classifier.setClassifierPackage(packageString);
+      classifier.apply();
+  
+      QueryFactory qf = new QueryFactory();
+  
+      ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+      ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
+  
+      carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
+  
+      classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+  
+      OIterator<? extends Classifier> i = classifierRootQ.getIterator();
+      try
+      {
+        for (Classifier classifierRoot : i)
+        {
+          classifier.addLink(classifierRoot, ClassifierIsARelationship.CLASS);
+        }
+      }
+      finally
+      {
+        i.close();
+      }
+    }
+  
+    return classifier;
   }
 }
