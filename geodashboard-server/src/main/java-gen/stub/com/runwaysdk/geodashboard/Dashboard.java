@@ -62,10 +62,10 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
@@ -411,7 +411,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     QueryFactory factory = new QueryFactory();
 
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
 
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
@@ -433,11 +433,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public static String getClassifierTree(String mdAttributeId)
   {
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(new QueryFactory());
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(new QueryFactory());
 
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
 
-    OIterator<? extends ClassifierAttributeRoot> iterator = null;
+    OIterator<? extends ClassifierTermAttributeRoot> iterator = null;
 
     try
     {
@@ -447,7 +447,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
       while (iterator.hasNext())
       {
-        ClassifierAttributeRoot relationship = iterator.next();
+        ClassifierTermAttributeRoot relationship = iterator.next();
         Classifier classifier = relationship.getChild();
 
         if (relationship.getSelectable())
@@ -499,7 +499,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
     QueryFactory factory = new QueryFactory();
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
     ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
 

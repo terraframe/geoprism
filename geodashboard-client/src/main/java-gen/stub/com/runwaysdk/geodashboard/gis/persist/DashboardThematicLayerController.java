@@ -38,7 +38,6 @@ import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO;

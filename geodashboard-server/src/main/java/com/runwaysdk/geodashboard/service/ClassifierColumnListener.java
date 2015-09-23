@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 import com.runwaysdk.business.Mutable;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.ExcelExportListener;
 import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
@@ -33,6 +34,10 @@ import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
 public class ClassifierColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener, Reloadable
@@ -99,32 +104,31 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
 
   public static String getClassifierPackage(MdAttributeTermDAOIF mdAttributeTerm)
   {
-//    QueryFactory factory = new QueryFactory();
-//
-//    ClassifierTermAttributeRootQuery arQuery = new ClassifierTermAttributeRootQuery(factory);
-//    arQuery.WHERE(arQuery.parentId().EQ(mdAttributeTerm.getId()));
-//
-//    ClassifierQuery cQuery = new ClassifierQuery(factory);
-//    cQuery.WHERE(cQuery.classifierTermAttributeRoots(arQuery));
-//
-//    OIterator<? extends Classifier> it = cQuery.getIterator();
-//
-//    try
-//    {
-//      List<? extends Classifier> roots = it.getAll();
-//
-//      if (roots.size() == 0)
-//      {
-//        throw new ProgrammingErrorException("Unable to find attribute roots for [" + mdAttributeTerm.getKey() + "]");
-//      }
-//
-//      return roots.get(0).getClassifierPackage();
-//    }
-//    finally
-//    {
-//      it.close();
-//    }
-    return null;
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierTermAttributeRootQuery arQuery = new ClassifierTermAttributeRootQuery(factory);
+    arQuery.WHERE(arQuery.parentId().EQ(mdAttributeTerm.getId()));
+
+    ClassifierQuery cQuery = new ClassifierQuery(factory);
+    cQuery.WHERE(cQuery.classifierTermAttributeRoots(arQuery));
+
+    OIterator<? extends Classifier> it = cQuery.getIterator();
+
+    try
+    {
+      List<? extends Classifier> roots = it.getAll();
+
+      if (roots.size() == 0)
+      {
+        throw new ProgrammingErrorException("Unable to find attribute roots for [" + mdAttributeTerm.getKey() + "]");
+      }
+
+      return roots.get(0).getClassifierPackage();
+    }
+    finally
+    {
+      it.close();
+    }
   }
 
 }
