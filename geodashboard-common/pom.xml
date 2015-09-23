@@ -46,7 +46,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-common</artifactId>
-      <version>1.8.1-SNAPSHOT</version>
+      <version>${runway.version}</version>
     </dependency>
     
     <dependency>

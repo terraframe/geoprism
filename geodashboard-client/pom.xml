@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>com.runwaysdk</groupId>
 			<artifactId>runwaysdk-gis-client</artifactId>
-			<version>1.8.1-SNAPSHOT</version>
+			<version>${runway.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.runwaysdk</groupId>
@@ -48,7 +48,9 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
+      <!-- 
 			<scope>provided</scope>
+       -->
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
