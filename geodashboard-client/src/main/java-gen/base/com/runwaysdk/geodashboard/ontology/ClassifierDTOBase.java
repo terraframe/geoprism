@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -580775890)
+@com.runwaysdk.business.ClassSignature(hash = 1069620461)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.ontology.Classifier";
-  private static final long serialVersionUID = -580775890;
+  private static final long serialVersionUID = 1069620461;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -630,57 +630,111 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierAttributeRoots()
+  public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO> getAllClassifierMultiTermAttributeRoots()
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO> getAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO> getAllClassifierAttributeRootsRelationships()
+  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO> getAllClassifierMultiTermAttributeRootsRelationships()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO> getAllClassifierAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO> getAllClassifierMultiTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO addClassifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  public com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO addClassifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermDTO parent)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO addClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  public static com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO addClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeMultiTermDTO parent)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public void removeClassifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO relationship)
+  public void removeClassifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO relationship)
   {
     getRequest().deleteParent(relationship.getId());
   }
   
-  public static void removeClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO relationship)
+  public static void removeClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO relationship)
   {
     clientRequestIF.deleteParent(relationship.getId());
   }
   
-  public void removeAllClassifierAttributeRoots()
+  public void removeAllClassifierMultiTermAttributeRoots()
   {
-    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public static void removeAllClassifierAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootDTO.CLASS);
+    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierTermAttributeRoots()
+  {
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO> getAllClassifierTermAttributeRootsRelationships()
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO> getAllClassifierTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  public com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO addClassifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO addClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  {
+    return (com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  public void removeClassifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO relationship)
+  {
+    getRequest().deleteParent(relationship.getId());
+  }
+  
+  public static void removeClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO relationship)
+  {
+    clientRequestIF.deleteParent(relationship.getId());
+  }
+  
+  public void removeAllClassifierTermAttributeRoots()
+  {
+    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
+  }
+  
+  public static void removeAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")

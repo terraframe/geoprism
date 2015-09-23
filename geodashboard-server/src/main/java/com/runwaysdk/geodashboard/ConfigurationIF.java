@@ -31,15 +31,6 @@ import com.runwaysdk.generation.loader.Reloadable;
  */
 public interface ConfigurationIF extends Reloadable
 {
-  /**
-   * Initialize a dashboard with views of its default types
-   * 
-   * @param _dashboard
-   *          The dashboard being initialized
-   * @param _index
-   *          The index of the builder
-   */
-  public void initialize(Dashboard _dashboard, int _index);
 
   /**
    * Returns the fully qualified package for types to include in the databrowser

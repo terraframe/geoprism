@@ -991,9 +991,9 @@
       <xs:element name="date" type="date" />
       <xs:element name="enumeration" type="enumeration" />
       <xs:element name="reference" type="reference" />
-      <xs:element name="term" type="reference" />
+      <xs:element name="term" type="term" />
       <xs:element name="multiReference" type="reference" />
-      <xs:element name="multiTerm" type="reference" />
+      <xs:element name="multiTerm" type="term" />
       <xs:element name="struct" type="struct" />
       <xs:element name="hashEncryption" type="hashEncryption" />
       <xs:element name="symmetricEncryption" type="symmetricEncryption" />
@@ -1117,6 +1117,19 @@
   <xs:complexType name="text">
     <xs:attributeGroup ref="attributePrimitive" />
   </xs:complexType>
+  
+  <xs:complexType name="term">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="rootTerm">
+        <xs:complexType>
+          <!--The fully qualified path of type that defines the struct -->
+          <xs:attribute name="key" type="xs:string" use="required" />
+          <xs:attribute name="selectable" type="xs:boolean" use="optional"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attributeGroup ref="attributeReference" />
+  </xs:complexType>  
 
   <!--Represents a Clob object in the database -->
   <xs:complexType name="clob">

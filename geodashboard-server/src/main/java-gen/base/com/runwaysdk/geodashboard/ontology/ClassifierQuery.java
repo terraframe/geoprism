@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1245412581)
+@com.runwaysdk.business.ClassSignature(hash = -1173616028)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -418,119 +418,235 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   }
 
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots()
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.getBusinessQuery().isChildIn(classifierAttributeRootQuery);
+    return this.getBusinessQuery().isChildIn(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierAttributeRootQuery);
+    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.getBusinessQuery().isChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.getBusinessQuery().isChildIn(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+
+    return this.getBusinessQuery().isNotChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    return this.getBusinessQuery().isNotChildIn(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.getBusinessQuery().isNotChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.getBusinessQuery().isNotChildIn(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.getBusinessQuery().isChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.getBusinessQuery().isChildIn(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.getBusinessQuery().isChildIn(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.getBusinessQuery().isChildIn(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.getBusinessQuery().isChildIn_SUBSELECT(classifierTermAttributeRootQuery);
   }
 
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    return this.getBusinessQuery().isNotChildIn(classifierAttributeRootQuery);
+    return this.getBusinessQuery().isNotChildIn(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierAttributeRootQuery);
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.getBusinessQuery().isNotChildIn(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.getBusinessQuery().isNotChildIn(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierTermAttributeRootQuery);
   }
 
 
@@ -996,16 +1112,28 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isAChild(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipQuery classifierIsARelationshipQuery);
 
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots();
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots();
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery);
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery);
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots();
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots();
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery);
+
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots();
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots();
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition isAParent();
@@ -1020,16 +1148,28 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.query.Condition SUBSELECT_isAParent(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipQuery classifierIsARelationshipQuery);
 
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots();
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots();
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery);
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery);
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots();
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots();
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery);
+
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots();
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery);
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots();
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_isAParent();
@@ -1561,61 +1701,119 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   }
 
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots()
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.isChildIn(relationshipQuery);
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.isChildIn(classifierAttributeRootQuery);
+    return this.isChildIn(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.isChildIn_SUBSELECT(classifierAttributeRootQuery);
+    return this.isChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.isChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.isChildIn(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.isChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.isChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.isChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.isChildIn(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.isChildIn_SUBSELECT(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.isChildIn(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.isChildIn(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.isChildIn_SUBSELECT(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.isChildIn_SUBSELECT(classifierTermAttributeRootQuery);
   }
 
 
@@ -1677,61 +1875,119 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   }
 
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.isNotChildIn(relationshipQuery);
   }
 
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots()
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.isNotChildIn(classifierAttributeRootQuery);
+    return this.isNotChildIn(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
   {
-    return this.isNotChildIn_SUBSELECT(classifierAttributeRootQuery);
+    return this.isNotChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.isNotChildIn(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot.CLASS);
+    relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
+
+    return this.isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.isNotChildIn(classifierMultiTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRootQuery classifierMultiTermAttributeRootQuery)
+  {
+    classifierMultiTermAttributeRootQuery.AND(classifierMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
+    return this.isNotChildIn_SUBSELECT(classifierMultiTermAttributeRootQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.isNotChildIn(relationshipQuery);
+  }
+
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots()
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
+
+    return this.isNotChildIn_SUBSELECT(relationshipQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.isNotChildIn(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
+  {
+    return this.isNotChildIn_SUBSELECT(classifierTermAttributeRootQuery);
+  }
+
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  {
+    com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.isNotChildIn(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.isNotChildIn(classifierTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery classifierAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery classifierTermAttributeRootQuery)
   {
-    classifierAttributeRootQuery.AND(classifierAttributeRootQuery.hasParent(mdAttributeTermQuery));
-    return this.isNotChildIn_SUBSELECT(classifierAttributeRootQuery);
+    classifierTermAttributeRootQuery.AND(classifierTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
+    return this.isNotChildIn_SUBSELECT(classifierTermAttributeRootQuery);
   }
 
 

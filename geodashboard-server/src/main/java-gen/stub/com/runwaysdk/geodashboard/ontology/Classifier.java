@@ -95,14 +95,14 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     QueryFactory qf = new QueryFactory();
 
     ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-    ClassifierAttributeRootQuery carQ = new ClassifierAttributeRootQuery(qf);
+    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
     ClassifierQuery classifierQ = new ClassifierQuery(qf);
     ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
     ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
 
     carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
 
-    classifierRootQ.WHERE(classifierRootQ.classifierAttributeRoots(carQ));
+    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
 
     allPathsQ.WHERE(allPathsQ.getParentTerm().EQ(classifierRootQ));
 
@@ -242,11 +242,11 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       QueryFactory qf = new QueryFactory();
   
       ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-      ClassifierAttributeRootQuery carQ = new ClassifierAttributeRootQuery(qf);
+      ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
   
       carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
   
-      classifierRootQ.WHERE(classifierRootQ.classifierAttributeRoots(carQ));
+      classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
   
       OIterator<? extends Classifier> i = classifierRootQ.getIterator();
       try

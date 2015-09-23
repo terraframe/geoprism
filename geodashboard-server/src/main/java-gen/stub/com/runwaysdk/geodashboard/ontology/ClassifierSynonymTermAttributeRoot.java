@@ -18,16 +18,16 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-public class ClassifierAttributeRoot extends ClassifierAttributeRootBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierSynonymTermAttributeRoot extends ClassifierSynonymTermAttributeRootBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = 1480065738;
+  private static final long serialVersionUID = -91099530;
   
-  public ClassifierAttributeRoot(String parentId, String childId)
+  public ClassifierSynonymTermAttributeRoot(String parentId, String childId)
   {
     super(parentId, childId);
   }
   
-  public ClassifierAttributeRoot(com.runwaysdk.system.metadata.MdAttributeTerm parent, com.runwaysdk.geodashboard.ontology.Classifier child)
+  public ClassifierSynonymTermAttributeRoot(com.runwaysdk.system.metadata.MdAttributeTerm parent, com.runwaysdk.geodashboard.ontology.ClassifierSynonym child)
   {
     this(parent.getId(), child.getId());
   }
