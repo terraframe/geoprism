@@ -48,7 +48,13 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-server</artifactId>
-      <version>${runway.version}</version>
+      <version>1.8.1-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>aspectjtools</artifactId>
+          <groupId>org.aspectj</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
