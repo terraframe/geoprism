@@ -18,6 +18,9 @@
  */
 package com.runwaysdk.geodashboard.service;
 
+import java.io.File;
+import java.net.URI;
+
 import org.xml.sax.Attributes;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -34,6 +37,7 @@ import com.runwaysdk.dataaccess.io.dataDefinition.TagContext;
 import com.runwaysdk.dataaccess.io.dataDefinition.TagHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.UpdateHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.XMLTags;
+import com.runwaysdk.dataaccess.io.instance.InstanceImporterUnzipper;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdTypeDAO;
@@ -223,7 +227,8 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
   private static class DashboardHandler extends TagHandler
   {
-    private static final String NAME    = "name";
+    private static final String NAME     = "name";
+
     private static final String LABEL    = "label";
 
     private static final String COUNTRY  = "country";
@@ -248,7 +253,7 @@ public class GeodashboardImportPlugin implements ImportPluginIF
       dashboard.getDisplayLabel().setDefaultValue(label);
       dashboard.setCountry(GeoEntity.getByKey(country));
       dashboard.setName(name);
-      
+
       dashboard.apply();
 
       context.setObject(Dashboard.CLASS, dashboard);
@@ -301,22 +306,53 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     }
   }
 
-  private static class CreateHandlerFactory extends HandlerFactory implements HandlerFactoryIF
+  private static class UnzipperTaskHandler extends TagHandler
   {
-    private static final String DASHBOARD_TAG         = "dashboard";
+    private static final String PATH = "path";
 
-    public CreateHandlerFactory(ImportManager manager)
+    public UnzipperTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      URI uri = this.getManager().getStreamSource().toURI();
+      File xml = new File(uri);
+      
+      String path = attributes.getValue(PATH);
+
+      File file = new File(xml.getParentFile(), path);
+
+      System.out.println("Unzipping zip directory [" + file.getAbsolutePath() + "]");
+
+      if (file.exists())
+      {
+        InstanceImporterUnzipper.processZipDir(file.getAbsolutePath());
+      }
+    }
+  }
+
+  private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
+  {
+    private static final String DASHBOARD_TAG     = "dashboard";
+
+    private static final String UNZIPPER_TASK_TAG = "unzipperTask";
+
+    public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
+      this.addHandler(UNZIPPER_TASK_TAG, new UnzipperTaskHandler(manager));
     }
   }
 
   @Override
   public void register(ImportManager manager)
   {
-    manager.register(CreateHandler.class.getName(), new CreateHandlerFactory(manager));
-    manager.register(CreateOrUpdateHandler.class.getName(), new CreateHandlerFactory(manager));
-    manager.register(UpdateHandler.class.getName(), new CreateHandlerFactory(manager));
+    manager.register(CreateHandler.class.getName(), new PluginHandlerFactory(manager));
+    manager.register(CreateOrUpdateHandler.class.getName(), new PluginHandlerFactory(manager));
+    manager.register(UpdateHandler.class.getName(), new PluginHandlerFactory(manager));
   }
 
   @Override
