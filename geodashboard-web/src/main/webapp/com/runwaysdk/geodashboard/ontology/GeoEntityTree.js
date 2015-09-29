@@ -46,7 +46,9 @@
     "ok" : "Ok",
     "cancel" : "Cancel",
     "mergeTitle" : "Merge confirmation",
-    "accept" : "Confirm as new location"
+    "accept" : "Confirm as new location",
+    "noproblems-msg" : "There are no known geoentity issues"
+    	
   });
   
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.RefreshQueue', {
@@ -500,23 +502,23 @@
       },
       
       __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
-    	 
-    	  var problemId = "";
-    	 var hasProblem = this.hasProblem(childId);
-     	 if(hasProblem){
-    		 problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
-    	 }
-    	  
-    	 if(config){
-    		 config.hasProblem = hasProblem;
-    		 config.problemId = problemId
-    	 }
-    	 else{
-    		 var config = {};
-    		 config.hasProblem = hasProblem;
-    		 config.problemId = problemId
-    	 }
-    	 
+       
+        var problemId = "";
+       var hasProblem = this.hasProblem(childId);
+        if(hasProblem){
+         problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
+       }
+        
+       if(config){
+         config.hasProblem = hasProblem;
+         config.problemId = problemId
+       }
+       else{
+         var config = {};
+         config.hasProblem = hasProblem;
+         config.problemId = problemId
+       }
+       
         var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
 
       },
@@ -533,25 +535,25 @@
       },
       
       __onCreateLi : function(node, $li) {
-    	  if (!node.phantom) {
-    		  if(node.hasProblem){
-    			  var msg = "";
-    			  var msgEls = $("#problems-list").find('[data-entity="'+node.runwayId+'"]');
-    			  for(var i=0; i<msgEls.length; i++){
-    				  var msgEl = msgEls[i];
-    				  msg +=  i+1 + "." + "&nbsp;&nbsp;" + $(msgEl).find(".geoent-problem-msg").text(); // gets the message from the problems panel
-    				  if(i < msgEls.length - 1){
-    					  msg += "<br/><br/>";
-    				  }
-    			  }
-    			  $li.find("span").parent().append("<i data-problemid='"+ node.problemId +"' data-entity='"+ node.runwayId +"' class='fa fa-times-circle geoent-problem-msg-icon geoent-problem-error'></i>");
-    			  $li.find("i").tooltip({
-    				  items: "i",
-    				  content: msg,
-    				  tooltipClass: "geoentity-problem-tooltip"
-    			  });
-    		  }
-    	  }
+        if (!node.phantom) {
+          if(node.hasProblem){
+            var msg = "";
+            var msgEls = $("#problems-list").find('[data-entity="'+node.runwayId+'"]');
+            for(var i=0; i<msgEls.length; i++){
+              var msgEl = msgEls[i];
+              msg +=  i+1 + "." + "&nbsp;&nbsp;" + $(msgEl).find(".geoent-problem-msg").text(); // gets the message from the problems panel
+              if(i < msgEls.length - 1){
+                msg += "<br/><br/>";
+              }
+            }
+            $li.find("span").parent().append("<i data-problemid='"+ node.problemId +"' data-entity='"+ node.runwayId +"' class='fa fa-times-circle geoent-problem-msg-icon geoent-problem-error'></i>");
+            $li.find("i").tooltip({
+              items: "i",
+              content: msg,
+              tooltipClass: "geoentity-problem-tooltip"
+            });
+          }
+        }
       },
       
       _toggleProblem : function(node, hasProblem) {
@@ -665,12 +667,11 @@
           html += '</li>';      
         }
           
-        if(html.length > 0){
-          $("#problems-list").html(html);
+        if(html.length == 0){
+          html = '<h4 id="problem-panel-noissue-msg">' + this.localize("noproblems-msg") + '</h4>';
         }
-        else{
-          $("#problem-panel-noissue-msg").show();
-        }
+        
+        $("#problems-list").html(html);
           
         $(".geoent-problem-error-li").click(function(e){
           var entityId = $(e.currentTarget).data("entity");
