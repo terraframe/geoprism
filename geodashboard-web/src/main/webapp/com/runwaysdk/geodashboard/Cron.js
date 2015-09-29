@@ -489,6 +489,9 @@
       {
       },    
       addInlineError : function (msg) {
+      },
+      hasError : function() {
+        return false;  
       }
     }
   });

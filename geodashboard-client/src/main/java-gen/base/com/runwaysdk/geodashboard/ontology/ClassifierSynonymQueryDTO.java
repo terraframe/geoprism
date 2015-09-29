@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -214191170)
+@com.runwaysdk.business.ClassSignature(hash = -650805076)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package com.runwaysdk.geodashboard.ontology;
 public class ClassifierSynonymQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -214191170;
+private static final long serialVersionUID = -650805076;
 
   protected ClassifierSynonymQueryDTO(String type)
   {

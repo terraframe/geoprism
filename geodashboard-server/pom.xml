@@ -38,7 +38,7 @@
     <root.user>postgres</root.user>
     <root.pass>postgres</root.pass>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -66,6 +66,12 @@
       <groupId>org.eclipse.birt.runtime</groupId>
       <artifactId>org.eclipse.birt.runtime</artifactId>
       <version>4.4.0</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>org.apache.batik.pdf</artifactId>
+          <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk.geodashboard</groupId>
@@ -73,14 +79,6 @@
       <version>1.0.8</version>
     </dependency>
 
-    <!-- This jar autogenerates meta-inf service provider configuration files (used with the BIRT Report Provider) More information on services loaders: https://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html http://www.oracle.com/technetwork/articles/javase/extensible-137159.html plugin 
-      blog: https://weblogs.java.net/blog/kohsuke/archive/2009/03/my_project_of_t.html -->
-    <dependency>
-      <groupId>org.kohsuke.metainf-services</groupId>
-      <artifactId>metainf-services</artifactId>
-      <version>1.1</version>
-    </dependency>    
-    
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-shapefile</artifactId>
@@ -231,7 +229,7 @@
                       <key>database.name</key>
                       <value>${database.name}</value>
                     </systemProperty>
-                  </systemProperties>                  
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -278,7 +276,7 @@
                       <key>database.name</key>
                       <value>${database.name}</value>
                     </systemProperty>
-                  </systemProperties>                  
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -327,7 +325,7 @@
                       <key>database.name</key>
                       <value>${database.name}</value>
                     </systemProperty>
-                  </systemProperties>                  
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -376,7 +374,7 @@
                       <key>database.name</key>
                       <value>${database.name}</value>
                     </systemProperty>
-                  </systemProperties>                  
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -410,8 +408,8 @@
       <!-- Read the server properties (from projects that extend geodashboard) as maven properties. This allows us to override the database properties later when we build. -->
       <plugin>
         <groupId>org.kohsuke.gmaven</groupId>
-		    <artifactId>gmaven-plugin</artifactId>
-		    <version>1.0-rc-5-patch-2</version>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0-rc-5-patch-2</version>
         <executions>
           <execution>
             <id>ExtendableServerProperties</id>
@@ -425,7 +423,7 @@
                   <groupId>commons-lang</groupId>
                   <artifactId>commons-lang</artifactId>
                   <version>2.4</version>
-                 </element>
+                </element>
               </classpath>
               <source>${project.basedir}/src/build/groovy/ExtendableServerProperties.groovy</source>
             </configuration>
@@ -450,17 +448,17 @@
           </execution>
         </executions>
       </plugin>
-    
+
       <!-- Weave Aspects -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.4</version>
+        <version>${aspectj.plugin.version}</version>
         <dependencies>
           <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjtools</artifactId>
-            <version>1.6.11</version>
+            <version>${aspectj.version}</version>
           </dependency>
         </dependencies>
         <executions>
@@ -484,6 +482,7 @@
           </aspectLibraries>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
           <fork>true</fork>
           <meminitial>512m</meminitial>
           <maxmem>1024m</maxmem>
@@ -531,58 +530,58 @@
 
     </plugins>
     <pluginManagement>
-    	<plugins>
-    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    		<plugin>
-    			<groupId>org.eclipse.m2e</groupId>
-    			<artifactId>lifecycle-mapping</artifactId>
-    			<version>1.0.0</version>
-    			<configuration>
-    				<lifecycleMappingMetadata>
-    					<pluginExecutions>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>org.codehaus.mojo</groupId>
-    								<artifactId>
-    									properties-maven-plugin
-    								</artifactId>
-    								<versionRange>
-    									[1.0-alpha-2,)
-    								</versionRange>
-    								<goals>
-    									<goal>
-    										read-project-properties
-    									</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore></ignore>
-    							</action>
-    						</pluginExecution>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>
-    									org.kohsuke.gmaven
-    								</groupId>
-    								<artifactId>
-    									gmaven-plugin
-    								</artifactId>
-    								<versionRange>
-    									[1.0-rc-5-patch-2,)
-    								</versionRange>
-    								<goals>
-    									<goal>execute</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore></ignore>
-    							</action>
-    						</pluginExecution>
-    					</pluginExecutions>
-    				</lifecycleMappingMetadata>
-    			</configuration>
-    		</plugin>
-    	</plugins>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>
+                      properties-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0-alpha-2,)
+                    </versionRange>
+                    <goals>
+                      <goal>
+                        read-project-properties
+                      </goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.kohsuke.gmaven
+                    </groupId>
+                    <artifactId>
+                      gmaven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0-rc-5-patch-2,)
+                    </versionRange>
+                    <goals>
+                      <goal>execute</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
     </pluginManagement>
   </build>
   <dependencyManagement>

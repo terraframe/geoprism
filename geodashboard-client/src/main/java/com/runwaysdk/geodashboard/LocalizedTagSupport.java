@@ -35,7 +35,7 @@ import com.runwaysdk.controller.tag.develop.TagAnnotation;
 import com.runwaysdk.geodashboard.localization.LocalizationFacadeDTO;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 
-@TagAnnotation(bodyContent = "empty", name = "localize", description = "Localizes the given key, respecting bundle precedence")
+@TagAnnotation(bodyContent = "empty", name = "localize", description = "Localizes the given key respecting bundle precedence")
 public class LocalizedTagSupport extends SimpleTagSupport
 {
   private String key;
@@ -118,7 +118,6 @@ public class LocalizedTagSupport extends SimpleTagSupport
     }
   }
 
-  @SuppressWarnings("unchecked")
   private ClientSession createAnonymousSession(PageContext pageContext)
   {
     ArrayList<Locale> arrayList = new ArrayList<Locale>();

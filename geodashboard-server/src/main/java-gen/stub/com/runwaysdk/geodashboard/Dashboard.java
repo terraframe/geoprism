@@ -62,10 +62,10 @@ import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRoot;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
@@ -251,24 +251,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     dashboard.apply();
 
-    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
-
-    int i = 0;
-
-    for (ConfigurationIF configuration : configurations)
-    {
-      dashboard.lock();
-
-      try
-      {
-        configuration.initialize(dashboard, i++);
-      }
-      finally
-      {
-        dashboard.unlock();
-      }
-    }
-
     return dashboard;
   }
 
@@ -302,7 +284,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       map.apply();
     }
   }
-  
+
   @Override
   @Transaction
   public void applyWithOptions(String[] userIds, String name)
@@ -311,7 +293,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     this.getDisplayLabel().setValue(name);
     this.apply();
     this.unlock();
-    
+
     assignUsers(this.getId(), userIds);
   }
 
@@ -321,6 +303,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
+    clone.setName(name);
     clone.setCountry(this.getCountry());
     clone.apply();
 
@@ -428,7 +411,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     QueryFactory factory = new QueryFactory();
 
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
 
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
@@ -450,11 +433,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public static String getClassifierTree(String mdAttributeId)
   {
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(new QueryFactory());
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(new QueryFactory());
 
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
 
-    OIterator<? extends ClassifierAttributeRoot> iterator = null;
+    OIterator<? extends ClassifierTermAttributeRoot> iterator = null;
 
     try
     {
@@ -464,7 +447,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
       while (iterator.hasNext())
       {
-        ClassifierAttributeRoot relationship = iterator.next();
+        ClassifierTermAttributeRoot relationship = iterator.next();
         Classifier classifier = relationship.getChild();
 
         if (relationship.getSelectable())
@@ -516,7 +499,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
 
     QueryFactory factory = new QueryFactory();
-    ClassifierAttributeRootQuery rootQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
     ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
 
@@ -784,46 +767,45 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return true;
   }
-  
+
   /*
-   * Gets all active geodashboard users in the system who are not Administrators 
-   * 
+   * Gets all active geodashboard users in the system who are not Administrators
    */
   @Override
-  public GeodashboardUser[] getAllDashboardUsers() {
+  public GeodashboardUser[] getAllDashboardUsers()
+  {
     ArrayList<GeodashboardUser> nonAdminGDUsers = new ArrayList<GeodashboardUser>();
     GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
     for (int i = 0; i < gdUsers.length; i++)
     {
       boolean isAdmin = false;
       GeodashboardUser user = gdUsers[i];
-      
+
       List<? extends Roles> userRoles = user.getAllAssignedRole().getAll();
-      for(Roles role : userRoles)
+      for (Roles role : userRoles)
       {
-        if(role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
+        if (role.getRoleName().equals(RoleView.ADMIN_NAMESPACE + ".Administrator"))
         {
           isAdmin = true;
         }
       }
-      
+
       Boolean inactive = user.getInactive();
 
       if (!inactive && !isAdmin)
       {
-       nonAdminGDUsers.add(user);
+        nonAdminGDUsers.add(user);
       }
     }
-    
+
     GeodashboardUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeodashboardUser[nonAdminGDUsers.size()]);
-    
+
     return nonAdminGDUsersArr;
   }
 
   /*
-   * Gets all active geodashboard users in the system who are not Administrators 
-   * and whether they already have access to a given dashboard.
-   * 
+   * Gets all active geodashboard users in the system who are not Administrators and whether they already have access to
+   * a given dashboard.
    */
   @Override
   public String getAllDashboardUsersJSON()
@@ -835,7 +817,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       JSONObject userObj = new JSONObject();
       GeodashboardUser user = gdUsers[i];
-      
+
       boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
 

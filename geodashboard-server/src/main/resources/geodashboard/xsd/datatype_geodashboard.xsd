@@ -1,0 +1,86 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:redefine schemaLocation="datatype_gis.xsd">
+
+    <!-- Geodashboard Module -->
+
+    <xs:complexType name="create">
+      <xs:complexContent>
+        <xs:extension base="create">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dashboard" type="dashboard" />
+            <xs:element name="unzipperTask" type="unzipperTask" />
+          </xs:choice>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="update">
+      <xs:complexContent>
+        <xs:extension base="update">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dashboard" type="dashboard" />
+          </xs:choice>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:redefine>
+
+  <xs:complexType name="dashboard">
+    <xs:sequence>
+      <xs:element name="create" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="type" type="type" minOccurs="1" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="type" type="type" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="label" type="xs:string" use="optional" />
+    <xs:attribute name="country" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="type">
+    <xs:sequence>
+      <xs:element name="geoNode" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="geoEntityAttribute" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:attribute name="index" type="xs:integer" default="0" />
+    <xs:attribute name="universal" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="unzipperTask">
+    <xs:attribute name="path" type="xs:anyURI" use="required" />
+  </xs:complexType>
+
+</xs:schema>

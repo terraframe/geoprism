@@ -140,7 +140,7 @@ public class DashboardMetadataBuilder
         mWrapper.setWrappedMdClass(mdClass);
         mWrapper.setUniversal(_universal);
         mWrapper.apply();
-        
+
         return mWrapper;
       }
     }

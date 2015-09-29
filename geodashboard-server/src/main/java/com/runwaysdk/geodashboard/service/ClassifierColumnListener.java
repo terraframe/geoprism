@@ -34,8 +34,8 @@ import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierAttributeRootQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -106,11 +106,11 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
   {
     QueryFactory factory = new QueryFactory();
 
-    ClassifierAttributeRootQuery arQuery = new ClassifierAttributeRootQuery(factory);
+    ClassifierTermAttributeRootQuery arQuery = new ClassifierTermAttributeRootQuery(factory);
     arQuery.WHERE(arQuery.parentId().EQ(mdAttributeTerm.getId()));
 
     ClassifierQuery cQuery = new ClassifierQuery(factory);
-    cQuery.WHERE(cQuery.classifierAttributeRoots(arQuery));
+    cQuery.WHERE(cQuery.classifierTermAttributeRoots(arQuery));
 
     OIterator<? extends Classifier> it = cQuery.getIterator();
 

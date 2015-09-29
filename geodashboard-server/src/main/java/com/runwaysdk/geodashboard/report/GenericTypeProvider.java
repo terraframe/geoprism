@@ -98,7 +98,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
     // For now we are assuming there is only one geo node per type
     SelectableReference geoEntityAttribute = this.getGeoEntityAttribute(config, query);
 
-    this.addLocationQuery(config, query, geoEntityAttribute);
+    this.addLocationQuery(config, geoEntityAttribute, query);
 
     ReportProviderUtil.addConditions(config, queryId, query);
 

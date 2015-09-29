@@ -1,0 +1,1520 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--The root element of the xml schema -->
+  <xs:element name="Runway" type="rootOptions" />
+
+  <xs:complexType name="rootOptions">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="delete" />
+      <xs:element name="update" type="update" />
+      <xs:element ref="create" />
+      <xs:element name="createOrUpdate" type="create" />
+      <xs:element ref="permissions" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:element name="delete">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="object" type="entityReference" />
+        <xs:element name="relationship" type="entityReference" />
+        <xs:element name="timestamp" type="timestamp" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:complexType name="update">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="mdEnumeration" type="mdEnumeration" />
+      <xs:element name="enumerationMaster" type="mdBusiness" />
+      <xs:element name="mdStruct" type="mdStruct" />
+      <xs:element name="mdLocalStruct" type="mdLocalStruct" />
+      <xs:element name="mdBusiness" type="mdBusiness" />
+      <xs:element name="mdTerm" type="mdBusiness" />
+      <xs:element name="mdRelationship" type="mdRelationship" />
+      <xs:element name="mdTree" type="mdRelationship" />
+      <xs:element name="mdGraph" type="mdRelationship" />
+      <xs:element name="mdTermRelationshiop" type="mdTermRelationship" />
+      <xs:element name="mdFacade" type="mdFacade" />
+      <xs:element name="mdException" type="mdException" />
+      <xs:element name="mdProblem" type="mdException" />
+      <xs:element name="mdInformation" type="mdException" />
+      <xs:element name="mdWarning" type="mdException" />
+      <xs:element name="mdView" type="mdView" />
+      <xs:element name="mdUtil" type="mdSession" />
+      <xs:element name="mdController" type="mdController" />
+      <xs:element name="mdWebForm" type="mdWebForm" />
+      <xs:element name="object" type="entity" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="relationship" type="entity" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+  </xs:complexType>
+
+
+  <xs:complexType name="create">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="mdEnumeration" type="mdEnumeration" />
+      <xs:element name="object" type="entity" />
+      <xs:element name="relationship" type="relationshipCreate" />
+      <xs:element name="enumerationMaster" type="mdBusiness" />
+      <xs:element name="mdStruct" type="mdStruct" />
+      <xs:element name="mdLocalStruct" type="mdLocalStruct" />
+      <xs:element name="mdBusiness" type="mdBusiness" />
+      <xs:element name="mdTerm" type="mdBusiness" />
+      <xs:element name="mdRelationship" type="mdRelationship" />
+      <xs:element name="mdTermRelationship" type="mdTermRelationship" />
+      <xs:element name="mdTree" type="mdRelationship" />
+      <xs:element name="mdGraph" type="mdRelationship" />
+      <xs:element name="mdIndex" type="mdIndex" />
+      <xs:element name="mdFacade" type="mdFacade" />
+      <xs:element name="mdException" type="mdException" />
+      <xs:element name="mdProblem" type="mdException" />
+      <xs:element name="mdInformation" type="mdException" />
+      <xs:element name="mdWarning" type="mdException" />
+      <xs:element name="mdView" type="mdView" />
+      <xs:element name="mdUtil" type="mdSession" />
+      <xs:element name="mdController" type="mdController" />
+      <xs:element name="mdWebForm" type="mdWebForm" />
+      <xs:element name="timestamp" type="timestamp" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:element name="create" type="create">
+    <!--VALIDATION SEGMENT -->
+    <!--KEY VALUES WHICH ARE UNIQUE AND CAN BE REFERENCED -->
+    <!--Ensure the name of each mdBusiness or subclass is a unique key -->
+    <xs:key name="classPath">
+      <xs:selector xpath=".//mdBusiness | .//mdStruct" />
+      <xs:field xpath="@name" />
+    </xs:key>
+
+    <!--Ensure that each mdRelationship is a unique key -->
+    <xs:key name="relationPath">
+      <xs:selector xpath=".//mdRelationship" />
+      <xs:field xpath="@name" />
+    </xs:key>
+
+    <!--Ensure the name of each enumeration mdBusiness is a unique key -->
+    <xs:key name="enumPath">
+      <xs:selector xpath=".//enumerationMaster" />
+      <xs:field xpath="@name" />
+    </xs:key>
+
+    <!--VALUES WHICH NEED TO BE UNIQUE, BUT ARE NOT KEYS -->
+
+    <!-- Ensure that mdBusiness, mdRelationship, and enumeration_class are in the same namespace, thus the names are unique -->
+    <xs:unique name="namespace">
+      <xs:selector xpath=".//mdBusiness | .//mdRelationship | .//enumerationMaster | .//enumerationFilter" />
+      <xs:field xpath="@name" />
+    </xs:unique>
+
+    <!--END OF VALIDATION -->
+  </xs:element>
+
+  <xs:element name="permissions">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="user" type="user" />
+        <xs:element name="role" type="role" />
+        <xs:element name="method" type="method" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="timestamp">
+    <xs:attribute name="version" />
+  </xs:complexType>
+
+  <!-- ******************************** Metadata definition ************************************ -->
+
+  <xs:complexType name="metadata">
+    <xs:attribute name="removable" type="xs:string" use="optional" />
+    <xs:attribute name="label" type="xs:string" use="optional" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+
+
+  <xs:complexType name="mdIndex">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="attribute">
+            <xs:complexType>
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="indexOrder" type="xs:integer" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <!-- entity: The fully qulified type of a mdBusiness or mdRelationship of this mdIndex -->
+        <xs:attribute name="type" type="xs:string" use="required" />
+        <!-- isUnique: Flag determining if the mdIndex must be unqiue -->
+        <xs:attribute name="unique" type="xs:boolean" />
+        <xs:attribute name="active" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--Defines a MdMethod -->
+  <xs:complexType name="mdMethod">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <xs:sequence>
+          <!--Defines the mdParameters of a mdMethod -->
+          <xs:element name="mdParameter" type="mdParameter" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="create" type="mdMethodOptions" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <!--name: The name of the mdMethod -->
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <!--returnType: The returnType of the mdMethod -->
+        <xs:attribute name="returnType" type="xs:string" />
+        <!--static: A flag denoting if the method is static -->
+        <xs:attribute name="static" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdAction">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <xs:sequence>
+          <!--Defines the mdParameters of a mdMethod -->
+          <xs:element name="mdParameter" type="mdParameter" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="create" type="mdMethodOptions" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <!--name: The name of the mdMethod -->
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="isPost" type="xs:boolean" use="optional" />
+        <xs:attribute name="isQuery" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdMethodOptions">
+    <xs:sequence>
+      <xs:element name="mdParameter" type="mdParameter" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdParameter">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <!--name: The name of the mdParameter -->
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <!--type: The type of the mdParameter -->
+        <xs:attribute name="type" type="xs:string" />
+        <!--order: The order of the mdParameter -->
+        <xs:attribute name="order" type="xs:integer" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--A state in a mdStateMachine -->
+  <xs:complexType name="state">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <!--name: The name of the state master -->
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <!--entry: The state entry parameter -->
+        <xs:attribute name="entry" type="entryOptions"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!--Common Attributes of classes that extend MdType -->
+  <xs:complexType name="mdType">
+    <xs:complexContent>
+      <xs:extension base="metadata">
+        <!--name:The qualified path/name of the mdBusiness -->
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="exported" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdFacadeOptions">
+    <xs:sequence>
+      <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--Defines a MdFacade -->
+  <xs:complexType name="mdFacade">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <xs:sequence>
+          <!--The methods defined for the mdFacade -->
+          <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="create" type="mdFacadeOptions" minOccurs="0" maxOccurs="1" />
+          <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdControllerOptions">
+    <xs:sequence>
+      <xs:element name="mdAction" type="mdAction" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdController">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <xs:sequence>
+          <!--The methods defined for the MdControllers -->
+          <xs:element name="mdAction" type="mdAction" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="create" type="mdControllerOptions" minOccurs="0" maxOccurs="1" />
+          <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name="mdWebField">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="order" type="xs:string" />
+    <xs:attribute name="label" type="xs:string" />
+    <xs:attribute name="description" type="xs:string" />
+    <xs:attribute name="removable" type="xs:boolean" />
+    <xs:attribute name="required" type="xs:boolean" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="mdWebAttribute">
+    <xs:attributeGroup ref="mdWebField" />
+    <xs:attribute name="mdAttribute" type="xs:string" />
+    <xs:attribute name="showOnViewAll" type="xs:boolean" />
+    <xs:attribute name="showOnSearch" type="xs:boolean" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="mdWebPrimitive">
+    <xs:attributeGroup ref="mdWebAttribute" />
+    <!-- isExpression: Flag denoting if the attribute is an expression attribute -->
+    <xs:attribute name="isExpression" type="xs:boolean" use="optional" />
+    <!-- expression: The expression to use to calculate the value -->
+    <xs:attribute name="expression" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="mdWebNumber">
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="startRange" type="xs:string" />
+    <xs:attribute name="endRange" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="mdWebDec">
+    <xs:attributeGroup ref="mdWebNumber" />
+    <xs:attribute name="decPrecision" type="xs:integer" />
+    <xs:attribute name="decScale" type="xs:integer" />
+  </xs:attributeGroup>
+
+  <xs:complexType name="mdWebField">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebField" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebComment">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebField" />
+    <xs:attribute name="commentText" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebAttribute">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebAttribute" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebPrimitive">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebPrimitive" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebSingleTermGrid">
+    <xs:sequence>
+      <xs:element name="gridFields" type="gridFields" minOccurs="0" maxOccurs="1" />
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebAttribute" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebBoolean">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="defaultValue" type="xs:boolean" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebChar">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="maxLength" type="xs:string" />
+    <xs:attribute name="displayLength" type="xs:string" />
+    <xs:attribute name="unique" type="xs:boolean" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebText">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="height" type="xs:integer" />
+    <xs:attribute name="width" type="xs:integer" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebDate">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="afterTodayExclusive" type="xs:boolean" />
+    <xs:attribute name="afterTodayInclusive" type="xs:boolean" />
+    <xs:attribute name="beforeTodayExclusive" type="xs:boolean" />
+    <xs:attribute name="beforeTodayInclusive" type="xs:boolean" />
+    <xs:attribute name="startDate" type="xs:date" />
+    <xs:attribute name="endDate" type="xs:date" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebNumber">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebNumber" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebDec">
+    <xs:sequence>
+      <xs:element name="condition" type="condition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="fieldGroup" type="fieldGroup" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attributeGroup ref="mdWebDec" />
+  </xs:complexType>
+
+  <xs:complexType name="fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="geo" type="mdWebAttribute" />
+      <xs:element name="multiTerm" type="mdWebAttribute" />
+      <xs:element name="grid" type="mdWebSingleTermGrid" />
+      <xs:element name="term" type="mdWebAttribute" />
+      <xs:element name="char" type="mdWebChar" />
+      <xs:element name="date" type="mdWebDate" />
+      <xs:element name="dateTime" type="mdWebPrimitive" />
+      <xs:element name="time" type="mdWebPrimitive" />
+      <xs:element name="double" type="mdWebDec" />
+      <xs:element name="float" type="mdWebDec" />
+      <xs:element name="decimal" type="mdWebDec" />
+      <xs:element name="boolean" type="mdWebBoolean" />
+      <xs:element name="long" type="mdWebNumber" />
+      <xs:element name="integer" type="mdWebNumber" />
+      <xs:element name="text" type="mdWebText" />
+      <xs:element name="reference" type="mdWebAttribute" />
+      <xs:element name="break" type="mdWebField" />
+      <xs:element name="comment" type="mdWebComment" />
+      <xs:element name="header" type="mdWebField" />
+      <xs:element name="group" type="mdWebField" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="mdWebBooleanGrid">
+    <xs:attributeGroup ref="mdWebPrimitive" />
+    <xs:attribute name="defaultValue" type="xs:boolean" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebDecGrid">
+    <xs:attributeGroup ref="mdWebDec" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="mdWebNumberGrid">
+    <xs:attributeGroup ref="mdWebNumber" />
+    <xs:attribute name="type" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="gridFields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="double" type="mdWebDecGrid" />
+      <xs:element name="float" type="mdWebDecGrid" />
+      <xs:element name="decimal" type="mdWebDecGrid" />
+      <xs:element name="boolean" type="mdWebBooleanGrid" />
+      <xs:element name="long" type="mdWebNumberGrid" />
+      <xs:element name="integer" type="mdWebNumberGrid" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="andCondition">
+    <xs:sequence>
+      <xs:element name="firstCondition" type="baseCondition" minOccurs="0" maxOccurs="1" />
+      <xs:element name="secondCondition" type="baseCondition" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="basicCondition">
+    <xs:attribute name="field" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+    <xs:attribute name="operation" type="operations" use="required" />
+  </xs:complexType>
+
+  <xs:simpleType name="operations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EQ" />
+      <xs:enumeration value="GT" />
+      <xs:enumeration value="GTE" />
+      <xs:enumeration value="LT" />
+      <xs:enumeration value="LTE" />
+      <xs:enumeration value="NEQ" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="fieldGroup">
+    <xs:attribute name="groupName" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="condition">
+    <xs:complexContent>
+      <xs:extension base="baseCondition">
+        <xs:choice minOccurs="0" maxOccurs="1">
+          <xs:element name="none" />
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="baseCondition">
+    <xs:choice minOccurs="0" maxOccurs="1">
+      <xs:element name="and" type="andCondition" />
+      <xs:element name="char" type="basicCondition" />
+      <xs:element name="date" type="basicCondition" />
+      <xs:element name="double" type="basicCondition" />
+      <xs:element name="long" type="basicCondition" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="mdWebFormOptions">
+    <xs:sequence>
+      <xs:element name="fields" type="fields" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdWebForm">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <xs:sequence>
+          <!--The methods defined for the MdWebForms -->
+          <xs:element name="fields" type="fields" minOccurs="0" maxOccurs="1" />
+          <xs:element name="create" type="mdWebFormOptions" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="formName" type="xs:string" />
+        <xs:attribute name="mdClass" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="enumItem">
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="mdEnumeration">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <xs:choice>
+          <!-- includes all of the instances of the enumeration mdBusiness in the subset -->
+          <xs:element name="includeAll" />
+          <!--specifys a particular object to include in the subset -->
+          <xs:sequence>
+            <xs:element name="addEnumItem" type="enumItem" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="removeEnumItem" type="enumItem" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:choice>
+        <!-- referenceName: The fully qualified name of the enumeration mdBusiness -->
+        <xs:attribute name="type" type="xs:string" use="required" />
+        <xs:attribute name="table" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdClass">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <!--publish:Flag indicating if the MdClass can be published -->
+        <xs:attribute name="publish" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdTransient">
+    <xs:complexContent>
+      <xs:extension base="mdClass">
+        <xs:attribute name="extendable" type="xs:boolean" use="optional" />
+        <xs:attribute name="isAbstract" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdException">
+    <xs:complexContent>
+      <xs:extension base="mdTransient">
+        <xs:sequence>
+          <xs:element name="attributes" type="attributes" minOccurs="0" maxOccurs="1" />
+          <xs:element name="create" type="mdExceptionOptions" minOccurs="0" maxOccurs="1" />
+          <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+          <xs:element name="dtoStubSource" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="message" type="xs:string" use="optional" />
+        <xs:attribute name="extends" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdExceptionOptions">
+    <xs:sequence>
+      <xs:element name="attributes" type="attributes" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdSession">
+    <xs:complexContent>
+      <xs:extension base="mdTransient">
+        <xs:sequence>
+          <xs:element name="attributes" type="attributes" minOccurs="0" maxOccurs="1" />
+          <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="create" type="mdSessionOptions" minOccurs="0" maxOccurs="1" />
+          <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+          <xs:element name="dtoStubSource" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="extends" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdSessionOptions">
+    <xs:sequence>
+      <xs:element name="attributes" type="attributes" minOccurs="0" maxOccurs="1" />
+      <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdView">
+    <xs:complexContent>
+      <xs:extension base="mdSession">
+        <xs:sequence>
+          <xs:element name="queryStubSource" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdEntityOptions">
+    <xs:sequence>
+      <xs:element name="attributes" type="attributes" minOccurs="0" maxOccurs="1" />
+      <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdEntity">
+    <xs:complexContent>
+      <xs:extension base="mdClass">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="attributes" type="attributes" minOccurs="0" />
+          <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+          <xs:element name="dtoStubSource" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+        <xs:attribute name="table" type="xs:string" use="optional" />
+        <xs:attribute name="generateController" type="xs:boolean" use="optional" />
+        <xs:attribute name="enforceSiteMaster" type="xs:boolean" use="optional" />
+        <xs:attribute name="hasDeterministicId" type="xs:boolean" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdStruct">
+    <xs:complexContent>
+
+      <xs:extension base="mdEntity">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="create" type="mdEntityOptions" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+
+        <!-- cacheSize: The number of items in the cache, only applicable for most recently used -->
+        <xs:attribute name="cacheSize" type="xs:integer" />
+        <!--cacheAlgorithm: The choice from a list of cacheAlgorithm -->
+        <xs:attribute name="cacheAlgorithm" type="cacheOptions" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdLocalStruct">
+    <xs:complexContent>
+      <xs:extension base="mdEntity">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="create" type="mdEntityOptions" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdElement">
+    <xs:complexContent>
+      <xs:extension base="mdEntity">
+        <xs:attribute name="extendable" type="xs:boolean" />
+        <!--abstract: If the mdBusiness is abstract -->
+        <xs:attribute name="isAbstract" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdBusinessOptions">
+    <xs:complexContent>
+      <xs:extension base="mdEntityOptions">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="mdStateMachine" type="mdStateMachine" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdBusinessBase">
+    <xs:complexContent>
+      <xs:extension base="mdElement">
+        <!-- cacheSize: The number of items in the cache, only applicable for most recently used -->
+        <xs:attribute name="cacheSize" type="xs:integer" />
+        <!--cacheAlgorithm: The choice from a list of cacheAlgorithm -->
+        <xs:attribute name="cacheAlgorithm" type="cacheOptions" />
+        <!--extends: The name of the mdBusiness being extended -->
+        <xs:attribute name="extends" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdBusiness">
+    <xs:complexContent>
+      <xs:extension base="mdBusinessBase">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="mdStateMachine" type="mdStateMachine" minOccurs="0" maxOccurs="1" />
+          <xs:element name="create" type="mdBusinessOptions" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--Data for the mdRelationship type -->
+  <xs:complexType name="mdRelationshipBase">
+    <xs:complexContent>
+      <xs:extension base="mdElement">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdRelationship">
+    <xs:sequence>
+      <!--The parent mdBusiness of the mdRelationship -->
+      <xs:element name="parent" type="participant" minOccurs="0" maxOccurs="1" />
+      <!--The child mdBusiness of the mdRelationship -->
+      <xs:element name="child" type="participant" minOccurs="0" maxOccurs="1" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="create" type="mdBusinessOptions" minOccurs="0" maxOccurs="1" />
+        <xs:element name="attributes" type="attributes" minOccurs="0" />
+        <xs:element name="mdMethod" type="mdMethod" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="stubSource" minOccurs="0" maxOccurs="1" />
+        <xs:element name="dtoStubSource" minOccurs="0" maxOccurs="1" />
+      </xs:choice>
+    </xs:sequence>
+
+    <!--name:The qualified path/name of the mdBusiness -->
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="exported" type="xs:boolean" use="optional" />
+    <!--publish:Flag indicating if the MdClass can be published -->
+    <xs:attribute name="publish" type="xs:boolean" use="optional" />
+    <xs:attribute name="composition" type="xs:boolean" />
+    <!--extends: The fully qualified name of the parent mdRelationship -->
+    <xs:attribute name="extends" type="xs:string" />
+    <!--cacheAlgorithm: The choice from a list of cacheAlgorithm -->
+    <xs:attribute name="cacheAlgorithm" type="relationshipCacheOptions" />
+    <xs:attribute name="extendable" type="xs:boolean" />
+    <!--abstract: If the mdBusiness is abstract -->
+    <xs:attribute name="isAbstract" type="xs:boolean" />
+    <xs:attribute name="table" type="xs:string" use="optional" />
+    <xs:attribute name="generateController" type="xs:boolean" use="optional" />
+    <xs:attribute name="enforceSiteMaster" type="xs:boolean" use="optional" />
+    <xs:attribute name="hasDeterministicId" type="xs:boolean" use="optional" />
+    <xs:attribute name="removable" type="xs:string" use="optional" />
+    <xs:attribute name="label" type="xs:string" use="optional" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+
+  <xs:complexType name="mdTermRelationship">
+    <xs:complexContent>
+      <xs:extension base="mdRelationship">
+        <xs:attribute name="associationType" type="associationTypes" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--Definition of the participants in a mdRelationship -->
+  <xs:complexType name="participant">
+    <!--name: The qualified path/name of the participating mdBusiness -->
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <!--label: The display label of the participant -->
+    <xs:attribute name="label" type="xs:string" />
+    <!-- cardinality: The cardinality of the participant in the mdRelationship -->
+    <xs:attribute name="cardinality" use="required" type="xs:string" />
+    <!--method: The name of the call method -->
+    <xs:attribute name="method" use="required" type="xs:string" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+
+  <xs:complexType name="states">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="state" type="state" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="transitions">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="transition" type="transition" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdStateMachineOptions">
+    <xs:sequence>
+      <xs:element name="states" type="states" minOccurs="0" maxOccurs="1" />
+      <xs:element name="transitions" type="transitions" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mdStateMachine">
+    <xs:complexContent>
+      <xs:extension base="mdType">
+        <xs:sequence>
+          <xs:element name="states" type="states" />
+          <xs:element name="transitions" type="transitions" />
+          <xs:element name="create" type="mdStateMachineOptions" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--A transition in an mdStateMachine -->
+  <xs:complexType name="transition">
+    <!--name: The name of the transitionDAO -->
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <!--label: The display label of the transitionDAO -->
+    <xs:attribute name="label" type="xs:string" use="optional" />
+    <!--source: The name of the source state -->
+    <xs:attribute name="source" type="xs:string" />
+    <!--sink: The name of the sink state -->
+    <xs:attribute name="sink" type="xs:string" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+
+  <!-- ******************************** Enumerated Options definition ************************************ -->
+
+
+  <xs:simpleType name="cacheOptions">
+    <xs:restriction base="xs:string">
+      <!--everything: All object of the mdBusiness are cached -->
+      <xs:enumeration value="everything" />
+      <!--nothing: No object of the mdBusiness are cached -->
+      <xs:enumeration value="nothing" />
+      <!-- most recently used: An x amount of the most recently used instances are cached -->
+      <xs:enumeration value="most recently used" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="entryOptions">
+    <xs:restriction base="xs:string">
+      <!--default: The default entry to the state machine -->
+      <xs:enumeration value="default" />
+      <!--true: The state is an entry state -->
+      <xs:enumeration value="true" />
+      <!--false: The state is not an entry state -->
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="relationshipCacheOptions">
+    <xs:restriction base="xs:string">
+      <!--everything: All object of the mdBusiness are cached -->
+      <xs:enumeration value="everything" />
+      <!--nothing: No object of the mdBusiness are cached -->
+      <xs:enumeration value="nothing" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ******************************** Object definition ************************************ -->
+
+  <xs:complexType name="entityReference">
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <xs:attribute name="key" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="entity">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <!--The attribute-value pairings of the object -->
+      <xs:element ref="attribute" />
+      <!--The attribute-xml id pairing of the object -->
+      <xs:element ref="attributeReference" />
+      <!--The attribute-multi xml id pairing of the object -->
+      <xs:element ref="attributeEnumeration" />
+      <!--The struct attribute values -->
+      <xs:element ref="attributeStruct" />
+    </xs:choice>
+    <!--The qualified path of the mdBusiness being instaniated -->
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <!--A key for the object -->
+    <xs:attribute name="key" type="xs:string" use="required" />
+    <!--New key of the entity, only applicable when updating an entity -->
+    <xs:attribute name="newKey" type="xs:string" />
+  </xs:complexType>
+
+  <!--A new instance of a mdRelationship DAO -->
+  <xs:complexType name="relationshipCreate">
+    <xs:complexContent>
+      <xs:extension base="entity">
+        <!--parentKey: The xml id of the object of the parent -->
+        <xs:attribute name="parentKey" type="xs:string" use="required" />
+        <!--childKey: The xml id of the object of the child -->
+        <xs:attribute name="childKey" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--Sets the value of an attribute for a particular object -->
+  <xs:element name="attribute">
+    <xs:complexType>
+      <!--attribute: The name of the attribute instantiated -->
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <!--value: The value for the attribute instantiated -->
+      <xs:attribute name="value" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <!--Sets the value of an attribute which references another object -->
+  <xs:element name="attributeReference">
+    <xs:complexType>
+      <!--attribute: The name of the attribute instantiated -->
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <!--key: The xml key of the mdBusiness being referened -->
+      <xs:attribute name="key" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Sets the value of an attribute which references multiple instances -->
+  <xs:element name="attributeEnumeration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="enumeratedItem" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <!--attribute: The name of attribute being instantiated -->
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Use for object of struct attributes, must reference standalone type -->
+  <xs:element name="attributeStruct">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <!--The attribute-value pairings of the object -->
+        <xs:element ref="attribute" />
+        <!--The attribute-multi xml id pairing of the object -->
+        <xs:element ref="attributeEnumeration" />
+        <!--The attribute-xml id pairing of the object -->
+        <xs:element ref="attributeReference" />
+      </xs:choice>
+      <!--attribute: The name of the struct attribute -->
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ************************************** ATTRIBUTE DEFINITIONS ****************************************** -->
+
+  <!--A list of all possible attributes -->
+  <xs:complexType name="attributes">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="char" type="char" />
+      <xs:element name="text" type="text" />
+      <xs:element name="clob" type="clob" />
+      <xs:element name="boolean" type="boolean" />
+      <xs:element name="integer" type="integer" />
+      <xs:element name="long" type="long" />
+      <xs:element name="float" type="float" />
+      <xs:element name="double" type="double" />
+      <xs:element name="decimal" type="decimal" />
+      <xs:element name="time" type="time" />
+      <xs:element name="dateTime" type="dateTime" />
+      <xs:element name="date" type="date" />
+      <xs:element name="enumeration" type="enumeration" />
+      <xs:element name="reference" type="reference" />
+      <xs:element name="term" type="term" />
+      <xs:element name="multiReference" type="reference" />
+      <xs:element name="multiTerm" type="term" />
+      <xs:element name="struct" type="struct" />
+      <xs:element name="hashEncryption" type="hashEncryption" />
+      <xs:element name="symmetricEncryption" type="symmetricEncryption" />
+      <xs:element name="blob" type="blob" />
+      <xs:element name="file" type="file" />
+      <xs:element name="localChar" type="localChar" />
+      <xs:element name="localText" type="localText" />
+      <xs:element name="virtual" type="virtual" />
+    </xs:choice>
+  </xs:complexType>
+
+  <!--Common Attributes of all attributes -->
+  <xs:attributeGroup name="attribute">
+    <!--name: The name of the attribute -->
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <!--column: The database column of the attribute -->
+    <xs:attribute name="column" type="xs:string" />
+    <!--label:The display label of the attribute -->
+    <xs:attribute name="label" type="xs:string" />
+    <!--description: A description of the purpose of attribute -->
+    <xs:attribute name="description" type="xs:string" />
+    <!--required: If the attribute must have a value -->
+    <xs:attribute name="required" type="xs:boolean" />
+    <!--required: Comma delimeted name of dimensions on which this attribute is required -->
+    <xs:attribute name="requiredForDimension" type="xs:string" />
+    <!--rename: Renames the attribute, only applicable when updating an attribute -->
+    <xs:attribute name="rename" type="xs:string" />
+    <!--setterVisibility: The visibility of the setter methods -->
+    <xs:attribute name="setterVisibility" type="visibilityOptions" />
+    <!--getterVisibility: The visibility of the getter methods -->
+    <xs:attribute name="getterVisibility" type="visibilityOptions" />
+    <!--unique_value: If the value of the attribute must be unique -->
+    <xs:attribute name="indexType">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <!--unique mdIndex: The value is unique and indexed upone -->
+          <xs:enumeration value="unique index" />
+          <!-- non-unique mdIndex: value that can have duplicates, but database does indexing upon -->
+          <xs:enumeration value="non-unique index" />
+          <!--no mdIndex: the attribute is not indexed pone -->
+          <xs:enumeration value="no index" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <!-- removable: If the attribute is allowed to be removed from the database -->
+    <xs:attribute name="removable" type="xs:boolean" />
+    <!-- immutable: If the attribute is allowed to be changed after creation -->
+    <xs:attribute name="immutable" type="xs:boolean" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:attributeGroup>
+
+  <xs:simpleType name="visibilityOptions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="public" />
+      <xs:enumeration value="protected" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:attributeGroup name="attributePrimitive">
+    <xs:attributeGroup ref="attribute" />
+    <!-- defaultValue: The value of the attribute if no other value is specified -->
+    <xs:attribute name="defaultValue" type="xs:string" />
+    <!-- isExpression: Flag denoting if the attribute is an expression attribute -->
+    <xs:attribute name="isExpression" type="xs:boolean" use="optional" />
+    <!-- expression: The expression to use to calculate the value -->
+    <xs:attribute name="expression" type="xs:string" />
+  </xs:attributeGroup>
+
+  <!-- Common Attributes of integer, long, float, double, float, and decimal attributes -->
+  <xs:attributeGroup name="attributeNumber">
+    <xs:attributeGroup ref="attributePrimitive" />
+    <!--rejectPositive: Positive numbers are not allowed -->
+    <xs:attribute name="rejectPositive" type="xs:boolean" />
+    <!--rejectZero: Zero is not allowed -->
+    <xs:attribute name="rejectZero" type="xs:boolean" />
+    <!--rejectNegative: Negative numbers are not allowed -->
+    <xs:attribute name="rejectNegative" type="xs:boolean" />
+  </xs:attributeGroup>
+
+  <!--Common Attributes of float, double, and decimal attributes -->
+  <xs:attributeGroup name="attributeDec">
+    <xs:attributeGroup ref="attributeNumber" />
+    <!--Length: Total number of digits -->
+    <xs:attribute name="length" type="xs:integer" />
+    <!--Decimal: The number of digits after the decimal point -->
+    <xs:attribute name="decimal" type="xs:integer" />
+  </xs:attributeGroup>
+
+
+  <!-- Common Attributes of reference, foreginProperty, and enumeration attributes -->
+  <xs:attributeGroup name="attributeReference">
+    <xs:attributeGroup ref="attribute" />
+    <!-- defaultValueKey: The value of the attribute if no other value is specified -->
+    <xs:attribute name="defaultValueKey" type="xs:string" />
+
+    <!--The fully qualified path of Object being referenced -->
+    <xs:attribute name="type" type="xs:string" />
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="attributeStruct">
+    <xs:attributeGroup ref="attribute" />
+    <!--The fully qualified path of type that defines the struct -->
+    <xs:attribute name="type" type="xs:string" />
+  </xs:attributeGroup>
+
+  <!--Common attribute of hash attribute and symmetric attribute -->
+  <xs:attributeGroup name="attributeEncryption">
+    <xs:attributeGroup ref="attribute" />
+    <!-- defaultValue: The value of the attribute if no other value is specified -->
+    <xs:attribute name="defaultValue" type="xs:string" />
+  </xs:attributeGroup>
+
+  <!--Represents a Char object in the database -->
+  <xs:complexType name="char">
+    <xs:attributeGroup ref="attributePrimitive" />
+    <!--Size: The length of the character string -->
+    <xs:attribute name="size" type="xs:string" />
+  </xs:complexType>
+
+  <!--Represents a Text object in the database -->
+  <xs:complexType name="text">
+    <xs:attributeGroup ref="attributePrimitive" />
+  </xs:complexType>
+  
+  <xs:complexType name="term">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="rootTerm">
+        <xs:complexType>
+          <!--The fully qualified path of type that defines the struct -->
+          <xs:attribute name="key" type="xs:string" use="required" />
+          <xs:attribute name="selectable" type="xs:boolean" use="optional"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attributeGroup ref="attributeReference" />
+  </xs:complexType>  
+
+  <!--Represents a Clob object in the database -->
+  <xs:complexType name="clob">
+    <xs:attributeGroup ref="attributePrimitive" />
+  </xs:complexType>
+
+  <!--Represents a Boolean object in the database -->
+  <xs:complexType name="boolean">
+    <xs:attributeGroup ref="attributePrimitive" />
+    <xs:attribute name="positiveLabel" type="xs:string" />
+    <xs:attribute name="negativeLabel" type="xs:string" />
+  </xs:complexType>
+
+  <!--Represents a Double object in the database -->
+  <xs:complexType name="integer">
+    <xs:attributeGroup ref="attributeNumber" />
+  </xs:complexType>
+
+  <!--Represents a Long object in the database -->
+  <xs:complexType name="long">
+    <xs:attributeGroup ref="attributeNumber" />
+  </xs:complexType>
+
+  <!--Represents a Float object in the database -->
+  <xs:complexType name="float">
+    <xs:attributeGroup ref="attributeDec" />
+  </xs:complexType>
+
+  <!--Represents a Double object in the database -->
+  <xs:complexType name="double">
+    <xs:attributeGroup ref="attributeDec" />
+  </xs:complexType>
+
+  <!--Represents a Decimal object in the database -->
+  <xs:complexType name="decimal">
+    <xs:attributeGroup ref="attributeDec" />
+  </xs:complexType>
+
+  <!--Represents a Time object in the database -->
+  <xs:complexType name="time">
+    <xs:attributeGroup ref="attributePrimitive" />
+  </xs:complexType>
+
+  <!--Represents a Date object in the database -->
+  <xs:complexType name="date">
+    <xs:attributeGroup ref="attributePrimitive" />
+  </xs:complexType>
+
+  <!--Represents a Date Time object in the database -->
+  <xs:complexType name="dateTime">
+    <xs:attributeGroup ref="attributePrimitive" />
+  </xs:complexType>
+
+  <!-- referenceName: Must reference a defined mdBusiness type -->
+  <xs:complexType name="reference">
+    <xs:attributeGroup ref="attributeReference" />
+  </xs:complexType>
+
+  <!-- local character: a localized character attribute -->
+  <xs:complexType name="localChar">
+    <xs:attributeGroup ref="attributeStruct" />
+  </xs:complexType>
+
+  <!-- text character: a localized character attribute -->
+  <xs:complexType name="localText">
+    <xs:attributeGroup ref="attributeStruct" />
+  </xs:complexType>
+
+  <!-- referenceName: Must reference a defined enumerationFilter type selectMultiple: Check boxes vs. Radio Buttons -->
+  <xs:complexType name="enumeration">
+    <xs:attributeGroup ref="attributeReference" />
+    <!-- selectMultipe: If multiple values of the enumeration can be checked simulataneously -->
+    <xs:attribute name="selectMultiple" type="xs:boolean" />
+  </xs:complexType>
+
+  <!-- referenceName: Must reference a defined mdBusiness type -->
+  <xs:complexType name="struct">
+    <xs:attributeGroup ref="attributeStruct" />
+  </xs:complexType>
+
+  <!-- Defines the hash encryption attribute -->
+  <xs:complexType name="hashEncryption">
+    <xs:attributeGroup ref="attributeEncryption" />
+    <!-- method: The type of method to use for hash encryption -->
+    <xs:attribute name="method" type="xs:string" />
+  </xs:complexType>
+
+  <!-- Defines the symmetric encryption attribute -->
+  <xs:complexType name="symmetricEncryption">
+    <xs:attributeGroup ref="attributeEncryption" />
+    <!-- method: The encryption method to use for symmetrix encryption -->
+    <xs:attribute name="method" type="xs:string" />
+    <!-- keySize: The size of the key to use for encryption -->
+    <xs:attribute name="keySize" type="xs:int" />
+  </xs:complexType>
+
+  <!-- Defines the blob attribute -->
+  <xs:complexType name="blob">
+    <xs:attributeGroup ref="attribute" />
+  </xs:complexType>
+
+  <!-- Defines the file attribute attribute -->
+  <xs:complexType name="file">
+    <xs:attributeGroup ref="attribute" />
+  </xs:complexType>
+
+  <xs:complexType name="virtual">
+    <!--name: The name of the attribute -->
+    <xs:attribute name="name" type="xs:string" />
+    <!--label:The display label of the attribute -->
+    <xs:attribute name="label" type="xs:string" />
+    <!--description: A description of the purpose of attribute -->
+    <xs:attribute name="description" type="xs:string" />
+    <!--required: If the attribute must have a value -->
+    <xs:attribute name="required" type="xs:boolean" />
+    <!-- Heads up: clean up accessor: The name of the accessor method used in generation <xs:attribute name="accessor" type="xs:string" /> -->
+    <!-- accessor: The fully qualified name of the MdClassDAO which defines the concrete attribute -->
+    <xs:attribute name="type" type="xs:string" use="required" />
+    <!--concrete: The name of the concrete attribute -->
+    <xs:attribute name="concrete" type="xs:string" use="required" />
+    <xs:anyAttribute processContents="skip" />
+  </xs:complexType>
+
+
+  <!-- ****************************************** RBAC PERMISSIONS ****************************************** -->
+
+  <xs:complexType name="singleActor">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="assignedRole">
+        <xs:complexType>
+          <xs:attribute name="roleName" type="xs:string" use="required" />
+          <xs:attribute name="label" type="xs:string" />
+          <xs:anyAttribute processContents="skip" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="grant" type="permissionOptions" />
+      <xs:element name="revoke" type="permissionOptions" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="permissionOptions">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <!--A permission defined for a MdFacade -->
+      <xs:element name="mdFacadePermission" type="mdFacadePermission" />
+      <!--A permission defined for a MdBusiness -->
+      <xs:element name="mdBusinessPermission" type="mdBusinessPermission" />
+      <!--A permission defined for a MdStructs -->
+      <xs:element name="mdStructPermission" type="mdClassPermission" />
+      <!--A permission defined for a MdViews -->
+      <xs:element name="mdViewPermission" type="mdClassPermission" />
+      <!--A permission defined for a MdUtils -->
+      <xs:element name="mdUtilPermission" type="mdClassPermission" />
+      <!--A permission defined for a MdRelationship -->
+      <xs:element name="mdRelationshipPermission" type="mdRelationshipPermission" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="user">
+    <xs:complexContent>
+      <xs:extension base="singleActor">
+        <!--attribute: The unique username -->
+        <xs:attribute name="userName" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="method">
+    <xs:complexContent>
+      <xs:extension base="singleActor">
+        <xs:attribute name="type" type="xs:string" use="required" />
+        <xs:attribute name="methodName" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="role">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="superRole">
+        <xs:complexType>
+          <xs:attribute name="roleName" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="grant" type="permissionOptions" />
+      <xs:element name="revoke" type="permissionOptions" />
+    </xs:choice>
+    <!--attribute: The unique username -->
+    <xs:attribute name="roleName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="mdFacadePermission">
+    <xs:sequence>
+      <xs:element name="mdMethodPermission" type="mdMethodPermission" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="mdClassPermission">
+    <!-- type: The metadata type to assign permissions to -->
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="operation">
+        <xs:complexType>
+          <xs:attribute name="name" type="allOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="operationForDimension">
+        <xs:complexType>
+          <xs:attribute name="name" type="dimensionOperations" use="required" />
+          <xs:attribute name="dimension" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="attributePermission" />
+      <xs:element name="mdMethodPermission" type="mdMethodPermission" />
+    </xs:choice>
+    <xs:attribute name="type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="mdBusinessPermission">
+    <xs:complexContent>
+      <xs:extension base="mdClassPermission">
+        <xs:sequence>
+          <xs:element name="statePermission" type="statePermission" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="mdRelationshipPermission">
+    <!-- type: The metadata type to assign permissions to -->
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="operation">
+        <xs:complexType>
+          <xs:attribute name="name" type="allOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="operationForDimension">
+        <xs:complexType>
+          <xs:attribute name="name" type="dimensionOperations" use="required" />
+          <xs:attribute name="dimension" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="attributePermission" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="parentStatePermission" type="parentStatePermission" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="childStatePermission" type="childStatePermission" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="mdMethodPermission" type="mdMethodPermission" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+    <xs:attribute name="type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="statePermission">
+    <!-- type: The metadata type to assign permissions to -->
+    <xs:sequence>
+      <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="allOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="attributePermission" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="stateName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="parentStatePermission">
+    <!-- type: The metadata type to assign permissions to -->
+    <xs:sequence>
+      <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="parentOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="stateName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="childStatePermission">
+    <!-- type: The metadata type to assign permissions to -->
+    <xs:sequence>
+      <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="childOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="stateName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:element name="attributePermission">
+    <xs:complexType>
+      <!-- type: The metadata type to assign permissions to -->
+      <xs:sequence>
+        <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name" type="attributeOperations" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="attributeName" type="xs:string" use="required" />
+      <xs:attribute name="dimension" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="mdMethodPermission">
+    <xs:sequence>
+      <xs:element name="operation" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="mdMethodOperations" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="methodName" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:simpleType name="allOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CREATE" />
+      <xs:enumeration value="DELETE" />
+      <xs:enumeration value="READ" />
+      <xs:enumeration value="WRITE" />
+      <xs:enumeration value="PROMOTE" />
+      <xs:enumeration value="ADD_PARENT" />
+      <xs:enumeration value="ADD_CHILD" />
+      <xs:enumeration value="DELETE_PARENT" />
+      <xs:enumeration value="DELETE_CHILD" />
+      <xs:enumeration value="READ_PARENT" />
+      <xs:enumeration value="READ_CHILD" />
+      <xs:enumeration value="WRITE_PARENT" />
+      <xs:enumeration value="WRITE_CHILD" />
+      <xs:enumeration value="GRANT" />
+      <xs:enumeration value="REVOKE" />
+      <xs:enumeration value="EXECUTE" />
+      <xs:enumeration value="READ_ALL_ATTRIBUTES" />
+      <xs:enumeration value="WRITE_ALL_ATTRIBUTES" />
+      <xs:enumeration value="DENY_READ" />
+      <xs:enumeration value="DENY_WRITE" />
+      <xs:enumeration value="DENY_CREATE" />
+      <xs:enumeration value="DENY_DELETE" />
+      <xs:enumeration value="ALL" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="associationTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RELATIONSHIP" />
+      <xs:enumeration value="TREE" />
+      <xs:enumeration value="GRAPH" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="dimensionOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="READ_ALL_ATTRIBUTES" />
+      <xs:enumeration value="WRITE_ALL_ATTRIBUTES" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="attributeOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="READ"></xs:enumeration>
+      <xs:enumeration value="WRITE"></xs:enumeration>
+      <xs:enumeration value="DENY_READ" />
+      <xs:enumeration value="DENY_WRITE" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mdMethodOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EXECUTE" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="childOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ADD_PARENT" />
+      <xs:enumeration value="DELETE_PARENT" />
+      <xs:enumeration value="READ_PARENT" />
+      <xs:enumeration value="WRITE_PARENT" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="parentOperations">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ADD_CHILD" />
+      <xs:enumeration value="DELETE_CHILD" />
+      <xs:enumeration value="READ_CHILD" />
+      <xs:enumeration value="WRITE_CHILD" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

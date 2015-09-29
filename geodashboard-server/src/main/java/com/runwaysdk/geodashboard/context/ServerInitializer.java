@@ -37,8 +37,6 @@ public class ServerInitializer implements Reloadable
   @Request
   public static void initialize()
   {
-//    throw new RuntimeException("Test");
-    
     ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
     List<ServerContextListenerInfo> infos = builder.read();
 

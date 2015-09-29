@@ -217,7 +217,14 @@ public class QueryFacade
 
       if (value != null && value.length() > 0)
       {
-        return new JSONObject(value);
+        try
+        {
+          return new JSONObject(value);
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
       }
     }
 

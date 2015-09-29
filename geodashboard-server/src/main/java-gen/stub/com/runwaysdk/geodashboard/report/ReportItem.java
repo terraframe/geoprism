@@ -21,6 +21,7 @@ package com.runwaysdk.geodashboard.report;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,8 +33,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.axis.encoding.Base64;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.birt.core.archive.FileArchiveWriter;
 import org.eclipse.birt.core.archive.IDocArchiveReader;
+import org.eclipse.birt.core.archive.IDocArchiveWriter;
 import org.eclipse.birt.core.archive.compound.ArchiveReader;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.report.engine.api.DocxRenderOption;
@@ -71,6 +74,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.CreatePermissionException;
+import com.runwaysdk.session.RequestState;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
@@ -141,8 +145,75 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Override
-  @Transaction
   public void applyWithFile(InputStream fileStream)
+  {
+
+    try
+    {
+      File rptdesign = File.createTempFile(TEMP_REPORT_PREFIX, "rptdesign");
+
+      try
+      {
+        FileIO.write(new FileOutputStream(rptdesign), fileStream);
+
+        /*
+         * First validate that the report works. This cannot be done in a transaction because report generation drops
+         * the request database connection. Thus we must validate outside of a transaction and then apply within a
+         * transaction
+         */
+        try
+        {
+          File rptdocument = File.createTempFile(TEMP_REPORT_PREFIX, "rptdocument");
+
+          try
+          {
+            FileArchiveWriter writer = new FileArchiveWriter(rptdocument.getAbsolutePath());
+
+            FileInputStream istream = new FileInputStream(rptdesign);
+
+            try
+            {
+              this.run(istream, writer, new HashMap<String, String>());
+            }
+            finally
+            {
+              istream.close();
+            }
+          }
+          finally
+          {
+            FileUtils.deleteQuietly(rptdocument);
+          }
+        }
+        catch (Exception e)
+        {
+          throw new InvalidReportDefinitionException(e);
+        }
+
+        FileInputStream istream = new FileInputStream(rptdesign);
+
+        try
+        {
+          this.applyWithFileInTransaction(istream);
+        }
+        finally
+        {
+          istream.close();
+        }
+      }
+      finally
+      {
+        FileUtils.deleteQuietly(rptdesign);
+      }
+    }
+    catch (IOException e)
+    {
+      throw new InvalidReportDefinitionException(e);
+    }
+  }
+
+  @Transaction
+  private void applyWithFileInTransaction(InputStream fileStream)
   {
     boolean isNew = this.isNew() && !this.isAppliedToDB();
 
@@ -237,15 +308,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
 
     this.apply();
-
-    try
-    {
-      this.run(new HashMap<String, String>());
-    }
-    catch (Exception e)
-    {
-      throw new InvalidReportDefinitionException(e);
-    }
   }
 
   @Override
@@ -500,7 +562,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return IRenderOption.OUTPUT_FORMAT_HTML;
   }
 
-  @Transaction
   public void generateAndSaveDocument(ReportParameter[] parameters)
   {
     try
@@ -508,62 +569,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       // Run the report and get the path of the temp rptdocument file
       File file = this.run(this.createParameterMap(parameters));
 
-      try
-      {
-        // If a vault file doesn't exist for the rptdocument then create one
-        if (this.getDocument() == null || this.getDocument().length() == 0)
-        {
-          this.lock();
-
-          VaultFile entity = new VaultFile();
-          VaultFileDAO fileDao = (VaultFileDAO) BusinessFacade.getEntityDAO(entity);
-
-          this.checkVaultPermissions(entity, Operation.CREATE);
-
-          String reportName = this.getReportName();
-
-          int index = reportName.lastIndexOf('.');
-
-          String filename = reportName.substring(0, index);
-          String extension = RPTDOCUMENT_EXTENSION;
-
-          entity.setValue(VaultFileInfo.FILE_NAME, filename);
-          entity.setValue(VaultFileInfo.EXTENSION, extension);
-
-          fileDao.setSize(0);
-          entity.apply();
-          fileDao.putFile(new FileInputStream(file));
-
-          this.setDocument(entity.getId());
-          this.apply();
-        }
-        else
-        {
-          VaultFile vaultFile = VaultFile.lock(this.getDocument());
-
-          try
-          {
-            VaultFileDAO document = (VaultFileDAO) BusinessFacade.getEntityDAO(vaultFile);
-
-            document.putFile(new FileInputStream(file));
-          }
-          finally
-          {
-            vaultFile.unlock();
-          }
-        }
-      }
-      catch (FileNotFoundException e)
-      {
-        throw new FileReadException(file, e);
-      }
-      finally
-      {
-        if (file.getName().startsWith(TEMP_REPORT_PREFIX))
-        {
-          FileIO.deleteFile(file);
-        }
-      }
+      this.save(file);
     }
     catch (BirtException e)
     {
@@ -580,40 +586,122 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     }
   }
 
+  @Transaction
+  private void save(File file) throws IOException
+  {
+    try
+    {
+      // If a vault file doesn't exist for the rptdocument then create one
+      if (this.getDocument() == null || this.getDocument().length() == 0)
+      {
+        this.lock();
+
+        VaultFile entity = new VaultFile();
+        VaultFileDAO fileDao = (VaultFileDAO) BusinessFacade.getEntityDAO(entity);
+
+        this.checkVaultPermissions(entity, Operation.CREATE);
+
+        String reportName = this.getReportName();
+
+        int index = reportName.lastIndexOf('.');
+
+        String filename = reportName.substring(0, index);
+        String extension = RPTDOCUMENT_EXTENSION;
+
+        entity.setValue(VaultFileInfo.FILE_NAME, filename);
+        entity.setValue(VaultFileInfo.EXTENSION, extension);
+
+        fileDao.setSize(0);
+        entity.apply();
+        fileDao.putFile(new FileInputStream(file));
+
+        this.setDocument(entity.getId());
+        this.apply();
+      }
+      else
+      {
+        VaultFile vaultFile = VaultFile.lock(this.getDocument());
+
+        try
+        {
+          VaultFileDAO document = (VaultFileDAO) BusinessFacade.getEntityDAO(vaultFile);
+
+          document.putFile(new FileInputStream(file));
+        }
+        finally
+        {
+          vaultFile.unlock();
+        }
+      }
+    }
+    catch (FileNotFoundException e)
+    {
+      throw new FileReadException(file, e);
+    }
+    finally
+    {
+      if (file.getName().startsWith(TEMP_REPORT_PREFIX))
+      {
+        FileIO.deleteFile(file);
+      }
+    }
+  }
+
   private File run(Map<String, String> parameterMap) throws BirtException, EngineException, IOException
   {
     File file = this.getCachedDocument(parameterMap);
 
     if (!file.exists() || file.getName().startsWith(TEMP_REPORT_PREFIX) || ( !parameterMap.containsKey(PAGE_NUMBER) && !this.getCacheDocument() ))
     {
-      IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
+      InputStream stream = this.getDesignAsStream();
+      FileArchiveWriter writer = new FileArchiveWriter(file.getAbsolutePath());
 
-      HashMap<String, Object> contextMap = new HashMap<String, Object>();
-      contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
-      contextMap.put(IClientSession.SESSION_ID, Session.getCurrentSession().getId());
-
-      IReportRunnable design = engine.openReportDesign(this.getDesignAsStream());
-
-      IRunTask task = engine.createRunTask(design);
-
-      try
-      {
-        Map<String, Object> convertedParameters = new ReportParameterUtil().convertParameters(design, parameterMap);
-
-        task.setAppContext(contextMap);
-        task.setParameterValues(convertedParameters);
-        task.validateParameters();
-        task.setLocale(LocalizationFacade.getLocale());
-
-        task.run(new FileArchiveWriter(file.getAbsolutePath()));
-      }
-      finally
-      {
-        task.close();
-      }
+      this.run(stream, writer, parameterMap);
     }
 
     return file;
+  }
+
+  private void run(InputStream stream, IDocArchiveWriter writer, Map<String, String> parameterMap) throws BirtException, EngineException, IOException
+  {
+    IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
+
+    HashMap<String, Object> contextMap = new HashMap<String, Object>();
+    contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
+    contextMap.put(IClientSession.SESSION_ID, Session.getCurrentSession().getId());
+
+    IReportRunnable design = engine.openReportDesign(stream);
+
+    IRunTask task = engine.createRunTask(design);
+
+    try
+    {
+      Map<String, Object> convertedParameters = new ReportParameterUtil().convertParameters(design, parameterMap);
+
+      task.setAppContext(contextMap);
+      task.setParameterValues(convertedParameters);
+      task.validateParameters();
+      task.setLocale(LocalizationFacade.getLocale());
+
+      RequestState requestState = RequestState.getCurrentRequestState();
+
+      try
+      {
+        // Release the request connection
+        requestState.returnDatabaseConnectionToPool();
+
+        task.run(writer);
+      }
+      finally
+      {
+        // Reconnect the request connection
+        requestState.getNewDatabaseConnectionFromPool();
+      }
+    }
+    finally
+    {
+      task.close();
+    }
   }
 
   public File getCachedDocument(Map<String, String> parameters)

@@ -44,6 +44,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
+    <aspectj.version>1.6.11</aspectj.version>    
+    <aspectj.plugin.version>1.4</aspectj.plugin.version>
+    
     <geotools.version>11.0</geotools.version>
   </properties>
 
@@ -73,7 +76,7 @@
   <build>
     <plugins>
       <!-- Add generated source directories -->
-      <plugin>
+      <plugin> 
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>1.7</version>
