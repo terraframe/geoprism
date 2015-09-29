@@ -151,6 +151,7 @@
             <exclude>**/webapp/openlayers/**</exclude>
             <exclude>**/webapp/leaflet_plugins/**</exclude>
             <exclude>**/webapp/jquery/**</exclude>
+            <exclude>**/webapp/jssor-slider/**</exclude>
             <exclude>**/webapp/jquerytree/**</exclude>
             <exclude>**/webapp/jquery-colorpicker/**</exclude>
             <exclude>**/webapp/cldrjs-0.4.0/**</exclude>
