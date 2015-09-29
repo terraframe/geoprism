@@ -159,6 +159,17 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
+  
+  public static void loadSystemBundle(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(EmailSettingDTO.CLASS);
+    types.add(RolesDTO.CLASS);
+    types.add(RoleViewDTO.CLASS);
+    types.add(GeodashboardUserDTO.CLASS);
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
 
   public static void loadUniversalBundle(ClientRequestIF request, HttpServletRequest req)
   {

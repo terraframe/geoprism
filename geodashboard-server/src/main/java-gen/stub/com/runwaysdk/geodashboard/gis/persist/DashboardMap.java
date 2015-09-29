@@ -72,6 +72,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.constants.MdBusinessInfo;
+import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -80,6 +83,7 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardMetadataQuery;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
@@ -101,6 +105,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdBusiness;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -136,6 +141,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   @Override
   public String updateConditions(DashboardCondition[] conditions)
   {
+//    makeBiz();
+//    LoaderDecorator.load("com.test.cltest.ClassLoaderTestiesBiz");
+    
     GeoserverBatch batch = new GeoserverBatch();
 
     List<? extends DashboardLayer> layers = this.getLayers();
@@ -152,6 +160,24 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     GeoserverFacade.pushUpdates(batch);
 
     return getMapJSON("republish=false");
+  }
+  
+  @Transaction
+  private void makeBiz()
+  {
+    try
+    {
+      MdBusiness biz = new MdBusiness();
+      biz.setValue(MdBusinessInfo.NAME, "ClassLoaderTestiesBiz");
+      biz.setValue(MdBusinessInfo.PACKAGE, "com.test.cltest");
+      biz.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "mdBusiness Set Test");
+      biz.setStructValue(MdBusinessInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, "Set mdBusiness Attributes Test");
+      biz.apply();
+    }
+    catch (DuplicateDataException e)
+    {
+      
+    }
   }
 
   private void generateSessionViewName(DashboardLayer layer)
