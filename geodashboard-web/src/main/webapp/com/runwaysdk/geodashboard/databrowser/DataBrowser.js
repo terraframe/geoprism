@@ -224,6 +224,7 @@
           actionParams: {},
           width: 560,
           onSuccess : function() {
+            that._table.refresh();            
           },
           onFailure : function(e) {
             that.handleException(e);            
@@ -263,7 +264,7 @@
             
             var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
               onSuccess : function() {
-            	that._table.refresh();
+                that._table.refresh();
               },
               onFailure : function(ex) {
                 tq.stop();
