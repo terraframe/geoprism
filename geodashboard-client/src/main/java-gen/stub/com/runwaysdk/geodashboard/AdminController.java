@@ -134,8 +134,9 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String sessionId = this.getClientSession().getSessionId();
     String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
-
+    
     this.req.setAttribute("response", response);
+    this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 

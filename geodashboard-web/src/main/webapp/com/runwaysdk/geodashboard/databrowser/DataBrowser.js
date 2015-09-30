@@ -67,7 +67,11 @@
     'export' : "Template",
     'import' : "Import",
     'message' : 'Message',
-    'success' : 'Upload complete'
+    'success' : 'Upload complete',
+    'dialogDeleteDataTitle' : 'Delete current data?',
+    'deleteData' : 'Are you sure you want to delete all of the selected data?',
+    'delete' : 'Delete',
+    'cancel' : 'Cancel'
   });
   
   var dataBrowser = ClassFramework.newClass(dataBrowserName, {
@@ -165,6 +169,10 @@
         items.push({label:this.localize("export"), id:"export", handler:Mojo.Util.bind(this, this._onContextExportClick, type)});
         items.push({label:this.localize("import"), id:"import", handler:Mojo.Util.bind(this, this._onContextImportClick, type)});
         
+        if(this._config.editData) {
+          items.push({label:this.localize("delete"), id:"import", handler:Mojo.Util.bind(this, this._onContextDeleteClick, type)});          
+        }
+        
         var cm = this.getFactory().newContextMenu(node);
         
         for(var i = 0; i < items.length; i++) {
@@ -202,8 +210,6 @@
           
         new com.runwaysdk.ui.RunwayControllerFormDialogDownloader(config).render();               
       },      
-      
-      
       _onContextImportClick : function(type) {
         var that = this;
         
@@ -225,6 +231,51 @@
         };
         
         new Form(config, 'result_iframe', 'upload_result').render();  
+      },
+      _onContextDeleteClick : function(type) {
+        var that = this;
+        
+        var fac = this.getFactory();
+        
+        var dialog = fac.newDialog(this.localize("dialogDeleteDataTitle"));
+        dialog.appendContent(this.localize("deleteData"));
+        
+        var Structure = com.runwaysdk.structure;
+        var tq = new Structure.TaskQueue();
+        var that = this;
+        
+        tq.addTask(new Structure.TaskIF({
+          start : function(){            
+            var cancelCallback = function() {
+              dialog.close();
+              tq.stop();
+            };
+
+            dialog.addButton(that.localize("delete"), function() { tq.next(); }, null, {class:'btn btn-primary'});
+            dialog.addButton(that.localize("cancel"), cancelCallback, null, {class:'btn'});            
+            dialog.render();
+          }
+        }));
+        
+        tq.addTask(new Structure.TaskIF({
+          start : function(){
+            dialog.close();
+            
+            var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              onSuccess : function() {
+            	that._table.refresh();
+              },
+              onFailure : function(ex) {
+                tq.stop();
+                that.handleException(ex);
+              }
+            }, '#databrowser');
+            
+            com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.deleteData(request, type)
+          }
+        }));
+        
+        tq.start();
       },
       handleException : function(e) {
         if($.type( e ) === "string") {

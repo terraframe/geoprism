@@ -325,8 +325,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
       File file = new File(xml.getParentFile(), path);
 
-      System.out.println("Unzipping zip directory [" + file.getAbsolutePath() + "]");
-
       if (file.exists())
       {
         InstanceImporterUnzipper.processZipDir(file.getAbsolutePath());

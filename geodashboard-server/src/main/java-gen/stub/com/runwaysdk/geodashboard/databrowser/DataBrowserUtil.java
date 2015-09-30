@@ -21,9 +21,19 @@ package com.runwaysdk.geodashboard.databrowser;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.runwaysdk.ComponentIF;
+import com.runwaysdk.business.Business;
+import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.business.Entity;
+import com.runwaysdk.dataaccess.MdEntityDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdEntityDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.ConfigurationIF;
 import com.runwaysdk.geodashboard.ConfigurationService;
+import com.runwaysdk.query.EntityQuery;
+import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdEntity;
 
 public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -53,6 +63,30 @@ public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysd
 
     return query;
   }
+  
+  @Transaction
+  public static void deleteData(String type)
+  {
+    MdEntityDAOIF mdEntity = MdEntityDAO.getMdEntityDAO(type);
+    
+    QueryFactory factory = new QueryFactory();
+    EntityQuery query = factory.entityQuery(mdEntity);
+    OIterator<? extends ComponentIF> iterator = query.getIterator();
+    
+    try
+    {
+      while(iterator.hasNext())
+      {
+        Entity entity = (Entity) iterator.next();
+        entity.delete();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
 
   public static MetadataTypeQuery getTypes(String[] packages, String[] types)
   {
