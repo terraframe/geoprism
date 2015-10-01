@@ -41,23 +41,16 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
 
     LocalProperties.setSkipCodeGenAndCompile(true);
 
-    try
-    {
-      File metadata = new File(DeployProperties.getDeployBin() + "/metadata");
+    File metadata = new File(DeployProperties.getDeployBin() + "/metadata");
 
-      if (metadata.exists() && metadata.isDirectory())
-      {
-        logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
-        Versioning.main(new String[] { metadata.getAbsolutePath() });
-      }
-      else
-      {
-        logger.error("Metadata schema files were not found! Unable to import schemas.");
-      }
-    }
-    finally
+    if (metadata.exists() && metadata.isDirectory())
     {
-      LocalProperties.setSkipCodeGenAndCompile(false);
+      logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
+      Versioning.main(new String[] { metadata.getAbsolutePath() });
+    }
+    else
+    {
+      logger.error("Metadata schema files were not found! Unable to import schemas.");
     }
   }
 
