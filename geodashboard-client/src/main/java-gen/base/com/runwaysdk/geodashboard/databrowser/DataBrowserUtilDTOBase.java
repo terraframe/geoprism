@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = -1539714016)
+@com.runwaysdk.business.ClassSignature(hash = 1649833896)
 public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.DataBrowserUtil";
-  private static final long serialVersionUID = -1539714016;
+  private static final long serialVersionUID = 1649833896;
   
   protected DataBrowserUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -35,6 +35,14 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   }
   
   public static java.lang.String ID = "id";
+  public static final void deleteData(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{type};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO.CLASS, "deleteData", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO getDefaultTypes(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};

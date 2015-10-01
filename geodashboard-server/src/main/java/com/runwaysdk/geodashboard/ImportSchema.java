@@ -16,47 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.context;
+package com.runwaysdk.geodashboard;
 
-import java.io.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.runwaysdk.constants.DeployProperties;
-import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.service.GeodashboardImportPlugin;
+import com.runwaysdk.session.Request;
 
-public class PatchingContextListener implements Reloadable, ServerContextListener
+public class ImportSchema
 {
-  private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
-
-  @Override
-  public void startup()
+  @Request
+  public static void main(String[] args)
   {
     SAXSourceParser.registerPlugin(new GeodashboardImportPlugin());
 
-    LocalProperties.setSkipCodeGenAndCompile(true);
-
-    File metadata = new File(DeployProperties.getDeployBin() + "/metadata");
-
-    if (metadata.exists() && metadata.isDirectory())
-    {
-      logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
-      Versioning.main(new String[] { metadata.getAbsolutePath() });
-    }
-    else
-    {
-      logger.error("Metadata schema files were not found! Unable to import schemas.");
-    }
-  }
-
-  @Override
-  public void shutdown()
-  {
-
+    Versioning.main(args);
   }
 }

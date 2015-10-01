@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.databrowser;
 
-@com.runwaysdk.business.ClassSignature(hash = 1003369120)
+@com.runwaysdk.business.ClassSignature(hash = -844990936)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.DataBrowserUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1003369120;
+  private static final long serialVersionUID = -844990936;
   
   public DataBrowserUtilBase()
   {
@@ -61,6 +61,12 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
   public static DataBrowserUtil get(String id)
   {
     return (DataBrowserUtil) com.runwaysdk.business.Util.get(id);
+  }
+  
+  public static void deleteData(java.lang.String type)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery getDefaultTypes()

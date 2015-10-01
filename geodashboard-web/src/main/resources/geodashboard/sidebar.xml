@@ -26,6 +26,8 @@
       <item name="Dashboard_Viewer" uri="DashboardViewer" synch="true" classes="link-viewer" />
   </link-list>
   <nav-list>
+    <item name="System_Configuration" uri="admin/system" />
+  
     <item name="Account_Management" uri="admin/users" />
 
     <item name="GIS_Management">

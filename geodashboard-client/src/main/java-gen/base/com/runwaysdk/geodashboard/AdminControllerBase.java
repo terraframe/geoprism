@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1934213464)
+@com.runwaysdk.business.ClassSignature(hash = 35093201)
 public class AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.AdminController";
@@ -165,6 +165,20 @@ public class AdminControllerBase implements com.runwaysdk.generation.loader.Relo
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failScheduler");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void system() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.system");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void failSystem() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failSystem");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)

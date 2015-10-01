@@ -50,4 +50,6 @@
   <map uri="report" controller="com.runwaysdk.geodashboard.report.ReportItemController">
     <action method=".*" uri="${method}"/>    
   </map>
+  
+  
 </mappings>

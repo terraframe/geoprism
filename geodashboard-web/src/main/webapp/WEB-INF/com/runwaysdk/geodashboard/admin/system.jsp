@@ -21,38 +21,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 
 <head>
 
-<gdb:localize var="page_title" key="databrowser.title"/>
+<gdb:localize var="page_title" key="system.title"/>
 
-<!-- Databrowser CSS -->
+<!-- User account CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/databrowser/databrowser.css" useRandomParam="false"/>  
-<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
+<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 
-<!-- Databrowser Javascript -->
-<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
-<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
-<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-<jwr:script src="/bundles/databrowser.js" useRandomParam="false"/>
-
+<!-- User account Javascript -->
+<jwr:script src="/bundles/system.js" useRandomParam="false"/>
 <script type="text/javascript">${js}</script>
+
 
 </head>
 
-<div id="databrowser"></div>
+<body>
+
+<div id="systemForm"></div>
 
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
-    types: com.runwaysdk.DTOUtil.convertToType(<%=request.getAttribute("response")%>.returnValue[0]).getResultSet(),
-    editData : <%=request.getAttribute("editData")%>
-  });
-  db.render("#databrowser");
+  var emailSetting = new com.runwaysdk.geodashboard.EmailSetting(${emailSetting}.returnValue[0]);
+  var user = new com.runwaysdk.geodashboard.GeodashboardUser(${user}.returnValue[0]);
+  
+  var sf = new com.runwaysdk.geodashboard.system.SystemForm(emailSetting, user);  
+  sf.render("#systemForm");
 </script>
 
-<iframe id="result_iframe" name="result_iframe" style="visibility: hidden;"></iframe>
+</body>

@@ -120,7 +120,7 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
 
       if (roots.size() == 0)
       {
-        throw new ProgrammingErrorException("Unable to find attribute roots for [" + mdAttributeTerm.getKey() + "]");
+        throw new ProgrammingErrorException("No attribute roots have been defined for [" + mdAttributeTerm.getKey() + "]");
       }
 
       return roots.get(0).getClassifierPackage();

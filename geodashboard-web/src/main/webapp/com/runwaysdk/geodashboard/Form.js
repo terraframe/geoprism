@@ -956,8 +956,8 @@
         if(attributeMdDTO.isRequired()) {
           label += " *";
         }
-                 
-        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input)
+        
+        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input);
         this.addEntry(entry);        
         
         return entry;
