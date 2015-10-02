@@ -19,6 +19,7 @@
 package com.runwaysdk.geodashboard;
 
 import com.runwaysdk.dataaccess.io.Versioning;
+import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.geodashboard.service.GeodashboardImportPlugin;
 import com.runwaysdk.session.Request;
@@ -28,6 +29,7 @@ public class ImportSchema
   @Request
   public static void main(String[] args)
   {
+    SAXSourceParser.registerPlugin(new GISImportPlugin());
     SAXSourceParser.registerPlugin(new GeodashboardImportPlugin());
 
     Versioning.main(args);
