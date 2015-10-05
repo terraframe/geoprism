@@ -83,7 +83,6 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardMetadataQuery;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
@@ -141,19 +140,17 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   @Override
   public String updateConditions(DashboardCondition[] conditions)
   {
-//    makeBiz();
-//    LoaderDecorator.load("com.test.cltest.ClassLoaderTestiesBiz");
-    
     GeoserverBatch batch = new GeoserverBatch();
 
     List<? extends DashboardLayer> layers = this.getLayers();
 
     for (DashboardLayer layer : layers)
     {
+      batch.addLayerToDrop(layer);
+
+      this.generateSessionViewName(layer);
+
       layer.setConditions(Arrays.asList(conditions));
-
-      generateSessionViewName(layer);
-
       layer.publish(batch);
     }
 
@@ -161,7 +158,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return getMapJSON("republish=false");
   }
-  
+
   @Transaction
   private void makeBiz()
   {
@@ -176,7 +173,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
     catch (DuplicateDataException e)
     {
-      
+
     }
   }
 
@@ -356,6 +353,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : orderedLayers)
     {
+      batch.addLayerToDrop(layer);
+      
       this.generateSessionViewName(layer);
 
       layer.publish(batch);

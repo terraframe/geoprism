@@ -22,7 +22,8 @@ import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getLo
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getPublisher;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getReader;
 import static com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties.getWorkspace;
-import it.geosolutions.geoserver.rest.decoder.RESTLayer;
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
 import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
@@ -198,7 +199,9 @@ public class GeoserverFacade implements Reloadable
    */
   public static boolean styleExists(String styleName)
   {
-    return GeoserverProperties.getReader().getSLD(styleName) != null;
+    GeoServerRESTReader reader = GeoserverProperties.getReader();
+    
+    return reader.existsStyle(styleName);
   }
 
   /**
@@ -240,60 +243,59 @@ public class GeoserverFacade implements Reloadable
    */
   public static void removeStyle(String styleName)
   {
-    // if (styleExists(styleName))
-    // {
-    if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
+    if (styleExists(styleName))
     {
-      log.info("Removed the SLD [" + styleName + "].");
-    }
-    else
-    {
-      log.warn("Failed to remove the SLD [" + styleName + "].");
-    }
-
-    // There are problems with Geoserver not removing the SLD artifacts,
-    // so make sure those are gone
-    String stylePath = GeoserverProperties.getGeoserverSLDDir();
-
-    // remove the sld
-    File sld = new File(stylePath + styleName + ".sld");
-    if (sld.exists())
-    {
-      boolean deleted = sld.delete();
-      if (deleted)
+      if (GeoserverProperties.getPublisher().removeStyle(styleName, true))
       {
-        log.info("Deleted the file [" + sld + "].");
+        log.info("Removed the SLD [" + styleName + "].");
       }
       else
       {
-        log.warn("Failed to delete the file [" + sld + "].");
+        log.warn("Failed to remove the SLD [" + styleName + "].");
       }
-    }
-    else
-    {
-      log.info("The file [" + sld + "] does not exist.");
-    }
 
-    // remove the xml
-    File xml = new File(stylePath + styleName + ".xml");
-    if (xml.exists())
-    {
-      boolean deleted = sld.delete();
-      if (deleted)
+      // There are problems with Geoserver not removing the SLD artifacts,
+      // so make sure those are gone
+      String stylePath = GeoserverProperties.getGeoserverSLDDir();
+
+      // remove the sld
+      File sld = new File(stylePath + styleName + ".sld");
+      if (sld.exists())
       {
-        log.info("Deleted the file [" + xml + "].");
+        boolean deleted = sld.delete();
+        if (deleted)
+        {
+          log.info("Deleted the file [" + sld + "].");
+        }
+        else
+        {
+          log.warn("Failed to delete the file [" + sld + "].");
+        }
       }
       else
       {
-        log.warn("Failed to delete the file [" + xml + "].");
+        log.info("The file [" + sld + "] does not exist.");
+      }
+
+      // remove the xml
+      File xml = new File(stylePath + styleName + ".xml");
+      if (xml.exists())
+      {
+        boolean deleted = sld.delete();
+        if (deleted)
+        {
+          log.info("Deleted the file [" + xml + "].");
+        }
+        else
+        {
+          log.warn("Failed to delete the file [" + xml + "].");
+        }
+      }
+      else
+      {
+        log.info("The file [" + xml + "] does not exist.");
       }
     }
-    else
-    {
-      log.info("The file [" + xml + "] does not exist.");
-    }
-
-    // }
   }
 
   public static boolean publishStyle(String styleName, String body, boolean force)
@@ -408,14 +410,19 @@ public class GeoserverFacade implements Reloadable
    */
   public static void removeLayer(String layer)
   {
-    String workspace = GeoserverProperties.getWorkspace();
-    if (GeoserverProperties.getPublisher().removeLayer(workspace, layer))
+    if (GeoserverFacade.layerExists(layer))
     {
-      log.info("Removed the layer for [" + layer + "].");
-    }
-    else
-    {
-      log.warn("Failed to remove the layer for [" + layer + "].");
+      String workspace = GeoserverProperties.getWorkspace();
+      GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
+
+      if (publisher.removeLayer(workspace, layer))
+      {
+        log.info("Removed the layer for [" + layer + "].");
+      }
+      else
+      {
+        log.warn("Failed to remove the layer for [" + layer + "].");
+      }
     }
   }
 
@@ -491,9 +498,9 @@ public class GeoserverFacade implements Reloadable
   public static boolean layerExists(String layer)
   {
     String workspace = GeoserverProperties.getWorkspace();
-    RESTLayer layerObj = getReader().getLayer(workspace, layer);
+    boolean exists = getReader().existsStyle(layer);
 
-    return layerObj != null;
+    return exists;
   }
 
   /**

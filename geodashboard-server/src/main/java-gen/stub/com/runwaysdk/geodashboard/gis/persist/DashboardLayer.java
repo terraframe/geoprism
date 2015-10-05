@@ -30,14 +30,10 @@ import org.json.JSONObject;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
-import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.MdBusinessInfo;
-import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
@@ -52,7 +48,6 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.util.IDGenerator;
 
 public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
@@ -130,6 +125,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      * view won't exist yet.
      */
     GeoserverBatch batch = new GeoserverBatch();
+    batch.addLayerToDrop(this);
 
     this.publish(batch);
 
@@ -246,8 +242,6 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
    */
   public void publish(GeoserverBatch batch)
   {
-    batch.addLayerToDrop(this);
-
     createDatabaseView(true);
 
     if (viewHasData)

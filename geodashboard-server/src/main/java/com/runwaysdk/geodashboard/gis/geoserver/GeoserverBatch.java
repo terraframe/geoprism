@@ -50,7 +50,12 @@ public class GeoserverBatch implements Reloadable
 
   public void addLayerToDrop(DashboardLayer layer)
   {
-    layersToDrop.add(layer.getViewName());
+    String viewName = layer.getViewName();
+
+    if (viewName != null && viewName.length() > 0)
+    {
+      layersToDrop.add(viewName);
+    }
 
     List<? extends DashboardStyle> styles = layer.getStyles();
 
@@ -58,7 +63,12 @@ public class GeoserverBatch implements Reloadable
     {
       DashboardStyle style = styles.get(i);
 
-      stylesToDrop.add(style.getName());
+      String styleName = style.getName();
+
+      if (styleName != null && styleName.length() > 0)
+      {
+        stylesToDrop.add(styleName);
+      }
     }
   }
 
