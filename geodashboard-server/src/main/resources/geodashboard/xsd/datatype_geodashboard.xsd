@@ -54,11 +54,12 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="type" type="type" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="type" type="type" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
     <xs:attribute name="label" type="xs:string" use="optional" />
     <xs:attribute name="country" type="xs:string" use="optional" />
+    <xs:attribute name="removable" type="xs:boolean" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="type">

@@ -227,13 +227,15 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
   private static class DashboardHandler extends TagHandler
   {
-    private static final String NAME     = "name";
+    private static final String NAME      = "name";
 
-    private static final String LABEL    = "label";
+    private static final String LABEL     = "label";
 
-    private static final String COUNTRY  = "country";
+    private static final String COUNTRY   = "country";
 
-    private static final String TYPE_TAG = "type";
+    private static final String TYPE_TAG  = "type";
+
+    private static final String REMOVABLE = "removable";
 
     public DashboardHandler(ImportManager manager)
     {
@@ -245,14 +247,27 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
+      String name = attributes.getValue(NAME);
       String label = attributes.getValue(LABEL);
       String country = attributes.getValue(COUNTRY);
-      String name = attributes.getValue(NAME);
+      String removable = attributes.getValue(REMOVABLE);
 
       Dashboard dashboard = this.getOrCreateDashboard(name);
-      dashboard.getDisplayLabel().setDefaultValue(label);
-      dashboard.setCountry(GeoEntity.getByKey(country));
-      dashboard.setName(name);
+
+      if (label != null && label.length() > 0)
+      {
+        dashboard.getDisplayLabel().setDefaultValue(label);
+      }
+
+      if (country != null && country.length() > 0)
+      {
+        dashboard.setCountry(GeoEntity.getByKey(country));
+      }
+
+      if (removable != null && removable.length() > 0)
+      {
+        dashboard.setRemovable(new Boolean(removable));
+      }
 
       dashboard.apply();
 
@@ -280,7 +295,9 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         }
       }
 
-      return new Dashboard();
+      Dashboard dashboard = new Dashboard();
+      dashboard.setName(name);
+      return dashboard;
     }
 
     private Dashboard getDashboard(String name)
@@ -320,7 +337,7 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       URI uri = this.getManager().getStreamSource().toURI();
       File xml = new File(uri);
-      
+
       String path = attributes.getValue(PATH);
 
       File file = new File(xml.getParentFile(), path);
