@@ -141,6 +141,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Transaction
   public void delete()
   {
+    if (this.getRemovable() != null && !this.getRemovable())
+    {
+      DashboardDeleteException ex = new DashboardDeleteException();
+      ex.setLabel(this.getDisplayLabel().getValue());
+
+      throw ex;
+    }
+
     // Delete all saved conditions
     DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(this));
@@ -305,6 +313,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     clone.getDisplayLabel().setDefaultValue(name);
     clone.setName(name);
     clone.setCountry(this.getCountry());
+    clone.setRemovable(true);
     clone.apply();
 
     OIterator<? extends DashboardMetadata> allMetadata = this.getAllMetadataRel();

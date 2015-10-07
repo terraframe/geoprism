@@ -125,6 +125,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      * view won't exist yet.
      */
     GeoserverBatch batch = new GeoserverBatch();
+    batch.addLayerToDrop(this);
 
     this.publish(batch);
 
@@ -241,8 +242,6 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
    */
   public void publish(GeoserverBatch batch)
   {
-    batch.addLayerToDrop(this);
-
     createDatabaseView(true);
 
     if (viewHasData)
@@ -250,7 +249,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       batch.addLayerToPublish(this);
     }
   }
-
+  
   /**
    * For easy reference, the name of the SLD is the same as the db view name. The .sld extension is automatically added
    * 

@@ -25,6 +25,7 @@ import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
@@ -179,7 +180,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     return parentDepth;
   }
 
-  protected void addLocationQuery(QueryConfiguration config, GeneratedComponentQuery query, SelectableReference geoEntityAttribute)
+  protected void addLocationQuery(QueryConfiguration config, SelectableReference geoEntityAttribute, GeneratedComponentQuery... queries)
   {
     if (config.hasLayerId())
     {
@@ -190,12 +191,9 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
       if (strategy instanceof GeometryAggregationStrategy)
       {
-        MdAttributeDAOIF layerAttribute = MdAttributeDAO.get(layer.getMdAttribute().getId());
-        MdAttributeDAOIF mdAttribute = query.getMdClassIF().definesAttribute(layerAttribute.definesAttribute());
-
-        if (mdAttribute != null)
+        if (this.isValid(layer, queries))
         {
-          this.addGeometryQuery(config, query, layer);
+          this.addGeometryQuery(config, queries[0], layer);
         }
         else
         {
@@ -211,6 +209,25 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     {
       this.addGeoEntityQuery(config, geoEntityAttribute);
     }
+  }
+
+  private boolean isValid(DashboardThematicLayer layer, GeneratedComponentQuery... queries)
+  {
+    MdAttributeDAOIF layerAttribute = MdAttributeDAO.get(layer.getMdAttributeId());
+    String attributeName = layerAttribute.definesAttribute();
+
+    for (GeneratedComponentQuery query : queries)
+    {
+      MdClassDAOIF mdClassIF = query.getMdClassIF();
+      MdAttributeDAOIF mdAttribute = mdClassIF.definesAttribute(attributeName);
+
+      if (mdAttribute != null)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private void addGeometryQuery(QueryConfiguration config, GeneratedComponentQuery query, DashboardThematicLayer layer)

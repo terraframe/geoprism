@@ -171,16 +171,18 @@ $(document).ready(function(){
 				</ul>
 			</div>
 			
-			<i class="fa fa-external-link ico-new-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
+			<i class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
 			
 			<!-- Clone dashboard button -->
 		    <c:if test="${editDashboard}">
 		      <span id="clone-dashboard" class="">
-  		          <i class="fa fa-plus ico-new-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
-<!--   		          <a href="#" class="opener clone-dashboard" data-toggle="tooltip" data-original-title="Clone dashboard" data-placement="left" data-id="clone-dashboard"></a> -->
+  		          <i class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
   		      </span>
   		      
-<%--   		      <i id="add-dashboard-user-btn" class="fa fa-user-plus ico-add-dashboard-user" title="<gdb:localize key='dashboardViewer.addDashboardUserTooltip'/>" ></i> --%>
+		      <span id="delete-dashboard" class="">
+  		          <i class="fa fa-minus ico-dashboard" title="<gdb:localize key='dashboardViewer.deleteDashboardTooltip'/>" ></i>
+  		      </span>  		      
+  		      
 		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
   		    	<a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
   		    </c:if>

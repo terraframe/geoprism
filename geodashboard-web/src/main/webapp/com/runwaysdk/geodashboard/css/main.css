@@ -2511,7 +2511,7 @@ span.select-area span.center {
 		margin: 0px 9px 0px 0px;
 	}
 	
-	i.fa.fa-plus.ico-new-dashboard {
+	i.fa.fa-plus.ico-dashboard {
 		margin-left: 5px;
 		vertical-align: bottom;
   		font-size: 14px;
@@ -2519,8 +2519,21 @@ span.select-area span.center {
   		cursor: pointer;
 	}
 	
-	i.fa.fa-plus.ico-new-dashboard:hover,
-	i.fa.fa-plus.ico-new-dashboard:focus{
+	i.fa.fa-plus.ico-dashboard:hover,
+	i.fa.fa-plus.ico-dashboard:focus{
+		color: #00bfff;
+	}
+	
+	i.fa.fa-minus.ico-dashboard {
+		margin-left: 5px;
+		vertical-align: bottom;
+  		font-size: 14px;
+  		color: #bababa;
+  		cursor: pointer;
+	}
+	
+	i.fa.fa-minus.ico-dashboard:hover,
+	i.fa.fa-minus.ico-dashboard:focus{
 		color: #00bfff;
 	}
 	
@@ -2550,7 +2563,7 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
-	i.fa.fa-external-link.ico-new-dashboard-tab {
+	i.fa.fa-external-link.ico-dashboard-tab {
 		margin-left: 0;
 		vertical-align: bottom;
   		font-size: 14px;
@@ -2558,8 +2571,8 @@ span.select-area span.center {
   		cursor: pointer;
 	}
 	
-	i.fa.fa-external-link.ico-new-dashboard-tab:hover,
-	i.fa.fa-external-link.ico-new-dashboard-tab:focus{
+	i.fa.fa-external-link.ico-dashboard-tab:hover,
+	i.fa.fa-external-link.ico-dashboard-tab:focus{
 		color: #00bfff;
 	}
 	

@@ -134,8 +134,9 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String sessionId = this.getClientSession().getSessionId();
     String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
-
+    
     this.req.setAttribute("response", response);
+    this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 
@@ -178,6 +179,29 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
   @Override
   public void failOntologies() throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
+  
+  @Override
+  public void system() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String sessionId = this.getClientSession().getSessionId();
+    String metadataES = "{className:" + EmailSettingDTO.CLASS + ", methodName:'getDefault', declaredTypes: []}";
+    String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
+    this.req.setAttribute("emailSetting", serializedES);
+    
+    String metadataUsr = "{className:" + GeodashboardUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
+    String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
+    this.req.setAttribute("user", serializedUsr);
+    
+    JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
+
+    render("system.jsp");
+  }
+
+  @Override
+  public void failSystem() throws java.io.IOException, javax.servlet.ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }

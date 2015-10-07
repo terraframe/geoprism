@@ -49,7 +49,8 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
-    types: com.runwaysdk.DTOUtil.convertToType(<%=request.getAttribute("response")%>.returnValue[0]).getResultSet()
+    types: com.runwaysdk.DTOUtil.convertToType(<%=request.getAttribute("response")%>.returnValue[0]).getResultSet(),
+    editData : <%=request.getAttribute("editData")%>
   });
   db.render("#databrowser");
 </script>

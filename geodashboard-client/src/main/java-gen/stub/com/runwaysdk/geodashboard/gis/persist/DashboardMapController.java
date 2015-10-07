@@ -20,7 +20,6 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -209,7 +208,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
     // Figure out the active dashboard.
     DashboardDTO activeDashboard = dashboards.get(0);
-    if (dashboardId != null)
+    if (dashboardId != null && dashboardId.length() > 0)
     {
       activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
     }

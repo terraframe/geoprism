@@ -28,10 +28,12 @@
         <xs:extension base="create">
           <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element name="dashboard" type="dashboard" />
+            <xs:element name="unzipperTask" type="unzipperTask" />
           </xs:choice>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
+    
     <xs:complexType name="update">
       <xs:complexContent>
         <xs:extension base="update">
@@ -52,11 +54,12 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="type" type="type" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="type" type="type" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
     <xs:attribute name="label" type="xs:string" use="optional" />
     <xs:attribute name="country" type="xs:string" use="optional" />
+    <xs:attribute name="removable" type="xs:boolean" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="type">
@@ -75,6 +78,10 @@
     <xs:attribute name="type" type="xs:string" use="required" />
     <xs:attribute name="index" type="xs:integer" default="0" />
     <xs:attribute name="universal" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="unzipperTask">
+    <xs:attribute name="path" type="xs:anyURI" use="required" />
   </xs:complexType>
 
 </xs:schema>

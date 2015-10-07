@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 222040313)
+@com.runwaysdk.business.ClassSignature(hash = -13220203)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -365,6 +365,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getRemovable()
+  {
+    return getRemovable(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -684,6 +701,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getRemovable();
+    public com.runwaysdk.query.SelectableBoolean getRemovable(String alias);
+    public com.runwaysdk.query.SelectableBoolean getRemovable(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -1014,6 +1034,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.OWNER,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableBoolean getRemovable()
+  {
+    return getRemovable(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableLong getSeq()
   {
     return getSeq(null);
@@ -1310,6 +1347,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBoolean getRemovable();
+    public com.runwaysdk.query.SelectableBoolean getRemovable(String alias);
+    public com.runwaysdk.query.SelectableBoolean getRemovable(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -1659,6 +1699,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.OWNER,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBoolean getRemovable()
+  {
+    return getRemovable(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getRemovable(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(com.runwaysdk.geodashboard.Dashboard.REMOVABLE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
