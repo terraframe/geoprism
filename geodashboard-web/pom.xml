@@ -27,7 +27,7 @@
   <parent>
     <groupId>com.runwaysdk</groupId>
     <artifactId>geodashboard</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.01.0004</version>
   </parent>
   <artifactId>geodashboard-web</artifactId>
   <packaging>war</packaging>
@@ -43,22 +43,22 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0004</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-client</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0004</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-server</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0004</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>1.8.1-SNAPSHOT</version>
+      <version>2.0.2</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -392,28 +392,28 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-common</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-client</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-common</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -421,7 +421,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-client</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -429,7 +429,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -437,7 +437,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0004</version>
                   <type>jar</type>
                   <includes>**/messages*.properties,**/geoserver*.properties</includes>
                 </artifactItem>

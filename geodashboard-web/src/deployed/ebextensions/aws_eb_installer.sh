@@ -18,20 +18,22 @@
 # License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 # This script is run by the AWS Elastic Beanstalk installer
+set -o verbose
+echo "VERBOSE SHOULD BE ENABLED"
 
 # Install Oracle JDK
-wget -O .ebextensions/jdk-6u45-linux-amd64.rpm "http://nexus.terraframe.com/service/local/artifact/maven/redirect?r=releases&g=com.oracle&a=jdk-linux-amd64&v=6u45&e=rpm"
-rpm --erase --nodeps java-1.6.0-openjdk java-1.6.0-openjdk-devel
-rpm -Uvh .ebextensions/jdk-6u45-linux-amd64.rpm
+wget -O .ebextensions/jre-8u60-linux-x64.rpm "http://nexus.terraframe.com/service/local/artifact/maven/redirect?r=releases&g=com.oracle&a=server-jre-linux&v=8u60&e=rpm&c=x64"
+rpm --erase --nodeps java-1.8.0-openjdk-1.8.0.51-1.b16.6.amzn1.x86_64 java-1.8.0-openjdk-headless-1.8.0.51-1.b16.6.amzn1.x86_64
+rpm -Uvh .ebextensions/jre-8u60-linux-x64.rpm
 /usr/sbin/alternatives --install /usr/bin/java java /usr/java/default/bin/java 3
 /usr/sbin/alternatives --set java /usr/java/default/bin/java
 /usr/sbin/alternatives --install /usr/bin/java_sdk java_sdk /usr/java/default/bin/java 3
 /usr/sbin/alternatives --set java_sdk /usr/java/default/bin/java
 
-export TOMCAT_HOME=/usr/share/tomcat6 # This value is also hardcoded in server.xml
-export JAVA_HOME=/usr/java/default/jre
+export TOMCAT_HOME=/usr/share/tomcat8 # This value is also hardcoded in server.xml, the post_aws_eb_installer, platform.properties, log4j.properties, java environoment variables
+export JAVA_HOME=/usr/java/default
+#export JAVA_HOME=/usr/java/default/jre # This is the value for when we're using a jdk
 
 # Forward port 443 to 8443
 /sbin/iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
