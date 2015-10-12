@@ -24,16 +24,9 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title><gdb:localize key="login.title" /></title>
-  
+	<gdb:localize var="page_title" key="login.header"/>
+
     <!-- User account CSS -->
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
@@ -180,7 +173,6 @@
 		}
 		
 	</style>
-	
 </head>
 <body>
 
