@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -606882587)
+@com.runwaysdk.business.ClassSignature(hash = 1127435703)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,6 +13,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -43,7 +26,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -606882587;
+  private static final long serialVersionUID = 1127435703;
   
   public MetadataWrapperBase()
   {
@@ -92,6 +75,46 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MetadataWrapper.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public com.runwaysdk.geodashboard.Dashboard getDashboard()
+  {
+    if (getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.Dashboard.get(getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void validateDashboard()
+  {
+    this.validateAttribute(DASHBOARD);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MetadataWrapper.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.Dashboard value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()

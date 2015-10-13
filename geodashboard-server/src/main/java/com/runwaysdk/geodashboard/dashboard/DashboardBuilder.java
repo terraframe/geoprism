@@ -31,16 +31,12 @@ import com.runwaysdk.geodashboard.DashboardAttributes;
 import com.runwaysdk.geodashboard.DashboardAttributesQuery;
 import com.runwaysdk.geodashboard.DashboardMetadata;
 import com.runwaysdk.geodashboard.DashboardMetadataQuery;
-import com.runwaysdk.geodashboard.MetadataGeoNode;
-import com.runwaysdk.geodashboard.MetadataGeoNodeQuery;
 import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoNode;
-import com.runwaysdk.system.gis.geo.Universal;
 
 public class DashboardBuilder implements Reloadable
 {
@@ -66,10 +62,34 @@ public class DashboardBuilder implements Reloadable
     return false;
   }
 
-  protected MetadataWrapper getOrCreateMetadataWrapper(MdClassDAOIF mdClass, Universal _universal)
+  protected MetadataWrapper getOrCreateMetadataWrapper(Dashboard _dashboard, MdClassDAOIF _mdClass)
+  {
+    MetadataWrapper mWrapper = this.getMetadataWrapper(_dashboard, _mdClass);
+
+//    if (mWrapper == null)
+//    {
+//      mWrapper = this.getMetadataWrapper(null, _mdClass);
+//    }
+
+    if (mWrapper == null)
+    {
+      mWrapper = new MetadataWrapper();
+      mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, _mdClass.getId());
+      mWrapper.apply();
+    }
+
+    return mWrapper;
+  }
+
+  private MetadataWrapper getMetadataWrapper(Dashboard _dashboard, MdClassDAOIF _mdClass)
   {
     MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
-    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+    query.WHERE(query.getWrappedMdClass().EQ(_mdClass));
+
+    if (_dashboard != null)
+    {
+      query.AND(query.getDashboard().EQ(_dashboard));
+    }
 
     OIterator<? extends MetadataWrapper> iterator = query.getIterator();
 
@@ -79,21 +99,13 @@ public class DashboardBuilder implements Reloadable
       {
         return iterator.next();
       }
-      else
-      {
-        MetadataWrapper mWrapper = new MetadataWrapper();
-        mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, mdClass.getId());
-        mWrapper.setUniversal(_universal);
-        mWrapper.apply();
 
-        return mWrapper;
-      }
+      return null;
     }
     finally
     {
       iterator.close();
     }
-
   }
 
   protected AttributeWrapper getOrCreateAttributeWrapper(DashboardTypeInfo info, MdClassDAOIF mdClass, String attributeName)
@@ -126,11 +138,11 @@ public class DashboardBuilder implements Reloadable
     }
   }
 
-  public void build(Dashboard _dashboard, MdClassDAOIF mdClass, Universal uni, DashboardTypeInfo info)
+  public void build(Dashboard _dashboard, MdClassDAOIF mdClass, DashboardTypeInfo info)
   {
     List<String> attributes = info.getAttributes();
 
-    MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(mdClass, uni);
+    MetadataWrapper mWrapper = this.getOrCreateMetadataWrapper(_dashboard, mdClass);
 
     this.createOrUpdateDashboardMetadata(_dashboard, mWrapper, info);
 
@@ -146,36 +158,6 @@ public class DashboardBuilder implements Reloadable
       {
         this.createOrUpdateDashboardAttributes(mWrapper, unitWrapper, listOrder++);
       }
-    }
-
-    List<GeoNode> nodes = info.getNodes();
-
-    for (GeoNode node : nodes)
-    {
-      // Associate the node with the MetadataWrapper
-      createOrUpdateMetadataGeoNode(mWrapper, node);
-    }
-  }
-
-  private void createOrUpdateMetadataGeoNode(MetadataWrapper _mWrapper, GeoNode _node)
-  {
-    MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
-    query.WHERE(query.getParent().EQ(_mWrapper));
-    query.AND(query.getChild().EQ(_node));
-
-    OIterator<? extends MetadataGeoNode> iterator = query.getIterator();
-
-    try
-    {
-      if (!iterator.hasNext())
-      {
-        MetadataGeoNode relationship = new MetadataGeoNode(_mWrapper, _node);
-        relationship.apply();
-      }
-    }
-    finally
-    {
-      iterator.close();
     }
   }
 
