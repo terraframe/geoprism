@@ -51,13 +51,18 @@ public class SessionController extends SessionControllerBase implements Reloadab
   @Override
   public void login(String username, String password) throws IOException, ServletException
   {
+    if (username != null)
+    {
+      username = username.trim();
+    }
+    
     try
     {
       // Ensure the server context has been initialized
 
       Locale[] locales = ServletUtility.getLocales(req);
 
-      WebClientSession clientSession = WebClientSession.createUserSession(username.trim(), password, locales);
+      WebClientSession clientSession = WebClientSession.createUserSession(username, password, locales);
       ClientRequestIF clientRequest = clientSession.getRequest();
 
       req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
@@ -65,7 +70,10 @@ public class SessionController extends SessionControllerBase implements Reloadab
       req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
 
       String root = req.getContextPath();
-      if (root.equals("")) { root = "/menu"; }
+      if (root.equals(""))
+      {
+        root = "/menu";
+      }
       resp.sendRedirect(root);
     }
     catch (Throwable t)
