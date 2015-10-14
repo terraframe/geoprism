@@ -111,13 +111,13 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     // Returns list of all types defined with GeoNodes
     QueryFactory factory = new QueryFactory();
 
-    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+    MappableClassGeoNodeQuery mgQuery = new MappableClassGeoNodeQuery(factory);
 
-    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
-    mwQuery.WHERE(mwQuery.EQ(mgQuery.getParent()));
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.EQ(mgQuery.getParent()));
 
     MdClassQuery query = new MdClassQuery(factory);
-    query.WHERE(query.EQ(mwQuery.getWrappedMdClass()));
+    query.WHERE(query.EQ(mcQuery.getWrappedMdClass()));
 
     OIterator<? extends MdClass> iterator = query.getIterator();
 
@@ -138,10 +138,10 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
   {
     QueryFactory factory = new QueryFactory();
 
-    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    MappableClassQuery mwQuery = new MappableClassQuery(factory);
     mwQuery.AND(mwQuery.getWrappedMdClass().EQ(MdClassDAO.getMdClassDAO(type)));
 
-    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
+    MappableClassGeoNodeQuery mgQuery = new MappableClassGeoNodeQuery(factory);
     mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
 
     GeoNodeQuery gnQuery = new GeoNodeQuery(factory);

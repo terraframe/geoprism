@@ -43,7 +43,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -84,11 +83,11 @@ import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
-import com.runwaysdk.geodashboard.DashboardMetadataQuery;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
+import com.runwaysdk.geodashboard.MappableClass;
+import com.runwaysdk.geodashboard.MappableClassQuery;
 import com.runwaysdk.geodashboard.MdAttributeView;
 import com.runwaysdk.geodashboard.MetadataWrapper;
-import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
@@ -354,7 +353,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     for (DashboardLayer layer : orderedLayers)
     {
       batch.addLayerToDrop(layer);
-      
+
       this.generateSessionViewName(layer);
 
       layer.publish(batch);
@@ -570,26 +569,27 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
     MdClassDAOIF mdClass = mdAttribute.definedByClass();
 
-    QueryFactory factory = new QueryFactory();
-
-    DashboardMetadataQuery dmQuery = new DashboardMetadataQuery(factory);
-    dmQuery.WHERE(dmQuery.getParent().EQ(this.getDashboardId()));
-
-    MetadataWrapperQuery query = new MetadataWrapperQuery(factory);
+    MappableClassQuery query = new MappableClassQuery(new QueryFactory());
     query.WHERE(query.getWrappedMdClass().EQ(mdClass));
-    query.AND(query.dashboard(dmQuery));
 
-    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+    OIterator<? extends MappableClass> iterator = query.getIterator();
 
     try
     {
       if (iterator.hasNext())
       {
-        MetadataWrapper wrapper = iterator.next();
-        Universal lowest = wrapper.getUniversal();
-        Universal root = Universal.getRoot();
+        MappableClass mClass = iterator.next();
 
-        Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
+        List<? extends Universal> lowests = mClass.getAllUniversal().getAll();
+
+        List<Term> universals = new LinkedList<Term>();
+
+        for (Universal lowest : lowests)
+        {
+          Universal root = Universal.getRoot();
+
+          universals.addAll(GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS));
+        }
 
         return universals.toArray(new Universal[universals.size()]);
       }

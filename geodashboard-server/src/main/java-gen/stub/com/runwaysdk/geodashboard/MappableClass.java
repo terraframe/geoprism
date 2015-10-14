@@ -53,10 +53,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     return getMappableClass(mdClass);
   }
 
-  public static MappableClass getMappableClass(MdClassDAOIF mdClass)
+  public static MappableClass getMappableClass(MdClassDAOIF _mdClass)
   {
+    System.out.println("Looking for MappableClass with wrapped id: [" + _mdClass.getId() + "]");
+
+    MdClass mdClass = MdClass.get(_mdClass.getId());
+
     MappableClassQuery query = new MappableClassQuery(new QueryFactory());
-    query.WHERE(query.getWrappedMdClass().EQ(mdClass.getId()));
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+
     OIterator<? extends MappableClass> iterator = query.getIterator();
 
     try
@@ -65,6 +70,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         return iterator.next();
       }
+
+      System.out.println("Unable to find Mappable Class with wrapped id [" + _mdClass.getId() + "]");
 
       return null;
     }

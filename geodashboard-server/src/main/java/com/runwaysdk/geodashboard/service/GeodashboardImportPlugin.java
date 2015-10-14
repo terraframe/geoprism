@@ -240,8 +240,10 @@ public class GeodashboardImportPlugin implements ImportPluginIF
       {
         mClass = MappableClass.getMappableClass(type);
 
-        if (mClass != null)
+        if (mClass == null)
         {
+          System.out.println("Searching for Mappable Class [" + type +"]");
+
           String[] search_tags = new String[] { "mappableClass" };
           SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.TYPE_ATTRIBUTE, type, "Type:" + type);
         }
@@ -416,14 +418,16 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         mClass.apply();
 
         context.setObject(MappableClass.CLASS, mClass);
+        
+        System.out.println("Creating Mappable Class [" + mdClass.definesType() +"]: [" + mClass.getWrappedMdClassId() + "]");
       }
     }
 
-    private MappableClass getOrCreateMappableClass(MdClassDAOIF mdClass)
+    private MappableClass getOrCreateMappableClass(MdClassDAOIF _mdClass)
     {
       if (this.getManager().isUpdateState() || this.getManager().isCreateOrUpdateState())
       {
-        MappableClass mClass = MappableClass.getMappableClass(mdClass);
+        MappableClass mClass = MappableClass.getMappableClass(_mdClass);
 
         if (mClass != null)
         {
@@ -433,14 +437,17 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         }
         else if (this.getManager().isUpdateState())
         {
-          String message = "Unable to find a [" + MappableClass.CLASS + "] with a type of [" + mdClass.definesType() + "]";
+          String message = "Unable to find a [" + MappableClass.CLASS + "] with a type of [" + _mdClass.definesType() + "]";
 
           throw new DataNotFoundException(message, MdClassDAO.getMdClassDAO(MappableClass.CLASS));
         }
       }
 
+      MdClass mdClass = MdClass.get(_mdClass.getId());
+      
       MappableClass mClass = new MappableClass();
-      mClass.setWrappedMdClass(MdClass.get(mdClass.getId()));
+      mClass.setWrappedMdClass(mdClass);
+      mClass.apply();
 
       return mClass;
     }

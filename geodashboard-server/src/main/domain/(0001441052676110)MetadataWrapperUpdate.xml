@@ -30,7 +30,7 @@
       </mdBusiness>
     </update>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass" label="Dashboard Wrapper" cacheAlgorithm="everything" generateController="false">
+      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass" label="Mappable Class" cacheAlgorithm="everything" generateController="false">
         <attributes>
           <reference name="wrappedMdClass" type="com.runwaysdk.system.metadata.MdClass" label="MdClass" required="true" />
         </attributes>
@@ -39,18 +39,18 @@
         <parent cardinality="*" name="com.runwaysdk.geodashboard.MappableClass" method="MappableClass"/>
         <child cardinality="*" name="com.runwaysdk.system.gis.geo.Universal" method="Universal"/>
       </mdRelationship>
-      <mdRelationship name="com.runwaysdk.geodashboard.MappableClassGeoNode" label="Wrapper Geo node" cacheAlgorithm="everything">
-        <parent cardinality="*" name="com.runwaysdk.geodashboard.MappableClass" method="DashboardMetadata" />
+      <mdRelationship name="com.runwaysdk.geodashboard.MappableClassGeoNode" label="MappableClass - GeoNode" cacheAlgorithm="everything" generateController="false">
+        <parent cardinality="*" name="com.runwaysdk.geodashboard.MappableClass" method="MappableClass" />
         <child cardinality="*" name="com.runwaysdk.system.gis.geo.GeoNode" method="GeoNode" />
       </mdRelationship>
     </create>
 
-<!-- 
     <delete>
+<!-- 
       <object key="com.runwaysdk.geodashboard.MetadataGeoNode" type="com.runwaysdk.system.metadata.MdRelationship"/>
+ -->    
       <object key="com.runwaysdk.geodashboard.MetadataWrapper.universal" type="com.runwaysdk.system.metadata.MdAttribute"/>      
     </delete>    
- -->    
   </doIt>
   <undoIt>
     <delete></delete>

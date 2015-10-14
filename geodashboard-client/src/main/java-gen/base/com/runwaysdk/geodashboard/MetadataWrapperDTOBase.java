@@ -1,10 +1,28 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -454119625)
+@com.runwaysdk.business.ClassSignature(hash = 524423042)
 public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
-  private static final long serialVersionUID = -454119625;
+  private static final long serialVersionUID = 524423042;
   
   protected MetadataWrapperDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -40,7 +58,6 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
   public java.util.Date getCreateDate()
   {
@@ -437,55 +454,6 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.gis.geo.UniversalDTO getUniversal()
-  {
-    if(getValue(UNIVERSAL) == null || getValue(UNIVERSAL).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.UniversalDTO.get(getRequest(), getValue(UNIVERSAL));
-    }
-  }
-  
-  public String getUniversalId()
-  {
-    return getValue(UNIVERSAL);
-  }
-  
-  public void setUniversal(com.runwaysdk.system.gis.geo.UniversalDTO value)
-  {
-    if(value == null)
-    {
-      setValue(UNIVERSAL, "");
-    }
-    else
-    {
-      setValue(UNIVERSAL, value.getId());
-    }
-  }
-  
-  public boolean isUniversalWritable()
-  {
-    return isWritable(UNIVERSAL);
-  }
-  
-  public boolean isUniversalReadable()
-  {
-    return isReadable(UNIVERSAL);
-  }
-  
-  public boolean isUniversalModified()
-  {
-    return isModified(UNIVERSAL);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUniversalMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.metadata.MdClassDTO getWrappedMdClass()
   {
     if(getValue(WRAPPEDMDCLASS) == null || getValue(WRAPPEDMDCLASS).trim().equals(""))
@@ -603,60 +571,6 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
     clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode()
-  {
-    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO> getAllGeoNodeRelationships()
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO> getAllGeoNodeRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.MetadataGeoNodeDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  public com.runwaysdk.geodashboard.MetadataGeoNodeDTO addGeoNode(com.runwaysdk.system.gis.geo.GeoNodeDTO child)
-  {
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeDTO addGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.gis.geo.GeoNodeDTO child)
-  {
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  public void removeGeoNode(com.runwaysdk.geodashboard.MetadataGeoNodeDTO relationship)
-  {
-    getRequest().deleteChild(relationship.getId());
-  }
-  
-  public static void removeGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.MetadataGeoNodeDTO relationship)
-  {
-    clientRequestIF.deleteChild(relationship.getId());
-  }
-  
-  public void removeAllGeoNode()
-  {
-    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
-  }
-  
-  public static void removeAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
-  {
-    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")

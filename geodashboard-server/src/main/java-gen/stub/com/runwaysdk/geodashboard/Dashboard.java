@@ -965,18 +965,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     QueryFactory factory = new QueryFactory();
 
-    DashboardQuery dQuery = new DashboardQuery(factory);
-    dQuery.WHERE(dQuery.getId().EQ(this.getId()));
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.AND(mcQuery.getWrappedMdClass().EQ(thematicAttribute.definedByClass()));
 
-    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
-    mwQuery.WHERE(mwQuery.dashboard(dQuery));
-    mwQuery.AND(mwQuery.getWrappedMdClass().EQ(thematicAttribute.definedByClass()));
-
-    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
-    mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
+    MappableClassGeoNodeQuery mcgnQuery = new MappableClassGeoNodeQuery(factory);
+    mcgnQuery.WHERE(mcgnQuery.getParent().EQ(mcQuery));
 
     GeoNodeQuery gnQuery = new GeoNodeQuery(factory);
-    gnQuery.WHERE(gnQuery.EQ(mgQuery.getChild()));
+    gnQuery.WHERE(gnQuery.EQ(mcgnQuery.getChild()));
 
     OIterator<? extends GeoNode> iterator = gnQuery.getIterator();
 
@@ -1005,24 +1001,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
     QueryFactory factory = new QueryFactory();
 
-    DashboardQuery dQuery = new DashboardQuery(factory);
-    dQuery.WHERE(dQuery.getId().EQ(this.getId()));
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.AND(mcQuery.getWrappedMdClass().EQ(mdAttribute.definedByClass()));
 
-    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
-    mwQuery.WHERE(mwQuery.dashboard(dQuery));
+    MappableClassGeoNodeQuery mcgnQuery = new MappableClassGeoNodeQuery(factory);
+    mcgnQuery.WHERE(mcgnQuery.getParent().EQ(mcQuery));
 
-    MetadataGeoNodeQuery mgQuery = new MetadataGeoNodeQuery(factory);
-    mgQuery.WHERE(mgQuery.getParent().EQ(mwQuery));
+    GeoNodeQuery gnQuery = new GeoNodeQuery(factory);
+    gnQuery.WHERE(gnQuery.EQ(mcgnQuery.getChild()));
 
-    OIterator<? extends MetadataGeoNode> iterator = mgQuery.getIterator();
+    OIterator<? extends GeoNode> iterator = gnQuery.getIterator();
 
     try
     {
       while (iterator.hasNext())
       {
-        MetadataGeoNode metadata = iterator.next();
-        GeoNode geoNode = metadata.getChild();
-
+        GeoNode geoNode = iterator.next();
         // Geo entity node
         String geoEntityAttributeId = geoNode.getGeoEntityAttributeId();
 
@@ -1033,7 +1027,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
 
       throw new ProgrammingErrorException("Unable to find a Geo Node for the Dashboard [" + this.getId() + "] and Attribute [" + mdAttribute.getId() + "]");
-
     }
     finally
     {
