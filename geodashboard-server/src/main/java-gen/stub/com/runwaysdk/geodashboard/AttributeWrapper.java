@@ -26,5 +26,18 @@ public class AttributeWrapper extends AttributeWrapperBase implements com.runway
   {
     super();
   }
+
+  public AttributeWrapper clone(MetadataWrapper metadata, Integer order)
+  {
+    AttributeWrapper clone = new AttributeWrapper();
+    clone.setWrappedMdAttribute(this.getWrappedMdAttribute());
+    clone.apply();
+    
+    DashboardAttributes attribute = metadata.addAttributeWrapper(clone);
+    attribute.setListOrder(order);
+    attribute.apply();
+    
+    return clone;
+  }
   
 }

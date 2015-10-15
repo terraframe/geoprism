@@ -181,20 +181,20 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // Delete the corresponding map
     this.getMap().delete();
 
-    // Delete the dashboard - wrapper mapping
-    OIterator<? extends DashboardMetadata> metadata = this.getAllMetadataRel();
+    // Delete the wrapper mapping
+    OIterator<? extends MetadataWrapper> mIterator = this.getAllMetadata();
 
     try
     {
-      while (metadata.hasNext())
+      while (mIterator.hasNext())
       {
-        DashboardMetadata rel = metadata.next();
-        rel.delete();
+        MetadataWrapper metadata = mIterator.next();
+        metadata.delete();
       }
     }
     finally
     {
-      metadata.close();
+      mIterator.close();
     }
 
     Roles role = this.getDashboardRole();
@@ -334,7 +334,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         DashboardMetadata rel = allMetadata.next();
 
-        DashboardMetadata dm = clone.addMetadata(rel.getChild());
+        MetadataWrapper existingWrapper = rel.getChild();
+
+        MetadataWrapper cloneWrapper = existingWrapper.clone(clone);
+
+        DashboardMetadata dm = clone.addMetadata(cloneWrapper);
         dm.setListOrder(rel.getListOrder());
         dm.apply();
       }
