@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -156372343)
+@com.runwaysdk.business.ClassSignature(hash = 120333011)
 public abstract class DashboardMapDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
-  private static final long serialVersionUID = -156372343;
+  private static final long serialVersionUID = 120333011;
   
   protected DashboardMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,6 +45,7 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return CLASS;
   }
   
+  public static java.lang.String ACTIVEBASEMAP = "activeBaseMap";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
@@ -59,6 +60,43 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public String getActiveBaseMap()
+  {
+    return getValue(ACTIVEBASEMAP);
+  }
+  
+  public void setActiveBaseMap(String value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBASEMAP, "");
+    }
+    else
+    {
+      setValue(ACTIVEBASEMAP, value);
+    }
+  }
+  
+  public boolean isActiveBaseMapWritable()
+  {
+    return isWritable(ACTIVEBASEMAP);
+  }
+  
+  public boolean isActiveBaseMapReadable()
+  {
+    return isReadable(ACTIVEBASEMAP);
+  }
+  
+  public boolean isActiveBaseMapModified()
+  {
+    return isModified(ACTIVEBASEMAP);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getActiveBaseMapMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(ACTIVEBASEMAP).getAttributeMdDTO();
+  }
+  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -491,18 +529,18 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public final java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  public final java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{outFileFormat, mapBounds, mapSize};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{outFileFormat, mapBounds, mapSize, activeBaseMap};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "generateMapImageExport", _declaredTypes);
     return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.io.InputStream generateMapImageExport(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  public static final java.io.InputStream generateMapImageExport(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, outFileFormat, mapBounds, mapSize};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{id, outFileFormat, mapBounds, mapSize, activeBaseMap};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO.CLASS, "generateMapImageExport", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

@@ -61,6 +61,7 @@ var MapConfig ={
     		"NAME":"MapQuest Hybrid",
     		"LAYER_TYPE":"Group",
     		"CUSTOM_TYPE_OPTIONS":{"style":"AerialWithLabels"},
+    		"LAYER_SOURCE_TYPE":"MapQuestHybrid",
     		"LOCLIZATION_KEY":"mqHybrid",
     		"DEFAULT":"false",
             "VISIBLE":"true",

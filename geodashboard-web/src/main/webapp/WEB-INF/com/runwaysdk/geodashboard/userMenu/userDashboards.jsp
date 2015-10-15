@@ -120,11 +120,14 @@
 			<!-- <div class="row"> -->
 			  <div class="col-sm-6 col-md-4">
 			    <div class="thumbnail text-center">
-			      <img src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Dashboard">
+				  <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
+			      <img src="/mapthumb/getDashboardMapThumbnail?dashboardId=${dashboard.id}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
 			      <div class="caption">
 			        <h3>${dashboard.displayLabel.value}</h3>
-					<!-- <p>Dashboard body</p> -->
-			        <p><a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a></p>
+<!-- 					<p>"SOME BODY TEXT"</p> -->
+			        <p>
+			        	<a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a>
+			        </p>
 			      </div>
 			    </div>
 			  </div>

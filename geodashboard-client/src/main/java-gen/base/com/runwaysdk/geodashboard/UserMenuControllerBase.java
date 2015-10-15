@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 731351376)
+@com.runwaysdk.business.ClassSignature(hash = -932097345)
 public class UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.UserMenuController";
@@ -95,6 +95,20 @@ public class UserMenuControllerBase implements com.runwaysdk.generation.loader.R
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.UserMenuController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.UserMenuController.failDashboards");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=false)
+  public void getDashboardMapThumbnail(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.UserMenuController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.UserMenuController.getDashboardMapThumbnail");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=false)
+  public void failGetDashboardMapThumbnail(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.UserMenuController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.UserMenuController.failGetDashboardMapThumbnail");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)

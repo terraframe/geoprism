@@ -843,6 +843,24 @@
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(htmlOrJson, response){
             that._onApplySuccess(htmlOrJson, response);
+            
+            //////////////////////////////
+            // temp solution for creating thumbnails. 
+            // TODO: move to save mechanism
+            //////////////////////////////
+            var clientRequest = new Mojo.ClientRequest({
+                onSuccess : function() {
+                  // No action needed
+                },
+                onFailure : function(e) {
+                  that.handleException(e);
+                }
+              });
+                  
+              // Persist legend position to the db
+              com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(clientRequest, that._map._dashboardId);
+              ///////////////////////////////
+              ///////////////////////////////
           },
           onFailure : function(e){
             that.handleException(e);
