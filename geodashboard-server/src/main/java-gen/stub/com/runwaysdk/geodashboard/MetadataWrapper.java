@@ -44,6 +44,20 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
   }
 
   @Override
+  protected String buildKey()
+  {
+    Dashboard dashboard = this.getDashboard();
+    MdClass wrappedMdClass = this.getWrappedMdClass();
+
+    if (dashboard != null && wrappedMdClass != null)
+    {
+      return dashboard.getName() + "-" + wrappedMdClass.getKey();
+    }
+
+    return super.buildKey();
+  }
+
+  @Override
   public void delete()
   {
     for (AttributeWrapper aw : this.getAllAttributeWrapper())
@@ -159,6 +173,24 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     {
       iterator.close();
     }
+  }
+
+  public MetadataWrapper clone(Dashboard dashboard)
+  {
+    MetadataWrapper clone = new MetadataWrapper();
+    clone.setDashboard(dashboard);
+    clone.setWrappedMdClass(this.getWrappedMdClass());
+    clone.apply();
+
+    OIterator<? extends DashboardAttributes> attributes = this.getAllAttributeWrapperRel();
+
+    for (DashboardAttributes attribute : attributes)
+    {
+      AttributeWrapper child = attribute.getChild();
+      child.clone(clone, attribute.getListOrder());
+    }
+
+    return clone;
   }
 
 }

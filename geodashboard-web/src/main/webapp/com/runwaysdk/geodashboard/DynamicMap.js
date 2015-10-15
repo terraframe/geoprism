@@ -1174,14 +1174,16 @@
           start : function(){
             dialog.close();
             
-            com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
-              onSuccess : function(){
+            var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              onSuccess : function() {
                 window.location = "?dashboard=";
               },
-              onFailure : function(e){
-                 that.handleException(e);
+              onFailure : function(e) {
+                that.handleException(e);
               }
-            }), that._dashboardId);  
+            }, $(DynamicMap.DASHBOARD_MODAL)[0]);            
+            
+            com.runwaysdk.Facade.deleteEntity(request, that._dashboardId);  
           }
         }));
         

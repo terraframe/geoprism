@@ -67,59 +67,61 @@
         },
       
       _displayDashboardCloneForm : function(html) {
+        var that = this;
+        
         // Remove the internal form div if it exists
-          $( "#dashboard-dialog" ).remove();
+        $( "#dashboard-dialog" ).remove();
           
-          // Set the html of the dialog
-          $( "#clone-container" ).html(html);
+        // Set the html of the dialog
+        $( "#clone-container" ).html(html);
           
-          // Show the dialog
-          $( "#dashboard-dialog" ).dialog({
-            resizable: false,
-            height:200,
-            width:730,
-            modal: true,
-            buttons: [{
-              text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
-              "class": 'btn btn-primary',
-              click : function() {
-                var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
-                  onSuccess : function(dashboard){
-                    $( "#dashboard-dialog" ).dialog( "close" );
+        // Show the dialog
+        $( "#dashboard-dialog" ).dialog({
+          resizable: false,
+          height:200,
+          width:730,
+          modal: true,
+          buttons: [{
+            text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
+            "class": 'btn btn-primary',
+            click : function() {
+              var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+                onSuccess : function(dashboard){
+                  $( "#dashboard-dialog" ).dialog( "close" );
                     
-                    window.location = "?dashboard=" + dashboard.getId();
-                  },
-                  onFailure : function(e){
-                    $( "#dashboard-dialog" ).dialog( "close" );
+                  window.location = "?dashboard=" + dashboard.getId();
+                },
+                onFailure : function(e){
+                  $( "#dashboard-dialog" ).dialog( "close" );
                     
-                    that.handleException(e);
-                  }
-                }, $("#dashboard-dialog").parent().get(0));
-                
-                var dashboardId = $('#clone-dashboard-id').val();
-                var label = $('#clone-label').val();
-                
-                if(label != null && label.length > 0)
-                {
-                  com.runwaysdk.geodashboard.Dashboard.clone(request, dashboardId, label);                    
+                  that.handleException(e);
                 }
-                else
-                {
-                  var msg = com.runwaysdk.Localize.localize("dashboard", "Required");
-                  
-                  $('#clone-label-error').html(msg);        
-                  $('#clone-label-field-row').addClass('field-error');                    
-                }
+              }, $("#dashboard-dialog").parent().get(0));
+                
+              var dashboardId = $('#clone-dashboard-id').val();
+              var label = $('#clone-label').val();
+                
+              if(label != null && label.length > 0)
+              {
+                com.runwaysdk.geodashboard.Dashboard.clone(request, dashboardId, label);                    
               }
-            },
-            {
-              text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
-              "class": 'btn btn-default',
-              click : function() {
-                 $( this ).dialog( "close" );
+              else
+              {
+                var msg = com.runwaysdk.Localize.localize("dashboard", "Required");
+                
+                $('#clone-label-error').html(msg);        
+                $('#clone-label-field-row').addClass('field-error');                    
               }
-            }]
-          });
+            }
+          },
+          {
+            text : com.runwaysdk.Localize.localize("dashboard", "Cancel", "Cancel"),
+            "class": 'btn btn-default',
+            click : function() {
+               $( this ).dialog( "close" );
+            }
+          }]
+        });
       },
       
       /*
