@@ -18,13 +18,13 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 524423042)
-public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = 596751014)
+public abstract class MappableClassDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
-  private static final long serialVersionUID = 524423042;
+  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClass";
+  private static final long serialVersionUID = 596751014;
   
-  protected MetadataWrapperDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected MappableClassDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
@@ -35,7 +35,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   * @param businessDTO The BusinessDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected MetadataWrapperDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected MappableClassDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }
@@ -47,7 +47,6 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
-  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -119,55 +118,6 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.geodashboard.DashboardDTO getDashboard()
-  {
-    if(getValue(DASHBOARD) == null || getValue(DASHBOARD).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.geodashboard.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
-    }
-  }
-  
-  public String getDashboardId()
-  {
-    return getValue(DASHBOARD);
-  }
-  
-  public void setDashboard(com.runwaysdk.geodashboard.DashboardDTO value)
-  {
-    if(value == null)
-    {
-      setValue(DASHBOARD, "");
-    }
-    else
-    {
-      setValue(DASHBOARD, value.getId());
-    }
-  }
-  
-  public boolean isDashboardWritable()
-  {
-    return isWritable(DASHBOARD);
-  }
-  
-  public boolean isDashboardReadable()
-  {
-    return isReadable(DASHBOARD);
-  }
-  
-  public boolean isDashboardModified()
-  {
-    return isModified(DASHBOARD);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARD).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()
@@ -503,135 +453,119 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(WRAPPEDMDCLASS).getAttributeMdDTO();
   }
   
-  public final com.runwaysdk.geodashboard.MdAttributeViewDTO[] getSortedAttributes()
+  @SuppressWarnings("unchecked")
+  public java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode()
   {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataWrapperDTO.CLASS, "getSortedAttributes", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MdAttributeViewDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final com.runwaysdk.geodashboard.MdAttributeViewDTO[] getSortedAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataWrapperDTO.CLASS, "getSortedAttributes", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MdAttributeViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttributeWrapper()
+  public static java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO> getAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.GeoNodeDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO> getAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public java.util.List<? extends com.runwaysdk.geodashboard.MappableClassGeoNodeDTO> getAllGeoNodeRelationships()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.AttributeWrapperDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.MappableClassGeoNodeDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships()
+  public static java.util.List<? extends com.runwaysdk.geodashboard.MappableClassGeoNodeDTO> getAllGeoNodeRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.MappableClassGeoNodeDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
-  @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public com.runwaysdk.geodashboard.MappableClassGeoNodeDTO addGeoNode(com.runwaysdk.system.gis.geo.GeoNodeDTO child)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardAttributesDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
-  public com.runwaysdk.geodashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.geodashboard.AttributeWrapperDTO child)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeDTO addGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.gis.geo.GeoNodeDTO child)
   {
-    return (com.runwaysdk.geodashboard.DashboardAttributesDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
-  public static com.runwaysdk.geodashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.AttributeWrapperDTO child)
-  {
-    return (com.runwaysdk.geodashboard.DashboardAttributesDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
-  }
-  
-  public void removeAttributeWrapper(com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
+  public void removeGeoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO relationship)
   {
     getRequest().deleteChild(relationship.getId());
   }
   
-  public static void removeAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.DashboardAttributesDTO relationship)
+  public static void removeGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.MappableClassGeoNodeDTO relationship)
   {
     clientRequestIF.deleteChild(relationship.getId());
   }
   
-  public void removeAllAttributeWrapper()
+  public void removeAllGeoNode()
   {
-    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
+    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
-  public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllGeoNode(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.DashboardAttributesDTO.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.DashboardDTO> getAllDashboard()
-  {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardDTO>) getRequest().getParents(this.getId(), com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.DashboardDTO> getAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public java.util.List<? extends com.runwaysdk.system.gis.geo.UniversalDTO> getAllUniversal()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardDTO>) clientRequestIF.getParents(id, com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.UniversalDTO>) getRequest().getChildren(this.getId(), com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends com.runwaysdk.geodashboard.DashboardMetadataDTO> getAllDashboardRelationships()
+  public static java.util.List<? extends com.runwaysdk.system.gis.geo.UniversalDTO> getAllUniversal(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardMetadataDTO>) getRequest().getParentRelationships(this.getId(), com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.gis.geo.UniversalDTO>) clientRequestIF.getChildren(id, com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.geodashboard.DashboardMetadataDTO> getAllDashboardRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public java.util.List<? extends com.runwaysdk.geodashboard.ClassUniversalDTO> getAllUniversalRelationships()
   {
-    return (java.util.List<? extends com.runwaysdk.geodashboard.DashboardMetadataDTO>) clientRequestIF.getParentRelationships(id, com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ClassUniversalDTO>) getRequest().getChildRelationships(this.getId(), com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
-  public com.runwaysdk.geodashboard.DashboardMetadataDTO addDashboard(com.runwaysdk.geodashboard.DashboardDTO parent)
+  @SuppressWarnings("unchecked")
+  public static java.util.List<? extends com.runwaysdk.geodashboard.ClassUniversalDTO> getAllUniversalRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (com.runwaysdk.geodashboard.DashboardMetadataDTO) getRequest().addParent(parent.getId(), this.getId(), com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.geodashboard.ClassUniversalDTO>) clientRequestIF.getChildRelationships(id, com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
-  public static com.runwaysdk.geodashboard.DashboardMetadataDTO addDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.geodashboard.DashboardDTO parent)
+  public com.runwaysdk.geodashboard.ClassUniversalDTO addUniversal(com.runwaysdk.system.gis.geo.UniversalDTO child)
   {
-    return (com.runwaysdk.geodashboard.DashboardMetadataDTO) clientRequestIF.addParent(parent.getId(), id, com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    return (com.runwaysdk.geodashboard.ClassUniversalDTO) getRequest().addChild(this.getId(), child.getId(), com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
-  public void removeDashboard(com.runwaysdk.geodashboard.DashboardMetadataDTO relationship)
+  public static com.runwaysdk.geodashboard.ClassUniversalDTO addUniversal(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.gis.geo.UniversalDTO child)
   {
-    getRequest().deleteParent(relationship.getId());
+    return (com.runwaysdk.geodashboard.ClassUniversalDTO) clientRequestIF.addChild(id, child.getId(), com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
-  public static void removeDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.DashboardMetadataDTO relationship)
+  public void removeUniversal(com.runwaysdk.geodashboard.ClassUniversalDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    getRequest().deleteChild(relationship.getId());
   }
   
-  public void removeAllDashboard()
+  public static void removeUniversal(com.runwaysdk.constants.ClientRequestIF clientRequestIF, com.runwaysdk.geodashboard.ClassUniversalDTO relationship)
   {
-    getRequest().deleteParents(this.getId(), com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    clientRequestIF.deleteChild(relationship.getId());
   }
   
-  public static void removeAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public void removeAllUniversal()
   {
-    clientRequestIF.deleteParents(id, com.runwaysdk.geodashboard.DashboardMetadataDTO.CLASS);
+    getRequest().deleteChildren(this.getId(), com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
   }
   
-  public static com.runwaysdk.geodashboard.MetadataWrapperDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static void removeAllUniversal(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  {
+    clientRequestIF.deleteChildren(id, com.runwaysdk.geodashboard.ClassUniversalDTO.CLASS);
+  }
+  
+  public static com.runwaysdk.geodashboard.MappableClassDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
     
-    return (com.runwaysdk.geodashboard.MetadataWrapperDTO) dto;
+    return (com.runwaysdk.geodashboard.MappableClassDTO) dto;
   }
   
   public void apply()
@@ -650,9 +584,9 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     getRequest().delete(this.getId());
   }
   
-  public static com.runwaysdk.geodashboard.MetadataWrapperQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static com.runwaysdk.geodashboard.MappableClassQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (com.runwaysdk.geodashboard.MetadataWrapperQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.MetadataWrapperDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (com.runwaysdk.geodashboard.MappableClassQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.MappableClassDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -660,12 +594,12 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     getRequest().lock(this);
   }
   
-  public static com.runwaysdk.geodashboard.MetadataWrapperDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.MappableClassDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataWrapperDTO.CLASS, "lock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MetadataWrapperDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MappableClassDTO.CLASS, "lock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.MappableClassDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -673,12 +607,12 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     getRequest().unlock(this);
   }
   
-  public static com.runwaysdk.geodashboard.MetadataWrapperDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.MappableClassDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataWrapperDTO.CLASS, "unlock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MetadataWrapperDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MappableClassDTO.CLASS, "unlock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.MappableClassDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

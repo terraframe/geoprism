@@ -19,6 +19,7 @@
 package com.runwaysdk.geodashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 1268513446)
+
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,11 +48,12 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String MAPTHUMBNAIL = "mapThumbnail";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
+  public static java.lang.String REMOVABLE = "removable";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1268513446;
+  private static final long serialVersionUID = 1534800364;
   
   public DashboardBase()
   {
@@ -516,6 +518,34 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     else
     {
       setValue(OWNER, value.getId());
+    }
+  }
+  
+  public Boolean getRemovable()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(REMOVABLE));
+  }
+  
+  public void validateRemovable()
+  {
+    this.validateAttribute(REMOVABLE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getRemovableMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(REMOVABLE);
+  }
+  
+  public void setRemovable(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(REMOVABLE, "");
+    }
+    else
+    {
+      setValue(REMOVABLE, java.lang.Boolean.toString(value));
     }
   }
   

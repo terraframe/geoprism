@@ -161,7 +161,7 @@
 		}
 		
 	</style>
-	
+	<title><gdb:localize key="login.title" /> </title>	
 </head>
 <body>
   

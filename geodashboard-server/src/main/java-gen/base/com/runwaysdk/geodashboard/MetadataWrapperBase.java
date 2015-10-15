@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -606882587)
+@com.runwaysdk.business.ClassSignature(hash = 1116384770)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,6 +31,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -41,9 +42,8 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  public static java.lang.String UNIVERSAL = "universal";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -606882587;
+  private static final long serialVersionUID = 1116384770;
   
   public MetadataWrapperBase()
   {
@@ -92,6 +92,46 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MetadataWrapper.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public com.runwaysdk.geodashboard.Dashboard getDashboard()
+  {
+    if (getValue(DASHBOARD).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.geodashboard.Dashboard.get(getValue(DASHBOARD));
+    }
+  }
+  
+  public String getDashboardId()
+  {
+    return getValue(DASHBOARD);
+  }
+  
+  public void validateDashboard()
+  {
+    this.validateAttribute(DASHBOARD);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getDashboardMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MetadataWrapper.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
+  }
+  
+  public void setDashboard(com.runwaysdk.geodashboard.Dashboard value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARD, "");
+    }
+    else
+    {
+      setValue(DASHBOARD, value.getId());
+    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
@@ -338,46 +378,6 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
-  public com.runwaysdk.system.gis.geo.Universal getUniversal()
-  {
-    if (getValue(UNIVERSAL).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.Universal.get(getValue(UNIVERSAL));
-    }
-  }
-  
-  public String getUniversalId()
-  {
-    return getValue(UNIVERSAL);
-  }
-  
-  public void validateUniversal()
-  {
-    this.validateAttribute(UNIVERSAL);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getUniversalMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MetadataWrapper.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(UNIVERSAL);
-  }
-  
-  public void setUniversal(com.runwaysdk.system.gis.geo.Universal value)
-  {
-    if(value == null)
-    {
-      setValue(UNIVERSAL, "");
-    }
-    else
-    {
-      setValue(UNIVERSAL, value.getId());
-    }
-  }
-  
   public com.runwaysdk.system.metadata.MdClass getWrappedMdClass()
   {
     if (getValue(WRAPPEDMDCLASS).trim().equals(""))
@@ -456,34 +456,6 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes> getAttributeWrapperRel(com.runwaysdk.geodashboard.AttributeWrapper attributeWrapper)
   {
     return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.DashboardAttributes>) getRelationshipsWithChild(attributeWrapper, com.runwaysdk.geodashboard.DashboardAttributes.CLASS);
-  }
-  
-  public com.runwaysdk.geodashboard.MetadataGeoNode addGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
-  {
-    return (com.runwaysdk.geodashboard.MetadataGeoNode) addChild(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
-  }
-  
-  public void removeGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
-  {
-    removeAllChildren(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode> getAllGeoNode()
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode>) getChildren(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode> getAllGeoNodeRel()
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode>) getChildRelationships(com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode> getGeoNodeRel(com.runwaysdk.system.gis.geo.GeoNode geoNode)
-  {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MetadataGeoNode>) getRelationshipsWithChild(geoNode, com.runwaysdk.geodashboard.MetadataGeoNode.CLASS);
   }
   
   public com.runwaysdk.geodashboard.DashboardMetadata addDashboard(com.runwaysdk.geodashboard.Dashboard dashboard)

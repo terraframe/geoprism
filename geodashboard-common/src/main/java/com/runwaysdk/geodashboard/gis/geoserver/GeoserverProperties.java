@@ -20,8 +20,10 @@ package com.runwaysdk.geodashboard.gis.geoserver;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -66,13 +68,15 @@ public class GeoserverProperties implements Reloadable
   /**
    * The server.properties configuration file
    */
-  private ConfigurationReaderIF         props;
+  private ConfigurationReaderIF            props;
 
-  private static GeoServerRESTPublisher publisher;
+  private static GeoServerRESTPublisher    publisher;
 
-  private static GeoServerRESTReader    restReader;
+  private static GeoServerRESTReader       restReader;
 
-  public static final String            SLD_EXTENSION = ".sld";
+  private static GeoServerRESTStoreManager manager;
+
+  public static final String               SLD_EXTENSION = ".sld";
 
   private GeoserverProperties()
   {
@@ -214,6 +218,30 @@ public class GeoserverProperties implements Reloadable
     }
 
     return publisher;
+  }
+
+  /**
+   * Returns the Geoserver REST publisher.
+   * 
+   * @return
+   */
+  public static synchronized GeoServerRESTStoreManager getManager()
+  {
+    if (manager == null)
+    {
+      try
+      {
+        URL restURL = new URL(getLocalPath());
+
+        manager = new GeoServerRESTStoreManager(restURL, getAdminUser(), getAdminPassword());
+      }
+      catch (MalformedURLException e)
+      {
+        throw new RuntimeException(e);
+      }
+    }
+
+    return manager;
   }
 
   /**

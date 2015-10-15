@@ -18,13 +18,13 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1967512183)
-public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = 845961712)
+public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MetadataGeoNode";
-  private static final long serialVersionUID = -1967512183;
+  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClassGeoNode";
+  private static final long serialVersionUID = 845961712;
   
-  public MetadataGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
+  public MappableClassGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {
     super(clientRequest, parentId, childId);
     
@@ -36,7 +36,7 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
   * @param relationshipDTO The RelationshipDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected MetadataGeoNodeDTOBase(com.runwaysdk.business.RelationshipDTO relationshipDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected MappableClassGeoNodeDTOBase(com.runwaysdk.business.RelationshipDTO relationshipDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(relationshipDTO, clientRequest);
   }
@@ -404,9 +404,9 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.geodashboard.MetadataWrapperDTO getParent()
+  public com.runwaysdk.geodashboard.MappableClassDTO getParent()
   {
-    return com.runwaysdk.geodashboard.MetadataWrapperDTO.get(getRequest(), super.getParentId());
+    return com.runwaysdk.geodashboard.MappableClassDTO.get(getRequest(), super.getParentId());
   }
   
     public com.runwaysdk.system.gis.geo.GeoNodeDTO getChild()
@@ -414,24 +414,24 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
     return com.runwaysdk.system.gis.geo.GeoNodeDTO.get(getRequest(), super.getChildId());
   }
   
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(id);
     
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) dto;
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeDTO) dto;
   }
   
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
   {
-    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
     queryDTO.addCondition("parent_id", "EQ", parentId);
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
   {
-    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS);
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS);
     queryDTO.addCondition("child_id", "EQ", childId);
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()
   {
@@ -449,9 +449,9 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
     getRequest().delete(this.getId());
   }
   
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -459,12 +459,12 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
     getRequest().lock(this);
   }
   
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS, "lock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS, "lock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -472,12 +472,12 @@ public abstract class MetadataGeoNodeDTOBase extends com.runwaysdk.business.Rela
     getRequest().unlock(this);
   }
   
-  public static com.runwaysdk.geodashboard.MetadataGeoNodeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static com.runwaysdk.geodashboard.MappableClassGeoNodeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MetadataGeoNodeDTO.CLASS, "unlock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.MetadataGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.MappableClassGeoNodeDTO.CLASS, "unlock", _declaredTypes);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

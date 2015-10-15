@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.system.gis.geo.GeoNode;
 
 public class DashboardTypeInfo implements Reloadable
 {
@@ -36,19 +35,13 @@ public class DashboardTypeInfo implements Reloadable
 
   private Map<String, String> labels;
 
-  private List<GeoNode>       nodes;
-
   private String              type;
 
-  private String              universal;
-
-  public DashboardTypeInfo(String _type, Integer _index, String _universal)
+  public DashboardTypeInfo(String _type, Integer _index)
   {
     this.type = _type;
     this.index = _index;
-    this.universal = _universal;
     this.labels = new HashMap<String, String>();
-    this.nodes = new LinkedList<GeoNode>();
     this.attributes = new LinkedList<String>();
     this.dashboardAttributes = new LinkedList<String>();
   }
@@ -74,11 +67,6 @@ public class DashboardTypeInfo implements Reloadable
   public String getType()
   {
     return type;
-  }
-
-  public String getUniversal()
-  {
-    return universal;
   }
 
   public Integer getIndex()
@@ -109,16 +97,6 @@ public class DashboardTypeInfo implements Reloadable
   public String getLabel(String _attributeName)
   {
     return this.labels.get(_attributeName);
-  }
-
-  public void addGeoNode(GeoNode node)
-  {
-    this.nodes.add(node);
-  }
-
-  public List<GeoNode> getNodes()
-  {
-    return nodes;
   }
 
   public boolean isDashboardAttribute(String attributeName)

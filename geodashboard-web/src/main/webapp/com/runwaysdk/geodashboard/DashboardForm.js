@@ -34,7 +34,7 @@
       
       _addDashboardUsersHTML : function() {
           
-    	  var usersJSON = $("#add-dashboard-users-container").data("dashboarduserjson");
+        var usersJSON = $("#add-dashboard-users-container").data("dashboarduserjson");
           var users = com.runwaysdk.geodashboard.gis.CategoryWidget.getValueFromHTML(usersJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
@@ -56,7 +56,7 @@
               }
           }
           else{
-          	html += '<p class="dialog-msg">'+ com.runwaysdk.Localize.localize("dashboard", "noUsersMsg") +'</p>';
+            html += '<p class="dialog-msg">'+ com.runwaysdk.Localize.localize("dashboard", "noUsersMsg") +'</p>';
           }
           
           html += '</div></div>';
@@ -67,7 +67,7 @@
         },
       
       _displayDashboardCloneForm : function(html) {
-    	  // Remove the internal form div if it exists
+        // Remove the internal form div if it exists
           $( "#dashboard-dialog" ).remove();
           
           // Set the html of the dialog
@@ -128,9 +128,9 @@
        * @html - html returned from the controller
        */
       _displayDashboardEditForm : function(html) {
-    	  var that = this;
-    	  
-    	  // Remove the internal form div if it exists
+        var that = this;
+        
+        // Remove the internal form div if it exists
           $(this.getImpl()).remove();
           
           // Set the html of the dialog
@@ -151,7 +151,7 @@
                 var label = $('#dashboard-label').val();
                 var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
                   onSuccess : function(dashboard){
-                	  
+                    
                     var label = $('#dashboard-label').val();
                     $("#dashboard-dropdown").find(".active").text(label);
                     
@@ -197,15 +197,15 @@
           var inputs = $("#add-dashboard-users-container input");
           var userIds = [];
           for(var i=0; i<inputs.length; i++){
-          	var input = inputs[i];
-          	var userObj = {};
-          	if(input.checked){
-          		userObj[input.id] = true;
-          	}
-          	else{
-          		userObj[input.id] = false;
-          	}
-          	userIds.push(userObj);
+            var input = inputs[i];
+            var userObj = {};
+            if(input.checked){
+              userObj[input.id] = true;
+            }
+            else{
+              userObj[input.id] = false;
+            }
+            userIds.push(userObj);
           }
           
           return userIds;
@@ -214,10 +214,10 @@
       edit : function(id) {
           var that = this;
           
-       	  var request = new Mojo.ClientRequest({
+           var request = new Mojo.ClientRequest({
               onSuccess : function(html){   
-            	  that._displayDashboardEditForm(html);
-            	  that._addDashboardUsersHTML();
+                that._displayDashboardEditForm(html);
+                that._addDashboardUsersHTML();
               },
               onFailure : function(e){
                 that.handleException(e);
@@ -230,16 +230,16 @@
         open : function() {
           var that = this;
             
-    	  var request = new Mojo.ClientRequest({
-              onSuccess : function(html){   
-            	  that._displayDashboardCloneForm(html);
-              },
-              onFailure : function(e){
-                that.handleException(e);
-              }
-            });
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(html){   
+              that._displayDashboardCloneForm(html);
+            },
+            onFailure : function(e){
+              that.handleException(e);
+            }
+          });
             
-            this._DashboardController.newClone(request, this._dashboardId);    
+          this._DashboardController.newClone(request, this._dashboardId);    
         },
       
       /**

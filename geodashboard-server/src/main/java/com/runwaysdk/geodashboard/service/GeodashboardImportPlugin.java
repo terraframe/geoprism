@@ -20,11 +20,13 @@ package com.runwaysdk.geodashboard.service;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.io.ImportManager;
 import com.runwaysdk.dataaccess.io.dataDefinition.CreateHandler;
@@ -41,8 +43,11 @@ import com.runwaysdk.dataaccess.io.instance.InstanceImporterUnzipper;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdTypeDAO;
+import com.runwaysdk.geodashboard.ClassUniversalQuery;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.DashboardQuery;
+import com.runwaysdk.geodashboard.MappableClass;
+import com.runwaysdk.geodashboard.MappableClassGeoNodeQuery;
 import com.runwaysdk.geodashboard.dashboard.DashboardBuilder;
 import com.runwaysdk.geodashboard.dashboard.DashboardTypeInfo;
 import com.runwaysdk.query.OIterator;
@@ -51,6 +56,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdClass;
 
 public class GeodashboardImportPlugin implements ImportPluginIF
 {
@@ -66,58 +72,60 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      DashboardTypeInfo info = (DashboardTypeInfo) context.getObject(DashboardTypeInfo.class.getName());
-      String type = info.getType();
+      MappableClass mClass = (MappableClass) context.getObject(MappableClass.CLASS);
+      String type = mClass.getWrappedMdClass().definesType();
+
       String attribute = attributes.getValue(ATTRIBUTE);
 
-      if (type != null)
+      String key = type + "." + attribute;
+      GeoNode node = GeoNode.getByKey(key);
+
+      if (node == null)
       {
-        String key = type + "." + attribute;
-        GeoNode node = GeoNode.getByKey(key);
+        String[] search_tags = { "geoEntityNode", "geoEntityGeometry" };
+        String cause = "GeoNode:" + key;
 
-        if (node == null)
-        {
-          String[] search_tags = { "geoEntityNode", "geoEntityGeometry" };
-          String cause = "GeoNode:" + key;
+        SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.NAME_ATTRIBUTE, type, cause);
 
-          SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.NAME_ATTRIBUTE, type, cause);
-
-          node = GeoNode.getByKey(key);
-        }
-
-        if (node != null)
-        {
-          info.addGeoNode(node);
-
-          this.setViewOnlyAttribute(info, node, GeoNode.GEOENTITYATTRIBUTE);
-
-          if (node instanceof GeoNodeGeometry)
-          {
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.GEOENTITYATTRIBUTE);
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.GEOMETRYATTRIBUTE);
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.DISPLAYLABELATTRIBUTE);
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.IDENTIFIERATTRIBUTE);
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.MULTIPOLYGONATTRIBUTE);
-            this.setViewOnlyAttribute(info, node, GeoNodeGeometry.POINTATTRIBUTE);
-          }
-        }
-        else
-        {
-          throw new RuntimeException("Unable to find the attribute metadata for [" + key + "]");
-        }
+        node = GeoNode.getByKey(key);
       }
 
+      MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
+      query.WHERE(query.getParent().EQ(mClass));
+      query.AND(query.getChild().EQ(node));
+
+      if (query.getCount() == 0)
+      {
+        mClass.addGeoNode(node).apply();
+      }
+    }
+  }
+
+  private static class UniversalHandler extends TagHandler
+  {
+    protected static final String KEY = "key";
+
+    public UniversalHandler(ImportManager manager)
+    {
+      super(manager);
     }
 
-    private void setViewOnlyAttribute(DashboardTypeInfo info, GeoNode node, String nodeAttribute)
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      String id = node.getValue(nodeAttribute);
+      MappableClass mClass = (MappableClass) context.getObject(MappableClass.CLASS);
 
-      if (id != null && id.length() > 0)
+      String key = attributes.getValue(KEY);
+
+      Universal universal = Universal.getByKey(key);
+
+      ClassUniversalQuery query = new ClassUniversalQuery(new QueryFactory());
+      query.WHERE(query.getParent().EQ(mClass));
+      query.AND(query.getChild().EQ(universal));
+
+      if (query.getCount() == 0)
       {
-        MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(id);
-
-        info.addViewOnlyAttribute(mdAttribute.definesAttribute());
+        mClass.addUniversal(universal).apply();
       }
     }
   }
@@ -180,14 +188,9 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
   private static class TypeHandler extends TagHandler
   {
-
     private static final String TYPE          = "type";
 
     private static final String INDEX         = "index";
-
-    private static final String UNIVERSAL     = "universal";
-
-    private static final String GEONODE_TAG   = "geoNode";
 
     private static final String ATTRIBUTE_TAG = "attribute";
 
@@ -195,7 +198,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       super(manager);
 
-      this.addHandler(GEONODE_TAG, new TypeNodeHandler(manager));
       this.addHandler(ATTRIBUTE_TAG, new TypeAttributeHandler(manager));
     }
 
@@ -204,11 +206,70 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       String type = attributes.getValue(TYPE);
       Integer index = new Integer(attributes.getValue(INDEX));
-      String universal = attributes.getValue(UNIVERSAL);
 
-      DashboardTypeInfo info = new DashboardTypeInfo(type, index, universal);
+      DashboardTypeInfo info = new DashboardTypeInfo(type, index);
+
+      MappableClass mClass = this.getMappableClass(type);
+
+      List<? extends GeoNode> nodes = mClass.getAllGeoNode().getAll();
+
+      for (GeoNode node : nodes)
+      {
+        this.setViewOnlyAttribute(info, node, GeoNode.GEOENTITYATTRIBUTE);
+
+        if (node instanceof GeoNodeGeometry)
+        {
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.GEOENTITYATTRIBUTE);
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.GEOMETRYATTRIBUTE);
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.DISPLAYLABELATTRIBUTE);
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.IDENTIFIERATTRIBUTE);
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.MULTIPOLYGONATTRIBUTE);
+          this.setViewOnlyAttribute(info, node, GeoNodeGeometry.POINTATTRIBUTE);
+        }
+      }
 
       context.setObject(DashboardTypeInfo.class.getName(), info);
+
+    }
+
+    private MappableClass getMappableClass(String type)
+    {
+      MappableClass mClass = null;
+
+      if (type != null)
+      {
+        mClass = MappableClass.getMappableClass(type);
+
+        if (mClass == null)
+        {
+          System.out.println("Searching for Mappable Class [" + type +"]");
+
+          String[] search_tags = new String[] { "mappableClass" };
+          SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.TYPE_ATTRIBUTE, type, "Type:" + type);
+        }
+
+        mClass = MappableClass.getMappableClass(type);
+
+      }
+
+      if (mClass == null)
+      {
+        throw new ProgrammingErrorException("Unable to find Mappable Class metadata for type [" + type + "]");
+      }
+
+      return mClass;
+    }
+
+    private void setViewOnlyAttribute(DashboardTypeInfo info, GeoNode node, String nodeAttribute)
+    {
+      String id = node.getValue(nodeAttribute);
+
+      if (id != null && id.length() > 0)
+      {
+        MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(id);
+
+        info.addViewOnlyAttribute(mdAttribute.definesAttribute());
+      }
     }
 
     @Override
@@ -218,22 +279,23 @@ public class GeodashboardImportPlugin implements ImportPluginIF
       DashboardTypeInfo info = (DashboardTypeInfo) context.getObject(DashboardTypeInfo.class.getName());
 
       MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO(info.getType());
-      Universal universal = Universal.getByKey(info.getUniversal());
 
       DashboardBuilder builder = new DashboardBuilder();
-      builder.build(dashboard, mdClass, universal, info);
+      builder.build(dashboard, mdClass, info);
     }
   }
 
   private static class DashboardHandler extends TagHandler
   {
-    private static final String NAME     = "name";
+    private static final String NAME      = "name";
 
-    private static final String LABEL    = "label";
+    private static final String LABEL     = "label";
 
-    private static final String COUNTRY  = "country";
+    private static final String COUNTRY   = "country";
 
-    private static final String TYPE_TAG = "type";
+    private static final String TYPE_TAG  = "type";
+
+    private static final String REMOVABLE = "removable";
 
     public DashboardHandler(ImportManager manager)
     {
@@ -245,14 +307,27 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
+      String name = attributes.getValue(NAME);
       String label = attributes.getValue(LABEL);
       String country = attributes.getValue(COUNTRY);
-      String name = attributes.getValue(NAME);
+      String removable = attributes.getValue(REMOVABLE);
 
       Dashboard dashboard = this.getOrCreateDashboard(name);
-      dashboard.getDisplayLabel().setDefaultValue(label);
-      dashboard.setCountry(GeoEntity.getByKey(country));
-      dashboard.setName(name);
+
+      if (label != null && label.length() > 0)
+      {
+        dashboard.getDisplayLabel().setDefaultValue(label);
+      }
+
+      if (country != null && country.length() > 0)
+      {
+        dashboard.setCountry(GeoEntity.getByKey(country));
+      }
+
+      if (removable != null && removable.length() > 0)
+      {
+        dashboard.setRemovable(new Boolean(removable));
+      }
 
       dashboard.apply();
 
@@ -280,7 +355,9 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         }
       }
 
-      return new Dashboard();
+      Dashboard dashboard = new Dashboard();
+      dashboard.setName(name);
+      return dashboard;
     }
 
     private Dashboard getDashboard(String name)
@@ -306,6 +383,77 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class MappableClassHandler extends TagHandler
+  {
+    private static final String UNIVERSAL_TAG = "universal";
+
+    private static final String GEONODE_TAG   = "geoNode";
+
+    private static final String TYPE          = "type";
+
+    public MappableClassHandler(ImportManager manager)
+    {
+      super(manager);
+
+      this.addHandler(UNIVERSAL_TAG, new UniversalHandler(manager));
+      this.addHandler(GEONODE_TAG, new TypeNodeHandler(manager));
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      String type = attributes.getValue(TYPE);
+
+      if (type != null)
+      {
+        if (!MdTypeDAO.isDefined(type))
+        {
+          String[] search_tags = XMLTags.TYPE_TAGS;
+          SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.NAME_ATTRIBUTE, type, "DataSet:" + type);
+        }
+
+        MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO(type);
+
+        MappableClass mClass = this.getOrCreateMappableClass(mdClass);
+        mClass.apply();
+
+        context.setObject(MappableClass.CLASS, mClass);
+        
+        System.out.println("Creating Mappable Class [" + mdClass.definesType() +"]: [" + mClass.getWrappedMdClassId() + "]");
+      }
+    }
+
+    private MappableClass getOrCreateMappableClass(MdClassDAOIF _mdClass)
+    {
+      if (this.getManager().isUpdateState() || this.getManager().isCreateOrUpdateState())
+      {
+        MappableClass mClass = MappableClass.getMappableClass(_mdClass);
+
+        if (mClass != null)
+        {
+          mClass.lock();
+
+          return mClass;
+        }
+        else if (this.getManager().isUpdateState())
+        {
+          String message = "Unable to find a [" + MappableClass.CLASS + "] with a type of [" + _mdClass.definesType() + "]";
+
+          throw new DataNotFoundException(message, MdClassDAO.getMdClassDAO(MappableClass.CLASS));
+        }
+      }
+
+      MdClass mdClass = MdClass.get(_mdClass.getId());
+      
+      MappableClass mClass = new MappableClass();
+      mClass.setWrappedMdClass(mdClass);
+      mClass.apply();
+
+      return mClass;
+    }
+
+  }
+
   private static class UnzipperTaskHandler extends TagHandler
   {
     private static final String PATH = "path";
@@ -320,7 +468,7 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       URI uri = this.getManager().getStreamSource().toURI();
       File xml = new File(uri);
-      
+
       String path = attributes.getValue(PATH);
 
       File file = new File(xml.getParentFile(), path);
@@ -334,13 +482,16 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
-    private static final String DASHBOARD_TAG     = "dashboard";
+    private static final String DASHBOARD_TAG      = "dashboard";
 
-    private static final String UNZIPPER_TASK_TAG = "unzipperTask";
+    private static final String MAPPABLE_CLASS_TAG = "mappableClass";
+
+    private static final String UNZIPPER_TASK_TAG  = "unzipperTask";
 
     public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
+      this.addHandler(MAPPABLE_CLASS_TAG, new MappableClassHandler(manager));
       this.addHandler(UNZIPPER_TASK_TAG, new UnzipperTaskHandler(manager));
     }
   }

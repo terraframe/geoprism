@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 919873830)
+@com.runwaysdk.business.ClassSignature(hash = -208502676)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 919873830;
+  private static final long serialVersionUID = -208502676;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -61,6 +61,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String MAPTHUMBNAIL = "mapThumbnail";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
+  public static java.lang.String REMOVABLE = "removable";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
@@ -635,6 +636,43 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getOwnerMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(OWNER).getAttributeMdDTO();
+  }
+  
+  public Boolean getRemovable()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(REMOVABLE));
+  }
+  
+  public void setRemovable(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(REMOVABLE, "");
+    }
+    else
+    {
+      setValue(REMOVABLE, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isRemovableWritable()
+  {
+    return isWritable(REMOVABLE);
+  }
+  
+  public boolean isRemovableReadable()
+  {
+    return isReadable(REMOVABLE);
+  }
+  
+  public boolean isRemovableModified()
+  {
+    return isModified(REMOVABLE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getRemovableMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(REMOVABLE).getAttributeMdDTO();
   }
   
   public Long getSeq()

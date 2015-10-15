@@ -239,6 +239,7 @@
         
         // Handler for the clone dashboard button
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
+        $("#delete-dashboard").on("click", Mojo.Util.bind(this, this._dashboardDeleteHandler));        
         $("#dashboard-options-btn").on("click", Mojo.Util.bind(this, this._dashboardEditHandler));  
         
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
@@ -518,19 +519,19 @@
       },
       
       _exportMap : function() {
-    	  var map = this._mapFactory.getMap();
-    	 
-    	  ////
-    	  // openlayers 3 map export functionality. 
-    	  // Poorly supported in safari and cant include non-map elements.
-    	  ////
-    	  // this element must be an <a> tag
-    	  //var exportPNGElement = document.getElementById('map-export-btn');
-    	  //map.once('postcompose', function(event) {
-    	  //	  var canvas = event.context.canvas;
-    	  // 	  exportPNGElement.href = canvas.toDataURL('image/png');
-    	  //});
-    	  //map.renderSync();
+        var map = this._mapFactory.getMap();
+       
+        ////
+        // openlayers 3 map export functionality. 
+        // Poorly supported in safari and cant include non-map elements.
+        ////
+        // this element must be an <a> tag
+        //var exportPNGElement = document.getElementById('map-export-btn');
+        //map.once('postcompose', function(event) {
+        //    var canvas = event.context.canvas;
+        //     exportPNGElement.href = canvas.toDataURL('image/png');
+        //});
+        //map.renderSync();
         
         var mapId = this._mapId;
         var outFileName = "GeoDashboard_Map";
@@ -1210,12 +1211,59 @@
        * 
        * @e
        */
+      _dashboardDeleteHandler : function(e) {
+        e.preventDefault();      
+        
+        var that = this;
+        var fac = com.runwaysdk.ui.Manager.getFactory();
+        
+        var dialog = fac.newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardDialog", "Delete dashboard"));
+        dialog.appendContent(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardContent", "Are you sure you want to delete this dashboard?"));
+        
+        var Structure = com.runwaysdk.structure;
+        var tq = new Structure.TaskQueue();
+        var that = this;
+        
+        tq.addTask(new Structure.TaskIF({
+          start : function(){            
+            var cancelCallback = function() {
+              dialog.close();
+              tq.stop();
+            };
+
+            dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "delete", "Delete"), function() { tq.next(); }, null, {class:'btn btn-primary'});
+            dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), cancelCallback, null, {class:'btn'});            
+            dialog.render();
+          }
+        }));
+        
+        tq.addTask(new Structure.TaskIF({
+          start : function(){
+            dialog.close();
+            
+            com.runwaysdk.Facade.deleteEntity(new Mojo.ClientRequest({
+              onSuccess : function(){
+                window.location = "?dashboard=";
+              },
+              onFailure : function(e){
+                 that.handleException(e);
+              }
+            }), that._dashboardId);  
+          }
+        }));
+        
+        tq.start();        
+      },
+      
+      /**
+       * 
+       * @e
+       */
       _dashboardEditHandler : function(e) {
         e.preventDefault();      
           
         var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(this, this._dashboardId);
-        dashboardForm.edit(this._dashboardId);
-        
+        dashboardForm.edit(this._dashboardId);        
       },
       
       _renderMessage : function(message, type) {
@@ -2290,8 +2338,8 @@
       },
       
       _setAttributeSidbarHeight : function(){
-    	  
-    	  var containerHeight = $(".aside.animated").height();
+        
+        var containerHeight = $(".aside.animated").height();
           var navBarHeight = $(".nav-bar").height();
           var filterHeight = $(".filter-block").height();
           var filterButtonCont = $("#filter-buttons-container").height();
@@ -2344,7 +2392,7 @@
         that._setAttributeSidbarHeight();
         
         $( window ).resize(function() {
-        	that._setAttributeSidbarHeight();
+          that._setAttributeSidbarHeight();
         });
         //
         // end

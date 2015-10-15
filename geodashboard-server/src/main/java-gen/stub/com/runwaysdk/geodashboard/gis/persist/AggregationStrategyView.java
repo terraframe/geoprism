@@ -26,9 +26,9 @@ import org.json.JSONArray;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
-import com.runwaysdk.geodashboard.MetadataGeoNode;
-import com.runwaysdk.geodashboard.MetadataGeoNodeQuery;
-import com.runwaysdk.geodashboard.MetadataWrapper;
+import com.runwaysdk.geodashboard.MappableClass;
+import com.runwaysdk.geodashboard.MappableClassGeoNode;
+import com.runwaysdk.geodashboard.MappableClassGeoNodeQuery;
 import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -60,29 +60,33 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   {
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
-    MetadataGeoNodeQuery query = new MetadataGeoNodeQuery(new QueryFactory());
+    MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
     query.WHERE(query.getChild().EQ(node));
 
-    OIterator<? extends MetadataGeoNode> iterator = query.getIterator();
+    OIterator<? extends MappableClassGeoNode> iterator = query.getIterator();
 
     try
     {
-      MetadataGeoNode relationship = iterator.next();
-      MetadataWrapper wrapper = relationship.getParent();
+      MappableClassGeoNode relationship = iterator.next();
+      MappableClass wrapper = relationship.getParent();
 
-      Universal lowest = wrapper.getUniversal();
-      Universal root = Universal.getRoot();
+      List<? extends Universal> lowests = wrapper.getAllUniversal().getAll();
 
-      Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
-
-      for (Term universal : universals)
+      for (Universal lowest : lowests)
       {
-        AggregationStrategyView view = new AggregationStrategyView();
-        view.setAggregationType(UniversalAggregationStrategy.CLASS);
-        view.setValue(universal.getId());
-        view.setDisplayLabel(universal.getDisplayLabel().getValue());
+        Universal root = Universal.getRoot();
 
-        list.add(view);
+        Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
+
+        for (Term universal : universals)
+        {
+          AggregationStrategyView view = new AggregationStrategyView();
+          view.setAggregationType(UniversalAggregationStrategy.CLASS);
+          view.setValue(universal.getId());
+          view.setDisplayLabel(universal.getDisplayLabel().getValue());
+
+          list.add(view);
+        }
       }
     }
     finally
