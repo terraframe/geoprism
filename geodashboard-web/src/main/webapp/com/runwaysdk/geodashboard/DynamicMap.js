@@ -1222,7 +1222,6 @@
         
         var Structure = com.runwaysdk.structure;
         var tq = new Structure.TaskQueue();
-        var that = this;
         
         tq.addTask(new Structure.TaskIF({
           start : function(){            

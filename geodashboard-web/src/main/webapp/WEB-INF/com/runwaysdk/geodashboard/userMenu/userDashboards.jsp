@@ -44,12 +44,15 @@
 		    background-color: #333;
 		    margin: 0;
 		    min-width: 100%;
+		    background-image: url(../../../../../com/runwaysdk/geodashboard/images/earth-profile.jpg);
+			background-size: cover;
 		}
 		
 		html, body, #container {
  		    height: 100%; 
 			overflow: hidden;
 			overflow-y: auto;
+			background-color: rgba(51,51,51,.8);
 		}
 		
 		h1 {
@@ -78,6 +81,17 @@
 			text-align: center;
 		}
 		
+		.thumbnail{
+			background-color: #F1F1F1;
+		}
+		.thumbnail:hover{
+			background-color: #fff;
+		}
+		
+		img{
+			width: 100%;
+			border-radius: 4px;
+		}
 	</style>
 	
 </head>
@@ -110,22 +124,33 @@
   	<div class="row"></div>
        <div class="col-md-3"></div>
        <div class="col-md-6">
-         	<c:forEach items="${dashboards}" var="dashboard">
-			<!-- <div class="row"> -->
+         	<c:forEach items="${dashboards}" var="dashboard" varStatus="counter">
+         	
+         	  <c:if test="${counter.count % 3 == 0}">
+            	<div class="row">
+        	  </c:if>
+        	  
 			  <div class="col-sm-6 col-md-4">
 			    <div class="thumbnail text-center">
-				  <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-			      <img src="/mapthumb/getDashboardMapThumbnail?dashboardId=${dashboard.id}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
-			      <div class="caption">
-			        <h3>${dashboard.displayLabel.value}</h3>
+			      <a href="DashboardViewer?dashboard=${dashboard.id}" class="" >
+				  	<!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
+			      	<img src="/mapthumb/getDashboardMapThumbnail?dashboardId=${dashboard.id}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
+			      	<div class="caption">
+			        	<h3>${dashboard.displayLabel.value}</h3>
 <!-- 					<p>"SOME BODY TEXT"</p> -->
-			        <p>
-			        	<a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a>
-			        </p>
-			      </div>
+
+<!-- 			        <p> -->
+<%-- 			        	<a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a> --%>
+<!-- 			        </p> -->
+			      	</div>
+			      </a>
 			    </div>
 			  </div>
-			<!-- </div> -->
+			  
+			  <c:if test="${counter.count mod 3 == 0}">
+				</div>
+			  </c:if>
+			  
  			</c:forEach>
        </div>
        <div class="col-md-3"></div>
