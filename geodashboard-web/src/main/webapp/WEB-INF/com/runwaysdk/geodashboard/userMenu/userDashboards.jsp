@@ -94,6 +94,16 @@
     		filter: alpha(opacity=100); 
 		}
 		
+	    .thumbnail:hover a i{
+			opacity: 1;
+    		filter: alpha(opacity=100); 
+		}
+		
+		.thumbnail:hover a .frame-box{
+			opacity: 1;
+    		filter: alpha(opacity=100); 
+		}
+		
 		img{
 			width: 100%;
 			border-radius: 4px;
@@ -104,29 +114,50 @@
     		-webkit-transition: opacity .2s ease-in-out;
 		}
 		
+		/* font-awesome icon */
+		i.fa.fa-plus{
+			font-size: 70px;
+    		padding: 40px;
+    		font-weight: normal;
+    		color: darkgrey;
+    		opacity: 0.6;
+    		filter: alpha(opacity=60); 
+    		transition: opacity .25s ease-in-out;
+    		-moz-transition: opacity .2s ease-in-out;
+    		-webkit-transition: opacity .2s ease-in-out;
+		}
+		
+		/* bootstrap icon */
 		i.glyphicon.glyphicon-plus{
 			font-size: 130px;
     		font-weight: bold;
     		color: darkgrey;
+    					opacity: 0.6;
+    		filter: alpha(opacity=60); 
+    		transition: opacity .25s ease-in-out;
+    		-moz-transition: opacity .2s ease-in-out;
+    		-webkit-transition: opacity .2s ease-in-out;
 		}
 		
-		i.fa.fa-plus-square-o{
-		 	font-size: 149px;
-    		font-weight: bold;
-    		color: darkgrey;
+		.frame-box {
+			position:relative;
+			opacity: 0.6;
+    		filter: alpha(opacity=60); 
+    		transition: opacity .25s ease-in-out;
+    		-moz-transition: opacity .2s ease-in-out;
+    		-webkit-transition: opacity .2s ease-in-out;
 		}
-		
-		.frame-box {position:relative}
 		.frame-box:before, .frame-box:after, .frame-box>:first-child:before, .frame-box>:first-child:after {
 		    position:absolute; content:' ';
 		    width:35px; height: 35px;
 		    border-color:darkgrey; 
 		    border-style:solid; 
+		    border-radius: 4px;
 		}
-		.frame-box:before {top:0;left:0;border-width: 4px 0 0 4px}
-		.frame-box:after {top:0;right:0;border-width: 4px 4px 0 0}
-		.frame-box>:first-child:before {bottom:0;right:0;border-width: 0 4px 4px 0}
-		.frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 4px 4px}
+		.frame-box:before {top:0;left:0;border-width: 6px 0 0 6px}
+		.frame-box:after {top:0;right:0;border-width: 6px 6px 0 0}
+		.frame-box>:first-child:before {bottom:0;right:0;border-width: 0 6px 6px 0}
+		.frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 6px 6px}
 	</style>
 	
 </head>
@@ -186,10 +217,10 @@
 		 			  <div class="col-sm-6 col-md-4">
 					    <div class="thumbnail text-center">
 					      <a href="#" class="new-dashboard-btn" >
-<!-- 					      	<i class="glyphicon glyphicon-plus"></i> -->
 					      		<div class="frame-box">
 					      			<div class="inner-frame-box">
-					      				<i class="glyphicon glyphicon-plus"></i>
+					      				<i class="fa fa-plus"></i>
+<!-- 					      				<i class="glyphicon glyphicon-plus"></i> -->
 					      			</div>
 					      		</div>
 					      		<div class="caption">
