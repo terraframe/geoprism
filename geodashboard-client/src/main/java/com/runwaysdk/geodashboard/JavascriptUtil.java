@@ -77,9 +77,6 @@ import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
-import com.runwaysdk.system.metadata.MdAttributeDTO;
-import com.runwaysdk.system.metadata.MdClassDTO;
-import com.runwaysdk.system.metadata.MdTypeDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.system.scheduler.ExecutableJobDTO;
 import com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO;
@@ -253,7 +250,16 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(DashboardDTO.CLASS);
-    
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+
+  public static void loadBuilderBundle(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
+    types.add(MappableClassDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

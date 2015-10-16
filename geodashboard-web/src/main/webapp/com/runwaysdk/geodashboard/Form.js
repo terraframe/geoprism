@@ -552,7 +552,7 @@
         com.runwaysdk.geodashboard.ontology.Classifier.get(request, termId);         
       },
       _getSuggestions : function(request, response) {
-      var that = this;
+        var that = this;
       
         var req = new Mojo.ClientRequest({
           onSuccess : function(resultSet){
