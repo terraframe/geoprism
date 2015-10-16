@@ -127,18 +127,6 @@
     		-webkit-transition: opacity .2s ease-in-out;
 		}
 		
-		/* bootstrap icon */
-		i.glyphicon.glyphicon-plus{
-			font-size: 130px;
-    		font-weight: bold;
-    		color: darkgrey;
-    					opacity: 0.6;
-    		filter: alpha(opacity=60); 
-    		transition: opacity .25s ease-in-out;
-    		-moz-transition: opacity .2s ease-in-out;
-    		-webkit-transition: opacity .2s ease-in-out;
-		}
-		
 		.frame-box {
 			position:relative;
 			opacity: 0.6;
@@ -220,7 +208,6 @@
 					      		<div class="frame-box">
 					      			<div class="inner-frame-box">
 					      				<i class="fa fa-plus"></i>
-<!-- 					      				<i class="glyphicon glyphicon-plus"></i> -->
 					      			</div>
 					      		</div>
 					      		<div class="caption">
