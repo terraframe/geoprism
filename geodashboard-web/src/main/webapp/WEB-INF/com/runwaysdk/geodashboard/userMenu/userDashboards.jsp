@@ -31,6 +31,7 @@
 	<!-- User account CSS -->
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+	<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
 	
 	<!-- User account Javascript -->
 	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -82,22 +83,50 @@
 		}
 		
 		.thumbnail{
-			background-color: #F1F1F1;
+			background-color: #eee;
 		}
 		.thumbnail:hover{
 			background-color: #fff;
 		}
 		
+		.thumbnail:hover a img{
+			opacity: 1;
+    		filter: alpha(opacity=100); 
+		}
+		
 		img{
 			width: 100%;
 			border-radius: 4px;
+			opacity: 0.6;
+    		filter: alpha(opacity=60); 
+    		transition: opacity .25s ease-in-out;
+    		-moz-transition: opacity .2s ease-in-out;
+    		-webkit-transition: opacity .2s ease-in-out;
 		}
 		
 		i.glyphicon.glyphicon-plus{
-			font-size: 149px;
+			font-size: 130px;
     		font-weight: bold;
     		color: darkgrey;
 		}
+		
+		i.fa.fa-plus-square-o{
+		 	font-size: 149px;
+    		font-weight: bold;
+    		color: darkgrey;
+		}
+		
+		.frame-box {position:relative}
+		.frame-box:before, .frame-box:after, .frame-box>:first-child:before, .frame-box>:first-child:after {
+		    position:absolute; content:' ';
+		    width:35px; height: 35px;
+		    border-color:darkgrey; 
+		    border-style:solid; 
+		}
+		.frame-box:before {top:0;left:0;border-width: 4px 0 0 4px}
+		.frame-box:after {top:0;right:0;border-width: 4px 4px 0 0}
+		.frame-box>:first-child:before {bottom:0;right:0;border-width: 0 4px 4px 0}
+		.frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 4px 4px}
 	</style>
 	
 </head>
@@ -142,10 +171,6 @@
 			      	<div class="caption">
 			        	<h3>${dashboard.displayLabel.value}</h3>
 <!-- 					<p>"SOME BODY TEXT"</p> -->
-
-<!-- 			        <p> -->
-<%-- 			        	<a href="DashboardViewer?dashboard=${dashboard.id}" class="btn btn-primary" role="button"><gdb:localize key="userDashboards.openButton"/></a> --%>
-<!-- 			        </p> -->
 			      	</div>
 			      </a>
 			    </div>
@@ -161,9 +186,14 @@
 		 			  <div class="col-sm-6 col-md-4">
 					    <div class="thumbnail text-center">
 					      <a href="#" class="new-dashboard-btn" >
-					      	<i class="glyphicon glyphicon-plus"></i>
+<!-- 					      	<i class="glyphicon glyphicon-plus"></i> -->
+					      		<div class="frame-box">
+					      			<div class="inner-frame-box">
+					      				<i class="glyphicon glyphicon-plus"></i>
+					      			</div>
+					      		</div>
 					      		<div class="caption">
-					        		<h3>New Dashboard</h3>
+					        		<h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
 					      		</div>
 					      	</a>
 					    </div>
