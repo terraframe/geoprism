@@ -92,6 +92,12 @@
 			width: 100%;
 			border-radius: 4px;
 		}
+		
+		i.glyphicon.glyphicon-plus{
+			font-size: 149px;
+    		font-weight: bold;
+    		color: darkgrey;
+		}
 	</style>
 	
 </head>
@@ -124,12 +130,10 @@
   	<div class="row"></div>
        <div class="col-md-3"></div>
        <div class="col-md-6">
+       
+       		<div class="row"> <!-- start of the 1st row -->
+       
          	<c:forEach items="${dashboards}" var="dashboard" varStatus="counter">
-         	
-         	  <c:if test="${counter.count % 3 == 0}">
-            	<div class="row">
-        	  </c:if>
-        	  
 			  <div class="col-sm-6 col-md-4">
 			    <div class="thumbnail text-center">
 			      <a href="DashboardViewer?dashboard=${dashboard.id}" class="" >
@@ -147,12 +151,34 @@
 			    </div>
 			  </div>
 			  
-			  <c:if test="${counter.count mod 3 == 0}">
-				</div>
-			  </c:if>
-			  
- 			</c:forEach>
-       </div>
+			  <c:choose>
+			    <c:when test="${counter.last}">
+	    			  <c:if test="${counter.count % 3 == 0}"> 
+	    			    </div>  <!-- close the last row -->
+	      	    		<div class="row">  <!-- start a new row if the last row has all three thumbnails -->
+	      	    	  </c:if>
+	      	    	
+		 			  <div class="col-sm-6 col-md-4">
+					    <div class="thumbnail text-center">
+					      <a href="#" class="new-dashboard-btn" >
+					      	<i class="glyphicon glyphicon-plus"></i>
+					      		<div class="caption">
+					        		<h3>New Dashboard</h3>
+					      		</div>
+					      	</a>
+					    </div>
+					  </div>
+					  
+				   </div> <!-- close the last row -->
+    			</c:when>
+    			<c:when test="${counter.count % 3 == 0}">
+    				</div> <!-- close the row after three thumbnails -->
+    				<div class="row"> <!-- now start the next row -->
+    			</c:when>
+         	  </c:choose>
+ 	      </c:forEach>
+ 	      
+       </div> <!-- close the middle column -->
        <div class="col-md-3"></div>
     </div>
   </div>
