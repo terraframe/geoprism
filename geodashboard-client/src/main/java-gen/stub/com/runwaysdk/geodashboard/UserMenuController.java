@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.DashboardDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
@@ -60,6 +61,33 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     this.req.setAttribute("isAdmin", this.userIsAdmin());
     
     render(DASHBOARDS);
+  }
+  
+  /**
+   * Gets the dashboard thumbnail for display in the app. 
+   * 
+   * @dashboardId 
+   */
+  @Override
+  public void getDashboardMapThumbnail(String dashboardId)
+  {
+    ClientRequestIF clientRequest = super.getClientRequest();
+    
+    DashboardDTO db = DashboardDTO.get(clientRequest, dashboardId);
+    
+    byte[] imageData = db.getMapThumbnail();
+    resp.setContentType("image/png");
+    try
+    {
+      resp.getOutputStream().write(imageData);
+      resp.getOutputStream().flush();
+      resp.getOutputStream().close();
+    }
+    catch (IOException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
   @Override

@@ -166,6 +166,17 @@
       SRID : "EPSG:4326"
     },
     
+    Static : {
+    	isJson : function(str) {
+    	    try {
+    	        JSON.parse(str);
+    	    } catch (e) {
+    	        return false;
+    	    }
+    	    return true;
+    	}
+    },
+    
     Instance : {
       
       /**
@@ -248,6 +259,21 @@
         return this._layerCache.get(layerId);        
       },
       
+      getCurrentBaseMap : function() {
+    	return this._currentBase;  
+      },
+      
+      setCurrentBaseMap : function(currBase) {
+    	var currBaseObj;
+    	if(typeof currBase === "string" && com.runwaysdk.geodashboard.gis.DynamicMap.isJson(currBase)){
+    		currBaseObj = JSON.parse(currBase);
+    		this._currentBase = currBaseObj;  
+    	}
+    	else{
+    		this._currentBase = currBase;
+    	}
+      },
+      
       getAggregationMap : function() {
         return this._aggregationMap;  
       },
@@ -262,6 +288,24 @@
       
       getCurrGeoId : function() {
         return this._currGeoId;        
+      },
+      
+      getMapSize : function() {
+          var mapSize = {};
+          mapSize.width = $("#mapDivId").width();
+          mapSize.height = $("#mapDivId").height();
+          return mapSize;
+      },
+      
+      getMapExtent : function() {
+    	  var mapBounds = {};
+          var mapExtent = this._mapFactory.getCurrentBounds(DynamicMap.SRID);
+          mapBounds.left = mapExtent._southWest.lng;
+          mapBounds.bottom = mapExtent._southWest.lat;
+          mapBounds.right = mapExtent._northEast.lng;
+          mapBounds.top = mapExtent._northEast.lat;
+          return mapBounds;
+        
       },
       
       canEditDashboards : function() {
@@ -414,6 +458,10 @@
           }
         }
         
+        if (json.activeBaseMap != null) {
+        	this.setCurrentBaseMap(json.activeBaseMap);
+        }
+        
         if (json.bbox != null) {
             this._bBox = json.bbox;
         }
@@ -488,19 +536,19 @@
         var mapId = this._mapId;
         var outFileName = "GeoDashboard_Map";
         var outFileFormat = "png";
-        var mapBounds = {};
-        var mapExtent = this._mapFactory.getCurrentBounds(DynamicMap.SRID);
-        mapBounds.left = mapExtent._southWest.lng;
-        mapBounds.bottom = mapExtent._southWest.lat;
-        mapBounds.right = mapExtent._northEast.lng;
-        mapBounds.top = mapExtent._northEast.lat;
-        mapBoundsStr = JSON.stringify(mapBounds);
+        var mapBounds = this.getMapExtent();
+        var mapBoundsStr = JSON.stringify(mapBounds);
       
-        var mapSize = {};
-        mapSize.width = $("#mapDivId").width();
-        mapSize.height = $("#mapDivId").height();
-        mapSizeStr = JSON.stringify(mapSize);
-      
+        var mapSize = this.getMapSize();
+        var mapSizeStr = JSON.stringify(mapSize);
+        
+        var activeBaseMap = this.getCurrentBaseMap();
+        var activeBaseMapStr = JSON.stringify(activeBaseMap);
+        
+        if(activeBaseMap.LAYER_SOURCE_TYPE.toLowerCase() !== "osm"){
+        	var msg = com.runwaysdk.Localize.localize("dashboard", "InvalidBaseMap");
+        	this._renderMessage(msg, "warning");
+        }
       
         var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo';
         url += '?' + encodeURIComponent("mapId") + "=" + encodeURIComponent(mapId);          
@@ -508,6 +556,7 @@
         url += '&' + encodeURIComponent("outFileFormat") + "=" + encodeURIComponent(outFileFormat);  
         url += '&' + encodeURIComponent("mapBounds") + "=" + encodeURIComponent(mapBoundsStr);  
         url += '&' + encodeURIComponent("mapSize") + "=" + encodeURIComponent(mapSizeStr);  
+        url += '&' + encodeURIComponent("activeBaseMap") + "=" + encodeURIComponent(activeBaseMapStr); 
           
         window.location.href = url;        
       },
@@ -535,7 +584,7 @@
             else {
               var msg = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
               
-              that._renderMessage(msg);
+              that._renderMessage(msg, "error");
             }
           },
           onFailure : function (exception) {
@@ -870,17 +919,19 @@
                 parentLayer.setLegendYPosition(y);
                 parentLayer.setGroupedInLegend(groupedInLegend);
                 
-                var clientRequest = new Mojo.ClientRequest({
-                  onSuccess : function() {
-                    // No action needed
-                  },
-                  onFailure : function(e) {
-                    that.handleException(e);
-                  }
-                });
-                    
-                // Persist legend position to the db
-                com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
+                if(this.canEditDashboards()){
+	                var clientRequest = new Mojo.ClientRequest({
+	                  onSuccess : function() {
+	                    // No action needed
+	                  },
+	                  onFailure : function(e) {
+	                    that.handleException(e);
+	                  }
+	                });
+	                    
+	                // Persist legend position to the db
+	                com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
+                }
                 parentLayer.layerLegend.group(ui.draggable);
               }
           });
@@ -1090,9 +1141,34 @@
         }
         layerIds.reverse();
         
-        var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(json) {
-            // Update the layer cache with the new layer ordering
+        if(this.canEditDashboards()){
+	        var clientRequest = new Mojo.ClientRequest({
+	          onSuccess : function(json) {
+	            // Update the layer cache with the new layer ordering
+	            var reorderedLayerCache = new com.runwaysdk.structure.LinkedHashMap();
+	            for (var i = 0; i < layerIds.length; ++i) {
+	              reorderedLayerCache.put(layerIds[i], that._layerCache.get(layerIds[i]));
+	            }
+	            that._layerCache = reorderedLayerCache;
+	            
+	            // At this point, the layers are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
+	            that._addUserLayersToMap(true);
+	          },
+	          onFailure : function(e) {
+	            that.handleException(e);
+	            
+	            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update the map because that ordering is still correct.
+	            that._drawUserLayersHTML();
+	          }
+	        });
+        
+	        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
+        }
+        else{
+        	////////////////////////////////
+        	// Temp solution until save mechanism is implemented. 
+        	// TODO: move persistence code to save mechanism. 
+        	// Update the layer cache with the new layer ordering
             var reorderedLayerCache = new com.runwaysdk.structure.LinkedHashMap();
             for (var i = 0; i < layerIds.length; ++i) {
               reorderedLayerCache.put(layerIds[i], that._layerCache.get(layerIds[i]));
@@ -1101,16 +1177,7 @@
             
             // At this point, the layers are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
             that._addUserLayersToMap(true);
-          },
-          onFailure : function(e) {
-            that.handleException(e);
-            
-            // The server failed to reorder the layers. We need to redraw the HTML to reset the layer ordering, but we don't need to update the map because that ordering is still correct.
-            that._drawUserLayersHTML();
-          }
-        });
-        
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(clientRequest, this._mapId, layerIds);
+        }
       },
       
       
@@ -1155,7 +1222,6 @@
         
         var Structure = com.runwaysdk.structure;
         var tq = new Structure.TaskQueue();
-        var that = this;
         
         tq.addTask(new Structure.TaskIF({
           start : function(){            
@@ -1201,8 +1267,13 @@
         dashboardForm.edit(this._dashboardId);        
       },
       
-      _renderMessage : function(message) {
-        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+      _renderMessage : function(message, type) {
+    	if(type === "error"){
+    		var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+    	}
+    	else if(type === "warning"){
+    		var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rWarning", "Warning"), {modal: true});
+    	}
         dialog.appendContent(message);
         dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
           dialog.close();
@@ -1411,6 +1482,7 @@
         // Create the HTML for each row (base layer representation).
         var ids = [];
         var baseLayers = this._baseLayers;
+        var activeBase = this.getCurrentBaseMap();
         for(var i=0; i<base.length; i++){
           
             var id = 'base_layer_'+i;
@@ -1428,9 +1500,38 @@
             com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(id);
             var checkbox = this.getFactory().newCheckBox({checked: false, classes: ["row-form", "jcf-class-check", "chk-area"]});
             checkbox.setId(id);
-            if(b._gdbisdefault === "true"){
+            if(activeBase.LAYER_SOURCE_TYPE){
+            	if(activeBase.LAYER_SOURCE_TYPE.toLowerCase() === b._gdbcustomtype.toLowerCase()){
+            		checkbox.setChecked(checkbox);
+            		this._mapFactory.showLayer(b, 0);
+            	}
+            }
+            else if(b._gdbisdefault === "true"){
+              // If MapConfig spedifies a default this will be chosen if no other active base layers are persisted
+              // to the database.
               checkbox.setChecked(checkbox);
               this._mapFactory.showLayer(b, 0);
+              this.setCurrentBaseMap({"LAYER_SOURCE_TYPE" : b._gdbcustomtype});
+              
+              //////////////////////////////
+              // temp solution for creating thumbnails. 
+              // TODO: remove once save mechanism initiates thumbnail generation
+              //////////////////////////////
+              if(this.canEditDashboards()){
+      	        var clientRequest = new Mojo.ClientRequest({
+      	            onSuccess : function() {
+      	              // No action needed
+      	            },
+      	            onFailure : function(e) {
+      	            	this.handleException(e);
+      	            }
+      	          });
+      	              
+      	          // Persist legend position to the db
+      	          com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(clientRequest, this._dashboardId, JSON.stringify({"LAYER_SOURCE_TYPE" : b._gdbcustomtype}));
+              }
+                ///////////////////////////////
+                ///////////////////////////////
             }
             checkbox.addOnCheckListener(function(event){
               target = event.getCheckBox();   
@@ -1456,6 +1557,7 @@
         var targetId = checkBox.getId();
         var ids = this._baseLayers.keySet();
         var isChecked = checkBox.isChecked();
+        var activeBase = {};
       
         if (isChecked) {
           for (var i=0; i<ids.length; i++) { 
@@ -1467,13 +1569,37 @@
             else {
               var newBaselayer = this._baseLayers.get(targetId);
               this._mapFactory.showLayer(newBaselayer, 0);
+              activeBase.LAYER_SOURCE_TYPE = newBaselayer._gdbcustomtype;
+              this.setCurrentBaseMap({"LAYER_SOURCE_TYPE" : newBaselayer._gdbcustomtype});
             }
           }
         }
         else {
           var unchecklayer = this._baseLayers.get(targetId);
           this._mapFactory.hideLayer(unchecklayer);
+          activeBase.LAYER_SOURCE_TYPE = "";
+          this.setCurrentBaseMap({"LAYER_SOURCE_TYPE" : ""});
         }
+        
+        //////////////////////////////
+        // temp solution for persisting saved base layer option. 
+        // TODO: remove once save mechanism initiates thumbnail generation
+        //////////////////////////////
+        if(this.canEditDashboards()){
+	        var clientRequest = new Mojo.ClientRequest({
+	            onSuccess : function() {
+	              // No action needed
+	            },
+	            onFailure : function(e) {
+	            	this.handleException(e);
+	            }
+	          });
+	              
+	          // Persist base layer option to the db
+	          com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(clientRequest, this._dashboardId, JSON.stringify(activeBase));
+        }
+        //////////////////////////////
+        //////////////////////////////
       },
       
       
@@ -1684,7 +1810,7 @@
         
         
       /**
-       * Control stack order or legends
+       * Control stack order of legends
        */
       _legendClickDragHandler : function(e){
           
@@ -1727,18 +1853,20 @@
         relatedLayer.setLegendYPosition(y);
         relatedLayer.setGroupedInLegend(groupedInLegend);
         
-        var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function() {
-          // No action needed
-          },
-          onFailure : function(e) {
-            that.handleException(e);
-           
-          }
-        });
-        
-        // Persist legend position to the db
-        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
+        if(this.canEditDashboards()){
+	        var clientRequest = new Mojo.ClientRequest({
+	          onSuccess : function() {
+	          // No action needed
+	          },
+	          onFailure : function(e) {
+	            that.handleException(e);
+	           
+	          }
+	        });
+	        
+	        // Persist legend position to the db
+	        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(clientRequest, relatedLayerId, x, y, groupedInLegend);
+        }
       },
       
       /*
@@ -2060,7 +2188,7 @@
         if(errorCount > 0) {
           var message = com.runwaysdk.Localize.localize("filter", "error");
           
-          that._renderMessage(message);
+          that._renderMessage(message, "error");
         }
         else {
           this._criteria = this._reloadCriteria();
@@ -2101,7 +2229,7 @@
         if(errorCount > 0) {
           var message = com.runwaysdk.Localize.localize("filter", "error");
           
-          that._renderMessage(message);
+          that._renderMessage(message, "error");
         }
         else {
           var criteria = this._reloadCriteria();
@@ -2128,7 +2256,7 @@
         if(errorCount > 0) {
           var message = com.runwaysdk.Localize.localize("filter", "error");
             
-          that._renderMessage(message);
+          that._renderMessage(message, "error");
         }
         else {
           var criteria = this._reloadCriteria();

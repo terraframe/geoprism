@@ -29,7 +29,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/javax.servlet.jsp-api-2.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jcl-over-slf4j-1.6.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/joda-time-2.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/json-20090211.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jstl-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts-1.13.jar"/>

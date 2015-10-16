@@ -33,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -54,6 +55,15 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
 
+import net.coobird.thumbnailator.Thumbnails;
+
+import org.geotools.data.ows.Layer;
+import org.geotools.data.ows.WMSCapabilities;
+import org.geotools.data.wms.WMSUtils;
+import org.geotools.data.wms.WebMapServer;
+import org.geotools.data.wms.request.GetMapRequest;
+import org.geotools.data.wms.response.GetMapResponse;
+import org.geotools.ows.ServiceException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -66,9 +76,11 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.xml.resolver.apps.resolver;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
@@ -117,7 +129,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     super();
   }
-
+  
   @Override
   public void accepts(MapVisitor visitor)
   {
@@ -405,7 +417,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         layers.put(orderedTLayersArr[i].toJSON());
       }
       mapJSON.put("layers", layers);
-
+      
+      mapJSON.put("activeBaseMap", this.getActiveBaseMap());
+      
       //
       // TODO: Resolve the situation where a reference layer is saved and loaded
       // compared to the results of getAvailableReferenceLayers()
@@ -429,11 +443,40 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       throw new ProgrammingErrorException(ex);
     }
   }
+  
+  public JSONArray getExpandedMapLayersBBox(DashboardLayer[] layers, double expandVal)
+  {
+
+    JSONArray bboxArr = new JSONArray();
+    Dashboard dashboard = this.getDashboard();
+
+    if (dashboard != null)
+    {
+      GeoEntity country = dashboard.getCountry();
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
+      MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
+
+      String tableName = mdClass.getTableName();
+      String geoColumnName = mdAttributeGeom.getColumnName();
+      String idColumnName = mdAttributeId.getColumnName();
+
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ST_AsText(ST_Expand(" + tableName + "." + geoColumnName + "," + expandVal +")) AS bbox");
+      sql.append(" FROM " + tableName);
+      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      ResultSet resultSet = Database.query(sql.toString());
+      bboxArr = this.formatBBox(resultSet);
+
+    }
+
+    return bboxArr;
+  }
 
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
     JSONArray bboxArr = new JSONArray();
-
     Dashboard dashboard = this.getDashboard();
 
     if (dashboard != null)
@@ -453,77 +496,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
 
       ResultSet resultSet = Database.query(sql.toString());
+      bboxArr = this.formatBBox(resultSet);
 
-      try
-      {
-        if (resultSet.next())
-        {
-          String bbox = resultSet.getString("bbox");
-          if (bbox != null)
-          {
-            Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
-            Matcher m = p.matcher(bbox);
-
-            if (m.matches())
-            {
-              String coordinates = m.group(1);
-              List<Coordinate> coords = new LinkedList<Coordinate>();
-
-              for (String c : coordinates.split(","))
-              {
-                String[] xAndY = c.split(" ");
-                double x = Double.valueOf(xAndY[0]);
-                double y = Double.valueOf(xAndY[1]);
-
-                coords.add(new Coordinate(x, y));
-              }
-
-              Envelope e = new Envelope(coords.get(0), coords.get(2));
-
-              try
-              {
-                bboxArr.put(e.getMinX());
-                bboxArr.put(e.getMinY());
-                bboxArr.put(e.getMaxX());
-                bboxArr.put(e.getMaxY());
-              }
-              catch (JSONException ex)
-              {
-                throw new ProgrammingErrorException(ex);
-              }
-            }
-            else
-            {
-              String label = country.getDisplayLabel().getValue();
-              String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
-
-              throw new ProgrammingErrorException(error);
-            }
-
-            if (bboxArr.length() > 0)
-            {
-              return bboxArr;
-            }
-          }
-        }
-      }
-      catch (SQLException sqlEx1)
-      {
-        Database.throwDatabaseException(sqlEx1);
-      }
-      finally
-      {
-        try
-        {
-          java.sql.Statement statement = resultSet.getStatement();
-          resultSet.close();
-          statement.close();
-        }
-        catch (SQLException sqlEx2)
-        {
-          Database.throwDatabaseException(sqlEx2);
-        }
-      }
     }
 
     // There are no layers in the map (that contain data) so return the
@@ -543,6 +517,87 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       }
     }
 
+    return bboxArr;
+  }
+  
+  /**
+   * Format the bounding box result set returned from a PostGIS database query
+   * 
+   * @param resultSet
+   * @return
+   */
+  private JSONArray formatBBox(ResultSet resultSet)
+  {
+    JSONArray bboxArr = new JSONArray();
+    Dashboard dashboard = this.getDashboard();
+    GeoEntity country = dashboard.getCountry();
+    
+    try
+    {
+      if (resultSet.next())
+      {
+        String bbox = resultSet.getString("bbox");
+        if (bbox != null)
+        {
+          Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
+          Matcher m = p.matcher(bbox);
+
+          if (m.matches())
+          {
+            String coordinates = m.group(1);
+            List<Coordinate> coords = new LinkedList<Coordinate>();
+
+            for (String c : coordinates.split(","))
+            {
+              String[] xAndY = c.split(" ");
+              double x = Double.valueOf(xAndY[0]);
+              double y = Double.valueOf(xAndY[1]);
+
+              coords.add(new Coordinate(x, y));
+            }
+
+            Envelope e = new Envelope(coords.get(0), coords.get(2));
+
+            try
+            {
+              bboxArr.put(e.getMinX());
+              bboxArr.put(e.getMinY());
+              bboxArr.put(e.getMaxX());
+              bboxArr.put(e.getMaxY());
+            }
+            catch (JSONException ex)
+            {
+              throw new ProgrammingErrorException(ex);
+            }
+          }
+          else
+          {
+            String label = country.getDisplayLabel().getValue();
+            String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
+
+            throw new ProgrammingErrorException(error);
+          }
+        }
+      }
+    }
+    catch (SQLException sqlEx1)
+    {
+      Database.throwDatabaseException(sqlEx1);
+    }
+    finally
+    {
+      try
+      {
+        java.sql.Statement statement = resultSet.getStatement();
+        resultSet.close();
+        statement.close();
+      }
+      catch (SQLException sqlEx2)
+      {
+        Database.throwDatabaseException(sqlEx2);
+      }
+    }
+    
     return bboxArr;
   }
 
@@ -641,12 +696,19 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return new MdAttributeView[] {};
   }
-
+  
+  /**
+   * Generate an image replicating the users map in the browser.
+   * 
+   * @outFileFormat - Allowed types (png, gif, jpg, bmp)
+   * @mapBounds - JSON constructed as {"bottom":"VALUE", "top":"VALUE", "left":"VALUE", "right":"VALUE"}
+   * @mapSize - JSON constructed as {"width":"VALUE", "height":"VALUE"}
+   * @activeBaseMap = JSON constructed as {"LAYER_SOURCE_TYPE":"VALUE"}
+   */
   @Override
-  public InputStream generateMapImageExport(String outFileFormat, String mapBounds, String mapSize)
+  public InputStream generateMapImageExport(String outFileFormat, String mapBounds, String mapSize, String activeBaseMap)
   {
     InputStream inStream = null;
-
     int width;
     int height;
 
@@ -688,6 +750,48 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       // Add layers to the base canvas
       BufferedImage layerCanvas = getLayersExportCanvas(width, height, orderedLayers, mapBounds);
+      
+      // Get base map
+      String baseType = null;
+      try
+      {
+        JSONObject activeBaseObj = new JSONObject(activeBaseMap);
+        baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not active base map JSON.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      
+      // Get bounds of the map
+      if(baseType.length() > 0)
+      {
+        String bottom;
+        String top;
+        String right;
+        String left;
+        try
+        {
+          JSONObject mapBoundsObj = new JSONObject(mapBounds);
+          bottom = mapBoundsObj.getString("bottom");
+          top = mapBoundsObj.getString("top");
+          right = mapBoundsObj.getString("right");
+          left = mapBoundsObj.getString("left");
+        }
+        catch (JSONException e)
+        {
+          String error = "Could not parse map bounds.";
+          throw new ProgrammingErrorException(error, e);
+        }
+        
+        BufferedImage baseMapImage = this.getBaseMapCanvas(width, height, left, bottom, right, top, baseType);
+        
+        if(baseMapImage != null)
+        {
+          mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
+        }
+      }
 
       // Offset the layerCanvas so that it is center
       int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
@@ -695,7 +799,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
 
-      // Add layers to the base canvas
+      // Add legends to the base canvas
       BufferedImage legendCanvas = getLegendExportCanvas(width, height);
       mapBaseGraphic.drawImage(legendCanvas, 0, 0, null);
     }
@@ -737,6 +841,122 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return inStream;
   }
+  
+  
+  public BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top)
+  {
+      String baseType = null;
+      try
+      {
+        JSONObject activeBaseObj = new JSONObject(this.getActiveBaseMap());
+        baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not active base map JSON.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      
+      BufferedImage baseMapImage = this.getBaseMapCanvas(mapWidth, mapHeight, left, bottom, right, top, baseType);
+      
+      return baseMapImage;
+  }
+
+  private BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top, String baseType)
+  {
+    BufferedImage image = null;
+    
+    if(baseType.toLowerCase().equals("osm"))
+    {
+      // TODO: Only add base map based on user settings (i.e. if OSM is enabled)
+      URL url = null;
+      try 
+      {
+        //
+        // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
+        // Tiled Map Services (TMS) which are not directly consumable by geotools. 
+        //
+        url = new URL("http://irs.gis-lab.info/?layers=osm&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+      } 
+      catch (MalformedURLException e) 
+      {
+        //will not happen
+        String error = "The URL is not formed correctly.";
+        throw new ProgrammingErrorException(error, e);
+      }
+  
+      WebMapServer wms = null;
+      try 
+      {
+        wms = new WebMapServer(url);
+      } 
+      catch (IOException e) 
+      {
+        //There was an error communicating with the server
+        //For example, the server is down
+        String error = "There was a problem communicating with the base map server.";
+        throw new ProgrammingErrorException(error, e);
+      } 
+      catch (ServiceException e) 
+      {
+        //The server returned a ServiceException (unusual in this case)
+        String error = "The server returned a ServiceException.";
+        throw new ProgrammingErrorException(error, e);
+      } 
+      catch (SAXException e) 
+      {
+        //Unable to parse the response from the server
+        //For example, the capabilities it returned was not valid
+        String error = "Could not parse the response from the server.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      
+      GetMapRequest request = wms.createGetMapRequest();
+      request.setFormat("image/png");
+      request.setDimensions(mapWidth, mapHeight); //sets the dimensions of the image to be returned from the server
+      request.setTransparent(true);
+      request.setSRS("EPSG:4326");
+      request.setBBox(left + "," + bottom + "," + right + "," + top);
+      
+      WMSCapabilities capabilities = wms.getCapabilities();
+      
+      for ( Layer layer : WMSUtils.getNamedLayers(capabilities) ) {
+        if(layer.getName().toLowerCase().trim().equals("osm"))
+        {
+          request.addLayer(layer);
+        }
+      }
+      
+      GetMapResponse response = null;
+      try
+      {
+        response = (GetMapResponse) wms.issueRequest(request);
+      }
+      catch (ServiceException e)
+      {
+        String error = "The server returned a ServiceException.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      catch (IOException e)
+      {
+        String error = "There was a problem communicating with the base map server.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      
+      try
+      {
+        image = ImageIO.read(response.getInputStream());
+      }
+      catch (IOException e)
+      {
+        String error = "Could not read the response to an image.";
+        throw new ProgrammingErrorException(error, e);
+      }
+    }
+    
+    return image;
+  }
+  
 
   /**
    * Builds a combined image layer of all the layers in a saved map.
@@ -744,9 +964,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
    * @mapWidth
    * @mapHeight
    * @orderedLayers
-   * @mapBounds
+   * @mapBounds - expects json object {"bottom":"VALUE", "top":"VALUE", "left":"VALUE", "right":"VALUE"}
    */
-  private BufferedImage getLayersExportCanvas(int mapWidth, int mapHeight, DashboardLayer[] orderedLayers, String mapBounds)
+  public BufferedImage getLayersExportCanvas(int mapWidth, int mapHeight, DashboardLayer[] orderedLayers, String mapBounds)
   {
     String bottom;
     String top;
@@ -777,7 +997,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         String error = "Could not parse map bounds.";
         throw new ProgrammingErrorException(error, e);
       }
-
+      
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {

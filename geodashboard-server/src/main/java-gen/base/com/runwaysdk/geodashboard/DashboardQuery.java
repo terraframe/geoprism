@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -837721478)
+@com.runwaysdk.business.ClassSignature(hash = -925120469)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -323,6 +323,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.LOCKEDBY);
 
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail()
+  {
+    return getMapThumbnail(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getName()
@@ -695,6 +712,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail();
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias);
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getName();
     public com.runwaysdk.query.SelectableChar getName(String alias);
     public com.runwaysdk.query.SelectableChar getName(String alias, String displayLabel);
@@ -998,6 +1018,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.LOCKEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail()
+  {
+    return getMapThumbnail(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getName()
@@ -1341,6 +1378,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail();
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias);
+    public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getName();
     public com.runwaysdk.query.SelectableChar getName(String alias);
     public com.runwaysdk.query.SelectableChar getName(String alias, String displayLabel);
@@ -1665,6 +1705,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.LOCKEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail()
+  {
+    return getMapThumbnail(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getMapThumbnail(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getName()

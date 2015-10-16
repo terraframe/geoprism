@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -1856832910)
+@com.runwaysdk.business.ClassSignature(hash = -2080404420)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -55,6 +55,23 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public String getClassType()
   {
     return com.runwaysdk.geodashboard.gis.persist.DashboardMap.CLASS;
+  }
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap()
+  {
+    return getActiveBaseMap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -629,6 +646,9 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public interface DashboardMapQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableReference
   {
 
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap();
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias);
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -758,6 +778,23 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
       return this.NE(dashboardMap.getId());
     }
 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap()
+  {
+    return getActiveBaseMap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
     return getCreateDate(null);
@@ -1272,6 +1309,9 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public interface DashboardMapQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableMultiReference
   {
 
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap();
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias);
+    public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -1397,6 +1437,23 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
       }
 
       return this.containsExactly(itemIdArray);
+  }
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap()
+  {
+    return getActiveBaseMap(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getActiveBaseMap(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.gis.persist.DashboardMap.ACTIVEBASEMAP, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {

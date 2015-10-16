@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1938572297)
+@com.runwaysdk.business.ClassSignature(hash = -1063603117)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,6 +29,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public abstract class DashboardMapBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
+  public static java.lang.String ACTIVEBASEMAP = "activeBaseMap";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
@@ -43,11 +44,39 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1938572297;
+  private static final long serialVersionUID = -1063603117;
   
   public DashboardMapBase()
   {
     super();
+  }
+  
+  public String getActiveBaseMap()
+  {
+    return getValue(ACTIVEBASEMAP);
+  }
+  
+  public void validateActiveBaseMap()
+  {
+    this.validateAttribute(ACTIVEBASEMAP);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getActiveBaseMapMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardMap.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ACTIVEBASEMAP);
+  }
+  
+  public void setActiveBaseMap(String value)
+  {
+    if(value == null)
+    {
+      setValue(ACTIVEBASEMAP, "");
+    }
+    else
+    {
+      setValue(ACTIVEBASEMAP, value);
+    }
   }
   
   public java.util.Date getCreateDate()
@@ -484,16 +513,16 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return (DashboardMap) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  public java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.io.InputStream generateMapImageExport(java.lang.String id, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize)
+  public static final java.io.InputStream generateMapImageExport(java.lang.String id, java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)
   {
     DashboardMap _instance = DashboardMap.get(id);
-    return _instance.generateMapImageExport(outFileFormat, mapBounds, mapSize);
+    return _instance.generateMapImageExport(outFileFormat, mapBounds, mapSize, activeBaseMap);
   }
   
   public java.lang.String getMapJSON(java.lang.String config)

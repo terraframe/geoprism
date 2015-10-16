@@ -184,8 +184,8 @@ $(document).ready(function(){
   		      </span>  		      
   		      
 		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
-  		    	<a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
   		    </c:if>
+  		    <a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
 		</div>
 		
 	    <!-- Global geo filter -->

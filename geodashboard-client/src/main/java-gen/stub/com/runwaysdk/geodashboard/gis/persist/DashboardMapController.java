@@ -301,7 +301,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   }
 
   @Override
-  public void exportMap(String mapId, String outFileName, String outFileFormat, String mapBounds, String mapSize) throws IOException, ServletException
+  public void exportMap(String mapId, String outFileName, String outFileFormat, String mapBounds, String mapSize, String activeBaseMap) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
@@ -313,13 +313,13 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
     try
     {
-      InputStream mapImageInStream = map.generateMapImageExport(outFileFormat, mapBounds, mapSize);
+      InputStream mapImageInStream = map.generateMapImageExport(outFileFormat, mapBounds, mapSize, activeBaseMap);
       FileDownloadUtil.writeFile(resp, outFileName, outFileFormat, mapImageInStream, "application/" + outFileFormat);
     }
     catch (Exception e)
     {
       ErrorUtility.prepareThrowable(e, req, resp, false);
-      this.failExportMap(mapId, outFileName, outFileFormat, mapBounds, mapSize);
+      this.failExportMap(mapId, outFileName, outFileFormat, mapBounds, mapSize, activeBaseMap);
     }
   }
 }

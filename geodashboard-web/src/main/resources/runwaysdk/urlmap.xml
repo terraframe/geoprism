@@ -39,6 +39,10 @@
   <map uri="dashboards" controller="com.runwaysdk.geodashboard.UserMenuController">
     <action method="dashboards" uri=""/>    
   </map>
+  
+  <map uri="mapthumb" controller="com.runwaysdk.geodashboard.UserMenuController">
+  	<action method=".*" uri="${method}" />
+  </map>
 
   <map uri="session" controller="com.runwaysdk.geodashboard.SessionController">
     <action method=".*" uri="${method}"/>

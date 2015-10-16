@@ -18,6 +18,12 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,6 +37,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1119,5 +1129,160 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     return countries;
+  }
+  
+  @Override
+  @Transaction
+  public void generateThumbnailImage()
+  {
+    String outFileFormat = "png";
+    BufferedImage base = null;
+    Graphics mapBaseGraphic = null;
+    BufferedImage resizedImage = null;
+    int defaultWidth = 800;
+    int defaultHeight = 750;
+    Double bottom;
+    Double top;
+    Double right;
+    Double left;
+    JSONObject restructuredBounds = new JSONObject();
+    
+    DashboardMap dashMap = this.getMap();
+    
+    // Ordering the layers from the default map
+    DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
+    JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .5);
+    
+    // Get bounds of the map
+    try
+    {
+      left = Double.parseDouble(mapBoundsArr.getString(0));
+      bottom = Double.parseDouble(mapBoundsArr.getString(1));
+      right = Double.parseDouble(mapBoundsArr.getString(2));
+      top = Double.parseDouble(mapBoundsArr.getString(3));
+      
+      restructuredBounds.put("left", left);
+      restructuredBounds.put("bottom", bottom);
+      restructuredBounds.put("right", right);
+      restructuredBounds.put("top", top);
+    }
+    catch (JSONException e)
+    {
+      String error = "Could not parse map bounds.";
+      throw new ProgrammingErrorException(error, e);
+    }
+    
+    int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
+    int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
+    
+    try
+    {
+      base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+      // Create the base canvas that all other map elements will be draped on top of
+      mapBaseGraphic = base.getGraphics();
+      mapBaseGraphic.setColor(Color.white);
+      mapBaseGraphic.fillRect(0, 0, width, height);
+      mapBaseGraphic.drawImage(base, 0, 0, null);
+      
+      // Get base map
+      String activeBaseMap = dashMap.getActiveBaseMap();
+      if(activeBaseMap.length() > 0)
+      {
+        String baseType = null;
+        try
+        {
+          JSONObject activeBaseObj = new JSONObject(activeBaseMap);
+          baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
+        }
+        catch (JSONException e)
+        {
+          String error = "Could not parse active base map JSON.";
+          throw new ProgrammingErrorException(error, e);
+        }
+        
+        if(baseType.length() > 0)
+        {
+          BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
+          
+          if(baseMapImage != null)
+          {
+            mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
+          }
+        }
+      }
+      
+      // Add layers to the base canvas
+      BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
+
+      // Offset the layerCanvas so that it is center
+      int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
+      int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
+
+      mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
+      
+      
+      try
+      {
+        resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
+      }
+      catch (IOException e)
+      {
+        String error = "Could not resize map image to thumbnail size.";
+        throw new ProgrammingErrorException(error, e);
+      }
+    }
+    finally
+    {
+      ByteArrayOutputStream outStream = null;
+      try
+      {
+        outStream = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, outFileFormat, outStream);
+        outStream.flush();
+        byte[] imageInByte = outStream.toByteArray();
+        outStream.close();
+        
+        this.lock();
+        this.setMapThumbnail(imageInByte);
+        this.unlock();
+        
+      }
+      catch (IOException e)
+      {
+        String error = "Could not write map image to the output stream.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      finally
+      {
+        if (outStream != null)
+        {
+          try
+          {
+            outStream.close();
+          }
+          catch (IOException e)
+          {
+            String error = "Could not close stream.";
+            throw new ProgrammingErrorException(error, e);
+          }
+        }
+      }
+
+      if (mapBaseGraphic != null)
+      {
+        mapBaseGraphic.dispose();
+      }
+    }
+  }
+  
+  @Override
+  @Transaction
+  public void setBaseLayerState(String baseLayerState)
+  {
+    DashboardMap dm = this.getMap();
+    dm.lock();
+    dm.setActiveBaseMap(baseLayerState);
+    dm.unlock();
   }
 }
