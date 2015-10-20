@@ -56,6 +56,7 @@
 		} 
 		
 		#logo{
+			max-height: 100px;
 		}
 		
 		#geodash-landing-top-div{

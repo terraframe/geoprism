@@ -28,7 +28,7 @@
 <% String webappRoot = request.getContextPath() + "/"; %> 
 
 <gdb:localize var="logoalt" key="splash.logoalt" />
-<img src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">
+<img id="logo" style="max-width:250px;" src="<%out.print(webappRoot);%>com/runwaysdk/geodashboard/images/splash_logo.png" alt="${logoalt}">
 
 <br/>
 <br/>
