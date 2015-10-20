@@ -2382,7 +2382,7 @@
         // Make sure all openers for each attribute have a click event
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
-        $('.ico-new-dashboard-tab').on('click',  Mojo.Util.bind(this, this._openNewDashboardTab));
+        $('.ico-dashboard-tab').on('click',  Mojo.Util.bind(this, this._openNewDashboardTab));
         $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
         $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
         $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
