@@ -75,6 +75,7 @@ public class DashboardBuilder implements Reloadable
     {
       mWrapper = new MetadataWrapper();
       mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, _mdClass.getId());
+      mWrapper.setDashboard(_dashboard);
       mWrapper.apply();
     }
 

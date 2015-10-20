@@ -63,8 +63,6 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
   public static MappableClass getMappableClass(MdClassDAOIF _mdClass)
   {
-    System.out.println("Looking for MappableClass with wrapped id: [" + _mdClass.getId() + "]");
-
     MdClass mdClass = MdClass.get(_mdClass.getId());
 
     MappableClassQuery query = new MappableClassQuery(new QueryFactory());
@@ -78,8 +76,6 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         return iterator.next();
       }
-
-      System.out.println("Unable to find Mappable Class with wrapped id [" + _mdClass.getId() + "]");
 
       return null;
     }
