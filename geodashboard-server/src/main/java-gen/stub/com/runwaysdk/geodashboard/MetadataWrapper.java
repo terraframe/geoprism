@@ -76,22 +76,19 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     Locale locale = Session.getCurrentLocale();
 
     QueryFactory f = new QueryFactory();
-    AttributeWrapperQuery awQ = new AttributeWrapperQuery(f);
-    // MetadataWrapperQuery mwQ = new MetadataWrapperQuery(f);
+    
     DashboardAttributesQuery daQ = new DashboardAttributesQuery(f);
 
-    // restrict by this wrapper and order the attributes
     daQ.WHERE(daQ.parentId().EQ(this.getId()));
     daQ.ORDER_BY_ASC(daQ.getListOrder());
 
-    awQ.WHERE(awQ.dashboardMetadata(daQ));
-
-    OIterator<? extends AttributeWrapper> iter = awQ.getIterator();
+    OIterator<? extends DashboardAttributes> iter = daQ.getIterator();
     try
     {
       while (iter.hasNext())
       {
-        AttributeWrapper aWrapper = iter.next();
+        DashboardAttributes attribute = iter.next();
+        AttributeWrapper aWrapper = attribute.getChild();
 
         MdAttributeDAOIF attr = MdAttributeDAO.get(aWrapper.getWrappedMdAttributeId());
         MdAttributeConcreteDAOIF mdAttributeConcrete = attr.getMdAttributeConcrete();

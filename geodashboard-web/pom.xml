@@ -18,16 +18,13 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is part of Runway SDK(tm). Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, 
-  or (at your option) any later version. Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
-  a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.runwaysdk</groupId>
     <artifactId>geodashboard</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.01.0005</version>
   </parent>
   <artifactId>geodashboard-web</artifactId>
   <packaging>war</packaging>
@@ -43,22 +40,22 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0005</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-client</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0005</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geodashboard-server</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.01.0005</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>1.8.1-SNAPSHOT</version>
+      <version>2.0.3-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -392,28 +389,28 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-common</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-client</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <excludes>**/*.java,**/*.properties</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-common</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -421,7 +418,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-client</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -429,7 +426,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
@@ -437,7 +434,7 @@
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geodashboard-server</artifactId>
-                  <version>0.0.1-SNAPSHOT</version>
+                  <version>1.01.0005</version>
                   <type>jar</type>
                   <includes>**/messages*.properties,**/geoserver*.properties</includes>
                 </artifactItem>
