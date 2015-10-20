@@ -202,20 +202,20 @@
 	      	    		<div class="row">  <!-- start a new row if the last row has all three thumbnails -->
 	      	    	  </c:if>
 	      	    	
-		 			  <div class="col-sm-6 col-md-4">
-					    <div class="thumbnail text-center">
-					      <a href="#" class="new-dashboard-btn" >
-					      		<div class="frame-box">
-					      			<div class="inner-frame-box">
-					      				<i class="fa fa-plus"></i>
-					      			</div>
-					      		</div>
-					      		<div class="caption">
-					        		<h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
-					      		</div>
-					      	</a>
-					    </div>
-					  </div>
+<!-- 		 			  <div class="col-sm-6 col-md-4"> -->
+<!-- 					    <div class="thumbnail text-center"> -->
+<!-- 					      <a href="#" class="new-dashboard-btn" > -->
+<!-- 					      		<div class="frame-box"> -->
+<!-- 					      			<div class="inner-frame-box"> -->
+<!-- 					      				<i class="fa fa-plus"></i> -->
+<!-- 					      			</div> -->
+<!-- 					      		</div> -->
+<!-- 					      		<div class="caption"> -->
+<%-- 					        		<h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3> --%>
+<!-- 					      		</div> -->
+<!-- 					      	</a> -->
+<!-- 					    </div> -->
+<!-- 					  </div> -->
 					  
 				   </div> <!-- close the last row -->
     			</c:when>
