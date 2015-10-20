@@ -242,8 +242,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
         if (mClass == null)
         {
-          System.out.println("Searching for Mappable Class [" + type +"]");
-
           String[] search_tags = new String[] { "mappableClass" };
           SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.TYPE_ATTRIBUTE, type, "Type:" + type);
         }

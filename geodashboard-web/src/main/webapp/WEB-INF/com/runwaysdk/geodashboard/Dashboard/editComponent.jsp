@@ -38,15 +38,26 @@
         </div>
         
         <div class="field-row clearfix" id="add-dashboard-users-field-row" >
-			<div class="holder">
-				<div class="row-holder">
-					<label><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></label>
-					<!-- Attaching users json to the container element because user json contains attribution for if a user already has privileges -->
-					<div id="add-dashboard-users-container" class="accordion-inner holder ui-sortable" data-dashboarduserjson="${dashboardUsersJSON}">
-			 		</div>
-			  	</div>
-	    	</div>
-		</section>
+          <div class="holder">
+            <div class="row-holder">
+              <label><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></label>
+              <!-- Attaching users json to the container element because user json contains attribution for if a user already has privileges -->
+              <div id="add-dashboard-users-container" class="accordion-inner holder ui-sortable" data-dashboarduserjson="${dashboardUsersJSON}">
+              </div>
+            </div>
+          </div>
+        </div>          
+        
+        <div class="field-row clearfix" id="add-dashboard-type-field-row" >
+          <div class="holder">
+            <div class="row-holder">
+              <label><gdb:localize key='dashboardbuilder.configureTypes'/></label>
+              <div id="add-dashboard-type-container" class="accordion-inner holder ui-sortable" data-classes="${classesJSON}">
+              </div>
+            </div>
+          </div>
+        </div>          
+      </section>
     </fieldset>
   </form>
 </div>

@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1235502118)
+@com.runwaysdk.business.ClassSignature(hash = -369477455)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -42,7 +42,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 1235502118;
+  private static final long serialVersionUID = -369477455;
   
   public MappableClassBase()
   {
@@ -453,6 +453,18 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static MappableClass getByKey(String key)
   {
     return (MappableClass) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public static java.lang.String getAttributesAsJSON(java.lang.String dashboardId, java.lang.String mdClassId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getClassesAsJSON(java.lang.String dashboardId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static MappableClass lock(java.lang.String id)

@@ -207,7 +207,11 @@ $(document).ready(function(){
 	        -->
 	        <c:forEach items="${types}" var="type" varStatus="typeStatus">
 	          <div class="panel panel-default">
-	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}">${type.displayLabel.value}</a>
+	            <span style="display:block;padding:7px 0px 7px 0px;">
+ 	  	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}">${type.displayLabel.value}</a>
+		            <i style="float:right;" id="type-options-btn" class="fa fa-cog ico-dashboard-options" data-mdclassid="${type.id}" title="<gdb:localize key='dashboardbuilder.configureTypeAttributes'/>" ></i>
+	            </span>
+	            
 	            <div id="collapse${typeStatus.index}" class="panel-collapse collapse">
 	              <div class="panel-body">
 	              <!-- slide block -->

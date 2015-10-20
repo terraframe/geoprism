@@ -66,14 +66,15 @@ public class DashboardBuilder implements Reloadable
   {
     MetadataWrapper mWrapper = this.getMetadataWrapper(_dashboard, _mdClass);
 
-//    if (mWrapper == null)
-//    {
-//      mWrapper = this.getMetadataWrapper(null, _mdClass);
-//    }
+    // if (mWrapper == null)
+    // {
+    // mWrapper = this.getMetadataWrapper(null, _mdClass);
+    // }
 
     if (mWrapper == null)
     {
       mWrapper = new MetadataWrapper();
+      mWrapper.setValue(MetadataWrapper.DASHBOARD, _dashboard.getId());
       mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, _mdClass.getId());
       mWrapper.apply();
     }

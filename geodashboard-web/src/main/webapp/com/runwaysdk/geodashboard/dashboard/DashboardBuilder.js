@@ -48,7 +48,7 @@
     "deleteText" : "Are you sure you want to delete dashboard [{0}]?"
   });
   
-  var DashboardFormEvent = ClassFramework.newClass('com.runwaysdk.ui.userstable.DashboardFormBuilderEvent', {
+  var DashboardFormEvent = ClassFramework.newClass('com.runwaysdk.ui.dashboardstable.DashboardFormBuilderEvent', {
     Constants : {
       APPLY_SUCCESS : 0,
       APPLY_FAILURE : 1,
@@ -57,9 +57,9 @@
       ON_EDIT : 4
     },
     Instance : {
-      initialize : function(eventType, user, container) {
+      initialize : function(eventType, dashboard, container) {
         this._eventType = eventType;
-        this._user = user;
+        this._dashboard = dashboard;
         this._container = container;
       },
       
@@ -68,11 +68,11 @@
       },
       
       getDashboard : function(){
-      return this._user;
+        return this._dashboard;
       },
       
       getContainer : function(){
-      return this._container;
+        return this._container;
       }
     }
   });
@@ -458,6 +458,94 @@
     }
   });
   
+  ClassFramework.newClass('com.runwaysdk.ui.userstable.DashboardFormDialog', {
+    Instance : {
+      initialize : function(dashboard, listener, configuator) {
+        this._dashboard = dashboard;
+        this._listener = listener;
+        this._configuator = (configuator || new com.runwaysdk.ui.userstable.DashboardFormConfiguator());        
+      },
+            
+      getFactory : function ()
+      {
+        return com.runwaysdk.ui.Manager.getFactory();
+      },
+      
+      _buildDialog : function(label) {            
+
+        var id = "dialog-" + (this._dashboard.isNewInstance() ? 'new' : this._dashboard.getId());
+        var element = document.getElementById(id);
+                        
+        if(element == null)
+        {      
+          var Structure = com.runwaysdk.structure;
+          var tq = new Structure.TaskQueue();
+          var that = this;
+          var types = {};
+          var info = null;
+              
+          // First load the this._dashboard json
+          tq.addTask(new Structure.TaskIF({
+            start : function(){
+              
+              var callback = new Mojo.ClientRequest({
+                 onSuccess : function(json) {
+                  info = JSON.parse(json);
+                      
+                  tq.next();
+                },
+                onFailure : function(ex) {
+                  tq.stop();
+                  that.handleException(ex);               
+                }
+              }); 
+
+              that._configuator.getJSON(callback, that._dashboard);
+            }
+          }));
+                         
+          // Last build the dialog form
+          tq.addTask(new Structure.TaskIF({
+            start : function(){
+              var fac = that.getFactory();
+              var table = that._table;
+            
+              var dialog = fac.newDialog(label, {minHeight:250, maxHeight:$(window).height() - 75, minWidth:730, resizable: false});   
+              dialog.setId(id);
+                
+              var builder = that._configuator.get(fac, that._dashboard, info);
+              builder.addListener(that._listener);
+              builder.render(dialog, false);
+            
+              dialog.render();   
+            
+              if (jcf != null && jcf.customForms != null) {
+                jcf.customForms.replaceAll();
+              }
+            }
+          }));
+            
+          tq.start();
+        }
+      },     
+      
+      render : function(title) {
+          
+        if(this._dashboard.isWritable())
+        {
+          this._buildDialog(title, this._dashboard);
+        }
+        else
+        {
+          var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+          dialog.appendContent(this.localize("notAllowed"));
+          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+          dialog.render();
+        }
+      }
+    }    
+  });
+  
   var dashboardTable = ClassFramework.newClass(dashboardTableName, {
     
     Extends : Widget,
@@ -475,113 +563,54 @@
       },
       
       _onEditDashboard : function(e) {
+    	var that = this;
         var target = e.getTarget();
         var id = target.id;        
         var mainDiv = document.getElementById("dashboardTable");
         var rowNumber = id.replace('table-edit-', '');
           
-        var user = this._table.getDataSource().getResultsQueryDTO().getResultSet()[rowNumber];
+        var dashboard = this._table.getDataSource().getResultsQueryDTO().getResultSet()[rowNumber];
         
         var callback = new com.runwaysdk.geodashboard.StandbyClientRequest({
           that : this,
           onSuccess : function(dto) {
-            this.that._buildDialog(this.that.localize("dialogEditDashboardTitle"), dto);        
+            var title = this.that.localize("dialogEditDashboardTitle");
+            
+            var dialog = new com.runwaysdk.ui.userstable.DashboardFormDialog(dto, that, that._configuator);
+            dialog.render(title);   
           },
           onFailure : function(ex) {
             this.that.handleException(ex);
           } 
         }, mainDiv);        
         
-        if(user.isWritable())
+        if(dashboard.isWritable())
         {
-          user.lock(callback);
+          dashboard.lock(callback);
         }
-        else if(user.isReadable())
+        else if(dashboard.isReadable())
         {
-          this._buildDialog(this.localize("dialogViewDashboardTitle"), user);        
+          var title = this.localize("dialogViewDashboardTitle");
+          
+          var dialog = new com.runwaysdk.ui.userstable.DashboardFormDialog(dashboard, this, this._configuator);
+          dialog.render(title);        	
         }
       },
       
-      _onNewDashboard : function(e) {        
-        var dashboard = new com.runwaysdk.geodashboard.Dashboard();
+      handleEvent : function(event) {
+        if(event.getEventType() === DashboardFormEvent.APPLY_SUCCESS) {
+          this._table.refresh();
+        }
+      },
       
-        if(dashboard.isWritable())
-        {
-          this._buildDialog(this.localize("dialogNewDashboardTitle"), dashboard);
-        }
-        else
-        {
-          var dialog = this.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-          dialog.appendContent(this.localize("notAllowed"));
-          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
-          dialog.render();
-        }
+      _onNewDashboard : function(e) {
+    	var dashboard = new com.runwaysdk.geodashboard.Dashboard();
+    	var title = this.localize("dialogNewTitle")
+    	
+        var dialog = new com.runwaysdk.ui.userstable.DashboardFormDialog(dashboard, this, this._configuator);
+    	dialog.render(title);
       },     
-      
-      _buildDialog : function(label, dashboard) {
-        
-        var id = "dialog-" + (dashboard.isNewInstance() ? 'new' : dashboard.getId());
-        var element = document.getElementById(id);
-                    
-        if(element == null)
-        {      
-          var Structure = com.runwaysdk.structure;
-          var tq = new Structure.TaskQueue();
-          var that = this;
-          var types = {};
-          var info = null;
-          
-          // First load the dashboard json
-          tq.addTask(new Structure.TaskIF({
-            start : function(){
-          
-              var callback = new Mojo.ClientRequest({
-                onSuccess : function(json) {
-                  info = JSON.parse(json);
-                  
-                  tq.next();
-                },
-                onFailure : function(ex) {
-                  tq.stop();
-                  that.handleException(ex);               
-                }
-              }); 
-
-              that._configuator.getJSON(callback, dashboard);
-            }
-          }));
-                     
-          // Last build the dialog form
-          tq.addTask(new Structure.TaskIF({
-            start : function(){
-              var fac = that.getFactory();
-              var table = that._table;
-        
-              var dialog = fac.newDialog(label, {minHeight:250, maxHeight:$(window).height() - 75, minWidth:730, resizable: false});   
-              dialog.setId(id);
             
-              var builder = that._configuator.get(fac, dashboard, info);
-              builder.addListener({
-                handleEvent : function(event) {
-                  if(event.getEventType() === DashboardFormEvent.APPLY_SUCCESS) {
-                    table.refresh();
-                  }
-                }              
-              });
-              builder.render(dialog, false);
-        
-              dialog.render();   
-        
-              if (jcf != null && jcf.customForms != null) {
-                jcf.customForms.replaceAll();
-              }
-            }
-          }));
-        
-          tq.start();
-        }
-      },     
-      
       _onDeleteDashboard : function(e) {
         var fac = this.getFactory();
         var table = this._table;

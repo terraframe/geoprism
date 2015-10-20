@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public class EscapeUtil
 {
-  public static String escapeHTMLAttribut(String value)
+  public static String escapeHTMLAttribute(String value)
   {
     if (value != null)
     {

@@ -23,7 +23,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -319,14 +318,37 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   @Override
   @Transaction
-  public void applyWithOptions(String[] userIds, String name)
+  public void applyWithOptions(String options)
   {
-    this.lock();
-    this.getDisplayLabel().setValue(name);
-    this.apply();
-    this.unlock();
+    try
+    {
+      JSONObject object = new JSONObject(options);
 
-    assignUsers(this.getId(), userIds);
+      if (object.has("label"))
+      {
+        this.getDisplayLabel().setValue(object.getString("label"));
+      }
+
+      this.apply();
+
+      if (object.has("userIds"))
+      {
+        JSONArray userIds = object.getJSONArray("userIds");
+
+        assignUsers(this.getId(), userIds);
+      }
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        MappableClass.assign(this, types);
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   @Override
@@ -879,14 +901,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return usersArr.toString();
   }
 
-  public static void assignUsers(String dashboardId, String[] userIds)
+  public static void assignUsers(String dashboardId, JSONArray userIds)
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
     Roles dbRole = dashboard.getDashboardRole();
     String dbRoleId = dbRole.getId();
     Roles[] allGeodashRoles = RoleView.getGeodashboardRoles();
 
-    for (String userJSON : userIds)
+    for (int i = 0; i < userIds.length(); i++)
     {
       List<String> roleIds = new ArrayList<String>();
       Set<String> set;
@@ -894,7 +916,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       try
       {
         String userId = null;
-        JSONObject userObj = new JSONObject(userJSON);
+        JSONObject userObj = userIds.getJSONObject(i);
 
         @SuppressWarnings("unchecked")
         Iterator<String> userObjKeys = userObj.keys();
@@ -1083,20 +1105,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("label", this.getDisplayLabel().getValue());
     object.put("removable", this.getRemovable());
     object.put("countries", this.getCountiesJSON());
-    object.put("classes", this.getMappableClassJSON());
+    // object.put("classes", this.getMappableClassJSON());
 
     return object;
   }
 
   private JSONArray getMappableClassJSON() throws JSONException
   {
+    List<? extends MetadataWrapper> wrappers = this.getAllMetadata().getAll();
+
     JSONArray array = new JSONArray();
 
     MappableClass[] mClasses = MappableClass.getAll();
 
     for (MappableClass mClass : mClasses)
     {
-      array.put(mClass.toJSON());
+      array.put(mClass.toJSON(wrappers));
     }
     return array;
   }
@@ -1130,7 +1154,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return countries;
   }
-  
+
   @Override
   @Transaction
   public void generateThumbnailImage()
@@ -1146,13 +1170,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Double right;
     Double left;
     JSONObject restructuredBounds = new JSONObject();
-    
+
     DashboardMap dashMap = this.getMap();
-    
+
     // Ordering the layers from the default map
     DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
     JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .5);
-    
+
     // Get bounds of the map
     try
     {
@@ -1160,7 +1184,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       bottom = Double.parseDouble(mapBoundsArr.getString(1));
       right = Double.parseDouble(mapBoundsArr.getString(2));
       top = Double.parseDouble(mapBoundsArr.getString(3));
-      
+
       restructuredBounds.put("left", left);
       restructuredBounds.put("bottom", bottom);
       restructuredBounds.put("right", right);
@@ -1171,10 +1195,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       String error = "Could not parse map bounds.";
       throw new ProgrammingErrorException(error, e);
     }
-    
+
     int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
     int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
-    
+
     try
     {
       base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -1184,10 +1208,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       mapBaseGraphic.setColor(Color.white);
       mapBaseGraphic.fillRect(0, 0, width, height);
       mapBaseGraphic.drawImage(base, 0, 0, null);
-      
+
       // Get base map
       String activeBaseMap = dashMap.getActiveBaseMap();
-      if(activeBaseMap.length() > 0)
+      if (activeBaseMap.length() > 0)
       {
         String baseType = null;
         try
@@ -1200,18 +1224,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
           String error = "Could not parse active base map JSON.";
           throw new ProgrammingErrorException(error, e);
         }
-        
-        if(baseType.length() > 0)
+
+        if (baseType.length() > 0)
         {
           BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
-          
-          if(baseMapImage != null)
+
+          if (baseMapImage != null)
           {
             mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
           }
         }
       }
-      
+
       // Add layers to the base canvas
       BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
 
@@ -1220,8 +1244,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
 
       mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
-      
-      
+
       try
       {
         resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
@@ -1242,11 +1265,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         outStream.flush();
         byte[] imageInByte = outStream.toByteArray();
         outStream.close();
-        
+
         this.lock();
         this.setMapThumbnail(imageInByte);
         this.unlock();
-        
+
       }
       catch (IOException e)
       {
@@ -1275,7 +1298,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
     }
   }
-  
+
   @Override
   @Transaction
   public void setBaseLayerState(String baseLayerState)
@@ -1284,5 +1307,28 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     dm.lock();
     dm.setActiveBaseMap(baseLayerState);
     dm.unlock();
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClassDAOIF mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+    query.AND(query.getWrappedMdClass().EQ(mdClass.getId()));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      throw new ProgrammingErrorException("Missing MetadataWrapper for Dashboard [" + this.getName() + "] and MdClass [" + mdClass.definesType() + "]");
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 }

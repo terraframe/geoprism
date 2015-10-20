@@ -241,6 +241,7 @@
         $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
         $("#delete-dashboard").on("click", Mojo.Util.bind(this, this._dashboardDeleteHandler));        
         $("#dashboard-options-btn").on("click", Mojo.Util.bind(this, this._dashboardEditHandler));  
+        $("#type-options-btn").on("click", Mojo.Util.bind(this, this._typeEditHandler));  
         
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
@@ -1265,6 +1266,19 @@
           
         var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(this, this._dashboardId);
         dashboardForm.edit(this._dashboardId);        
+      },
+      
+      /**
+       * 
+       * @e
+       */
+      _typeEditHandler : function(e) {
+        e.preventDefault();
+        
+        var mdClassId = $(e.target).data('mdclassid');
+        
+        var form = new com.runwaysdk.geodashboard.gis.TypeForm(this._dashboardId, mdClassId);
+        form.render();        
       },
       
       _renderMessage : function(message, type) {
