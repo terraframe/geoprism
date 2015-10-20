@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -116172904)
+@com.runwaysdk.business.ClassSignature(hash = 35093201)
 public class AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.AdminController";
@@ -95,20 +77,6 @@ public class AdminControllerBase implements com.runwaysdk.generation.loader.Relo
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failAccount");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void builder() throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.builder");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
-  public void failBuilder() throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failBuilder");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
