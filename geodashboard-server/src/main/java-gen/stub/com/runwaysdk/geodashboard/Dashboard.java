@@ -372,6 +372,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       RoleDAO roleDAO = RoleDAO.get(clone.getDashboardRoleId()).getBusinessDAO();
       roleDAO.assignMember(UserDAO.get(user.getId()));
     }
+    
+    // Clone the map thumbnail
+    clone.setMapThumbnail(this.getMapThumbnail());
 
     return clone;
   }
