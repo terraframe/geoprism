@@ -21,9 +21,7 @@ package com.runwaysdk.geodashboard.service;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
-
 import org.xml.sax.Attributes;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -242,8 +240,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
 
         if (mClass == null)
         {
-          System.out.println("Searching for Mappable Class [" + type +"]");
-
           String[] search_tags = new String[] { "mappableClass" };
           SearchHandler.searchEntity(this.getManager(), search_tags, XMLTags.TYPE_ATTRIBUTE, type, "Type:" + type);
         }
@@ -418,8 +414,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
         mClass.apply();
 
         context.setObject(MappableClass.CLASS, mClass);
-        
-        System.out.println("Creating Mappable Class [" + mdClass.definesType() +"]: [" + mClass.getWrappedMdClassId() + "]");
       }
     }
 

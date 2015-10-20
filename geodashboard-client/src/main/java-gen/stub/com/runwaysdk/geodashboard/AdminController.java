@@ -205,19 +205,5 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
-  @Override
-  public void builder() throws IOException, ServletException
-  {
-    JavascriptUtil.loadBuilderBundle(this.getClientRequest(), this.req);
-
-    render("builder.jsp");
-  }
-  
-  @Override
-  public void failBuilder() throws IOException, ServletException
-  {
-    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
-  }
 
 }

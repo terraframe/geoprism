@@ -325,6 +325,7 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
+  
   public com.runwaysdk.query.SelectableBlob getMapThumbnail()
   {
     return getMapThumbnail(null);
@@ -1724,6 +1725,7 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.query.SelectableBlob)this.get(com.runwaysdk.geodashboard.Dashboard.MAPTHUMBNAIL, alias, displayLabel);
 
   }
+
   public com.runwaysdk.query.SelectableChar getName()
   {
     return getName(null);

@@ -22,15 +22,16 @@
 
 <Server port="8205" shutdown="SHUTDOWN">
 
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <!-- Security listener. Documentation at /docs/config/listeners.html
+  <Listener className="org.apache.catalina.security.SecurityListener" />
+  -->
   <!--APR library loader. Documentation at /docs/apr.html -->
-  <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener" />
-  <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
-  <Listener className="org.apache.catalina.core.JasperListener" />
-  <!-- Prevent memory leaks due to use of particular java/javax APIs -->
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <!-- Prevent memory leaks due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-  <!-- JMX Support for the Tomcat server. Documentation at /docs/non-existent.html -->
-  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <!-- Global JNDI resources Documentation at /docs/jndi-resources-howto.html -->
   <GlobalNamingResources>
@@ -54,7 +55,7 @@
       connectionTimeout="20000"
       emptySessionPath="true"
       keyAlias="tomcat"
-      keystoreFile="/usr/share/tomcat6/conf/geodashboard.ks"
+      keystoreFile="/usr/share/tomcat8/conf/geodashboard.ks"
       keystorePass="2v8hVW2rPFncN6m"
       port="8443"
       redirectPort="8443" 
@@ -83,8 +84,16 @@
       <!-- The request dumper valve dumps useful debugging information about the request and response data received and sent by Tomcat. Documentation at: /docs/config/valve.html -->
       <!-- <Valve className="org.apache.catalina.valves.RequestDumperValve"/> -->
 
-      <!-- This Realm uses the UserDatabase configured in the global JNDI resources under the key "UserDatabase". Any edits that are performed against this UserDatabase are immediately available for use by the Realm. -->
-      <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
+      <!-- Use the LockOutRealm to prevent attempts to guess user passwords
+           via a brute-force attack -->
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <!-- This Realm uses the UserDatabase configured in the global JNDI
+             resources under the key "UserDatabase".  Any edits
+             that are performed against this UserDatabase are immediately
+             available for use by the Realm.  -->
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
 
       <!-- Define the default virtual host Note: XML Schema validation will not work with Xerces 2.2. -->
       <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">

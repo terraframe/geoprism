@@ -18,18 +18,10 @@
  */
 package com.runwaysdk.geodashboard;
 
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
@@ -84,61 +76,5 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       iterator.close();
     }
 
-  }
-
-  public static MappableClass[] getAll()
-  {
-    MappableClassQuery query = new MappableClassQuery(new QueryFactory());
-    query.ORDER_BY_ASC(query.getWrappedMdClass().getDisplayLabel().localize());
-
-    OIterator<? extends MappableClass> iterator = query.getIterator();
-
-    try
-    {
-      List<? extends MappableClass> classes = iterator.getAll();
-
-      return classes.toArray(new MappableClass[classes.size()]);
-    }
-    finally
-    {
-      iterator.close();
-    }
-  }
-
-  public JSONObject toJSON() throws JSONException
-  {
-    MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(this.getWrappedMdClassId());
-    String label = mdClass.getDisplayLabel(Session.getCurrentLocale());
-
-    JSONObject object = new JSONObject();
-    object.put("label", label);
-    object.put("id", this.getId());
-    object.put("type", mdClass.getKey());
-    object.put("selected", false);
-    object.put("attributes", this.getAttributeJSON(mdClass));
-
-    return object;
-  }
-
-  private JSONArray getAttributeJSON(MdClassDAOIF mdClass) throws JSONException
-  {
-    JSONArray array = new JSONArray();
-
-    List<? extends MdAttributeDAOIF> mdAttributes = mdClass.getAllDefinedMdAttributes();
-
-    for (MdAttributeDAOIF mdAttribute : mdAttributes)
-    {
-      if (!mdAttribute.isSystem())
-      {
-        JSONObject object = new JSONObject();
-        object.put("label", mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
-        object.put("id", mdAttribute.getId());
-        object.put("selected", false);
-
-        array.put(object);
-      }
-    }
-
-    return array;
   }
 }

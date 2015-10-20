@@ -92,7 +92,6 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
-import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
@@ -114,19 +113,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public Dashboard()
   {
     super();
-  }
-
-  @Override
-  protected String buildKey()
-  {
-    String name = this.getName();
-
-    if (name != null && name.length() > 0)
-    {
-      return name;
-    }
-
-    return super.buildKey();
   }
 
   public static DashboardQuery getSortedDashboards()
@@ -1060,75 +1046,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       iterator.close();
     }
-  }
-
-  @Override
-  public String getJSON()
-  {
-    try
-    {
-      return this.toJSON().toString();
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-  }
-
-  public JSONObject toJSON() throws JSONException
-  {
-    JSONObject object = new JSONObject();
-
-    object.put("name", this.getName());
-    object.put("label", this.getDisplayLabel().getValue());
-    object.put("removable", this.getRemovable());
-    object.put("countries", this.getCountiesJSON());
-    object.put("classes", this.getMappableClassJSON());
-
-    return object;
-  }
-
-  private JSONArray getMappableClassJSON() throws JSONException
-  {
-    JSONArray array = new JSONArray();
-
-    MappableClass[] mClasses = MappableClass.getAll();
-
-    for (MappableClass mClass : mClasses)
-    {
-      array.put(mClass.toJSON());
-    }
-    return array;
-  }
-
-  private JSONArray getCountiesJSON() throws JSONException
-  {
-    JSONArray countries = new JSONArray();
-    GeoEntity country = this.getCountry();
-
-    OIterator<Term> it = GeoEntity.getRoot().getDirectDescendants(LocatedIn.CLASS);
-
-    try
-    {
-      while (it.hasNext())
-      {
-        GeoEntity entity = (GeoEntity) it.next();
-        boolean selected = country != null && country.getId().equals(entity.getId());
-
-        JSONObject object = new JSONObject();
-        object.put("displayLabel", entity.getDisplayLabel().getValue());
-        object.put("value", entity.getId());
-        object.put("checked", selected);
-
-        countries.put(object);
-      }
-    }
-    finally
-    {
-      it.close();
-    }
-
-    return countries;
   }
   
   @Override

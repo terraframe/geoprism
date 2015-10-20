@@ -18,16 +18,14 @@
 # License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 #
 
+export TOMCAT_HOME=/usr/share/tomcat8
 
 # This script is run by the AWS Elastic Beanstalk installer and it runs after tomcat is installed.
 
 # Copy geoserver to the webapps
-mv /usr/share/tomcat6/conf/geoserver.war /usr/share/tomcat6/webapps/geoserver.war
+mv $TOMCAT_HOME/conf/geoserver.war $TOMCAT_HOME/webapps/geoserver.war
 
 # Make vault directory
-mkdir /usr/share/tomcat6/vault
-chmod 700 /usr/share/tomcat6/vault
-chown tomcat:tomcat /usr/share/tomcat6/vault
-
-# Application context
-# mv /usr/share/tomcat6/webapps/ROOT /usr/share/tomcat6/webapps/e3rrl
+mkdir $TOMCAT_HOME/vault
+chmod 700 $TOMCAT_HOME/vault
+chown tomcat:tomcat $TOMCAT_HOME/vault
