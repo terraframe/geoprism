@@ -141,17 +141,61 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
     {
       DashboardThematicStyle tSource = (DashboardThematicStyle) source;
 
+      // Bubble
       this.setBubbleContinuousSize(tSource.getBubbleContinuousSize());
+      this.setBubbleFill(tSource.getBubbleFill());
       this.setBubbleMaxSize(tSource.getBubbleMaxSize());
       this.setBubbleMinSize(tSource.getBubbleMinSize());
-//      this.setPointRadius(tSource.getPointRadius());
-      this.setBasicPointSize(tSource.getBasicPointSize());
+      this.setBubbleOpacity(tSource.getBubbleOpacity());
+      this.setBubbleRotation(tSource.getBubbleRotation());
+      this.setBubbleSize(tSource.getBubbleSize());
+      this.setBubbleStroke(tSource.getBubbleStroke());
+      this.setBubbleStrokeOpacity(tSource.getBubbleStrokeOpacity());
+      this.setBubbleStrokeWidth(tSource.getBubbleStrokeWidth());
+      this.setBubbleWellKnownName(tSource.getBubbleWellKnownName());
+      
+      // Category Point
+      this.setCategoryPointFillOpacity(tSource.getCategoryPointFillOpacity());
+      this.setCategoryPointSize(tSource.getCategoryPointSize());
+      this.setCategoryPointStroke(tSource.getCategoryPointStroke());
+      this.setCategoryPointStrokeOpacity(tSource.getCategoryPointStrokeOpacity());
+      this.setCategoryPointStrokeWidth(tSource.getCategoryPointStrokeWidth());
+      this.setCategoryPointStyles(tSource.getCategoryPointStyles());
+      this.setCategoryPointWellKnownName(tSource.getCategoryPointWellKnownName());
+      
+      // Category Polygon
+      this.setCategoryPolygonFillOpacity(tSource.getCategoryPolygonFillOpacity());
+      this.setCategoryPolygonStroke(tSource.getCategoryPolygonStroke());
+      this.setCategoryPolygonStrokeOpacity(tSource.getCategoryPolygonStrokeOpacity());
+      this.setCategoryPolygonStrokeWidth(tSource.getCategoryPolygonStrokeWidth());
+      this.setCategoryPolygonStyles(tSource.getCategoryPolygonStyles());
+      
+      // Gradient Point
+      this.setGradientPointSize(tSource.getGradientPointSize());
+      this.setGradientPointWellKnownName(tSource.getGradientPointWellKnownName());
+      this.setGradientPointFillOpacity(tSource.getGradientPointFillOpacity());
+      this.setGradientPointMaxFill(tSource.getGradientPointMaxFill());
+      this.setGradientPointMinFill(tSource.getGradientPointMinFill());
+      this.setGradientPointStroke(tSource.getGradientPointStroke());
+      this.setGradientPointStrokeOpacity(tSource.getGradientPointStrokeOpacity());
+      this.setGradientPointStrokeWidth(tSource.getGradientPointStrokeWidth());
+      
+      // Gradient Polygon
+      this.setGradientPolygonFillOpacity(tSource.getGradientPolygonFillOpacity());
+      this.setGradientPolygonStroke(tSource.getGradientPolygonStroke());
       this.setGradientPolygonMaxFill(tSource.getGradientPolygonMaxFill());
       this.setGradientPolygonMinFill(tSource.getGradientPolygonMinFill());
+      this.setGradientPolygonStrokeOpacity(tSource.getGradientPolygonStrokeOpacity());
+      this.setGradientPolygonStrokeWidth(tSource.getGradientPolygonStrokeWidth());
+      
+      //this.setPointRadius(tSource.getPointRadius());
+      this.setBasicPointSize(tSource.getBasicPointSize());
+    
+      // Secondary attributes
       this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());
       this.setSecondaryAttribute(tSource.getSecondaryAttribute());
       this.setSecondaryCategories(tSource.getSecondaryCategories());
-      this.setCategoryPolygonStyles(tSource.getCategoryPolygonStyles());
+      
       this.setStyleCondition(tSource.getStyleCondition());
     }
   }
