@@ -365,6 +365,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       condition.clone(clone);
     }
+    
+    // Clone the map thumbnail
+    clone.setMapThumbnail(this.getMapThumbnail());
 
     return clone;
   }
