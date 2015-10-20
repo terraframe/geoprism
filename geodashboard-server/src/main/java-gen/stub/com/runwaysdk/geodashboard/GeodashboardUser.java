@@ -31,6 +31,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
@@ -147,7 +148,14 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
   public static GeodashboardUser getCurrentUser()
   {
-    return GeodashboardUser.get(Session.getCurrentSession().getUser().getId());
+    SessionIF session = Session.getCurrentSession();
+
+    if (session != null)
+    {
+      return GeodashboardUser.get(session.getUser().getId());
+    }
+
+    return null;
   }
 
   public static Boolean isRoleMemeber(String roles)

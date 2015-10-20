@@ -23,7 +23,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -364,6 +363,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     for (DashboardCondition condition : conditions)
     {
       condition.clone(clone);
+    }
+
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    if (user != null)
+    {
+      RoleDAO roleDAO = RoleDAO.get(clone.getDashboardRoleId()).getBusinessDAO();
+      roleDAO.assignMember(UserDAO.get(user.getId()));
     }
 
     return clone;
@@ -1047,7 +1054,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       iterator.close();
     }
   }
-  
+
   @Override
   @Transaction
   public void generateThumbnailImage()
@@ -1063,13 +1070,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Double right;
     Double left;
     JSONObject restructuredBounds = new JSONObject();
-    
+
     DashboardMap dashMap = this.getMap();
-    
+
     // Ordering the layers from the default map
     DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
     JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .5);
-    
+
     // Get bounds of the map
     try
     {
@@ -1077,7 +1084,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       bottom = Double.parseDouble(mapBoundsArr.getString(1));
       right = Double.parseDouble(mapBoundsArr.getString(2));
       top = Double.parseDouble(mapBoundsArr.getString(3));
-      
+
       restructuredBounds.put("left", left);
       restructuredBounds.put("bottom", bottom);
       restructuredBounds.put("right", right);
@@ -1088,10 +1095,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       String error = "Could not parse map bounds.";
       throw new ProgrammingErrorException(error, e);
     }
-    
+
     int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
     int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
-    
+
     try
     {
       base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -1101,10 +1108,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       mapBaseGraphic.setColor(Color.white);
       mapBaseGraphic.fillRect(0, 0, width, height);
       mapBaseGraphic.drawImage(base, 0, 0, null);
-      
+
       // Get base map
       String activeBaseMap = dashMap.getActiveBaseMap();
-      if(activeBaseMap.length() > 0)
+      if (activeBaseMap.length() > 0)
       {
         String baseType = null;
         try
@@ -1117,18 +1124,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
           String error = "Could not parse active base map JSON.";
           throw new ProgrammingErrorException(error, e);
         }
-        
-        if(baseType.length() > 0)
+
+        if (baseType.length() > 0)
         {
           BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
-          
-          if(baseMapImage != null)
+
+          if (baseMapImage != null)
           {
             mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
           }
         }
       }
-      
+
       // Add layers to the base canvas
       BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
 
@@ -1137,8 +1144,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
 
       mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
-      
-      
+
       try
       {
         resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
@@ -1159,11 +1165,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         outStream.flush();
         byte[] imageInByte = outStream.toByteArray();
         outStream.close();
-        
+
         this.lock();
         this.setMapThumbnail(imageInByte);
         this.unlock();
-        
+
       }
       catch (IOException e)
       {
@@ -1192,7 +1198,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
     }
   }
-  
+
   @Override
   @Transaction
   public void setBaseLayerState(String baseLayerState)
