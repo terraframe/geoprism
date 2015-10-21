@@ -23,16 +23,21 @@ import com.runwaysdk.generation.loader.Reloadable;
 public class StrategyContextListener implements ServerContextListener, Reloadable
 {
   @Override
+  public void initialize()
+  {
+  }
+
+  @Override
   public void startup()
   {
-//    StrategyInitializer.startUp();
-//    Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
+    // StrategyInitializer.startUp();
+    // Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
   }
 
   @Override
   public void shutdown()
   {
-//    StrategyInitializer.shutDown();
-//    Classifier.getStrategy().shutdown();
+    // StrategyInitializer.shutDown();
+    // Classifier.getStrategy().shutdown();
   }
 }

@@ -23,6 +23,10 @@ import com.runwaysdk.system.scheduler.SchedulerManager;
 
 public class SchedulerContextListener implements ServerContextListener, Reloadable
 {
+  @Override
+  public void initialize()
+  {
+  }
 
   @Override
   public void startup()

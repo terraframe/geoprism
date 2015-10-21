@@ -24,6 +24,11 @@ import com.runwaysdk.geodashboard.report.CacheDocumentManager;
 public class CacheDocumentManagerContextListener implements Reloadable, ServerContextListener
 {
   @Override
+  public void initialize()
+  {
+  }
+
+  @Override
   public void startup()
   {
     CacheDocumentManager.start();

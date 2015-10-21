@@ -19,28 +19,72 @@
 package com.runwaysdk.geodashboard.context;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
+import com.runwaysdk.dataaccess.InstallerCP;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.io.Versioning;
+import com.runwaysdk.dataaccess.io.XMLImporter;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.service.GeodashboardImportPlugin;
+import com.runwaysdk.util.ServerInitializerFacade;
 
-public class PatchingContextListener implements Reloadable, ServerContextListener
+public abstract class PatchingContextListener implements Reloadable, ServerContextListener
 {
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
+
+  @Override
+  public void initialize()
+  {
+    LocalProperties.setSkipCodeGenAndCompile(true);
+
+    if (!Database.tableExists("md_class"))
+    {
+      this.initializeDatabase();
+    }
+  }
+
+  private void initializeDatabase()
+  {
+    System.out.println("Initializing the database");
+
+    try
+    {
+      InputStream schema = this.getClass().getResourceAsStream("/com/runwaysdk/resources/xsd/schema.xsd");
+
+      InputStream[] xmlFilesIS = InstallerCP.buildMetadataInputStreamList();
+
+      XMLImporter x = new XMLImporter(schema, xmlFilesIS);
+      x.toDatabase();
+
+      ServerInitializerFacade.rebuild();
+    }
+    catch (IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
 
   @Override
   public void startup()
   {
     SAXSourceParser.registerPlugin(new GeodashboardImportPlugin());
 
-    LocalProperties.setSkipCodeGenAndCompile(true);
+    this.patchMetadata();
+  }
 
+  @Transaction
+  protected void patchMetadata()
+  {
     File metadata = new File(DeployProperties.getDeployBin() + "/metadata");
 
     if (metadata.exists() && metadata.isDirectory())

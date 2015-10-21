@@ -34,12 +34,42 @@ public class ServerInitializer implements Reloadable
 
   private static final Log log = LogFactory.getLog(ServerInitializer.class);
 
-  @Request
   public static void initialize()
   {
     ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
     List<ServerContextListenerInfo> infos = builder.read();
 
+    initialize(infos);
+    startup(infos);
+  }
+
+  private static void initialize(List<ServerContextListenerInfo> infos)
+  {
+    for (ServerContextListenerInfo info : infos)
+    {
+      try
+      {
+
+        Class<?> clazz = LoaderDecorator.load(info.getClassName());
+        Object newInstance = clazz.newInstance();
+
+        ServerContextListener listener = (ServerContextListener) newInstance;
+        listener.initialize();
+
+        log.debug("Initialized: " + info.getClassName() + ".setup();");
+      }
+      catch (Exception e)
+      {
+        log.error(e);
+
+        throw new ProgrammingErrorException("Unable to startup the server context listener [" + info.getClassName() + "]", e);
+      }
+    }
+  }
+
+  @Request
+  private static void startup(List<ServerContextListenerInfo> infos)
+  {
     for (ServerContextListenerInfo info : infos)
     {
       try
@@ -88,7 +118,7 @@ public class ServerInitializer implements Reloadable
   {
     ServerContextListenerDocumentBuilder builder = new ServerContextListenerDocumentBuilder();
     List<ServerContextListenerInfo> infos = builder.read();
-    
+
     Collections.reverse(infos);
 
     for (ServerContextListenerInfo info : infos)
