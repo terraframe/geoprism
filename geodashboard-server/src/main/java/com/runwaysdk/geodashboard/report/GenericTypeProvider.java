@@ -34,7 +34,6 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
@@ -56,7 +55,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
   @Override
   public List<PairView> getSupportedQueryDescriptors()
   {
-    List<MdClass> mdClasses = MetadataWrapper.getMdClassesWithGeoNodes();
+    List<MdClass> mdClasses = GenericTypeProviderCache.getInstance().getMdClassesWithGeoNodes();
 
     List<PairView> list = new LinkedList<PairView>();
 
@@ -78,7 +77,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
      * We are making the assumption that the queryId is type
      */
 
-    return MetadataWrapper.getGeoNodes(queryId);
+    return GenericTypeProviderCache.getInstance().getGeoNodes(queryId);
   }
 
   @Override

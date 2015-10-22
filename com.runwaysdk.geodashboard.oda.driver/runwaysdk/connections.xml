@@ -24,18 +24,18 @@
   <!-- Only the default connection is used. -->
 
 
-  <!--
 	<connection>
 	    <label>default</label>
 	    <type>Java</type>
 	    <address>localhost</address>
 	</connection>
-  -->
 
+  <!--
 	<connection>
 	    <label>default</label>
 	    <type>RMI</type>
 	    <address>//localhost:1199/</address>
 	</connection>
+  -->
 	
 </Runway>

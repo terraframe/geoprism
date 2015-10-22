@@ -688,14 +688,14 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       try
       {
         // Release the request connection
-        requestState.returnDatabaseConnectionToPool();
+//        requestState.returnDatabaseConnectionToPool();
 
         task.run(writer);
       }
       finally
       {
         // Reconnect the request connection
-        requestState.getNewDatabaseConnectionFromPool();
+//        requestState.getNewDatabaseConnectionFromPool();
       }
     }
     finally

@@ -55,8 +55,6 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
 
   private void initializeDatabase()
   {
-    System.out.println("Initializing the database");
-
     try
     {
       InputStream schema = this.getClass().getResourceAsStream("/com/runwaysdk/resources/xsd/schema.xsd");

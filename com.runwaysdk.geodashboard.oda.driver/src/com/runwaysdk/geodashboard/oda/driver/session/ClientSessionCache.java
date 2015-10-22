@@ -75,12 +75,7 @@ public class ClientSessionCache
 
     if (!getInstance().has(key))
     {
-      long time = System.currentTimeMillis();
-      String label = "BIRT-RMI-" + time;
-
-      CommonsConfigurationResolver.setIncludeRuntimeProperties(false);
-
-      ClientRequestManager.addConnection(new ConnectionLabel(label, Type.RMI, url));
+      String label = getConnectionLabel(url);
 
       ClientSession session = ClientSession.createUserSession(label, username, password, new Locale[] { Locale.US });
 
@@ -96,9 +91,7 @@ public class ClientSessionCache
 
     if (!getInstance().has(key))
     {
-      long time = System.currentTimeMillis();
-      String label = "BIRT-RMI-" + time;
-      ClientRequestManager.addConnection(new ConnectionLabel(label, Type.RMI, url));
+      String label = getConnectionLabel(url);
 
       ClientSession session = ClientSession.getExistingSession(label, sessionId, new Locale[] { Locale.US });
 
@@ -113,6 +106,26 @@ public class ClientSessionCache
     if (getInstance().has(session.getKey()))
     {
       getInstance().remove(session.getKey());
+    }
+  }
+
+  private static String getConnectionLabel(String url)
+  {
+    String prop = System.getProperty("birt-server");
+
+    if (prop != null && prop.equals("true"))
+    {
+      return "default";
+    }
+    else
+    {
+      long time = System.currentTimeMillis();
+      String label = "BIRT-RMI-" + time;
+
+      CommonsConfigurationResolver.setIncludeRuntimeProperties(false);
+
+      ClientRequestManager.addConnection(new ConnectionLabel(label, Type.RMI, url));
+      return label;
     }
   }
 }
