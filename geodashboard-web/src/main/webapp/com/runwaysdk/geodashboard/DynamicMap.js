@@ -919,7 +919,7 @@
                 parentLayer.setLegendYPosition(y);
                 parentLayer.setGroupedInLegend(groupedInLegend);
                 
-                if(this.canEditDashboards()){
+                if(that.canEditDashboards()){
 	                var clientRequest = new Mojo.ClientRequest({
 	                  onSuccess : function() {
 	                    // No action needed
