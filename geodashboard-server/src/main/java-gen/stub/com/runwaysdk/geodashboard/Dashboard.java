@@ -21,8 +21,10 @@ package com.runwaysdk.geodashboard;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -299,6 +301,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       map.setName(this.getDisplayLabel().getValue());
       map.setDashboard(this);
       map.apply();
+
+      DashboardState state = new DashboardState();
+      state.setDashboard(this);
+      state.apply();
     }
   }
 
@@ -357,13 +363,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       layer.clone(map);
     }
 
-    // Clone the global conditions
-    DashboardCondition[] conditions = this.getConditions((GeodashboardUser) null);
-
-    for (DashboardCondition condition : conditions)
-    {
-      condition.clone(clone);
-    }
+    // Clone the global state
+    DashboardState state = DashboardState.getDashboardState(this, null);
+    state.clone(this);
 
     GeodashboardUser user = GeodashboardUser.getCurrentUser();
 
@@ -372,9 +374,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       RoleDAO roleDAO = RoleDAO.get(clone.getDashboardRoleId()).getBusinessDAO();
       roleDAO.assignMember(UserDAO.get(user.getId()));
     }
-    
-    // Clone the map thumbnail
-    clone.setMapThumbnail(this.getMapThumbnail());
 
     return clone;
   }
@@ -677,52 +676,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public DashboardCondition[] getConditions()
   {
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    DashboardState state = this.getDashboardState();
+    String json = state.getConditions();
 
-    DashboardCondition[] conditions = this.getConditions(user);
-
-    // There are no user specific conditions, return the global conditions
-    if (conditions.length == 0)
-    {
-      conditions = this.getConditions((GeodashboardUser) null);
-    }
+    DashboardCondition[] conditions = DashboardCondition.deserialize(json);
 
     return conditions;
-  }
-
-  private DashboardCondition[] getConditions(GeodashboardUser user)
-  {
-    DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
-    query.WHERE(query.getDashboard().EQ(this));
-
-    if (user != null)
-    {
-      query.AND(query.getGeodashboardUser().EQ(user));
-    }
-    else
-    {
-      query.AND(query.getGeodashboardUser().EQ((String) null));
-    }
-
-    OIterator<? extends DashboardCondition> iterator = null;
-
-    try
-    {
-      iterator = query.getIterator();
-
-      List<? extends DashboardCondition> list = iterator.getAll();
-
-      DashboardCondition[] conditions = list.toArray(new DashboardCondition[list.size()]);
-
-      return conditions;
-    }
-    finally
-    {
-      if (iterator != null)
-      {
-        iterator.close();
-      }
-    }
   }
 
   @Override
@@ -734,56 +693,65 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
      */
     GeodashboardUser user = GeodashboardUser.getCurrentUser();
 
-    DashboardCondition[] existing = this.getConditions(user);
+    byte[] image = this.generateThumbnail();
 
-    for (DashboardCondition condition : existing)
-    {
-      condition.delete();
-    }
-
-    for (DashboardCondition condition : conditions)
-    {
-      condition.setDashboard(this);
-      condition.setGeodashboardUser(user);
-      condition.apply();
-    }
-  }
-
-  @Override
-  @Transaction
-  public void applyGlobalConditions(DashboardCondition[] conditions)
-  {
-    /*
-     * First delete any conditions which exist
-     */
-    DashboardCondition[] existing = this.getConditions((GeodashboardUser) null);
-
-    for (DashboardCondition condition : existing)
-    {
-      condition.delete();
-    }
-
-    for (DashboardCondition condition : conditions)
-    {
-      condition.setDashboard(this);
-      condition.setGeodashboardUser(null);
-      condition.apply();
-    }
-  }
-
-  @Override
-  public String getConditionsJSON()
-  {
     JSONArray array = new JSONArray();
-
-    DashboardCondition[] conditions = this.getConditions();
 
     for (DashboardCondition condition : conditions)
     {
       array.put(condition.getJSON());
     }
 
-    return array.toString();
+    DashboardState state = DashboardState.getDashboardState(this, user);
+
+    if (state == null)
+    {
+      state = new DashboardState();
+      state.setDashboard(this);
+      state.setGeodashboardUser(user);
+    }
+    else
+    {
+      state.lock();
+    }
+
+    state.setConditions(array.toString());
+    state.setMapThumbnail(image);
+    state.apply();
+  }
+
+  @Override
+  @Transaction
+  public void applyGlobalConditions(DashboardCondition[] conditions)
+  {
+    byte[] image = this.generateThumbnail();
+
+    JSONArray array = new JSONArray();
+
+    for (DashboardCondition condition : conditions)
+    {
+      array.put(condition.getJSON());
+    }
+
+    DashboardState state = DashboardState.getDashboardState(this, null);
+    state.lock();
+    state.setConditions(array.toString());
+    state.setMapThumbnail(image);
+    state.apply();
+  }
+
+  @Override
+  public String getConditionsJSON()
+  {
+    DashboardState state = this.getDashboardState();
+    String conditions = state.getConditions();
+
+    if (conditions != null && conditions.length() > 0)
+    {
+      return conditions;
+    }
+
+    return "''";
   }
 
   @Override
@@ -1059,8 +1027,47 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
+  public InputStream getThumbnailStream()
+  {
+    DashboardState state = this.getDashboardState();
+    byte[] buffer = state.getMapThumbnail();
+
+    return new ByteArrayInputStream(buffer);
+  }
+
+  private DashboardState getDashboardState()
+  {
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    DashboardState state = null;
+
+    if (user != null)
+    {
+      state = DashboardState.getDashboardState(this, user);
+    }
+
+    if (state == null)
+    {
+      state = DashboardState.getDashboardState(this, null);
+    }
+
+    return state;
+  }
+
+  @Override
   @Transaction
   public void generateThumbnailImage()
+  {
+//    byte[] image = this.generateThumbnail();
+//
+//    DashboardState state = DashboardState.getDashboardState(this, null);
+//    state.lock();
+//    state.setMapThumbnail(image);
+//    state.apply();
+  }
+
+  @Transaction
+  public byte[] generateThumbnail()
   {
     String outFileFormat = "png";
     BufferedImage base = null;
@@ -1083,10 +1090,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // Get bounds of the map
     try
     {
-      left = Double.parseDouble(mapBoundsArr.getString(0));
-      bottom = Double.parseDouble(mapBoundsArr.getString(1));
-      right = Double.parseDouble(mapBoundsArr.getString(2));
-      top = Double.parseDouble(mapBoundsArr.getString(3));
+      left = mapBoundsArr.getDouble(0);
+      bottom = mapBoundsArr.getDouble(1);
+      right = mapBoundsArr.getDouble(2);
+      top = mapBoundsArr.getDouble(3);
 
       restructuredBounds.put("left", left);
       restructuredBounds.put("bottom", bottom);
@@ -1102,104 +1109,94 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
     int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
 
-    try
+    base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+    // Create the base canvas that all other map elements will be draped on top of
+    mapBaseGraphic = base.getGraphics();
+    mapBaseGraphic.setColor(Color.white);
+    mapBaseGraphic.fillRect(0, 0, width, height);
+    mapBaseGraphic.drawImage(base, 0, 0, null);
+
+    // Get base map
+    String activeBaseMap = dashMap.getActiveBaseMap();
+    if (activeBaseMap.length() > 0)
     {
-      base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-      // Create the base canvas that all other map elements will be draped on top of
-      mapBaseGraphic = base.getGraphics();
-      mapBaseGraphic.setColor(Color.white);
-      mapBaseGraphic.fillRect(0, 0, width, height);
-      mapBaseGraphic.drawImage(base, 0, 0, null);
-
-      // Get base map
-      String activeBaseMap = dashMap.getActiveBaseMap();
-      if (activeBaseMap.length() > 0)
-      {
-        String baseType = null;
-        try
-        {
-          JSONObject activeBaseObj = new JSONObject(activeBaseMap);
-          baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
-        }
-        catch (JSONException e)
-        {
-          String error = "Could not parse active base map JSON.";
-          throw new ProgrammingErrorException(error, e);
-        }
-
-        if (baseType.length() > 0)
-        {
-          BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
-
-          if (baseMapImage != null)
-          {
-            mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
-          }
-        }
-      }
-
-      // Add layers to the base canvas
-      BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
-
-      // Offset the layerCanvas so that it is center
-      int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
-      int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
-
-      mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
-
+      String baseType = null;
       try
       {
-        resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
+        JSONObject activeBaseObj = new JSONObject(activeBaseMap);
+        baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
       }
-      catch (IOException e)
+      catch (JSONException e)
       {
-        String error = "Could not resize map image to thumbnail size.";
+        String error = "Could not parse active base map JSON.";
         throw new ProgrammingErrorException(error, e);
       }
+
+      if (baseType.length() > 0)
+      {
+        BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
+
+        if (baseMapImage != null)
+        {
+          mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
+        }
+      }
+    }
+
+    // Add layers to the base canvas
+    BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
+
+    // Offset the layerCanvas so that it is center
+    int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
+    int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
+
+    mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
+
+    try
+    {
+      resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
+    }
+    catch (IOException e)
+    {
+      String error = "Could not resize map image to thumbnail size.";
+      throw new ProgrammingErrorException(error, e);
+    }
+
+    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+    try
+    {
+      ImageIO.write(resizedImage, outFileFormat, outStream);
+    }
+    catch (IOException e)
+    {
+      String error = "Could not write map image to the output stream.";
+      throw new ProgrammingErrorException(error, e);
     }
     finally
     {
-      ByteArrayOutputStream outStream = null;
-      try
+      if (outStream != null)
       {
-        outStream = new ByteArrayOutputStream();
-        ImageIO.write(resizedImage, outFileFormat, outStream);
-        outStream.flush();
-        byte[] imageInByte = outStream.toByteArray();
-        outStream.close();
-
-        this.lock();
-        this.setMapThumbnail(imageInByte);
-        this.unlock();
-
-      }
-      catch (IOException e)
-      {
-        String error = "Could not write map image to the output stream.";
-        throw new ProgrammingErrorException(error, e);
-      }
-      finally
-      {
-        if (outStream != null)
+        try
         {
-          try
-          {
-            outStream.close();
-          }
-          catch (IOException e)
-          {
-            String error = "Could not close stream.";
-            throw new ProgrammingErrorException(error, e);
-          }
+          outStream.flush();
+          outStream.close();
+        }
+        catch (IOException e)
+        {
+          String error = "Could not close stream.";
+          throw new ProgrammingErrorException(error, e);
         }
       }
-
-      if (mapBaseGraphic != null)
-      {
-        mapBaseGraphic.dispose();
-      }
     }
+
+    if (mapBaseGraphic != null)
+    {
+      mapBaseGraphic.dispose();
+    }
+
+    return outStream.toByteArray();
   }
 
   @Override

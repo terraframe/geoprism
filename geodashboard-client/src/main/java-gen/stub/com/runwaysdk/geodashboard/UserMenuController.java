@@ -19,100 +19,116 @@
 package com.runwaysdk.geodashboard;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.geodashboard.DashboardDTO;
-import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
-import com.runwaysdk.system.RolesDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
-
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.system.RolesDTO;
+import com.runwaysdk.util.FileIO;
 
 public class UserMenuController extends UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR   = "/WEB-INF/";
-  
-  public static final String LAYOUT  = "WEB-INF/templates/basicLayout.jsp";
-  
-  public static final String MENU  = "com/runwaysdk/geodashboard/userMenu/userMenu.jsp";
-  
-  public static final String DASHBOARDS  = "com/runwaysdk/geodashboard/userMenu/userDashboards.jsp";
-  
+  public static final String JSP_DIR    = "/WEB-INF/";
+
+  public static final String LAYOUT     = "WEB-INF/templates/basicLayout.jsp";
+
+  public static final String MENU       = "com/runwaysdk/geodashboard/userMenu/userMenu.jsp";
+
+  public static final String DASHBOARDS = "com/runwaysdk/geodashboard/userMenu/userDashboards.jsp";
+
   public UserMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
-  
+
   @Override
   public void dashboards() throws IOException, ServletException
   {
-    
+
     ClientRequestIF clientRequest = super.getClientRequest();
-    
+
     DashboardQueryDTO dashboardsQ = DashboardDTO.getSortedDashboards(clientRequest);
-    List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet(); 
-    
+    List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet();
+
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     this.req.setAttribute("dashboards", dashboards);
     this.req.setAttribute("isAdmin", this.userIsAdmin());
-    
+
     render(DASHBOARDS);
   }
-  
+
   /**
-   * Gets the dashboard thumbnail for display in the app. 
+   * Gets the dashboard thumbnail for display in the app.
    * 
-   * @dashboardId 
+   * @dashboardId
    */
   @Override
   public void getDashboardMapThumbnail(String dashboardId)
   {
     ClientRequestIF clientRequest = super.getClientRequest();
-    
+
     DashboardDTO db = DashboardDTO.get(clientRequest, dashboardId);
-    
-    byte[] imageData = db.getMapThumbnail();
-    resp.setContentType("image/png");
+
     try
     {
-      resp.getOutputStream().write(imageData);
-      resp.getOutputStream().flush();
-      resp.getOutputStream().close();
+      InputStream istream = db.getThumbnailStream();
+
+      try
+      {
+        resp.setContentType("image/png");
+
+        ServletOutputStream ostream = resp.getOutputStream();
+
+        try
+        {
+          FileIO.write(ostream, istream);
+
+          ostream.flush();
+        }
+        finally
+        {
+          ostream.close();
+        }
+      }
+      finally
+      {
+        istream.close();
+      }
     }
     catch (IOException e)
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
-  
+
   @Override
   public void menu() throws IOException, ServletException
   {
-   
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     this.req.setAttribute("isAdmin", this.userIsAdmin());
-    
+
     render(MENU);
   }
-  
-  private boolean userIsAdmin() 
+
+  private boolean userIsAdmin()
   {
     GeodashboardUserDTO currentUser = GeodashboardUserDTO.getCurrentUser(this.getClientRequest());
-    
+
     List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
-    for(RolesDTO role : userRoles)
+    for (RolesDTO role : userRoles)
     {
       Pattern regex = Pattern.compile("\\.(\\S+)");
       Matcher match = regex.matcher(role.getRoleName());
       if (match.find())
       {
-        if(match.group(1).equals("admin.Administrator"))
+        if (match.group(1).equals("admin.Administrator"))
         {
           return true;
         }
@@ -120,5 +136,5 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     }
     return false;
   }
-  
+
 }

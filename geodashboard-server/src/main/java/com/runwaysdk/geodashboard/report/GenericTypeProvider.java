@@ -165,7 +165,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
             label.setUserDefinedDisplayLabel(displayLabel);
 
             vQuery.SELECT(label);
-            vQuery.WHERE(selectableReference.EQ(classifierQuery));
+            vQuery.WHERE(selectableReference.LEFT_JOIN_EQ(classifierQuery));
           }
         }
         else if (mdAttributeConcrete instanceof MdAttributeLocalDAOIF)
