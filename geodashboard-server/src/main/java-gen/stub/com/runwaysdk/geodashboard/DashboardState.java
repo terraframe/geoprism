@@ -51,6 +51,10 @@ public class DashboardState extends DashboardStateBase implements com.runwaysdk.
     {
       query.AND(query.getGeodashboardUser().EQ(user));
     }
+    else
+    {
+      query.AND(query.getGeodashboardUser().EQ((String) null));
+    }
 
     OIterator<? extends DashboardState> it = query.getIterator();
 

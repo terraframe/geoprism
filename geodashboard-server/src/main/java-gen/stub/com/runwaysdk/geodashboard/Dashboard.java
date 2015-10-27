@@ -1058,12 +1058,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Transaction
   public void generateThumbnailImage()
   {
-//    byte[] image = this.generateThumbnail();
-//
-//    DashboardState state = DashboardState.getDashboardState(this, null);
-//    state.lock();
-//    state.setMapThumbnail(image);
-//    state.apply();
+    byte[] image = this.generateThumbnail();
+
+    GeodashboardUser[] users = new GeodashboardUser[] { null, GeodashboardUser.getCurrentUser() };
+
+    for (GeodashboardUser user : users)
+    {
+      DashboardState state = DashboardState.getDashboardState(this, user);
+      state.lock();
+      state.setMapThumbnail(image);
+      state.apply();
+    }
   }
 
   @Transaction
