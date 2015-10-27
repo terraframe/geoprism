@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -472348286)
+@com.runwaysdk.business.ClassSignature(hash = -1620526988)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = -472348286;
+  private static final long serialVersionUID = -1620526988;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -58,7 +58,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String MAPTHUMBNAIL = "mapThumbnail";
   public static java.lang.String NAME = "name";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String REMOVABLE = "removable";
@@ -522,36 +521,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
-  public byte[] getMapThumbnail()
-  {
-    return super.getBlob(MAPTHUMBNAIL);
-  }
-  
-  public void setMapThumbnail(byte[] bytes)
-  {
-    super.setBlob(MAPTHUMBNAIL, bytes);
-  }
-  
-  public boolean isMapThumbnailWritable()
-  {
-    return isWritable(MAPTHUMBNAIL);
-  }
-  
-  public boolean isMapThumbnailReadable()
-  {
-    return isReadable(MAPTHUMBNAIL);
-  }
-  
-  public boolean isMapThumbnailModified()
-  {
-    return isModified(MAPTHUMBNAIL);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeBlobMdDTO getMapThumbnailMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeBlobMdDTO) getAttributeDTO(MAPTHUMBNAIL).getAttributeMdDTO();
-  }
-  
   public String getName()
   {
     return getValue(NAME);
@@ -986,22 +955,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.system.gis.geo.GeoNodeDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final java.lang.String getJSON()
-  {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
-    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final java.lang.String getJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
   public final java.lang.String getMapId()
   {
     String[] _declaredTypes = new String[]{};
@@ -1048,6 +1001,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{mdAttributeId, text, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getTextSuggestions", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.io.InputStream getThumbnailStream()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getThumbnailStream", _declaredTypes);
+    return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.io.InputStream getThumbnailStream(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getThumbnailStream", _declaredTypes);
+    return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.Boolean hasAccess()

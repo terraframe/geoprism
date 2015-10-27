@@ -18,6 +18,11 @@
  */
 package com.runwaysdk.geodashboard.gis.persist.condition;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -91,5 +96,79 @@ public abstract class DashboardCondition extends DashboardConditionBase implemen
   protected void populate(DashboardCondition source)
   {
     this.setGeodashboardUser(source.getGeodashboardUser());
+  }
+
+  public static DashboardCondition[] deserialize(String json)
+  {
+    try
+    {
+      JSONArray criteria = new JSONArray(json);
+
+      List<DashboardCondition> conditions = new LinkedList<DashboardCondition>();
+
+      for (int i = 0; i < criteria.length(); i++)
+      {
+        JSONObject object = criteria.getJSONObject(i);
+        String type = object.getString(TYPE_KEY);
+        String operation = object.getString(OPERATION_KEY);
+        String value = object.getString(VALUE_KEY);
+
+        DashboardCondition condition = null;
+
+        if (type.equals(LocationCondition.CONDITION_TYPE))
+        {
+          condition = new LocationCondition();
+          condition.setValue(LocationCondition.COMPARISONVALUE, value);
+        }
+        else if (type.equals(ClassifierCondition.CONDITION_TYPE))
+        {
+          String mdAttributeId = object.getString(ClassifierCondition.MD_ATTRIBUTE_KEY);
+
+          condition = new ClassifierCondition();
+          condition.setValue(ClassifierCondition.DEFININGMDATTRIBUTE, mdAttributeId);
+          condition.setValue(ClassifierCondition.COMPARISONVALUE, value);
+        }
+        else if (type.equals(DashboardAttributeCondition.CONDITION_TYPE))
+        {
+          String mdAttributeId = object.getString("mdAttribute");
+
+          if (operation.equals(DashboardGreaterThan.OPERATION))
+          {
+            condition = new DashboardGreaterThan();
+          }
+          else if (operation.equals(DashboardGreaterThanOrEqual.OPERATION))
+          {
+            condition = new DashboardGreaterThanOrEqual();
+          }
+          else if (operation.equals(DashboardLessThan.OPERATION))
+          {
+            condition = new DashboardLessThan();
+          }
+          else if (operation.equals(DashboardLessThanOrEqual.OPERATION))
+          {
+            condition = new DashboardLessThanOrEqual();
+          }
+          else if (operation.equals(DashboardNotEqual.OPERATION))
+          {
+            condition = new DashboardNotEqual();
+          }
+          else
+          {
+            condition = new DashboardEqual();
+          }
+
+          condition.setValue(ClassifierCondition.DEFININGMDATTRIBUTE, mdAttributeId);
+          condition.setValue(ClassifierCondition.COMPARISONVALUE, value);
+        }
+
+        conditions.add(condition);
+      }
+
+      return conditions.toArray(new DashboardCondition[conditions.size()]);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 }
