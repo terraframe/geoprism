@@ -26,7 +26,7 @@
 
   <groupId>com.runwaysdk</groupId>
   <artifactId>geodashboard</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.01.0005</version>
   <packaging>pom</packaging>
 
   <name>Geo dashboard</name>
@@ -42,10 +42,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <aspectj.version>1.6.11</aspectj.version>    
-    <aspectj.plugin.version>1.4</aspectj.plugin.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <aspectj.version>1.8.6</aspectj.version>    
+    <aspectj.plugin.version>1.7</aspectj.plugin.version>
     
     <geotools.version>11.0</geotools.version>
   </properties>
@@ -76,7 +76,7 @@
   <build>
     <plugins>
       <!-- Add generated source directories -->
-      <plugin> 
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>1.7</version>
@@ -154,7 +154,6 @@
             <exclude>**/webapp/openlayers/**</exclude>
             <exclude>**/webapp/leaflet_plugins/**</exclude>
             <exclude>**/webapp/jquery/**</exclude>
-            <exclude>**/webapp/jssor-slider/**</exclude>
             <exclude>**/webapp/jquerytree/**</exclude>
             <exclude>**/webapp/jquery-colorpicker/**</exclude>
             <exclude>**/webapp/cldrjs-0.4.0/**</exclude>

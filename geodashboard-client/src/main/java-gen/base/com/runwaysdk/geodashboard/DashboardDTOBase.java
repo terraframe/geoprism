@@ -986,6 +986,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.system.gis.geo.GeoNodeDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public final java.lang.String getJSON()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public final java.lang.String getMapId()
   {
     String[] _declaredTypes = new String[]{};

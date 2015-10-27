@@ -683,19 +683,28 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       task.validateParameters();
       task.setLocale(LocalizationFacade.getLocale());
 
-      RequestState requestState = RequestState.getCurrentRequestState();
+      String prop = System.getProperty("birt-server");
 
-      try
+      if (prop != null && prop.equals("true"))
       {
-        // Release the request connection
-        requestState.returnDatabaseConnectionToPool();
-
         task.run(writer);
       }
-      finally
+      else
       {
-        // Reconnect the request connection
-        requestState.getNewDatabaseConnectionFromPool();
+        RequestState requestState = RequestState.getCurrentRequestState();
+
+        try
+        {
+          // Release the request connection
+          requestState.returnDatabaseConnectionToPool();
+
+          task.run(writer);
+        }
+        finally
+        {
+          // Reconnect the request connection
+          requestState.getNewDatabaseConnectionFromPool();
+        }
       }
     }
     finally

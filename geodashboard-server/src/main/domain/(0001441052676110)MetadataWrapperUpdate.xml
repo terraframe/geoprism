@@ -24,7 +24,7 @@
       <mdBusiness name="com.runwaysdk.geodashboard.MetadataWrapper">
         <create>
           <attributes>
-            <reference name="dashboard" type="com.runwaysdk.geodashboard.Dashboard" label="Dashboard"/>
+            <reference name="dashboard" type="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" required="true"/>
           </attributes>
         </create>
       </mdBusiness>

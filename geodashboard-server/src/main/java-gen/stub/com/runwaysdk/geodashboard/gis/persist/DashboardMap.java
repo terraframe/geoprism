@@ -365,7 +365,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     for (DashboardLayer layer : orderedLayers)
     {
       batch.addLayerToDrop(layer);
-
+      
       this.generateSessionViewName(layer);
 
       layer.publish(batch);

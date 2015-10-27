@@ -23,6 +23,10 @@ import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer;
 
 public class GeoserverContextListener implements Reloadable, ServerContextListener
 {
+  @Override
+  public void initialize()
+  {
+  }
 
   @Override
   public void startup()

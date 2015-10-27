@@ -24,6 +24,11 @@ import com.runwaysdk.generation.loader.Reloadable;
 public class RMIContextListener implements Reloadable, ServerContextListener
 {
   @Override
+  public void initialize()
+  {
+  }
+
+  @Override
   public void startup()
   {
     RemoteAdapterServer.startServer();

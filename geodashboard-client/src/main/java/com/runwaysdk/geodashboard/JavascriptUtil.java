@@ -162,7 +162,7 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
-
+  
   public static void loadSystemBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -173,6 +173,7 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
+
 
   public static void loadUniversalBundle(ClientRequestIF request, HttpServletRequest req)
   {
