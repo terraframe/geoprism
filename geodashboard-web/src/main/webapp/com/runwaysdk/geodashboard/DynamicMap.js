@@ -1423,7 +1423,7 @@
               
               // remove the actual layer from the map
             if(toRemove.wmsLayerObj){
-              this._mapFactory.hideLayer(toRemove.wmsLayerObj);
+              this._mapFactory.removeLayer(toRemove.wmsLayerObj);
             }
             
             // Remove associated legend and legend container
@@ -1439,7 +1439,7 @@
           
               // remove the map layer from the map
             if(toDisable.wmsLayerObj){
-              this._mapFactory.hideLayer(toDisable.wmsLayerObj);
+              this._mapFactory.removeLayer(toDisable.wmsLayerObj);
             }
           
             // change the ui back to disabled
@@ -1492,6 +1492,9 @@
             ids.push(id);
             baseLayers.put(id, b);
             
+            this._mapFactory.addLayer(b, i); 
+            this._mapFactory.hideLayer(b);
+            
             var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
             
             // Assigning better display labels.
@@ -1503,14 +1506,14 @@
             if(activeBase.LAYER_SOURCE_TYPE){
             	if(activeBase.LAYER_SOURCE_TYPE.toLowerCase() === b._gdbcustomtype.toLowerCase()){
             		checkbox.setChecked(checkbox);
-            		this._mapFactory.showLayer(b, 0);
+            		this._mapFactory.showLayer(b);
             	}
             }
             else if(b._gdbisdefault === "true"){
               // If MapConfig spedifies a default this will be chosen if no other active base layers are persisted
               // to the database.
               checkbox.setChecked(checkbox);
-              this._mapFactory.showLayer(b, 0);
+              this._mapFactory.showLayer(b);
               this.setCurrentBaseMap({"LAYER_SOURCE_TYPE" : b._gdbcustomtype});
               
               //////////////////////////////
@@ -1533,6 +1536,8 @@
                 ///////////////////////////////
                 ///////////////////////////////
             }
+
+            
             checkbox.addOnCheckListener(function(event){
               target = event.getCheckBox();   
               that._toggleBaseLayer(target);
@@ -1621,7 +1626,7 @@
         
         if (checked) {
           layer.setLayerIsActive(true);
-          this._addUserLayersToMap(true);       
+          this._mapFactory.showLayer(layer.wmsLayerObj, null)
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.show()
@@ -1652,7 +1657,7 @@
         
         if (checked) {
           layer.setLayerIsActive(true);
-          this._addUserLayersToMap(true);       
+          this._mapFactory.showLayer(layer.wmsLayerObj); 
           if(layer.getDisplayInLegend())
           {
             layer.layerLegend.show()

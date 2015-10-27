@@ -348,19 +348,11 @@
          * @stackIndex - integer value z-index of the layer 
          * 
          * <public> - called externally
-         * 
-         * TODO: bubble chopping is worse with openlayers. fix it
+      	 *
          */
         showLayer : function(layer, stackIndex) {
-          var map = this.getMap();
-          
-          if(stackIndex !== null && stackIndex >= 0){
-            map.getLayers().insertAt(stackIndex, layer);
-          }
-          else{
-            // will add the layer to the top of all other layers
-            map.addLayer(layer);
-          }
+          layer.setVisible(true);
+
         },
         
         /**
@@ -371,10 +363,43 @@
          * <public> - called externally
          */
         hideLayer : function(layer) {
+          layer.setVisible(false);
+        },
+        
+        /**
+         * Adds the layer on the map
+         * 
+         * @layer - layer object
+         * @stackIndex - integer value z-index of the layer 
+         * 
+         * <public> - called externally
+      	 *
+         */
+        addLayer : function(layer, stackIndex) {
+            var map = this.getMap();
+            
+            if(stackIndex !== null && stackIndex >= 0){
+              map.getLayers().insertAt(stackIndex, layer);
+            }
+            else{
+              // will add the layer to the top of all other layers
+              map.addLayer(layer);
+            }
+        },
+        
+        /**
+         * Remove the layer from the map
+         * 
+         * @layer - layer object
+         * 
+         * <public> - called externally
+         */
+        removeLayer : function(layer) {
           var map = this.getMap();
           map.removeLayer(layer);
         },
         
+          
         /**
          * Create and return an array of all base layer objects.
          * 
@@ -577,20 +602,20 @@
               
               // Single Tile format
               var wmsLayer = new ol.layer.Image({
-            source: new ol.source.ImageWMS({
-              url: window.location.origin+"/geoserver/wms/",
-              params: {
-                'LAYERS': geoserverName, 
-                'TILED': true,
-                'STYLES': layer.getSldName() || "",
-                'FORMAT': 'image/png'
-              },
-              serverType: 'geoserver'
-            }),
-            visible: true
-        });
+		            source: new ol.source.ImageWMS({
+		              url: window.location.origin+"/geoserver/wms/",
+		              params: {
+		                'LAYERS': geoserverName, 
+		                'TILED': true,
+		                'STYLES': layer.getSldName() || "",
+		                'FORMAT': 'image/png'
+		              },
+		              serverType: 'geoserver'
+		            }),
+		            visible: true
+		      });
               
-              this.showLayer(wmsLayer, null);
+              this.addLayer(wmsLayer, null);
               layer.wmsLayerObj = wmsLayer;
         },
         

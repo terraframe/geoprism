@@ -1001,69 +1001,68 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {
-        // if (layer instanceof DashboardThematicLayer)
-        // {
-
-        Graphics2D newOverlayBaseGraphic = null;
-        Graphics2D mapLayerGraphic2d = null;
-
-        String layersString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
-
-        StringBuffer requestURL = new StringBuffer();
-        requestURL.append(GeoserverProperties.getLocalPath() + "/wms?");
-        requestURL.append("LAYERS=" + layersString);
-        requestURL.append("&");
-        requestURL.append("STYLES="); // there are no geoserver styles being added. sld's are used instead
-        requestURL.append("&");
-        requestURL.append("SRS=EPSG%3A4326");
-        requestURL.append("&");
-        requestURL.append("TRANSPARENT=true");
-        requestURL.append("&");
-        requestURL.append("ISBASELAYER=false"); // in the browser the baselayer prop is set for the 1st layer in the
-                                                // map.
-        requestURL.append("&");
-        requestURL.append("SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage");
-        requestURL.append("&");
-        requestURL.append("FORMAT=image%2F" + processingFormat);
-        requestURL.append("&");
-        requestURL.append("BBOX=" + left + "," + bottom + "," + right + "," + top);
-        requestURL.append("&");
-        requestURL.append("WIDTH=" + Integer.toString(mapWidth));
-        requestURL.append("&");
-        requestURL.append("HEIGHT=" + Integer.toString(mapHeight));
-
-        try
-        {
-          BufferedImage layerImg = this.getImageFromGeoserver(requestURL.toString());
-          BufferedImage newOverlayBase = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB);
-
-          newOverlayBaseGraphic = newOverlayBase.createGraphics();
-
-          // Add transparency to the layerGraphic
-          // This is set in JavaScript in the app so we are replicating browser side transparency settings that are
-          // applied to the whole layer
-          AlphaComposite thisLayerComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getLayerOpacity(layer));
-          mapLayerGraphic2d = layerImg.createGraphics();
-          newOverlayBaseGraphic.setComposite(thisLayerComposite);
-
-          // Add the current layerGraphic to the base image
-          newOverlayBaseGraphic.drawImage(layerImg, 0, 0, null);
-          mapBaseGraphic.drawImage(newOverlayBase, 0, 0, null);
-
-        }
-        finally
-        {
-          if (newOverlayBaseGraphic != null)
-          {
-            newOverlayBaseGraphic.dispose();
+         if (layer.getLayerEnabled())
+         {
+            Graphics2D newOverlayBaseGraphic = null;
+            Graphics2D mapLayerGraphic2d = null;
+    
+            String layersString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
+    
+            StringBuffer requestURL = new StringBuffer();
+            requestURL.append(GeoserverProperties.getLocalPath() + "/wms?");
+            requestURL.append("LAYERS=" + layersString);
+            requestURL.append("&");
+            requestURL.append("STYLES="); // there are no geoserver styles being added. sld's are used instead
+            requestURL.append("&");
+            requestURL.append("SRS=EPSG%3A4326");
+            requestURL.append("&");
+            requestURL.append("TRANSPARENT=true");
+            requestURL.append("&");
+            requestURL.append("ISBASELAYER=false"); // in the browser the baselayer prop is set for the 1st layer in the
+                                                    // map.
+            requestURL.append("&");
+            requestURL.append("SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage");
+            requestURL.append("&");
+            requestURL.append("FORMAT=image%2F" + processingFormat);
+            requestURL.append("&");
+            requestURL.append("BBOX=" + left + "," + bottom + "," + right + "," + top);
+            requestURL.append("&");
+            requestURL.append("WIDTH=" + Integer.toString(mapWidth));
+            requestURL.append("&");
+            requestURL.append("HEIGHT=" + Integer.toString(mapHeight));
+    
+            try
+            {
+              BufferedImage layerImg = this.getImageFromGeoserver(requestURL.toString());
+              BufferedImage newOverlayBase = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB);
+    
+              newOverlayBaseGraphic = newOverlayBase.createGraphics();
+    
+              // Add transparency to the layerGraphic
+              // This is set in JavaScript in the app so we are replicating browser side transparency settings that are
+              // applied to the whole layer
+              AlphaComposite thisLayerComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getLayerOpacity(layer));
+              mapLayerGraphic2d = layerImg.createGraphics();
+              newOverlayBaseGraphic.setComposite(thisLayerComposite);
+    
+              // Add the current layerGraphic to the base image
+              newOverlayBaseGraphic.drawImage(layerImg, 0, 0, null);
+              mapBaseGraphic.drawImage(newOverlayBase, 0, 0, null);
+    
+            }
+            finally
+            {
+              if (newOverlayBaseGraphic != null)
+              {
+                newOverlayBaseGraphic.dispose();
+              }
+    
+              if (mapLayerGraphic2d != null)
+              {
+                mapLayerGraphic2d.dispose();
+              }
+            }
           }
-
-          if (mapLayerGraphic2d != null)
-          {
-            mapLayerGraphic2d.dispose();
-          }
-        }
-        // }
       }
     }
     finally
