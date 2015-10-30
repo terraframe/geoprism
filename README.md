@@ -53,7 +53,7 @@ In GeoDashboard a Universal represents a feature set type to which data points c
 
 ### General Software Requirements
 * Java 8 (Oracle jre recommended)
-* Tomcat 6 
+* Tomcat 8 
 * GeoServer 2.5 +
 * PostgreSQL 9.0 +
 * PostGIS 2.0 +
