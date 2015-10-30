@@ -1493,7 +1493,7 @@
             baseLayers.put(id, b);
             
             this._mapFactory.addLayer(b, i); 
-            this._mapFactory.hideLayer(b);
+            this._mapFactory.hideLayer(b); // hide them all since the default for adding layers is visible
             
             var checkboxContainer = this.getFactory().newElement("div", {"class" : "checkbox-container"});
             
