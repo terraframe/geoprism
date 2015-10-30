@@ -55,15 +55,6 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
 
-import net.coobird.thumbnailator.Thumbnails;
-
-import org.geotools.data.ows.Layer;
-import org.geotools.data.ows.WMSCapabilities;
-import org.geotools.data.wms.WMSUtils;
-import org.geotools.data.wms.WebMapServer;
-import org.geotools.data.wms.request.GetMapRequest;
-import org.geotools.data.wms.response.GetMapResponse;
-import org.geotools.ows.ServiceException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -76,7 +67,13 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.xml.resolver.apps.resolver;
+import org.geotools.data.ows.Layer;
+import org.geotools.data.ows.WMSCapabilities;
+import org.geotools.data.wms.WMSUtils;
+import org.geotools.data.wms.WebMapServer;
+import org.geotools.data.wms.request.GetMapRequest;
+import org.geotools.data.wms.response.GetMapResponse;
+import org.geotools.ows.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,8 +100,8 @@ import com.runwaysdk.geodashboard.MetadataWrapper;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.F;
@@ -129,7 +126,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     super();
   }
-  
+
   @Override
   public void accepts(MapVisitor visitor)
   {
@@ -142,15 +139,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return this.getAllHasLayer().getAll();
   }
 
-  /**
-   * MdMethod
-   * 
-   * Invoked when the user hits "apply" on the mapping screen. This will update BIRT and republish all layers with the
-   * updated filter criteria conditions.
-   */
   @Override
-  public String updateConditions(DashboardCondition[] conditions)
+  public String refresh(String state)
   {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
+
     GeoserverBatch batch = new GeoserverBatch();
 
     List<? extends DashboardLayer> layers = this.getLayers();
@@ -365,7 +358,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     for (DashboardLayer layer : orderedLayers)
     {
       batch.addLayerToDrop(layer);
-      
+
       this.generateSessionViewName(layer);
 
       layer.publish(batch);
@@ -417,9 +410,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         layers.put(orderedTLayersArr[i].toJSON());
       }
       mapJSON.put("layers", layers);
-      
+
       mapJSON.put("activeBaseMap", this.getActiveBaseMap());
-      
+
       //
       // TODO: Resolve the situation where a reference layer is saved and loaded
       // compared to the results of getAvailableReferenceLayers()
@@ -443,7 +436,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       throw new ProgrammingErrorException(ex);
     }
   }
-  
+
   public JSONArray getExpandedMapLayersBBox(DashboardLayer[] layers, double expandVal)
   {
 
@@ -462,7 +455,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       String idColumnName = mdAttributeId.getColumnName();
 
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ST_AsText(ST_Expand(" + tableName + "." + geoColumnName + "," + expandVal +")) AS bbox");
+      sql.append("SELECT ST_AsText(ST_Expand(" + tableName + "." + geoColumnName + "," + expandVal + ")) AS bbox");
       sql.append(" FROM " + tableName);
       sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
 
@@ -519,7 +512,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return bboxArr;
   }
-  
+
   /**
    * Format the bounding box result set returned from a PostGIS database query
    * 
@@ -531,7 +524,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     JSONArray bboxArr = new JSONArray();
     Dashboard dashboard = this.getDashboard();
     GeoEntity country = dashboard.getCountry();
-    
+
     try
     {
       if (resultSet.next())
@@ -597,7 +590,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         Database.throwDatabaseException(sqlEx2);
       }
     }
-    
+
     return bboxArr;
   }
 
@@ -696,7 +689,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return new MdAttributeView[] {};
   }
-  
+
   /**
    * Generate an image replicating the users map in the browser.
    * 
@@ -750,7 +743,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       // Add layers to the base canvas
       BufferedImage layerCanvas = getLayersExportCanvas(width, height, orderedLayers, mapBounds);
-      
+
       // Get base map
       String baseType = null;
       try
@@ -763,9 +756,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         String error = "Could not active base map JSON.";
         throw new ProgrammingErrorException(error, e);
       }
-      
+
       // Get bounds of the map
-      if(baseType.length() > 0)
+      if (baseType.length() > 0)
       {
         String bottom;
         String top;
@@ -784,10 +777,10 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
           String error = "Could not parse map bounds.";
           throw new ProgrammingErrorException(error, e);
         }
-        
+
         BufferedImage baseMapImage = this.getBaseMapCanvas(width, height, left, bottom, right, top, baseType);
-        
-        if(baseMapImage != null)
+
+        if (baseMapImage != null)
         {
           mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
         }
@@ -841,92 +834,92 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     return inStream;
   }
-  
-  
+
   public BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top)
   {
-      String baseType = null;
-      try
-      {
-        JSONObject activeBaseObj = new JSONObject(this.getActiveBaseMap());
-        baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
-      }
-      catch (JSONException e)
-      {
-        String error = "Could not active base map JSON.";
-        throw new ProgrammingErrorException(error, e);
-      }
-      
-      BufferedImage baseMapImage = this.getBaseMapCanvas(mapWidth, mapHeight, left, bottom, right, top, baseType);
-      
-      return baseMapImage;
+    String baseType = null;
+    try
+    {
+      JSONObject activeBaseObj = new JSONObject(this.getActiveBaseMap());
+      baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
+    }
+    catch (JSONException e)
+    {
+      String error = "Could not active base map JSON.";
+      throw new ProgrammingErrorException(error, e);
+    }
+
+    BufferedImage baseMapImage = this.getBaseMapCanvas(mapWidth, mapHeight, left, bottom, right, top, baseType);
+
+    return baseMapImage;
   }
 
   private BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top, String baseType)
   {
     BufferedImage image = null;
-    
-    if(baseType.toLowerCase().equals("osm"))
+
+    if (baseType.toLowerCase().equals("osm"))
     {
       // TODO: Only add base map based on user settings (i.e. if OSM is enabled)
       URL url = null;
-      try 
+      try
       {
         //
         // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
-        // Tiled Map Services (TMS) which are not directly consumable by geotools. 
+        // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
         url = new URL("http://irs.gis-lab.info/?layers=osm&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
-      } 
-      catch (MalformedURLException e) 
+      }
+      catch (MalformedURLException e)
       {
-        //will not happen
+        // will not happen
         String error = "The URL is not formed correctly.";
         throw new ProgrammingErrorException(error, e);
       }
-  
+
       WebMapServer wms = null;
-      try 
+      try
       {
         wms = new WebMapServer(url);
-      } 
-      catch (IOException e) 
+      }
+      catch (IOException e)
       {
-        //There was an error communicating with the server
-        //For example, the server is down
+        // There was an error communicating with the server
+        // For example, the server is down
         String error = "There was a problem communicating with the base map server.";
         throw new ProgrammingErrorException(error, e);
-      } 
-      catch (ServiceException e) 
+      }
+      catch (ServiceException e)
       {
-        //The server returned a ServiceException (unusual in this case)
+        // The server returned a ServiceException (unusual in this case)
         String error = "The server returned a ServiceException.";
         throw new ProgrammingErrorException(error, e);
-      } 
-      catch (SAXException e) 
+      }
+      catch (SAXException e)
       {
-        //Unable to parse the response from the server
-        //For example, the capabilities it returned was not valid
+        // Unable to parse the response from the server
+        // For example, the capabilities it returned was not valid
         String error = "Could not parse the response from the server.";
         throw new ProgrammingErrorException(error, e);
       }
-      
+
       GetMapRequest request = wms.createGetMapRequest();
       request.setFormat("image/png");
-      request.setDimensions(mapWidth, mapHeight); //sets the dimensions of the image to be returned from the server
+      request.setDimensions(mapWidth, mapHeight); // sets the dimensions of the image to be returned from the server
       request.setTransparent(true);
       request.setSRS("EPSG:4326");
       request.setBBox(left + "," + bottom + "," + right + "," + top);
-      
+
       WMSCapabilities capabilities = wms.getCapabilities();
-      
-      for ( Layer layer : WMSUtils.getNamedLayers(capabilities) ) {
-        if(layer.getName().toLowerCase().trim().equals("osm"))
+
+      for (Layer layer : WMSUtils.getNamedLayers(capabilities))
+      {
+        if (layer.getName().toLowerCase().trim().equals("osm"))
         {
           request.addLayer(layer);
         }
       }
-      
+
       GetMapResponse response = null;
       try
       {
@@ -942,7 +935,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         String error = "There was a problem communicating with the base map server.";
         throw new ProgrammingErrorException(error, e);
       }
-      
+
       try
       {
         image = ImageIO.read(response.getInputStream());
@@ -953,10 +946,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         throw new ProgrammingErrorException(error, e);
       }
     }
-    
+
     return image;
   }
-  
 
   /**
    * Builds a combined image layer of all the layers in a saved map.
@@ -997,7 +989,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         String error = "Could not parse map bounds.";
         throw new ProgrammingErrorException(error, e);
       }
-      
+
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {

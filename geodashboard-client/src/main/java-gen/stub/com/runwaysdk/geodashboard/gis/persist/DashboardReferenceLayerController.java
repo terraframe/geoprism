@@ -195,8 +195,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   {
     try
     {
-      DashboardConditionDTO[] conditions = null;  // place holder for ignoring conditions with reference layers
-      String layerJSON = layer.applyWithStyle(style, mapId, conditions);
+      String layerJSON = layer.applyWithStyle(style, mapId, "");
 
       JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
       jsonReturn.setInformation(this.getClientRequest().getInformation());

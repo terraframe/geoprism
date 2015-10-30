@@ -18,22 +18,43 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
-import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.condition.GreaterThan;
+import com.runwaysdk.generation.loader.Reloadable;
 
-public class GreaterThanImpl extends PrimitiveImpl implements GreaterThan
+public abstract class DashboardAttributeCondition extends DashboardCondition implements Reloadable
 {
-  
-  public GreaterThanImpl()
+
+  /**
+   * Condition type for restricting on an attribute
+   */
+  public static final String CONDITION_TYPE   = "ATTRIBUTE_CONDITION";
+
+  /**
+   * Magic value for the json attribute name which specifies the id of the MdAttribute
+   */
+  public static final String MD_ATTRIBUTE_KEY = "mdAttribute";
+
+  private String             mdAttributeId;
+
+  public DashboardAttributeCondition(String mdAttributeId)
   {
     super();
+
+    this.mdAttributeId = mdAttributeId;
+  }
+
+  public String getMdAttributeId()
+  {
+    return mdAttributeId;
+  }
+
+  public void setMdAttributeId(String definingMdAttributeId)
+  {
+    this.mdAttributeId = definingMdAttributeId;
   }
 
   @Override
-  public void accepts(MapVisitor visitor)
+  public String getJSONKey()
   {
-    visitor.visit(this);
-    
+    return this.getMdAttributeId();
   }
-
 }

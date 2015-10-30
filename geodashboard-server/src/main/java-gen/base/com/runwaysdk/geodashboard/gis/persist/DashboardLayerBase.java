@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1409447649)
+@com.runwaysdk.business.ClassSignature(hash = -1510387868)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -54,7 +54,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String TYPE = "type";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1409447649;
+  private static final long serialVersionUID = -1510387868;
   
   public DashboardLayerBase()
   {
@@ -746,16 +746,16 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     return (DashboardLayer) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, java.lang.String state)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.lang.String applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static final java.lang.String applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, java.lang.String state)
   {
     DashboardLayer _instance = DashboardLayer.get(id);
-    return _instance.applyWithStyle(style, mapId, conditions);
+    return _instance.applyWithStyle(style, mapId, state);
   }
   
   public static com.runwaysdk.system.gis.geo.UniversalQuery getSortedUniversals()

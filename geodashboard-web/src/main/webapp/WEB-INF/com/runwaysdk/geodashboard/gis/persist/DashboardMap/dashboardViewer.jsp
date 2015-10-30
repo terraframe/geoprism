@@ -25,58 +25,88 @@
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<gdb:localize var="page_title" key="dashboardViewer.title"/>
+<!DOCTYPE html>
+<html ng-app="dashboard">
 
-<!-- Dynamic map CSS -->
-<jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
-<jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
-<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
-<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
 
-<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+	<title><gdb:localize key="dashboardViewer.title"/></title>
+	
+    <!-- Tell Runway what the application context path is. -->
+    <script>
+      window.com = window.com || {};
+      window.com.runwaysdk = window.com.runwaysdk || {};
+      window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+    </script>	
+	
+	<!-- CSS imports -->
+	<jwr:style src="/bundles/main.css" useRandomParam="false" />
+	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+	
+	<!-- Default imports -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>	
+	
+	<jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+	<jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
+	<jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+	
+	<!-- Dynamic map CSS -->
+	<jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
+	<jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
+	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+	<jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
+	<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
+	
+	<!-- Dynamic map Javascript -->
+	<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
+	<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+	<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
+	
+	<script type="text/javascript">${js}</script>
+	<%-- <jwr:style src="/com/runwaysdk/geodashboard/MapConfig.json" useRandomParam="false"/>   --%>
+	<script src="/com/runwaysdk/geodashboard/MapConfig.json"></script>
+	
+	<!-- Google maps API -->
+	<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>	
+	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+		
+	<script type="text/javascript">
+	$(document).ready(function(){
+		com.runwaysdk.ui.Manager.setFactory("JQuery"); 
 
-<!-- Dynamic map Javascript -->
-<jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
-<jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
-<jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-<jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
+		// Render the map
+		var map = new GDB.gis.DynamicMap({    
+			mapDivId: "mapDivId",    
+			mapId: '${mapId}',
+			dashboardId : '${dashboardId}',
+			workspace : '${workspace}',
+			aggregationMap : ${aggregationMap},
+			criteria : ${conditions},
+			editDashboard : ${editDashboard},
+			editData : ${editData},
+			layerCategoriesTree: {
+				termType : '${type}',
+				relationshipTypes : [ '${relationType}' ],
+				rootTerm : '${rootId}',
+				checkable: true
+			}    
+		});
+		map.render();
+	});
+	</script>	
 
-<script type="text/javascript">${js}</script>
+  </head>
 
-<%-- <jwr:style src="/com/runwaysdk/geodashboard/MapConfig.json" useRandomParam="false"/>   --%>
-<script src="/com/runwaysdk/geodashboard/MapConfig.json"></script>
-
-<!-- Google maps API -->
-<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-  
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-  
-  // Render the map
-  var map = new GDB.gis.DynamicMap({    
-    mapDivId: "mapDivId",    
-    mapId: '${mapId}',
-    dashboardId : '${dashboardId}',
-    workspace : '${workspace}',
-    aggregationMap : ${aggregationMap},
-    criteria : ${conditions},
-    editDashboard : ${editDashboard},
-    editData : ${editData},
-    layerCategoriesTree: {
-      termType : '${type}',
-      relationshipTypes : [ '${relationType}' ],
-      rootTerm : '${rootId}',
-      checkable: true
-    }    
-  });
-  
-  map.render();  
-});
-
-</script>
+  <body>
 
     <form action="#" class="control-form" id="control-form">
     <div id="control-form-collapse-button">
@@ -155,7 +185,7 @@ $(document).ready(function(){
     </form>
     
     <!-- contain aside of the page -->
-  <aside class="aside animated legend-snapable expanded" id="dashboardMetadata">
+  <aside class="aside animated legend-snapable expanded" id="dashboardMetadata"  ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}')">
         <div id="data-panel-toggle-container">
       		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
       	</div>
@@ -188,145 +218,22 @@ $(document).ready(function(){
   		    <a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
 		</div>
 		
+	  <ng-form name="form">
+		
+		
 	    <!-- Global geo filter -->
-	    <div class="filter-block">	    
-	      <div class="row-holder">
-	        <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
-	      </div>	    
-	      <div class="geo">
-	        <gdb:localize key="dashboard.entity.label" var="dashboardEntityLabel"/>
-	        
-		    <input class="gdb-attr-filter filter-geo" id="filter-geo" type="text" placeholder="${dashboardEntityLabel}"></input>
-		    <input id="filter-geo-hidden" type="hidden"></input>		    
-	      </div>	    
-		</div>
+	    <location-filter filter="dashboard.model.location" dashboard="dashboard.dashboardId"></location-filter>
 		                                        
-        <div class="sales-accortion panel-group">
-	        <!-- 
-	        TEST
-	        -->
-	        <c:forEach items="${types}" var="type" varStatus="typeStatus">
-	          <div class="panel panel-default">
-	            <a class="opener" data-toggle="collapse" data-parent="#accordion" href="#collapse${typeStatus.index}">${type.displayLabel.value}</a>
-	            <div id="collapse${typeStatus.index}" class="panel-collapse collapse">
-	              <div class="panel-body">
-	              <!-- slide block -->
-	              <c:forEach items="${attrMap[type.id]}" var="attr" varStatus="attrStatus">
-	                <div class="panel">
-	                  <h4 class="panel-title"><a class="opener-link" data-toggle="collapse" data-parent="#accordion${typeStatus.index}-${attrStatus.index}" href="#collapse00${typeStatus.index}-${attrStatus.index}">${attr.displayLabel}</a>
-                           <c:if test="${editDashboard}">
-                             <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" data-id="${attr.mdAttributeId}">
-                               <span><gdb:localize var="map_it" key="dashboardViewer.mapIt"/>${map_it}</span>
-                             </a>
-                           </c:if>
-						</h4>
-										
-	                  <!-- slide block -->
-	                  <div id="collapse00${typeStatus.index}-${attrStatus.index}" class="panel-collapse collapse">
-	                    <div class="panel-body">
-	                      <div class="filter-block">
-	                        <div class="row-holder">
-	                          <label for="f${typeStatus.index}-${attrStatus.index}"><gdb:localize var="dbviewer_filter" key="dashboardViewer.filter"/>${dbviewer_filter}</label>
-	                        </div>
-	                        <div class="row-holder">
-	                          <c:choose>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDecimal' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-									<!-- Number attribute -->
-		                            <div class="select-holder">
-		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
-		                                <option value="gt">&gt;</option>
-		                                <option value="ge">&gt;=</option>
-		                                <option value="lt">&lt;</option>
-		                                <option value="le">&lt;=</option>
-		                              </select>
-		                            </div>
-		                            <div class="text">
-		                              <label class="none"><gdb:localize key="dashboardViewer.number"/></label>
-		                              <gdb:localize key="dashboard.number.label" var="dashboardNumberLabel"/>
-		                              
-		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDecimal' || attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDouble'}">
-		                                <input class="gdb-attr-filter filter-number numbers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
-		                              </c:if>
-		                              
-		                              <c:if test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeInteger'}">
-		                                <input class="gdb-attr-filter filter-number integers-only" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardNumberLabel}"></input>
-		                              </c:if>
-		                            </div>
-								</c:when>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeDate'}">
-									<!-- Date attribute -->
-									<div class="data-block">
-										<div class="col">
-											<label><gdb:localize key="dashboardViewer.dates.from" /></label>
-											<span class="data-text"> 
-												<input class="checkin gdb-attr-filter filter-date" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="" />
-												<a href="#" class="datapicker-opener"></a>
-											</span>
-										</div>
-										<div class="col">
-											<label><gdb:localize key="dashboardViewer.dates.to" /></label>
-											<span class="data-text"> 
-												<input class="checkout gdb-attr-filter filter-date" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="" />
-												<a href="#" class="datapicker-opener"></a>
-											</span>
-										</div>
-									</div>
-								</c:when>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeCharacter'}">
-									<!-- Character attribute -->
-		                            <div class="select-holder">
-		                              <select id="filter-opts-${attr.mdAttributeId}" class="filter-select">
-		                                <option value="eq">=</option>
-		                                <option value="neq">!=</option>
-		                              </select>
-		                            </div>
-		                            <div class="text">
-		                              <gdb:localize key="dashboard.text.label" var="dashboardTextLabel"/>
-		                              
-		                              <label class="none"><gdb:localize key="dashboardViewer.text"/></label>
-		                              <input class="gdb-attr-filter filter-char" data-mdattributeid="${attr.mdAttributeId}" type="text" placeholder="${dashboardTextLabel}"></input>
-		                            </div>
-								</c:when>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeTerm'}">
-									<!-- Term attribute -->
-                                    <div class="gdb-attr-filter filter-term" id="${attr.mdAttributeId}"></div>
-								</c:when>
-								<c:when test="${attr.attributeType == 'com.runwaysdk.system.metadata.MdAttributeBoolean'}">
-									<!-- Boolean attribute -->
-		                            <div class="checks-frame">
-		                              <div>
-		                                <input class="gdb-attr-filter filter-boolean" id="${attr.mdAttributeId}-true" name="filter-${attr.mdAttributeId}" type="radio" value="true">
-		                                <label for="${attr.mdAttributeId}-true"><gdb:localize key="filter.true" /></label>
-		                              </div>
-		                              <div>
-  		                                <input class="gdb-attr-filter filter-boolean" id="${attr.mdAttributeId}-false" name="filter-${attr.mdAttributeId}" type="radio" value="false">
-		                                <label for="${attr.mdAttributeId}-false"><gdb:localize key="filter.false" /></label>
-		                              </div>
-		                            </div>
-								</c:when>
-								<c:otherwise>
-													      
-								</c:otherwise>
-							  </c:choose>
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </div>
-	                </div>
-	              </c:forEach>
-	            </div></div></div>
-	        </c:forEach>
-       </div> <!-- END sales-accortion panel-group -->
+        <div class="sales-accortion panel-group" id="type-accordion">
+          <type-accordion types="dashboard.model.types" edittable="dashboard.model.editDashboard"></type-accordion>  
+        </div> <!-- END sales-accortion panel-group -->
     
 	    <div id="filter-buttons-container">
-	      <a href="#" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left"">
-	      </a>
-	      <a href="#" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
-	      </a>
-	      <c:if test="${editDashboard}">
-	      	      <a class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
-	      </c:if>
+	      <a href="#" ng-click="form.$invalid || dashboard.refresh()" ng-disabled="form.$invalid" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
+	      <a href="#" ng-click="form.$invalid || dashboard.save()" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left""></a>
+  	      <a href="#" ng-click="form.$invalid || dashboard.saveGlobal()"  ng-disabled="form.$invalid" ng-if="dashboard.model.editDashboard" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
 	    </div>
+	  </ng-form>
   </aside>
   
   <!-- modal -->

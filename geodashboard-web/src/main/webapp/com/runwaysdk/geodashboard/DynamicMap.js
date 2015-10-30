@@ -369,7 +369,7 @@
         
         var conditions = this._getConditionsFromCriteria(this._criteria);
           
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions(clientRequest, this._mapId, conditions);
+        com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(clientRequest, this._mapId, "{}");
         
         this._renderReport('', '', this._criteria);
       },
@@ -2383,9 +2383,9 @@
         $('a.attributeLayer').on('click', Mojo.Util.bind(this, this._openLayerForAttribute));
         $('a.new-dashboard-btn').on('click', Mojo.Util.bind(this, this._openNewDashboardForm));
         $('.ico-dashboard-tab').on('click',  Mojo.Util.bind(this, this._openNewDashboardTab));
-        $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
-        $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
-        $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
+//        $('a.apply-filters-button').on('click', Mojo.Util.bind(this, this._onClickApplyFilters));
+//        $('a.save-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveFilters));
+//        $('a.save-global-filters-button').on('click', Mojo.Util.bind(this, this._onClickSaveGlobalFilters));
         
         ////
         // setting scroll bar for attribute sidebar

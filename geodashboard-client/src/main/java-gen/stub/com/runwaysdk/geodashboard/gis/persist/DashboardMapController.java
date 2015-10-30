@@ -290,7 +290,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
       req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
 
-      render("dashboardViewer.jsp");
+      req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/dashboardViewer.jsp").forward(req, resp);
     }
   }
 

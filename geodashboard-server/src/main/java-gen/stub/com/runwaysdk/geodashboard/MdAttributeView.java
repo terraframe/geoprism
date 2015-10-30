@@ -18,13 +18,38 @@
  */
 package com.runwaysdk.geodashboard;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
+
 public class MdAttributeView extends MdAttributeViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = 1311378616;
-  
+
   public MdAttributeView()
   {
     super();
   }
-  
+
+  public JSONObject toJSON(DashboardCondition condition) throws JSONException
+  {
+    JSONObject object = new JSONObject();
+    object.put("attributeType", this.getAttributeType());
+    object.put("mdAttributeId", this.getMdAttributeId());
+    object.put("attributeName", this.getAttributeName());
+    object.put("label", this.getDisplayLabel());
+
+    if (condition != null)
+    {
+      object.put("filter", condition.getJSON());
+    }
+    else
+    {
+      object.put("filter", new JSONObject());
+    }
+
+    return object;
+  }
+
 }

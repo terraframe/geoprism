@@ -61,6 +61,8 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -69,8 +71,6 @@ import com.runwaysdk.geodashboard.gis.persist.GeoEntityThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.gis.persist.GeometryThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.ThematicQueryBuilder;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
@@ -160,18 +160,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       throw ex;
     }
 
-    // Delete all saved conditions
-    DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
+    // Delete all saved states
+    DashboardStateQuery query = new DashboardStateQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(this));
 
-    OIterator<? extends DashboardCondition> it = query.getIterator();
+    OIterator<? extends DashboardState> it = query.getIterator();
 
     try
     {
       while (it.hasNext())
       {
-        DashboardCondition condition = it.next();
-        condition.delete();
+        DashboardState state = it.next();
+        state.delete();
       }
     }
     finally
@@ -673,72 +673,92 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return ( query.getCount() > 0 );
   }
 
-  @Override
   public DashboardCondition[] getConditions()
   {
     DashboardState state = this.getDashboardState();
     String json = state.getConditions();
 
-    DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+    if (json != null && json.length() > 0)
+    {
+      DashboardCondition[] conditions = DashboardCondition.deserialize(json);
 
-    return conditions;
+      return conditions;
+    }
+
+    return new DashboardCondition[] {};
   }
 
-  @Override
-  @Transaction
-  public void applyConditions(DashboardCondition[] conditions)
+  public Map<String, DashboardCondition> getConditionMap()
   {
-    /*
-     * First delete any conditions which exist
-     */
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    Map<String, DashboardCondition> map = new HashMap<String, DashboardCondition>();
 
-    byte[] image = this.generateThumbnail();
-
-    JSONArray array = new JSONArray();
+    DashboardCondition[] conditions = this.getConditions();
 
     for (DashboardCondition condition : conditions)
     {
-      array.put(condition.getJSON());
+      map.put(condition.getJSONKey(), condition);
     }
 
-    DashboardState state = DashboardState.getDashboardState(this, user);
-
-    if (state == null)
-    {
-      state = new DashboardState();
-      state.setDashboard(this);
-      state.setGeodashboardUser(user);
-    }
-    else
-    {
-      state.lock();
-    }
-
-    state.setConditions(array.toString());
-    state.setMapThumbnail(image);
-    state.apply();
+    return map;
   }
 
-  @Override
-  @Transaction
-  public void applyGlobalConditions(DashboardCondition[] conditions)
-  {
-    byte[] image = this.generateThumbnail();
+  // HEADS UP
 
-    JSONArray array = new JSONArray();
-
-    for (DashboardCondition condition : conditions)
-    {
-      array.put(condition.getJSON());
-    }
-
-    DashboardState state = DashboardState.getDashboardState(this, null);
-    state.lock();
-    state.setConditions(array.toString());
-    state.setMapThumbnail(image);
-    state.apply();
-  }
+  // @Override
+  // @Transaction
+  // public void applyConditions(DashboardCondition[] conditions)
+  // {
+  // /*
+  // * First delete any conditions which exist
+  // */
+  // GeodashboardUser user = GeodashboardUser.getCurrentUser();
+  //
+  // byte[] image = this.generateThumbnail();
+  //
+  // JSONArray array = new JSONArray();
+  //
+  // for (DashboardCondition condition : conditions)
+  // {
+  // array.put(condition.getJSON());
+  // }
+  //
+  // DashboardState state = DashboardState.getDashboardState(this, user);
+  //
+  // if (state == null)
+  // {
+  // state = new DashboardState();
+  // state.setDashboard(this);
+  // state.setGeodashboardUser(user);
+  // }
+  // else
+  // {
+  // state.lock();
+  // }
+  //
+  // state.setConditions(array.toString());
+  // state.setMapThumbnail(image);
+  // state.apply();
+  // }
+  //
+  // @Override
+  // @Transaction
+  // public void applyGlobalConditions(DashboardCondition[] conditions)
+  // {
+  // byte[] image = this.generateThumbnail();
+  //
+  // JSONArray array = new JSONArray();
+  //
+  // for (DashboardCondition condition : conditions)
+  // {
+  // array.put(condition.getJSON());
+  // }
+  //
+  // DashboardState state = DashboardState.getDashboardState(this, null);
+  // state.lock();
+  // state.setConditions(array.toString());
+  // state.setMapThumbnail(image);
+  // state.apply();
+  // }
 
   @Override
   public String getConditionsJSON()
@@ -1054,6 +1074,23 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return state;
   }
 
+  private DashboardState getOrCreateDashboardState(GeodashboardUser user)
+  {
+    DashboardState state = DashboardState.getDashboardState(this, user);
+
+    if (state == null)
+    {
+      state = new DashboardState();
+      state.setDashboard(this);
+      state.setGeodashboardUser(user);
+    }
+    else
+    {
+      state.lock();
+    }
+    return state;
+  }
+
   @Override
   @Transaction
   public void generateThumbnailImage()
@@ -1065,9 +1102,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     for (GeodashboardUser user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
-      state.lock();
-      state.setMapThumbnail(image);
-      state.apply();
+
+      if (state != null)
+      {
+        state.lock();
+        state.setMapThumbnail(image);
+        state.apply();
+      }
     }
   }
 
@@ -1212,5 +1253,113 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     dm.lock();
     dm.setActiveBaseMap(baseLayerState);
     dm.unlock();
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClass mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+    query.AND(query.getDashboard().EQ(this));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  @Override
+  public String getJSON()
+  {
+    try
+    {
+      return this.toJSON().toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public JSONObject toJSON() throws JSONException
+  {
+    MdClass[] mdClasses = this.getSortedTypes();
+
+    JSONArray types = new JSONArray();
+
+    Map<String, DashboardCondition> conditions = this.getConditionMap();
+
+    for (MdClass mdClass : mdClasses)
+    {
+      types.put(this.toJSON(mdClass, conditions));
+    }
+
+    JSONObject object = new JSONObject();
+    object.put("id", this.getId());
+    object.put("name", this.getName());
+    object.put("label", this.getDisplayLabel().getValue());
+    object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+    object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
+    object.put("types", types);
+
+    if (conditions.containsKey(LocationCondition.CONDITION_TYPE))
+    {
+      DashboardCondition condition = conditions.get(LocationCondition.CONDITION_TYPE);
+
+      object.put("location", condition.getJSON());
+    }
+    else
+    {
+      object.put("location", new JSONObject());
+    }
+
+    return object;
+  }
+
+  private JSONObject toJSON(MdClass mdClass, Map<String, DashboardCondition> conditions) throws JSONException
+  {
+    JSONArray attributes = new JSONArray();
+
+    MetadataWrapper wrapper = this.getMetadataWrapper(mdClass);
+    MdAttributeView[] views = wrapper.getSortedAttributes();
+
+    for (MdAttributeView view : views)
+    {
+      DashboardCondition condition = conditions.get(view.getMdAttributeId());
+
+      attributes.put(view.toJSON(condition));
+    }
+
+    JSONObject object = new JSONObject();
+    object.put("label", mdClass.getDisplayLabel().getValue());
+    object.put("id", mdClass.getId());
+    object.put("attributes", attributes);
+
+    return object;
+  }
+
+  @Override
+  public String saveState(String json)
+  {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
+
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    DashboardState state = this.getOrCreateDashboardState(user);
+
+    state.setConditions(DashboardCondition.serialize(conditions));
+    state.apply();
+
+    return "";
   }
 }
