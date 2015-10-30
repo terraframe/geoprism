@@ -163,7 +163,6 @@
         edittable:'='
       },
       link: function (scope, element, attrs) {
-        console.log(scope.edittable);
       }
     }    
   }
@@ -209,17 +208,18 @@
     }    
   }
   
-  function DateType() {
+  function DateType($parse) {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/dashboard/date-type.jsp',      
-      require: '^form',
+      require: ['^form'],
       scope: {
         attribute:'='
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
+        var ngModel = $parse(attrs.ngModel);
         
         /* Hook up the jquery datepicker*/
         var checkin = $(element).find('.checkin');
@@ -240,6 +240,9 @@
           selectOtherMonths: true,
           onSelect: function(dateText, inst){
             startDate = new Date(dateText);
+            
+            scope.attribute.filter.startDate = startDate;
+            scope.$apply();
           },
           onClose: function( selectedDate ) {
             checkout.datepicker( "option", "minDate", selectedDate );
@@ -255,6 +258,9 @@
           selectOtherMonths: true,
           onSelect: function(dateText, inst){
             endDate = new Date(dateText);
+            
+            scope.attribute.filter.endDate = endDate;
+            scope.$apply();
           },
           onClose: function( selectedDate ) {
             checkin.datepicker( "option", "maxDate", selectedDate );

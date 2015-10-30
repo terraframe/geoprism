@@ -176,9 +176,8 @@ public abstract class DashboardCondition implements Reloadable
 
           JSONObject condition = attribute.getJSONObject("filter");
 
-          if (condition.has(DashboardPrimitiveCondition.COMPARISONVALUE) && condition.getString(DashboardPrimitiveCondition.COMPARISONVALUE).length() > 0)
+          if (condition.keys().hasNext())
           {
-
             if (!condition.has(TYPE_KEY))
             {
               condition.put(TYPE_KEY, DashboardAttributeCondition.CONDITION_TYPE);
@@ -187,6 +186,7 @@ public abstract class DashboardCondition implements Reloadable
             if (!condition.has(DashboardPrimitiveCondition.MD_ATTRIBUTE_KEY))
             {
               String mdAttributeId = attribute.getString("mdAttributeId");
+              
               condition.put(DashboardPrimitiveCondition.MD_ATTRIBUTE_KEY, mdAttributeId);
             }
 

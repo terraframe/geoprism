@@ -23,14 +23,14 @@
   <div class="col">
     <label><gdb:localize key="dashboardViewer.dates.from" /></label>
     <span class="data-text"> 
-      <input ng-model="attribute.filter.checkin" class="checkin gdb-attr-filter filter-date" type="text" placeholder="" />
+      <input ng-model="attribute.filter.startDate" class="checkin gdb-attr-filter filter-date" type="text" placeholder="" />
       <a href="#" class="datapicker-opener"></a>
     </span>
   </div>
   <div class="col">
     <label><gdb:localize key="dashboardViewer.dates.to" /></label>
     <span class="data-text"> 
-      <input ng-model="attribute.filter.checkout" class="checkout gdb-attr-filter filter-date" type="text" placeholder="" />
+      <input ng-model="attribute.filter.endDate" class="checkout gdb-attr-filter filter-date" type="text" placeholder="" />
       <a href="#" class="datapicker-opener"></a>
     </span>
   </div>
