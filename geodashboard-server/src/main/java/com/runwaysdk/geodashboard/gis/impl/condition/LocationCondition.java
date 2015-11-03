@@ -68,7 +68,12 @@ public class LocationCondition extends DashboardCondition implements com.runways
 
   public GeoEntity getComparisonValue()
   {
-    return GeoEntity.get(comparisonValueId);
+    if (this.comparisonValueId != null && this.comparisonValueId.length() > 0)
+    {
+      return GeoEntity.get(comparisonValueId);
+    }
+
+    return null;
   }
 
   @Override

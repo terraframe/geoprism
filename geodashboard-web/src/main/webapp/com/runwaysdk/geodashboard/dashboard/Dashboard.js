@@ -22,6 +22,7 @@
 
     /* Default State */ 
     controller.dashboardId = '';
+    controller.workspace = '';
     controller.model = {
       location : {label:'',value:''},
       editDashboard : false,
@@ -30,36 +31,34 @@
       mapId : '',
       dashboardId : controller.dashboardId
     };
+    /* Map state */
     controller.thematicLayerCache = {values:{}, ids:[]};
     controller.referenceLayerCache = {values:{}, ids:[]};
-    
+    controller.bbox = [];
+    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
     
     /* Initialization Function */
-    $scope.init = function(dashboardId) {
+    $scope.init = function(dashboardId, workspace) {
       controller.dashboardId = dashboardId;
+      controller.workspace = workspace;
     }
 
-    /* Getters */
-    controller.getDashboardId = function() {
-      return controller.dashboardId;
-    }  
-
-    $scope.$watch(controller.getDashboardId(), function(newVal, oldVal){
-      controller.load();    
-    }, true);
-    
     /* Controller Functions */
     controller.load = function() {
       var request = new Mojo.ClientRequest({
         onSuccess : function(json){
           $timeout(function() {
             controller.model = JSON.parse(json);
+            
+            console.log("Location: (" + controller.model.location.value + ", " + controller.model.location.label + ")");
+            
             $scope.$apply();
             
             controller.refresh();
           }, 0);
         },
         onFailure : function(e){
+          GDB.ExceptionHandler.handleException(e);        	
         }
       });
       
@@ -81,15 +80,19 @@
     /* Refresh Map Function */
     controller.refresh = function() {
       var request = new Mojo.ClientRequest({
-        onSuccess : function(json) {
+        onSuccess : function(json, dto, response) {
+          controller.hideLayers();
+                    	
           var map = Mojo.Util.toObject(json);
 
           $timeout(function() {
-            controller.refreshMap(map);
-          }, 0);
+            controller.setMapState(map, false);
+          }, 10);
+          
+          GDB.ExceptionHandler.handleInformation(response.getInformation());            
         },
         onFailure : function(e) {
-          console.log(e);
+          GDB.ExceptionHandler.handleException(e);
         }
       });
           
@@ -101,7 +104,7 @@
         onSuccess : function() {
         },
         onFailure : function(e) {
-          alert(e);
+          GDB.ExceptionHandler.handleException(e);
         }
       });
           
@@ -115,6 +118,10 @@
       form.open(mdAttributeId);
     }  
     
+    controller.getDashboardId = function() {
+      return controller.dashboardId;
+    }  
+    
     controller.getModel = function() {
       return controller.model;
     }
@@ -126,6 +133,18 @@
     
     controller.getLayer = function(layerId) {
       return controller.getLayerCache()[layerId];        
+    }
+    
+    controller.getThematicLayers = function() {
+      var layers = [];
+      
+      for(var i = 0; i < controller.thematicLayerCache.ids.length; i++) {
+        var layerId = controller.thematicLayerCache.ids[i];
+        
+        layers.push(controller.thematicLayerCache.values[layerId]);
+      }
+      
+      return layers;
     }
     
     /* Reference Layer Cache Getters/Setters */
@@ -146,17 +165,17 @@
     }
     
     controller.handleReferenceLayerEvent = function(map) {
-      controller.refreshMap(map);
-//      controller._addUserLayersToMap(true);    
+      controller.setMapState(map, true);
     }
     
     controller.handleLayerEvent = function(map) {
-      controller.refreshMap(map);
-//        this._mapFactory.removeClickPopup();
-//        this._addUserLayersToMap(true);    
+      controller.setMapState(map, true);
     }
     
-    controller.refreshMap = function(map) {
+    controller.setMapState = function(map, reverse) {
+      if (map.bbox != null) {
+        controller.bbox = map.bbox;
+      }   	
     
       if(map.layers){
         var cache = controller.getLayerCache();
@@ -165,18 +184,24 @@
         for (var i = 0; i < map.layers.length; ++i) {
           var layer = map.layers[i];
             
-          var oldLayer = cache[layer.layerId];
+          var oldLayer = cache.values[layer.layerId];
           
           if (oldLayer != null) {
-            layer.wmsLayerObj = oldLayer.wmsLayerObj;
             layer.isActive = oldLayer.isActive;                        
           }
           else {
             layer.isActive = true;
+            
+            /* Add new item to the map */            
+            if(reverse) {
+              cache.ids.unshift(layer.layerId);
+            }
+            else {
+              cache.ids.push(layer.layerId);
+            }
           }
           
           cache.values[layer.layerId] = layer;          
-          cache.ids.unshift(layer.layerId);
         }
       }
         
@@ -204,12 +229,49 @@
 //        controller.setCurrentBaseMap(map.activeBaseMap);
 //      }
 //        
-//      if (map.bbox != null) {
-//        controller.setBBOX(map.bbox);
-//      }
-      
       $scope.$apply();
+      
+      controller.renderMap();
     }
+    
+    controller.renderMap = function() {
+      if(controller.bbox.length === 2){
+        controller.mapFactory.setView(null, controller.bbox, 5);
+      }
+      else if(controller.bbox.length === 4){
+        controller.mapFactory.setView(controller.bbox, null, null);
+      }
+              
+      if(controller.baseLayers == null) {
+        controller.baseLayers = controller.mapFactory.createBaseLayers();                                    	  
+//        this._renderBaseLayerSwitcher(baseLayers);          
+      }
+            
+//    var refLayers = this._refLayerCache.values();
+//    controller.mapFactory.createReferenceLayers(refLayers, this._workspace, removeExisting);
+            
+      var layers = controller.getThematicLayers();
+      controller.mapFactory.createUserLayers(layers, controller.workspace, true);    	  
+    }
+    
+    controller.toggleLayer = function(layer) {
+      if(!layer.isActive) {
+        controller.mapFactory.hideLayer(layer);            
+      }
+      else {
+        controller.renderMap();
+      }
+    }
+    
+    controller.hideLayers = function() {
+     var layers = controller.getThematicLayers();
+     controller.mapFactory.hideLayers(layers);     
+    }
+    
+    /* Setup all watch functions */
+    $scope.$watch(controller.getDashboardId(), function(newVal, oldVal){
+      controller.load();    
+    }, true);    
   }
   
   angular.module("dashboard", ["dashboard-accordion", "dashboard-layer"]);

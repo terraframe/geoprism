@@ -346,32 +346,32 @@
        * 
        */
       fullRefresh : function() {
-        var that = this;
-        
-        this._renderMap();
-        
-        var clientRequest = new Mojo.ClientRequest({
-          onSuccess : function(json, calledObj, response) {
-            var jsonObj = Mojo.Util.toObject(json);
-             
-            that._updateCacheFromJSONResponse(jsonObj);
-            that._configureMap();
-            
-            that._renderBaseLayers();
-            that._renderUserLayers();
-            
-            that._drawLegendItems();
-          },
-          onFailure : function(e) {
-            that.handleException(e);
-          }
-        });
-        
-        var conditions = this._getConditionsFromCriteria(this._criteria);
-          
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(clientRequest, this._mapId, "{}");
-        
-        this._renderReport('', '', this._criteria);
+//        var that = this;
+//        
+//        this._renderMap();
+//        
+//        var clientRequest = new Mojo.ClientRequest({
+//          onSuccess : function(json, calledObj, response) {
+//            var jsonObj = Mojo.Util.toObject(json);
+//             
+//            that._updateCacheFromJSONResponse(jsonObj);
+//            that._configureMap();
+//            
+//            that._renderBaseLayers();
+//            that._renderUserLayers();
+//            
+//            that._drawLegendItems();
+//          },
+//          onFailure : function(e) {
+//            that.handleException(e);
+//          }
+//        });
+//        
+//        var conditions = this._getConditionsFromCriteria(this._criteria);
+//          
+//        com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(clientRequest, this._mapId, "{}");
+//        
+//        this._renderReport('', '', this._criteria);
       },
       
       handleLayerEvent : function(jsonObj) {

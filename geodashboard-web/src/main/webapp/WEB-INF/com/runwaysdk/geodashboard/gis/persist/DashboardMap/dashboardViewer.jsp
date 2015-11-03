@@ -109,7 +109,7 @@
 
   </head>
 
-  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}')">
+  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}', '${workspace}')">
 
     <form action="#" class="control-form" id="control-form">
     <div id="control-form-collapse-button">

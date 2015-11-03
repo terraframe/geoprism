@@ -188,6 +188,7 @@
           
           this._bounds = null;
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
+          this._cache = {};
           
           this.renderMap(dynamicMap);
         },
@@ -371,8 +372,22 @@
          * <public> - called externally
          */
         hideLayer : function(layer) {
-          var map = this.getMap();
-          map.removeLayer(layer);
+          var wmsLayer = this._cache[layer.layerId];          
+          
+          if (wmsLayer != null) {
+            var map = this.getMap();
+            map.removeLayer(wmsLayer);
+            
+            delete this._cache[layer.layerId];
+          }
+        },
+        
+        hideLayers : function(layers) {
+          for(var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            
+            this.hideLayer(layer);
+          }
         },
         
         /**
@@ -381,67 +396,67 @@
          * <public> - called externally
          */
         createBaseLayers : function(){
-	        var baseObjArr = [];
-	        var baseMapsArr = MapConfig._BASEMAPS;
-	        for(var i=0; i<baseMapsArr.length; i++){
-	        	var base = baseMapsArr[i];
-	        	if(base.LAYER_TYPE.toLowerCase() === "tile"){
-	        		var baseObj = new ol.layer.Tile(
-	        				{visible: base.VISIBLE},
-	        				base.CUSTOM_TYPE_OPTIONS
-	        			);
-	        		
-	        		if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
-	        			
-	        			baseObj.setSource( 
-	        				new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
-	        			);
-	        		}
-	        		else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
-	        			baseObj.setSource( 
-	        				new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
-	        			);
-	        		}
-	        		
-        			baseObj._gdbisdefault = base.DEFAULT;
-        			baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
-            		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
-            		
-	        		baseObjArr.push(baseObj);
-	        	}
-	        	else if(base.LAYER_TYPE.toLowerCase() === "group"){
-	        		var layersArr = [];
-	        		
-	        		var baseObj = new ol.layer.Group(
-	        				{visible: base.VISIBLE},
-	        				{isdefault: base.DEFAULT},
-	        				base.CUSTOM_TYPE_OPTIONS);
-	        		
-	        		for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
-	        			var layer = base.GROUP_LAYERS[gi];
-	        			
-	        			if(layer.LAYER_TYPE.toLowerCase() === "tile"){
-	        				var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
-	        				
-	        				if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
-	        					layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
-	        				}
-	        				
-	        				layersArr.push(layerObj);
-	        			}
-	        		}
-	        		
-	        		baseObj.setLayers(new ol.Collection(layersArr));
-	        		
-	        		baseObj._gdbisdefault = base.DEFAULT;
-	        		baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
-	        		baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
-	        		
-	        		baseObjArr.push(baseObj);
-	        	}
+          var baseObjArr = [];
+          var baseMapsArr = MapConfig._BASEMAPS;
+          for(var i=0; i<baseMapsArr.length; i++){
+            var base = baseMapsArr[i];
+            if(base.LAYER_TYPE.toLowerCase() === "tile"){
+              var baseObj = new ol.layer.Tile(
+                  {visible: base.VISIBLE},
+                  base.CUSTOM_TYPE_OPTIONS
+                );
+              
+              if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
+                
+                baseObj.setSource( 
+                  new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
+                );
+              }
+              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+                baseObj.setSource( 
+                  new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
+                );
+              }
+              
+              baseObj._gdbisdefault = base.DEFAULT;
+              baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+                baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+                
+              baseObjArr.push(baseObj);
+            }
+            else if(base.LAYER_TYPE.toLowerCase() === "group"){
+              var layersArr = [];
+              
+              var baseObj = new ol.layer.Group(
+                  {visible: base.VISIBLE},
+                  {isdefault: base.DEFAULT},
+                  base.CUSTOM_TYPE_OPTIONS);
+              
+              for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
+                var layer = base.GROUP_LAYERS[gi];
+                
+                if(layer.LAYER_TYPE.toLowerCase() === "tile"){
+                  var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
+                  
+                  if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+                    layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
+                  }
+                  
+                  layersArr.push(layerObj);
+                }
+              }
+              
+              baseObj.setLayers(new ol.Collection(layersArr));
+              
+              baseObj._gdbisdefault = base.DEFAULT;
+              baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+              baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+              
+              baseObjArr.push(baseObj);
+            }
         }
-        	
-        	
+          
+          
         // TODO: Set min/max zoom levels or on zoom behavior to account for mapquest not displaying 
          // at low zoom levels
           
@@ -458,30 +473,28 @@
          * 
          * <public> - called externally
          */
-        createUserLayers : function(layers, geoserverWorkspace, removeExisting) {
+        createUserLayers : function(layers, geoserverWorkspace, removeExisting) {        	
           // Remove any already rendered layers from the map
-            if (removeExisting === true) {
-              for (var i = 0; i < layers.length; i++) {
-                var layer = layers[i];
+           if (removeExisting === true) {
+              
+             for (var i = 0; i < layers.length; i++) {
+               var layer = layers[i];
                 
-                if (layer.wmsLayerObj != null) {
-                  this.hideLayer(layer.wmsLayerObj);
-                }
-              }
-            }
+               this.hideLayer(layer);
+             }
+              
+           }
             
-            
-            //
-            // Add thematic layers to map
-            //
-            for (var i = 0; i < layers.length; i++) {
-              var layer = layers[i];
-              var viewName = layer.getViewName();
+           for (var i = (layers.length-1); i >= 0; i--) {
+             var layer = layers[i];
+                
+              var viewName = layer.viewName;
               var geoserverName = geoserverWorkspace + ":" + viewName;
-              if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.wmsLayerObj == null))) {
+              
+              if (layer.isActive === true && (removeExisting !== false || (removeExisting === false && layer.wmsLayerObj == null))) {
                 this.constructLayerObj(layer, geoserverWorkspace);
               }
-            }
+           }
         },
         
         
@@ -533,18 +546,35 @@
          * <private> - internal method
          */
         constructLayerObj : function(layer, geoserverWorkspace){
-          
           // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
-              // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO REDUCE BUBBLE CHOPPING.
-              // We could get slightly better performance by setting tiled: false for non-bubble layers but 
-              // this is currently unnecessary addition of code for relatively small performance gain.
-          var viewName = layer.getViewName();
-              var geoserverName = geoserverWorkspace + ":" + viewName;
+          // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO REDUCE BUBBLE CHOPPING.
+          // We could get slightly better performance by setting tiled: false for non-bubble layers but 
+          // this is currently unnecessary addition of code for relatively small performance gain.        	
+          var viewName = layer.viewName;
+          var geoserverName = geoserverWorkspace + ":" + viewName;
+                    
+          // Single Tile format
+          var wmsLayer = new ol.layer.Image({
+            source: new ol.source.ImageWMS({
+              url: window.location.origin+"/geoserver/wms/",
+              params: {
+                'LAYERS': geoserverName, 
+                'TILED': true,
+                'STYLES': layer.sldName || "",
+                'FORMAT': 'image/png'
+              },
+              serverType: 'geoserver'
+            }),
+            visible: true
+          });
+              
+          this.showLayer(wmsLayer, null);
+          this._cache[layer.layerId] = wmsLayer;
               
               
-              //
-              //  Implementation of meta-tiling is not working. Until a fix is found we will use single tile requests
-              //
+          //
+          //  Implementation of meta-tiling is not working. Until a fix is found we will use single tile requests
+          //
 //              var mapBounds = this.getCurrentBounds(MapWidget.DATASRID);
 //              var mapSWOrigin = [mapBounds._southWest.lng, mapBounds._southWest.lat].toString();
 //                
@@ -571,27 +601,9 @@
 //            }),
 //            visible: true
 //        });
-              //
-              // end of meta-tiling block
-              //
-              
-              // Single Tile format
-              var wmsLayer = new ol.layer.Image({
-            source: new ol.source.ImageWMS({
-              url: window.location.origin+"/geoserver/wms/",
-              params: {
-                'LAYERS': geoserverName, 
-                'TILED': true,
-                'STYLES': layer.getSldName() || "",
-                'FORMAT': 'image/png'
-              },
-              serverType: 'geoserver'
-            }),
-            visible: true
-        });
-              
-              this.showLayer(wmsLayer, null);
-              layer.wmsLayerObj = wmsLayer;
+          //
+          // end of meta-tiling block
+          //
         },
         
         /**
@@ -613,26 +625,27 @@
             map.getView().setZoom(zoomLevel);
           }
           else if(bounds){
-              // Handle points (2 coord sets) & polygons (4 coord sets)
-              if (bounds.length === 2){
-                this.setBounds(bounds[0], bounds[1]);
+            // Handle points (2 coord sets) & polygons (4 coord sets)
+            if (bounds.length === 2){
+              this.setBounds(bounds[0], bounds[1]);
                 
-                map.getView().setCenter(bounds, MapWidget.DATASRID, MapWidget.MAPSRID);
-              }
-              else if (bounds.length === 4){
+              map.getView().setCenter(bounds, MapWidget.DATASRID, MapWidget.MAPSRID);
+            }
+            else if (bounds.length === 4){
               // OpenLayers 3 standard format = [minx, miny, maxx, maxy]
-                this.setBounds([bounds[0], bounds[1], bounds[2], bounds[3]]);
+              this.setBounds([bounds[0], bounds[1], bounds[2], bounds[3]]);
               
-            var fromattedBounds = this.getBounds();
-            var bBox = [
-                             fromattedBounds._southWest.lng, 
-                             fromattedBounds._southWest.lat, 
-                             fromattedBounds._northEast.lng, 
-                             fromattedBounds._northEast.lat
-                             ];
-            var areaExtent = ol.extent.applyTransform(bBox, ol.proj.getTransform(MapWidget.DATASRID, MapWidget.MAPSRID));
-            map.getView().fit(areaExtent, map.getSize());
-              };
+              var fromattedBounds = this.getBounds();
+              var bBox = [
+                fromattedBounds._southWest.lng, 
+                fromattedBounds._southWest.lat, 
+                fromattedBounds._northEast.lng, 
+                fromattedBounds._northEast.lat
+              ];
+              
+              var areaExtent = ol.extent.applyTransform(bBox, ol.proj.getTransform(MapWidget.DATASRID, MapWidget.MAPSRID));
+              map.getView().fit(areaExtent, map.getSize());
+            };
           };
         },
         
@@ -869,8 +882,8 @@
           if(this.getEnableClickEvents()){
             this.setDynamicMap(dynamicMap);
             
-            var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
-            map.on("click", mapClickHandlerBound);
+//            var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
+//            map.on("click", mapClickHandlerBound);
           }
         }
       },

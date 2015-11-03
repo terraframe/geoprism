@@ -158,9 +158,24 @@
       handleErrorMessage : function(message) {
         var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
         dialog.appendContent(message);
-        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
         dialog.render();        
-      }        
+      },
+      handleInformation : function(information) {
+        if(information != null) {
+          var html = '<ul>';
+        
+          for(var i = 0; i < information.length; i++) {
+            html += '<li>' + information[i].getMessage() +'</li>'
+          }
+          html += '</ul>';
+          
+          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rInfo", "Information"), {modal: true});
+          dialog.appendContent(html);
+          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
+          dialog.render();              
+        }
+      }      
     }
   });
   

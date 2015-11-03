@@ -31,10 +31,6 @@
       },
       link: function (scope, element, attrs) {
         var input = $(element).find(".filter-geo");
-
-        if(scope.filter.value != null) {
-          input.val(scope.filter.label);          
-        }
         
         input.autocomplete({
           source: function( request, response ) {  
@@ -74,6 +70,11 @@
           minLength: 2
         });
         
+        scope.$watch('filter', function(){
+          if(scope.filter.value != null && scope.filter.value != '') {
+            input.val(scope.filter.label);          
+          }
+        }, true);
       }
     }    
   }  

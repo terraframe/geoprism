@@ -26,11 +26,10 @@
     }
     
     controller.toggle = function(layerId) {
-      var layer = $scope.cache.values[layerId];
-      
+      var layer = $scope.cache.values[layerId];      
       layer.isActive = !layer.isActive;
-      
-      // TODO Hide cache from map
+
+      $scope.dashboard.toggleLayer(layer);
     }
     
     controller.edit = function(layerId) {
@@ -44,17 +43,15 @@
         onSuccess : function(){
         	
           if($scope.cache.values[layerId] != null) {
+            // Remove the layer from the map
+            var layer = $scope.cache.values[layerId];
+            layer.isActive = false;
+            
+            $scope.dashboard.toggleLayer(layer);
             
         	// Remove value from cache
         	delete $scope.cache.values[layerId];        
         	$scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
-            
-            // remove the actual layer from the map
-            // TODO Remove layer from map
-            
-//            if(toRemove.wmsLayerObj){
-//              this._mapFactory.hideLayer(toRemove.wmsLayerObj);
-//            }        	  
           }
           
           $scope.$apply();
@@ -69,10 +66,11 @@
     
     controller.setLayerIndexes = function(layerIds) {
       $scope.cache.ids = layerIds;
-            
-      // // At this point, the cache are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
-      // that._addUserLayersToMap(true);
+
       $scope.$apply();       	
+      
+      // // At this point, the cache are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
+      $scope.dashboard.renderMap();                  
     }
     
     controller.move = function(e, ui) {
@@ -80,14 +78,14 @@
         
       var elements = $("#overlayLayerContainer").find(".row-form");
         
-      for (var i = (elements.length-1); i >= 0; i--) {
+      for (var i = 0; i < elements.length; i++) {
         var layerId = $(elements[i]).data('id');
         
         layerIds.push(layerId);
       }      
     	
       if($scope.edit){
-        var request = new Mojo.ClientRequest({
+        var request = new GDB.StandbyClientRequest({
           onSuccess : function(json) {
             controller.setLayerIndexes(layerIds);
           },
@@ -96,7 +94,7 @@
               
             $scope.$apply();
           }
-        });
+        }, '#overlay-container');
       
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(request, $scope.dashboard.model.mapId, layerIds);
       }
