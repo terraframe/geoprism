@@ -285,6 +285,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
 
       List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
+      
       for (int i = 0; i < savedLayers.size(); i++)
       {
         DashboardLayer savedLayer = savedLayers.get(i);
@@ -395,6 +396,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       // Convert from ListArray to Array for Thematic Layers
       DashboardThematicLayer[] orderedTLayersArr = new DashboardThematicLayer[orderedTLayers.size()];
+      
       for (int i = 0; i < orderedTLayers.size(); i++)
       {
         orderedTLayersArr[i] = orderedTLayers.get(i);
@@ -407,7 +409,10 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       for (int i = 0; i < orderedTLayersArr.length; i++)
       {
-        layers.put(orderedTLayersArr[i].toJSON());
+        JSONObject object = orderedTLayersArr[i].toJSON();
+        object.put("index", i);
+        
+        layers.put(object);
       }
       mapJSON.put("layers", layers);
 
@@ -421,6 +426,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       mapJSON.put("refLayers", refLayerOptions);
 
       JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
+      
       mapJSON.put("bbox", mapBBox);
 
       if (log.isDebugEnabled())

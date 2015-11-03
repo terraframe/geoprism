@@ -86,9 +86,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       existing.delete();
     }
   }
-
-  public String applyWithStyleAndStrategy(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
+  
+  @Override
+  public String applyWithStyleAndStrategy(DashboardStyle style, String mapId, AggregationStrategy strategy, String state)
   {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
+    
     this.applyAll(style, mapId, strategy, conditions);
 
     return this.publish();

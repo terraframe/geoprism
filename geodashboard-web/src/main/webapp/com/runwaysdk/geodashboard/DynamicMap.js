@@ -167,14 +167,14 @@
     },
     
     Static : {
-    	isJson : function(str) {
-    	    try {
-    	        JSON.parse(str);
-    	    } catch (e) {
-    	        return false;
-    	    }
-    	    return true;
-    	}
+     isJson : function(str) {
+          try {
+              JSON.parse(str);
+          } catch (e) {
+              return false;
+          }
+          return true;
+      }
     },
     
     Instance : {
@@ -238,9 +238,9 @@
         $(".gdb-dashboard").on("click", dashboardBound); 
         
         // Handler for the clone dashboard button
-        $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
-        $("#delete-dashboard").on("click", Mojo.Util.bind(this, this._dashboardDeleteHandler));        
-        $("#dashboard-options-btn").on("click", Mojo.Util.bind(this, this._dashboardEditHandler));  
+//        $("#clone-dashboard").on("click", Mojo.Util.bind(this, this._dashboardCloneHandler));        
+//        $("#delete-dashboard").on("click", Mojo.Util.bind(this, this._dashboardDeleteHandler));        
+//        $("#dashboard-options-btn").on("click", Mojo.Util.bind(this, this._dashboardEditHandler));  
         
         this._DashboardMapController = com.runwaysdk.geodashboard.gis.persist.DashboardMapController;
         this._ReportController = com.runwaysdk.geodashboard.report.ReportItemController;
@@ -1054,55 +1054,55 @@
        * 
        */
       _drawUserLayersHTML : function(htmlInfo) {
-        var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
-        var onCheckHandler = Mojo.Util.bind(this, this._toggleOverlayLayer);
-        var layers = this._layerCache.values();
-        var html = '';
-        
-        // 1) Create the HTML for the layer overlay.
-        for(var i = layers.length-1; i >= 0; i--){
-          var layer = layers[i];
-          
-          var displayName = layer.getLayerName() || "N/A";
-          
-          html += '<div class="row-form">';
-          html += "<div id=" + layer.getLayerId() + "/>";
-          html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
-          
-          if(this.canEditDashboards()) {
-            //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
-            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
-            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
-            
-              html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
-              html += '<a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
-              html += '</div>';
-          }
-          
-          html += '</div>';
-        }
-        
-        // 2) Render the HTML we just generated.
-        container.html(html);
-        
-        // 3) Add checkboxes and register click events
-        for(var i = 0; i < layers.length; i++){
-          var layer = layers[i];
-          
-          var chexd = layer.checked === false || layer.checked === true ? layer.checked : layer.getLayerIsActive();  //layerIsActive should be false if unchecked
-          
-          com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(layer.getLayerId());
-          var checkbox = this.getFactory().newCheckBox({el: "#"+layer.getLayerId(), data: {runwayId: layer.getLayerId()}, checked: chexd, classes: ["check"]});
-          checkbox.addOnCheckListener(onCheckHandler);
-          checkbox.render();
-        }        
-        
-        // open the overlay panel if there are layers and it is collapsed
-        if(layers.length > 0 && !$("#collapse-overlay").hasClass("in")){
-          $("#overlay-opener-button").click();
-        }
-        
-        this._drawLegendItems();
+//        var container = $('#'+DynamicMap.OVERLAY_LAYER_CONTAINER);
+//        var onCheckHandler = Mojo.Util.bind(this, this._toggleOverlayLayer);
+//        var layers = this._layerCache.values();
+//        var html = '';
+//        
+//        // 1) Create the HTML for the layer overlay.
+//        for(var i = layers.length-1; i >= 0; i--){
+//          var layer = layers[i];
+//          
+//          var displayName = layer.getLayerName() || "N/A";
+//          
+//          html += '<div class="row-form">';
+//          html += "<div id=" + layer.getLayerId() + "/>";
+//          html += '<label for="'+layer.getLayerId()+'">'+displayName+'</label>';
+//          
+//          if(this.canEditDashboards()) {
+//            //html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'">remove</a>';
+//            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'">edit</a>';
+//            //html += '<a href="#" data-id="'+layer.getLayerId()+'" class="ico-control">control</a></div>';
+//            
+//              html += '<div class="cell"><a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-times ico-remove" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "deleteLayerTooltip")+'"></a>';
+//              html += '<a href="#" data-id="'+layer.getLayerId()+'" class="fa fa-pencil ico-edit" title="'+com.runwaysdk.Localize.localize("dashboardViewer", "editLayerTooltip")+'"></a>';
+//              html += '</div>';
+//          }
+//          
+//          html += '</div>';
+//        }
+//        
+//        // 2) Render the HTML we just generated.
+//        container.html(html);
+//        
+//        // 3) Add checkboxes and register click events
+//        for(var i = 0; i < layers.length; i++){
+//          var layer = layers[i];
+//          
+//          var chexd = layer.checked === false || layer.checked === true ? layer.checked : layer.getLayerIsActive();  //layerIsActive should be false if unchecked
+//          
+//          com.runwaysdk.event.Registry.getInstance().removeAllEventListeners(layer.getLayerId());
+//          var checkbox = this.getFactory().newCheckBox({el: "#"+layer.getLayerId(), data: {runwayId: layer.getLayerId()}, checked: chexd, classes: ["check"]});
+//          checkbox.addOnCheckListener(onCheckHandler);
+//          checkbox.render();
+//        }        
+//        
+//        // open the overlay panel if there are layers and it is collapsed
+//        if(layers.length > 0 && !$("#collapse-overlay").hasClass("in")){
+//          $("#overlay-opener-button").click();
+//        }
+//        
+//        this._drawLegendItems();
       },
       
       
@@ -1986,49 +1986,49 @@
          
         var conditions = [];
         
-        for(var i = 0; i < criteria.length; i++) {
-          
-          var type = criteria[i].type;
-          var operation = criteria[i].operation;
-          var value = criteria[i].value;
-          
-          var condition = null;
-            
-          if(type == 'LOCATION_CONDITION') {
-            condition = new com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition();              
-          }            
-          else if(type == 'CLASSIFIER_CONDITION') {
-            condition = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();
-            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
-          }            
-          else if (type == 'ATTRIBUTE_CONDITION') {
-              
-            if (operation === "gt") {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
-            }
-            else if (operation === "ge") {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
-            }
-            else if (operation === "lt") {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
-            }
-            else if (operation === "le") {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
-            }
-            else if(operation === "neq") {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual();
-            }              
-            else {
-              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();                
-            }
-              
-            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
-          }
-            
-          condition.setComparisonValue(value);
-          
-          conditions.push(condition);
-        }     
+//        for(var i = 0; i < criteria.length; i++) {
+//          
+//          var type = criteria[i].type;
+//          var operation = criteria[i].operation;
+//          var value = criteria[i].value;
+//          
+//          var condition = null;
+//            
+//          if(type == 'LOCATION_CONDITION') {
+//            condition = new com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition();              
+//          }            
+//          else if(type == 'CLASSIFIER_CONDITION') {
+//            condition = new com.runwaysdk.geodashboard.gis.persist.condition.ClassifierCondition();
+//            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
+//          }            
+//          else if (type == 'ATTRIBUTE_CONDITION') {
+//              
+//            if (operation === "gt") {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan();
+//            }
+//            else if (operation === "ge") {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual();
+//            }
+//            else if (operation === "lt") {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThan();
+//            }
+//            else if (operation === "le") {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual();
+//            }
+//            else if(operation === "neq") {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqual();
+//            }              
+//            else {
+//              condition = new com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual();                
+//            }
+//              
+//            condition.setDefiningMdAttribute(criteria[i].mdAttribute);              
+//          }
+//            
+//          condition.setComparisonValue(value);
+//          
+//          conditions.push(condition);
+//        }     
         
         return conditions;
       },

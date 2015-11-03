@@ -145,6 +145,25 @@
     }
   });
   
+  var ExceptionHandler = Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'ExceptionHandler', {
+    Static :{
+      handleException : function(e) {
+        if($.type( e ) === "string") {
+          ExceptionHandler.handleErrorMessage(e);
+        }
+        else {
+          ExceptionHandler.handleErrorMessage(e.getLocalizedMessage());
+        }
+      },
+      handleErrorMessage : function(message) {
+        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();});
+        dialog.render();        
+      }        
+    }
+  });
+  
 
   // Alias the project's root to GDB
   Mojo.GLOBAL[ALIAS] = Mojo.$.com.runwaysdk.geodashboard;

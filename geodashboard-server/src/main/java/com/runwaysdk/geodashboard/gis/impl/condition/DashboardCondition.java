@@ -18,6 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,54 +81,73 @@ public abstract class DashboardCondition implements Reloadable
 
       for (int i = 0; i < criteria.length(); i++)
       {
-        JSONObject object = criteria.getJSONObject(i);
-        String type = object.getString(TYPE_KEY);
-        String operation = object.getString(OPERATION_KEY);
-        String value = object.getString(VALUE_KEY);
-
         DashboardCondition condition = null;
 
-        if (type.equals(LocationCondition.CONDITION_TYPE))
+        JSONObject object = criteria.getJSONObject(i);
+        String type = object.getString(TYPE_KEY);
+
+        if (type.equals(DateCondition.CONDITION_TYPE))
         {
-          condition = new LocationCondition(value);
+          String mdAttributeId = object.getString(DateCondition.MD_ATTRIBUTE_KEY);
+          String startDate = ( object.has(DateCondition.START_DATE) ? object.getString(DateCondition.START_DATE) : null );
+          String endDate = ( object.has(DateCondition.END_DATE) ? object.getString(DateCondition.END_DATE) : null );
+
+          condition = new DateCondition(mdAttributeId, startDate, endDate);
         }
         else if (type.equals(ClassifierCondition.CONDITION_TYPE))
         {
+          String value = object.getString(VALUE_KEY);
           String mdAttributeId = object.getString(ClassifierCondition.MD_ATTRIBUTE_KEY);
 
-          condition = new ClassifierCondition(mdAttributeId, value);
+          if (value != null && !value.equals("[]"))
+          {
+            condition = new ClassifierCondition(mdAttributeId, value);
+          }
         }
-        else if (type.equals(DashboardAttributeCondition.CONDITION_TYPE))
+        else
         {
-          String mdAttributeId = object.getString(DashboardAttributeCondition.MD_ATTRIBUTE_KEY);
+          String operation = object.getString(OPERATION_KEY);
+          String value = object.getString(VALUE_KEY);
 
-          if (operation.equals(DashboardGreaterThanCondition.OPERATION))
+          if (type.equals(LocationCondition.CONDITION_TYPE))
           {
-            condition = new DashboardGreaterThanCondition(mdAttributeId, value);
+            condition = new LocationCondition(value);
           }
-          else if (operation.equals(DashboardGreaterThanOrEqualCondition.OPERATION))
+          else if (type.equals(DashboardAttributeCondition.CONDITION_TYPE))
           {
-            condition = new DashboardGreaterThanOrEqualCondition(mdAttributeId, value);
-          }
-          else if (operation.equals(DashboardLessThanCondition.OPERATION))
-          {
-            condition = new DashboardLessThanCondition(mdAttributeId, value);
-          }
-          else if (operation.equals(DashboardLessThanOrEqualCondition.OPERATION))
-          {
-            condition = new DashboardLessThanOrEqualCondition(mdAttributeId, value);
-          }
-          else if (operation.equals(DashboardNotEqualCondition.OPERATION))
-          {
-            condition = new DashboardNotEqualCondition(mdAttributeId, value);
-          }
-          else
-          {
-            condition = new DashboardEqualCondition(mdAttributeId, value);
+            String mdAttributeId = object.getString(DashboardAttributeCondition.MD_ATTRIBUTE_KEY);
+
+            if (operation.equals(DashboardGreaterThanCondition.OPERATION))
+            {
+              condition = new DashboardGreaterThanCondition(mdAttributeId, value);
+            }
+            else if (operation.equals(DashboardGreaterThanOrEqualCondition.OPERATION))
+            {
+              condition = new DashboardGreaterThanOrEqualCondition(mdAttributeId, value);
+            }
+            else if (operation.equals(DashboardLessThanCondition.OPERATION))
+            {
+              condition = new DashboardLessThanCondition(mdAttributeId, value);
+            }
+            else if (operation.equals(DashboardLessThanOrEqualCondition.OPERATION))
+            {
+              condition = new DashboardLessThanOrEqualCondition(mdAttributeId, value);
+            }
+            else if (operation.equals(DashboardNotEqualCondition.OPERATION))
+            {
+              condition = new DashboardNotEqualCondition(mdAttributeId, value);
+            }
+            else
+            {
+              condition = new DashboardEqualCondition(mdAttributeId, value);
+            }
           }
         }
 
-        conditions.add(condition);
+        if (condition != null)
+        {
+          conditions.add(condition);
+        }
       }
 
       return conditions.toArray(new DashboardCondition[conditions.size()]);
@@ -176,7 +196,7 @@ public abstract class DashboardCondition implements Reloadable
 
           JSONObject condition = attribute.getJSONObject("filter");
 
-          if (condition.keys().hasNext())
+          if (!isEmpty(condition))
           {
             if (!condition.has(TYPE_KEY))
             {
@@ -186,7 +206,7 @@ public abstract class DashboardCondition implements Reloadable
             if (!condition.has(DashboardPrimitiveCondition.MD_ATTRIBUTE_KEY))
             {
               String mdAttributeId = attribute.getString("mdAttributeId");
-              
+
               condition.put(DashboardPrimitiveCondition.MD_ATTRIBUTE_KEY, mdAttributeId);
             }
 
@@ -197,6 +217,36 @@ public abstract class DashboardCondition implements Reloadable
     }
 
     return conditions;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static boolean isEmpty(JSONObject condition) throws JSONException
+  {
+    Iterator<String> it = condition.keys();
+
+    while (it.hasNext())
+    {
+      String key = it.next();
+
+      if (! ( key.equals(TYPE_KEY) || key.equals(OPERATION_KEY) || key.equals(DashboardAttributeCondition.MD_ATTRIBUTE_KEY) ))
+      {
+        Object value = condition.get(key);
+
+        if (value != null)
+        {
+          if (value instanceof JSONArray && ( (JSONArray) value ).length() > 0)
+          {
+            return false;
+          }
+          else if (value instanceof String && ( (String) value ).length() > 0)
+          {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   public static DashboardCondition[] getConditionsFromState(String state)

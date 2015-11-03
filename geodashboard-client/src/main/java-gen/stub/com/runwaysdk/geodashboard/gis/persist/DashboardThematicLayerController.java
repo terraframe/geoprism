@@ -37,7 +37,6 @@ import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
 import com.runwaysdk.geodashboard.JavascriptUtil;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO;
@@ -403,13 +402,13 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
     return ( (MdAttributeConcreteDTO) mdAttr );
   }
-
+  
   @Override
-  public void applyWithStyle(DashboardThematicLayerDTO layer, DashboardStyleDTO style, String mapId, AggregationStrategyDTO strategy, DashboardConditionDTO[] conditions) throws IOException, ServletException
+  public void applyWithStyle(DashboardThematicLayerDTO layer, DashboardStyleDTO style, String mapId, AggregationStrategyDTO strategy, String state) throws IOException, ServletException
   {
     try
     {
-      String layerJSON = layer.applyWithStyleAndStrategy(style, mapId, strategy, conditions);
+      String layerJSON = layer.applyWithStyleAndStrategy(style, mapId, strategy, state);
 
       JSONReturnObject jsonReturn = new JSONReturnObject(layerJSON);
       jsonReturn.setInformation(this.getClientRequest().getInformation());

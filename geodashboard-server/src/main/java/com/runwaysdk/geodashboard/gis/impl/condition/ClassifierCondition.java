@@ -25,13 +25,14 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.ValueQuery;
 
-public class ClassifierCondition extends DashboardPrimitiveCondition implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierCondition extends DashboardPrimitiveCondition implements Reloadable
 {
   /**
    * Equal comparison
@@ -90,11 +91,20 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
   {
     try
     {
+      String value = this.getComparisonValue();
+
       JSONObject object = new JSONObject();
       object.put(TYPE_KEY, CONDITION_TYPE);
       object.put(MD_ATTRIBUTE_KEY, this.getMdAttributeId());
-      object.put(OPERATION_KEY, this.getOperation());
-      object.put(VALUE_KEY, this.getComparisonValue());
+
+      if (value != null && value.length() > 0)
+      {
+        object.put(VALUE_KEY, new JSONArray(value));
+      }
+      else
+      {
+        object.put(VALUE_KEY, new JSONArray());
+      }
 
       return object;
     }

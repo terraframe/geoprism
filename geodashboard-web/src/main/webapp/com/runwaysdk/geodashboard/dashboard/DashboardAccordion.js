@@ -17,83 +17,8 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  var parser = null;
-  var formatter = null;
-  
-  var getParser = function() {
-    if(parser == null) {
-      parser = Globalize.numberParser();        
-    }
-  
-    return parser;
-  }
-  
-  var getFormatter = function() {
-    if(formatter == null) {
-      formatter = Globalize.numberFormatter();        
-    }
-    
-    return formatter;
-  }
-  
-  function DashboardController($scope) {
-    var controller = this;
-  
-    controller.dashboardId = '';
-
-    /* Getters */
-    controller.getDashboardId = function() {
-      return controller.dashboardId;
-    }  
-
-    /* Initialization Function */
-    $scope.init = function(dashboardId) {
-      controller.model = {
-        location : {label:'',value:''},
-        editDashboard : false,
-        editData : false,
-        types : [],
-        dashboardId : dashboardId
-      };
-      controller.dashboardId = dashboardId;      
-    }
-  
-    $scope.$watch(controller.getDashboardId(), function(newVal, oldVal){
-      controller.load();    
-    }, true);
-    
-    /* Controller Functions */
-    controller.load = function() {
-      var request = new Mojo.ClientRequest({
-        onSuccess : function(json){
-          controller.model = JSON.parse(json);
-          
-          $scope.$apply();
-        },
-        onFailure : function(e){
-        }
-      });
-      
-      com.runwaysdk.geodashboard.Dashboard.getJSON(request, controller.dashboardId);
-    }
-    
-    /* Refresh Map Function */
-    controller.refresh = function() {
-      console.log(controller.model);
-    }
-    
-    controller.save = function() {
-      var request = new Mojo.ClientRequest({
-        onSuccess : function() {
-        },
-        onFailure : function(e) {
-          alert(e);
-        }
-      });
-          
-      com.runwaysdk.geodashboard.Dashboard.saveState(request, controller.dashboardId, controller.model);      
-    }
-  }
+  var parser = Globalize.numberParser();
+  var formatter = Globalize.numberFormatter();        
   
   function LocationFilter() {
     return {
@@ -160,7 +85,8 @@
       templateUrl: '/partial/dashboard/dashboard-accordion.jsp',      
       scope: {
         types:'=',
-        edittable:'='
+        edittable:'=',
+        newLayer:'&'
       },
       link: function (scope, element, attrs) {
       }
@@ -178,16 +104,17 @@
         identifier:'@'
       },
       link: function (scope, element, attrs) {
-    	  
+      
         // This is a hack because of scoping issues with ng-repeat
         scope.edittable = scope.$parent.$parent.$parent.edittable;
-    	  
-        // Don't collapse the element if there are filtering values    	      	  
+        scope.newLayer = scope.$parent.$parent.$parent.newLayer;
+        
+        // Don't collapse the element if there are filtering values            
         if(!$.isEmptyObject(scope.attribute.filter)) {
-        	element.ready(function(){
+          element.ready(function(){
               $(element).find(".opener-link").click();
           })
-        }    	  
+        }      
       }
     }    
   }
@@ -219,7 +146,7 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
-        var ngModel = $parse(attrs.ngModel);
+        scope.attribute.filter.type = "DATE_CONDITION";
         
         /* Hook up the jquery datepicker*/
         var checkin = $(element).find('.checkin');
@@ -241,7 +168,7 @@
           onSelect: function(dateText, inst){
             startDate = new Date(dateText);
             
-            scope.attribute.filter.startDate = startDate;
+            scope.attribute.filter.startDate = dateText;
             scope.$apply();
           },
           onClose: function( selectedDate ) {
@@ -259,7 +186,7 @@
           onSelect: function(dateText, inst){
             endDate = new Date(dateText);
             
-            scope.attribute.filter.endDate = endDate;
+            scope.attribute.filter.endDate = dateText;
             scope.$apply();
           },
           onClose: function( selectedDate ) {
@@ -299,6 +226,7 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
+        scope.attribute.filter.type = "CLASSIFIER_CONDITION";
           
         var mdAttributeId = scope.attribute.mdAttributeId;
           
@@ -321,12 +249,17 @@
               selectable : false,
               checkable : true
             });
+            tree.onCheck(function(node){
+              scope.attribute.filter.value = tree.getCheckedTerms();
+              scope.$apply();
+            });
+            
             tree.render("#" + mdAttributeId, nodes);
             
             // Load saved values
-            if(scope.attribute.value != null)
+            if(scope.attribute.filter.value != null)
             {
-              tree.setCheckedTerms(scope.attribute.value);  
+              tree.setCheckedTerms(scope.attribute.filter.value);  
             }
           },
           onFailure : function(e){
@@ -393,10 +326,8 @@
     }    
   }
   
-  angular.module("dashboard", []);
-  angular
-  .module('dashboard')
-  .controller('DashboardController', DashboardController)
+  angular.module("dashboard-accordion", []);
+  angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)
   .directive('accordionAttribute', AccordionAttribute)

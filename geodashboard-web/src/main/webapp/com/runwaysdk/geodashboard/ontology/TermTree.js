@@ -226,6 +226,11 @@
         
         this.selectCallbacks = [];
         this.deselectCallbacks = [];
+        this._checkListeners = [];
+      },
+      
+      onCheck : function(listener) {
+        this._checkListeners.push(listener);
       },
       
       /*
@@ -434,6 +439,10 @@
         var node = checkBox.node;
         
         this.__setCheck(node, checked);
+        
+        for(var i = 0; i < this._checkListeners.length; i++) {
+          this._checkListeners[i](node);
+        }
       },
       
       __onCreateLi : function(node, $li) {

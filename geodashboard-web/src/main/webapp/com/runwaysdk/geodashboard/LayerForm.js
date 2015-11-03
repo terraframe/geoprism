@@ -843,24 +843,6 @@
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(htmlOrJson, response){
             that._onApplySuccess(htmlOrJson, response);
-            
-            //////////////////////////////
-            // temp solution for creating thumbnails. 
-            // TODO: move to save mechanism
-            //////////////////////////////
-            var clientRequest = new Mojo.ClientRequest({
-                onSuccess : function() {
-                  // No action needed
-                },
-                onFailure : function(e) {
-                  that.handleException(e);
-                }
-              });
-                  
-              // Persist legend position to the db
-              com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(clientRequest, that._map._dashboardId);
-              ///////////////////////////////
-              ///////////////////////////////
           },
           onFailure : function(e){
             that.handleException(e);
@@ -956,7 +938,7 @@
       edit : function(id) {
         var that = this;
         
-        var layer = this._map._layerCache.get(id);
+        var layer = this._map.getLayer(id);
         that._layer = layer;
       
         this._LayerController.edit(new com.runwaysdk.geodashboard.StandbyClientRequest({
@@ -1052,21 +1034,10 @@
       _applyWithStyleListener : function(params){
         
         var layer = this._map.getLayer(params["layer.componentId"]);
-        var mdAttribute = (layer != null) ? layer.getValue('mdAttribute') : this._thematicAttributeId;
+        var mdAttribute = (layer != null) ? layer.mdAttributeId : this._thematicAttributeId;
         
-        params['layer.mdAttribute'] = mdAttribute;
-        
-        var conditions = this._map.getConditions();
-        
-        $.each(conditions, function( index, condition ) {
-          params["conditions_" + index + ".comparisonValue"] = condition.getValue('comparisonValue');
-          params["conditions_" + index + ".isNew"] = "true";
-          params["#conditions_" + index + ".actualType"] = condition.getType();
-          
-          if(condition instanceof com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition) {
-            params["conditions_" + index + ".definingMdAttribute"] = condition.getValue('definingMdAttribute');  
-          }
-        });      
+        params['layer.mdAttribute'] = mdAttribute;        
+        params['state'] = JSON.stringify(this._map.getModel());
         
         if($("#tab005categoriespolygon").is(":visible")){
           var catStyleArr = this._updateCategoriesJSON("#categories-polygon-input");

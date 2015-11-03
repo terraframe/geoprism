@@ -78,6 +78,9 @@
 	<script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>	
 	
 	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	
+	<jwr:script src="/bundles/dashboard.js" useRandomParam="false"/> 
+	
 		
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -106,7 +109,7 @@
 
   </head>
 
-  <body>
+  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}')">
 
     <form action="#" class="control-form" id="control-form">
     <div id="control-form-collapse-button">
@@ -117,16 +120,7 @@
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
         
 		<!-- Overlay Layers Panel -->
-        <article class="accordion info-box" id="overlay-container">
-            <div class="accordion-group sales-accortion">
-              <div class="accordion-heading">
-                <a class="map-layers-opener opener" id="overlay-opener-button" data-toggle="collapse" data-parent="#overlay-container" href="#collapse-overlay"><gdb:localize key="dashboardViewer.mapLayers"/></a>
-              </div>
-              <div id="collapse-overlay" class="accordion-body" style="height: 0px;">
-                <div class="accordion-inner holder" id="overlayLayerContainer"></div>
-              </div>
-            </div>
-        </article>
+		<thematic-layers cache="dashboard.thematicLayerCache" edit="dashboard.model.editDashboard" map-id="dashboard.model.mapId" dashboard="dashboard" ></thematic-layers>
         
        	<!-- Reference Layer Panel -->       
         <article class="accordion info-box" id="ref-layer-container">
@@ -185,7 +179,7 @@
     </form>
     
     <!-- contain aside of the page -->
-  <aside class="aside animated legend-snapable expanded" id="dashboardMetadata"  ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}')">
+  <aside class="aside animated legend-snapable expanded" id="dashboardMetadata">
         <div id="data-panel-toggle-container">
       		<i id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
       	</div>
@@ -204,28 +198,25 @@
 			<i class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
 			
 			<!-- Clone dashboard button -->
-		    <c:if test="${editDashboard}">
-		      <span id="clone-dashboard" class="">
-  		          <i class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
-  		      </span>
-  		      
-		      <span id="delete-dashboard" class="">
-  		          <i class="fa fa-minus ico-dashboard" title="<gdb:localize key='dashboardViewer.deleteDashboardTooltip'/>" ></i>
-  		      </span>  		      
-  		      
-		      <i id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
-  		    </c:if>
+			<span id="clone-dashboard" class="" ng-if="dashboard.model.editDashboard">
+				<i class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
+			</span>
+			
+			<span id="delete-dashboard" class="" ng-if="dashboard.model.editDashboard">
+				<i class="fa fa-minus ico-dashboard" title="<gdb:localize key='dashboardViewer.deleteDashboardTooltip'/>" ></i>
+			</span>
+			
+			<i  ng-if="dashboard.model.editDashboard" id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
+  		    
   		    <a href="<%=request.getContextPath() + "/menu"%>" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
 		</div>
 		
-	  <ng-form name="form">
-		
-		
+	  <ng-form name="form">		
 	    <!-- Global geo filter -->
 	    <location-filter filter="dashboard.model.location" dashboard="dashboard.dashboardId"></location-filter>
 		                                        
         <div class="sales-accortion panel-group" id="type-accordion">
-          <type-accordion types="dashboard.model.types" edittable="dashboard.model.editDashboard"></type-accordion>  
+          <type-accordion types="dashboard.model.types" edittable="dashboard.model.editDashboard" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
         </div> <!-- END sales-accortion panel-group -->
     
 	    <div id="filter-buttons-container">
