@@ -2405,7 +2405,7 @@
         $('#report-upload').on('click', Mojo.Util.bind(this, this._onClickUploadReport));
         
         $('#map-export-btn').on('click', Mojo.Util.bind(this, this._onClickExportMap)); 
-        $('#map-zoom-to-extent-btn').on('click', Mojo.Util.bind(this, this._onClickZoomMapToExtent));
+//        $('#map-zoom-to-extent-btn').on('click', Mojo.Util.bind(this, this._onClickZoomMapToExtent));
         
         $('#control-form-collapse-button').on('click', Mojo.Util.bind(this, this._onClickToggleLeftPanel));
         $('#data-panel-expand-toggle').on('click', Mojo.Util.bind(this, this._onClickToggleRightPanel));

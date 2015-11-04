@@ -138,25 +138,19 @@
               		<ul id="legend-list-group"></ul> 
 			    </div>
 		    </div>
-		 </article>
+		</article>
 		 
-		<!-- Map Tools Panel -->       
+        <!-- Map Tools Panel -->       
         <article class="accordion info-box" id="map-tools-collapse-container">
-        	<div class="accordion-group sales-accortion" id="map-tools-sub-container">
-<!--         		<div class="accordion-heading"> -->
-<%--         			<a class="map-tools-opener opener" id="map-tools-opener-button" data-toggle="collapse" data-parent="#map-tools-collapse-container" href="#collapse-map-tools"><gdb:localize key="dashboardViewer.map-tools"/></a> --%>
-<!--         		</div>	 -->
-              	<div id="collapse-map-tools" class="accordion-body">
-              		<div class="accordion-inner holder" id="mapToolsContainer">
-						<!-- map-export-btn must be an <a> tag if we want to use openlayers export functionality -->
-              			<a id="map-export-btn" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
-              			<a id="map-zoom-to-extent-btn" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></a>
-              		</div>
-              
-			    </div>
-		    </div>
-		 </article>
-		 
+          <div class="accordion-group sales-accortion" id="map-tools-sub-container">
+            <div id="collapse-map-tools" class="accordion-body">
+              <div class="accordion-inner holder" id="mapToolsContainer">
+                <a id="map-export-btn" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
+                <a ng-click="dashboard.centerMap()" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></a>
+              </div>              
+            </div>
+          </div>
+        </article>		 
       </fieldset>
     </form>
     

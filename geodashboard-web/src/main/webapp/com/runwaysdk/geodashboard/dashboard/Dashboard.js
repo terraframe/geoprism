@@ -134,11 +134,7 @@
     controller.getModel = function() {
       return controller.model;
     }
-    
-    controller.getBBOX = function(bbox) {
-      return controller.bbox;    
-    }
-    
+
     controller.canEdit = function() {
       return controller.model.editDashboard;
     }
