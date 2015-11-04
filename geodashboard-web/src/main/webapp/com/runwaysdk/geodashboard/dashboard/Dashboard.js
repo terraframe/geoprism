@@ -50,8 +50,6 @@
           $timeout(function() {
             controller.model = JSON.parse(json);
             
-            console.log("Location: (" + controller.model.location.value + ", " + controller.model.location.label + ")");
-            
             $scope.$apply();
             
             controller.refresh();
@@ -125,6 +123,10 @@
     controller.getModel = function() {
       return controller.model;
     }
+    
+    controller.canEdit = function() {
+      return controller.model.editDashboard;
+    }
 
     /* Layer Cache Getters/Setters */
     controller.getLayerCache = function() {
@@ -156,16 +158,25 @@
       return controller.getReferenceLayerCache()[layerId];        
     }
     
+    controller.getReferenceLayers = function() {
+      var layers = [];
+        
+      // References are reverse order
+      for(var i = (controller.referenceLayerCache.ids.length - 1); i >= 0; i--) {
+        var layerId = controller.referenceLayerCache.ids[i];
+          
+        layers.push(controller.referenceLayerCache.values[layerId]);
+      }
+        
+      return layers;
+    }    
+    
     controller.setCurrentBaseMap = function(baseMap) {
       controller.model.baseMap = baseMap;    
     }
     
     controller.setBBOX = function(bbox) {
       controller.model.bbox = bbox;    
-    }
-    
-    controller.handleReferenceLayerEvent = function(map) {
-      controller.setMapState(map, true);
     }
     
     controller.handleLayerEvent = function(map) {
@@ -183,11 +194,14 @@
         // Build thematic layer objects and populate the cache
         for (var i = 0; i < map.layers.length; ++i) {
           var layer = map.layers[i];
+          layer.key = layer.layerId;
             
           var oldLayer = cache.values[layer.layerId];
           
           if (oldLayer != null) {
-            layer.isActive = oldLayer.isActive;                        
+            layer.isActive = oldLayer.isActive;
+          	
+          	angular.copy(layer, oldLayer);            
           }
           else {
             layer.isActive = true;
@@ -199,31 +213,37 @@
             else {
               cache.ids.push(layer.layerId);
             }
-          }
-          
-          cache.values[layer.layerId] = layer;          
+            
+            cache.values[layer.layerId] = layer;
+          }          
         }
       }
         
       // Build reference layer objects and populate the cache
-//      if(map.refLayers){
-//        var cache = controller.getReferenceLayerCache();
-//      
-//        for (var r = 0; r < map.refLayers.length; ++r) {
-//          var layer = map.refLayers[r];
-//            
-//          // Construct the layer view objects
-//          var view = com.runwaysdk.geodashboard.gis.LayerViewFactory.createLayerView(layer);
-//          
-//          var oldLayer = cache.get(view.universalId);
-//          
-//          if (oldLayer != null) {
-//            view.wmsLayerObj = oldLayer.wmsLayerObj;
-//          }
-//            
-//          cache.put(view.universalId, view);
-//        }
-//      }
+      if(map.refLayers){
+        var cache = controller.getReferenceLayerCache();
+      
+        for (var r = 0; r < map.refLayers.length; ++r) {
+          var layer = map.refLayers[r];
+          layer.key = layer.universalId;
+            
+          var oldLayer = cache.values[layer.universalId];
+            
+          if (oldLayer != null) {
+          	if((oldLayer.layerExists && layer.layerExists) || (!oldLayer.layerExists && !layer.layerExists)) {        	  
+              layer.isActive = oldLayer.isActive;
+          	}
+          	
+          	angular.copy(layer, oldLayer);
+          }
+          else {        	  
+            /* Add new item to the cache */
+        	  
+            cache.ids.unshift(layer.universalId);
+            cache.values[layer.universalId] = layer;  
+          }
+        }
+      }
 //        
 //      if (map.activeBaseMap != null) {
 //        controller.setCurrentBaseMap(map.activeBaseMap);
@@ -243,15 +263,15 @@
       }
               
       if(controller.baseLayers == null) {
-        controller.baseLayers = controller.mapFactory.createBaseLayers();                                    	  
+//        controller.baseLayers = controller.mapFactory.createBaseLayers();                                    	  
 //        this._renderBaseLayerSwitcher(baseLayers);          
       }
             
-//    var refLayers = this._refLayerCache.values();
-//    controller.mapFactory.createReferenceLayers(refLayers, this._workspace, removeExisting);
+      var rLayers = controller.getReferenceLayers();
+      controller.mapFactory.createReferenceLayers(rLayers, controller.workspace, true);
             
-      var layers = controller.getThematicLayers();
-      controller.mapFactory.createUserLayers(layers, controller.workspace, true);    	  
+      var tLayers = controller.getThematicLayers();
+      controller.mapFactory.createUserLayers(tLayers, controller.workspace, true);    	  
     }
     
     controller.toggleLayer = function(layer) {
@@ -264,8 +284,8 @@
     }
     
     controller.hideLayers = function() {
-     var layers = controller.getThematicLayers();
-     controller.mapFactory.hideLayers(layers);     
+      var layers = controller.getThematicLayers();
+      controller.mapFactory.hideLayers(layers);     
     }
     
     /* Setup all watch functions */

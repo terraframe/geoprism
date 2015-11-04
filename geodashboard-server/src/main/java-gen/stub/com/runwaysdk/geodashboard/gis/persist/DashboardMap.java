@@ -77,7 +77,6 @@ import org.geotools.ows.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
@@ -321,29 +320,34 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     if (!child.getId().equals(root.getId()))
     {
-      JSONObject uniObjContainer = new JSONObject();
-      JSONObject uniObjProps = new JSONObject();
-
       String uniDispLabel = child.getDisplayLabel().toString();
-      String uniId = child.getId();
+      String universalId = child.getId();
 
-      if (savedLayerHash.containsKey(uniId))
+      if (savedLayerHash.containsKey(universalId))
       {
-        // layerId = savedLayerHash.get(uniId).getId();
-        JSONObject savedLayerJSON = savedLayerHash.get(uniId).toJSON();
-        savedLayerJSON.put("uniId", uniId);
-        savedLayerJSON.put("refLayerExists", true);
-        savedLayerJSON.put("layerType", "REFERENCELAYER");
-        jsonArr.put(savedLayerJSON);
+        JSONObject json = savedLayerHash.get(universalId).toJSON();
+        
+        jsonArr.put(json);
       }
       else
       {
-        uniObjProps.put("uniId", uniId);
-        uniObjProps.put("uniDispLabel", uniDispLabel);
-        uniObjProps.put("refLayerExists", false);
-        uniObjContainer.put("layerType", "REFERENCEJSON");
-        uniObjContainer.put("properties", uniObjProps);
-        jsonArr.put(uniObjContainer);
+        // Spoof a place holder for the universal
+        JSONObject json = new JSONObject();
+        json.put("viewName", (String) null);
+        json.put("sldName", (String) null);
+        json.put("layerName", uniDispLabel);
+        json.put("layerId", universalId);
+        json.put("inLegend", false);
+        json.put("legendXPosition", 0);
+        json.put("legendYPosition", 0);
+        json.put("groupedInLegend", true);
+        json.put("featureStrategy", "BASIC");
+        json.put("isActive", false);        
+        json.put("layerType", "REFERENCEJSON");
+        json.put("layerExists", false);        
+        json.put("universalId", universalId);
+                
+        jsonArr.put(json);
       }
     }
   }
@@ -899,13 +903,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         // The server returned a ServiceException (unusual in this case)
         String error = "The server returned a ServiceException.";
-        throw new ProgrammingErrorException(error, e);
-      }
-      catch (SAXException e)
-      {
-        // Unable to parse the response from the server
-        // For example, the capabilities it returned was not valid
-        String error = "Could not parse the response from the server.";
         throw new ProgrammingErrorException(error, e);
       }
 

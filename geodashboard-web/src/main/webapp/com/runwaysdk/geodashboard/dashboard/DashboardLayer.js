@@ -73,6 +73,10 @@
       $scope.dashboard.renderMap();                  
     }
     
+    controller.canEdit = function() {
+      return $scope.dashboard.canEdit();    	
+    }
+    
     controller.move = function(e, ui) {
       var layerIds = [];
         
@@ -102,6 +106,12 @@
         controller.setLayerIndexes(layerIds);    	  
       }
     }
+    
+    controller.hasValues = function(cache) {
+      var length = cache.ids.length;
+      
+      return (length > 0);
+    }
   }
     
   function ThematicLayers() {
@@ -111,18 +121,17 @@
       templateUrl: '/partial/dashboard/thematic-layers.jsp',
       scope: {
         cache:'=',
-        edit:'=',
         dashboard:'='
       },
       controller : ThematicLayersController,
       controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {        
+      link: function (scope, element, attrs, ctrl) {
+    	
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-          var length = scope.cache.ids.length;
         
           element.ready(function() {
-            if(length > 0  && !$(element).find("#collapse-overlay").hasClass("in")) {
+            if(ctrl.hasValues(scope.cache) && !$(element).find("#collapse-overlay").hasClass("in")) {
               $(element).find("#overlay-opener-button").click();            
             }            
           });
@@ -140,8 +149,104 @@
       }
     }    
   }
+
+  function ReferenceLayersController($scope, $timeout) {
+    var controller = this;
+	  
+    controller.canEdit = function() {
+      return $scope.dashboard.canEdit();      
+    }
     
+    controller.edit = function(layerId, universalId) {
+      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+      form.edit(layerId);    	
+    }    
+    
+    controller.add = function(layerId, universalId) {
+      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+      form.open(universalId);
+    }
+
+    controller.toggle = function(layerId, universalId) {
+      var layer = $scope.cache.values[universalId];      
+      layer.isActive = !layer.isActive;
+
+      $scope.dashboard.toggleLayer(layer);
+    }
+    
+    controller.remove = function(layerId, universalId) {
+    	
+      var request = new GDB.StandbyClientRequest({
+        onSuccess : function(){
+          // remove the map layer from the map
+          var layer = $scope.cache.values[universalId];
+          layer.isActive = false;
+          layer.layerExists = false;
+          layer.layerType = "REFERENCEJSON";
+          
+          $scope.dashboard.toggleLayer(layer);          
+        	  
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          GDB.ExceptionHandler.handleException(e);
+        }
+      }, '#ref-layer-container');
+      	
+      com.runwaysdk.Facade.deleteEntity(request, layerId);      
+    }
+    
+    controller.hasValues = function(cache) {
+      if(cache.ids.length > 0) {
+        for(var i = 0; i < cache.ids.length; i++) {
+          var id = cache.ids[i];
+          var layer = cache.values[id];
+          
+          if(layer.layerExists) {
+            return true;
+          }
+        }
+      }  
+      
+      return false;
+    }
+    
+    controller.refresh = function() {
+      $timeout(function() {
+    	console.log("Reference layers have changed");
+      }, 10);
+    }
+  }
+    
+  function ReferenceLayers() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/reference-layers.jsp',
+      scope: {
+        cache:'=',
+        dashboard:'='
+      },
+      controller : ReferenceLayersController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {    
+          
+        // open the overlay panel if there are cache and it is collapsed        
+        scope.$watch('cache', function(newVal, oldVal){
+          element.ready(function() {
+            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues(scope.cache)) {
+              $(element).find("#ref-layer-opener-button").click();            
+            }            
+          });
+          
+          ctrl.refresh();
+        }, true);
+      }
+    }    
+  }  
+  
   angular.module("dashboard-layer", []);
   angular.module('dashboard-layer')
-    .directive('thematicLayers', ThematicLayers);  
+    .directive('thematicLayers', ThematicLayers)
+    .directive('referenceLayers', ReferenceLayers);  
 })();

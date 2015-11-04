@@ -1779,7 +1779,7 @@
           var jsonObj = {};
           jsonObj["refLayers"] = [Mojo.Util.toObject(htmlOrJson)];
               
-          this._map.handleReferenceLayerEvent(jsonObj)
+          this._map.handleLayerEvent(jsonObj);
               
           this.handleMessages(response);
         }

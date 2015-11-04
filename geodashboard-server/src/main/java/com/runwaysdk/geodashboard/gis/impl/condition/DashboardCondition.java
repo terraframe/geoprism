@@ -251,16 +251,21 @@ public abstract class DashboardCondition implements Reloadable
 
   public static DashboardCondition[] getConditionsFromState(String state)
   {
-    try
+    if (state != null && state.length() > 0)
     {
-      JSONArray conditions = DashboardCondition.parseConditions(state);
+      try
+      {
+        JSONArray conditions = DashboardCondition.parseConditions(state);
 
-      return DashboardCondition.deserialize(conditions.toString());
+        return DashboardCondition.deserialize(conditions.toString());
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+
+    return new DashboardCondition[] {};
   }
 
 }

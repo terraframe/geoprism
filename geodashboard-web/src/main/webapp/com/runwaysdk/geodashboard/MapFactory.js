@@ -372,7 +372,7 @@
          * <public> - called externally
          */
         hideLayer : function(layer) {
-          var wmsLayer = this._cache[layer.layerId];          
+          var wmsLayer = this._cache[layer.key];          
           
           if (wmsLayer != null) {
             var map = this.getMap();
@@ -383,10 +383,12 @@
         },
         
         hideLayers : function(layers) {
-          for(var i = 0; i < layers.length; i++) {
-            var layer = layers[i];
-            
-            this.hideLayer(layer);
+          if(layers != null) {
+            for(var i = 0; i < layers.length; i++) {
+              var layer = layers[i];
+                  
+              this.hideLayer(layer);
+            }        	  
           }
         },
         
@@ -475,26 +477,20 @@
          */
         createUserLayers : function(layers, geoserverWorkspace, removeExisting) {        	
           // Remove any already rendered layers from the map
-           if (removeExisting === true) {
-              
-             for (var i = 0; i < layers.length; i++) {
-               var layer = layers[i];
-                
-               this.hideLayer(layer);
-             }
-              
-           }
+          if (removeExisting === true) {
+            this.hideLayers(layers);            
+          }
             
-           for (var i = (layers.length-1); i >= 0; i--) {
-             var layer = layers[i];
+          for (var i = (layers.length-1); i >= 0; i--) {
+            var layer = layers[i];
                 
-              var viewName = layer.viewName;
-              var geoserverName = geoserverWorkspace + ":" + viewName;
+             var viewName = layer.viewName;
+             var geoserverName = geoserverWorkspace + ":" + viewName;
               
-              if (layer.isActive === true && (removeExisting !== false || (removeExisting === false && layer.wmsLayerObj == null))) {
-                this.constructLayerObj(layer, geoserverWorkspace);
-              }
-           }
+             if (layer.isActive === true) {
+               this.constructLayerObj(layer, geoserverWorkspace);
+             }
+          }
         },
         
         
@@ -507,34 +503,25 @@
          * 
          * <public> - called externally
          */
-        createReferenceLayers : function(refLayers, geoserverWorkspace, removeExisting) {
+        createReferenceLayers : function(layers, geoserverWorkspace, removeExisting) {
           
           // Remove any already rendered layers from the map
-            if (removeExisting === true) {
-              for (var i = 0; i < refLayers.length; i++) {
-                  var layer = refLayers[i];
-                  
-                  if (layer.wmsLayerObj && layer.wmsLayerObj != null) {
-                    this.hideLayer(layer.wmsLayerObj);
-                  }
-                }
-            }
+          if (removeExisting === true) {
+            this.hideLayers(layers);
+          }
             
-            
-            //
-            // Add reference layers to the map
-            //
-            for (var i = 0; i < refLayers.length; i++) {
-              var layer = refLayers[i];
+          //
+          // Add reference layers to the map
+          //            
+          for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
               
-              // Since REFERENCEJSON layers are basic placeholders for actual mappable layers we will make sure none of them
-              // get through here.
-              if(layer.layerType !== "REFERENCEJSON"){
-                if (layer.getLayerIsActive() === true && (removeExisting !== false || (removeExisting === false && layer.wmsLayerObj == null))) {
-                  this.constructLayerObj(layer, geoserverWorkspace);
-                }
-              }
+            // Since REFERENCEJSON layers are basic placeholders for actual mappable layers we will make sure none of them
+            // get through here.            
+            if(layer.layerType !== "REFERENCEJSON" && layer.isActive === true && layer.layerExists) {
+              this.constructLayerObj(layer, geoserverWorkspace);
             }
+          }
         },
         
         /**
@@ -569,7 +556,7 @@
           });
               
           this.showLayer(wmsLayer, null);
-          this._cache[layer.layerId] = wmsLayer;
+          this._cache[layer.key] = wmsLayer;
               
               
           //
