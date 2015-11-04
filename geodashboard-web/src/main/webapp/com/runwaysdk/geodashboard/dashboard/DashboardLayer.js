@@ -18,6 +18,11 @@
  */
 (function(){
   
+  /**
+   * 
+   * THEMATIC LAYER CONTROLLER AND WIDGET
+   * 
+   */
   function ThematicLayersController($scope, $timeout) {
     var controller = this;
     
@@ -150,6 +155,11 @@
     }    
   }
 
+  /**
+   * 
+   * REFERENCE LAYER CONTROLLER AND WIDGET
+   * 
+   */  
   function ReferenceLayersController($scope, $timeout) {
     var controller = this;
 	  
@@ -210,12 +220,6 @@
       
       return false;
     }
-    
-    controller.refresh = function() {
-      $timeout(function() {
-    	console.log("Reference layers have changed");
-      }, 10);
-    }
   }
     
   function ReferenceLayers() {
@@ -238,15 +242,54 @@
               $(element).find("#ref-layer-opener-button").click();            
             }            
           });
-          
-          ctrl.refresh();
         }, true);
       }
     }    
   }  
   
+  /**
+   * 
+   * BASE LAYER CONTROLLER AND WIDGET
+   * 
+   */
+  function BaseLayersController($scope, $timeout) {
+    var controller = this;
+    
+    controller.toggle = function(layerId) {
+      for(var i = 0; i < $scope.layers.length; i++) {
+        var layer = $scope.layers[i];
+        
+        if(layer.layerId == layerId) {
+          layer.isActive = !layer.isActive;          
+        }
+        else {
+          layer.isActive = false;                    
+        }
+      }
+      
+      $scope.dashboard.refreshBaseLayer();
+    }    
+  }
+  
+  function BaseLayers() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/base-layers.jsp',
+      scope: {
+        layers:'=',
+        dashboard:'='
+      },
+      controller : BaseLayersController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {    
+      }
+    }    
+  }    
+  
   angular.module("dashboard-layer", []);
   angular.module('dashboard-layer')
     .directive('thematicLayers', ThematicLayers)
-    .directive('referenceLayers', ReferenceLayers);  
+    .directive('referenceLayers', ReferenceLayers)
+    .directive('baseLayers', BaseLayers);  
 })();

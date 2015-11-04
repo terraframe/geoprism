@@ -126,16 +126,7 @@
 		<reference-layers cache="dashboard.referenceLayerCache" dashboard="dashboard" ></reference-layers>
 
 		<!-- Base Layers Panel -->     
-        <article class="accordion info-box" id="base-map-container">
-            <div class="accordion-group sales-accortion">
-              <div class="accordion-heading">
-                <a class="map-layers-opener opener" data-toggle="collapse" data-parent="#base-map-container" href="#collapse-base-maps"><gdb:localize key="dashboardViewer.baseMaps"/></a>
-              </div>
-              <div id="collapse-base-maps" class="accordion-body" style="height: 0px;">
-                <div class="accordion-inner holder" id="baseLayerContainer"></div>
-              </div>
-            </div>
-        </article>
+		<base-layers layers="dashboard.baseLayers" dashboard="dashboard" ></base-layers>
         
 		<!-- Legend Panel -->       
         <article class="accordion info-box" id="legend-collapse-container">

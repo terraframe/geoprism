@@ -1304,11 +1304,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       types.put(this.toJSON(mdClass, conditions));
     }
 
+    DashboardMap map = this.getMap();
+    
     JSONObject object = new JSONObject();
     object.put("id", this.getId());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
-    object.put("mapId", this.getMapId());
+    object.put("mapId", map.getId());
+    object.put("activeBaseMap", new JSONObject(map.getActiveBaseMap()));
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);

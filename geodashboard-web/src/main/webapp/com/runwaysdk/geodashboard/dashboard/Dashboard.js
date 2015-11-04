@@ -36,6 +36,7 @@
     controller.referenceLayerCache = {values:{}, ids:[]};
     controller.bbox = [];
     controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
+    controller.baseLayers = controller.mapFactory.createBaseLayers();            	
     
     /* Initialization Function */
     $scope.init = function(dashboardId, workspace) {
@@ -49,10 +50,21 @@
         onSuccess : function(json){
           $timeout(function() {
             controller.model = JSON.parse(json);
+
+            // Initialize the default base map
+            for(var i = 0; i < controller.baseLayers.length; i++) {
+              var layer = controller.baseLayers[i];
+              
+              if(layer.layerType == controller.model.activeBaseMap["LAYER_SOURCE_TYPE"]) {
+                layer.isActive = true;
+              }
+            }
             
+
             $scope.$apply();
             
             controller.refresh();
+            controller.refreshBaseLayer();
           }, 0);
         },
         onFailure : function(e){
@@ -110,8 +122,7 @@
     }
     
     /* Create a new layer */
-    controller.newLayer = function(mdAttributeId) {
-    
+    controller.newLayer = function(mdAttributeId) {    
       var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(controller, controller.model.mapId);
       form.open(mdAttributeId);
     }  
@@ -122,6 +133,10 @@
     
     controller.getModel = function() {
       return controller.model;
+    }
+    
+    controller.getBBOX = function(bbox) {
+      return controller.bbox;    
     }
     
     controller.canEdit = function() {
@@ -171,21 +186,15 @@
       return layers;
     }    
     
-    controller.setCurrentBaseMap = function(baseMap) {
-      controller.model.baseMap = baseMap;    
-    }
-    
-    controller.setBBOX = function(bbox) {
-      controller.model.bbox = bbox;    
-    }
-    
     controller.handleLayerEvent = function(map) {
       controller.setMapState(map, true);
     }
     
     controller.setMapState = function(map, reverse) {
       if (map.bbox != null) {
-        controller.bbox = map.bbox;
+        angular.copy(map.bbox, controller.bbox);
+        
+        controller.centerMap();
       }   	
     
       if(map.layers){
@@ -244,29 +253,13 @@
           }
         }
       }
-//        
-//      if (map.activeBaseMap != null) {
-//        controller.setCurrentBaseMap(map.activeBaseMap);
-//      }
-//        
+      
       $scope.$apply();
       
       controller.renderMap();
     }
     
     controller.renderMap = function() {
-      if(controller.bbox.length === 2){
-        controller.mapFactory.setView(null, controller.bbox, 5);
-      }
-      else if(controller.bbox.length === 4){
-        controller.mapFactory.setView(controller.bbox, null, null);
-      }
-              
-      if(controller.baseLayers == null) {
-//        controller.baseLayers = controller.mapFactory.createBaseLayers();                                    	  
-//        this._renderBaseLayerSwitcher(baseLayers);          
-      }
-            
       var rLayers = controller.getReferenceLayers();
       controller.mapFactory.createReferenceLayers(rLayers, controller.workspace, true);
             
@@ -276,7 +269,7 @@
     
     controller.toggleLayer = function(layer) {
       if(!layer.isActive) {
-        controller.mapFactory.hideLayer(layer);            
+        controller.mapFactory.hideLayer(layer, true);            
       }
       else {
         controller.renderMap();
@@ -286,6 +279,49 @@
     controller.hideLayers = function() {
       var layers = controller.getThematicLayers();
       controller.mapFactory.hideLayers(layers);     
+    }
+    
+    controller.refreshBaseLayer = function() {
+      if(controller.baseLayers.length > 0) {
+        var baseMap = {"LAYER_SOURCE_TYPE" : ""};
+
+        for(var i = 0; i < controller.baseLayers.length; i++) {
+          var layer = controller.baseLayers[i];
+          
+          if(layer.isActive) {
+            baseMap = {"LAYER_SOURCE_TYPE" : layer.layerType};
+
+            controller.mapFactory.showLayer(layer, 0);          
+          }
+          else {
+            controller.mapFactory.hideLayer(layer, false);        	
+          }
+        }
+  
+        /* Persist the changes to the active base map */
+        if(controller.canEdit()){
+          var request = new Mojo.ClientRequest({
+            onSuccess : function() {
+              // No action needed
+            },
+            onFailure : function(e) {
+              GDB.ExceptionHandler.handleException(e);
+            }
+          });
+                
+          // Persist base layer option to the db
+          com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(request, controller.dashboardId, JSON.stringify(baseMap));
+        }
+      }
+    }
+    
+    controller.centerMap = function() {
+      if(controller.bbox.length === 2){
+        controller.mapFactory.setView(null, controller.bbox, 5);
+      }
+      else if(controller.bbox.length === 4){
+        controller.mapFactory.setView(controller.bbox, null, null);
+      }    	
     }
     
     /* Setup all watch functions */

@@ -353,14 +353,17 @@
          * TODO: bubble chopping is worse with openlayers. fix it
          */
         showLayer : function(layer, stackIndex) {
-          var map = this.getMap();
+          var oLayer = this._cache[layer.key];
           
-          if(stackIndex !== null && stackIndex >= 0){
-            map.getLayers().insertAt(stackIndex, layer);
-          }
-          else{
-            // will add the layer to the top of all other layers
-            map.addLayer(layer);
+          if(oLayer != null) {
+            var map = this.getMap();          
+            if(stackIndex !== null && stackIndex >= 0){
+              map.getLayers().insertAt(stackIndex, oLayer);
+            }
+            else{
+              // will add the layer to the top of all other layers
+              map.addLayer(oLayer);
+            }        	  
           }
         },
         
@@ -371,14 +374,16 @@
          * 
          * <public> - called externally
          */
-        hideLayer : function(layer) {
-          var wmsLayer = this._cache[layer.key];          
+        hideLayer : function(layer, persist) {
+          var oLayer = this._cache[layer.key];
           
-          if (wmsLayer != null) {
+          if (oLayer != null) {
             var map = this.getMap();
-            map.removeLayer(wmsLayer);
+            map.removeLayer(oLayer);
             
-            delete this._cache[layer.layerId];
+            if(persist) {
+              delete this._cache[layer.layerId];            	
+            }
           }
         },
         
@@ -387,7 +392,7 @@
             for(var i = 0; i < layers.length; i++) {
               var layer = layers[i];
                   
-              this.hideLayer(layer);
+              this.hideLayer(layer, true);
             }        	  
           }
         },
@@ -398,15 +403,18 @@
          * <public> - called externally
          */
         createBaseLayers : function(){
-          var baseObjArr = [];
+        	
+          var layers = [];
           var baseMapsArr = MapConfig._BASEMAPS;
+          
           for(var i=0; i<baseMapsArr.length; i++){
             var base = baseMapsArr[i];
+            
             if(base.LAYER_TYPE.toLowerCase() === "tile"){
               var baseObj = new ol.layer.Tile(
-                  {visible: base.VISIBLE},
-                  base.CUSTOM_TYPE_OPTIONS
-                );
+                {visible: base.VISIBLE},
+                base.CUSTOM_TYPE_OPTIONS
+              );
               
               if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
                 
@@ -422,9 +430,20 @@
               
               baseObj._gdbisdefault = base.DEFAULT;
               baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
-                baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+              baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+              
+              // Add the baseObj to the layer cache
+              this._cache[i] = baseObj;
                 
-              baseObjArr.push(baseObj);
+              var layer = {
+            	layerId : i,
+            	key : i,
+                isActive : false,
+            	layerType : base.LAYER_SOURCE_TYPE,
+            	layerLabel : this.localize(base.LOCLIZATION_KEY)
+              };
+              
+              layers.push(layer);
             }
             else if(base.LAYER_TYPE.toLowerCase() === "group"){
               var layersArr = [];
@@ -450,21 +469,23 @@
               
               baseObj.setLayers(new ol.Collection(layersArr));
               
-              baseObj._gdbisdefault = base.DEFAULT;
-              baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
-              baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+              // Add the baseObj to the layer cache
+              this._cache[i] = baseObj;              
               
-              baseObjArr.push(baseObj);
+              var layer = {
+                layerId : i,
+                key : i,
+                isActive : false,
+                layerType : base.LAYER_SOURCE_TYPE,
+                layerLabel : this.localize(base.LOCLIZATION_KEY)
+              };
+                    
+              layers.push(layer);
             }
-        }
+          }
           
-          
-        // TODO: Set min/max zoom levels or on zoom behavior to account for mapquest not displaying 
-         // at low zoom levels
-          
-          return baseObjArr;
-        },
-        
+          return layers;
+        },        
         
         /**
          * Create and return an array of all user defined layer objects.
@@ -541,7 +562,7 @@
           var geoserverName = geoserverWorkspace + ":" + viewName;
                     
           // Single Tile format
-          var wmsLayer = new ol.layer.Image({
+          var oLayer = new ol.layer.Image({
             source: new ol.source.ImageWMS({
               url: window.location.origin+"/geoserver/wms/",
               params: {
@@ -554,9 +575,10 @@
             }),
             visible: true
           });
-              
-          this.showLayer(wmsLayer, null);
-          this._cache[layer.key] = wmsLayer;
+
+          this._cache[layer.key] = oLayer;
+          
+          this.showLayer(layer, null);
               
               
           //
