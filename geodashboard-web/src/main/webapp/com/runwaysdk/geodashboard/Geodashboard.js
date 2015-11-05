@@ -147,6 +147,12 @@
   
   var ExceptionHandler = Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'ExceptionHandler', {
     Static :{
+      renderDialog : function(title, message) {
+        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(title, {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
+        dialog.render();                
+      },
       handleException : function(e) {
         if($.type( e ) === "string") {
           ExceptionHandler.handleErrorMessage(e);
@@ -156,10 +162,9 @@
         }
       },
       handleErrorMessage : function(message) {
-        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rError", "Error"), {modal: true});
-        dialog.appendContent(message);
-        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
-        dialog.render();        
+        var title = com.runwaysdk.Localize.get("rError", "Error");
+      
+        ExceptionHandler.renderDialog(title, message);
       },
       handleInformation : function(information) {
         if(information != null) {
@@ -169,13 +174,12 @@
             html += '<li>' + information[i].getMessage() +'</li>'
           }
           html += '</ul>';
+
+          var title = com.runwaysdk.Localize.get("rInformation", "Information");
           
-          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("rInfo", "Information"), {modal: true});
-          dialog.appendContent(html);
-          dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
-          dialog.render();              
+          ExceptionHandler.renderDialog(title, html);
         }
-      }      
+      }
     }
   });
   

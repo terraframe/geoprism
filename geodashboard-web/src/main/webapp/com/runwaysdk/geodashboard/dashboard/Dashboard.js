@@ -59,7 +59,7 @@
       };
       controller.thematicLayerCache = {values:{}, ids:[]};
       controller.referenceLayerCache = {values:{}, ids:[]};
-    	
+    
       var onSuccess = function(json){
         $timeout(function() {
           controller.model = JSON.parse(json);
@@ -87,7 +87,7 @@
     controller.refresh = function() {
       onSuccess = function(json, dto, response) {
         controller.hideLayers();
-                    	
+                    
         var map = Mojo.Util.toObject(json);
 
         $timeout(function() {
@@ -178,7 +178,7 @@
         angular.copy(map.bbox, controller.bbox);
         
         controller.centerMap();
-      }   	
+      }   
     
       if(map.layers){
         var cache = controller.getLayerCache();
@@ -192,8 +192,8 @@
           
           if (oldLayer != null) {
             layer.isActive = oldLayer.isActive;
-          	
-          	angular.copy(layer, oldLayer);            
+          
+          angular.copy(layer, oldLayer);            
           }
           else {
             layer.isActive = true;
@@ -222,15 +222,15 @@
           var oldLayer = cache.values[layer.universalId];
             
           if (oldLayer != null) {
-          	if((oldLayer.layerExists && layer.layerExists) || (!oldLayer.layerExists && !layer.layerExists)) {        	  
+          if((oldLayer.layerExists && layer.layerExists) || (!oldLayer.layerExists && !layer.layerExists)) {          
               layer.isActive = oldLayer.isActive;
-          	}
-          	
-          	angular.copy(layer, oldLayer);
           }
-          else {        	  
+          
+          angular.copy(layer, oldLayer);
+          }
+          else {          
             /* Add new item to the cache */
-        	  
+          
             cache.ids.unshift(layer.universalId);
             cache.values[layer.universalId] = layer;  
           }
@@ -248,12 +248,12 @@
         
         controller.renderBase = false;
       }
-    	
+    
       var rLayers = controller.getReferenceLayers();
       controller.mapFactory.createReferenceLayers(rLayers, controller.getWorkspace(), true);
             
       var tLayers = controller.getThematicLayers();
-      controller.mapFactory.createUserLayers(tLayers, controller.getWorkspace(), true);    	  
+      controller.mapFactory.createUserLayers(tLayers, controller.getWorkspace(), true);      
     }
     
     controller.toggleLayer = function(layer) {
@@ -283,7 +283,7 @@
             controller.mapFactory.showLayer(layer, 0);          
           }
           else {
-            controller.mapFactory.hideLayer(layer, false);        	
+            controller.mapFactory.hideLayer(layer, false);        
           }
         }
   
@@ -291,6 +291,20 @@
         dashboardService.setDashboardBaseLayer(controller.dashboardId, JSON.stringify(baseMap));
       }
     }
+
+    controller.getActiveBaseLayer = function() {
+      if(controller.baseLayers.length > 0) {
+        for(var i = 0; i < controller.baseLayers.length; i++) {
+          var layer = controller.baseLayers[i];
+          
+          if(layer.isActive) {
+            return layer
+          }
+        }
+      }
+      
+      return null;
+    }    
     
     controller.centerMap = function() {
       if(controller.bbox.length === 2){
@@ -298,7 +312,63 @@
       }
       else if(controller.bbox.length === 4){
         controller.mapFactory.setView(controller.bbox, null, null);
-      }    	
+      }    
+    }
+    
+    controller.getMapExtent = function() {
+      var mapBounds = {};
+      
+      var mapExtent = controller.mapFactory.getCurrentBounds(com.runwaysdk.geodashboard.gis.DynamicMap.SRID);
+      mapBounds.left = mapExtent._southWest.lng;
+      mapBounds.bottom = mapExtent._southWest.lat;
+      mapBounds.right = mapExtent._northEast.lng;
+      mapBounds.top = mapExtent._northEast.lat;
+      
+      return mapBounds;      
+    }
+    
+    controller.getMapSize = function() {
+      var mapSize = {};
+      mapSize.width = $("#mapDivId").width();
+      mapSize.height = $("#mapDivId").height();
+      
+      return mapSize;
+    }
+    
+    controller.exportMap = function() {
+      var map = controller.mapFactory.getMap();
+      var mapId = controller.model.mapId;
+      var mapBounds = controller.getMapExtent();
+      var mapSize = controller.getMapSize();
+      
+      var layer = controller.getActiveBaseLayer();
+      var activeBaseMap = (layer != null ? {"LAYER_SOURCE_TYPE" : layer.layerType} : {"LAYER_SOURCE_TYPE" : ""});
+      
+      var outFileName = "GeoDashboard_Map";
+      var outFileFormat = "png";
+      var mapBoundsStr = JSON.stringify(mapBounds);          
+      var mapSizeStr = JSON.stringify(mapSize);            
+      var activeBaseMapStr = JSON.stringify(activeBaseMap);
+            
+      if(activeBaseMap.LAYER_SOURCE_TYPE.toLowerCase() !== "osm"){        
+        var title = com.runwaysdk.Localize.get("rWarning", "Warning");
+        var message = com.runwaysdk.Localize.localize("dashboard", "InvalidBaseMap");
+        
+        GDB.ExceptionHandler.renderDialog(title, message);            
+      }
+      
+      var params = {
+        'mapId' : mapId,
+        'outFileName' : outFileName,
+        'outFileFormat' : outFileFormat,
+        'mapBounds' : mapBoundsStr,
+        'mapSize' : mapSizeStr,
+        'activeBaseMap' : activeBaseMapStr
+      };
+      
+      var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo?' + $.param(params);
+              
+      window.location.href = url;            
     }
     
     /* Setup all watch functions */

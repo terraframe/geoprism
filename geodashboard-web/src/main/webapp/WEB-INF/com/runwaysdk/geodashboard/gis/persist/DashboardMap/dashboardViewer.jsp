@@ -136,7 +136,7 @@
           <div class="accordion-group sales-accortion" id="map-tools-sub-container">
             <div id="collapse-map-tools" class="accordion-body">
               <div class="accordion-inner holder" id="mapToolsContainer">
-                <a id="map-export-btn" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
+                <a ng-click="dashboard.exportMap()" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
                 <a ng-click="dashboard.centerMap()" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></a>
               </div>              
             </div>

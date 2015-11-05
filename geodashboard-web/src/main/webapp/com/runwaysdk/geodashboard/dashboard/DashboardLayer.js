@@ -305,15 +305,16 @@
       return src;      
     }
     
-    controller.detach = function(layer) {
+    controller.detach = function($event, layer) {
+    	
       layer.groupedInLegend = false;
       
-      if(layer.legendXPosition == 0) {
-        layer.legendXPosition = 50;
+      if(layer.legendXPosition == 0) {    	  
+        layer.legendXPosition = $event.clientX + 50;
       }      
       
       if(layer.legendYPosition == 0) {
-        layer.legendYPosition = 50;        
+        layer.legendYPosition = $event.clientY - 50;        
       }   
       
       dashboardService.updateLegend(layer);        

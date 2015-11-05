@@ -31,7 +31,7 @@
       <ul id="legend-list-group">
         <!-- Thematic layers  -->
         <div ng-repeat="layerId in thematicCache.ids" ng-init="layer = thematicCache.values[layerId]">
-          <li ng-if="layer.inLegend && layer.isActive && layer.groupedInLegend" class="legend-item legend-grouped" ng-dblclick="ctrl.detach(layer)">
+          <li ng-if="layer.inLegend && layer.isActive && layer.groupedInLegend" class="legend-item legend-grouped" ng-dblclick="ctrl.detach($event, layer)">
             <img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
             {{layer.layerName}}
           </li>
@@ -39,7 +39,7 @@
 
         <!-- Reference layers  -->        
         <div ng-repeat="layerId in referenceCache.ids" ng-init="layer = referenceCache.values[layerId]">
-          <li ng-if="layer.inLegend && layer.isActive && layer.layerExists && layer.groupedInLegend" class="legend-item legend-grouped" ng-dblclick="ctrl.detach(layer)">
+          <li ng-if="layer.inLegend && layer.isActive && layer.layerExists && layer.groupedInLegend" class="legend-item legend-grouped" ng-dblclick="ctrl.detach($event, layer)">
             <img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
             {{layer.layerName}}
           </li>        

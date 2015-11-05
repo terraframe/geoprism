@@ -1305,16 +1305,29 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     DashboardMap map = this.getMap();
-    
+
     JSONObject object = new JSONObject();
     object.put("id", this.getId());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("mapId", map.getId());
-    object.put("activeBaseMap", new JSONObject(map.getActiveBaseMap()));
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
+
+    String activeBaseMap = map.getActiveBaseMap();
+
+    if (activeBaseMap != null && activeBaseMap.length() > 0)
+    {
+      object.put("activeBaseMap", new JSONObject(activeBaseMap));
+    }
+    else
+    {
+      JSONObject baseMap = new JSONObject();
+      baseMap.put("LAYER_SOURCE_TYPE", "OSM");
+      
+      object.put("activeBaseMap", baseMap);
+    }
 
     if (conditions.containsKey(LocationCondition.CONDITION_TYPE))
     {

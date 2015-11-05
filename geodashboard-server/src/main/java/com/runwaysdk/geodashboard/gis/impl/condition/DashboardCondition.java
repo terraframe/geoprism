@@ -104,7 +104,7 @@ public abstract class DashboardCondition implements Reloadable
             condition = new ClassifierCondition(mdAttributeId, value);
           }
         }
-        else
+        else if(object.has(OPERATION_KEY) && object.has(VALUE_KEY))
         {
           String operation = object.getString(OPERATION_KEY);
           String value = object.getString(VALUE_KEY);
