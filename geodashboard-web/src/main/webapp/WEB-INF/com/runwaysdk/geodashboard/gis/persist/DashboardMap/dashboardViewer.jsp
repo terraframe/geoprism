@@ -109,7 +109,7 @@
 
   </head>
 
-  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}', '${workspace}')">
+  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}', '${workspace}', ${editDashboard})">
 
     <form action="#" class="control-form" id="control-form">
     <div id="control-form-collapse-button">
@@ -129,7 +129,7 @@
 		<base-panel layers="dashboard.baseLayers" dashboard="dashboard" ></base-panel>
         
 		<!-- Legend Panel --> 
-		<legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" dashboard="dashboard"></legend-panel>      
+		<legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache"></legend-panel>      
 		 
         <!-- Map Tools Panel -->       
         <article class="accordion info-box" id="map-tools-collapse-container">
@@ -180,10 +180,10 @@
 		
 	  <ng-form name="form">		
 	    <!-- Global geo filter -->
-	    <location-filter filter="dashboard.model.location" dashboard="dashboard.dashboardId"></location-filter>
+	    <location-filter filter="dashboard.model.location" dashboard-id="dashboard.dashboardId"></location-filter>
 		                                        
         <div class="sales-accortion panel-group" id="type-accordion">
-          <type-accordion types="dashboard.model.types" edittable="dashboard.model.editDashboard" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
+          <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
         </div> <!-- END sales-accortion panel-group -->
     
 	    <div id="filter-buttons-container">
@@ -205,7 +205,7 @@
     <!-- Filled in by ajax call to create new dashboard -->
   </div>
 
-  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" dashboard="dashboard"></floating-legends>  
+  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache"></floating-legends>  
   
   <!-- map container -->
   <div class="bg-stretch">

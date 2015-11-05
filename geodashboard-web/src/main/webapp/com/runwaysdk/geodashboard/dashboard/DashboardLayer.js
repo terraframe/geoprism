@@ -17,13 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  
+	
   /**
    * 
    * THEMATIC LAYER CONTROLLER AND WIDGET
    * 
    */
-  function ThematicPanelController($scope, $timeout) {
+  function ThematicPanelController($scope, $timeout, dashboardService) {
     var controller = this;
     
     controller.getLayer = function(layerId) {
@@ -42,31 +42,26 @@
       form.edit(layerId);    	
     }
     
-    controller.remove = function(layerId) {
-    	
-      var request = new GDB.StandbyClientRequest({
-        onSuccess : function(){
-        	
-          if($scope.cache.values[layerId] != null) {
-            // Remove the layer from the map
-            var layer = $scope.cache.values[layerId];
-            layer.isActive = false;
-            
-            $scope.dashboard.toggleLayer(layer);
-            
-        	// Remove value from cache
-        	delete $scope.cache.values[layerId];        
-        	$scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
-          }
+    controller.remove = function(layerId) {    	
+      var onSuccess =  function(){
           
-          $scope.$apply();
-        },
-        onFailure : function(e){
-          GDB.ExceptionHandler.handleException(e);
+        if($scope.cache.values[layerId] != null) {
+            
+          // Remove the layer from the map
+          var layer = $scope.cache.values[layerId];
+          layer.isActive = false;
+              
+          $scope.dashboard.toggleLayer(layer);
+              
+          // Remove value from cache
+          delete $scope.cache.values[layerId];        
+          $scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
         }
-      }, '#overlay-container');
-    	
-      com.runwaysdk.Facade.deleteEntity(request, layerId);      
+            
+        $scope.$apply();
+      };
+          
+      dashboardService.removeLayer(layerId, '#overlay-container', onSuccess);  
     },
     
     controller.setLayerIndexes = function(layerIds) {
@@ -93,19 +88,18 @@
         layerIds.push(layerId);
       }      
     	
-      if($scope.edit){
-        var request = new GDB.StandbyClientRequest({
-          onSuccess : function(json) {
-            controller.setLayerIndexes(layerIds);
-          },
-          onFailure : function(e) {
-            GDB.ExceptionHandler.handleException(e);
-              
-            $scope.$apply();
-          }
-        }, '#overlay-container');
-      
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(request, $scope.dashboard.model.mapId, layerIds);
+      if(dashboardService.edit){
+    	var mapId = $scope.dashboard.model.mapId;
+    	
+    	var onSuccess = function(json) {
+          controller.setLayerIndexes(layerIds);
+        };
+        
+        var onFailure = function(e) {
+          $scope.$apply();
+        };
+    	
+    	dashboardService.orderLayers(mapId, layerIds, '#overlay-container', onSuccess, onFailure);
       }
       else{
         controller.setLayerIndexes(layerIds);    	  
@@ -160,11 +154,11 @@
    * REFERENCE LAYER CONTROLLER AND WIDGET
    * 
    */  
-  function ReferencePanelController($scope, $timeout) {
+  function ReferencePanelController($scope, $timeout, dashboardService) {
     var controller = this;
 	  
     controller.canEdit = function() {
-      return $scope.dashboard.canEdit();      
+      return dashboardService.canEdit();      
     }
     
     controller.edit = function(layerId, universalId) {
@@ -185,25 +179,20 @@
     }
     
     controller.remove = function(layerId, universalId) {
-    	
-      var request = new GDB.StandbyClientRequest({
-        onSuccess : function(){
-          // remove the map layer from the map
-          var layer = $scope.cache.values[universalId];
-          layer.isActive = false;
-          layer.layerExists = false;
-          layer.layerType = "REFERENCEJSON";
-          
-          $scope.dashboard.toggleLayer(layer);          
-        	  
-          $scope.$apply();
-        },
-        onFailure : function(e){
-          GDB.ExceptionHandler.handleException(e);
-        }
-      }, '#ref-layer-container');
       	
-      com.runwaysdk.Facade.deleteEntity(request, layerId);      
+      var onSuccess = function(){
+        // remove the map layer from the map
+        var layer = $scope.cache.values[universalId];
+        layer.isActive = false;
+        layer.layerExists = false;
+        layer.layerType = "REFERENCEJSON";
+          
+        $scope.dashboard.toggleLayer(layer);          
+        	  
+        $scope.$apply();
+      };
+      
+      dashboardService.removeLayer(layerId, '#ref-layer-container', onSuccess);
     }
     
     controller.hasValues = function(cache) {
@@ -292,7 +281,7 @@
    * LEGEND LAYER CONTROLLER AND WIDGET
    * 
    */
-  function LegendController($scope, $timeout) {
+  function LegendController($scope, $timeout, dashboardService) {
     var controller = this;
     
     controller.getSrc = function(layer) {
@@ -304,7 +293,7 @@
         HEIGHT:25,        
         TRANSPARENT:true,
         LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
-        LAYER: $scope.dashboard.getWorkspace() + ":" + layer.viewName
+        LAYER: dashboardService.getWorkspace() + ":" + layer.viewName
       };
 
       if(layer.showFeatureLabels){
@@ -314,10 +303,6 @@
       var src = window.location.origin + '/geoserver/wms?' + $.param(params);
         
       return src;      
-    }
-    
-    controller.canEdit = function() {
-      return $scope.dashboard.canEdit();
     }
     
     controller.detach = function(layer) {
@@ -331,18 +316,17 @@
         layer.legendYPosition = 50;        
       }   
       
-      controller.persist(layer, controller.canEdit());
+      dashboardService.updateLegend(layer);        
     }
     
     controller.attach = function(layer) {
       layer.groupedInLegend = true;
       
-      controller.persist(layer, controller.canEdit());
+      dashboardService.updateLegend(layer);        
     }
 
     controller.move = function(e,ui) {
       var layer = $scope.layer;
-      var edit = $scope.edit;
     	
       var target = e.currentTarget;
       var newPosition = $(target).position();
@@ -352,22 +336,7 @@
       layer.legendXPosition = x;        
       layer.legendYPosition = y;   
       
-      controller.persist(layer, edit);
-    }
-    
-    controller.persist = function(layer, edit) {
-      if(edit){
-        var request = new Mojo.ClientRequest({
-          onSuccess : function() {
-            // No action needed
-          },
-          onFailure : function(e) {
-            GDB.ExceptionHandler.handleException(e);
-          }
-        });
-            
-        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);
-      }
+      dashboardService.updateLegend(layer);        
     }
   }
   
@@ -378,8 +347,7 @@
       templateUrl: '/partial/dashboard/legend-panel.jsp',
       scope: {
         thematicCache:'=',
-        referenceCache:'=',
-        dashboard:'='
+        referenceCache:'='
       },
       controller : LegendController,
       controllerAs : 'ctrl',
@@ -395,8 +363,7 @@
       templateUrl: '/partial/dashboard/floating-legends.jsp',
       scope: {
         thematicCache:'=',
-        referenceCache:'=',
-        dashboard:'='
+        referenceCache:'='
       },
       controller : LegendController,
       controllerAs : 'ctrl',
@@ -409,8 +376,7 @@
     return {
       restrict:'A',
       scope: {
-        layer: "=",
-        edit:"="
+        layer: "="
       },
       controller : LegendController,
       controllerAs : 'ctrl',      
@@ -431,7 +397,7 @@
     }
   }
   
-  angular.module("dashboard-layer", []);
+  angular.module("dashboard-layer", ["dashboard-services"]);
   angular.module('dashboard-layer')
     .directive('thematicPanel', ThematicPanel)
     .directive('referencePanel', ReferencePanel)

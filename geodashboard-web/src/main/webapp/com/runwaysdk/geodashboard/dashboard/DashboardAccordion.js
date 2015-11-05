@@ -18,7 +18,30 @@
  */
 (function(){
   var parser = Globalize.numberParser();
-  var formatter = Globalize.numberFormatter();        
+  var formatter = Globalize.numberFormatter();  
+  
+  function LocationFilterController($scope, dashboardService) {
+    var controller = this;
+    
+    controller.source = function( request, response ) {
+      var onSuccess = function(query){
+        var resultSet = query.getResultSet()
+                                    
+        var results = [];
+                  
+        $.each(resultSet, function( index, result ) {
+          var label = result.getValue('displayLabel');
+          var id = result.getValue('id');
+                    
+          results.push({'label':label, 'value':label, 'id':id});
+        });
+                  
+        response( results );
+      };
+                      
+      dashboardService.getGeoEntitySuggestions($scope.dashboardId, request.term, 10, onSuccess);
+    }
+  }
   
   function LocationFilter() {
     return {
@@ -27,35 +50,15 @@
       templateUrl: '/partial/dashboard/location-filter.jsp',      
       scope: {
         filter:'=',
-        dashboard:'='
+        dashboardId:'='
       },
-      link: function (scope, element, attrs) {
+      controller : LocationFilterController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
         var input = $(element).find(".filter-geo");
         
         input.autocomplete({
-          source: function( request, response ) {  
-            var req = new Mojo.ClientRequest({
-              onSuccess : function(query){
-                var resultSet = query.getResultSet()
-                                        
-                var results = [];
-                      
-                $.each(resultSet, function( index, result ) {
-                  var label = result.getValue('displayLabel');
-                  var id = result.getValue('id');
-                        
-                  results.push({'label':label, 'value':label, 'id':id});
-                });
-                      
-                response( results );
-              },
-              onFailure : function(e){
-                console.log(e);
-              }
-            });
-                  
-            com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, scope.dashboard, request.term, 10);
-          },
+          source: ctrl.source,
           select: function(event, ui) {
             scope.filter.value = ui.item.id;
             scope.filter.label = ui.item.label;
@@ -86,12 +89,19 @@
       templateUrl: '/partial/dashboard/dashboard-accordion.jsp',      
       scope: {
         types:'=',
-        edittable:'=',
         newLayer:'&'
       },
       link: function (scope, element, attrs) {
       }
     }    
+  }
+  
+  function AccordionAttributeController($scope, dashboardService) {
+    var controller = this;
+    
+    controller.canEdit = function() {
+      return dashboardService.canEdit();
+    }
   }
   
   function AccordionAttribute() {
@@ -104,10 +114,11 @@
         attribute:'=',
         identifier:'@'
       },
-      link: function (scope, element, attrs) {
+      controller : AccordionAttributeController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
       
         // This is a hack because of scoping issues with ng-repeat
-        scope.edittable = scope.$parent.$parent.$parent.edittable;
         scope.newLayer = scope.$parent.$parent.$parent.newLayer;
         
         // Don't collapse the element if there are filtering values            
@@ -327,7 +338,7 @@
     }    
   }
   
-  angular.module("dashboard-accordion", []);
+  angular.module("dashboard-accordion", ["dashboard-services"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)

@@ -17,108 +17,91 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DashboardController($scope, $timeout) {
+  function DashboardController($scope, $timeout, dashboardService) {
     var controller = this;
 
     /* Default State */ 
     controller.dashboardId = '';
-    controller.workspace = '';
     controller.model = {
       location : {label:'',value:''},
       editDashboard : false,
       editData : false,
       types : [],
-      mapId : '',
-      dashboardId : controller.dashboardId
+      mapId : ''
     };
+    
     /* Map state */
     controller.thematicLayerCache = {values:{}, ids:[]};
     controller.referenceLayerCache = {values:{}, ids:[]};
     controller.bbox = [];
     controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
-    controller.baseLayers = controller.mapFactory.createBaseLayers();            	
+    controller.baseLayers = controller.mapFactory.createBaseLayers();
+    controller.renderBase = true;
     
     /* Initialization Function */
-    $scope.init = function(dashboardId, workspace) {
+    $scope.init = function(dashboardId, workspace, edit) {
       controller.dashboardId = dashboardId;
-      controller.workspace = workspace;
+      
+      dashboardService.setWorkspace(workspace);
+      dashboardService.setEdit(edit);
     }
 
     /* Controller Functions */
     controller.load = function() {
-      var request = new Mojo.ClientRequest({
-        onSuccess : function(json){
-          $timeout(function() {
-            controller.model = JSON.parse(json);
-
-            // Initialize the default base map
-            for(var i = 0; i < controller.baseLayers.length; i++) {
-              var layer = controller.baseLayers[i];
-              
-              if(layer.layerType == controller.model.activeBaseMap["LAYER_SOURCE_TYPE"]) {
-                layer.isActive = true;
-              }
-            }
-            
-
-            $scope.$apply();
-            
-            controller.refresh();
-            controller.refreshBaseLayer();
-          }, 0);
-        },
-        onFailure : function(e){
-          GDB.ExceptionHandler.handleException(e);        	
-        }
-      });
-      
+        
       /* Clear the current state */
       controller.model = {
         location : {label:'',value:''},
         editDashboard : false,
         editData : false,
         types : [],
-        mapId : '',
-        dashboardId : controller.dashboardId
+        mapId : ''
       };
       controller.thematicLayerCache = {values:{}, ids:[]};
       controller.referenceLayerCache = {values:{}, ids:[]};
+    	
+      var onSuccess = function(json){
+        $timeout(function() {
+          controller.model = JSON.parse(json);
+          controller.renderBase = true;
+          
+          // Initialize the default base map
+          for(var i = 0; i < controller.baseLayers.length; i++) {
+            var layer = controller.baseLayers[i];
+              
+            if(layer.layerType == controller.model.activeBaseMap["LAYER_SOURCE_TYPE"]) {
+              layer.isActive = true;
+            }
+          }            
+
+          $scope.$apply();
+            
+          controller.refresh();
+        }, 0);
+      };
       
-      com.runwaysdk.geodashboard.Dashboard.getJSON(request, controller.dashboardId);
+      dashboardService.getDashboardJSON(controller.dashboardId, onSuccess);
     }
     
     /* Refresh Map Function */
     controller.refresh = function() {
-      var request = new Mojo.ClientRequest({
-        onSuccess : function(json, dto, response) {
-          controller.hideLayers();
+      onSuccess = function(json, dto, response) {
+        controller.hideLayers();
                     	
-          var map = Mojo.Util.toObject(json);
+        var map = Mojo.Util.toObject(json);
 
-          $timeout(function() {
-            controller.setMapState(map, false);
-          }, 10);
+        $timeout(function() {
+          controller.setMapState(map, false);
+        }, 10);
           
-          GDB.ExceptionHandler.handleInformation(response.getInformation());            
-        },
-        onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
-        }
-      });
-          
-      com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(request, controller.model.mapId, controller.model);
+        GDB.ExceptionHandler.handleInformation(response.getInformation());            
+      };
+      
+      dashboardService.refreshMap(controller.model, onSuccess);
     }
     
     controller.save = function() {
-      var request = new Mojo.ClientRequest({
-        onSuccess : function() {
-        },
-        onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
-        }
-      });
-          
-      com.runwaysdk.geodashboard.Dashboard.saveState(request, controller.dashboardId, controller.model);      
+      dashboardService.saveDashboardState(controller.dashboardId, controller.model, '#filter-buttons-container');
     }
     
     /* Create a new layer */
@@ -132,7 +115,7 @@
     }
 
     controller.getWorkspace = function() {
-      return controller.workspace;
+      return dashboardService.getWorkspace();
     } 
     
     controller.getModel = function() {
@@ -260,11 +243,17 @@
     }
     
     controller.renderMap = function() {
+      if(controller.renderBase) {
+        controller.refreshBaseLayer();
+        
+        controller.renderBase = false;
+      }
+    	
       var rLayers = controller.getReferenceLayers();
-      controller.mapFactory.createReferenceLayers(rLayers, controller.workspace, true);
+      controller.mapFactory.createReferenceLayers(rLayers, controller.getWorkspace(), true);
             
       var tLayers = controller.getThematicLayers();
-      controller.mapFactory.createUserLayers(tLayers, controller.workspace, true);    	  
+      controller.mapFactory.createUserLayers(tLayers, controller.getWorkspace(), true);    	  
     }
     
     controller.toggleLayer = function(layer) {
@@ -299,19 +288,7 @@
         }
   
         /* Persist the changes to the active base map */
-        if(controller.canEdit()){
-          var request = new Mojo.ClientRequest({
-            onSuccess : function() {
-              // No action needed
-            },
-            onFailure : function(e) {
-              GDB.ExceptionHandler.handleException(e);
-            }
-          });
-                
-          // Persist base layer option to the db
-          com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(request, controller.dashboardId, JSON.stringify(baseMap));
-        }
+        dashboardService.setDashboardBaseLayer(controller.dashboardId, JSON.stringify(baseMap));
       }
     }
     
@@ -330,7 +307,7 @@
     }, true);    
   }
   
-  angular.module("dashboard", ["dashboard-accordion", "dashboard-layer"]);
+  angular.module("dashboard", ["dashboard-services", "dashboard-accordion", "dashboard-layer"]);
   angular
   .module('dashboard')
   .controller('DashboardController', DashboardController)
