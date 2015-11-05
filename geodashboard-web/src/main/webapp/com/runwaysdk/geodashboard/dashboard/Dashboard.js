@@ -19,6 +19,8 @@
 (function(){
   function DashboardController($scope, $timeout, dashboardService) {
     var controller = this;
+    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
+    controller.baseLayers = controller.mapFactory.createBaseLayers();
 
     /* Default State */ 
     controller.dashboardId = '';
@@ -27,23 +29,23 @@
       editDashboard : false,
       editData : false,
       types : [],
-      mapId : ''
+      mapId : '',
+      label : ''
     };
     
     /* Map state */
     controller.thematicLayerCache = {values:{}, ids:[]};
     controller.referenceLayerCache = {values:{}, ids:[]};
     controller.bbox = [];
-    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
-    controller.baseLayers = controller.mapFactory.createBaseLayers();
     controller.renderBase = true;
     
     /* Initialization Function */
     $scope.init = function(dashboardId, workspace, edit) {
-      controller.dashboardId = dashboardId;
-      
       dashboardService.setWorkspace(workspace);
       dashboardService.setEdit(edit);
+
+      controller.dashboardId = dashboardId;      
+      controller.load();
     }
 
     /* Controller Functions */
@@ -64,13 +66,18 @@
         $timeout(function() {
           controller.model = JSON.parse(json);
           controller.renderBase = true;
-          
+
           // Initialize the default base map
+          var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
+          
           for(var i = 0; i < controller.baseLayers.length; i++) {
             var layer = controller.baseLayers[i];
               
-            if(layer.layerType == controller.model.activeBaseMap["LAYER_SOURCE_TYPE"]) {
+            if(layer.layerType == layerSourceType) {
               layer.isActive = true;
+            }
+            else {
+              layer.isActive = false;            	
             }
           }            
 
@@ -112,6 +119,14 @@
     
     controller.getDashboardId = function() {
       return controller.dashboardId;
+    }
+    
+    controller.setDashboardId = function(dashboardId) {
+      if(controller.dashboardId != dashboardId) {
+        controller.dashboardId = dashboardId;
+        
+        controller.load();
+      }
     }
 
     controller.getWorkspace = function() {
@@ -370,11 +385,6 @@
               
       window.location.href = url;            
     }
-    
-    /* Setup all watch functions */
-    $scope.$watch(controller.getDashboardId(), function(newVal, oldVal){
-      controller.load();    
-    }, true);    
   }
   
   angular.module("dashboard", ["dashboard-services", "dashboard-accordion", "dashboard-layer"]);

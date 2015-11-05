@@ -223,8 +223,6 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       req.setAttribute("dashboardId", activeDashboard.getId());
       req.setAttribute("workspace", GeoserverProperties.getWorkspace());
 
-      // Dashboards does not include the active dashboard.
-      dashboards.remove(activeDashboard);
       req.setAttribute("dashboards", dashboards);
 
       if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals(""))
