@@ -23,7 +23,7 @@
    * THEMATIC LAYER CONTROLLER AND WIDGET
    * 
    */
-  function ThematicLayersController($scope, $timeout) {
+  function ThematicPanelController($scope, $timeout) {
     var controller = this;
     
     controller.getLayer = function(layerId) {
@@ -119,16 +119,16 @@
     }
   }
     
-  function ThematicLayers() {
+  function ThematicPanel() {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/thematic-layers.jsp',
+      templateUrl: '/partial/dashboard/thematic-layer-panel.jsp',
       scope: {
         cache:'=',
         dashboard:'='
       },
-      controller : ThematicLayersController,
+      controller : ThematicPanelController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
     	
@@ -160,7 +160,7 @@
    * REFERENCE LAYER CONTROLLER AND WIDGET
    * 
    */  
-  function ReferenceLayersController($scope, $timeout) {
+  function ReferencePanelController($scope, $timeout) {
     var controller = this;
 	  
     controller.canEdit = function() {
@@ -222,16 +222,16 @@
     }
   }
     
-  function ReferenceLayers() {
+  function ReferencePanel() {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/reference-layers.jsp',
+      templateUrl: '/partial/dashboard/reference-layer-panel.jsp',
       scope: {
         cache:'=',
         dashboard:'='
       },
-      controller : ReferenceLayersController,
+      controller : ReferencePanelController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {    
           
@@ -252,7 +252,7 @@
    * BASE LAYER CONTROLLER AND WIDGET
    * 
    */
-  function BaseLayersController($scope, $timeout) {
+  function BasePanelController($scope, $timeout) {
     var controller = this;
     
     controller.toggle = function(layerId) {
@@ -271,25 +271,166 @@
     }    
   }
   
-  function BaseLayers() {
+  function BasePanel() {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/base-layers.jsp',
+      templateUrl: '/partial/dashboard/base-layer-panel.jsp',
       scope: {
         layers:'=',
         dashboard:'='
       },
-      controller : BaseLayersController,
+      controller : BasePanelController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {    
       }
     }    
   }    
   
+  /**
+   * 
+   * LEGEND LAYER CONTROLLER AND WIDGET
+   * 
+   */
+  function LegendController($scope, $timeout) {
+    var controller = this;
+    
+    controller.getSrc = function(layer) {
+      var params = {
+        REQUEST:"GetLegendGraphic",
+        VERSION:"1.0.0",        
+        FORMAT:"image/png",        
+        WIDTH:25,        
+        HEIGHT:25,        
+        TRANSPARENT:true,
+        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
+        LAYER: $scope.workspace + ":" + layer.viewName
+      };
+
+      if(layer.showFeatureLabels){
+        params.LEGEND_OPTIONS = params.LEGEND_OPTIONS + 'forceLabels:on;';
+      }      
+      
+      var src = window.location.origin + '/geoserver/wms?' + $.param(params);
+        
+      return src;      
+    }
+    
+    controller.detach = function(layer) {
+      layer.groupedInLegend = false;
+      
+      if(layer.legendXPosition == 0) {
+        layer.legendXPosition = 50;
+      }      
+      
+      if(layer.legendYPosition == 0) {
+        layer.legendYPosition = 50;        
+      }   
+      
+      controller.persist(layer);
+    }
+    
+    controller.attach = function(layer) {
+      layer.groupedInLegend = true;
+      
+      controller.persist(layer);
+    }
+
+    controller.move = function(e,ui) {
+      var layer = $scope.layer;
+    	
+      var target = e.currentTarget;
+      var newPosition = $(target).position();
+      var x = newPosition.left;
+      var y = newPosition.top;
+      
+      layer.legendXPosition = x;        
+      layer.legendYPosition = y;   
+      
+      controller.persist(layer);
+    }
+    
+    controller.persist = function(layer) {
+//      if(this.canEditDashboards()){
+      var request = new Mojo.ClientRequest({
+        onSuccess : function() {
+          // No action needed
+        },
+        onFailure : function(e) {
+          GDB.ExceptionHandler.handleException(e);
+        }
+      });
+            
+      com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);
+//          }
+    }
+  }
+  
+  function LegendPanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/legend-panel.jsp',
+      scope: {
+        thematicCache:'=',
+        referenceCache:'=',
+        workspace:'='
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }    
+  
+  function FloatingLegends() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/floating-legends.jsp',
+      scope: {
+        thematicCache:'=',
+        referenceCache:'=',
+        workspace:'='
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }   
+  
+  function LegendDrag() {
+    return {
+      restrict:'A',
+      scope: {
+        layer: "=",
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',      
+	  link: function(scope, element, attrs, ctrl) {
+        element.ready(function(){
+          $(element).draggable({
+            containment: "body", 
+            snap: true, 
+            snap: ".legend-snapable", 
+            snapMode: "outer", 
+            snapTolerance: 5,
+            stack: ".legend-container"
+          });
+          
+          $(element).on('dragstop', ctrl.move); 
+        });
+	  }
+    }
+  }
+  
   angular.module("dashboard-layer", []);
   angular.module('dashboard-layer')
-    .directive('thematicLayers', ThematicLayers)
-    .directive('referenceLayers', ReferenceLayers)
-    .directive('baseLayers', BaseLayers);  
+    .directive('thematicPanel', ThematicPanel)
+    .directive('referencePanel', ReferencePanel)
+    .directive('basePanel', BasePanel)  
+    .directive('floatingLegends', FloatingLegends)
+    .directive('legendPanel', LegendPanel)
+    .directive('legendDrag', LegendDrag);  
 })();

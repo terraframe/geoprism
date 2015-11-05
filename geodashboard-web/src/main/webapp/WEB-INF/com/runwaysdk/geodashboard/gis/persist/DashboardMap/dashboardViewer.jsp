@@ -120,25 +120,16 @@
         <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
         
 		<!-- Overlay Layers Panel -->
-		<thematic-layers cache="dashboard.thematicLayerCache" dashboard="dashboard" ></thematic-layers>
+		<thematic-panel cache="dashboard.thematicLayerCache" dashboard="dashboard" ></thematic-panel>
         
        	<!-- Reference Layer Panel -->       
-		<reference-layers cache="dashboard.referenceLayerCache" dashboard="dashboard" ></reference-layers>
+		<reference-panel cache="dashboard.referenceLayerCache" dashboard="dashboard" ></reference-panel>
 
 		<!-- Base Layers Panel -->     
-		<base-layers layers="dashboard.baseLayers" dashboard="dashboard" ></base-layers>
+		<base-panel layers="dashboard.baseLayers" dashboard="dashboard" ></base-panel>
         
-		<!-- Legend Panel -->       
-        <article class="accordion info-box" id="legend-collapse-container">
-        	<div class="accordion-group sales-accortion" id="legend-sub-container">
-        		<div class="accordion-heading">
-        			<a class="legend-opener opener" id="legend-opener-button" data-toggle="collapse" data-parent="#legend-collapse-container" href="#collapse-legend"><gdb:localize key="dashboardViewer.legend"/></a>
-        		</div>	
-              	<div id="collapse-legend" class="accordion-body" style="height: 0px;">
-              		<ul id="legend-list-group"></ul> 
-			    </div>
-		    </div>
-		</article>
+		<!-- Legend Panel --> 
+		<legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" workspace="dashboard.workspace"></legend-panel>      
 		 
         <!-- Map Tools Panel -->       
         <article class="accordion info-box" id="map-tools-collapse-container">
@@ -213,7 +204,8 @@
   <div class="modal fade" id="dashboardModal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <!-- Filled in by ajax call to create new dashboard -->
   </div>
-  
+
+  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" workspace="dashboard.workspace"></floating-legends>  
   
   <!-- map container -->
   <div class="bg-stretch">
