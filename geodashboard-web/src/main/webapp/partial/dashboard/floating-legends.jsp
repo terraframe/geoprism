@@ -22,7 +22,7 @@
 <div>
   <!-- Thematic layers -->
   <div ng-repeat="layerId in thematicCache.ids" ng-init="layer = thematicCache.values[layerId]">
-    <div ng-if="layer.inLegend && layer.isActive && !layer.groupedInLegend" class="info-box legend-container legend-snapable" ng-style="{'top':layer.legendYPosition + 'px', 'left':layer.legendXPosition + 'px'}"  legend-drag layer="layer">
+    <div ng-if="layer.inLegend && layer.isActive && !layer.groupedInLegend" class="info-box legend-container legend-snapable" ng-style="{'top':layer.legendYPosition + 'px', 'left':layer.legendXPosition + 'px'}"  legend-drag layer="layer" edit="ctrl.canEdit()">
       <div id="legend-items-container" ng-dblclick="ctrl.attach(layer)">
         <ul id="legend-list">
           <li class="legend-item legend-grouped">
@@ -36,7 +36,7 @@
   
   <!-- Reference layers -->
   <div ng-repeat="layerId in referenceCache.ids" ng-init="layer = referenceCache.values[layerId]"">
-    <div ng-if="layer.inLegend && layer.isActive && layer.layerExists && !layer.groupedInLegend" class="info-box legend-container legend-snapable" ng-style="{'top':layer.legendYPosition + 'px', 'left':layer.legendXPosition + 'px'}"  legend-drag layer="layer">
+    <div ng-if="layer.inLegend && layer.isActive && layer.layerExists && !layer.groupedInLegend" class="info-box legend-container legend-snapable" ng-style="{'top':layer.legendYPosition + 'px', 'left':layer.legendXPosition + 'px'}"  legend-drag layer="layer" edit="ctrl.canEdit()">
       <div id="legend-items-container" ng-dblclick="ctrl.attach(layer)">
         <ul id="legend-list">
           <li class="legend-item legend-grouped">

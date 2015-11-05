@@ -304,7 +304,7 @@
         HEIGHT:25,        
         TRANSPARENT:true,
         LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
-        LAYER: $scope.workspace + ":" + layer.viewName
+        LAYER: $scope.dashboard.getWorkspace() + ":" + layer.viewName
       };
 
       if(layer.showFeatureLabels){
@@ -314,6 +314,10 @@
       var src = window.location.origin + '/geoserver/wms?' + $.param(params);
         
       return src;      
+    }
+    
+    controller.canEdit = function() {
+      return $scope.dashboard.canEdit();
     }
     
     controller.detach = function(layer) {
@@ -327,17 +331,18 @@
         layer.legendYPosition = 50;        
       }   
       
-      controller.persist(layer);
+      controller.persist(layer, controller.canEdit());
     }
     
     controller.attach = function(layer) {
       layer.groupedInLegend = true;
       
-      controller.persist(layer);
+      controller.persist(layer, controller.canEdit());
     }
 
     controller.move = function(e,ui) {
       var layer = $scope.layer;
+      var edit = $scope.edit;
     	
       var target = e.currentTarget;
       var newPosition = $(target).position();
@@ -347,22 +352,22 @@
       layer.legendXPosition = x;        
       layer.legendYPosition = y;   
       
-      controller.persist(layer);
+      controller.persist(layer, edit);
     }
     
-    controller.persist = function(layer) {
-//      if(this.canEditDashboards()){
-      var request = new Mojo.ClientRequest({
-        onSuccess : function() {
-          // No action needed
-        },
-        onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
-        }
-      });
+    controller.persist = function(layer, edit) {
+      if(edit){
+        var request = new Mojo.ClientRequest({
+          onSuccess : function() {
+            // No action needed
+          },
+          onFailure : function(e) {
+            GDB.ExceptionHandler.handleException(e);
+          }
+        });
             
-      com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);
-//          }
+        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);
+      }
     }
   }
   
@@ -374,7 +379,7 @@
       scope: {
         thematicCache:'=',
         referenceCache:'=',
-        workspace:'='
+        dashboard:'='
       },
       controller : LegendController,
       controllerAs : 'ctrl',
@@ -391,7 +396,7 @@
       scope: {
         thematicCache:'=',
         referenceCache:'=',
-        workspace:'='
+        dashboard:'='
       },
       controller : LegendController,
       controllerAs : 'ctrl',
@@ -405,6 +410,7 @@
       restrict:'A',
       scope: {
         layer: "=",
+        edit:"="
       },
       controller : LegendController,
       controllerAs : 'ctrl',      

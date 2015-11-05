@@ -129,7 +129,11 @@
     
     controller.getDashboardId = function() {
       return controller.dashboardId;
-    }  
+    }
+
+    controller.getWorkspace = function() {
+      return controller.workspace;
+    } 
     
     controller.getModel = function() {
       return controller.model;

@@ -129,7 +129,7 @@
 		<base-panel layers="dashboard.baseLayers" dashboard="dashboard" ></base-panel>
         
 		<!-- Legend Panel --> 
-		<legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" workspace="dashboard.workspace"></legend-panel>      
+		<legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" dashboard="dashboard"></legend-panel>      
 		 
         <!-- Map Tools Panel -->       
         <article class="accordion info-box" id="map-tools-collapse-container">
@@ -205,7 +205,7 @@
     <!-- Filled in by ajax call to create new dashboard -->
   </div>
 
-  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" workspace="dashboard.workspace"></floating-legends>  
+  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache" dashboard="dashboard"></floating-legends>  
   
   <!-- map container -->
   <div class="bg-stretch">
