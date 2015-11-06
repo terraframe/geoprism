@@ -98,8 +98,15 @@
         var onFailure = function(e) {
           $scope.$apply();
         };
+        
+        /* 
+         * DashboardService.orderedLayers is expecting the ids to be passed
+         * in the opposite order of the front end.
+         */
+        var reversed = layerIds.slice();
+        reversed.reverse();
     	
-    	dashboardService.orderLayers(mapId, layerIds, '#overlay-container', onSuccess, onFailure);
+    	dashboardService.orderLayers(mapId, reversed, '#overlay-container', onSuccess, onFailure);
       }
       else{
         controller.setLayerIndexes(layerIds);    	  

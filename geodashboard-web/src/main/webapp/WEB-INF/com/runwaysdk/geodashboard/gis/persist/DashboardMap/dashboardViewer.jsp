@@ -84,26 +84,7 @@
     
   <script type="text/javascript">
   $(document).ready(function(){
-    com.runwaysdk.ui.Manager.setFactory("JQuery"); 
-
-    // Render the map
-    var map = new GDB.gis.DynamicMap({    
-      mapDivId: "mapDivId",    
-      mapId: '${mapId}',
-      dashboardId : '${dashboardId}',
-      workspace : '${workspace}',
-      aggregationMap : ${aggregationMap},
-      criteria : [],
-      editDashboard : ${editDashboard},
-      editData : ${editData},
-      layerCategoriesTree: {
-        termType : '${type}',
-        relationshipTypes : [ '${relationType}' ],
-        rootTerm : '${rootId}',
-        checkable: true
-      }    
-    });
-    map.render();
+    com.runwaysdk.ui.Manager.setFactory("JQuery");
   });
   </script>  
 
@@ -209,7 +190,7 @@
   <!-- map container -->
   <div class="bg-stretch">
     <div id="mapDivId" class="dynamicMap">
-      <map-popup feature="dashboard.feature" dashboard="dashboard"></map-popup>
+      <map-popup ng-if="dashboard.feature != null" feature="dashboard.feature" dashboard="dashboard"></map-popup>
     </div>
   </div>
   

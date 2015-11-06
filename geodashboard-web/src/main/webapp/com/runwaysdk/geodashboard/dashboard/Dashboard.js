@@ -244,13 +244,7 @@
             layer.isActive = true;
             
             /* Add new item to the map */            
-            if(reverse) {
-              cache.ids.unshift(layer.layerId);
-            }
-            else {
-              cache.ids.push(layer.layerId);
-            }
-            
+            cache.ids.unshift(layer.layerId);
             cache.values[layer.layerId] = layer;
           }          
         }
@@ -303,7 +297,7 @@
     
     controller.toggleLayer = function(layer) {
       if(!layer.isActive) {
-        controller.mapFactory.hideLayer(layer, true);            
+        controller.mapFactory.hideLayer(layer);            
       }
       else {
         controller.renderMap();
@@ -328,7 +322,7 @@
             controller.mapFactory.showLayer(layer, 0);          
           }
           else {
-            controller.mapFactory.hideLayer(layer, false);        
+            controller.mapFactory.hideLayer(layer);        
           }
         }
   

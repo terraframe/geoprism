@@ -43,13 +43,8 @@
       dashboardService.getFeatureInformation($scope.feature, onSuccess);
     }
     
-    controller.hasData = function() {
-      
-      return ($scope.feature != null && !$.isEmptyObject($scope.feature));
-    }
-    
     controller.close = function() {    	
-      $scope.feature = {};	    	
+      $scope.feature = null;	    	
     }
   }
   

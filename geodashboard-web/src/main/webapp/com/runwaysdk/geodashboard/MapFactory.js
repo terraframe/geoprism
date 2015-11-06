@@ -344,14 +344,14 @@
          * 
          * <public> - called externally
          */
-        hideLayer : function(layer, persist) {
+        hideLayer : function(layer) {
           var oLayer = this._cache[layer.key];
           
           if (oLayer != null && oLayer.showing == true) {
             var map = this.getMap();
             map.removeLayer(oLayer);
             
-            if(persist) {
+            if(oLayer.removable) {
               delete this._cache[layer.layerId];            
             }
             else {
@@ -405,6 +405,7 @@
               baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
               baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
               baseObj.showing = false;
+              baseObj.removable = false;
 
               // Add the baseObj to the layer cache
               this._cache[i] = baseObj;
@@ -443,6 +444,7 @@
               
               baseObj.setLayers(new ol.Collection(layersArr));
               baseObj.showing = false;
+              baseObj.removable = false;
 
               // Add the baseObj to the layer cache
               this._cache[i] = baseObj;              
@@ -551,7 +553,7 @@
             visible: true
           });
           oLayer.showing = false;
-
+          oLayer.removable = true;
 
           this._cache[layer.key] = oLayer;
           
