@@ -1325,7 +1325,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       JSONObject baseMap = new JSONObject();
       baseMap.put("LAYER_SOURCE_TYPE", "OSM");
-      
+
       object.put("activeBaseMap", baseMap);
     }
 
@@ -1378,5 +1378,50 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     state.apply();
 
     return "";
+  }
+
+  public static String getAvailableDashboardsAsJSON()
+  {
+    DashboardQuery query = Dashboard.getSortedDashboards();
+    OIterator<? extends Dashboard> iterator = query.getIterator();
+
+    try
+    {
+      JSONArray dashboards = new JSONArray();
+      boolean first = true;
+
+      JSONObject response = new JSONObject();
+
+      while (iterator.hasNext())
+      {
+        Dashboard dashboard = iterator.next();
+
+        JSONObject object = new JSONObject();
+        object.put("dashboardId", dashboard.getId());
+        object.put("label", dashboard.getDisplayLabel().getValue());
+
+        dashboards.put(object);
+
+        if (first)
+        {
+          response.put("state", dashboard.toJSON());
+
+          first = false;
+        }
+      }
+
+      response.put("dashboards", dashboards);
+
+      return response.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
   }
 }

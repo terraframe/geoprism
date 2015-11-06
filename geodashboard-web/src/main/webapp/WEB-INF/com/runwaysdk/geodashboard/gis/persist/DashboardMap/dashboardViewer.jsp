@@ -93,7 +93,7 @@
       dashboardId : '${dashboardId}',
       workspace : '${workspace}',
       aggregationMap : ${aggregationMap},
-      criteria : ${conditions},
+      criteria : [],
       editDashboard : ${editDashboard},
       editData : ${editData},
       layerCategoriesTree: {
@@ -109,7 +109,7 @@
 
   </head>
 
-  <body ng-controller="DashboardController as dashboard" ng-init="init('${dashboardId}', '${workspace}', ${editDashboard})">
+  <body ng-controller="DashboardController as dashboard" ng-init="init('${workspace}', ${editDashboard}, ${editData})">
 
     <form action="#" class="control-form" id="control-form" ng-cloak>
       <div id="control-form-collapse-button">
@@ -155,20 +155,20 @@
         <div id="dashboard-dropdown" class="sales-menu dropdown">
           <a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown">{{dashboard.model.label}}</a>
           <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
-            <c:forEach items="${dashboards}" var="dashboard" varStatus="status">
-              <li><a ng-if="dashboard.dashboardId != '${dashboard.id}'" ng-click="dashboard.setDashboardId('${dashboard.id}')">${dashboard.displayLabel.value}</a></li>
-            </c:forEach>
+            <li ng-repeat="da in dashboard.dashboards">
+              <a ng-if="dashboard.dashboardId != da.dashboardId" ng-click="dashboard.setDashboardId(da.dashboardId)">{{da.label}}</a>
+            </li>
           </ul>
         </div>
       
-        <i class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
+        <i ng-click="dashboard.openDashboard()" class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
       
         <!-- Clone dashboard button -->
-        <span id="clone-dashboard" class="" ng-if="dashboard.model.editDashboard">
+        <span ng-if="dashboard.canEdit()" id="clone-dashboard">
           <i class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
         </span>
       
-        <span id="delete-dashboard" class="" ng-if="dashboard.model.editDashboard">
+        <span ng-if="dashboard.canEdit()" id="delete-dashboard">
           <i class="fa fa-minus ico-dashboard" title="<gdb:localize key='dashboardViewer.deleteDashboardTooltip'/>" ></i>
         </span>
       
@@ -188,7 +188,7 @@
         <div id="filter-buttons-container">
           <a href="#" ng-click="form.$invalid || dashboard.refresh()" ng-disabled="form.$invalid" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
           <a href="#" ng-click="form.$invalid || dashboard.save()" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left""></a>
-          <a href="#" ng-click="form.$invalid || dashboard.saveGlobal()"  ng-disabled="form.$invalid" ng-if="dashboard.model.editDashboard" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
+          <a ng-if="dashboard.canEdit()" href="#" ng-click="form.$invalid || dashboard.saveGlobal()"  ng-disabled="form.$invalid" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
         </div>
       </ng-form>
     </aside>
@@ -208,7 +208,9 @@
   
   <!-- map container -->
   <div class="bg-stretch">
-    <div id="mapDivId" class="dynamicMap"></div>
+    <div id="mapDivId" class="dynamicMap">
+      <map-popup feature="dashboard.feature" dashboard="dashboard"></map-popup>
+    </div>
   </div>
   
   <!-- reporting container -->

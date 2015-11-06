@@ -21,21 +21,30 @@
   function DashboardService() {
     var service = {};
     service.edit = false;
+    service.editData = false;
     service.workspace = '';
     
     service.setEdit = function(edit) {
       service.edit = edit;
     };
     
-    service.canEdit = function(edit) {
+    service.canEdit = function() {
       return service.edit;
+    };
+    
+    service.setEditData = function(editData) {
+      service.editData = editData;
+    };
+    
+    service.canEditData = function() {
+      return service.editData;
     };
     
     service.setWorkspace = function(workspace) {
       service.workspace = workspace;
     };
     
-    service.getWorkspace = function(workspace) {
+    service.getWorkspace = function() {
       return service.workspace;
     };
     
@@ -101,8 +110,8 @@
       }
     }
     
-    service.refreshMap = function(state, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+    service.refreshMap = function(state, elementId, onSuccess, onFailure) {
+      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
               
       com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(request, state.mapId, state);
     }
@@ -111,6 +120,12 @@
       var request = service.createRequest(onSuccess, onFailure);
           
       com.runwaysdk.geodashboard.Dashboard.getJSON(request, dashboardId);
+    }
+    
+    service.getAvailableDashboardsAsJSON = function(onSuccess, onFailure) {
+      var request = service.createRequest(onSuccess, onFailure);
+    
+      com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON(request);
     }
     
     service.saveDashboardState = function(dashboardId, state, elementId, onSuccess, onFailure) {
@@ -123,6 +138,16 @@
       var request = service.createRequest(onSuccess, onFailure);
     
       com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
+    }
+    
+    service.getFeatureInformation = function(feature, onSuccess, onFailure) {
+      var request = service.createRequest(onSuccess, onFailure);
+
+      var layerId = feature.layerId;
+      var geoId = feature.geoId;
+
+      com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);   
+ 	
     }
     
     return service;

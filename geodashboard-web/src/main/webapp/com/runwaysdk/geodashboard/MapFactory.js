@@ -64,18 +64,6 @@
         IsAbstract : true
       },
       
-      getEnableClickEvents : {
-        IsAbstract : true
-      },
-      
-      getDynamicMap : {
-        IsAbstract : true
-      },
-      
-      setDynamicMap : {
-        IsAbstract : true
-      },
-      
       getImpl : {
         IsAbstract : true
       },
@@ -136,10 +124,6 @@
         IsAbstract : true
       },
       
-      _mapClickHandler : {
-        IsAbstract : true
-      },
-      
       createUserLayers : {
         IsAbstract : true
       },
@@ -156,15 +140,15 @@
         IsAbstract : true
       },
       
-      showClickPopup : {
-        IsAbstract : true
-      },
-      
-      removeClickPopup : {
-        IsAbstract : true
-      },
-      
       renderMap : {
+        IsAbstract : true
+      },
+      
+      setClickHandler : {
+        IsAbstract : true
+      },
+      
+      getFeatureInfo : {
         IsAbstract : true
       }
     }
@@ -178,19 +162,17 @@
         
       },   
       Instance : {
-        initialize : function(elementId, center, zoomLevel, enableClickEvents, dynamicMap){
+        initialize : function(elementId, center, zoomLevel){
           this._center = center || [0,0];
           this._zoomLevel = zoomLevel || 2;
           this._elementId = elementId;    
           this._map = null;
-          this.enableClickEvents = enableClickEvents;
-          this._dynamicMap = dynamicMap;
           
           this._bounds = null;
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
           this._cache = {};
           
-          this.renderMap(dynamicMap);
+          this.renderMap();
         },
         
         /**
@@ -247,20 +229,6 @@
          */
         getEnableClickEvents : function() {
           return this.enableClickEvents;
-        },
-        
-        /**
-         * <private> - internal method
-         */
-        getDynamicMap : function() {
-          return this._dynamicMap;
-        },
-        
-        /**
-         * <private> - internal method
-         */
-        setDynamicMap : function(thisRef) {
-          this._dynamicMap = thisRef;
         },
         
         /**
@@ -355,15 +323,17 @@
         showLayer : function(layer, stackIndex) {
           var oLayer = this._cache[layer.key];
           
-          if(oLayer != null) {
-            var map = this.getMap();          
+          if(oLayer != null && oLayer.showing == false) {
+            var map = this.getMap();
             if(stackIndex !== null && stackIndex >= 0){
               map.getLayers().insertAt(stackIndex, oLayer);
             }
             else{
               // will add the layer to the top of all other layers
               map.addLayer(oLayer);
-            }        	  
+            }
+            
+            oLayer.showing = true;
           }
         },
         
@@ -377,12 +347,15 @@
         hideLayer : function(layer, persist) {
           var oLayer = this._cache[layer.key];
           
-          if (oLayer != null) {
+          if (oLayer != null && oLayer.showing == true) {
             var map = this.getMap();
             map.removeLayer(oLayer);
             
             if(persist) {
-              delete this._cache[layer.layerId];            	
+              delete this._cache[layer.layerId];            
+            }
+            else {
+              oLayer.showing = false;  
             }
           }
         },
@@ -393,7 +366,7 @@
               var layer = layers[i];
                   
               this.hideLayer(layer, true);
-            }        	  
+            }          
           }
         },
         
@@ -403,7 +376,7 @@
          * <public> - called externally
          */
         createBaseLayers : function(){
-        	
+        
           var layers = [];
           var baseMapsArr = MapConfig._BASEMAPS;
           
@@ -431,16 +404,17 @@
               baseObj._gdbisdefault = base.DEFAULT;
               baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
               baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
-              
+              baseObj.showing = false;
+
               // Add the baseObj to the layer cache
               this._cache[i] = baseObj;
                 
               var layer = {
-            	layerId : i,
-            	key : i,
+            layerId : i,
+            key : i,
                 isActive : false,
-            	layerType : base.LAYER_SOURCE_TYPE,
-            	layerLabel : this.localize(base.LOCLIZATION_KEY)
+            layerType : base.LAYER_SOURCE_TYPE,
+            layerLabel : this.localize(base.LOCLIZATION_KEY)
               };
               
               layers.push(layer);
@@ -468,7 +442,8 @@
               }
               
               baseObj.setLayers(new ol.Collection(layersArr));
-              
+              baseObj.showing = false;
+
               // Add the baseObj to the layer cache
               this._cache[i] = baseObj;              
               
@@ -496,7 +471,7 @@
          * 
          * <public> - called externally
          */
-        createUserLayers : function(layers, geoserverWorkspace, removeExisting) {        	
+        createUserLayers : function(layers, geoserverWorkspace, removeExisting) {        
           // Remove any already rendered layers from the map
           if (removeExisting === true) {
             this.hideLayers(layers);            
@@ -557,7 +532,7 @@
           // This tiling format (tileLayer) is the preferred way to render wms due to performance gains but 
           // REQUIRES THAT META TILING SIZE BE SET TO A LARGE VALUE (I.E. 20) TO REDUCE BUBBLE CHOPPING.
           // We could get slightly better performance by setting tiled: false for non-bubble layers but 
-          // this is currently unnecessary addition of code for relatively small performance gain.        	
+          // this is currently unnecessary addition of code for relatively small performance gain.        
           var viewName = layer.viewName;
           var geoserverName = geoserverWorkspace + ":" + viewName;
                     
@@ -575,6 +550,8 @@
             }),
             visible: true
           });
+          oLayer.showing = false;
+
 
           this._cache[layer.key] = oLayer;
           
@@ -663,207 +640,19 @@
          */
         removeStaleMapFragments : function() {
           var map = this.getMap();
-            map.remove();
+          map.remove();
             
           $('#'+this.getMapElementId()).html('');
-        },
-        
-        
-        /**
-         * Performs the identify request when a user clicks on the map
-         * 
-         * @param id
-         * 
-         * <private> - internal method
-         */
-        _mapClickHandler : function(e) {
-        
-          // remove any exiting popups
-          this.removeClickPopup();
-        
-          var dynamicMap = this.getDynamicMap();
-          var point = e.pixel;
-            
-          // The 'this' is a this reference from the calling code to get access to the layer cache
-          var layers = dynamicMap.getCachedLayers().reverse();
-            
-          if(layers.length > 0) {
-              
-            // Construct a GetFeatureInfo request URL given a point        
-            var size = this.getMapSize();        
-            var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
-            var layerMap = new Object();
-            var layerStringList = '';
-            var that = this;
-            
-            // Build a string of layers to query against but geoserver will only return the 
-            // first entry in the array if anything is found. Otherwise it will query the next layer
-            // until something is found.
-            var firstAdded = false;
-            
-            for (var i = 0; i < layers.length; i++) { 
-              var layer = layers[i];
-              
-              // If the layer object is active (visible on the map)
-              if(layer.getLayerIsActive()){
-                var layerId = layer.attributeMap.viewName.value;              
-                layerMap[layerId] = layer;              
-                    
-                if(firstAdded){
-                  layerStringList += "," + layerId;
-                }
-                else{
-                  layerStringList += layerId;
-                  firstAdded = true;
-                }
-              }
-            }
-            
-            var requestURL = window.location.origin+"/geoserver/" + dynamicMap._workspace +"/wms?" +
-              "REQUEST=GetFeatureInfo" +
-              "&INFO_FORMAT=application/json" +
-              "&EXCEPTIONS=APPLICATION/VND.OGC.SE_XML" +
-              "&SERVICE=WMS" +
-              "&SRS="+MapWidget.DATASRID +
-              "&VERSION=1.1.1" +
-              "&height=" + size.y +
-              "&width=" + size.x +
-              "&X="+ parseInt(point[0]) +
-              "&Y="+ parseInt(point[1]) +
-              "&BBOX="+ mapBbox +
-              "&LAYERS=geodashboard:"+ layerStringList +
-              "&QUERY_LAYERS=geodashboard:"+ layerStringList +
-              "&TYPENAME=geodashboard:"+ layerStringList;
-          
-              var that = this;
-              
-              $.ajax({
-                  url: requestURL,
-                  context: document.body 
-              }).done(function(json) {
-                var popupContent = '';
-                
-                if(json.features != null) {
-                  // The getfeatureinfo request will return only 1 feature
-                  for(var i = 0; i < json.features.length; i++){
-                    var featureLayer = json.features[i];
-                    var featureLayerIdReturn = featureLayer.id;
-                    var featureLayerId = featureLayerIdReturn.substring(0, featureLayerIdReturn.indexOf('.'));
-                    var geoId = featureLayer.properties.geoid;
-                      
-                    var layer = layerMap[featureLayerId];
-                    var layerDisplayName = layer.getLayerName();
-                    var aggregationMethod = layer.getAggregationMethod();
-                    var attributeName = layer.getAggregationAttribute().toLowerCase();
-                      
-                    var attributeValue = featureLayer.properties[attributeName];                            
-                    var featureDisplayName = featureLayer.properties.displaylabel;
-
-                      
-                    if(typeof attributeValue === 'number'){
-                      attributeValue = dynamicMap._formatter(attributeValue);
-                    }
-                    else if(attributeValue != null && !isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
-                      var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
-                      var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
-                      attributeValue = dynamicMap._formatDate(parsedAttr);
-                    }
-                      
-                    popupContent += '<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><h3 class="popup-heading">'+layerDisplayName+'</h3>';
-                      
-                    var html = '';
-                    html += '<table class="table">';
-                    html += '<thead class="popup-table-heading">';
-                    html += '<tr>'; 
-                    html += '<th>'+that.localize("location")+'</th>';  
-                    html += '<th>'+that.localize("aggregationMethod")+'</th>'; 
-                    html += '<th>'+that.localize("aggregateValue")+'</th>'; 
-                    html += '</tr>';  
-                    html += '</thead>';
-                    html += '<tbody>';  
-                    html += '<tr>'; 
-                    html += '<td>'+ (featureDisplayName == null ? '' : featureDisplayName) +'</td>';  
-                    html += '<td>' + (aggregationMethod == null ? '' : aggregationMethod) + '</td>'; 
-                    html += '<td>' + (attributeValue == null ? '' : attributeValue) + '</td>';  
-                    html += '</tr>';  
-                      
-                    if(dynamicMap.canEditData() && geoId != null && (layer.aggregationStrategy.type == 'GeometryAggregationStrategy' || layer.aggregationStrategy.type == 'GEOMETRY') ) {
-                      html += '<tr>'; 
-                      html += '<td colspan="3"><a class="edit-feature" data-layerid="' + layer.getLayerId() + '" data-geoid="' + geoId + '">' + that.localize("editFeature") + '</a></td>';  
-                      html += '</tr>';  
-                    }
-                      
-                    html += '</tbody>';  
-                    html += '</table></div>';  
-                              
-                    popupContent += html;
-                      
-                    if(geoId != null)
-                    {                 
-                      dynamicMap.setCurrGeoId(geoId);
-                      dynamicMap._renderReport(layer.getLayerId(), geoId, dynamicMap._criteria);
-                    }            
-                  }                  
-                }
-                
-                if(popupContent.length > 0){
-                  that.showClickPopup(popupContent, e.coordinate);
-                  
-                  // Hook-up the edit click event
-                  $(".edit-feature").click(function(e){
-                    var layerId = $(this).data("layerid");
-                    var geoId = $(this).data("geoid");
-                    
-                    dynamicMap.editFeature(layerId, geoId);
-                  });
-                }
-              });
-            }
-        },
-        
-        /**
-         * Open a popup on the map
-         * 
-         * <private> - internal method
-         */
-        showClickPopup : function(content, latLng) {
-          var that = this;
-          var map = this.getMap();
-          var popup = $.parseHTML(content)[0];
-            
-          var overlay = new ol.Overlay({
-                element:popup,
-                autoPan: true
-          });
-          
-          map.addOverlay(overlay);
-          overlay.setPosition(latLng);
-          
-          $("#popup-closer").click(function(e){
-            that.removeClickPopup();
-          });
-        },
-        
-        /**
-         * Close all popups on the map
-         * 
-         * <public> - called externally
-         */
-        removeClickPopup : function() {
-          var map = this.getMap();
-          var overlays = map.getOverlays();
-          overlays.clear();
-        },
-        
+        },                
         
         /**
          * Instantiate a new map
          * 
-         * @dynamicMap - the this refernce from calling code which is needed to gain access to DynamicMap scope
+         * @controller - the this refernce from calling code which is needed to gain access to Controller scope
          * 
          * <private> - internal method
          */
-        renderMap : function(dynamicMap) {
+        renderMap : function() {
           if(this.getMap() != null){
             this.removeStaleMapFragments();
           }
@@ -886,19 +675,110 @@
           });
           
           this.setMap(map);
-          this.configureMap();
+          this.configureMap();          
+        },
+        
+        setClickHandler : function(handler) {
+          var map = this.getMap();
           
-          if(this.getEnableClickEvents()){
-            this.setDynamicMap(dynamicMap);
+          map.on('click', handler);
+        },
+        
+        getFeatureInfo : function(workspace, layers, point, callback) {
+          if(layers.length > 0) {
+            var x = parseInt(point[0]);
+            var y = parseInt(point[1]);
             
-//            var mapClickHandlerBound = Mojo.Util.bind(this, this._mapClickHandler);
-//            map.on("click", mapClickHandlerBound);
-          }
+            // Construct a GetFeatureInfo request URL given a point
+            var size = this.getMapSize();
+            var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
+            var layerMap = {};
+
+            var layerStringList = '';
+                
+             // Build a string of layers to query against but geoserver will only return the 
+             // first entry in the array if anything is found. Otherwise it will query the next layer
+             // until something is found.
+            var firstAdded = false;
+                
+            for (var i = 0; i < layers.length; i++) { 
+              var layer = layers[i];
+              layerMap[layer.viewName] = layer;                           
+                  
+              // If the layer object is active (visible on the map)
+              if(layer.isActive){
+                var layerId = layer.viewName;
+                        
+                if(firstAdded){
+                  layerStringList += "," + layerId;
+                }
+                else{
+                  layerStringList += layerId;
+                  firstAdded = true;
+                }
+              }
+            }
+            
+            var params = {
+              REQUEST:'GetFeatureInfo',
+              INFO_FORMAT:'application/json',
+              EXCEPTIONS:'APPLICATION/VND.OGC.SE_XML',
+              SERVICE:'WMS',
+              SRS:MapWidget.DATASRID,              
+              VERSION:'1.1.1',
+              height:size.y,
+              width:size.x,
+              X:x,
+              Y:y,
+              BBOX:mapBbox,
+              LAYERS:"geodashboard:"+ layerStringList,
+              QUERY_LAYERS:"geodashboard:"+ layerStringList,
+              TYPENAME:"geodashboard:"+ layerStringList
+            };
+                
+            var url = window.location.origin+"/geoserver/" + workspace +"/wms?" + $.param(params);
+                  
+            $.ajax({
+              url: url,
+              context: document.body 
+            }).done(function(response) {
+            
+              if(response.features != null && response.features.length > 0) {
+                  
+                /* The response will return only 1 feature */
+                var feature = response.features[0];
+                var viewName = feature.id.substring(0, feature.id.indexOf('.'));
+                
+                var layer = layerMap[viewName];
+                var layerDisplayName = layer.layerName;
+                var aggregationMethod = layer.aggregationMethod;
+                var attributeName = layer.aggregationAttribute.toLowerCase();
+                        
+                var featureDisplayName = feature.properties.displaylabel;
+                var geoId = feature.properties.geoid;
+                var attributeValue = feature.properties[attributeName];
+              
+                var info = {
+                  layerDisplayName : layerDisplayName,
+                  aggregationMethod : aggregationMethod,
+                  featureDisplayName : featureDisplayName,
+                  attributeValue : attributeValue,
+                  geoId : geoId,
+                  x : x,
+                  y : y,
+                  layerId : layer.layerId,
+                  aggregationStrategy : layer.aggregationStrategy
+                };  
+                  
+                callback(info);
+              }
+            });
+          }        
         }
       },
       Static : {
         // Static methods
-        }
+      }
     });
   
 })();

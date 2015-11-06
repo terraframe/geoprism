@@ -19,10 +19,12 @@
 (function(){
   function DashboardController($scope, $timeout, dashboardService) {
     var controller = this;
-    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null, true, controller);
+    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null);
+    
     controller.baseLayers = controller.mapFactory.createBaseLayers();
 
-    /* Default State */ 
+    /* Default Dashboard State */ 
+    controller.dashboards = [];
     controller.dashboardId = '';
     controller.model = {
       location : {label:'',value:''},
@@ -40,54 +42,32 @@
     controller.renderBase = true;
     
     /* Initialization Function */
-    $scope.init = function(dashboardId, workspace, edit) {
+    $scope.init = function(workspace, editDashboard, editData) {
       dashboardService.setWorkspace(workspace);
-      dashboardService.setEdit(edit);
+      dashboardService.setEdit(editDashboard);
+      dashboardService.setEditData(editData);
+      
+      controller.mapFactory.setClickHandler(controller.onMapClick);
 
-      controller.dashboardId = dashboardId;      
-      controller.load();
+      controller.loadDashboardOptions();
     }
-
-    /* Controller Functions */
-    controller.load = function() {
-        
-      /* Clear the current state */
-      controller.model = {
-        location : {label:'',value:''},
-        editDashboard : false,
-        editData : false,
-        types : [],
-        mapId : ''
-      };
-      controller.thematicLayerCache = {values:{}, ids:[]};
-      controller.referenceLayerCache = {values:{}, ids:[]};
     
-      var onSuccess = function(json){
+    controller.loadDashboardOptions = function(){
+      
+      onSuccess = function(json) {
         $timeout(function() {
-          controller.model = JSON.parse(json);
-          controller.renderBase = true;
-
-          // Initialize the default base map
-          var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
+          var response = JSON.parse(json);
+        
+          controller.dashboards = response.dashboards;
+          controller.dashboardId = response.state.id;
+        
+          controller.setDashboardState(response.state);
           
-          for(var i = 0; i < controller.baseLayers.length; i++) {
-            var layer = controller.baseLayers[i];
-              
-            if(layer.layerType == layerSourceType) {
-              layer.isActive = true;
-            }
-            else {
-              layer.isActive = false;            	
-            }
-          }            
-
           $scope.$apply();
-            
-          controller.refresh();
         }, 0);
       };
-      
-      dashboardService.getDashboardJSON(controller.dashboardId, onSuccess);
+          
+      dashboardService.getAvailableDashboardsAsJSON(onSuccess);      
     }
     
     /* Refresh Map Function */
@@ -104,7 +84,7 @@
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
       };
       
-      dashboardService.refreshMap(controller.model, onSuccess);
+      dashboardService.refreshMap(controller.model, '#filter-buttons-container', onSuccess);
     }
     
     controller.save = function() {
@@ -125,7 +105,7 @@
       if(controller.dashboardId != dashboardId) {
         controller.dashboardId = dashboardId;
         
-        controller.load();
+        controller.loadDashboardState();
       }
     }
 
@@ -140,6 +120,54 @@
     controller.canEdit = function() {
       return controller.model.editDashboard;
     }
+    
+    controller.loadDashboardState = function() {
+        
+      /* Clear the current state */
+      controller.model = {
+        location : {label:'',value:''},
+        editDashboard : false,
+        editData : false,
+        types : [],
+        mapId : ''
+      };
+      controller.thematicLayerCache = {values:{}, ids:[]};
+      controller.referenceLayerCache = {values:{}, ids:[]};
+      
+      var onSuccess = function(json){
+        var state = JSON.parse(json);
+          
+        controller.setDashboardState(state);
+      };
+        
+      dashboardService.getDashboardJSON(controller.dashboardId, onSuccess);
+    }
+    
+    controller.setDashboardState = function(state) {
+      $timeout(function() {
+        controller.model = state;
+        controller.renderBase = true;
+
+        // Initialize the default base map
+        var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
+            
+        for(var i = 0; i < controller.baseLayers.length; i++) {
+          var layer = controller.baseLayers[i];
+                
+          if(layer.layerType == layerSourceType) {
+            layer.isActive = true;
+          }
+          else {
+            layer.isActive = false;            
+          }
+        }            
+
+        $scope.$apply();
+              
+        controller.refresh();
+      }, 5);
+    }
+    
 
     /* Layer Cache Getters/Setters */
     controller.getLayerCache = function() {
@@ -189,6 +217,8 @@
     }
     
     controller.setMapState = function(map, reverse) {
+      controller.feature = {};
+
       if (map.bbox != null) {
         angular.copy(map.bbox, controller.bbox);
         
@@ -208,7 +238,7 @@
           if (oldLayer != null) {
             layer.isActive = oldLayer.isActive;
           
-          angular.copy(layer, oldLayer);            
+            angular.copy(layer, oldLayer);            
           }
           else {
             layer.isActive = true;
@@ -313,7 +343,7 @@
           var layer = controller.baseLayers[i];
           
           if(layer.isActive) {
-            return layer
+            return layer;
           }
         }
       }
@@ -385,9 +415,58 @@
               
       window.location.href = url;            
     }
+    
+    controller.openDashboard = function(){
+      var url = "?" + $.param({'dashboard' : controller.dashboardId}) ;
+      
+      var win = window.open(url, '_blank');
+      win.focus();
+    }
+    
+    /**
+     * Performs the identify request when a user clicks on the map
+     * 
+     * @param id
+     * 
+     * <private> - internal method
+     */
+    controller.onMapClick = function(e) {
+    
+      var point = e.pixel;
+      var workspace = controller.getWorkspace();
+      var layers = controller.getThematicLayers();
+      
+      controller.mapFactory.getFeatureInfo(workspace, layers, point, controller.setFeatureInfo);        
+    }
+    
+    controller.setFeatureInfo = function(info) {
+      if(info != null) {
+    	
+    	var attributeValue = info.attributeValue;
+    	
+        /* Localize the value if needed */
+        if(typeof attributeValue === 'number'){
+          var formatter = Globalize.numberFormatter();  
+              
+          info.attributeValue = formatter(attributeValue);
+        }
+        else if(attributeValue != null && !isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
+          var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
+          var parsedAttr = $.datepicker.parseDate('yy-mm-dd', slicedAttr);
+            
+          var formatter = Globalize.dateFormatter({ date: "short" })
+            
+          info.attributeValue = formatter(parsedAttr);
+        }    
+        
+        controller.feature = info;
+        
+        $scope.$apply();
+      }
+    }
   }
   
-  angular.module("dashboard", ["dashboard-services", "dashboard-accordion", "dashboard-layer"]);
+  angular.module("dashboard", ["dashboard-services", "dashboard-accordion", "dashboard-layer", "dashboard-map"]);
   angular
   .module('dashboard')
   .controller('DashboardController', DashboardController)

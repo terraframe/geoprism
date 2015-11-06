@@ -41,8 +41,8 @@
       /**
        * 
        */
-      initialize : function(dynamicMap, config){
-        this._dynamicMap = dynamicMap;
+      initialize : function(controller, config){
+        this._controller = controller;
         this._id = config.id;
         this._type = config.type;
         this._object = null;
@@ -172,7 +172,7 @@
                 this._form.addEntry(entry);                
               }
               else if(attributeMd.getReferencedMdBusiness() == 'com.runwaysdk.system.gis.geo.GeoEntity' ) {                
-                var entry = new com.runwaysdk.geodashboard.GeoEntityEntry(attributeMd, attributeDTO.getValue(), this._dynamicMap.getDashboardId());
+                var entry = new com.runwaysdk.geodashboard.GeoEntityEntry(attributeMd, attributeDTO.getValue(), this._controller.getDashboardId());
                 
                 this._form.addEntry(entry);                
               }
@@ -252,7 +252,7 @@
           var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
             onSuccess : function(object){
               that._dialog.close();
-              that._dynamicMap._onClickApplyFilters();
+              that._controller.refresh();
             },
             onFailure : function(e){
               that.handleException(e);

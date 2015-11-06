@@ -20,10 +20,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,14 +34,11 @@ import com.runwaysdk.geodashboard.DashboardQueryDTO;
 import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 import com.runwaysdk.geodashboard.JavascriptUtil;
-import com.runwaysdk.geodashboard.MdAttributeViewDTO;
-import com.runwaysdk.geodashboard.MetadataWrapperDTO;
 import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
 import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
-import com.runwaysdk.system.metadata.MdClassDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -232,26 +226,6 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
       req.setAttribute("mapId", activeDashboard.getMapId());
 
-      // Add Dashboard's specified attributes (i.e. SalesTransaction) to the request.
-      MdClassDTO[] types = activeDashboard.getSortedTypes();
-      req.setAttribute("types", types);
-
-      Map<String, List<MdAttributeViewDTO>> attrMap = new LinkedHashMap<String, List<MdAttributeViewDTO>>();
-
-      for (MetadataWrapperDTO mdDTO : activeDashboard.getAllMetadata())
-      {
-        List<MdAttributeViewDTO> attrs = new LinkedList<MdAttributeViewDTO>();
-        MdAttributeViewDTO[] views = mdDTO.getSortedAttributes();
-
-        for (MdAttributeViewDTO mdAttrView : views)
-        {
-          attrs.add(mdAttrView);
-        }
-
-        attrMap.put(mdDTO.getWrappedMdClassId(), attrs);
-      }
-
-      req.setAttribute("attrMap", attrMap);
 
       GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
 
@@ -261,10 +235,6 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
       JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
-      /*
-       * Load the conditions information
-       */
-      req.setAttribute("conditions", activeDashboard.getConditionsJSON());
       req.setAttribute("hasReport", activeDashboard.hasReport());
       req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
       req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));

@@ -74,7 +74,7 @@
     }
     
     controller.canEdit = function() {
-      return $scope.dashboard.canEdit();    	
+      return dashboardService.canEdit();    	
     }
     
     controller.move = function(e, ui) {
@@ -355,7 +355,7 @@
       link: function (scope, element, attrs, ctrl) {
       }
     }    
-  }    
+  }
   
   function FloatingLegends() {
     return {
