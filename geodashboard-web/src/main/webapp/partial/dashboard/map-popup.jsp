@@ -21,7 +21,7 @@
 
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div ng-style="{'top':feature.y + 'px', 'left':feature.x + 'px', 'position':'absolute', 'z-index':50}" class="ol-overlay-container">
+<div ng-cloak ng-style="{'top':feature.y + 'px', 'left':feature.x + 'px', 'position':'absolute', 'z-index':50}" class="ol-overlay-container">
   <div id="popup" class="ol-popup">
     <a href="#" ng-click="ctrl.close()" id="popup-closer" class="ol-popup-closer"></a>
     <h3 class="popup-heading">{{feature.layerDisplayName}}</h3>

@@ -310,7 +310,7 @@
             return true;
           }
             
-          var number = getParser()( modelValue );
+          var number = parser( modelValue );
           var valid = ($.isNumeric(number) && Math.floor(number) == number);
           
           return valid;        
@@ -330,7 +330,7 @@
             return true;
           }
           
-          var number = getParser()( modelValue );
+          var number = parser( modelValue );
           
           return $.isNumeric(number);        
         }

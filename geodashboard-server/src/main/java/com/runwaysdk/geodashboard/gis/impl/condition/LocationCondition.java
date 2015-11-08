@@ -18,14 +18,22 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
+import com.runwaysdk.geodashboard.QueryUtil;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
+import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
@@ -77,18 +85,18 @@ public class LocationCondition extends DashboardCondition implements com.runways
   }
 
   @Override
-  public void restrictQuery(ValueQuery query, Attribute attr)
+  public void restrictQuery(ValueQuery _vQuery, Attribute _attribute)
   {
     GeoEntity entity = this.getComparisonValue();
 
     if (entity != null)
     {
-      AttributeReference attributeReference = (AttributeReference) attr;
+      AttributeReference attributeReference = (AttributeReference) _attribute;
 
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(_vQuery);
 
-      query.AND(aptQuery.getParentTerm().EQ(entity));
-      query.AND(attributeReference.EQ(aptQuery.getChildTerm()));
+      _vQuery.AND(aptQuery.getParentTerm().EQ(entity));
+      _vQuery.AND(attributeReference.EQ(aptQuery.getChildTerm()));
     }
   }
 
@@ -128,5 +136,39 @@ public class LocationCondition extends DashboardCondition implements com.runways
   public String getJSONKey()
   {
     return CONDITION_TYPE;
+  }
+
+  @Override
+  public List<String> getConditionInformation()
+  {
+    List<String> messages = new LinkedList<String>();
+
+    GeoEntity entity = this.getComparisonValue();
+
+    if (entity != null)
+    {
+      String localizedValue = entity.getDisplayLabel().getValue();
+
+      String message = LocalizationFacade.getFromBundles("location.condition");
+      message = message.replace("{0}", localizedValue);
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
+
+  @Override
+  public void restrictQuery(String _type, ValueQuery _vQuery, GeneratedComponentQuery _query)
+  {
+    MdClassDAOIF mdClass = _query.getMdClassIF();
+    MdAttributeDAOIF mdAttribute = QueryUtil.getGeoEntityAttribute(mdClass);
+
+    if (mdAttribute != null)
+    {
+      AttributeReference attribute = (AttributeReference) _query.get(mdAttribute.definesAttribute());
+      
+      this.restrictQuery(_vQuery, attribute);
+    }
   }
 }

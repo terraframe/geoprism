@@ -36,8 +36,9 @@
               
       var onSuccess = function(json) {
         var information = JSON.parse(json);
+        var dashboard = dashboardService.getDashboard();
           
-        new com.runwaysdk.geodashboard.gis.FeatureForm($scope.dashboard, information).render();
+        new com.runwaysdk.geodashboard.gis.FeatureForm(dashboard, information).render();
       };
       
       dashboardService.getFeatureInformation($scope.feature, onSuccess);
@@ -54,8 +55,7 @@
       replace: true,
       templateUrl: '/partial/dashboard/map-popup.jsp',
       scope: {
-        feature:'=',
-       	dashboard:'='
+        feature:'='
       },
       controller : MapPopupController,
       controllerAs : 'ctrl',

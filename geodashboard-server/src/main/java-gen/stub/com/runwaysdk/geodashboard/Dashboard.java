@@ -1310,6 +1310,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("id", this.getId());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
+    object.put("hasReport", this.hasReport());
     object.put("mapId", map.getId());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));

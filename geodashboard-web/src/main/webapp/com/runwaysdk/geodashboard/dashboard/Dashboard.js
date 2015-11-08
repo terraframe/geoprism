@@ -46,6 +46,7 @@
       dashboardService.setWorkspace(workspace);
       dashboardService.setEdit(editDashboard);
       dashboardService.setEditData(editData);
+      dashboardService.setDashboard(controller);
       
       controller.mapFactory.setClickHandler(controller.onMapClick);
 
@@ -78,17 +79,23 @@
         var map = Mojo.Util.toObject(json);
 
         $timeout(function() {
-          controller.setMapState(map, false);
+          controller.setMapState(map, false);          
         }, 10);
+        
+        controller.renderReport();
           
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
       };
       
-      dashboardService.refreshMap(controller.model, '#filter-buttons-container', onSuccess);
+      
+      var state = controller.getCompressedState();
+      dashboardService.refreshMap(state, '#filter-buttons-container', onSuccess);
     }
     
     controller.save = function() {
-      dashboardService.saveDashboardState(controller.dashboardId, controller.model, '#filter-buttons-container');
+      var state = controller.getCompressedState();
+      
+      dashboardService.saveDashboardState(controller.dashboardId, state, '#filter-buttons-container');
     }
     
     /* Create a new layer */
@@ -217,7 +224,7 @@
     }
     
     controller.setMapState = function(map, reverse) {
-      controller.feature = {};
+      controller.feature = null;
 
       if (map.bbox != null) {
         angular.copy(map.bbox, controller.bbox);
@@ -435,9 +442,9 @@
     
     controller.setFeatureInfo = function(info) {
       if(info != null) {
-    	
-    	var attributeValue = info.attributeValue;
-    	
+      
+      var attributeValue = info.attributeValue;
+      
         /* Localize the value if needed */
         if(typeof attributeValue === 'number'){
           var formatter = Globalize.numberFormatter();  
@@ -454,13 +461,125 @@
         }    
         
         controller.feature = info;
+        controller.geoId = info.geoId;
         
         $scope.$apply();
+        
+        controller.renderReport();
       }
     }
+    
+    controller.renderReport = function() {
+      if($( "#report-viewport" ).length > 0) {
+        
+        // Get the width of the reporting div, make sure to remove some pixels because of
+        // the side bar and some padding. convert px to pt
+        var widthPt = Math.round(($('#report-content').width() - 20) * 72 / 96);
+        var heightPt = Math.round($('#report-content').height() * 72 / 96);
+        
+        var layerId = (controller.feature != null ? controller.feature.layerId : '');
+        var geoId = (controller.feature != null ? controller.feature.geoId : '');
+        
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'width', 'value' : widthPt});
+        configuration.parameters.push({'name' : 'height', 'value' : heightPt});
+        configuration.parameters.push({'name' : 'layerId', 'value' : layerId});
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'state', 'value' : JSON.stringify(controller.getCompressedState())});
+        
+        var onSuccess = function(html){
+          $( "#report-content" ).html(html);
+        };
+        
+        dashboardService.runReport(controller.dashboardId, JSON.stringify(configuration), "#report-viewport", onSuccess);
+      }
+    }
+    
+    controller.exportReport = function(format) {
+      var dashboardId = controller.getDashboardId();
+      
+      var layerId = (controller.feature != null ? controller.feature.layerId : '');
+      var geoId = (controller.feature != null ? controller.feature.geoId : '');
+      
+      if(controller.model.hasReport) {          
+        var configuration = {};
+        configuration.parameters = [];
+        configuration.parameters.push({'name' : 'format', 'value' : format});
+        configuration.parameters.push({'name' : 'layerId', 'value' : layerId});
+        configuration.parameters.push({'name' : 'category', 'value' : geoId});
+        configuration.parameters.push({'name' : 'state', 'value' : JSON.stringify(controller.getCompressedState())});
+            
+        var params = {
+          report : dashboardId,
+          configuration : JSON.stringify(configuration) 
+        }
+                  
+        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo?' + $.param(params);
+                  
+        window.location.href = url;  	  
+      }
+      else {
+        var message = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
+          
+        GDB.ExceptionHandler.handleException(message);        
+      }
+    }
+    
+    controller.getCompressedState = function() {
+      var oState = controller.model;
+      
+      var state = {
+        mapId : oState.mapId,
+        types : []
+      };
+      
+      if(!controller.isEmpty(oState.location)) {
+        state.location = oState.location;
+      }
+      
+      for(var i = 0; i < oState.types.length; i++) {
+        var oType = oState.types[i];
+        var oAttributes = oType.attributes;
+
+        var attributes = [];
+        
+        if(oAttributes != null) {          
+          for(var j = 0; j < oAttributes.length; j++) {
+            var oAttribute = oAttributes[j];
+            
+            if(oAttribute.filter != null && !controller.isEmpty(oAttribute.filter)) {
+              attributes.push(oAttribute);
+            }            
+          }          
+        }
+        
+        if(attributes.length > 0) {
+          var type = {
+            id : oType.id,
+            attributes : attributes
+          }
+            
+          state.types.push(type);
+        }
+      }
+      
+      return state;
+    }
+    
+    controller.isEmpty = function(filter)
+    {
+      for(var key in filter) {
+        if(key != 'type' && key != 'operation' && filter.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
   }
   
-  angular.module("dashboard", ["dashboard-services", "dashboard-accordion", "dashboard-layer", "dashboard-map"]);
+  angular.module("dashboard", ["dashboard-services", "report-panel", "dashboard-accordion", "dashboard-layer", "dashboard-map"]);
   angular
   .module('dashboard')
   .controller('DashboardController', DashboardController)

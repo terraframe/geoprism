@@ -23,6 +23,7 @@
     service.edit = false;
     service.editData = false;
     service.workspace = '';
+    service.dashboard = null;
     
     service.setEdit = function(edit) {
       service.edit = edit;
@@ -46,6 +47,14 @@
     
     service.getWorkspace = function() {
       return service.workspace;
+    };
+    
+    service.setDashboard = function(dashboard) {
+      service.dashboard = dashboard;
+    };
+    
+    service.getDashboard = function() {
+      return service.dashboard;
     };
     
     service.createRequest = function(onSuccess, onFailure){
@@ -148,6 +157,18 @@
 
       com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);   
  	
+    }
+    
+    service.hasReport = function(dashboardId, onSuccess, onFailure) {
+      var request = service.createRequest(onSuccess, onFailure);
+      
+      com.runwaysdk.geodashboard.Dashboard.hasReport(request, dashboardId);    	
+    }
+    
+    service.runReport = function(dashboardId, configuration, elementId, onSuccess, onFailure) {
+      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+    	
+      com.runwaysdk.geodashboard.report.ReportItemController.run(request, dashboardId, configuration);
     }
     
     return service;

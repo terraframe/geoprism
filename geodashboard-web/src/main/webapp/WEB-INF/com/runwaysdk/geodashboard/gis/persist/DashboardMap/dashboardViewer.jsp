@@ -195,38 +195,7 @@
   </div>
   
   <!-- reporting container -->
-  <article id="reporticng-container" class="reporticng-container report-panel-closed">
-    <c:if test="${editDashboard || hasReport}">
-      <div id="report-toolbar">
-        <div id="report-toggle-container">
-          <i id="report-collapse-toggle" class="fa fa-angle-double-down report-height-toggle" style="display:none;"></i>
-          <i id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
-        </div>
-      
-        <c:if test="${editDashboard}">
-          <a href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
-        </c:if>
-      
-        <c:choose>
-          <c:when test="${!hasReport}">
-            <span id="report-export-container" style="display: none;">
-          </c:when>      
-          <c:otherwise>
-            <span id="report-export-container">
-          </c:otherwise>       
-        </c:choose>
-      
-          <a href="#" class="report-export" data-format="docx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as docx" ><gdb:localize key="report.docx"/></a>
-          <a href="#" class="report-export" data-format="xlsx" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as xlsx" ><gdb:localize key="report.xlsx"/></a>
-          <a href="#" class="report-export" data-format="pdf" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/> as pdf" ><gdb:localize key="report.pdf"/></a>
-        </span>
-      </div>
-      <div id="report-viewport">    
-        <div id="report-content">
-        </div>   
-      </div>
-    </c:if>
-  </article>
+  <report-panel has-report="dashboard.model.hasReport"></report-panel>
   
   <!-- allow a user to go to the top of the page -->
   <div class="skip">

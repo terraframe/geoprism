@@ -18,6 +18,9 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +82,28 @@ public class DateCondition extends DashboardAttributeCondition implements Reload
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Override
+  public List<String> getConditionInformation()
+  {
+    List<String> messages = new LinkedList<String>();
+
+    if (startDate != null && startDate.length() > 0)
+    {
+      DashboardGreaterThanOrEqualCondition condition = new DashboardGreaterThanOrEqualCondition(this.getMdAttributeId(), this.startDate);
+
+      messages.addAll(condition.getConditionInformation());
+    }
+
+    if (this.endDate != null && endDate.length() > 0)
+    {
+      DashboardLessThanOrEqualCondition condition = new DashboardLessThanOrEqualCondition(this.getMdAttributeId(), this.endDate);
+
+      messages.addAll(condition.getConditionInformation());
+    }
+
+    return messages;
   }
 
 }

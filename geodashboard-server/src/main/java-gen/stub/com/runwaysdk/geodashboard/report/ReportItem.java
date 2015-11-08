@@ -67,6 +67,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
@@ -107,6 +108,10 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static final String  CATEGORY              = "category";
 
   public static final String  CRITERIA              = "criteria";
+
+  public static final String  CRITERIA_INFO         = "criteriaInfo";
+
+  public static final String  STATE                 = "state";
 
   public static final String  BASE_URL              = "dss.vector.solutions.report.ReportController.generate.mojo?report=";
 
@@ -517,17 +522,22 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
     map.put("categoryLabel", this.getLabel(map));
 
-    if (map.containsKey(CRITERIA))
+    if (map.containsKey(STATE))
     {
-      String criteria = map.get(CRITERIA);
+      String state = map.get(STATE);
+      DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
 
       // Get the user friendly description of the criteria
-      if (criteria != null && criteria.length() > 0)
+      if (conditions.length > 0)
       {
-        String information = ReportProviderUtil.getConditionInformation(criteria);
+        map.put(CRITERIA, DashboardCondition.serialize(conditions));
 
-        map.put("criteriaInfo", information);
+        String information = ReportProviderUtil.getConditionInformation(conditions);
+
+        map.put(CRITERIA_INFO, information);
       }
+
+      map.remove(STATE);
     }
 
     map.put(CONTEXT, new JSONObject(map).toString());
