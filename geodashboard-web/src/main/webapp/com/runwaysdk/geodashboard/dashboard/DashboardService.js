@@ -22,7 +22,6 @@
     var service = {};
     service.edit = false;
     service.editData = false;
-    service.workspace = '';
     service.dashboard = null;
     
     service.setEdit = function(edit) {
@@ -39,14 +38,6 @@
     
     service.canEditData = function() {
       return service.editData;
-    };
-    
-    service.setWorkspace = function(workspace) {
-      service.workspace = workspace;
-    };
-    
-    service.getWorkspace = function() {
-      return service.workspace;
     };
     
     service.setDashboard = function(dashboard) {
@@ -171,10 +162,16 @@
       com.runwaysdk.geodashboard.report.ReportItemController.run(request, dashboardId, configuration);
     }
     
+    service.removeDashboard = function(dashboardId, elementId, onSuccess, onFailure) {
+      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+            
+      com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
+    }
+    
     return service;
   }
   
-  angular.module("dashboard-services", []);
-  angular.module('dashboard-services')
+  angular.module("dashboard-service", []);
+  angular.module("dashboard-service")
     .factory('dashboardService', DashboardService)
 })();

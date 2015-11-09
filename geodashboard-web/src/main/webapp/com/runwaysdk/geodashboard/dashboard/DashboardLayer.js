@@ -288,7 +288,7 @@
    * LEGEND LAYER CONTROLLER AND WIDGET
    * 
    */
-  function LegendController($scope, $timeout, dashboardService) {
+  function LegendController($scope, $timeout, dashboardService, mapService) {
     var controller = this;
     
     controller.getSrc = function(layer) {
@@ -300,7 +300,7 @@
         HEIGHT:25,        
         TRANSPARENT:true,
         LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
-        LAYER: dashboardService.getWorkspace() + ":" + layer.viewName
+        LAYER: mapService.getWorkspace() + ":" + layer.viewName
       };
 
       if(layer.showFeatureLabels){
@@ -405,7 +405,7 @@
     }
   }
   
-  angular.module("dashboard-layer", ["dashboard-services"]);
+  angular.module("dashboard-layer", ["dashboard-service", "map-service"]);
   angular.module('dashboard-layer')
     .directive('thematicPanel', ThematicPanel)
     .directive('referencePanel', ReferencePanel)

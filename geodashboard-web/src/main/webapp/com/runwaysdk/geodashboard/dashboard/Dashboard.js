@@ -17,11 +17,10 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DashboardController($scope, $timeout, dashboardService) {
+  function DashboardController($scope, $timeout, dashboardService, mapService) {
     var controller = this;
-    controller.mapFactory = new com.runwaysdk.geodashboard.gis.OpenLayersMap("mapDivId", null, null);
     
-    controller.baseLayers = controller.mapFactory.createBaseLayers();
+    controller.baseLayers = mapService.createBaseLayers();
 
     /* Default Dashboard State */ 
     controller.dashboards = [];
@@ -43,12 +42,13 @@
     
     /* Initialization Function */
     $scope.init = function(workspace, editDashboard, editData) {
-      dashboardService.setWorkspace(workspace);
+      
       dashboardService.setEdit(editDashboard);
       dashboardService.setEditData(editData);
       dashboardService.setDashboard(controller);
-      
-      controller.mapFactory.setClickHandler(controller.onMapClick);
+
+      mapService.setWorkspace(workspace);
+      mapService.setClickHandler(controller.onMapClick);
 
       controller.loadDashboardOptions();
     }
@@ -117,7 +117,7 @@
     }
 
     controller.getWorkspace = function() {
-      return dashboardService.getWorkspace();
+      return mapService.getWorkspace();
     } 
     
     controller.getModel = function() {
@@ -140,6 +140,9 @@
       };
       controller.thematicLayerCache = {values:{}, ids:[]};
       controller.referenceLayerCache = {values:{}, ids:[]};
+      
+      /* Remove all current layers */
+      mapService.clear();
       
       var onSuccess = function(json){
         var state = JSON.parse(json);
@@ -296,15 +299,15 @@
       }
     
       var rLayers = controller.getReferenceLayers();
-      controller.mapFactory.createReferenceLayers(rLayers, controller.getWorkspace(), true);
+      mapService.createReferenceLayers(rLayers, true);
             
       var tLayers = controller.getThematicLayers();
-      controller.mapFactory.createUserLayers(tLayers, controller.getWorkspace(), true);      
+      mapService.createUserLayers(tLayers, true);      
     }
     
     controller.toggleLayer = function(layer) {
       if(!layer.isActive) {
-        controller.mapFactory.hideLayer(layer);            
+        mapService.hideLayer(layer);            
       }
       else {
         controller.renderMap();
@@ -313,7 +316,7 @@
     
     controller.hideLayers = function() {
       var layers = controller.getThematicLayers();
-      controller.mapFactory.hideLayers(layers);     
+      mapService.hideLayers(layers);     
     }
     
     controller.refreshBaseLayer = function() {
@@ -326,10 +329,10 @@
           if(layer.isActive) {
             baseMap = {"LAYER_SOURCE_TYPE" : layer.layerType};
 
-            controller.mapFactory.showLayer(layer, 0);          
+            mapService.showLayer(layer, 0);          
           }
           else {
-            controller.mapFactory.hideLayer(layer);        
+            mapService.hideLayer(layer);        
           }
         }
   
@@ -354,17 +357,17 @@
     
     controller.centerMap = function() {
       if(controller.bbox.length === 2){
-        controller.mapFactory.setView(null, controller.bbox, 5);
+        mapService.setView(null, controller.bbox, 5);
       }
       else if(controller.bbox.length === 4){
-        controller.mapFactory.setView(controller.bbox, null, null);
+        mapService.setView(controller.bbox, null, null);
       }    
     }
     
     controller.getMapExtent = function() {
       var mapBounds = {};
       
-      var mapExtent = controller.mapFactory.getCurrentBounds(com.runwaysdk.geodashboard.gis.DynamicMap.SRID);
+      var mapExtent = mapService.getCurrentBounds(com.runwaysdk.geodashboard.gis.DynamicMap.SRID);
       mapBounds.left = mapExtent._southWest.lng;
       mapBounds.bottom = mapExtent._southWest.lat;
       mapBounds.right = mapExtent._northEast.lng;
@@ -382,7 +385,6 @@
     }
     
     controller.exportMap = function() {
-      var map = controller.mapFactory.getMap();
       var mapId = controller.model.mapId;
       var mapBounds = controller.getMapExtent();
       var mapSize = controller.getMapSize();
@@ -433,11 +435,9 @@
      */
     controller.onMapClick = function(e) {
     
-      var point = e.pixel;
-      var workspace = controller.getWorkspace();
       var layers = controller.getThematicLayers();
       
-      controller.mapFactory.getFeatureInfo(workspace, layers, point, controller.setFeatureInfo);        
+      mapService.getFeatureInfo(layers, e, controller.setFeatureInfo);        
     }
     
     controller.setFeatureInfo = function(info) {
@@ -577,10 +577,75 @@
       return true;
     }
 
+    controller.cloneDashboard = function() {
+      var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
+      dashboardForm.open();
+    }
+    
+    controller.addDashboard = function(dashboardId, label) {
+      controller.dashboards.push({
+        dashboardId : dashboardId,
+        label : label
+      });
+    }
+    
+    controller.removeDashboard = function() {
+      var that = this;
+      var fac = com.runwaysdk.ui.Manager.getFactory();
+        
+      var dialog = fac.newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardDialog", "Delete dashboard"));
+      dialog.appendContent(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardContent", "Are you sure you want to delete this dashboard?"));
+        
+      var Structure = com.runwaysdk.structure;
+      var tq = new Structure.TaskQueue();
+        
+      tq.addTask(new Structure.TaskIF({
+        start : function(){            
+         var cancelCallback = function() {
+            dialog.close();
+            tq.stop();
+          };
+
+          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "delete", "Delete"), function() { tq.next(); }, null, {class:'btn btn-primary'});
+          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), cancelCallback, null, {class:'btn'});            
+          dialog.render();
+        }
+      }));
+        
+      tq.addTask(new Structure.TaskIF({
+        start : function(){
+          dialog.close();
+          
+          var onSuccess = function() {
+            // Remove the dashboard from the array
+        	var index = undefined;
+        	
+        	for(var i = 0; i < controller.dashboards.length; i++) {
+              var dashboard = controller.dashboards[i];
+              
+              if(dashboard.dashboardId == controller.dashboardId) {
+                index = i;
+              }              
+        	}
+        	
+        	if(index != null) {
+              controller.dashboards.splice(index, 1);
+        	}
+        	
+        	var dashboardId = controller.dashboards[0].dashboardId;
+        	
+        	controller.setDashboardId(dashboardId);
+          };          
+          
+          dashboardService.removeDashboard(controller.dashboardId, "#dashboardModal01", onSuccess);
+        }
+      }));
+        
+      tq.start();             
+    }
   }
   
-  angular.module("dashboard", ["dashboard-services", "report-panel", "dashboard-accordion", "dashboard-layer", "dashboard-map"]);
-  angular
-  .module('dashboard')
+  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel"]);
+  angular.module("dashboard")
   .controller('DashboardController', DashboardController)
 })();

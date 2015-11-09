@@ -338,7 +338,7 @@
     }    
   }
   
-  angular.module("dashboard-accordion", ["dashboard-services"]);
+  angular.module("dashboard-accordion", ["dashboard-service"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)

@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function MapPopupController($scope, dashboardService) {
+  function MapPopupController($scope, dashboardService, mapService) {
     var controller = this;
     
     controller.canEditData = function() {
@@ -38,14 +38,21 @@
         var information = JSON.parse(json);
         var dashboard = dashboardService.getDashboard();
           
-        new com.runwaysdk.geodashboard.gis.FeatureForm(dashboard, information).render();
+        var form = new com.runwaysdk.geodashboard.gis.FeatureForm(dashboard, information);
+        form.render();
       };
       
       dashboardService.getFeatureInformation($scope.feature, onSuccess);
     }
     
-    controller.close = function() {    	
-      $scope.feature = null;	    	
+    controller.close = function() {
+      mapService.clearOverlays();
+      
+      $scope.feature = null;      
+    }
+    
+    controller.addOverlay = function(element, coordinate) {
+      mapService.addOverlay(element, coordinate);    	
     }
   }
   
@@ -60,11 +67,18 @@
       controller : MapPopupController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+        scope.$watch('feature', function(){
+          if(scope.feature != null) {
+            element.ready(function() {
+              ctrl.addOverlay(element[0], scope.feature.coordinate);
+            });
+          }	
+        }, true);
       }
     }    
   }
   
-  angular.module("dashboard-map", ["dashboard-services"]);
+  angular.module("dashboard-map", ["dashboard-service", "map-service"]);
   angular.module('dashboard-map')
     .directive('mapPopup', MapPopup);
 })();

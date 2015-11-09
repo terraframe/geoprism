@@ -150,6 +150,18 @@
       
       getFeatureInfo : {
         IsAbstract : true
+      },
+      
+      clear : {
+        IsAbstract : true
+      },
+      
+      addOverlay : {
+        IsAbstract : true
+      },
+        
+      clearOverlays : {
+        IsAbstract : true
       }
     }
   });
@@ -686,11 +698,14 @@
           map.on('click', handler);
         },
         
-        getFeatureInfo : function(workspace, layers, point, callback) {
+        getFeatureInfo : function(workspace, layers, e, callback) {
           if(layers.length > 0) {
+            var point = e.pixel;
+            var coordinate = e.coordinate;
+        	  
             var x = parseInt(point[0]);
             var y = parseInt(point[1]);
-            
+                        
             // Construct a GetFeatureInfo request URL given a point
             var size = this.getMapSize();
             var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
@@ -766,8 +781,7 @@
                   featureDisplayName : featureDisplayName,
                   attributeValue : attributeValue,
                   geoId : geoId,
-                  x : x,
-                  y : y,
+                  coordinate : coordinate,
                   layerId : layer.layerId,
                   aggregationStrategy : layer.aggregationStrategy
                 };  
@@ -776,7 +790,57 @@
               }
             });
           }        
-        }
+        },
+        
+        clear : function() {
+          
+          for (var key in this._cache) {
+            if (this._cache.hasOwnProperty(key)) {
+              var oLayer = this._cache[key];
+              
+              if (oLayer != null && oLayer.showing == true) {
+                var map = this.getMap();
+                map.removeLayer(oLayer);
+                  
+                if(oLayer.removable) {
+                  delete this._cache[key];            
+                }
+                else {
+                  oLayer.showing = false;  
+                }
+              }
+            }
+          }          
+        },
+        
+        /**
+         * Open a popup on the map
+         * 
+         * <private> - internal method
+         */
+        addOverlay : function(element, coordinate) {
+          var that = this;
+          var map = this.getMap();
+            
+          var overlay = new ol.Overlay({
+            element:element,
+            autoPan: true
+          });
+          
+          map.addOverlay(overlay);
+          overlay.setPosition(coordinate);
+        },
+        
+        /**
+         * Close all popups on the map
+         * 
+         * <public> - called externally
+         */
+        clearOverlays : function() {
+          var map = this.getMap();
+          var overlays = map.getOverlays();
+          overlays.clear();
+        }        
       },
       Static : {
         // Static methods
