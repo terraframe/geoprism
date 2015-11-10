@@ -61,7 +61,7 @@
     <div id="filter-buttons-container">
       <a href="#" ng-click="form.$invalid || dashboard.refresh()" ng-disabled="form.$invalid" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
       <a href="#" ng-click="form.$invalid || dashboard.save(false)" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left""></a>
-      <a ng-if="dashboard.canEdit()" href="#" ng-click="form.$invalid || dashboard.save(t)"  ng-disabled="form.$invalid" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
+      <a ng-if="dashboard.canEdit()" href="#" ng-click="form.$invalid || dashboard.save(true)"  ng-disabled="form.$invalid" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
     </div>
   </ng-form>
 </aside>
