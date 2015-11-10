@@ -19,9 +19,9 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<aside class="aside animated legend-snapable expanded" id="dashboardMetadata" ng-cloak> 
+<aside class="aside animated legend-snapable" ng-class="{'expanded' : ctrl.expanded}" id="dashboardMetadata" ng-cloak> 
   <div id="data-panel-toggle-container">
-    <i ng-click="ctrl.toogle()" id="data-panel-expand-toggle" class="fa fa-angle-double-right"></i>
+    <i id="data-panel-expand-toggle" ng-click="ctrl.toggle()" class="fa" ng-class="{'fa-angle-double-right' : ctrl.expanded, 'fa-angle-double-left' : !ctrl.expanded}"></i>
   </div>
       
   <div class="nav-bar">

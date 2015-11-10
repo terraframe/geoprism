@@ -20,9 +20,37 @@
 	
   function DashboardPanelController($scope, $timeout, dashboardService) {
     var controller = this;
+    controller.expanded = true;
     
     controller.toggle = function() {
-    	
+      var speed = 500;
+        
+      if(controller.expanded){
+        $("#dashboardMetadata").animate({right: "-=300"}, speed, function() {
+          controller.expanded = false;
+          
+          $scope.$apply();
+        });
+          
+        // Report Panel background
+        $("#report-viewport").animate({marginRight: "0px"}, speed);
+          
+        // Repprt panel toolbar
+        $("#report-toolbar").animate({marginRight: "0px"}, speed);
+      }
+      else{
+        $("#dashboardMetadata").animate({right: "+=300"}, speed, function() {
+          controller.expanded = true;
+
+          $scope.$apply();          
+        });
+          
+        // Report Panel background
+        $("#report-viewport").animate({marginRight: "300px"}, speed);
+        
+        // Repprt panel toolbar
+        $("#report-toolbar").animate({marginRight: "300px"},speed);
+      }
     }
   }
 	  
