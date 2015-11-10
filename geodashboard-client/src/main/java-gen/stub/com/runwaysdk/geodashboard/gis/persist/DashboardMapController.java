@@ -3,24 +3,24 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 
@@ -32,11 +32,7 @@ import com.runwaysdk.geodashboard.DashboardQueryDTO;
 import com.runwaysdk.geodashboard.FileDownloadUtil;
 import com.runwaysdk.geodashboard.GeodashboardUserDTO;
 import com.runwaysdk.geodashboard.JavascriptUtil;
-import com.runwaysdk.geodashboard.gis.DashboardHasNoMapExceptionDTO;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.system.RolesDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
-import com.runwaysdk.system.gis.geo.LocatedInDTO;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -199,6 +195,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     req.setAttribute("workspace", GeoserverProperties.getWorkspace());
     req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
     req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+
+    JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
     req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/dashboardViewer.jsp").forward(req, resp);
   }

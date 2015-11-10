@@ -50,8 +50,6 @@
   <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
   
   <!-- Default imports -->
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>  
-  
   <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
   <jwr:script src="/bundles/widget.js" useRandomParam="false"/>  
