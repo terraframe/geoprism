@@ -143,6 +143,10 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
+        
+        element.ready(function(){
+          jcf.customForms.replaceAll(element[0]);
+        });
       }
     }    
   }
@@ -223,6 +227,10 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
+        
+        element.ready(function(){
+          jcf.customForms.replaceAll(element[0]);
+        });        
       }
     }    
   }
@@ -295,6 +303,10 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
+        
+        element.ready(function(){
+          jcf.customForms.replaceAll(element[0]);
+        });        
       }
     }    
   }
