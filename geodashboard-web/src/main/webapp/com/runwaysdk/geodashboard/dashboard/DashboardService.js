@@ -64,18 +64,24 @@
     }
     
     service.createStandbyRequest = function(elementId, onSuccess, onFailure){
-      var request = new GDB.StandbyClientRequest({
-        onSuccess : onSuccess,
-        onFailure : function(e){
-          GDB.ExceptionHandler.handleException(e);
-              
-          if(onFailure != null) {
-            onFailure(e);
-          }
-        }
-      }, elementId);
+      var el = $(elementId);
       
-      return request;
+      if(el.length > 0) {    	  
+        var request = new GDB.StandbyClientRequest({
+          onSuccess : onSuccess,
+          onFailure : function(e){
+            GDB.ExceptionHandler.handleException(e);
+            
+            if(onFailure != null) {
+              onFailure(e);
+            }
+          }
+        }, elementId);
+        
+        return request;        
+      }
+      
+      return service.createRequest(onSuccess, onFailure);
     }
     
     service.updateLegend = function(layer, onSuccess, onFailure) {

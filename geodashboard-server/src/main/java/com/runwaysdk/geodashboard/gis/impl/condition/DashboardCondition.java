@@ -253,11 +253,21 @@ public abstract class DashboardCondition implements Reloadable
 
         if (value != null)
         {
-          if (value instanceof JSONArray && ( (JSONArray) value ).length() > 0)
+          if (value instanceof JSONArray)
           {
-            return false;
+            if ( ( (JSONArray) value ).length() > 0)
+            {
+              return false;
+            }
           }
-          else if (value instanceof String && ( (String) value ).length() > 0)
+          else if (value instanceof String)
+          {
+            if ( ( (String) value ).length() > 0)
+            {
+              return false;
+            }
+          }
+          else
           {
             return false;
           }

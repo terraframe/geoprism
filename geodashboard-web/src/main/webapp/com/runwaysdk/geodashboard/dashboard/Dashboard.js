@@ -643,6 +643,11 @@
         
       tq.start();             
     }
+    
+    controller.editOptions = function() {
+      var form = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
+      form.edit(controller.dashboardId);            	
+    }
   }
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel"]);

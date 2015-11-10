@@ -303,14 +303,39 @@
     return {
       restrict: 'A',
       require: 'ngModel',
-      link: function (scope, element, attrs, ctrl) {
-        ctrl.$validators.integer = function(modelValue, viewValue) {
-          if (ctrl.$isEmpty(modelValue)) {
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(value) {
+          if(value != null) {        	  
+            //convert data from view format to model format
+            var number = parser( value );
+            return number;
+          }
+          
+          return value;
+        });
+
+        ngModel.$formatters.push(function(value) {
+          if(value != null) {
+            var number = value;
+            
+            if(typeof number === 'string') {
+              number = parseInt(value);
+            }
+            
+            //convert data from model format to view format
+            return formatter(number);
+          }
+            
+          return value;
+        });
+        
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
             // consider empty models to be valid
             return true;
           }
             
-          var number = parser( modelValue );
+          var number = parser( viewValue );
           var valid = ($.isNumeric(number) && Math.floor(number) == number);
           
           return valid;        
@@ -323,14 +348,40 @@
     return {
       restrict: 'A',
       require: 'ngModel',
-      link: function (scope, element, attrs, ctrl) {
-        ctrl.$validators.integer = function(modelValue, viewValue) {
-          if (ctrl.$isEmpty(modelValue)) {
+      link: function (scope, element, attrs, ngModel) {
+      
+        ngModel.$parsers.push(function(value) {
+          if(value != null) {          
+            //convert data from view format to model format
+            var number = parser( value );
+            return number;
+          }
+              
+          return value;
+        });
+
+        ngModel.$formatters.push(function(value) {
+          if(value != null) {
+            var number = value;
+                
+            if(typeof number === 'string') {
+              number = parseInt(value);
+            }
+                
+            //convert data from model format to view format
+            return formatter(number);
+          }
+                
+          return value;
+        });
+      
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
             // consider empty models to be valid
             return true;
           }
           
-          var number = parser( modelValue );
+          var number = parser( viewValue );
           
           return $.isNumeric(number);        
         }
