@@ -26,8 +26,11 @@
           <mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
           <mdMethod name="saveState" label="Save state" static="false" returnType="java.lang.String">
             <mdParameter name="state" label="State" order="0" type="java.lang.String" />
+            <mdParameter name="global" label="Global" order="1" type="java.lang.Boolean" />
           </mdMethod>
-          <mdMethod name="getAvailableDashboardsAsJSON" label="Get available dashboards as JSON" static="true" returnType="java.lang.String" />          
+          <mdMethod name="getAvailableDashboardsAsJSON" label="Get available dashboards as JSON" static="true" returnType="java.lang.String">
+            <mdParameter name="dashboardId" label="Dashboard Id" order="1" type="java.lang.String" />
+          </mdMethod>          
         </create>
       </mdBusiness>
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">

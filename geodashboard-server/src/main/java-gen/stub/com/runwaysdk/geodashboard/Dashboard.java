@@ -1367,11 +1367,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  public String saveState(String json)
+  public String saveState(String json, Boolean global)
   {
     DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
 
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    GeodashboardUser user = null;
+
+    if (!global)
+    {
+      user = GeodashboardUser.getCurrentUser();
+    }
 
     DashboardState state = this.getOrCreateDashboardState(user);
 
@@ -1381,7 +1386,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return "";
   }
 
-  public static String getAvailableDashboardsAsJSON()
+  public static String getAvailableDashboardsAsJSON(String dashboardId)
   {
     DashboardQuery query = Dashboard.getSortedDashboards();
     OIterator<? extends Dashboard> iterator = query.getIterator();
@@ -1403,7 +1408,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
         dashboards.put(object);
 
-        if (first)
+        if (first || dashboard.getId().equals(dashboardId))
         {
           response.put("state", dashboard.toJSON());
 

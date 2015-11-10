@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
@@ -187,8 +185,6 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   {
     ClientRequestIF clientRequest = this.getClientRequest();
 
-    String dashboardId = req.getParameter("dashboard");
-
     // Get all dashboards
     DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
     List<? extends DashboardDTO> dashboards = dashboardQ.getResultSet();
@@ -200,66 +196,11 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       return;
     }
 
-    // Figure out the active dashboard.
-    DashboardDTO activeDashboard = dashboards.get(0);
-    if (dashboardId != null && dashboardId.length() > 0)
-    {
-      activeDashboard = DashboardDTO.get(clientRequest, dashboardId);
-    }
+    req.setAttribute("workspace", GeoserverProperties.getWorkspace());
+    req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
+    req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
-    if (!activeDashboard.hasAccess())
-    {
-      this.failCreateMapForSession();
-    }
-    else
-    {
-      req.setAttribute("activeDashboard", activeDashboard);
-      req.setAttribute("dashboardId", activeDashboard.getId());
-      req.setAttribute("workspace", GeoserverProperties.getWorkspace());
-
-      req.setAttribute("dashboards", dashboards);
-
-      if (activeDashboard.getMapId() == null || activeDashboard.getMapId().equals(""))
-      {
-        throw new DashboardHasNoMapExceptionDTO(clientRequest);
-      }
-
-      req.setAttribute("mapId", activeDashboard.getMapId());
-
-
-      GeoEntityDTO root = GeoEntityDTO.getRoot(this.getClientRequest());
-
-      this.req.setAttribute("type", GeoEntityDTO.CLASS);
-      this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
-      this.req.setAttribute("rootId", root.getId());
-
-      JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
-
-      req.setAttribute("hasReport", activeDashboard.hasReport());
-      req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
-      req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
-      
-      GeodashboardUserDTO currentUser = GeodashboardUserDTO.getCurrentUser(this.getClientRequest());
-      boolean isAdmin = false;
-      List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
-      for(RolesDTO role : userRoles)
-      {
-        Pattern regex = Pattern.compile("\\.(\\S+)");
-        Matcher match = regex.matcher(role.getRoleName());
-        if (match.find())
-        {
-          if(match.group(1).equals("admin.Administrator"))
-          {
-            isAdmin = true;
-          }
-        }
-      }
-      req.setAttribute("isAdmin", isAdmin);
-
-      req.setAttribute("aggregationMap", DashboardStyleDTO.getAggregationJSON(this.getClientRequest()));
-
-      req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/dashboardViewer.jsp").forward(req, resp);
-    }
+    req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/dashboardViewer.jsp").forward(req, resp);
   }
 
   @Override

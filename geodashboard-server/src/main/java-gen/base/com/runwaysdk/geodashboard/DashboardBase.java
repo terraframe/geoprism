@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1508042380)
+@com.runwaysdk.business.ClassSignature(hash = -855236791)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -51,7 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1508042380;
+  private static final long serialVersionUID = -855236791;
   
   public DashboardBase()
   {
@@ -741,7 +741,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.getAllDashboardUsersJSON();
   }
   
-  public static java.lang.String getAvailableDashboardsAsJSON()
+  public static java.lang.String getAvailableDashboardsAsJSON(java.lang.String dashboardId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -891,16 +891,16 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.hasReport();
   }
   
-  public java.lang.String saveState(java.lang.String state)
+  public java.lang.String saveState(java.lang.String state, java.lang.Boolean global)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.lang.String saveState(java.lang.String id, java.lang.String state)
+  public static final java.lang.String saveState(java.lang.String id, java.lang.String state, java.lang.Boolean global)
   {
     Dashboard _instance = Dashboard.get(id);
-    return _instance.saveState(state);
+    return _instance.saveState(state, global);
   }
   
   public void setBaseLayerState(java.lang.String baseLayerState)

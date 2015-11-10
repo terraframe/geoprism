@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DashboardController($scope, $timeout, dashboardService, mapService) {
+  function DashboardController($scope, $timeout, $location, dashboardService, mapService) {
     var controller = this;
     
     controller.baseLayers = mapService.createBaseLayers();
@@ -49,7 +49,7 @@
 
       mapService.setWorkspace(workspace);
       mapService.setClickHandler(controller.onMapClick);
-
+      
       controller.loadDashboardOptions();
     }
     
@@ -68,7 +68,9 @@
         }, 0);
       };
           
-      dashboardService.getAvailableDashboardsAsJSON(onSuccess);      
+      var dashboardId = $location.search().dashboard;
+      
+      dashboardService.getAvailableDashboardsAsJSON(dashboardId, onSuccess);      
     }
     
     /* Refresh Map Function */
@@ -85,17 +87,16 @@
         controller.renderReport();
           
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
-      };
-      
+      };      
       
       var state = controller.getCompressedState();
       dashboardService.refreshMap(state, '#filter-buttons-container', onSuccess);
     }
     
-    controller.save = function() {
+    controller.save = function(global) {
       var state = controller.getCompressedState();
       
-      dashboardService.saveDashboardState(controller.dashboardId, state, '#filter-buttons-container');
+      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container');
     }
     
     /* Create a new layer */
@@ -652,5 +653,12 @@
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel"]);
   angular.module("dashboard")
-  .controller('DashboardController', DashboardController)
+    .config(['$locationProvider', function($locationProvider) {
+      $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+      });
+    }])  
+   .controller('DashboardController', DashboardController)
+  
 })();

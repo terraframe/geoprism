@@ -128,16 +128,16 @@
       com.runwaysdk.geodashboard.Dashboard.getJSON(request, dashboardId);
     }
     
-    service.getAvailableDashboardsAsJSON = function(onSuccess, onFailure) {
+    service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
       var request = service.createRequest(onSuccess, onFailure);
     
-      com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON(request);
+      com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
     }
     
-    service.saveDashboardState = function(dashboardId, state, elementId, onSuccess, onFailure) {
+    service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {
       var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
       
-      com.runwaysdk.geodashboard.Dashboard.saveState(request, dashboardId, state);      
+      com.runwaysdk.geodashboard.Dashboard.saveState(request, dashboardId, state, global);      
     }
     
     service.getGeoEntitySuggestions = function(dashboardId, text, size, onSuccess, onFailure) {
