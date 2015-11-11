@@ -26,19 +26,21 @@
 
 
 <head>
-	<gdb:localize var="page_title" key="login.header"/>
+  <gdb:localize var="page_title" key="login.header"/>
   
-	<!-- User account CSS -->
-	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
-	<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
-	
-	<!-- User account Javascript -->
-	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
-	<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
-	  
-	<script type="text/javascript">${js}</script>
+  <!-- User account CSS -->
+  <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+  <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+  <jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
+  
+  <!-- User account Javascript -->
+  <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
+  <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+  <jwr:script src="/bundles/account.js" useRandomParam="false"/> 
+  <jwr:script src="/bundles/builder.js" useRandomParam="false"/>
+   
+    
+  <script type="text/javascript">${js}</script>
   
   <style>
 		body {
@@ -159,27 +161,27 @@
   
   
   <div id="container">
-  	<header id="header">
-  	    <p class="text-right">
-  	        <c:choose>
-			  <c:when test="${isAdmin}">
-		      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
-					<i class="user-command-link"> | </i>
-		      </c:when>
-		      <c:otherwise>
-		      </c:otherwise>
-	        </c:choose>
-	        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-			<i class="user-command-link"> | </i>
- 			<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
- 		</p>
- 		<div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
-	</header>
-  	<div class="row"></div>
+    <header id="header">
+        <p class="text-right">
+            <c:choose>
+        <c:when test="${isAdmin}">
+              <a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
+          <i class="user-command-link"> | </i>
+          </c:when>
+          <c:otherwise>
+          </c:otherwise>
+          </c:choose>
+          <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+      <i class="user-command-link"> | </i>
+       <a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+     </p>
+     <div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
+  </header>
+    <div class="row"></div>
        <div class="col-md-3"></div>
        <div class="col-md-6">
        
-       		<div class="row"> <!-- start of the 1st row -->
+           <div class="row"> <!-- start of the 1st row -->
        
          	<c:forEach items="${dashboards}" var="dashboard" varStatus="counter">
 			  <div class="col-sm-6 col-md-4">
@@ -202,20 +204,20 @@
 	      	    		<div class="row">  <!-- start a new row if the last row has all three thumbnails -->
 	      	    	  </c:if>
 	      	    	
-<!-- 		 			  <div class="col-sm-6 col-md-4"> -->
-<!-- 					    <div class="thumbnail text-center"> -->
-<!-- 					      <a href="#" class="new-dashboard-btn" > -->
-<!-- 					      		<div class="frame-box"> -->
-<!-- 					      			<div class="inner-frame-box"> -->
-<!-- 					      				<i class="fa fa-plus"></i> -->
-<!-- 					      			</div> -->
-<!-- 					      		</div> -->
-<!-- 					      		<div class="caption"> -->
-<%-- 					        		<h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3> --%>
-<!-- 					      		</div> -->
-<!-- 					      	</a> -->
-<!-- 					    </div> -->
-<!-- 					  </div> -->
+ 		 			  <div class="col-sm-6 col-md-4">
+ 					    <div class="thumbnail text-center">
+ 					      <a href="#" class="new-dashboard-btn" >
+ 					      		<div class="frame-box">
+ 					      			<div class="inner-frame-box">
+ 					      				<i class="fa fa-plus"></i>
+ 					      			</div>
+ 					      		</div>
+ 					      		<div class="caption">
+					        		<h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
+ 					      		</div>
+ 					      	</a>
+ 					    </div>
+ 					  </div>
 					  
 				   </div> <!-- close the last row -->
     			</c:when>
@@ -224,8 +226,7 @@
     				<div class="row"> <!-- now start the next row -->
     			</c:when>
          	  </c:choose>
- 	      </c:forEach>
- 	      
+ 	      </c:forEach> 	      
        </div> <!-- close the middle column -->
        <div class="col-md-3"></div>
     </div>
@@ -234,24 +235,40 @@
 </body>
 </html>
 
-  <script type="text/javascript">	   
-		$(document).ready(function(){
+  <script type="text/javascript">     
+    $(document).ready(function(){
+      
+          com.runwaysdk.ui.Manager.setFactory("JQuery");
+      
+          $("#account-btn").on("click", function(){
 
-			com.runwaysdk.ui.Manager.setFactory("JQuery");
-			
-			$("#account-btn").on("click", function(){
-
-				var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
-				dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
-			          dialog.close();
-			        }, null, {primary: true});
-				dialog.setStyle("z-index", 2001);
-	        	dialog.render();    
-	        	
-			  var ut = new com.runwaysdk.ui.userstable.UserForm();  
-			  ut.render("#"+dialog.getContentEl().getId());
-			})
-		});
+            var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
+            dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+              dialog.close();
+            }, null, {primary: true});
+            dialog.setStyle("z-index", 2001);
+            dialog.render();    
+            
+            var ut = new com.runwaysdk.ui.userstable.UserForm();  
+            ut.render("#"+dialog.getContentEl().getId());
+          });
+      
+          $('.new-dashboard-btn').on("click", function(){
+            var dashboard = new com.runwaysdk.geodashboard.Dashboard();
+            var title = com.runwaysdk.Localize.get("com.runwaysdk.ui.userstable.DashboardTable.dialogNewDashboardTitle", "New Dashboard");
+            var listener = {
+              handleEvent : function(event) {
+                if(event.getEventType() === com.runwaysdk.ui.dashboardstable.DashboardFormBuilderEvent.APPLY_SUCCESS) {
+                  var dashboard = event.getDashboard();
+                        
+                  window.location.href = 'DashboardViewer?dashboard=' + dashboard.getId();
+                }
+              }
+            };
+          
+            new com.runwaysdk.ui.userstable.DashboardFormDialog(dashboard, listener).render(title);        
+          });
+    });
   </script>
   
   

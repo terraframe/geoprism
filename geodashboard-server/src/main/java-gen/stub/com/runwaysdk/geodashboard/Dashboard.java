@@ -340,14 +340,37 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   @Override
   @Transaction
-  public void applyWithOptions(String[] userIds, String name)
+  public void applyWithOptions(String options)
   {
-    this.lock();
-    this.getDisplayLabel().setValue(name);
-    this.apply();
-    this.unlock();
+    try
+    {
+      JSONObject object = new JSONObject(options);
 
-    assignUsers(this.getId(), userIds);
+      if (object.has("label"))
+      {
+        this.getDisplayLabel().setValue(object.getString("label"));
+      }
+
+      this.apply();
+
+      if (object.has("userIds"))
+      {
+        JSONArray userIds = object.getJSONArray("userIds");
+
+        assignUsers(this.getId(), userIds);
+      }
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        MappableClass.assign(this, types);
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   @Override
@@ -893,14 +916,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return usersArr.toString();
   }
 
-  public static void assignUsers(String dashboardId, String[] userIds)
+  public static void assignUsers(String dashboardId, JSONArray userIds)
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
     Roles dbRole = dashboard.getDashboardRole();
     String dbRoleId = dbRole.getId();
     Roles[] allGeodashRoles = RoleView.getGeodashboardRoles();
 
-    for (String userJSON : userIds)
+    for (int i = 0; i < userIds.length(); i++)
     {
       List<String> roleIds = new ArrayList<String>();
       Set<String> set;
@@ -908,7 +931,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       try
       {
         String userId = null;
-        JSONObject userObj = new JSONObject(userJSON);
+        JSONObject userObj = userIds.getJSONObject(i);
 
         @SuppressWarnings("unchecked")
         Iterator<String> userObjKeys = userObj.keys();
@@ -1484,5 +1507,28 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       iterator.close();
     }
 
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClassDAOIF mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+    query.AND(query.getWrappedMdClass().EQ(mdClass.getId()));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      throw new ProgrammingErrorException("Missing MetadataWrapper for Dashboard [" + this.getName() + "] and MdClass [" + mdClass.definesType() + "]");
+    }
+    finally
+    {
+      iterator.close();
+    }
   }
 }

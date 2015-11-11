@@ -122,7 +122,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
         geomTypesJSONArr.put(polyAttr.getAttributeName());
       }
 
-      view.setAvailableGeometryTypes(EscapeUtil.escapeHTMLAttribut(geomTypesJSONArr.toString()));
+      view.setAvailableGeometryTypes(EscapeUtil.escapeHTMLAttribute(geomTypesJSONArr.toString()));
 
       list.add(view);
     }
