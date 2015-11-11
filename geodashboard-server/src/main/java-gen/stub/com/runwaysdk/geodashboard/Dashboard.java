@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -87,6 +88,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.ReadPermissionException;
+import com.runwaysdk.session.Request;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -100,6 +102,27 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
+  private static class ThumbnailThread implements Runnable, Reloadable
+  {
+    private Dashboard        dashboard;
+
+    private GeodashboardUser user;
+
+    public ThumbnailThread(Dashboard dashboard, GeodashboardUser user)
+    {
+      this.dashboard = dashboard;
+      this.user = user;
+    }
+
+    @Override
+    @Request
+    public void run()
+    {
+      dashboard.generateThumbnailImage(user);
+    }
+
+  }
+
   private static class MdClassComparator implements Comparator<MdClass>, Reloadable
   {
 
@@ -116,7 +139,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     super();
   }
-  
+
   @Override
   public String toString()
   {
@@ -1099,23 +1122,36 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  @Transaction
   public void generateThumbnailImage()
+  {
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+
+    // Write the thumbnail
+    Thread t = new Thread(new ThumbnailThread(this, user));
+    t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+    {
+      @Override
+      public void uncaughtException(Thread t, Throwable e)
+      {
+        e.printStackTrace();
+      }
+    });
+    t.setDaemon(true);
+    t.start();
+  }
+
+  @Transaction
+  private void generateThumbnailImage(GeodashboardUser user)
   {
     byte[] image = this.generateThumbnail();
 
-    GeodashboardUser[] users = new GeodashboardUser[] { null, GeodashboardUser.getCurrentUser() };
+    DashboardState state = DashboardState.getDashboardState(this, user);
 
-    for (GeodashboardUser user : users)
+    if (state != null)
     {
-      DashboardState state = DashboardState.getDashboardState(this, user);
-
-      if (state != null)
-      {
-        state.lock();
-        state.setMapThumbnail(image);
-        state.apply();
-      }
+      state.lock();
+      state.setMapThumbnail(image);
+      state.apply();
     }
   }
 
@@ -1302,16 +1338,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     /*
      * Ensure the user has permissions to read this dashboard
-     */    
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();    
+     */
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
     UserDAOIF userDAO = UserDAO.get(user.getId());
-    
-    if(userDAO.hasRole(this.getDashboardRoleId()))
-    {      
+
+    if (userDAO.hasRole(this.getDashboardRoleId()))
+    {
       // User does not have permissions to read this dashboard
       throw new ReadPermissionException("", this, userDAO);
     }
-    
+
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();

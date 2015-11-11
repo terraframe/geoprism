@@ -76,23 +76,30 @@
     }
     
     controller.getQueryParameters = function() {
-      var a = window.location.search.substr(1).split('&');
+      var query_string = {};
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
       
-      if (a == "") return {};
-      
-      var b = {};
-      
-      for (var i = 0; i < a.length; ++i)
-      {
-        var p=a[i].split('=');
-        
-        if (p.length != 2) continue;
-
-        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+            // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+          query_string[pair[0]] = decodeURIComponent(pair[1]);
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+        	
+          var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+          query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+          query_string[pair[0]].push(decodeURIComponent(pair[1]));
+        }
       }
-      
-      return b;
+       
+      return query_string;
     }
+    
+    
     
     /* Refresh Map Function */
     controller.refresh = function() {
@@ -117,7 +124,11 @@
     controller.save = function(global) {
       var state = controller.getCompressedState();
       
-      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container');
+      var onSuccess = function() {
+        dashboardService.generateThumbnailImage(controller.dashboardId);    	  
+      }
+      
+      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container', onSuccess);
     }
     
     /* Create a new layer */
@@ -246,6 +257,8 @@
     
     controller.handleLayerEvent = function(map) {
       controller.setMapState(map, true);
+      
+      dashboardService.generateThumbnailImage(controller.dashboardId);
     }
     
     controller.setMapState = function(map, reverse) {

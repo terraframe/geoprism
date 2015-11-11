@@ -998,7 +998,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         // if (layer instanceof DashboardThematicLayer)
         // {
-
         Graphics2D newOverlayBaseGraphic = null;
         Graphics2D mapLayerGraphic2d = null;
 

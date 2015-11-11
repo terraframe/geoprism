@@ -180,6 +180,12 @@
       com.runwaysdk.geodashboard.Dashboard.getClassifierTree(request, mdAttributeId);
     }
     
+    service.generateThumbnailImage = function(dashboardId, onSuccess, onFailure) {
+      var request = service.createRequest(onSuccess, onFailure);    
+      
+      com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
+    }
+    
     return service;
   }
   
