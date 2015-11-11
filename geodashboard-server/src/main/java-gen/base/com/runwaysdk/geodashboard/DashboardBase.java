@@ -51,11 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-<<<<<<< HEAD
-  private static final long serialVersionUID = -855236791;
-=======
   private static final long serialVersionUID = 957184003;
->>>>>>> refs/remotes/origin/dashboard-builder
   
   public DashboardBase()
   {

@@ -32,9 +32,6 @@
             <mdParameter name="options" label="Options" order="2" type="java.lang.String" />
           </create>
         </mdMethod>
-        <create>
-          <mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
-        </create>
       </mdBusiness>
       <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
         <create>
