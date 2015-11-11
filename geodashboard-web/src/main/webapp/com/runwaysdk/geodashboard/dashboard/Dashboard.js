@@ -17,6 +17,8 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+	
+  /* JQuery plugin function for getting url parameter values */
   function DashboardController($scope, $timeout, $location, dashboardService, mapService) {
     var controller = this;
     
@@ -68,9 +70,28 @@
         }, 0);
       };
           
-      var dashboardId = $location.search().dashboard;
+      var dashboardId =  controller.getQueryParameters().dashboard;
       
       dashboardService.getAvailableDashboardsAsJSON(dashboardId, onSuccess);      
+    }
+    
+    controller.getQueryParameters = function() {
+      var a = window.location.search.substr(1).split('&');
+      
+      if (a == "") return {};
+      
+      var b = {};
+      
+      for (var i = 0; i < a.length; ++i)
+      {
+        var p=a[i].split('=');
+        
+        if (p.length != 2) continue;
+
+        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+      }
+      
+      return b;
     }
     
     /* Refresh Map Function */
@@ -653,12 +674,5 @@
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel"]);
   angular.module("dashboard")
-    .config(['$locationProvider', function($locationProvider) {
-      $locationProvider.html5Mode({
-        enabled: true,
-        requireBase: false
-      });
-    }])  
    .controller('DashboardController', DashboardController)
-  
 })();

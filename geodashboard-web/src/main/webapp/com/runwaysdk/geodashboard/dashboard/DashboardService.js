@@ -174,6 +174,12 @@
       com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
     }
     
+    service.getClassifierTree = function(mdAttributeId, onSuccess, onFailure) {
+      var request = service.createRequest(onSuccess, onFailure);    
+      
+      com.runwaysdk.geodashboard.Dashboard.getClassifierTree(request, mdAttributeId);
+    }
+    
     return service;
   }
   

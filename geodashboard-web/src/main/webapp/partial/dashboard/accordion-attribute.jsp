@@ -21,8 +21,9 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <div class="panel">
   <h4 class="panel-title">
-    <a class="opener-link" data-toggle="collapse" data-parent="{{'#collapse' + $parent.$index}}" ng-href="#collapse00{{identifier}}">{{attribute.label}}</a>      
-    <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" ng-if="ctrl.canEdit()" ng-click="newLayer({mdAttributeId:attribute.mdAttributeId})">
+    <a class="opener-link" data-toggle="collapse" ng-href="#collapse00{{identifier}}">{{attribute.label}}</a>
+          
+    <a href="#" class="opener attributeLayer" data-toggle="tooltip" data-original-title="New map layer" data-placement="left" ng-if="ctrl.canEdit()" ng-click="ctrl.newLayer(attribute.mdAttributeId)">
       <span><gdb:localize key="dashboardViewer.mapIt"/></span>
     </a>
   </h4>

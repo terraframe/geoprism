@@ -86,6 +86,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.ReadPermissionException;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -114,6 +115,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public Dashboard()
   {
     super();
+  }
+  
+  @Override
+  public String toString()
+  {
+    return this.getDisplayLabel().getValue();
   }
 
   public static DashboardQuery getSortedDashboards()
@@ -1293,6 +1300,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public JSONObject toJSON() throws JSONException
   {
+    /*
+     * Ensure the user has permissions to read this dashboard
+     */    
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();    
+    UserDAOIF userDAO = UserDAO.get(user.getId());
+    
+    if(userDAO.hasRole(this.getDashboardRoleId()))
+    {      
+      // User does not have permissions to read this dashboard
+      throw new ReadPermissionException("", this, userDAO);
+    }
+    
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();

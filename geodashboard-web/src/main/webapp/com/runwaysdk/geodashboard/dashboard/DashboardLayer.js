@@ -113,11 +113,19 @@
       }
     }
     
-    controller.hasValues = function(cache) {
-      var length = cache.ids.length;
+    controller.hasValues = function() {
+      var length = $scope.cache.ids.length;
       
       return (length > 0);
     }
+    
+    controller.expand = function(element) {
+      $timeout(function(){
+        if(controller.hasValues() && !$(element).find("#collapse-overlay").hasClass("in")) {      
+          $(element).find("#overlay-opener-button").click();            
+        }        
+      }, 1000);
+    }    
   }
     
   function ThematicPanel() {
@@ -135,12 +143,7 @@
     	
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-        
-          element.ready(function() {
-            if(ctrl.hasValues(scope.cache) && !$(element).find("#collapse-overlay").hasClass("in")) {
-              $(element).find("#overlay-opener-button").click();            
-            }            
-          });
+          ctrl.expand(element);        
         }, true);
         
         /* Hook-up drag and drop */

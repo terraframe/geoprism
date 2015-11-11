@@ -96,11 +96,26 @@
     }    
   }
   
-  function AccordionAttributeController($scope, dashboardService) {
+  function AccordionAttributeController($scope, $timeout, dashboardService) {
     var controller = this;
     
     controller.canEdit = function() {
       return dashboardService.canEdit();
+    }
+    
+    controller.newLayer = function(mdAttributeId) {
+      dashboardService.getDashboard().newLayer(mdAttributeId);
+    }
+    
+    controller.expand = function(element) {
+      /*
+       * There is a timing issue between when the angular finishes process
+       * the ng-href and ng-attr attributes.  Thus we need to delay the
+       * acutal opening of the attribute block.
+       */  
+      $timeout(function(){
+        $(element).find(".opener-link").click();
+      }, 1000);
     }
   }
   
@@ -118,17 +133,24 @@
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
       
-        // This is a hack because of scoping issues with ng-repeat
-        scope.newLayer = scope.$parent.$parent.$parent.newLayer;
-        
         // Don't collapse the element if there are filtering values            
-        if(!$.isEmptyObject(scope.attribute.filter)) {
-          element.ready(function(){
-              $(element).find(".opener-link").click();
-          })
-        }      
+        element.ready(function(){        
+          if(!$.isEmptyObject(scope.attribute.filter)) {
+            ctrl.expand(element);
+          }      
+        });
       }
     }    
+  }
+  
+  function AttributeTypeController($scope, $timeout) {
+    var controller = this;
+
+    controller.init = function(element) {
+      $timeout(function(){
+        jcf.customForms.replaceAll(element[0]);      
+      }, 500, false);
+    }  
   }
   
   function NumberType() {
@@ -136,17 +158,17 @@
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/dashboard/number-type.jsp',      
-      require: '^form',
+      require: ['^form', 'numberType'],
+      controller : AttributeTypeController,
+      controllerAs : 'ctrl',
       scope: {
         attribute:'=',
         whole:'=',
       },
-      link: function (scope, element, attrs, ctrl) {
-        scope.form = ctrl;
-        
-        element.ready(function(){
-          jcf.customForms.replaceAll(element[0]);
-        });
+      link: function (scope, element, attrs, ctrls) {
+        scope.form = ctrls[0];
+
+        ctrls[1].init(element);
       }
     }    
   }
@@ -215,23 +237,65 @@
       }
     }    
   }
-  
+
   function CharacterType() {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/dashboard/character-type.jsp',      
-      require: '^form',      
+      require: ['^form', 'characterType'],      
       scope: {
         attribute:'='
       },
-      link: function (scope, element, attrs, ctrl) {
-        scope.form = ctrl;
+      controller : AttributeTypeController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrls) {
+        scope.form = ctrls[0];
         
-        element.ready(function(){
-          jcf.customForms.replaceAll(element[0]);
-        });        
+        ctrls[1].init(element);
       }
+    }    
+  }
+  
+  function OntologyTypeController($scope, dashboardService) {
+    var controller = this;
+    
+    controller.renderTree = function(element) {
+      
+      var onSuccess = function(results){
+        var nodes = JSON.parse(results);
+        var rootTerms = [];
+              
+        for(var i = 0; i < nodes.length; i++) {
+          rootTerms.push({termId : nodes[i].id});
+        }
+              
+        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+          termType : "com.runwaysdk.geodashboard.ontology.Classifier" ,
+          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+          rootTerms : rootTerms,
+          editable : false,
+          slide : false,
+          selectable : false,
+          checkable : true
+        });
+        tree.onCheck(function(node){
+          $scope.attribute.filter.value = tree.getCheckedTerms();
+          $scope.$apply();
+        });
+            
+        tree.render(element, nodes);
+            
+        // Load saved values
+        if($scope.attribute.filter.value != null)
+        {
+          tree.setCheckedTerms($scope.attribute.filter.value);  
+        }
+      }
+          
+      var mdAttributeId = $scope.attribute.mdAttributeId;
+
+      dashboardService.getClassifierTree(mdAttributeId, onSuccess);      
     }    
   }
   
@@ -240,54 +304,19 @@
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/dashboard/ontology-type.jsp',
-      require: '^form',
+      controller : OntologyTypeController,
+      controllerAs : 'ctrl',
       scope: {
         attribute:'='
       },
-      link: function (scope, element, attrs, ctrl) {
-        scope.form = ctrl;
+      require: ['^form', 'ontologyType'],      
+      link: function (scope, element, attrs, ctrls) {
+        scope.form = ctrls[0];
         scope.attribute.filter.type = "CLASSIFIER_CONDITION";
-          
-        var mdAttributeId = scope.attribute.mdAttributeId;
-          
-        // Get the term roots and setup the tree widget
-        var req = new Mojo.ClientRequest({
-          onSuccess : function(results){
-            var nodes = JSON.parse(results);
-            var rootTerms = [];
-              
-            for(var i = 0; i < nodes.length; i++) {
-              rootTerms.push({termId : nodes[i].id});
-            }
-              
-            var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-              termType : "com.runwaysdk.geodashboard.ontology.Classifier" ,
-              relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
-              rootTerms : rootTerms,
-              editable : false,
-              slide : false,
-              selectable : false,
-              checkable : true
-            });
-            tree.onCheck(function(node){
-              scope.attribute.filter.value = tree.getCheckedTerms();
-              scope.$apply();
-            });
-            
-            tree.render("#" + mdAttributeId, nodes);
-            
-            // Load saved values
-            if(scope.attribute.filter.value != null)
-            {
-              tree.setCheckedTerms(scope.attribute.filter.value);  
-            }
-          },
-          onFailure : function(e){
-            console.log(e);
-          }
+        
+        element.ready(function(){
+          ctrls[1].renderTree(element[0]);
         });
-          
-        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);      
       }
     }    
   }
@@ -317,7 +346,7 @@
       require: 'ngModel',
       link: function (scope, element, attrs, ngModel) {
         ngModel.$parsers.push(function(value) {
-          if(value != null) {        	  
+          if(value != null) {            
             //convert data from view format to model format
             var number = parser( value );
             return number;
