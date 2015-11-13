@@ -20,6 +20,7 @@ package com.runwaysdk.geodashboard;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,6 +40,7 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
@@ -134,12 +136,12 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     List<? extends MetadataWrapper> wrappers = dashboard.getAllMetadata().getAll();
 
-    return toJSON(wrappers);
+    return toJSON(dashboard, wrappers);
   }
 
-  public JSONObject toJSON(List<? extends MetadataWrapper> wrappers) throws JSONException
+  public JSONObject toJSON(Dashboard dashboard, List<? extends MetadataWrapper> wrappers) throws JSONException
   {
-    boolean selected = this.isSelected(wrappers);
+    boolean value = this.isSelected(wrappers);
 
     MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(this.getWrappedMdClassId());
     String label = mdClass.getDisplayLabel(Session.getCurrentLocale());
@@ -148,8 +150,18 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     object.put("label", label);
     object.put("id", this.getId());
     object.put("type", mdClass.getKey());
-    object.put("selected", selected);
-    // object.put("attributes", this.getAttributeJSON(mdClass));
+    object.put("value", value);
+
+    LinkedList<AttributeWrapper> attributes = new LinkedList<AttributeWrapper>();
+
+    MetadataWrapper wrapper = dashboard.getMetadataWrapper(mdClass);
+
+    if (wrapper != null)
+    {
+      attributes.addAll(wrapper.getAllAttributeWrapper().getAll());
+    }
+
+    object.put("attributes", this.getAttributeJSON(mdClass, attributes));
 
     return object;
   }
@@ -186,7 +198,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         MappableClass mClass = it.next();
 
-        array.put(mClass.toJSON(wrappers));
+        array.put(mClass.toJSON(dashboard, wrappers));
       }
 
       return array.toString();
@@ -210,7 +222,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         JSONObject type = types.getJSONObject(i);
         String id = type.getString("id");
-        boolean checked = type.getBoolean("checked");
+        boolean checked = type.getBoolean("value");
 
         MappableClass mClass = MappableClass.get(id);
         MdClass mdClass = mClass.getWrappedMdClass();
@@ -226,10 +238,16 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
           wrapper.setDashboard(dashboard);
           wrapper.apply();
 
-          // TODO Fix order
           DashboardMetadata metadata = dashboard.addMetadata(wrapper);
           metadata.setListOrder(i);
           metadata.apply();
+
+          // Add all of the attributes
+
+          JSONArray attributes = type.getJSONArray("attributes");
+
+          MappableClass.assign(wrapper, attributes);
+
         }
         else if (!checked && query.getCount() > 0)
         {
@@ -257,27 +275,61 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
-  public static String getAttributesAsJSON(String dashboardId, String mdClassId)
+  private static void assign(MetadataWrapper wrapper, JSONArray attributes)
   {
-    MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(mdClassId);
-    MappableClass mClass = getMappableClass(mdClass);
-
-    Dashboard dashboard = Dashboard.get(dashboardId);
-    MetadataWrapper wrapper = dashboard.getMetadataWrapper(mdClass);
-
-    List<? extends AttributeWrapper> attributes = wrapper.getAllAttributeWrapper().getAll();
-
     try
     {
-      JSONArray array = mClass.getAttributeJSON(mdClass, attributes);
+      for (int i = 0; i < attributes.length(); i++)
+      {
+        JSONObject type = attributes.getJSONObject(i);
+        String id = type.getString("id");
+        boolean checked = type.getBoolean("selected");
 
-      return array.toString();
+        MdAttribute mdAttribute = MdAttribute.get(id);
+        
+        QueryFactory factory = new QueryFactory();
+
+        MetadataWrapperQuery wQuery = new MetadataWrapperQuery(factory);
+        wQuery.WHERE(wQuery.getId().EQ(wrapper.getId()));
+        
+        AttributeWrapperQuery query = new AttributeWrapperQuery(factory);
+        query.WHERE(query.dashboardMetadata(wQuery));
+        query.AND(query.getWrappedMdAttribute().EQ(mdAttribute));
+
+        if (checked && query.getCount() == 0)
+        {
+          AttributeWrapper attribute = new AttributeWrapper();
+          attribute.setWrappedMdAttribute(mdAttribute);
+          attribute.apply();
+          
+          DashboardAttributes dAttribute = wrapper.addAttributeWrapper(attribute);
+          dAttribute.setListOrder(i);
+          dAttribute.apply();
+        }
+        else if (!checked && query.getCount() > 0)
+        {
+          OIterator<? extends AttributeWrapper> iterator = query.getIterator();
+
+          try
+          {
+            while (iterator.hasNext())
+            {
+              AttributeWrapper attribute = iterator.next();
+              attribute.delete();
+            }
+          }
+          finally
+          {
+            iterator.close();
+          }
+        }
+
+      }
     }
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
-
   }
 
   private JSONArray getAttributeJSON(MdClassDAOIF mdClass, List<? extends AttributeWrapper> attributes) throws JSONException
@@ -335,5 +387,4 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
     return false;
   }
-
 }

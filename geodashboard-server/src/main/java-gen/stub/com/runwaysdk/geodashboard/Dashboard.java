@@ -96,6 +96,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
@@ -729,13 +730,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public DashboardCondition[] getConditions()
   {
     DashboardState state = this.getDashboardState();
-    String json = state.getConditions();
 
-    if (json != null && json.length() > 0)
+    if (state != null)
     {
-      DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+      String json = state.getConditions();
 
-      return conditions;
+      if (json != null && json.length() > 0)
+      {
+        DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+
+        return conditions;
+      }
     }
 
     return new DashboardCondition[] {};
@@ -1389,10 +1394,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("hasReport", this.hasReport());
-    object.put("mapId", map.getId());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
+
+    if (map != null)
+    {
+      object.put("mapId", map.getId());
+    }
 
     String activeBaseMap = map.getActiveBaseMap();
 
@@ -1524,11 +1533,86 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         return iterator.next();
       }
 
-      throw new ProgrammingErrorException("Missing MetadataWrapper for Dashboard [" + this.getName() + "] and MdClass [" + mdClass.definesType() + "]");
+      return null;
     }
     finally
     {
       iterator.close();
+    }
+  }
+
+  private JSONArray getMappableClassJSON() throws JSONException
+  {
+    List<? extends MetadataWrapper> wrappers = this.getAllMetadata().getAll();
+
+    JSONArray array = new JSONArray();
+
+    MappableClass[] mClasses = MappableClass.getAll();
+
+    for (MappableClass mClass : mClasses)
+    {
+      array.put(mClass.toJSON(this, wrappers));
+    }
+    return array;
+  }
+
+  private JSONArray getCountiesJSON() throws JSONException
+  {
+    JSONArray countries = new JSONArray();
+    GeoEntity country = this.getCountry();
+
+    OIterator<Term> it = GeoEntity.getRoot().getDirectDescendants(LocatedIn.CLASS);
+
+    try
+    {
+      while (it.hasNext())
+      {
+        GeoEntity entity = (GeoEntity) it.next();
+        boolean selected = country != null && country.getId().equals(entity.getId());
+
+        JSONObject object = new JSONObject();
+        object.put("displayLabel", entity.getDisplayLabel().getValue());
+        object.put("value", entity.getId());
+        object.put("checked", selected);
+
+        countries.put(object);
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return countries;
+  }
+
+  @Override
+  public String getDashboardDefinition()
+  {
+    try
+    {
+      if (!this.isNew())
+      {
+        this.lock();
+      }
+
+      JSONObject options = new JSONObject();
+      options.put("types", this.getMappableClassJSON());
+
+      JSONObject object = new JSONObject();
+      object.put(Dashboard.NAME, this.getName());
+      object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
+      object.put(Dashboard.COUNTRY, this.getCountryId());
+      object.put(Dashboard.REMOVABLE, this.getRemovable());
+      
+      object.put("countries", this.getCountiesJSON());
+      object.put("options", options);
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
     }
   }
 }

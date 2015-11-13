@@ -18,8 +18,7 @@
  */
 (function(){
 	
-  /* JQuery plugin function for getting url parameter values */
-  function DashboardController($scope, $timeout, $location, dashboardService, mapService) {
+  function DashboardController($scope, $timeout, dashboardService, mapService) {
     var controller = this;
     
     controller.baseLayers = mapService.createBaseLayers();

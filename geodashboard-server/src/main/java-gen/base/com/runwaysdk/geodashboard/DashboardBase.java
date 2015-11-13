@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 957184003)
+@com.runwaysdk.business.ClassSignature(hash = 403763428)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -51,7 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 957184003;
+  private static final long serialVersionUID = 403763428;
   
   public DashboardBase()
   {
@@ -781,6 +781,24 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getConditionsJSON();
+  }
+  
+  public static java.lang.String getCountriesJSON(java.lang.String dashboardId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.String getDashboardDefinition()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getDashboardDefinition(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getDashboardDefinition();
   }
   
   public com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
