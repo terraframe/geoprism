@@ -75,9 +75,11 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
       json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
       json.put("featureStrategy", getFeatureStrategy());
+      json.put("universalId", this.getUniversalId());
+      json.put("layerExists", true);
+      json.put("isActive", true);
       json.put("layerType", "REFERENCELAYER");
-      json.put("uniId", this.getUniversal().getId());
-
+      
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
       for (int i = 0; i < styles.size(); ++i)

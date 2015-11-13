@@ -86,6 +86,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.ReadPermissionException;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -114,6 +115,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public Dashboard()
   {
     super();
+  }
+  
+  @Override
+  public String toString()
+  {
+    return this.getDisplayLabel().getValue();
   }
 
   public static DashboardQuery getSortedDashboards()
@@ -1318,6 +1325,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public JSONObject toJSON() throws JSONException
   {
+    /*
+     * Ensure the user has permissions to read this dashboard
+     */    
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();    
+    UserDAOIF userDAO = UserDAO.get(user.getId());
+    
+    if(userDAO.hasRole(this.getDashboardRoleId()))
+    {      
+      // User does not have permissions to read this dashboard
+      throw new ReadPermissionException("", this, userDAO);
+    }
+    
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();
@@ -1329,14 +1348,31 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       types.put(this.toJSON(mdClass, conditions));
     }
 
+    DashboardMap map = this.getMap();
+
     JSONObject object = new JSONObject();
     object.put("id", this.getId());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
-    object.put("mapId", this.getMapId());
+    object.put("hasReport", this.hasReport());
+    object.put("mapId", map.getId());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
+
+    String activeBaseMap = map.getActiveBaseMap();
+
+    if (activeBaseMap != null && activeBaseMap.length() > 0)
+    {
+      object.put("activeBaseMap", new JSONObject(activeBaseMap));
+    }
+    else
+    {
+      JSONObject baseMap = new JSONObject();
+      baseMap.put("LAYER_SOURCE_TYPE", "OSM");
+
+      object.put("activeBaseMap", baseMap);
+    }
 
     if (conditions.containsKey(LocationCondition.CONDITION_TYPE))
     {
@@ -1375,11 +1411,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  public String saveState(String json)
+  public String saveState(String json, Boolean global)
   {
     DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
 
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    GeodashboardUser user = null;
+
+    if (!global)
+    {
+      user = GeodashboardUser.getCurrentUser();
+    }
 
     DashboardState state = this.getOrCreateDashboardState(user);
 
@@ -1387,5 +1428,50 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     state.apply();
 
     return "";
+  }
+
+  public static String getAvailableDashboardsAsJSON(String dashboardId)
+  {
+    DashboardQuery query = Dashboard.getSortedDashboards();
+    OIterator<? extends Dashboard> iterator = query.getIterator();
+
+    try
+    {
+      JSONArray dashboards = new JSONArray();
+      boolean first = true;
+
+      JSONObject response = new JSONObject();
+
+      while (iterator.hasNext())
+      {
+        Dashboard dashboard = iterator.next();
+
+        JSONObject object = new JSONObject();
+        object.put("dashboardId", dashboard.getId());
+        object.put("label", dashboard.getDisplayLabel().getValue());
+
+        dashboards.put(object);
+
+        if (first || dashboard.getId().equals(dashboardId))
+        {
+          response.put("state", dashboard.toJSON());
+
+          first = false;
+        }
+      }
+
+      response.put("dashboards", dashboards);
+
+      return response.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
   }
 }

@@ -28,9 +28,9 @@
       <div class="accordion-inner holder" id="overlayLayerContainer">
         <div class="row-form" ng-repeat="layerId in cache.ids" data-id="{{layerId}}" ng-init="layer = cache.values[layerId]">
                 
-          <div class="check com-runwaysdk-ui-factory-runway-checkbox-CheckBox com-runwaysdk-ui-factory-runway-Widget checked" ng-class="{'checked' : layer.checked || layer.isActive}" ng-click="ctrl.toggle(layer.layerId)"></div>
+          <div class="check com-runwaysdk-ui-factory-runway-checkbox-CheckBox com-runwaysdk-ui-factory-runway-Widget checked" ng-class="{'checked' : layer.isActive}" ng-click="ctrl.toggle(layer.layerId)"></div>
           <label>{{layer.layerName}}</label>
-          <div class="cell" ng-if="true">            
+          <div class="cell" ng-if="ctrl.canEdit()">            
             <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove(layer.layerId)" title="<gdb:localize key="dashboardViewer.deleteLayerTooltip"/>"></a>
             <a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(layer.layerId)" title="<gdb:localize key="dashboardViewer.editLayerTooltip"/>"></a>
           </div>

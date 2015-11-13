@@ -212,6 +212,8 @@ public class JavascriptUtil implements Reloadable
   public static void loadDynamicMapBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardMapDTO.CLASS);
     types.add(DashboardLayerDTO.CLASS);
     types.add(DashboardLayerViewDTO.CLASS);
@@ -221,17 +223,8 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardReferenceLayerDTO.CLASS);
     types.add(DashboardReferenceLayerViewDTO.CLASS);
     types.add(DashboardReferenceLayerController.CLASS);
-    types.add(DashboardGreaterThanDTO.CLASS);
-    types.add(DashboardGreaterThanOrEqualDTO.CLASS);
-    types.add(DashboardLessThanDTO.CLASS);
-    types.add(DashboardLessThanOrEqualDTO.CLASS);
-    types.add(DashboardEqualDTO.CLASS);
-    types.add(DashboardNotEqualDTO.CLASS);
-    types.add(ClassifierConditionDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(DashboardMapController.CLASS);
-    types.add(DashboardDTO.CLASS);
-    types.add(LocationConditionDTO.CLASS);
     types.add(ReportItemController.CLASS);
     types.add(ReportItemDTO.CLASS);
     types.add(ReportItemViewDTO.CLASS);

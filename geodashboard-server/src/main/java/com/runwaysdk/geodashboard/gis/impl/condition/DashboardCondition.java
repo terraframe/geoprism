@@ -28,7 +28,9 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardCondition implements Reloadable
@@ -48,15 +50,29 @@ public abstract class DashboardCondition implements Reloadable
    */
   public static final String TYPE_KEY      = "type";
 
-  public abstract void restrictQuery(ValueQuery query, Attribute attr);
-
   public abstract JSONObject getJSON();
 
   public abstract String getJSONKey();
 
+  public abstract List<String> getConditionInformation();
+
+  public abstract void restrictQuery(ValueQuery vQuery, Attribute attribute);
+
+  public abstract void restrictQuery(String _type, ValueQuery _vQuery, GeneratedComponentQuery _query);
+
   public DashboardCondition()
   {
     super();
+  }
+
+  protected String handleCondition(String label, String operation, String value)
+  {
+    String message = LocalizationFacade.getFromBundles("attribute.condition");
+    message = message.replace("{0}", label);
+    message = message.replace("{1}", operation);
+    message = message.replace("{2}", value);
+
+    return message;
   }
 
   public static String serialize(DashboardCondition[] conditions)
@@ -104,7 +120,7 @@ public abstract class DashboardCondition implements Reloadable
             condition = new ClassifierCondition(mdAttributeId, value);
           }
         }
-        else
+        else if (object.has(OPERATION_KEY) && object.has(VALUE_KEY))
         {
           String operation = object.getString(OPERATION_KEY);
           String value = object.getString(VALUE_KEY);
@@ -178,7 +194,10 @@ public abstract class DashboardCondition implements Reloadable
         condition.put(OPERATION_KEY, "eq");
       }
 
-      conditions.put(condition);
+      if (!isEmpty(condition))
+      {
+        conditions.put(condition);
+      }
     }
 
     if (object.has("types"))
@@ -234,11 +253,21 @@ public abstract class DashboardCondition implements Reloadable
 
         if (value != null)
         {
-          if (value instanceof JSONArray && ( (JSONArray) value ).length() > 0)
+          if (value instanceof JSONArray)
           {
-            return false;
+            if ( ( (JSONArray) value ).length() > 0)
+            {
+              return false;
+            }
           }
-          else if (value instanceof String && ( (String) value ).length() > 0)
+          else if (value instanceof String)
+          {
+            if ( ( (String) value ).length() > 0)
+            {
+              return false;
+            }
+          }
+          else
           {
             return false;
           }
@@ -251,16 +280,20 @@ public abstract class DashboardCondition implements Reloadable
 
   public static DashboardCondition[] getConditionsFromState(String state)
   {
-    try
+    if (state != null && state.length() > 0)
     {
-      JSONArray conditions = DashboardCondition.parseConditions(state);
+      try
+      {
+        JSONArray conditions = DashboardCondition.parseConditions(state);
 
-      return DashboardCondition.deserialize(conditions.toString());
+        return DashboardCondition.deserialize(conditions.toString());
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+
+    return new DashboardCondition[] {};
   }
-
 }

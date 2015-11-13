@@ -18,14 +18,22 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.query.Attribute;
@@ -50,9 +58,9 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
   }
 
   @Override
-  public void restrictQuery(ValueQuery query, Attribute attr)
+  public void restrictQuery(ValueQuery vQuery, Attribute attribute)
   {
-    AttributeReference attributeTerm = (AttributeReference) attr;
+    AttributeReference attributeTerm = (AttributeReference) attribute;
     MdAttributeReferenceDAOIF mdAttributeTerm = (MdAttributeReferenceDAOIF) attributeTerm.getMdAttributeIF();
     MdBusinessDAOIF mdBusinessDAO = mdAttributeTerm.getReferenceMdBusinessDAO();
 
@@ -60,7 +68,7 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
     {
       try
       {
-        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(query);
+        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
 
         JSONArray array = new JSONArray(this.getComparisonValue());
 
@@ -71,7 +79,7 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
           allPathQuery.OR(allPathQuery.getParentTerm().EQ(termId));
         }
 
-        query.AND(attributeTerm.EQ(allPathQuery.getChildTerm()));
+        vQuery.AND(attributeTerm.EQ(allPathQuery.getChildTerm()));
       }
       catch (JSONException e)
       {
@@ -112,5 +120,48 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Override
+  public List<String> getConditionInformation()
+  {
+    List<String> messages = new LinkedList<String>();
+
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.getMdAttributeId());
+    Locale locale = LocalizationFacade.getLocale();
+
+    String localizedLabel = mdAttribute.getDisplayLabel(locale);
+    String localizedOperation = LocalizationFacade.getFromBundles("classifier.operation");
+    String value = this.getComparisonValue();
+
+    try
+    {
+      JSONArray array = new JSONArray(value);
+
+      for (int i = 0; i < array.length(); i++)
+      {
+        String termId = array.getString(i);
+
+        try
+        {
+          Classifier classifier = Classifier.get(termId);
+
+          String localizedValue = classifier.getDisplayLabel().getValue();
+
+          messages.add(this.handleCondition(localizedLabel, localizedOperation, localizedValue));
+        }
+        catch (DataNotFoundException e)
+        {
+          // Do nothing. There was criteria specified on a classifier which no longer exists or the id of the
+          // classifier was changed.
+        }
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    
+    return messages;
   }
 }

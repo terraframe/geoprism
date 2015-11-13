@@ -25,8 +25,8 @@
       DASHBOARD_MODAL : '#dashboard-dialog'
     },
     Instance : {
-      initialize : function(map, dashboardId){
-        this._map = map;
+      initialize : function(controller, dashboardId){
+        this._controller = controller;
         this._dashboardId = dashboardId;
         
         this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
@@ -47,12 +47,13 @@
                 if(user.hasAccess){
                   checked = "checked";
                 }
-                    var chk = '<div class="check-block">' +
-                    '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
-                    '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
-                    '</div>';
+                
+                var chk = '<div class="check-block">' +
+                '<input id="'+userId+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
+                '<label for="'+userId+'">'+ user.firstName + " " + user.lastName +'</label>' +
+                '</div>';
                     
-                    html += chk;
+                html += chk;
               }
           }
           else{
@@ -87,9 +88,7 @@
             click : function() {
               var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
                 onSuccess : function(dashboard){
-                  $( "#dashboard-dialog" ).dialog( "close" );
-                    
-                  window.location = "?dashboard=" + dashboard.getId();
+                  that._controller.addDashboard(dashboard.getId(), dashboard.getDisplayLabel().getLocalizedValue());
                 },
                 onFailure : function(e){
                   $( "#dashboard-dialog" ).dialog( "close" );

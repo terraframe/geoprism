@@ -18,7 +18,12 @@
  */
 package com.runwaysdk.geodashboard.gis.impl.condition;
 
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardAttributeCondition extends DashboardCondition implements Reloadable
 {
@@ -57,4 +62,20 @@ public abstract class DashboardAttributeCondition extends DashboardCondition imp
   {
     return this.getMdAttributeId();
   }
+
+  @Override
+  public void restrictQuery(String _type, ValueQuery _vQuery, GeneratedComponentQuery _query)
+  {
+    MdAttributeConcreteDAOIF mdAttribute = MdAttributeDAO.get(this.getMdAttributeId()).getMdAttributeConcrete();
+    String attributeName = mdAttribute.definesAttribute();
+    String key = mdAttribute.getKey();
+
+    if (key.startsWith(_type))
+    {
+      Attribute attribute = _query.get(attributeName);
+
+      this.restrictQuery(_vQuery, attribute);
+    }
+  }
+
 }

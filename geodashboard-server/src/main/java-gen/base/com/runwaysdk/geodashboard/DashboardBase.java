@@ -51,6 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
+
   private static final long serialVersionUID = -15792655;
   
   public DashboardBase()
@@ -741,6 +742,12 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.getAllDashboardUsersJSON();
   }
   
+  public static java.lang.String getAvailableDashboardsAsJSON(java.lang.String dashboardId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
@@ -897,16 +904,16 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.hasReport();
   }
   
-  public java.lang.String saveState(java.lang.String state)
+  public java.lang.String saveState(java.lang.String state, java.lang.Boolean global)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.lang.String saveState(java.lang.String id, java.lang.String state)
+  public static final java.lang.String saveState(java.lang.String id, java.lang.String state, java.lang.Boolean global)
   {
     Dashboard _instance = Dashboard.get(id);
-    return _instance.saveState(state);
+    return _instance.saveState(state, global);
   }
   
   public void setBaseLayerState(java.lang.String baseLayerState)

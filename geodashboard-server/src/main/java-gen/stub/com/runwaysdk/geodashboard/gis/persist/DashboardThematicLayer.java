@@ -151,15 +151,17 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     try
     {
+      DashboardLegend legend = this.getDashboardLegend();
+      
       JSONObject json = new JSONObject();
       json.put("viewName", getViewName());
       json.put("sldName", getSLDName());
       json.put("layerName", getName());
       json.put("layerId", getId());
       json.put("inLegend", this.getDisplayInLegend());
-      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
-      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
-      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
+      json.put("legendXPosition", legend.getLegendXPosition());
+      json.put("legendYPosition", legend.getLegendYPosition());
+      json.put("groupedInLegend", legend.getGroupedInLegend());
       json.put("featureStrategy", getFeatureStrategy());
       json.put("mdAttributeId", this.getMdAttributeId());
       json.put("attributeType", this.getAttributeType());

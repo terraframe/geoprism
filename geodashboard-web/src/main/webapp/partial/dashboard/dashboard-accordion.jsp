@@ -25,7 +25,7 @@
   
   <div id="{{'collapse' + $index}}" class="panel-collapse collapse">
     <div class="panel-body">
-      <accordion-attribute ng-repeat="attribute in type.attributes" attribute="attribute" identifier="{{$parent.$index}}-{{$index}}"  new-layer="newLayer(mdAttributeId)"></accordion-attribute>
+      <accordion-attribute ng-repeat="attribute in type.attributes" attribute="attribute" identifier="{{$parent.$index}}-{{$index}}"></accordion-attribute>
     </div>
   </div>
 </div>

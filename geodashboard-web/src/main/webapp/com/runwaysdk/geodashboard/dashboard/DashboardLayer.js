@@ -17,8 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  
-  function ThematicLayersController($scope, $timeout) {
+	
+  /**
+   * 
+   * THEMATIC LAYER CONTROLLER AND WIDGET
+   * 
+   */
+  function ThematicPanelController($scope, $timeout, dashboardService) {
     var controller = this;
     
     controller.getLayer = function(layerId) {
@@ -37,31 +42,26 @@
       form.edit(layerId);    	
     }
     
-    controller.remove = function(layerId) {
-    	
-      var request = new GDB.StandbyClientRequest({
-        onSuccess : function(){
-        	
-          if($scope.cache.values[layerId] != null) {
-            // Remove the layer from the map
-            var layer = $scope.cache.values[layerId];
-            layer.isActive = false;
-            
-            $scope.dashboard.toggleLayer(layer);
-            
-        	// Remove value from cache
-        	delete $scope.cache.values[layerId];        
-        	$scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
-          }
+    controller.remove = function(layerId) {    	
+      var onSuccess =  function(){
           
-          $scope.$apply();
-        },
-        onFailure : function(e){
-          GDB.ExceptionHandler.handleException(e);
+        if($scope.cache.values[layerId] != null) {
+            
+          // Remove the layer from the map
+          var layer = $scope.cache.values[layerId];
+          layer.isActive = false;
+              
+          $scope.dashboard.toggleLayer(layer);
+              
+          // Remove value from cache
+          delete $scope.cache.values[layerId];        
+          $scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
         }
-      }, '#overlay-container');
-    	
-      com.runwaysdk.Facade.deleteEntity(request, layerId);      
+            
+        $scope.$apply();
+      };
+          
+      dashboardService.removeLayer(layerId, '#overlay-container', onSuccess);  
     },
     
     controller.setLayerIndexes = function(layerIds) {
@@ -71,6 +71,10 @@
       
       // // At this point, the cache are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
       $scope.dashboard.renderMap();                  
+    }
+    
+    controller.canEdit = function() {
+      return dashboardService.canEdit();    	
     }
     
     controller.move = function(e, ui) {
@@ -84,48 +88,62 @@
         layerIds.push(layerId);
       }      
     	
-      if($scope.edit){
-        var request = new GDB.StandbyClientRequest({
-          onSuccess : function(json) {
-            controller.setLayerIndexes(layerIds);
-          },
-          onFailure : function(e) {
-            GDB.ExceptionHandler.handleException(e);
-              
-            $scope.$apply();
-          }
-        }, '#overlay-container');
-      
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(request, $scope.dashboard.model.mapId, layerIds);
+      if(dashboardService.edit){
+    	var mapId = $scope.dashboard.model.mapId;
+    	
+    	var onSuccess = function(json) {
+          controller.setLayerIndexes(layerIds);
+        };
+        
+        var onFailure = function(e) {
+          $scope.$apply();
+        };
+        
+        /* 
+         * DashboardService.orderedLayers is expecting the ids to be passed
+         * in the opposite order of the front end.
+         */
+        var reversed = layerIds.slice();
+        reversed.reverse();
+    	
+    	dashboardService.orderLayers(mapId, reversed, '#overlay-container', onSuccess, onFailure);
       }
       else{
         controller.setLayerIndexes(layerIds);    	  
       }
     }
+    
+    controller.hasValues = function() {
+      var length = $scope.cache.ids.length;
+      
+      return (length > 0);
+    }
+    
+    controller.expand = function(element) {
+      $timeout(function(){
+        if(controller.hasValues() && !$(element).find("#collapse-overlay").hasClass("in")) {      
+          $(element).find("#overlay-opener-button").click();            
+        }        
+      }, 1000);
+    }    
   }
     
-  function ThematicLayers() {
+  function ThematicPanel() {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/thematic-layers.jsp',
+      templateUrl: '/partial/dashboard/thematic-layer-panel.jsp',
       scope: {
         cache:'=',
-        edit:'=',
         dashboard:'='
       },
-      controller : ThematicLayersController,
+      controller : ThematicPanelController,
       controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {        
+      link: function (scope, element, attrs, ctrl) {
+    	
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-          var length = scope.cache.ids.length;
-        
-          element.ready(function() {
-            if(length > 0  && !$(element).find("#collapse-overlay").hasClass("in")) {
-              $(element).find("#overlay-opener-button").click();            
-            }            
-          });
+          ctrl.expand(element);        
         }, true);
         
         /* Hook-up drag and drop */
@@ -140,8 +158,262 @@
       }
     }    
   }
+
+  /**
+   * 
+   * REFERENCE LAYER CONTROLLER AND WIDGET
+   * 
+   */  
+  function ReferencePanelController($scope, $timeout, dashboardService) {
+    var controller = this;
+	  
+    controller.canEdit = function() {
+      return dashboardService.canEdit();      
+    }
     
-  angular.module("dashboard-layer", []);
+    controller.edit = function(layerId, universalId) {
+      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+      form.edit(layerId);    	
+    }    
+    
+    controller.add = function(layerId, universalId) {
+      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+      form.open(universalId);
+    }
+
+    controller.toggle = function(layerId, universalId) {
+      var layer = $scope.cache.values[universalId];      
+      layer.isActive = !layer.isActive;
+
+      $scope.dashboard.toggleLayer(layer);
+    }
+    
+    controller.remove = function(layerId, universalId) {
+      	
+      var onSuccess = function(){
+        // remove the map layer from the map
+        var layer = $scope.cache.values[universalId];
+        layer.isActive = false;
+        layer.layerExists = false;
+        layer.layerType = "REFERENCEJSON";
+          
+        $scope.dashboard.toggleLayer(layer);          
+        	  
+        $scope.$apply();
+      };
+      
+      dashboardService.removeLayer(layerId, '#ref-layer-container', onSuccess);
+    }
+    
+    controller.hasValues = function(cache) {
+      if(cache.ids.length > 0) {
+        for(var i = 0; i < cache.ids.length; i++) {
+          var id = cache.ids[i];
+          var layer = cache.values[id];
+          
+          if(layer.layerExists) {
+            return true;
+          }
+        }
+      }  
+      
+      return false;
+    }
+  }
+    
+  function ReferencePanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/reference-layer-panel.jsp',
+      scope: {
+        cache:'=',
+        dashboard:'='
+      },
+      controller : ReferencePanelController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {    
+          
+        // open the overlay panel if there are cache and it is collapsed        
+        scope.$watch('cache', function(newVal, oldVal){
+          element.ready(function() {
+            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues(scope.cache)) {
+              $(element).find("#ref-layer-opener-button").click();            
+            }            
+          });
+        }, true);
+      }
+    }    
+  }  
+  
+  /**
+   * 
+   * BASE LAYER CONTROLLER AND WIDGET
+   * 
+   */
+  function BasePanelController($scope, $timeout) {
+    var controller = this;
+    
+    controller.toggle = function(layerId) {
+      for(var i = 0; i < $scope.layers.length; i++) {
+        var layer = $scope.layers[i];
+        
+        if(layer.layerId == layerId) {
+          layer.isActive = !layer.isActive;          
+        }
+        else {
+          layer.isActive = false;                    
+        }
+      }
+      
+      $scope.dashboard.refreshBaseLayer();
+    }    
+  }
+  
+  function BasePanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/base-layer-panel.jsp',
+      scope: {
+        layers:'=',
+        dashboard:'='
+      },
+      controller : BasePanelController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {    
+      }
+    }    
+  }    
+  
+  /**
+   * 
+   * LEGEND LAYER CONTROLLER AND WIDGET
+   * 
+   */
+  function LegendController($scope, $timeout, dashboardService, mapService) {
+    var controller = this;
+    
+    controller.getSrc = function(layer) {
+      var params = {
+        REQUEST:"GetLegendGraphic",
+        VERSION:"1.0.0",        
+        FORMAT:"image/png",        
+        WIDTH:25,        
+        HEIGHT:25,        
+        TRANSPARENT:true,
+        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
+        LAYER: mapService.getWorkspace() + ":" + layer.viewName
+      };
+
+      if(layer.showFeatureLabels){
+        params.LEGEND_OPTIONS = params.LEGEND_OPTIONS + 'forceLabels:on;';
+      }      
+      
+      var src = window.location.origin + '/geoserver/wms?' + $.param(params);
+        
+      return src;      
+    }
+    
+    controller.detach = function($event, layer) {
+    	
+      layer.groupedInLegend = false;
+      
+      if(layer.legendXPosition == 0) {    	  
+        layer.legendXPosition = $event.clientX + 50;
+      }      
+      
+      if(layer.legendYPosition == 0) {
+        layer.legendYPosition = $event.clientY - 50;        
+      }   
+      
+      dashboardService.updateLegend(layer);        
+    }
+    
+    controller.attach = function(layer) {
+      layer.groupedInLegend = true;
+      
+      dashboardService.updateLegend(layer);        
+    }
+
+    controller.move = function(e,ui) {
+      var layer = $scope.layer;
+    	
+      var target = e.currentTarget;
+      var newPosition = $(target).position();
+      var x = newPosition.left;
+      var y = newPosition.top;
+      
+      layer.legendXPosition = x;        
+      layer.legendYPosition = y;   
+      
+      dashboardService.updateLegend(layer);        
+    }
+  }
+  
+  function LegendPanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/legend-panel.jsp',
+      scope: {
+        thematicCache:'=',
+        referenceCache:'='
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }
+  
+  function FloatingLegends() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/floating-legends.jsp',
+      scope: {
+        thematicCache:'=',
+        referenceCache:'='
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }   
+  
+  function LegendDrag() {
+    return {
+      restrict:'A',
+      scope: {
+        layer: "="
+      },
+      controller : LegendController,
+      controllerAs : 'ctrl',      
+	  link: function(scope, element, attrs, ctrl) {
+        element.ready(function(){
+          $(element).draggable({
+            containment: "body", 
+            snap: true, 
+            snap: ".legend-snapable", 
+            snapMode: "outer", 
+            snapTolerance: 5,
+            stack: ".legend-container"
+          });
+          
+          $(element).on('dragstop', ctrl.move); 
+        });
+	  }
+    }
+  }
+  
+  angular.module("dashboard-layer", ["dashboard-service", "map-service"]);
   angular.module('dashboard-layer')
-    .directive('thematicLayers', ThematicLayers);  
+    .directive('thematicPanel', ThematicPanel)
+    .directive('referencePanel', ReferencePanel)
+    .directive('basePanel', BasePanel)  
+    .directive('floatingLegends', FloatingLegends)
+    .directive('legendPanel', LegendPanel)
+    .directive('legendDrag', LegendDrag);  
 })();
