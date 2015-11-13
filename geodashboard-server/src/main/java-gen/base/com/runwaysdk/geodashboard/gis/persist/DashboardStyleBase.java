@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1431545958)
+@com.runwaysdk.business.ClassSignature(hash = 1258083355)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -71,7 +71,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = 1431545958;
+  private static final long serialVersionUID = 1258083355;
   
   public DashboardStyleBase()
   {
@@ -1260,6 +1260,18 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.String getJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getJSON(java.lang.String id)
+  {
+    DashboardStyle _instance = DashboardStyle.get(id);
+    return _instance.getJSON();
   }
   
   public static com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery getSortedAggregations(java.lang.String thematicAttributeId)

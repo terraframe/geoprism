@@ -34,6 +34,8 @@
 <!-- Ontologies CSS -->
 <jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
 
+<!-- <script type="text/javascript" src="/com/runwaysdk/geodashboard/dashboard/DashboardLayerForm.js"></script> -->
+
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
 <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
@@ -43,10 +45,9 @@
 </head>
 
 <!-- Include the types of this form to get the default values the MdAction needs -->
-<mjl:component param="style" item="${style}">
-</mjl:component>
+<mjl:component param="style" item="${style}"></mjl:component>
 
-    <div id="DashboardLayer-mainDiv" class="modal-dialog">
+    <div id="DashboardLayer-mainDiv" class="modal-dialog" ng-controller="LayerFormController" ng-init="init('${layer.id}', '${style.newInstance}', '${fonts}', '${geoNodes}', '${layer.geoNodeId}', '${aggregations}' )">
       <div class="modal-content">
         <div class="heading">
           <c:if test="${style.newInstance}">
@@ -68,188 +69,210 @@
             </div>
           </c:if>
             
-            <div class="row-holder">
-              <div class="label-holder">
-                <strong><gdb:localize var="dl_form_nameTheLayer" key="DashboardThematicLayer.form.nameTheLayer"/>${dl_form_nameTheLayer}</strong>
-              </div>
-              <div class="holder">
-<mjl:component param="layer" item="${layer}">
-                <label class="none" for="f312">${layer.nameMd.displayLabel}</label>
-                <span class="text">
-                  <input type="text" id="layer.name" value="${layer.name}" name="layer.name" />
-                      <mjl:messages attribute="name" classes="error-message">
-                        <mjl:message />
-                      </mjl:messages>
-                </span>
-</mjl:component>
-              </div>
-            </div>
-			<mjl:component param="style" item="${style}">
-	            <div class="row-holder">
-	              <div class="label-holder style02">
-	                <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardThematicLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
-	              </div>
-	              <div class="holder">
-	                <div class="row-holder">
-	                  <div class="check-block">
-	                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue"></input>
-	                    <label for="f51">${style.enableValueMd.displayLabel}</label>
-	                    <mjl:messages attribute="enableValue" classes="error-message">
-	                      <mjl:message />
-	                    </mjl:messages>
-	                  </div>
-	                  <div class="check-block">
-	                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}"></input>
-	                    <label for="f94">${style.enableLabelMd.displayLabel}</label>
-	                  </div>              
-	                </div>
-	                <div class="row-holder">
-	                  <div class="cell style02">
-	                    <label for="f55">${style.labelFontMd.displayLabel}</label>
-	                    <div class="select-holder">
-	                      <select class="font-select" name="style.${style.labelFontMd.name}" id="f55">
-	                        <c:forEach items="${fonts}" var="font">
-	                          <c:choose>
-	                            <c:when test="${style.labelFont == font}">
-	                              <option value="${font}" style="font-family:${font}" selected="selected">${font}</option>
-	                            </c:when>
-	                            <c:otherwise>
-	                              <option value="${font}" style="font-family:${font}" >${font}</option>
-	                            </c:otherwise>
-	                          </c:choose>
-	                        </c:forEach>
-	                      </select>
-	                    </div>
-	                  </div>
-	                  <div class="cell">
-	                    <label for="f95">${style.labelSizeMd.displayLabel}</label>
-	                    <div class="select-holder">
-	                      <select class="size-select" id="f95" name="style.${style.labelSizeMd.name}">
-	                        <c:forEach begin="0" end="30" var="size">
-	                          <c:choose>
-	                            <c:when test="${style.labelSize == size}">
-	                              <option selected="selected" value="${size}">${size}</option>
-	                            </c:when>
-	                            <c:otherwise>
-	                              <option value="${size}">${size}</option>
-	                            </c:otherwise>
-	                          </c:choose>
-	                        </c:forEach>
-	                      </select>
-	                    </div>
-	                  </div>
-	                  <div class="cell">
-	                    <span>${style.labelColorMd.displayLabel}</span>
-	                    <div class="color-holder">
-	                      <a href="#" class="color-choice">
-	                        <span class="ico" style="background:${style.labelColor};">icon</span>
-	                        <span class="arrow">arrow</span>
-	                        <input type="hidden" class="color-input" name="style.${style.labelColorMd.name}" value="${style.labelColor}" />
-	                      </a>
-	                    </div>
-	                  </div>
-	                  <div class="cell">
-	                    <span>${style.labelHaloMd.displayLabel}</span>
-	                    <div class="color-holder">
-	                      <a href="#" class="color-choice">
-	                        <span class="ico" style="background:${style.labelHalo};">icon</span>
-	                        <span class="arrow">arrow</span>
-	                        <input type="hidden" class="color-input" name="style.${style.labelHaloMd.name}" value="${style.labelHalo}" />
-	                      </a>
-	                    </div>
-	                  </div>
-	                  <div class="cell">
-	                  <label for="f54">${style.labelHaloWidthMd.displayLabel}</label>
-	                    <div class="select-holder">
-	                      <select class="size-select" name="style.${style.labelHaloWidthMd.name}" id="f54">
-	                        <c:forEach begin="0" end="15" var="size">
-	                          <c:choose>
-	                            <c:when test="${style.labelHaloWidth == size}">
-	                              <option selected="selected" value="${size}">${size}</option>
-	                            </c:when>
-	                            <c:otherwise>
-	                              <option value="${size}">${size}</option>
-	                            </c:otherwise>
-	                          </c:choose>
-	                        </c:forEach>
-	                      </select>
-	                    </div>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
-			</mjl:component>
+            <layer-name-input></layer-name-input>
+            
+            
+<!--             <div class="row-holder"> -->
+<!--               <div class="label-holder"> -->
+<%--                 <strong><gdb:localize var="dl_form_nameTheLayer" key="DashboardThematicLayer.form.nameTheLayer"/>${dl_form_nameTheLayer}</strong> --%>
+<!--               </div> -->
+<!--               <div class="holder"> -->
+<%-- <mjl:component param="layer" item="${layer}"> --%>
+<%--                 <label class="none" for="f312">${layer.nameMd.displayLabel}</label> --%>
+<!--                 <span class="text"> -->
+<%--                   <input type="text" id="layer.name" value="${layer.name}" name="layer.name" /> --%>
+<%--                       <mjl:messages attribute="name" classes="error-message"> --%>
+<%--                         <mjl:message /> --%>
+<%--                       </mjl:messages> --%>
+<!--                 </span> -->
+<%-- </mjl:component> --%>
+<!--               </div> -->
+<!--             </div> -->
+
+
+			<layer-label></layer-label>
+
+
+<%-- 			<mjl:component param="style" item="${style}"> --%>
+<!-- 	            <div class="row-holder"> -->
+<!-- 	              <div class="label-holder style02"> -->
+<%-- 	                <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardThematicLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong> --%>
+<!-- 	              </div> -->
+<!-- 	              <div class="holder"> -->
+<!-- 	                <div class="row-holder"> -->
+<!-- 	                  <div class="check-block"> -->
+<%-- 	                    <input id="f51" type="checkbox" <c:if test="${style.enableValue}">checked</c:if> name="style.enableValue"></input> --%>
+<%-- 	                    <label for="f51">${style.enableValueMd.displayLabel}</label> --%>
+<%-- 	                    <mjl:messages attribute="enableValue" classes="error-message"> --%>
+<%-- 	                      <mjl:message /> --%>
+<%-- 	                    </mjl:messages> --%>
+<!-- 	                  </div> -->
+<!-- 	                  <div class="check-block"> -->
+<%-- 	                    <input id="f94" type="checkbox" <c:if test="${style.enableLabel}">checked</c:if> name="style.${style.enableLabelMd.name}"></input> --%>
+<%-- 	                    <label for="f94">${style.enableLabelMd.displayLabel}</label> --%>
+<!-- 	                  </div>               -->
+<!-- 	                </div> -->
+<!-- 	                <div class="row-holder"> -->
+<!-- 	                  <div class="cell style02"> -->
+<%-- 	                    <label for="f55">${style.labelFontMd.displayLabel}</label> --%>
+<!-- 	                    <div class="select-holder"> -->
+<%-- 	                      <select class="font-select" name="style.${style.labelFontMd.name}" id="f55"> --%>
+<%-- 	                        <c:forEach items="${fonts}" var="font"> --%>
+<%-- 	                          <c:choose> --%>
+<%-- 	                            <c:when test="${style.labelFont == font}"> --%>
+<%-- 	                              <option value="${font}" style="font-family:${font}" selected="selected">${font}</option> --%>
+<%-- 	                            </c:when> --%>
+<%-- 	                            <c:otherwise> --%>
+<%-- 	                              <option value="${font}" style="font-family:${font}" >${font}</option> --%>
+<%-- 	                            </c:otherwise> --%>
+<%-- 	                          </c:choose> --%>
+<%-- 	                        </c:forEach> --%>
+<!-- 	                      </select> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+<!-- 	                  <div class="cell"> -->
+<%-- 	                    <label for="f95">${style.labelSizeMd.displayLabel}</label> --%>
+<!-- 	                    <div class="select-holder"> -->
+<%-- 	                      <select class="size-select" id="f95" name="style.${style.labelSizeMd.name}"> --%>
+<%-- 	                        <c:forEach begin="0" end="30" var="size"> --%>
+<%-- 	                          <c:choose> --%>
+<%-- 	                            <c:when test="${style.labelSize == size}"> --%>
+<%-- 	                              <option selected="selected" value="${size}">${size}</option> --%>
+<%-- 	                            </c:when> --%>
+<%-- 	                            <c:otherwise> --%>
+<%-- 	                              <option value="${size}">${size}</option> --%>
+<%-- 	                            </c:otherwise> --%>
+<%-- 	                          </c:choose> --%>
+<%-- 	                        </c:forEach> --%>
+<!-- 	                      </select> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+<!-- 	                  <div class="cell"> -->
+<%-- 	                    <span>${style.labelColorMd.displayLabel}</span> --%>
+<!-- 	                    <div class="color-holder"> -->
+<!-- 	                      <a href="#" class="color-choice"> -->
+<%-- 	                        <span class="ico" style="background:${style.labelColor};">icon</span> --%>
+<!-- 	                        <span class="arrow">arrow</span> -->
+<%-- 	                        <input type="hidden" class="color-input" name="style.${style.labelColorMd.name}" value="${style.labelColor}" /> --%>
+<!-- 	                      </a> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+<!-- 	                  <div class="cell"> -->
+<%-- 	                    <span>${style.labelHaloMd.displayLabel}</span> --%>
+<!-- 	                    <div class="color-holder"> -->
+<!-- 	                      <a href="#" class="color-choice"> -->
+<%-- 	                        <span class="ico" style="background:${style.labelHalo};">icon</span> --%>
+<!-- 	                        <span class="arrow">arrow</span> -->
+<%-- 	                        <input type="hidden" class="color-input" name="style.${style.labelHaloMd.name}" value="${style.labelHalo}" /> --%>
+<!-- 	                      </a> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+<!-- 	                  <div class="cell"> -->
+<%-- 	                  <label for="f54">${style.labelHaloWidthMd.displayLabel}</label> --%>
+<!-- 	                    <div class="select-holder"> -->
+<%-- 	                      <select class="size-select" name="style.${style.labelHaloWidthMd.name}" id="f54"> --%>
+<%-- 	                        <c:forEach begin="0" end="15" var="size"> --%>
+<%-- 	                          <c:choose> --%>
+<%-- 	                            <c:when test="${style.labelHaloWidth == size}"> --%>
+<%-- 	                              <option selected="selected" value="${size}">${size}</option> --%>
+<%-- 	                            </c:when> --%>
+<%-- 	                            <c:otherwise> --%>
+<%-- 	                              <option value="${size}">${size}</option> --%>
+<%-- 	                            </c:otherwise> --%>
+<%-- 	                          </c:choose> --%>
+<%-- 	                        </c:forEach> --%>
+<!-- 	                      </select> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+<!-- 	                </div> -->
+<!-- 	              </div> -->
+<!-- 	            </div> -->
+<%-- 			</mjl:component> --%>
+            
+            
+            
+            
+            
+            <layer-geo-node></layer-geo-node>
+            
+            
             
             
 			<!-- AGGREGATION SETTINGS -->
 			
-			<div id="geonode-holder" class="row-holder">
-              <div class="label-holder style03">
-                <strong><gdb:localize var="dl_form_defineGeoNode" key="DashboardThematicLayer.form.defineGeoNode"/>${dl_form_defineGeoNode}</strong>
-              </div>
-              <div class="holder add">
-              	<mjl:component param="layer" item="${layer}">
-                <div class="box">
-                  <label for="geonode-select"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
-                  <div class="select-box">
-	                    <select id="geonode-select" class="method-select" name="layer.geoNode">
-	                       <c:forEach items="${nodes}" var="node">
-		                         <c:choose>
-		                           <c:when test="${layer.geoNodeId == node.id}">
-				                         <option value="${node.id}" data-type="${node.type}" selected="selected">${node.geoEntityAttribute.displayLabel}</option>
-		                           </c:when>
-		                           <c:otherwise>
-		                           		<option value="${node.id}" data-type="${node.type}" >${node.geoEntityAttribute.displayLabel}</option>
-		                           </c:otherwise>
-		                         </c:choose>
-	                      </c:forEach>
-	                    </select>
-                  </div>
-                </div>
-				</mjl:component>
-              </div>
-            </div>
+<!-- 			<div id="geonode-holder" class="row-holder"> -->
+<!--               <div class="label-holder style03"> -->
+<%--                 <strong><gdb:localize var="dl_form_defineGeoNode" key="DashboardThematicLayer.form.defineGeoNode"/>${dl_form_defineGeoNode}</strong> --%>
+<!--               </div> -->
+<!--               <div class="holder add"> -->
+<%--               	<mjl:component param="layer" item="${layer}"> --%>
+<!--                 <div class="box"> -->
+<%--                   <label for="geonode-select"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label> --%>
+<!--                   <div class="select-box"> -->
+<!-- 	                    <select id="geonode-select" class="method-select" name="layer.geoNode"> -->
+<%-- 	                       <c:forEach items="${nodes}" var="node"> --%>
+<%-- 		                         <c:choose> --%>
+<%-- 		                           <c:when test="${layer.geoNodeId == node.id}"> --%>
+<%-- 				                         <option value="${node.id}" data-type="${node.type}" selected="selected">${node.geoEntityAttribute.displayLabel}</option> --%>
+<%-- 		                           </c:when> --%>
+<%-- 		                           <c:otherwise> --%>
+<%-- 		                           		<option value="${node.id}" data-type="${node.type}" >${node.geoEntityAttribute.displayLabel}</option> --%>
+<%-- 		                           </c:otherwise> --%>
+<%-- 		                         </c:choose> --%>
+<%-- 	                      </c:forEach> --%>
+<!-- 	                    </select> -->
+<!--                   </div> -->
+<!--                 </div> -->
+<%-- 				</mjl:component> --%>
+<!--               </div> -->
+<!--             </div> -->
 			
 			
-            <div id="agg-level-holder" class="row-holder" style="display:none;">
-              <div class="label-holder style03">
-                <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardThematicLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong>
-              </div>
-              <div class="holder add">
-              	<mjl:component param="layer" item="${layer}">
-	                <div class="box">
-	                  <label for="agg-level-dd"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
-	                  <div class="select-box">
-		                    <select id="agg-level-dd" class="method-select" name="layer.${layer.aggregationStrategyMd.name}">
-		                    	 <option value="" data-aggType=""></option>
-								 <!-- OPTIONS ARE DYNAMICALLY SET IN JAVASCRIPT -->
-		                    </select>
-	                  </div>
-	                </div>
-	                <div class="box">
-	                  <label for="agg-method-dd"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
-	                  <div class="select-box">
-	                    <select id="agg-method-dd" class="method-select" name="layer.${layer.aggregationTypeMd.name}">
-	                      <c:forEach items="${aggregations}" var="aggregation">
-	                         	<c:choose>
-	                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}">
-	                             		<option value="${aggregation.enumName}" selected="selected">
-	                               			${aggregation.displayLabel.value}
-	                             		</option>
-	                           		</c:when>
-	                           		<c:otherwise>
-	                             		<option value="${aggregation.enumName}">
-	                               			${aggregation.displayLabel.value}
-	                             		</option>
-	                           		</c:otherwise>
-	                         	</c:choose>
-	                      </c:forEach>
-	                    </select>
-	                  </div>
-	                </div>
-				</mjl:component>
-              </div>
-            </div>
+			
+			 <layer-aggregation></layer-aggregation>
+			
+			
+			
+			
+<!--             <div id="agg-level-holder" class="row-holder" style="display:none;"> -->
+<!--               <div class="label-holder style03"> -->
+<%--                 <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardThematicLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong> --%>
+<!--               </div> -->
+<!--               <div class="holder add"> -->
+<%--               	<mjl:component param="layer" item="${layer}"> --%>
+<!-- 	                <div class="box"> -->
+<%-- 	                  <label for="agg-level-dd"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label> --%>
+<!-- 	                  <div class="select-box"> -->
+<%-- 		                    <select id="agg-level-dd" class="method-select" name="layer.${layer.aggregationStrategyMd.name}"> --%>
+<!-- 		                    	 <option value="" data-aggType=""></option> -->
+<!-- 								 OPTIONS ARE DYNAMICALLY SET IN JAVASCRIPT -->
+<!-- 		                    </select> -->
+<!-- 	                  </div> -->
+<!-- 	                </div> -->
+<!-- 	                <div class="box"> -->
+<%-- 	                  <label for="agg-method-dd"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label> --%>
+<!-- 	                  <div class="select-box"> -->
+<%-- 	                    <select id="agg-method-dd" class="method-select" name="layer.${layer.aggregationTypeMd.name}"> --%>
+<%-- 	                      <c:forEach items="${aggregations}" var="aggregation"> --%>
+<%-- 	                         	<c:choose> --%>
+<%-- 	                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}"> --%>
+<%-- 	                             		<option value="${aggregation.enumName}" selected="selected"> --%>
+<%-- 	                               			${aggregation.displayLabel.value} --%>
+<!-- 	                             		</option> -->
+<%-- 	                           		</c:when> --%>
+<%-- 	                           		<c:otherwise> --%>
+<%-- 	                             		<option value="${aggregation.enumName}"> --%>
+<%-- 	                               			${aggregation.displayLabel.value} --%>
+<!-- 	                             		</option> -->
+<%-- 	                           		</c:otherwise> --%>
+<%-- 	                         	</c:choose> --%>
+<%-- 	                      </c:forEach> --%>
+<!-- 	                    </select> -->
+<!-- 	                  </div> -->
+<!-- 	                </div> -->
+<%-- 				</mjl:component> --%>
+<!--               </div> -->
+<!--             </div> -->
             
    
             

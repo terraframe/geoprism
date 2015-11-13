@@ -19,7 +19,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -164,7 +167,49 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
   {
     resp.sendError(500);
   }
+  
+  private String encodeString(String val)
+  {
+    
+    String value = null;
+    try
+    {
+      value = URLEncoder.encode(val, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return value;
+  }
+  
+  private JSONArray formatAggregationMethods(List<AggregationTypeDTO> aggMethods)
+  {
+    JSONArray formattedAggMethods = new JSONArray();
+    for(AggregationTypeDTO aggMethod : aggMethods)
+    {
+      try
+      {
+        JSONObject aggMethodObj = new JSONObject();
+        String formattedAggMethod = aggMethod.toString().replaceAll(".*\\.", "");
+        aggMethodObj.put("method", formattedAggMethod);
+        aggMethodObj.put("label", aggMethod.getDisplayLabel());
+        aggMethodObj.put("id", aggMethod.getId());
+        formattedAggMethods.put(aggMethodObj);
+      }
+      catch (JSONException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    
+    return formattedAggMethods;
+  }
 
+  
   /**
    * Loads artifacts for layer/style CRUD.
    * 
@@ -190,7 +235,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       req.setAttribute("style", style);
 
       String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
-      req.setAttribute("fonts", fonts);
+      req.setAttribute("fonts", this.encodeString(new JSONArray(Arrays.asList(fonts)).toString()) );
 
       // selected attribute
       MdAttributeDTO mdAttr;
@@ -207,8 +252,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       DashboardMapDTO map = DashboardMapDTO.get(clientRequest, mapId);
       DashboardDTO dashboard = map.getDashboard();
 
-      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
-      req.setAttribute("nodes", nodes);
+      String geoNodesJSON = dashboard.getGeoNodesJSON(mdAttr);
+      req.setAttribute("geoNodes", this.encodeString(geoNodesJSON));
+      
+      // TODO: REMOVE 'nodes' - geoNodes replaces it
+//      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
+//      req.setAttribute("nodes", nodes);
 
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
@@ -216,7 +265,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
 
-      req.setAttribute("aggregations", aggregations);
+      req.setAttribute("aggregations", this.encodeString(formatAggregationMethods(aggregations).toString()) );
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
 
       List<String> pointTypes = new ArrayList<String>();

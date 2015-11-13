@@ -17,9 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DashboardController($scope, $timeout) {
+  function DashboardController($scope, $timeout, $compile) {
     var controller = this;
-
+    
+    /* Getting the $compile method reference for use with later functions  */
+    controller.$compile = $compile;
+    controller.$scope = $scope;
+    
     /* Default State */ 
     controller.dashboardId = '';
     controller.workspace = '';
@@ -115,7 +119,7 @@
     controller.newLayer = function(mdAttributeId) {
     
       var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(controller, controller.model.mapId);
-      form.open(mdAttributeId);
+      form.open(mdAttributeId, controller.$compile, controller.$scope);
     }  
     
     controller.getDashboardId = function() {
@@ -274,7 +278,7 @@
     }, true);    
   }
   
-  angular.module("dashboard", ["dashboard-accordion", "dashboard-layer"]);
+  angular.module("dashboard", ["dashboard-accordion", "dashboard-layer","dashboard-layer-form"]);
   angular
   .module('dashboard')
   .controller('DashboardController', DashboardController)

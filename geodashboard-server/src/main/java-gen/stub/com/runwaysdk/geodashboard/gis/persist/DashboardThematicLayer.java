@@ -140,6 +140,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       iter.close();
     }
   }
+  
+  @Override
+  public String getJSON()
+  {
+    return this.toJSON().toString();
+  }
 
   public JSONObject toJSON()
   {

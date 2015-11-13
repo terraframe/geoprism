@@ -919,18 +919,18 @@
       },
       
       _displayLayerForm : function(html, layer) {
-      var that = this;
-      this.$_displayLayerForm(html, layer);
+    	  var that = this;
+      	this.$_displayLayerForm(html, layer);
       
         // Attach event listeners for the universal (geo) aggregation dropdown.
-        this._setGeoAggEventListeners();
+//        this._setGeoAggEventListeners();
         
         // Populate the Aggregation Options based on the default selected GeoNode
-        this._getGeographicAggregationOptions(layer);
+//        this._getGeographicAggregationOptions(layer);
         
-        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
-          that._getGeographicAggregationOptions(layer);
-        });
+//        $(ThematicLayerForm.GEO_NODE_SELECT_EL).change(function(){ 
+//          that._getGeographicAggregationOptions(layer);
+//        });
         
         this._thematicAttributeId = $(".category-input").data("mdattributeid"); // There can be multiple elements matching but all have same mdattributeid val
       },
@@ -952,13 +952,18 @@
         }, this.getImpl()[0]), id);  
       },
       
-      open : function(thematicAttributeId) {
+      open : function(thematicAttributeId, $compile, $scope) {
         var that = this;
+        that.$compile = $compile
+        that.$scope = $scope
           
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, "");
-            that._addLayerFormControls();              
+            that._addLayerFormControls();    
+            //
+            // compiling the new html for Angular
+            that.$compile($("#DashboardLayer-mainDiv")[0])($scope);
           },
           onFailure : function(e){
             that._closeLayerModal();
@@ -1095,34 +1100,34 @@
        * @layer - the layer object representing the layer the form is targeting 
        * 
        */
-      _getGeographicAggregationOptions : function(layer){
-        var that = this;
-        
-        // To set the option on a saved layer when initiating an edit session we get the
-        // universal id OR geometry aggregation value id depending on the aggregation type of
-        // the saved layer. 
-        if(layer){
-          var universalOrGeomId = layer.aggregationStrategy.value;
-          if(universalOrGeomId){
-            that._selectedOption = universalOrGeomId;
-          }
-          else{
-            that._selectedOption = null;
-          }
-        }
-        var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
-        
-          var clientRequest = new Mojo.ClientRequest({
-            onSuccess : function(data) {
-              that._setGeographicAggregationOptions(data, that._selectedOption);
-            },
-            onFailure : function(e) {
-              that.handleException(e);
-            }
-          });
-          
-          com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategies(clientRequest, selectedVal);
-      },
+//      _getGeographicAggregationOptions : function(layer){
+//        var that = this;
+//        
+//        // To set the option on a saved layer when initiating an edit session we get the
+//        // universal id OR geometry aggregation value id depending on the aggregation type of
+//        // the saved layer. 
+//        if(layer){
+//          var universalOrGeomId = layer.aggregationStrategy.value;
+//          if(universalOrGeomId){
+//            that._selectedOption = universalOrGeomId;
+//          }
+//          else{
+//            that._selectedOption = null;
+//          }
+//        }
+//        var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
+//        
+//          var clientRequest = new Mojo.ClientRequest({
+//            onSuccess : function(data) {
+//              that._setGeographicAggregationOptions(data, that._selectedOption);
+//            },
+//            onFailure : function(e) {
+//              that.handleException(e);
+//            }
+//          });
+//          
+//          com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategies(clientRequest, selectedVal);
+//      },
       
       /**
        * 
@@ -1151,63 +1156,63 @@
           return geomTypes;
       },
       
-      _setGeoAggEventListeners : function(){
-        var that = this;
-        
-          // Attach event listeners for the universal (geo) aggregation dropdown.
-          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
-            if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+" option:selected").hasClass("universal-leaf")){
-              // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
-            }
-            else{
-              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
-            }
-            
-            var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
-            that._setLayerTypeOptions(selectedOption);
-          });
-      },
+//      _setGeoAggEventListeners : function(){
+//        var that = this;
+//        
+//          // Attach event listeners for the universal (geo) aggregation dropdown.
+//          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
+//            if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+" option:selected").hasClass("universal-leaf")){
+//              // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+//              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
+//            }
+//            else{
+//              $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
+//            }
+//            
+//            var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+//            that._setLayerTypeOptions(selectedOption);
+//          });
+//      },
       
       /**
        * Populate the geographic aggregation dropdown
        * 
        * @aggregations - JSON representing geo aggregation levels
        */
-      _setGeographicAggregationOptions : function(aggregations, selectedOption) {
-        var selected = "";
-        
-        // Get the original name value from the originally rendered dropdown because this
-        // data was already passed from server to client in the jsp
-        var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
-        
-        var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" data-layertypes="'+layerTypes+'" >';
-        for(var i=0; i<aggregations.length; i++){
-          var agg = aggregations[i];
-          if(selectedOption === agg.getValue()){
-            selected = "selected";
-          }
-          else if(i === 0){
-            selected = "selected";
-          }
-          else{
-            selected = "";
-          }
-          html += '<option value="' + agg.getValue() + '" data-type="'+agg.getAggregationType()+'" data-geomTypes="'+agg.getAvailableGeometryTypes()+'" '+selected+'>' + agg.getDisplayLabel() + '</option>';
-        }
-        html += '</select>';
-          
-          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().html(html);
-
-        jcf.customForms.replaceAll($(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().get(0));
-        
-        $(ThematicLayerForm.GEO_AGG_HOLDER).show();
-        
-        var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
-        this._setLayerTypeOptions(selectedOption);
-        
-        this._setGeoAggEventListeners();
-      },
+//      _setGeographicAggregationOptions : function(aggregations, selectedOption) {
+//        var selected = "";
+//        
+//        // Get the original name value from the originally rendered dropdown because this
+//        // data was already passed from server to client in the jsp
+//        var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
+//        
+//        var html = '<select id="'+ThematicLayerForm.GEO_AGG_LEVEL_DD.replace("#", "")+'" class="method-select" data-layertypes="'+layerTypes+'" >';
+//        for(var i=0; i<aggregations.length; i++){
+//          var agg = aggregations[i];
+//          if(selectedOption === agg.getValue()){
+//            selected = "selected";
+//          }
+//          else if(i === 0){
+//            selected = "selected";
+//          }
+//          else{
+//            selected = "";
+//          }
+//          html += '<option value="' + agg.getValue() + '" data-type="'+agg.getAggregationType()+'" data-geomTypes="'+agg.getAvailableGeometryTypes()+'" '+selected+'>' + agg.getDisplayLabel() + '</option>';
+//        }
+//        html += '</select>';
+//          
+//          $(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().html(html);
+//
+//        jcf.customForms.replaceAll($(ThematicLayerForm.GEO_AGG_LEVEL_DD).parent().get(0));
+//        
+//        $(ThematicLayerForm.GEO_AGG_HOLDER).show();
+//        
+//        var selectedOption = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+//        this._setLayerTypeOptions(selectedOption);
+//        
+//        this._setGeoAggEventListeners();
+//      },
       
       
       /**
