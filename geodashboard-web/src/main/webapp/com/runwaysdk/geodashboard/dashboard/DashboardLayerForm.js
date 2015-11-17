@@ -110,27 +110,27 @@
 		 }
 	 
 	 function layerAggregation() {
-		    return {
-		      restrict: 'E',
-		      replace: true,
-		      templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
-		      scope: true,
-		      link: function (scope, element, attrs) {
-		    	  // format the partial
+	    return {
+	      restrict: 'E',
+	      replace: true,
+	      templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
+	      scope: true,
+	      link: function (scope, element, attrs) {
+	    	  // format the partial
 //		    	  jcf.customForms.replaceAll(element[0]);
-		    	  
-		    	  var geoNodeSelectId = "#geonode-select";
-		          
-		          // Populate the Aggregation Options based on the default selected GeoNode
-		    	  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
-		    	  $(geoNodeSelectId).change(function(){ 
-		    		  scope.getGeographicAggregationOptions(layer);
-		    	  });
-		      }
-		    }    
-		 }
+	    	  
+	    	  var geoNodeSelectId = "#geonode-select";
+	          
+	          // Populate the Aggregation Options based on the default selected GeoNode
+	    	  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
+	    	  $(geoNodeSelectId).change(function(){ 
+	    		  scope.getGeographicAggregationOptions(layer);
+	    	  });
+	      }
+	    }    
+	}
 	
-	var DashboardThematicLayerFormController = function($scope, $compile) {
+	var DashboardThematicLayerFormController = function($scope, $compile, layerFormService) {
 		var controller = this;
 		var geoNodeSelectId = "#geonode-select";
    	  	var geoTypeHolder = "#geom-type-holder";
@@ -138,6 +138,7 @@
    	  	var geoAggLevelHolder = "#agg-level-holder";
    	  	var geoAggMethodSelectId = "#agg-method-dd";
 		
+   	  	
 		 /* Getting the $compile method reference for use with later functions  */
 	    controller.$compile = $compile;
 	    controller.$scope = $scope;
@@ -149,8 +150,11 @@
 	    	$scope.availableFonts = processFonts(JSON.parse(decodeURIComponent(availableFonts)));
 	    	$scope.geoNodes = JSON.parse(decodeURIComponent(geoNodes));
 	    	
+	    	controller.layerId = layerId;
+	    	
 	    	if(!newInstance){
 	    	  $scope.loadExisting(controller.newInstance);
+	    	  controller.loadLayerState()
 	    	}
  
 	      
@@ -264,6 +268,54 @@
 			};
 		
 	    }
+	    
+	    controller.loadLayerState = function() {
+	        
+	        /* Clear the current state */
+//	        controller.model = {
+//	          location : {label:'',value:''},
+//	          editDashboard : false,
+//	          editData : false,
+//	          types : [],
+//	          mapId : ''
+//	        };
+
+	        
+	        var onSuccess = function(json){
+	          var state = JSON.parse(json);
+	            
+//	          controller.setLayerState(state);
+	        };
+	          
+	        layerFormService.getThematicLayerJSON(controller.layerId, onSuccess);
+	    }
+	    
+	    
+	    controller.setLayerState = function(state) {
+//	        $timeout(function() {
+//	          controller.model = state;
+//	          controller.renderBase = true;
+//
+//	          // Initialize the default base map
+//	          var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
+//	              
+//	          for(var i = 0; i < controller.baseLayers.length; i++) {
+//	            var layer = controller.baseLayers[i];
+//	                  
+//	            if(layer.layerType == layerSourceType) {
+//	              layer.isActive = true;
+//	            }
+//	            else {
+//	              layer.isActive = false;            
+//	            }
+//	          }            
+//
+//	          $scope.$apply();
+//	                
+//	          controller.refresh();
+//	        }, 5);
+	      }
+	    
 		  
     	// Fonts from Java come in as simple json array. We need to add id's to each entry for Angular.
 		// It's important to note the obvious, that these id's are completely generic.
@@ -307,25 +359,6 @@
 	        $scope.thematicStyleModel.enableLabel = val;
 	    }; 
 	    
-	    
-	    controller.loadExisting = function(newInstance){
-	        var request = new Mojo.ClientRequest({
-	            onSuccess : function(json){
-	              $timeout(function() {
-	                controller.thematicLayerModel = JSON.parse(json);
-	                
-	                $scope.$apply();
-	                
-	                controller.refresh();
-	              }, 0);
-	            },
-	            onFailure : function(e){
-	              GDB.ExceptionHandler.handleException(e);        	
-	            }
-	        });
-	        
-	        com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getJSON(request, controller.layerId);
-	    }
 	    
   	  	/**
          * 
@@ -459,16 +492,16 @@
          }
 	}
 	 
-	angular.module("dashboard-layer-form", []);
+	angular.module("dashboard-layer-form", ["dashboard", "layer-form-service"]);
 	angular.module("dashboard-layer-form")
-		.controller('LayerFormController', ['$scope', DashboardThematicLayerFormController])
+		.controller('LayerFormController', ['$scope', '$compile', 'layerFormService', DashboardThematicLayerFormController])
 		.directive('layerNameInput', layerNameInput)
 		.directive('layerLabel', layerLabel)
 		.directive('layerGeoNode', layerGeoNode)
 		.directive('layerAggregation', layerAggregation)
 		.filter('range', function() {
 		  return function(input, min, max) {
-		    min = parseInt(min); //Make string input int
+		    min = parseInt(min); 
 		    max = parseInt(max);
 		    for (var i=min; i<max; i++)
 		      input.push(i);

@@ -170,7 +170,18 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("layerType", layerType);
       json.put("attributeLabel", this.getAttributeDisplayLabel());
       json.put("geoNodeId", this.getGeoNodeId());
-      json.put("aggregationStrategy", this.getAggregationStrategy().getJSON());
+      
+      AggregationStrategy aggStrategy = this.getAggregationStrategy();
+      JSONObject aggStratJSON = null;
+      if(aggStrategy != null)
+      {
+        aggStratJSON = aggStrategy.getJSON();
+      }
+      else
+      {
+        aggStratJSON = new JSONObject();
+      }
+      json.put("aggregationStrategy", aggStratJSON);
 
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
@@ -194,14 +205,19 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO();
 
-    String label = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
-
-    if (label == null || label.length() == 0)
+    if(mdAttribute != null)
     {
-      return mdAttribute.getMdAttributeConcrete().getDisplayLabel(Session.getCurrentLocale());
-    }
+      String label = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
 
-    return label;
+      if (label == null || label.length() == 0)
+      {
+        return mdAttribute.getMdAttributeConcrete().getDisplayLabel(Session.getCurrentLocale());
+      }
+
+      return label;
+    }
+    
+    return null;
   }
 
   /**
@@ -269,7 +285,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   @Override
   public AttributeType getAttributeType()
   {
-    MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO().getMdAttributeConcrete();
+    MdAttributeDAOIF mdAttribute = null;
+    MdAttributeDAOIF mdAttrIF = this.getMdAttributeDAO();
+    if(mdAttrIF != null)
+    {
+      mdAttribute = mdAttrIF.getMdAttributeConcrete();
+    }
 
     if (mdAttribute instanceof MdAttributeDateDAOIF)
     {
@@ -294,7 +315,15 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   @Override
   public String getAttribute()
   {
-    return MdAttributeDAO.get(this.getMdAttributeId()).definesAttribute();
+    String attrId = this.getMdAttributeId();
+    if(attrId.length() > 0)
+    {
+      return MdAttributeDAO.get(attrId).definesAttribute();
+    }
+    else
+    {
+      return null;
+    }
   }
 
   protected void populate(DashboardLayer source)

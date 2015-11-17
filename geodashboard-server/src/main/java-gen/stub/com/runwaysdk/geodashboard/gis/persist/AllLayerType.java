@@ -85,4 +85,8 @@ public enum AllLayerType implements com.runwaysdk.business.BusinessEnumeration, 
     return null;
   }
   
+  public static AllLayerType getDefault()
+  {
+    return AllLayerType.BASICPOINT;
+  }
 }
