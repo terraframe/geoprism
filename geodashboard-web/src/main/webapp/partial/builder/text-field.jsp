@@ -22,6 +22,8 @@
 
 <div class="field-row clearfix">
   <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
-  <input ng-model="model[field.name]" class="com-runwaysdk-ui-factory-runway-TextInput com-runwaysdk-ui-factory-runway-FormInput com-runwaysdk-ui-factory-runway-Widget" type="text">
-  <div class="error-message">{{field.message}}</div>
+  <input ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}" class="com-runwaysdk-ui-factory-runway-TextInput com-runwaysdk-ui-factory-runway-FormInput com-runwaysdk-ui-factory-runway-Widget" type="text">
+  <div class="error-message">
+    <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
+  </div>
 </div>

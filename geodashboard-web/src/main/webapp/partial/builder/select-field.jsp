@@ -23,9 +23,11 @@
 <div class="field-row clearfix">
   <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
   <div class="select-holder">
-    <select ng-model="model[field.name]">
+    <select ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}">
       <option ng-repeat="option in field.options" value="{{option.value}}">{{option.displayLabel}}</option>
     </select>  
   </div>
-  <div class="error-message">{{field.message}}</div>
+  <div class="error-message">
+    <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>
+  </div>
 </div>

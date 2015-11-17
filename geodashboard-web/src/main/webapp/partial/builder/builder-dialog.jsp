@@ -28,7 +28,7 @@
         <span class="ui-dialog-title"><gdb:localize key="dashboard.form.heading"/></span>
       </div>
       <div class="ui-dialog-content ui-widget-content" style="display: block; width: auto; min-height: 23px; max-height: 630px; height: auto;">
-        <form name="form" class="com-runwaysdk-geodashboard-Form com-runwaysdk-ui-factory-runway-Widget submit-form">
+        <form name="form" class="com-runwaysdk-geodashboard-Form com-runwaysdk-ui-factory-runway-Widget">
           <fieldset class="com-runwaysdk-geodashboard-FormList com-runwaysdk-ui-factory-runway-Widget">
             <section class="form-container">
               <div ng-repeat="field in ctrl.fields">
@@ -39,50 +39,50 @@
               </div>
             </section>
           </fieldset>
-        </form>
           
-        <div class="panel" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">
-          <h3 class="panel-title">
-            <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a>
-          </h3>          
-          <div id="user-field-row" class="collapse in">
-            <div ng-repeat="user in ctrl.dashboard.options.users">
-              <div>
-                <input type="checkbox" ng-model="user.hasAccess"></input>
-                {{user.firstName + ' ' + user.lastName}}
+          <div class="panel" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">
+            <h3 class="panel-title">
+              <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a>
+            </h3>          
+            <div id="user-field-row" class="collapse in">
+              <div ng-repeat="user in ctrl.dashboard.options.users">
+                <div>
+                  <input type="checkbox" ng-model="user.hasAccess"></input>
+                  {{user.firstName + ' ' + user.lastName}}
+                </div>
               </div>
             </div>
           </div>
-        </div>
         
-        <div class="panel" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0">
-          <h3 class="panel-title">
-            <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a>
-          </h3>          
-          <div id="type-field-row" class="collapse in">
-            <div ng-repeat="type in ctrl.dashboard.options.types">
-              <h4 class="panel-title">
-                <input type="checkbox" ng-model="type.value"></input>              
-                <a class="opener-link" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
-              </h4>          
-              <div id="type{{$index}}" class="collapse">
-                <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
-              </div>              
+          <div class="panel" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0">
+            <h3 class="panel-title">
+              <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a>
+            </h3>          
+            <div id="type-field-row" class="collapse in">
+              <div ng-repeat="type in ctrl.dashboard.options.types">
+                <h4 class="panel-title">
+                  <input type="checkbox" ng-model="type.value"></input>              
+                  <a class="opener-link" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
+                </h4>          
+                <div id="type{{$index}}" class="collapse">
+                  <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
+                </div>              
+              </div>
             </div>
           </div>
-        </div>                            
-      </div>
-      
-      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-        <div class="ui-dialog-buttonset">
-          <button ng-click="ctrl.persist()" aria-disabled="false" role="button" class="btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
-            <span class="ui-button-text"><gdb:localize key="dashboard.Ok"/></span>
-          </button>
-          <button ng-click="ctrl.cancel()" aria-disabled="false" role="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
-            <span class="ui-button-text"><gdb:localize key="dashboard.Cancel"/></span>
-          </button>
-        </div>      
-      </div>
+          
+          <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <div class="ui-dialog-buttonset">
+              <button ng-disabled="form.$invalid" ng-click="ctrl.persist()" aria-disabled="false" role="button" class="btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
+                <span class="ui-button-text"><gdb:localize key="dashboard.Ok"/></span>
+              </button>
+              <button ng-click="ctrl.cancel()" aria-disabled="false" role="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
+                <span class="ui-button-text"><gdb:localize key="dashboard.Cancel"/></span>
+              </button>
+            </div>      
+          </div>
+        </form>
+      </div>      
     </div>
   </modal-dialog>       
 </div>

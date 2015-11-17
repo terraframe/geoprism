@@ -22,13 +22,24 @@
     var service = {};
     service.dto = new com.runwaysdk.geodashboard.Dashboard();
     
-    service.applyWithOptions = function(object, onSuccess, onFailure) {    
+    service.applyWithOptions = function(object, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
 
       runwayService.populate(service.dto, object);
      
       service.dto.applyWithOptions(request, object.options);
     }
+    
+    service.unlock = function(object, onSuccess, onFailure) {
+      if(service.dto == null || service.dto.isNewInstance()) {
+        onSuccess();  
+      }
+      else {
+        var request = runwayService.createRequest(onSuccess, onFailure);
+        
+        service.dto.unlock(request);  
+      }
+    }    
     
     service.loadDashboard = function(dashboardId, onSuccess, onFailure) {
       
@@ -48,15 +59,15 @@
       }, onFailure);
       
       if(dashboardId != null) {
-      	var dto = new com.runwaysdk.geodashboard.Dashboard();
+      var dto = new com.runwaysdk.geodashboard.Dashboard();
         dto.id = dashboardId;
         dto.newInstance = false;
         dto.attributeMap.id.value = dashboardId;
-    	  
+      
         dto.getDashboardDefinition(request);
       }
       else {
-    	var dto = new com.runwaysdk.geodashboard.Dashboard();
+        var dto = new com.runwaysdk.geodashboard.Dashboard();
         dto.getDashboardDefinition(request);
       }
     }

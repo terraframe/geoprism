@@ -22,14 +22,20 @@
     var controller = this;
     
     controller.cancel = function() {
-      $scope.show = null;
-      
-      controller.fields = null;    
-      controller.dashboard = null;      
+      var onSuccess = function() {      
+        $scope.show = null;
+          
+        controller.fields = null;
+        controller.dashboard = null;
+        
+        $scope.$apply();
+      }
+        
+      builderService.unlock(controller.dashboard, onSuccess);
     }
     
     controller.persist = function() {
-      var onSuccess = function(result) {    	  
+      var onSuccess = function(result) {      
         $scope.show = null;          
         controller.fields = null;    
         controller.dashboard = null;  
@@ -81,12 +87,13 @@
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/builder/text-field.jsp',
+      require: '^form',      
       scope: {
         field:'=',
         model:'='
       },
-      link: function (scope, element, attrs, ctrl) {
-        
+      link: function (scope, element, attrs, form) {
+        scope.form = form;  
       }
     }    
   }
@@ -110,11 +117,14 @@
         field:'=',
         model:'='
       },
+      require: ['^form', 'selectField'],            
       controller : SelectFieldController,
       controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {
+      link: function (scope, element, attrs, ctrls) {
+        scope.form = ctrls[0];
+    
         element.ready(function(){
-          ctrl.init(element);        
+          ctrls[1].init(element);        
         });
       }
     }    

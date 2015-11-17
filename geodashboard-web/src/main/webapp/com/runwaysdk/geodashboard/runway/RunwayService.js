@@ -101,7 +101,9 @@
             field.options = [];
           }
             
-          if(!$.isEmptyObject(field)) {
+          if(!$.isEmptyObject(field)) {        	
+        	field.required = attributeMd.isRequired();
+        	
             fields.push(field);
           }
         }        
