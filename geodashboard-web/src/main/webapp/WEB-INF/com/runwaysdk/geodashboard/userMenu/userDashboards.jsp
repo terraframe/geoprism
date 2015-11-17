@@ -203,7 +203,7 @@
   
   
 </head>
-<body ng-app="dashboard-builder">
+<body ng-app="dashboard-menu">
 
   <c:if test="${not empty param.errorMessage}">
     <div class="error-message">
@@ -233,58 +233,43 @@
     <div class="row"></div>
     <div class="col-md-3"></div>
     <div class="col-md-6">
-      <div class="row"> <!-- start of the 1st row -->
-       
-        <c:forEach items="${dashboards}" var="dashboard" varStatus="counter">
-          <div class="col-sm-6 col-md-4">
+      <div class="row">
+        <div class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+          <a href="#" class="new-dashboard-btn" >
             <div class="thumbnail text-center">
-              <a href="DashboardViewer?dashboard=${dashboard.id}" class="" >
+              <div class="frame-box">
+                <div class="inner-frame-box">
+                  <i class="fa fa-plus"></i>
+                </div>
+              </div>
+              <div class="caption">
+                <h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
+              </div>
+            </div>
+          </a>
+        </div>                         
+      
+        <div class="col-sm-6 col-md-4" ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]">
+          <div class="thumbnail text-center">
+            <a ng-href="DashboardViewer?dashboard={{dashboard.dashboardId}}" class="" >
               
               <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-                <img src="/mapthumb/getDashboardMapThumbnail?dashboardId=${dashboard.id}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
-                <div class="caption">
-                  <h3>${dashboard.displayLabel.value}</h3>
-                </div>
-              </a>              
-            </div>
-            <a href="#" ng-click="ctrl.edit('${dashboard.id}')">
-              <h3 style="color:white;">Edit</h3>              
-            </a>            
+              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{dashboard.dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
+              
+              <div class="caption">
+                <h3>{{dashboard.label}}</h3>
+              </div>
+            </a>              
           </div>
-        
-          <c:choose>
-            <c:when test="${counter.last}">
-              <c:if test="${counter.count % 3 == 0}"> 
-                </div>  <!-- close the last row -->
-                  <div class="row">  <!-- start a new row if the last row has all three thumbnails -->
-                  </c:if>
-                
-              <div class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
-                <a href="#" class="new-dashboard-btn" >
-                  <div class="thumbnail text-center">
-                    <div class="frame-box">
-                      <div class="inner-frame-box">
-                        <i class="fa fa-plus"></i>
-                      </div>
-                    </div>
-                    <div class="caption">
-                      <h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
-                    </div>
-                  </div>
-                </a>
-              </div>            
-            </div> <!-- close the last row -->
-          </c:when>
-          <c:when test="${counter.count % 3 == 0}">
-            </div> <!-- close the row after three thumbnails -->
-            <div class="row"> <!-- now start the next row -->
-          </c:when>
-             </c:choose>
-         </c:forEach>         
-       </div> <!-- close the middle column -->
-       <div class="col-md-3"></div>
+          <div style="color:white;">          
+            <a href="#" ng-click="ctrl.edit(dashboard.dashboardId)" style="color:white;"><gdb:localize key="dashboard.edit.label"/></a> |
+            <a href="#" ng-click="ctrl.remove(dashboard.dashboardId)" style="color:white;"><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
+          </div>
+        </div>
+      </div>
+    </div>      
+    <div class="col-md-3"></div>
        
-       <builder-dialog ng-if="ctrl.show != null" show="ctrl.show"></builder-dialog>
-    </div> 
+    <builder-dialog ng-if="ctrl.show != null" show="ctrl.show" callback="ctrl"></builder-dialog>
   </div>
 </body>

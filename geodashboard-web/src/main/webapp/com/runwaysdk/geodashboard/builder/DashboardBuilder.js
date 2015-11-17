@@ -18,31 +18,6 @@
  */
 (function(){
 
-  function DashboardMenuController($scope, $timeout) {
-    var controller = this;
-    controller.show = null;    
-    
-    controller.account = function() {
-      var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
-      dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
-        dialog.close();
-      }, null, {primary: true});
-      dialog.setStyle("z-index", 2001);
-      dialog.render();    
-        
-      var ut = new com.runwaysdk.ui.userstable.UserForm();  
-      ut.render("#"+dialog.getContentEl().getId());
-    }
-    
-    controller.newDashboard = function() {
-      controller.show = 'NEW';      
-    }
-    
-    controller.edit = function(dashboardId) {
-      controller.show = dashboardId;
-    }
-  }
-  
   function BuilderDialogController($scope, $timeout, builderService) {
     var controller = this;
     
@@ -54,13 +29,16 @@
     }
     
     controller.persist = function() {
-      var onSuccess = function(result) {
-        $scope.show = null;
-          
+      var onSuccess = function(result) {    	  
+        $scope.show = null;          
         controller.fields = null;    
-        controller.dashboard = null;      
-          
+        controller.dashboard = null;  
+                
         $scope.$apply();
+
+        var dashboard = JSON.parse(result);
+
+        $scope.callback.refresh(dashboard);
       }    
       
       builderService.applyWithOptions(controller.dashboard, onSuccess);
@@ -73,8 +51,6 @@
       var onSuccess = function(result) {
         controller.fields = result.fields;    
         controller.dashboard = result.object;
-        
-        console.log(controller.dashboard);
         
         $scope.$apply();
       }
@@ -89,7 +65,8 @@
       replace: true,
       templateUrl: '/partial/builder/builder-dialog.jsp',
       scope: {
-        show:'='
+        show:'=',
+        callback:'='
       },
       controller : BuilderDialogController,
       controllerAs : 'ctrl',
@@ -202,7 +179,6 @@
 
   angular.module("dashboard-builder", ["builder-service"]);
   angular.module("dashboard-builder")
-   .controller('DashboardMenuController', DashboardMenuController)
    .directive('textField', TextField)
    .directive('selectField', SelectField)
    .directive('modalDialog', ModalDialog)

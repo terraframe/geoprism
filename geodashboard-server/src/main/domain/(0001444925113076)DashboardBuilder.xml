@@ -27,14 +27,14 @@
         </create>
       </mdController>
       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
-        <create>
-          <mdMethod name="getDashboardDefinition" label="Get Dashboard Definition" returnType="java.lang.String" />
-        </create>      
-        <mdMethod name="applyWithOptions" label="Apply With Options" static="false" returnType="void">
+        <mdMethod name="applyWithOptions" returnType="java.lang.String">
           <create>
             <mdParameter name="options" label="Options" order="2" type="java.lang.String" />
           </create>
         </mdMethod>
+        <create>
+          <mdMethod name="getDashboardDefinition" label="Get Dashboard Definition" returnType="java.lang.String" />
+        </create>      
       </mdBusiness>
       <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
         <create>

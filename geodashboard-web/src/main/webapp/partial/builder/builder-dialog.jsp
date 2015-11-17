@@ -41,7 +41,21 @@
           </fieldset>
         </form>
           
-        <div class="panel">
+        <div class="panel" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">
+          <h3 class="panel-title">
+            <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a>
+          </h3>          
+          <div id="user-field-row" class="collapse in">
+            <div ng-repeat="user in ctrl.dashboard.options.users">
+              <div>
+                <input type="checkbox" ng-model="user.hasAccess"></input>
+                {{user.firstName + ' ' + user.lastName}}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0">
           <h3 class="panel-title">
             <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a>
           </h3>          
@@ -58,6 +72,7 @@
           </div>
         </div>                            
       </div>
+      
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
         <div class="ui-dialog-buttonset">
           <button ng-click="ctrl.persist()" aria-disabled="false" role="button" class="btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
