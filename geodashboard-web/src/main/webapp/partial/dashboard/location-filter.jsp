@@ -24,6 +24,6 @@
     <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
   </div>
   <div class="geo">
-	<input class="gdb-attr-filter filter-geo" id="filter-geo" type="text" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
+	<input ng-model="filter.label" id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
   </div>
 </div>

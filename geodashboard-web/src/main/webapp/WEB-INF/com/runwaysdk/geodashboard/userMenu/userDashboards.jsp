@@ -152,50 +152,7 @@
     .frame-box:before {top:0;left:0;border-width: 6px 0 0 6px}
     .frame-box:after {top:0;right:0;border-width: 6px 6px 0 0}
     .frame-box>:first-child:before {bottom:0;right:0;border-width: 0 6px 6px 0}
-    .frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 6px 6px}
-    
-.ng-modal-overlay {
-  /* A dark translucent div that covers the whole screen */
-  position:absolute;
-  z-index:99;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background-color:#000000;
-  opacity: 0.8;
-}
-.ng-modal-dialog {
-  /* A centered div above the overlay with a box shadow. */
-  z-index:100;
-  position: absolute;
-  width: 50%; /* Default */
-
-  /* Center the dialog */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-
-  background-color: #fff;
-  box-shadow: 4px 4px 80px #000;
-}
-.ng-modal-dialog-content {
-  padding:10px;
-  text-align: left;
-}
-.ng-modal-close {
-  position: absolute;
-  top: 3px;
-  right: 5px;
-  padding: 5px;
-  cursor: pointer;
-  font-size: 120%;
-  display: inline-block;
-  font-weight: bold;
-  font-family: 'arial', 'sans-serif';
-}    
+    .frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 6px 6px}    
   </style>
   
   <jwr:script src="/bundles/builder.js" useRandomParam="false"/>   
@@ -211,7 +168,7 @@
     </div>
   </c:if>  
   
-  <div id="container" ng-controller="DashboardMenuController as ctrl">
+  <div id="container" ng-controller="DashboardMenuController as ctrl"  ng-cloak>
     <header id="header">
       <p class="text-right">
         <c:choose>
@@ -234,7 +191,7 @@
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <div class="row">
-        <div class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+        <div ng-if="ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
           <a href="#" class="new-dashboard-btn" >
             <div class="thumbnail text-center">
               <div class="frame-box">
@@ -261,7 +218,7 @@
               </div>
             </a>              
           </div>
-          <div style="color:white;">          
+          <div ng-if="ctrl.editDashboard" style="color:white;">          
             <a href="#" ng-click="ctrl.edit(dashboard.dashboardId)" style="color:white;"><gdb:localize key="dashboard.edit.label"/></a> |
             <a href="#" ng-click="ctrl.remove(dashboard.dashboardId)" style="color:white;"><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
           </div>

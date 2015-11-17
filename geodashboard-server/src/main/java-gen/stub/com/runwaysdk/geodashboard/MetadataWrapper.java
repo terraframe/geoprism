@@ -60,9 +60,11 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
   @Override
   public void delete()
   {
+    Dashboard dashboard = this.getDashboard();
+
     for (AttributeWrapper aw : this.getAllAttributeWrapper())
     {
-      aw.delete();
+      aw.delete(dashboard);
     }
 
     super.delete();
@@ -76,7 +78,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     Locale locale = Session.getCurrentLocale();
 
     QueryFactory f = new QueryFactory();
-    
+
     DashboardAttributesQuery daQ = new DashboardAttributesQuery(f);
 
     daQ.WHERE(daQ.parentId().EQ(this.getId()));

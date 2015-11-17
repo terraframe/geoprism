@@ -153,7 +153,9 @@
   <div class="skip">
     <a href="#wrapper"><gdb:localize key="dashboardViewer.backToTop"/></a>
   </div>
-  
+
+  <!-- dashboard builder modal -->  
+  <builder-dialog ng-if="dashboard.builder != null" show="dashboard.builder" callback="dashboard"></builder-dialog>  
 </body>
 
 <!-- Dialog for cloning a dashboard  -->

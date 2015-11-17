@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-	
+
   function DashboardController($scope, $timeout, dashboardService, mapService) {
     var controller = this;
     
@@ -34,6 +34,9 @@
       mapId : '',
       label : ''
     };
+    
+    // Variable used to dispatch events the builder modal
+    controller.builder = null;
     
     /* Map state */
     controller.thematicLayerCache = {values:{}, ids:[]};
@@ -86,7 +89,7 @@
           query_string[pair[0]] = decodeURIComponent(pair[1]);
             // If second entry with this name
         } else if (typeof query_string[pair[0]] === "string") {
-        	
+        
           var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
           query_string[pair[0]] = arr;
             // If third or later entry with this name
@@ -124,7 +127,7 @@
       var state = controller.getCompressedState();
       
       var onSuccess = function() {
-        dashboardService.generateThumbnailImage(controller.dashboardId);    	  
+        dashboardService.generateThumbnailImage(controller.dashboardId);      
       }
       
       dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container', onSuccess);
@@ -160,7 +163,7 @@
       return controller.model.editDashboard;
     }
     
-    controller.loadDashboardState = function() {
+    controller.clearDashboardState = function() {
         
       /* Clear the current state */
       controller.model = {
@@ -172,9 +175,13 @@
       };
       controller.thematicLayerCache = {values:{}, ids:[]};
       controller.referenceLayerCache = {values:{}, ids:[]};
-      
+       
       /* Remove all current layers */
-      mapService.clear();
+      mapService.clear();    
+    }
+    
+    controller.loadDashboardState = function() {      
+      controller.clearDashboardState();
       
       var onSuccess = function(json){
         var state = JSON.parse(json);
@@ -551,7 +558,7 @@
                   
         var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo?' + $.param(params);
                   
-        window.location.href = url;  	  
+        window.location.href = url;    
       }
       else {
         var message = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
@@ -623,68 +630,61 @@
       });
     }
     
-    controller.removeDashboard = function() {
-      var that = this;
-      var fac = com.runwaysdk.ui.Manager.getFactory();
-        
-      var dialog = fac.newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardDialog", "Delete dashboard"));
-      dialog.appendContent(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardContent", "Are you sure you want to delete this dashboard?"));
-        
-      var Structure = com.runwaysdk.structure;
-      var tq = new Structure.TaskQueue();
-        
-      tq.addTask(new Structure.TaskIF({
-        start : function(){            
-         var cancelCallback = function() {
-            dialog.close();
-            tq.stop();
-          };
-
-          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "delete", "Delete"), function() { tq.next(); }, null, {class:'btn btn-primary'});
-          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), cancelCallback, null, {class:'btn'});            
-          dialog.render();
-        }
-      }));
-        
-      tq.addTask(new Structure.TaskIF({
-        start : function(){
-          dialog.close();
-          
-          var onSuccess = function() {
-            // Remove the dashboard from the array
-        	var index = undefined;
-        	
-        	for(var i = 0; i < controller.dashboards.length; i++) {
-              var dashboard = controller.dashboards[i];
-              
-              if(dashboard.dashboardId == controller.dashboardId) {
-                index = i;
-              }              
-        	}
-        	
-        	if(index != null) {
-              controller.dashboards.splice(index, 1);
-        	}
-        	
-        	var dashboardId = controller.dashboards[0].dashboardId;
-        	
-        	controller.setDashboardId(dashboardId);
-          };          
-          
-          dashboardService.removeDashboard(controller.dashboardId, "#dashboardModal01", onSuccess);
-        }
-      }));
-        
-      tq.start();             
+    controller.editOptions = function() {
+      controller.builder = controller.dashboardId;
     }
     
-    controller.editOptions = function() {
-      var form = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
-      form.edit(controller.dashboardId);            	
+    controller.getFilterMap = function() {
+      var map = {};
+        
+      for(var i = 0; i < controller.model.types.length; i++) {
+        var type = controller.model.types[i];
+      
+        map[type.id] = {};
+          
+        for(var j = 0; j < type.attributes.length; j++) {
+          var attribute = type.attributes[j];
+            
+          map[type.id][attribute.mdAttributeId] = attribute.filter;
+        }        
+      }
+      
+      return map;
+    }
+    
+    // Copies the map of filters into the given state
+    controller.copyFilters = function(state) {
+      state.location = controller.model.location;
+    	
+      var filters = controller.getFilterMap();      
+        
+      for(var i = 0; i < state.types.length; i++) {
+        var type = state.types[i];
+            
+        for(var j = 0; j < type.attributes.length; j++) {
+          var attribute = type.attributes[j];          
+          var filter = filters[type.id][attribute.mdAttributeId];
+          
+          if(filter != null) {
+            attribute.filter = filter;
+          }
+        }        
+      }
+    }
+    
+    controller.refreshDashboard = function(state) {
+      // Merge state to preserve all the applicable current filters
+      controller.copyFilters(state);
+    	
+      // Clear the current dashboard state
+      controller.clearDashboardState();
+      
+      // Load the new dashboard state and refresh the map
+      controller.setDashboardState(state);
     }
   }
   
-  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel"]);
+  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder"]);
   angular.module("dashboard")
    .controller('DashboardController', DashboardController)
 })();

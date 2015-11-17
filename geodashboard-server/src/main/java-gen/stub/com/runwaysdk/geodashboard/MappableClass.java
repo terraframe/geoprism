@@ -231,23 +231,45 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
         query.WHERE(query.getDashboard().EQ(dashboard));
         query.AND(query.getWrappedMdClass().EQ(mdClass));
 
-        if (checked && query.getCount() == 0)
+        if (checked)
         {
-          MetadataWrapper wrapper = new MetadataWrapper();
-          wrapper.setWrappedMdClass(mdClass);
-          wrapper.setDashboard(dashboard);
-          wrapper.apply();
+          if (query.getCount() == 0)
+          {
+            MetadataWrapper wrapper = new MetadataWrapper();
+            wrapper.setWrappedMdClass(mdClass);
+            wrapper.setDashboard(dashboard);
+            wrapper.apply();
 
-          DashboardMetadata metadata = dashboard.addMetadata(wrapper);
-          metadata.setListOrder(i);
-          metadata.apply();
+            DashboardMetadata metadata = dashboard.addMetadata(wrapper);
+            metadata.setListOrder(i);
+            metadata.apply();
+            
+            // Add all of the attributes
+            JSONArray attributes = type.getJSONArray("attributes");
 
-          // Add all of the attributes
+            MappableClass.assign(dashboard, wrapper, attributes);
+          }
+          else
+          {
+            OIterator<? extends MetadataWrapper> iterator = query.getIterator();
 
-          JSONArray attributes = type.getJSONArray("attributes");
-
-          MappableClass.assign(wrapper, attributes);
-
+            try
+            {
+              while (iterator.hasNext())
+              {
+                MetadataWrapper wrapper = iterator.next();
+                
+                // Add all of the attributes
+                JSONArray attributes = type.getJSONArray("attributes");
+                
+                MappableClass.assign(dashboard, wrapper, attributes);            
+              }
+            }
+            finally
+            {
+              iterator.close();
+            }            
+          }
         }
         else if (!checked && query.getCount() > 0)
         {
@@ -275,7 +297,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
-  private static void assign(MetadataWrapper wrapper, JSONArray attributes)
+  private static void assign(Dashboard dashboard, MetadataWrapper wrapper, JSONArray attributes)
   {
     try
     {
@@ -286,12 +308,12 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
         boolean checked = type.getBoolean("selected");
 
         MdAttribute mdAttribute = MdAttribute.get(id);
-        
+
         QueryFactory factory = new QueryFactory();
 
         MetadataWrapperQuery wQuery = new MetadataWrapperQuery(factory);
         wQuery.WHERE(wQuery.getId().EQ(wrapper.getId()));
-        
+
         AttributeWrapperQuery query = new AttributeWrapperQuery(factory);
         query.WHERE(query.dashboardMetadata(wQuery));
         query.AND(query.getWrappedMdAttribute().EQ(mdAttribute));
@@ -301,7 +323,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
           AttributeWrapper attribute = new AttributeWrapper();
           attribute.setWrappedMdAttribute(mdAttribute);
           attribute.apply();
-          
+
           DashboardAttributes dAttribute = wrapper.addAttributeWrapper(attribute);
           dAttribute.setListOrder(i);
           dAttribute.apply();
@@ -315,7 +337,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
             while (iterator.hasNext())
             {
               AttributeWrapper attribute = iterator.next();
-              attribute.delete();
+              attribute.delete(dashboard);
             }
           }
           finally
@@ -323,7 +345,6 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
             iterator.close();
           }
         }
-
       }
     }
     catch (JSONException e)

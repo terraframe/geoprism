@@ -29,6 +29,7 @@
           
           controller.ids = [];
           controller.dashboards = {};
+          controller.editDashboard = response.editDashboard;
           
           for(var i = 0; i < response.dashboards.length; i++) {
             var dashboard = response.dashboards[i];
@@ -122,7 +123,7 @@
       tq.start();             
     }
     
-    controller.refresh = function(dashboard) {
+    controller.refreshDashboard = function(dashboard) {
       
       var newDashboard = {dashboardId:dashboard.id, label:dashboard.label};
       var oldDashboard = controller.dashboards[dashboard.id];

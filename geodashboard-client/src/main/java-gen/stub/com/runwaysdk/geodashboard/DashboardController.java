@@ -99,12 +99,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   {
     DashboardDTO dto = DashboardDTO.lock(super.getClientRequest(), id);
 
-    String dashboardUsersJSON = dto.getAllDashboardUsersJSON();
-    String mClassesJSON = MappableClassDTO.getClassesAsJSON(this.getClientRequest(), id);
-
     req.setAttribute("dashboard", dto);
-    req.setAttribute("dashboardUsersJSON", EscapeUtil.escapeHTMLAttribute(dashboardUsersJSON));
-    req.setAttribute("classesJSON", EscapeUtil.escapeHTMLAttribute(mClassesJSON));
 
     render("editComponent.jsp");
   }

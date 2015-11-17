@@ -22,8 +22,8 @@
     var service = {};
     service.dto = new com.runwaysdk.geodashboard.Dashboard();
     
-    service.applyWithOptions = function(object, onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
+    service.applyWithOptions = function(object, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
 
       runwayService.populate(service.dto, object);
      
@@ -52,6 +52,8 @@
         /* Populate the list of country options */ 
         result.fields = runwayService.getFields(service.dto, ['name', 'displayLabel', 'country']);      
         result.fields[2].options = object.countries;      
+        result.fields[2].readable = dto.isNewInstance();      
+        
         result.object = object;
       
         onSuccess(result);
@@ -59,7 +61,7 @@
       }, onFailure);
       
       if(dashboardId != null) {
-      var dto = new com.runwaysdk.geodashboard.Dashboard();
+        var dto = new com.runwaysdk.geodashboard.Dashboard();
         dto.id = dashboardId;
         dto.newInstance = false;
         dto.attributeMap.id.value = dashboardId;

@@ -22,8 +22,8 @@
 
 
 <div>
-  <modal-dialog ng-show="ctrl.fields != null" width='600px'>
-    <div role="dialog" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable com-runwaysdk-ui-factory-jquery-Dialog com-runwaysdk-ui-factory-runway-Widget ui-dialog-buttons">
+  <modal-dialog ng-show="ctrl.dashboard != null" width='600px'>
+    <div id="builder-div" role="dialog" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable com-runwaysdk-ui-factory-jquery-Dialog com-runwaysdk-ui-factory-runway-Widget ui-dialog-buttons">
       <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
         <span class="ui-dialog-title"><gdb:localize key="dashboard.form.heading"/></span>
       </div>
@@ -32,7 +32,7 @@
           <fieldset class="com-runwaysdk-geodashboard-FormList com-runwaysdk-ui-factory-runway-Widget">
             <section class="form-container">
               <div ng-repeat="field in ctrl.fields">
-                <div ng-switch on="field.type">
+                <div ng-if="field.readable" ng-switch on="field.type">
                   <select-field ng-switch-when="select" field="field" model="ctrl.dashboard"></select-field>
                   <text-field ng-switch-when="text" field="field" model="ctrl.dashboard"></text-field>
                 </div>          

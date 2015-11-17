@@ -44,10 +44,10 @@
 
         var dashboard = JSON.parse(result);
 
-        $scope.callback.refresh(dashboard);
+        $scope.callback.refreshDashboard(dashboard);
       }    
       
-      builderService.applyWithOptions(controller.dashboard, onSuccess);
+      builderService.applyWithOptions(controller.dashboard,'#builder-div', onSuccess);
     }
     
     controller.load = function() {

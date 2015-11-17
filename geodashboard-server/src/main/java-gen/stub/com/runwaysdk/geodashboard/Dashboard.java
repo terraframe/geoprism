@@ -87,6 +87,7 @@ import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.ReadPermissionException;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -370,7 +371,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       throw new ProgrammingErrorException(e);
     }
-    
+
     return this.getJSON();
   }
 
@@ -899,7 +900,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     JSONArray usersArr = new JSONArray();
 
     GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
-    
+
     for (int i = 0; i < gdUsers.length; i++)
     {
       JSONObject userObj = new JSONObject();
@@ -1337,13 +1338,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     /*
      * Ensure the user has permissions to read this dashboard
      */
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
-    UserDAOIF userDAO = UserDAO.get(user.getId());
-
-    if (userDAO.hasRole(this.getDashboardRoleId()))
+    if (!this.hasAccess())
     {
-      // User does not have permissions to read this dashboard
-      throw new ReadPermissionException("", this, userDAO);
+      UserDAOIF user = Session.getCurrentSession().getUser();
+      throw new ReadPermissionException("", this, user);
     }
 
     MdClass[] mdClasses = this.getSortedTypes();
@@ -1474,6 +1472,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
 
       response.put("dashboards", dashboards);
+      response.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
 
       return response.toString();
     }
