@@ -17,14 +17,8 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-<<<<<<< HEAD
-	
-  /* JQuery plugin function for getting url parameter values */
-  function DashboardController($scope, $timeout, $location, $compile, dashboardService, mapService) {
-=======
 
-  function DashboardController($scope, $timeout, dashboardService, mapService) {
->>>>>>> ef0428fff73f7ae47c00915d4b76968d5a2868b3
+  function DashboardController($scope, $compile, $timeout, dashboardService, mapService) {
     var controller = this;
     
     /* Getting the $compile method reference for use with later functions  */
