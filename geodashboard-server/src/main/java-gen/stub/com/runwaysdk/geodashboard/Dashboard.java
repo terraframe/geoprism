@@ -87,6 +87,7 @@ import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.ReadPermissionException;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
@@ -107,18 +108,30 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     private Dashboard        dashboard;
 
     private GeodashboardUser user;
+    
+    private String sessionId;
 
-    public ThumbnailThread(Dashboard dashboard, GeodashboardUser user)
+    public ThumbnailThread(Dashboard dashboard, GeodashboardUser user, String sessionId)
     {
       this.dashboard = dashboard;
       this.user = user;
+      this.sessionId = sessionId;
     }
 
     @Override
-    @Request
     public void run()
     {
-      dashboard.generateThumbnailImage(user);
+      System.out.println(sessionId);
+      
+      this.execute(this.sessionId);
+    }
+    
+    @Request(RequestType.SESSION)
+    public void execute(String sessionId)
+    {
+      System.out.println(Session.getCurrentSession().getId());
+      
+      dashboard.generateThumbnailImage(user);      
     }
 
   }
@@ -1124,9 +1137,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public void generateThumbnailImage()
   {
     GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    String sessionId = Session.getCurrentSession().getId();
 
     // Write the thumbnail
-    Thread t = new Thread(new ThumbnailThread(this, user));
+    Thread t = new Thread(new ThumbnailThread(this, user, sessionId));
     t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
     {
       @Override
