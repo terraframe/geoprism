@@ -312,7 +312,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 
       req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
       req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribut(new JSONArray(layerTypes.keySet()).toString()));
+      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribute(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)
@@ -397,9 +397,9 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
-      req.setAttribute("polygoncategories", EscapeUtil.escapeHTMLAttribut(style.getCategoryPolygonStyles()));
-      req.setAttribute("pointcategories", EscapeUtil.escapeHTMLAttribut(style.getCategoryPointStyles()));
-      req.setAttribute("secondaryCategories", EscapeUtil.escapeHTMLAttribut(style.getSecondaryCategories()));
+      req.setAttribute("polygoncategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPolygonStyles()));
+      req.setAttribute("pointcategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPointStyles()));
+      req.setAttribute("secondaryCategories", EscapeUtil.escapeHTMLAttribute(style.getSecondaryCategories()));
 
       /*
        * Secondary attribute objects

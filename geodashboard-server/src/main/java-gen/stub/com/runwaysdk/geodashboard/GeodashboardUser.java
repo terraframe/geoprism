@@ -178,13 +178,18 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
   public Boolean isAssigned(Roles role)
   {
-    QueryFactory factory = new QueryFactory();
+    if (role != null)
+    {
+      QueryFactory factory = new QueryFactory();
 
-    AssignmentsQuery query = new AssignmentsQuery(factory);
-    query.WHERE(query.getParent().EQ(this));
-    query.AND(query.getChild().EQ(role));
+      AssignmentsQuery query = new AssignmentsQuery(factory);
+      query.WHERE(query.getParent().EQ(this));
+      query.AND(query.getChild().EQ(role));
 
-    return ( query.getCount() > 0 );
+      return ( query.getCount() > 0 );
+    }
+
+    return false;
   }
 
   public static GeodashboardUser[] getAllUsers()

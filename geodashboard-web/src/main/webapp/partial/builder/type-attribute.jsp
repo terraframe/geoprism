@@ -19,11 +19,8 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="filter-block">
-  <div class="row-holder">
-    <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
-  </div>
-  <div class="geo">
-	<input ng-model="filter.label" id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
-  </div>
+
+<div style="padding-left: 10px;">
+  <input type="checkbox" ng-model="attribute.selected"></input>
+  {{attribute.label}}              
 </div>

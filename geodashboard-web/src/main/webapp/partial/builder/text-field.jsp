@@ -19,11 +19,11 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="filter-block">
-  <div class="row-holder">
-    <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
-  </div>
-  <div class="geo">
-	<input ng-model="filter.label" id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
+
+<div class="field-row clearfix">
+  <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+  <input ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}" class="com-runwaysdk-ui-factory-runway-TextInput com-runwaysdk-ui-factory-runway-FormInput com-runwaysdk-ui-factory-runway-Widget" type="text">
+  <div class="error-message">
+    <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
   </div>
 </div>

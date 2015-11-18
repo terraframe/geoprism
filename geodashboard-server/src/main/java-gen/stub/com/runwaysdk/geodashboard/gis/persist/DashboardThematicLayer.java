@@ -534,7 +534,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     return strategy.getCategoryLabel(geoNode, categoryId);
   }
 
-//  @Override
+  @Override
   public String getFeatureInformation(String featureId)
   {
     GeoNode geoNode = this.getGeoNode();

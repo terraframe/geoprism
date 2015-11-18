@@ -41,10 +41,6 @@
       <i ng-click="dashboard.cloneDashboard()" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
     </span>
       
-    <span ng-if="dashboard.canEdit()" id="delete-dashboard">
-      <i ng-click="dashboard.removeDashboard()" class="fa fa-minus ico-dashboard" title="<gdb:localize key='dashboardViewer.deleteDashboardTooltip'/>" ></i>
-    </span>
-      
     <i ng-if="dashboard.canEdit()" ng-click="dashboard.editOptions()" id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
           
     <a href="/menu" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>

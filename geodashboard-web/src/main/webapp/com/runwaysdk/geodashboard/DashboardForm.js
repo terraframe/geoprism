@@ -67,6 +67,41 @@
           jcf.customForms.replaceAll($( "#add-dashboard-users-container" )[0]);
         },
       
+        _addMappableClassesHTML : function() {
+          
+          var typesJSON = $("#add-dashboard-type-container").data("classes");
+          var types = com.runwaysdk.geodashboard.gis.CategoryWidget.getValueFromHTML(typesJSON);
+          var html = '<div class="holder"><div class="row-holder">';
+          
+          if(types.length > 0){
+            for(var i=0; i<types.length; i++){
+              var type = types[i];
+              var id = type.id;
+              var checked = "";
+              
+              if(type.selected){
+                checked = "checked";
+              }
+              
+              var chk = '<div class="check-block">' +
+              '<input id="'+id+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
+              '<label for="'+id+'">'+ type.label +'</label>' +
+              '</div>';
+              
+              html += chk;
+            }
+          }
+          else{
+            html += '<p class="dialog-msg">'+ com.runwaysdk.Localize.localize("dashboard", "noMappableTypesMsg") +'</p>';
+          }
+          
+          html += '</div></div>';
+          
+          // Set the html
+          $( "#add-dashboard-type-container" ).html(html);
+          jcf.customForms.replaceAll($( "#add-dashboard-type-container" )[0]);
+        },
+        
       _displayDashboardCloneForm : function(html) {
         var that = this;
         
@@ -167,10 +202,13 @@
                 }, $(that.getImpl()).parent().get(0));
                 
                 var userIds = that._getDashboardUserPrivilegeAssignments();
+                var types = that._getDashboardTypes();
                 
                 if(label != null && label.length > 0)
                 {
-                  com.runwaysdk.geodashboard.Dashboard.applyWithOptions(request, dashboardId, userIds, label);                    
+                  var options = JSON.stringify({"label" : label, "userIds" : userIds, "types" : types});
+                	
+                  com.runwaysdk.geodashboard.Dashboard.applyWithOptions(request, dashboardId, options);                    
                 }
                 else
                 {
@@ -212,6 +250,22 @@
           return userIds;
       },
       
+      /*
+       * Scrape dashboard types dashboard options form
+       */
+      _getDashboardTypes : function() {
+        var inputs = $("#add-dashboard-type-container input");
+        var types = [];
+        
+        for(var i=0; i<inputs.length; i++){
+          var input = inputs[i];
+            
+          types.push({'checked' : input.checked, 'id' : input.id});
+        }
+        
+        return types;
+      },
+      
       edit : function(id) {
           var that = this;
           
@@ -219,6 +273,7 @@
               onSuccess : function(html){   
                 that._displayDashboardEditForm(html);
                 that._addDashboardUsersHTML();
+                that._addMappableClassesHTML();
               },
               onFailure : function(e){
                 that.handleException(e);
@@ -288,6 +343,117 @@
     }
   });
   
+  /**
+   * LANGUAGE
+   */
+   com.runwaysdk.Localize.defineLanguage('com.runwaysdk.geodashboard.gis.TypeForm', {
+    "submit" : "Submit",
+    "cancel" : "Cancel",
+    "title"  : "Configure type attributes"
+   });
+
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.TypeForm', {
+    Extends : com.runwaysdk.ui.Component,  
+    Constants : {
+      DASHBOARD_MODAL : '#type-dialog'
+    },
+    Instance : {
+      initialize : function(dashboardId, mdClassId){
+        this._dashboardId = dashboardId;
+        this._mdClassId = mdClassId;
+      },
+      getFactory : function ()
+      {
+        return com.runwaysdk.ui.Manager.getFactory();
+      },
+      setDialog : function(dialog) {
+        this._dialog = dialog;
+      },      
+      setForm : function(form) {
+        this._form = form;
+      },      
+      render : function() {
+        var that = this;
+
+        var element = document.getElementById('type-dialog');
+                          
+        if(element == null)
+        {                
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(json) {
+              var attributes = JSON.parse(json);
+                
+              var fac = that.getFactory();
+              
+              var dialog = fac.newDialog(that.localize("title"), {minHeight:250, maxHeight:$(window).height() - 75, minWidth:730, resizable: false});   
+              dialog.setId('type-dialog');
+                
+              var form = new com.runwaysdk.geodashboard.Form();
+              
+              var options = [];
+              
+              for (var i = 0; i < attributes.length; ++i) {
+                var attribute = attributes[i];
+                var option = {displayLabel:attribute.label, value:attribute.id, checked:attribute.selected}; 
+                       
+                options.push(option);
+              }
+              
+              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('types', 'Attributes',options);
+              form.addEntry(entry);
+              
+              dialog.appendContent(form);
+              dialog.addButton(that.localize("submit"), Mojo.Util.bind(that, that._handleSubmit), null, {id:'dashboard-submit', 'class':'btn btn-primary type-button'});
+              dialog.addButton(that.localize("cancel"), Mojo.Util.bind(that, that._handleCancel), null, {id:'dashboard-cancel', 'class':'btn type-button'});            
+                            
+              that.setDialog(dialog);
+              that.setForm(form);
+              
+              dialog.render();   
+              
+              if (jcf != null && jcf.customForms != null) {
+                jcf.customForms.replaceAll();
+              }
+            },
+            onFailure : function(ex) {
+              that.handleException(ex);               
+            }
+          }); 
+            
+            
+          com.runwaysdk.geodashboard.MappableClass.getAttributesAsJSON(request, that._dashboardId, that._mdClassId);
+        }
+      },
+      _handleSubmit : function(e) {
+        var that = this;
+
+        // Disable the buttons to prevent multiple submits
+    	$('.type-button').prop("disabled",true);    	  
+          
+        // Clear any existing error messages
+        this._form.removeErrorMessages();
+          
+        var values = this._form.getValues();
+          
+        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          onSuccess : function(dashboard) {
+            that._dialog.close();
+          },
+          onFailure : function(ex) {
+            that._form.handleException(ex);
+            
+            $('.type-button').prop("disabled",false);    	  
+          }
+        }, this._dialog.getParentNode());
+
+//        that._dashboard.apply(applyCallback);
+        this._dialog.close();        
+      },
+      _handleCancel : function(e) {
+        this._dialog.close();
+      }
+    }
+  });
 })();
   
   

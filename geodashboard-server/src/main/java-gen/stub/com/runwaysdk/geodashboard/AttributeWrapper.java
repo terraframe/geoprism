@@ -18,6 +18,12 @@
  */
 package com.runwaysdk.geodashboard;
 
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerQuery;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+
 public class AttributeWrapper extends AttributeWrapperBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = -1313778104;
@@ -25,6 +31,32 @@ public class AttributeWrapper extends AttributeWrapperBase implements com.runway
   public AttributeWrapper()
   {
     super();
+  }
+  
+  @Transaction
+  public void delete(Dashboard dashboard)
+  {
+    // Delete any existing layers    
+    DashboardThematicLayerQuery query = new DashboardThematicLayerQuery(new QueryFactory());
+    query.WHERE(query.getDashboardMap().getDashboard().EQ(dashboard));
+    query.AND(query.getMdAttribute().EQ(this.getWrappedMdAttribute()));
+    
+    OIterator<? extends DashboardThematicLayer> it = query.getIterator();
+    
+    try
+    {
+      while(it.hasNext())
+      {
+        DashboardThematicLayer layer = it.next();
+        layer.delete();
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+        
+    this.delete();
   }
 
   public AttributeWrapper clone(MetadataWrapper metadata, Integer order)

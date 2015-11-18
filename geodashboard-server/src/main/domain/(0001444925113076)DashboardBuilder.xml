@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="com.runwaysdk.geodashboard.AdminController">
+        <create>
+          <mdAction name="builder" label="Builder" isPost="false" isQuery="false" />
+        </create>
+      </mdController>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <mdMethod name="applyWithOptions" returnType="java.lang.String">
+          <create>
+            <mdParameter name="options" label="Options" order="2" type="java.lang.String" />
+          </create>
+        </mdMethod>
+        <create>
+          <mdMethod name="getDashboardDefinition" label="Get Dashboard Definition" returnType="java.lang.String" />
+        </create>      
+      </mdBusiness>
+      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
+        <create>
+          <mdMethod name="getClassesAsJSON" label="Get classes as JSON" static="true" returnType="java.lang.String">
+            <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getAttributesAsJSON" label="Get classes as JSON" static="true" returnType="java.lang.String">
+            <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String" />
+            <mdParameter name="mdClassId" label="Mappable Class Id" order="1" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.userIds" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.name" type="com.runwaysdk.system.metadata.MdParameter" />
+    </delete>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.options" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="com.runwaysdk.geodashboard.MappableClass.getClassesAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="com.runwaysdk.geodashboard.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="com.runwaysdk.geodashboard.AdminController.builder" type="com.runwaysdk.system.metadata.MdAction" />
+    </delete>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
+        <mdMethod name="applyWithOptions" label="Apply With Options" static="false" returnType="void">
+          <create>
+            <mdParameter order="0" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />
+            <mdParameter name="name" label="Dashboard Name" order="1" type="java.lang.String" />
+          </create>
+        </mdMethod>
+      </mdBusiness>
+    </update>
+  </undoIt>
+</version>

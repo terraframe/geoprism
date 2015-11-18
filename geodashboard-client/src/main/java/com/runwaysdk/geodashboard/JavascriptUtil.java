@@ -148,6 +148,8 @@ public class JavascriptUtil implements Reloadable
     types.add(RolesDTO.CLASS);
     types.add(RoleViewDTO.CLASS);
     types.add(GeodashboardUserDTO.CLASS);
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);    
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -239,6 +241,7 @@ public class JavascriptUtil implements Reloadable
     types.add(GeoNodeDTO.CLASS);
     types.add(AggregationStrategyViewDTO.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+    types.add(MappableClassDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -247,7 +250,15 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(DashboardDTO.CLASS);
-    
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+
+  public static void loadBuilderBundle(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

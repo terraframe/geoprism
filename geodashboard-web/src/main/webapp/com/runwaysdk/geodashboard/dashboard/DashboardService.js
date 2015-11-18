@@ -18,7 +18,7 @@
  */
 (function(){
   
-  function DashboardService() {
+  function DashboardService(runwayService) {
     var service = {};
     service.edit = false;
     service.editData = false;
@@ -47,46 +47,10 @@
     service.getDashboard = function() {
       return service.dashboard;
     };
-    
-    service.createRequest = function(onSuccess, onFailure){
-      var request = new Mojo.ClientRequest({
-        onSuccess : onSuccess,
-        onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
-                    
-          if(onFailure != null) {
-            onFailure(e);
-          }
-        }
-      });
-      
-      return request;
-    }
-    
-    service.createStandbyRequest = function(elementId, onSuccess, onFailure){
-      var el = $(elementId);
-      
-      if(el.length > 0) {    	  
-        var request = new GDB.StandbyClientRequest({
-          onSuccess : onSuccess,
-          onFailure : function(e){
-            GDB.ExceptionHandler.handleException(e);
-            
-            if(onFailure != null) {
-              onFailure(e);
-            }
-          }
-        }, elementId);
         
-        return request;        
-      }
-      
-      return service.createRequest(onSuccess, onFailure);
-    }
-    
     service.updateLegend = function(layer, onSuccess, onFailure) {
       if(service.canEdit()) {
-        var request = service.createRequest(onSuccess, onFailure);
+        var request = runwayService.createRequest(onSuccess, onFailure);
                    
         com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);        
       }
@@ -94,7 +58,7 @@
     
     service.removeLayer = function(layerId, elementId, onSuccess, onFailure) {
       if(service.canEdit()) {      
-        var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+        var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
           
         com.runwaysdk.Facade.deleteEntity(request, layerId);
       }
@@ -102,7 +66,7 @@
     
     service.orderLayers = function(mapId, layerIds, elementId, onSuccess, onFailure) {
       if(service.canEdit()) {      
-        var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+        var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
         
         com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(request, mapId, layerIds);
       }
@@ -110,44 +74,44 @@
     
     service.setDashboardBaseLayer = function(dashboardId, baseMap, onSuccess, onFailure) {
       if(service.canEdit()){
-        var request = service.createRequest(onSuccess, onFailure);
+        var request = runwayService.createRequest(onSuccess, onFailure);
       
         com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(request, dashboardId, baseMap);
       }
     }
     
     service.refreshMap = function(state, elementId, onSuccess, onFailure) {
-      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
               
       com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(request, state.mapId, state);
     }
     
     service.getDashboardJSON = function(dashboardId, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
           
       com.runwaysdk.geodashboard.Dashboard.getJSON(request, dashboardId);
     }
     
     service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
     
       com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
     }
     
     service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {
-      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
       
       com.runwaysdk.geodashboard.Dashboard.saveState(request, dashboardId, state, global);      
     }
     
     service.getGeoEntitySuggestions = function(dashboardId, text, size, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
     
       com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
     }
     
     service.getFeatureInformation = function(feature, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
 
       var layerId = feature.layerId;
       var geoId = feature.geoId;
@@ -157,33 +121,39 @@
     }
     
     service.hasReport = function(dashboardId, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
       
       com.runwaysdk.geodashboard.Dashboard.hasReport(request, dashboardId);    	
     }
     
     service.runReport = function(dashboardId, configuration, elementId, onSuccess, onFailure) {
-      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
     	
       com.runwaysdk.geodashboard.report.ReportItemController.run(request, dashboardId, configuration);
     }
     
     service.removeDashboard = function(dashboardId, elementId, onSuccess, onFailure) {
-      var request = service.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
             
       com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
     }
     
     service.getClassifierTree = function(mdAttributeId, onSuccess, onFailure) {
-      var request = service.createRequest(onSuccess, onFailure);    
+      var request = runwayService.createRequest(onSuccess, onFailure);    
       
       com.runwaysdk.geodashboard.Dashboard.getClassifierTree(request, mdAttributeId);
+    }
+    
+    service.generateThumbnailImage = function(dashboardId, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);    
+      
+      com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
     }
     
     return service;
   }
   
-  angular.module("dashboard-service", []);
+  angular.module("dashboard-service", ["runway-service"]);
   angular.module("dashboard-service")
     .factory('dashboardService', DashboardService)
 })();

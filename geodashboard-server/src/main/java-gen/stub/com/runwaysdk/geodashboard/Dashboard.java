@@ -25,14 +25,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +86,9 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.ReadPermissionException;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -94,12 +96,46 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
+  private static class ThumbnailThread implements Runnable, Reloadable
+  {
+    private Dashboard        dashboard;
+
+    private GeodashboardUser user;
+    
+    private String sessionId;
+
+    public ThumbnailThread(Dashboard dashboard, GeodashboardUser user, String sessionId)
+    {
+      this.dashboard = dashboard;
+      this.user = user;
+      this.sessionId = sessionId;
+    }
+
+    @Override
+    public void run()
+    {
+      System.out.println(sessionId);
+      
+      this.execute(this.sessionId);
+    }
+    
+    @Request(RequestType.SESSION)
+    public void execute(String sessionId)
+    {
+      System.out.println(Session.getCurrentSession().getId());
+      
+      dashboard.generateThumbnailImage(user);      
+    }
+
+  }
+
   private static class MdClassComparator implements Comparator<MdClass>, Reloadable
   {
 
@@ -116,7 +152,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     super();
   }
-  
+
   @Override
   public String toString()
   {
@@ -317,14 +353,39 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   @Override
   @Transaction
-  public void applyWithOptions(String[] userIds, String name)
+  public String applyWithOptions(String options)
   {
-    this.lock();
-    this.getDisplayLabel().setValue(name);
-    this.apply();
-    this.unlock();
+    try
+    {
+      JSONObject object = new JSONObject(options);
 
-    assignUsers(this.getId(), userIds);
+      if (object.has("label"))
+      {
+        this.getDisplayLabel().setValue(object.getString("label"));
+      }
+
+      this.apply();
+
+      if (object.has("users"))
+      {
+        JSONArray users = object.getJSONArray("users");
+
+        assignUsers(this.getId(), users);
+      }
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        MappableClass.assign(this, types);
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+    return this.getJSON();
   }
 
   @Override
@@ -683,13 +744,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public DashboardCondition[] getConditions()
   {
     DashboardState state = this.getDashboardState();
-    String json = state.getConditions();
 
-    if (json != null && json.length() > 0)
+    if (state != null)
     {
-      DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+      String json = state.getConditions();
 
-      return conditions;
+      if (json != null && json.length() > 0)
+      {
+        DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+
+        return conditions;
+      }
     }
 
     return new DashboardCondition[] {};
@@ -838,9 +903,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public String getAllDashboardUsersJSON()
   {
+    JSONArray usersArr = this.getDashboardUsersJSON();
+
+    return usersArr.toString();
+  }
+
+  private JSONArray getDashboardUsersJSON()
+  {
     JSONArray usersArr = new JSONArray();
 
     GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
+
     for (int i = 0; i < gdUsers.length; i++)
     {
       JSONObject userObj = new JSONObject();
@@ -866,70 +939,27 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
     }
-
-    return usersArr.toString();
+    return usersArr;
   }
 
-  public static void assignUsers(String dashboardId, String[] userIds)
+  public static void assignUsers(String dashboardId, JSONArray users)
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
-    Roles dbRole = dashboard.getDashboardRole();
-    String dbRoleId = dbRole.getId();
-    Roles[] allGeodashRoles = RoleView.getGeodashboardRoles();
+    String roleId = dashboard.getDashboardRoleId();
+    RoleDAO roleDAO = RoleDAO.get(roleId).getBusinessDAO();
 
-    for (String userJSON : userIds)
+    for (int i = 0; i < users.length(); i++)
     {
-      List<String> roleIds = new ArrayList<String>();
-      Set<String> set;
-      UserDAOIF user = null;
       try
       {
-        String userId = null;
-        JSONObject userObj = new JSONObject(userJSON);
+        JSONObject userObj = users.getJSONObject(i);
 
-        @SuppressWarnings("unchecked")
-        Iterator<String> userObjKeys = userObj.keys();
-        while (userObjKeys.hasNext())
-        {
-          userId = userObjKeys.next().toString();
-        }
+        String userId = userObj.getString(GeodashboardUser.ID);
+        boolean assignToDashboard = (Boolean) userObj.get("hasAccess");
 
-        GeodashboardUser gdUser = GeodashboardUser.get(userId);
-        user = UserDAO.get(userId);
+        UserDAOIF user = UserDAO.get(userId);
 
-        boolean assignToDashboard = (Boolean) userObj.get(userId);
         if (assignToDashboard)
-        {
-          roleIds.add(dbRoleId);
-        }
-
-        List<? extends Roles> userRoles = gdUser.getAllAssignedRole().getAll();
-        for (Roles existingRole : userRoles)
-        {
-          // filter out roles for this dashboard if it already exists on the user
-          // because the dashboard role assignment happens above
-          if (!dbRoleId.equals(existingRole.getId()))
-          {
-            roleIds.add(existingRole.getId());
-          }
-        }
-      }
-      catch (JSONException e)
-      {
-        String msg = "Could not properly parse user json.";
-        throw new ProgrammingErrorException(msg, e);
-      }
-
-      set = new HashSet<String>(roleIds);
-
-      /*
-       * Assign roles
-       */
-      for (Roles role : allGeodashRoles)
-      {
-        RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
-
-        if (set.contains(role.getId()))
         {
           roleDAO.assignMember(user);
         }
@@ -937,6 +967,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         {
           roleDAO.deassignMember(user);
         }
+      }
+      catch (JSONException e)
+      {
+        String msg = "Could not properly parse user json.";
+        throw new ProgrammingErrorException(msg, e);
       }
     }
   }
@@ -1124,23 +1159,37 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  @Transaction
   public void generateThumbnailImage()
+  {
+    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    String sessionId = Session.getCurrentSession().getId();
+
+    // Write the thumbnail
+    Thread t = new Thread(new ThumbnailThread(this, user, sessionId));
+    t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+    {
+      @Override
+      public void uncaughtException(Thread t, Throwable e)
+      {
+        e.printStackTrace();
+      }
+    });
+    t.setDaemon(true);
+    t.start();
+  }
+
+  @Transaction
+  private void generateThumbnailImage(GeodashboardUser user)
   {
     byte[] image = this.generateThumbnail();
 
-    GeodashboardUser[] users = new GeodashboardUser[] { null, GeodashboardUser.getCurrentUser() };
+    DashboardState state = DashboardState.getDashboardState(this, user);
 
-    for (GeodashboardUser user : users)
+    if (state != null)
     {
-      DashboardState state = DashboardState.getDashboardState(this, user);
-
-      if (state != null)
-      {
-        state.lock();
-        state.setMapThumbnail(image);
-        state.apply();
-      }
+      state.lock();
+      state.setMapThumbnail(image);
+      state.apply();
     }
   }
 
@@ -1327,16 +1376,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     /*
      * Ensure the user has permissions to read this dashboard
-     */    
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();    
-    UserDAOIF userDAO = UserDAO.get(user.getId());
-    
-    if(userDAO.hasRole(this.getDashboardRoleId()))
-    {      
-      // User does not have permissions to read this dashboard
-      throw new ReadPermissionException("", this, userDAO);
+     */
+    if (!this.hasAccess())
+    {
+      UserDAOIF user = Session.getCurrentSession().getUser();
+      throw new ReadPermissionException("", this, user);
     }
-    
+
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();
@@ -1355,10 +1401,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("hasReport", this.hasReport());
-    object.put("mapId", map.getId());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
+
+    if (map != null)
+    {
+      object.put("mapId", map.getId());
+    }
 
     String activeBaseMap = map.getActiveBaseMap();
 
@@ -1461,6 +1511,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
 
       response.put("dashboards", dashboards);
+      response.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
 
       return response.toString();
     }
@@ -1473,5 +1524,104 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       iterator.close();
     }
 
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClassDAOIF mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+    query.AND(query.getWrappedMdClass().EQ(mdClass.getId()));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  private JSONArray getMappableClassJSON() throws JSONException
+  {
+    List<? extends MetadataWrapper> wrappers = this.getAllMetadata().getAll();
+
+    JSONArray array = new JSONArray();
+
+    MappableClass[] mClasses = MappableClass.getAll();
+
+    for (MappableClass mClass : mClasses)
+    {
+      array.put(mClass.toJSON(this, wrappers));
+    }
+    return array;
+  }
+
+  private JSONArray getCountiesJSON() throws JSONException
+  {
+    JSONArray countries = new JSONArray();
+    GeoEntity country = this.getCountry();
+
+    OIterator<Term> it = GeoEntity.getRoot().getDirectDescendants(LocatedIn.CLASS);
+
+    try
+    {
+      while (it.hasNext())
+      {
+        GeoEntity entity = (GeoEntity) it.next();
+        boolean selected = country != null && country.getId().equals(entity.getId());
+
+        JSONObject object = new JSONObject();
+        object.put("displayLabel", entity.getDisplayLabel().getValue());
+        object.put("value", entity.getId());
+        object.put("checked", selected);
+
+        countries.put(object);
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return countries;
+  }
+
+  @Override
+  public String getDashboardDefinition()
+  {
+    try
+    {
+      if (!this.isNew())
+      {
+        this.lock();
+      }
+
+      JSONObject options = new JSONObject();
+      options.put("types", this.getMappableClassJSON());
+      options.put("users", this.getDashboardUsersJSON());
+
+      JSONObject object = new JSONObject();
+      object.put(Dashboard.NAME, this.getName());
+      object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
+      object.put(Dashboard.COUNTRY, this.getCountryId());
+      object.put(Dashboard.REMOVABLE, this.getRemovable());
+
+      object.put("countries", this.getCountiesJSON());
+      object.put("options", options);
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 }
