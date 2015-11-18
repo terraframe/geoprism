@@ -21,7 +21,7 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
        
-       		<div id="agg-level-holder" class="row-holder" style="display:none;">
+       		<div id="agg-level-holder" class="row-holder">
               <div class="label-holder style03">
                 <strong><gdb:localize var="dl_form_defineAggMeth" key="DashboardThematicLayer.form.defineAggMeth"/>${dl_form_defineAggMeth}</strong>
               </div>
@@ -32,7 +32,7 @@
 	                  <label for="agg-level-dd"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
 	                  <div class="select-box">
 		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" ng-model="thematicLayerModel.aggregationStrategy">
-			                	<option ng-repeat="agg in dynamicDataModel.aggregationLevelOptions" value="{{agg.value}}" ng-selected="{{agg.value == thematicLayerModel.aggregationStrategy.value}}" data-type="{{agg.type}}" data-geomTypes="{{agg.geomTypes}}">{{agg.displayLabel}}</option>
+			                	<option ng-repeat="agg in dynamicDataModel.aggregationLevelOptions" value="{{agg.aggStrategyValue}}" ng-selected="{{agg.aggStrategyValue == thematicLayerModel.aggregationStrategy.aggStrategyValue}}" data-type="{{agg.aggStrategyType}}" data-geomTypes="{{agg.aggStrategyGeomTypes}}">{{agg.aggStrategyLabel}}</option>
 		                    </select>
 	                  </div>
 	                </div>

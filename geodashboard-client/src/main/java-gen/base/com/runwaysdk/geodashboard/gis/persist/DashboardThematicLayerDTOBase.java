@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 2093681454)
+@com.runwaysdk.business.ClassSignature(hash = 305223741)
 public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer";
-  private static final long serialVersionUID = 2093681454;
+  private static final long serialVersionUID = 305223741;
   
   protected DashboardThematicLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -279,6 +279,14 @@ public abstract class DashboardThematicLayerDTOBase extends com.runwaysdk.geodas
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{geoNodeId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO.CLASS, "getGeoNodeGeometryTypesJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getOptionsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String thematicAttributeId, java.lang.String dashboardId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{thematicAttributeId, dashboardId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO.CLASS, "getOptionsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

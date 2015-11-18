@@ -168,7 +168,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     resp.sendError(500);
   }
   
-  private String encodeString(String val)
+  private static String encodeString(String val)
   {
     
     String value = null;
@@ -235,7 +235,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       req.setAttribute("style", style);
 
       String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
-      req.setAttribute("fonts", this.encodeString(new JSONArray(Arrays.asList(fonts)).toString()) );
+      req.setAttribute("fonts", encodeString(new JSONArray(Arrays.asList(fonts)).toString()) );
 
       // selected attribute
       MdAttributeDTO mdAttr;
@@ -253,7 +253,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       DashboardDTO dashboard = map.getDashboard();
 
       String geoNodesJSON = dashboard.getGeoNodesJSON(mdAttr);
-      req.setAttribute("geoNodes", this.encodeString(geoNodesJSON));
+      req.setAttribute("geoNodes", encodeString(geoNodesJSON));
       
       // TODO: REMOVE 'nodes' - geoNodes replaces it
 //      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
@@ -265,7 +265,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
 
-      req.setAttribute("aggregations", this.encodeString(formatAggregationMethods(aggregations).toString()) );
+      req.setAttribute("aggregations", encodeString(formatAggregationMethods(aggregations).toString()) );
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
 
       List<String> pointTypes = new ArrayList<String>();

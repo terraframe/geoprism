@@ -105,6 +105,7 @@
 		      link: function (scope, element, attrs) {
 		    	  // format the partial
 //		    	  jcf.customForms.replaceAll(element[0]);
+		    	  console.log("test")
 		      }
 		    }    
 		 }
@@ -120,17 +121,28 @@
 //		    	  jcf.customForms.replaceAll(element[0]);
 	    	  
 	    	  var geoNodeSelectId = "#geonode-select";
+	    	  var geoAggLevelId = "#agg-level-dd";
 	          
-	          // Populate the Aggregation Options based on the default selected GeoNode
-	    	  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
 	    	  $(geoNodeSelectId).change(function(){ 
-	    		  scope.getGeographicAggregationOptions(layer);
+	    		  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
+	    	  });
+	    	  
+	    	  
+	    	  $(geoAggLevelId).change(function(e){ 
+	    		  // Hide aggregation dropdown when mapping against raw geometries (cant aggregate geometries)
+	    		  var type = $(e.currentTarget.selectedOptions).data("type");
+	              if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
+	            	  $(geoAggLevelId).parent().parent().show();
+	              }
+	              else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
+	            	  $(geoAggLevelId).parent().parent().hide();
+	              }
 	    	  });
 	      }
 	    }    
 	}
 	
-	var DashboardThematicLayerFormController = function($scope, $compile, layerFormService) {
+	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService) {
 		var controller = this;
 		var geoNodeSelectId = "#geonode-select";
    	  	var geoTypeHolder = "#geom-type-holder";
@@ -144,130 +156,130 @@
 	    controller.$scope = $scope;
 	    
 		/* Initialization Function */
-	    $scope.init = function(layerId, newInstance, availableFonts, geoNodes, geoNodeId, aggregations) {
+	    $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId) {
 	    	$scope.layerId = layerId;
 	    	$scope.newInstance = Boolean(newInstance);
-	    	$scope.availableFonts = processFonts(JSON.parse(decodeURIComponent(availableFonts)));
-	    	$scope.geoNodes = JSON.parse(decodeURIComponent(geoNodes));
+	    	$scope.thematicLayerModel.mdAttributeId = mdAttributeId;
+	    	$scope.thematicLayerModel.geoNodeId = geoNodeId;
 	    	
-	    	controller.layerId = layerId;
-	    	
-	    	if(!newInstance){
-	    	  $scope.loadExisting(controller.newInstance);
-	    	  controller.loadLayerState()
+	    	if(newInstance){
+	    		controller.loadLayerOptions($scope.thematicLayerModel.mdAttributeId);
 	    	}
+	    	else{
+	    	  controller.loadLayerState();
+	    	}
+	    }
  
 	      
-		    /* Default State */ 
-		    $scope.layerId = '';
-		    $scope.newInstance = true; 
-		    
-		    // Dymanic model properties may be changed based on runway based ajax requests 
-		    // They are kept out of other models to keep those models replicating server models more closely
-		    $scope.dynamicDataModel = {
-		    	aggregationLevelOptions : [],
-		    	aggregationMethods : JSON.parse(decodeURIComponent(aggregations))
-		    };
+	    /* Default State */ 
+	    $scope.layerId = '';
+	    $scope.newInstance = true; 
+	    $scope.availableFonts = [];
+	    
+	    // Dymanic model properties may be changed based on runway based ajax requests 
+	    // They are kept out of other models to keep those models replicating server models more closely
+	    $scope.dynamicDataModel = {
+	    	aggregationLevelOptions : [],
+	    	aggregationMethods : []
+	    };
 
-			$scope.thematicLayerModel = {
-				viewName : '',
-				sldName : '',
-				layerName : '',
-				layerId : '',
-				inLegend : true,
-				legendXPosition : 0,
-				legendYPosition : 0,
-				groupedInLegen : true,
-				featureStrategy : '',
-				mdAttributeId : '',
-				attributeType : '',
-				aggregationMethod : $scope.dynamicDataModel.aggregationMethods[0], 
-				aggregationAttribute : '',
-				layerType : '',
-				attributeLabel : '',
-				geoNodeId : geoNodeId.trim().length > 0 ? geoNodeId : $scope.geoNodes[0].id,
-				aggregationStrategy : $scope.dynamicDataModel.aggregationLevelOptions[0],
-				styles : ''
-			};
-			
-			$scope.thematicStyleModel = {
-				basicPointSize : '',
-				enableLabel : true,
-				enableValue : true,
-				id : '',
-				labelColor : '#000000;',
-				availableFonts : $scope.availableFonts[0],
-				labelFont : '', 
-				labelHalo : '#ffffff',
-				labelHaloWidth : '2',
-				labelSize : "12",
-				lineOpacity : '',
-				lineStroke : '',
-				lineStrokeCap : '',
-				lineStrokeWidth : '',
-				name : '',
-				pointFill : '',
-				pointOpacity : '',
-				pointRotation : '',
-				pointStroke : '',
-				pointStrokeOpacity : '',
-				pointStrokeWidth : '',
-				pointWellKnownName : '',
-				polygonFill : '',
-				polygonFillOpacity : '',
-				polygonStroke : '',
-				polygonStrokeOpacity : '',
-				polygonStrokeWidth : '',
-				type : '',
-				valueColor : '',
-				valueFont : '',
-				valueHalo : '',
-				valueHaloWidth : '',
-				valueSize : '',
-				bubbleContinuousSize : '',
-				bubbleFill : '',
-				bubbleMaxSize : '',
-				bubbleMinSize : '',
-				bubbleOpacity : '',
-				bubbleRotation : '',
-				bubbleSize : '',
-				bubbleStroke : '',
-				bubbleStrokeOpacity : '',
-				bubbleStrokeWidth : '',
-				bubbleWellKnownName : '',
-				categoryPointFillOpacity : '',
-				categoryPointSize : '',
-				categoryPointStroke : '',
-				categoryPointStrokeOpacity : '',
-				categoryPointStrokeWidth : '',
-				categoryPointStyles : '',
-				categoryPointWellKnownName : '',
-				categoryPolygonFillOpacity : '',
-				categoryPolygonStroke : '',
-				categoryPolygonStrokeOpacity : '',
-				categoryPolygonStrokeWidth : '',
-				categoryPolygonStyles : '',
-				gradientPointFillOpacity : '',
-				gradientPointMaxFill : '',
-				gradientPointMinFill : '',
-				gradientPointSize : '',
-				gradientPointStroke : '',
-				gradientPointStrokeOpacity : '',
-				gradientPointStrokeWidth : '',
-				gradientPointWellKnownName : '',
-				gradientPolygonFillOpacity : '',
-				gradientPolygonMaxFill : '',
-				gradientPolygonMinFill : '',
-				gradientPolygonStroke : '',
-				gradientPolygonStrokeOpacity : '',
-				gradientPolygonStrokeWidth : '',
-				secondaryAggregationType : '',
-				secondaryAttribute : '',
-				secondaryCategories : '',
-				styleCondition : ''
-			};
+		$scope.thematicLayerModel = {
+			viewName : '',
+			sldName : '',
+			layerName : '',
+			layerId : '',
+			inLegend : true,
+			legendXPosition : 0,
+			legendYPosition : 0,
+			groupedInLegend : true,
+			featureStrategy : '',
+			mdAttributeId : '',
+			attributeType : '',
+			aggregationMethod : '', 
+			aggregationAttribute : '',
+			layerType : '',
+			attributeLabel : '',
+			geoNodeId : '',
+			aggregationStrategy : '',
+			styles : ''
+		};
 		
-	    }
+		$scope.thematicStyleModel = {
+			basicPointSize : '',
+			enableLabel : true,
+			enableValue : true,
+			id : '',
+			labelColor : '#000000;',
+			labelFont : '', 
+			labelHalo : '#ffffff',
+			labelHaloWidth : '2',
+			labelSize : "12",
+			lineOpacity : '',
+			lineStroke : '',
+			lineStrokeCap : '',
+			lineStrokeWidth : '',
+			name : '',
+			pointFill : '',
+			pointOpacity : '',
+			pointRotation : '',
+			pointStroke : '',
+			pointStrokeOpacity : '',
+			pointStrokeWidth : '',
+			pointWellKnownName : '',
+			polygonFill : '',
+			polygonFillOpacity : '',
+			polygonStroke : '',
+			polygonStrokeOpacity : '',
+			polygonStrokeWidth : '',
+			type : '',
+			valueColor : '',
+			valueFont : '',
+			valueHalo : '',
+			valueHaloWidth : '',
+			valueSize : '',
+			bubbleContinuousSize : '',
+			bubbleFill : '',
+			bubbleMaxSize : '',
+			bubbleMinSize : '',
+			bubbleOpacity : '',
+			bubbleRotation : '',
+			bubbleSize : '',
+			bubbleStroke : '',
+			bubbleStrokeOpacity : '',
+			bubbleStrokeWidth : '',
+			bubbleWellKnownName : '',
+			categoryPointFillOpacity : '',
+			categoryPointSize : '',
+			categoryPointStroke : '',
+			categoryPointStrokeOpacity : '',
+			categoryPointStrokeWidth : '',
+			categoryPointStyles : '',
+			categoryPointWellKnownName : '',
+			categoryPolygonFillOpacity : '',
+			categoryPolygonStroke : '',
+			categoryPolygonStrokeOpacity : '',
+			categoryPolygonStrokeWidth : '',
+			categoryPolygonStyles : '',
+			gradientPointFillOpacity : '',
+			gradientPointMaxFill : '',
+			gradientPointMinFill : '',
+			gradientPointSize : '',
+			gradientPointStroke : '',
+			gradientPointStrokeOpacity : '',
+			gradientPointStrokeWidth : '',
+			gradientPointWellKnownName : '',
+			gradientPolygonFillOpacity : '',
+			gradientPolygonMaxFill : '',
+			gradientPolygonMinFill : '',
+			gradientPolygonStroke : '',
+			gradientPolygonStrokeOpacity : '',
+			gradientPolygonStrokeWidth : '',
+			secondaryAggregationType : '',
+			secondaryAttribute : '',
+			secondaryCategories : '',
+			styleCondition : ''
+		};
+		
 	    
 	    controller.loadLayerState = function() {
 	        
@@ -287,7 +299,40 @@
 //	          controller.setLayerState(state);
 	        };
 	          
-	        layerFormService.getThematicLayerJSON(controller.layerId, onSuccess);
+	        layerFormService.getThematicLayerJSON($scope.layerId, onSuccess);
+	    }
+	    
+	    controller.loadLayerOptions = function(attributeId) {
+	        
+	        var onSuccess = function(json){
+	          var opts = JSON.parse(json);
+	            
+	          controller.setLayerOptions(opts);
+	        };
+	          
+	        layerFormService.getThematicLayerOptionsJSON(attributeId, $scope.dashboard.getDashboardId(), onSuccess);
+	    }
+	    
+	    controller.setLayerOptions = function(options) {
+//	    	$timeout(function() {
+	    		$scope.dynamicDataModel.aggregationMethods = options.aggregations;
+	    		$scope.dynamicDataModel.nodeAggregationStrategiesLookup = options.aggegationStrategies;
+	    		$scope.dynamicDataModel.aggregationLevelOptions = options.aggegationStrategies[0].aggregationStrategies;
+	    	
+	    		$scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
+	    		$scope.thematicLayerModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
+	    		
+	    		//$scope.thematicStyleModel.availableFonts = processFonts(options.fonts);
+		    	$scope.availableFonts = processFonts(options.fonts);
+
+	    		$scope.geoNodes = options.geoNodes;
+	    		$scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationLevelOptions, $scope.thematicLayerModel.aggregationStrategy)
+	    		
+		          // Populate the Aggregation Options based on the default selected GeoNode
+//		    	  $scope.getGeographicAggregationOptions($scope.thematicLayerModel.aggregationStrategy, $scope.thematicLayerModel.geoNodeId);
+	    	
+	    		$scope.$apply();
+//	    	}, 0);
 	    }
 	    
 	    
@@ -330,7 +375,7 @@
     	
 	    // Aggregation strategy watcher
 	    $scope.$watch("thematicLayerModel.aggregationStrategy", function(newValue, oldValue) {
-	        console.log("watching ", " : ", "new val = ", newValue, " old val = ", oldValue)
+	        console.log("watching agg strategy", " : ", "new val = ", newValue, " old val = ", oldValue)
             if($(geoAggLevelSelectId+" option:selected").hasClass("universal-leaf")){
                 // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
                 $(geoAggMethodSelectId).parent().parent().hide();
@@ -338,15 +383,10 @@
               else{
                 $(geoAggMethodSelectId).parent().parent().show();
               }
-              
-              var selectedOption = $(geoAggLevelSelectId).find(":selected");
-              if(selectedOption){
-            	  _setLayerTypeOptions(selectedOption);
-              }
 	    });
 	    
 	    $scope.$watch("thematicLayerModel.aggregationMethod", function(newValue, oldValue) {
-	        console.log("watching ", " : ", "new val = ", newValue, " old val = ", oldValue)
+	        console.log("watching agg method", " : ", "new val = ", newValue, " old val = ", oldValue)
 	    });
 	    
 	    
@@ -366,30 +406,19 @@
          * 
          */
 	    $scope.getGeographicAggregationOptions = function(aggregationStrategy, geoNodeId){
-            var that = this;
+            var selectedOption = null;
             
-            // To set the option on a saved layer when initiating an edit session we get the
-            // universal id OR geometry aggregation value id depending on the aggregation type of
-            // the saved layer. 
             if(aggregationStrategy){
-                that._selectedOption = aggregationStrategy;
-            }
-            else{
-                that._selectedOption = null;
+                selectedOption = aggregationStrategy;
             }
             
-            var clientRequest = new Mojo.ClientRequest({
-                onSuccess : function(data) {
-                  $scope.setGeographicAggregationOptions(data, that._selectedOption);
-                },
-                onFailure : function(e) {
-                  //that.handleException(e);
-                  // TODO: handle exception
-                	console.log(e)
-                  
-                }
-            });
-            com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.getAggregationStrategies(clientRequest, geoNodeId);
+            var nodeAggLookup = $scope.dynamicDataModel.nodeAggregationStrategiesLookup;
+            for(var i=0; i<nodeAggLookup.length; i++){
+            	var thisNode = nodeAggLookup[i];
+            	if(thisNode.nodeId === geoNodeId){
+            		$scope.setGeographicAggregationOptions(thisNode.aggregationStrategies, selectedOption);
+            	}
+            }
 	    }
 	    
         /**
@@ -402,12 +431,12 @@
 	             
 	             // Get the original name value from the originally rendered dropdown because this
 	             // data was already passed from server to client in the jsp
+	             // TODO: Move this data into the model
 	             var layerTypes = $(geoTypeHolder).data("layertypes");
 	             
-	             var allAggs = [];
 	             for(var i=0; i<aggregations.length; i++){
 	               var agg = aggregations[i];
-	               if(selectedOption === agg.getValue()){
+	               if(selectedOption.aggStrategyId === agg.aggStrategyId){
 	                 selected = "selected";
 	               }
 	               else if(i === 0){
@@ -416,19 +445,19 @@
 	               else{
 	                 selected = "";
 	               }
-	               var thisAgg = {"value":agg.getValue(), "type":agg.getAggregationType(), "geomTypes":agg.getAvailableGeometryTypes(), "displayLabel":agg.getDisplayLabel()}
-	               allAggs.push(thisAgg)
+	               
+	               var thisAgg = {"value":agg.aggStrategyValue, "type":agg.aggStrategyType, "geomTypes":agg.aggStrategyGeomTypes, "displayLabel":agg.aggStrategyLabel}
 	             }
-	             
+
 	             // Re-sets the options property on the model
-	             $scope.dynamicDataModel.aggregationLevelOptions = allAggs;
+	             $scope.dynamicDataModel.aggregationLevelOptions = aggregations;
 
 //	             jcf.customForms.replaceAll($(geoAggLevelSelectId).parent().get(0));
 	             
-	             $(geoAggLevelHolder).show();
+//	             $(geoAggLevelHolder).show();
 	             
-	             var selectedOption = $(geoAggLevelSelectId).find(":selected");
-	             _setLayerTypeOptions(selectedOption);
+//	             var selectedOption = $(geoAggLevelSelectId).find(":selected");
+	             _setLayerTypeOptions($scope.thematicLayerModel.aggregationStrategy);
         }
          
          /**
@@ -437,9 +466,9 @@
           * @selectedOption - selected option from the geographic aggregation level dropdown
           */
          function _setLayerTypeOptions(selectedOption) {
-           var type = selectedOption.data('type');
-           var layerTypes = $(geoTypeHolder).data("layertypes");
-           var layerTypesJSON = getValueFromHTML(layerTypes);
+           var type = selectedOption.aggStrategyType;
+           // TODO: Move this data into the model
+           var layerTypesJSON = $(geoTypeHolder).data("layertypes");
            
            if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
              for(var i=0; i<layerTypesJSON.length; i++){
@@ -494,7 +523,7 @@
 	 
 	angular.module("dashboard-layer-form", ["dashboard", "layer-form-service"]);
 	angular.module("dashboard-layer-form")
-		.controller('LayerFormController', ['$scope', '$compile', 'layerFormService', DashboardThematicLayerFormController])
+		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
 		.directive('layerNameInput', layerNameInput)
 		.directive('layerLabel', layerLabel)
 		.directive('layerGeoNode', layerGeoNode)

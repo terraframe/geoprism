@@ -47,7 +47,7 @@
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}"></mjl:component>
 
-    <div id="DashboardLayer-mainDiv" class="modal-dialog" ng-controller="LayerFormController" ng-init="init('${layer.id}', '${style.newInstance}', '${fonts}', '${geoNodes}', '${layer.geoNodeId}', '${aggregations}' )">
+    <div id="DashboardLayer-mainDiv" class="modal-dialog" ng-controller="LayerFormController" ng-init="init('${layer.id}', '${style.newInstance}', '${layer.geoNodeId}', '${mdAttributeId}' )">
       <div class="modal-content">
         <div class="heading">
           <c:if test="${style.newInstance}">

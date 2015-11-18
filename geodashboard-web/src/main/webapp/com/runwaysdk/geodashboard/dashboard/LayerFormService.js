@@ -66,6 +66,12 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getJSON(request, layerId);
     }
     
+    service.getThematicLayerOptionsJSON = function(attributeId, dashboardId, onSuccess, onFailure) {
+    	var request = service.createRequest(onSuccess, onFailure);
+        
+        com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getOptionsJSON(request, attributeId, dashboardId);
+    }
+    
     return service;
   }
   
