@@ -107,16 +107,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 {
   private static class ThumbnailThread implements Runnable, Reloadable
   {
-    private Dashboard        dashboard;
+    private Dashboard          dashboard;
 
-    private GeodashboardUser user;
+    private GeodashboardUser[] users;
 
-    private String           sessionId;
+    private String             sessionId;
 
-    public ThumbnailThread(Dashboard dashboard, GeodashboardUser user, String sessionId)
+    public ThumbnailThread(String sessionId, Dashboard dashboard, GeodashboardUser... users)
     {
       this.dashboard = dashboard;
-      this.user = user;
+      this.users = users;
       this.sessionId = sessionId;
     }
 
@@ -129,7 +129,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     @Request(RequestType.SESSION)
     public void execute(String sessionId)
     {
-      dashboard.generateThumbnailImage(user);
+      dashboard.generateThumbnailImage(users);
     }
 
   }
@@ -1133,11 +1133,21 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public void generateThumbnailImage()
   {
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    /*
+     * This method is only invoked when a new layer is created.  As such, 
+     * it generates a thumbnail for both the current users state
+     * and the global state.  Normally you just want to generate a thumbnail
+     * for one or the other.
+     */
+    this.executeThumbnailThread(GeodashboardUser.getCurrentUser(), null);
+  }
+
+  private void executeThumbnailThread(GeodashboardUser... users)
+  {
     String sessionId = Session.getCurrentSession().getId();
 
     // Write the thumbnail
-    Thread t = new Thread(new ThumbnailThread(this, user, sessionId));
+    Thread t = new Thread(new ThumbnailThread(sessionId, this, users));
     t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
     {
       @Override
@@ -1151,22 +1161,20 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Transaction
-  private void generateThumbnailImage(GeodashboardUser user)
+  private void generateThumbnailImage(GeodashboardUser[] users)
   {
     byte[] image = this.generateThumbnail();
 
-    DashboardState state = DashboardState.getDashboardState(this, user);
-
-    if (state == null)
+    for (GeodashboardUser user : users)
     {
-      state = DashboardState.getDashboardState(this, null);
-    }
+      DashboardState state = DashboardState.getDashboardState(this, user);
 
-    if (state != null)
-    {
-      state.lock();
-      state.setMapThumbnail(image);
-      state.apply();
+      if (state != null)
+      {
+        state.lock();
+        state.setMapThumbnail(image);
+        state.apply();
+      }
     }
   }
 
@@ -1453,8 +1461,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     state.setConditions(DashboardCondition.serialize(conditions));
     state.apply();
-
-    this.generateThumbnailImage();
+    
+    this.executeThumbnailThread(user);
 
     return "";
   }
@@ -1678,20 +1686,20 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       it.close();
     }
   }
-  
+
   @Override
   @Transaction
   public void setDashboardAttributesOrder(String classId, String[] attributeIds)
   {
     MetadataWrapper wrapper = MetadataWrapper.getByWrappedMdClassId(this, classId);
-    
-    if(wrapper != null)
+
+    if (wrapper != null)
     {
       DashboardAttributesQuery query = new DashboardAttributesQuery(new QueryFactory());
       query.WHERE(query.getParent().EQ(wrapper));
-      
+
       OIterator<? extends DashboardAttributes> it = query.getIterator();
-      
+
       try
       {
         List<? extends DashboardAttributes> attributes = it.getAll();
@@ -1699,7 +1707,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         for (DashboardAttributes attribute : attributes)
         {
           AttributeWrapper aw = attribute.getChild();
-          
+
           for (int i = 0; i < attributeIds.length; i++)
           {
             String attributeId = attributeIds[i];
