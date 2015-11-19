@@ -31,9 +31,12 @@
 	                <div class="box">
 	                  <label for="agg-level-dd"><gdb:localize var="dl_form_groupBy" key="DashboardThematicLayer.form.groupBy"/>${dl_form_groupBy}</label>
 	                  <div class="select-box">
-		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" ng-model="thematicLayerModel.aggregationStrategy">
-			                	<option ng-repeat="agg in dynamicDataModel.aggregationLevelOptions" value="{{agg.aggStrategyValue}}" ng-selected="{{agg.aggStrategyValue == thematicLayerModel.aggregationStrategy.aggStrategyValue}}" data-type="{{agg.aggStrategyType}}" data-geomTypes="{{agg.aggStrategyGeomTypes}}">{{agg.aggStrategyLabel}}</option>
-		                    </select>
+<!-- 		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" ng-model="thematicLayerModel.aggregationStrategy"> -->
+<!-- 			                	<option ng-repeat="agg in dynamicDataModel.aggregationStrategyOptions track by agg.aggStrategyValue" value="{{agg.aggStrategyValue}}" ng-selected="{{agg.aggStrategyValue == thematicLayerModel.aggregationStrategy.aggStrategyValue}}">{{agg.aggStrategyLabel}}</option> -->
+<!-- 		                    </select> -->
+		                    
+		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" data-ng-options="agg.aggStrategyLabel for agg in dynamicDataModel.aggregationStrategyOptions track by agg.aggStrategyValue" data-ng-model="thematicLayerModel.aggregationStrategy"></select>
+		                    
 	                  </div>
 	                </div>
 	                
@@ -43,29 +46,12 @@
 	                  <label for="agg-method-dd"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
 	                  <div class="select-box">
 	                    
-<!-- 	                          <select ng-init="thematicLayerModel.aggregationMethod = SUM" id="agg-method-dd" class="method-select" name="layer.aggregationType"  -->
-<!-- 	                          	ng-model="thematicLayerModel.aggregationMethod" ng-options="for item in dynamicDataModel.aggregationMethods track by item"></select> -->
+	                          <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationMethod" ng-options="meth.label for meth in dynamicDataModel.aggregationMethods track by meth.id"></select>
 
-	                        <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationMethod" >
-					           	<option ng-repeat="aggMeth in dynamicDataModel.aggregationMethods" value="{{aggMeth.id}}" ng-selected="{{aggMeth.id == dynamicDataModel.aggregationMethods[0].id}}" >{{aggMeth.label}}</option>
-							</select>
+<!-- 	                        <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationMethod" > -->
+<!-- 					           	<option ng-repeat="aggMeth in dynamicDataModel.aggregationMethods" value="{{aggMeth.id}}" ng-selected="{{aggMeth.id == dynamicDataModel.aggregationMethods[0].id}}" >{{aggMeth.label}}</option> -->
+<!-- 							</select> -->
 							
-<!-- 	         			<select id="agg-method-dd" class="method-select" name="layer.aggregationType">            -->
-<%-- 	                      <c:forEach items="${aggregations}" var="aggregation"> --%>
-<!-- 	                         	<c:choose> -->
-<%-- 	                           		<c:when test="${aggregation.displayLabel.value == activeAggregation}"> --%>
-<%-- 	                             		<option value="${aggregation.enumName}" selected="selected"> --%>
-<%-- 	                               			${aggregation.displayLabel.value} --%>
-<!-- 	                             		</option> -->
-<!-- 	                           		</c:when> -->
-<!-- 	                           		<c:otherwise> -->
-<%-- 	                             		<option value="${aggregation.enumName}"> --%>
-<%-- 	                               			${aggregation.displayLabel.value} --%>
-<!-- 	                             		</option> -->
-<!-- 	                           		</c:otherwise> -->
-<!-- 	                         	</c:choose> -->
-<!-- 	                      </c:forEach> -->
-<!-- 	                    </select> -->
 	                  </div>
 	                </div>
               </div>

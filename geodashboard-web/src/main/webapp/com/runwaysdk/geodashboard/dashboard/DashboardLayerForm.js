@@ -91,6 +91,48 @@
 	    			  scope.setEnableLabel(true); // manually set the model to true because the change event hasn't occured yet
 	    		  }
 	    	  }
+	    	  
+	          $("#label-text-color").colpick({
+	              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+	              onShow:function(colPickObj){
+	            	  var that = this;
+	                  $('#modal01').scroll(function(){  
+	                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+	                    var colPick = $(that);
+	                    var diff = colPick.offset().top + colPick.height() + 2; 
+	                    var diffStr = diff.toString() + "px";
+	                    colorPicker.css({ top: diffStr });
+	                  });
+	              },
+	              onChange:function(hsb,hex,rgb,el,bySetColor) {
+	            	$(el).find(".ico").css('background','#'+hex);
+	            	scope.thematicStyleModel.labelColor = '#'+hex;
+	              },
+	              onHide:function(el) {
+	            	 scope.$apply();
+	              }
+	           });
+	          
+	          $("#label-halo-color").colpick({
+	              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+	              onShow:function(colPickObj){
+	            	  var that = this;
+	                  $('#modal01').scroll(function(){  
+	                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+	                    var colPick = $(that);
+	                    var diff = colPick.offset().top + colPick.height() + 2; 
+	                    var diffStr = diff.toString() + "px";
+	                    colorPicker.css({ top: diffStr });
+	                  });
+	              },
+	              onChange:function(hsb,hex,rgb,el,bySetColor) {
+	            	$(el).find(".ico").css('background','#'+hex);
+	            	scope.thematicStyleModel.labelHalo = '#'+hex;
+	              },
+	              onHide:function(el) {
+	            	 scope.$apply();
+	              }
+	           });
 	      }
 	    }    
 	}
@@ -105,12 +147,11 @@
 		      link: function (scope, element, attrs) {
 		    	  // format the partial
 //		    	  jcf.customForms.replaceAll(element[0]);
-		    	  console.log("test")
 		      }
 		    }    
 		 }
 	 
-	 function layerAggregation() {
+	 function layerAggregation(layerFormService) {
 	    return {
 	      restrict: 'E',
 	      replace: true,
@@ -118,10 +159,11 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-//		    	  jcf.customForms.replaceAll(element[0]);
+		      //jcf.customForms.replaceAll(element[0]);
 	    	  
 	    	  var geoNodeSelectId = "#geonode-select";
 	    	  var geoAggLevelId = "#agg-level-dd";
+	    	  var aggMedthodId = "#agg-method-dd";
 	          
 	    	  $(geoNodeSelectId).change(function(){ 
 	    		  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
@@ -130,12 +172,12 @@
 	    	  
 	    	  $(geoAggLevelId).change(function(e){ 
 	    		  // Hide aggregation dropdown when mapping against raw geometries (cant aggregate geometries)
-	    		  var type = $(e.currentTarget.selectedOptions).data("type");
+	    		  var type = layerFormService.getAggregationStrategyType(scope, e.currentTarget.selectedOptions[0].value);
 	              if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
-	            	  $(geoAggLevelId).parent().parent().show();
+	            	  $(aggMedthodId).parent().parent().show();
 	              }
 	              else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
-	            	  $(geoAggLevelId).parent().parent().hide();
+	            	  $(aggMedthodId).parent().parent().hide();
 	              }
 	    	  });
 	      }
@@ -179,8 +221,9 @@
 	    // Dymanic model properties may be changed based on runway based ajax requests 
 	    // They are kept out of other models to keep those models replicating server models more closely
 	    $scope.dynamicDataModel = {
-	    	aggregationLevelOptions : [],
-	    	aggregationMethods : []
+	    	aggregationStrategyOptions : [],
+	    	aggregationMethods : [], 
+	    	layerTypeNams : []
 	    };
 
 		$scope.thematicLayerModel = {
@@ -283,16 +326,6 @@
 	    
 	    controller.loadLayerState = function() {
 	        
-	        /* Clear the current state */
-//	        controller.model = {
-//	          location : {label:'',value:''},
-//	          editDashboard : false,
-//	          editData : false,
-//	          types : [],
-//	          mapId : ''
-//	        };
-
-	        
 	        var onSuccess = function(json){
 	          var state = JSON.parse(json);
 	            
@@ -314,25 +347,23 @@
 	    }
 	    
 	    controller.setLayerOptions = function(options) {
-//	    	$timeout(function() {
 	    		$scope.dynamicDataModel.aggregationMethods = options.aggregations;
 	    		$scope.dynamicDataModel.nodeAggregationStrategiesLookup = options.aggegationStrategies;
-	    		$scope.dynamicDataModel.aggregationLevelOptions = options.aggegationStrategies[0].aggregationStrategies;
+	    		$scope.dynamicDataModel.aggregationStrategyOptions = options.aggegationStrategies[0].aggregationStrategies;
+	    		$scope.dynamicDataModel.layerTypeNames = options.layerTypeNames;
 	    	
 	    		$scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
 	    		$scope.thematicLayerModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
 	    		
-	    		//$scope.thematicStyleModel.availableFonts = processFonts(options.fonts);
-		    	$scope.availableFonts = processFonts(options.fonts);
-
+	    		$scope.availableFonts = processFonts(options.fonts);
 	    		$scope.geoNodes = options.geoNodes;
-	    		$scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationLevelOptions, $scope.thematicLayerModel.aggregationStrategy)
 	    		
-		          // Populate the Aggregation Options based on the default selected GeoNode
-//		    	  $scope.getGeographicAggregationOptions($scope.thematicLayerModel.aggregationStrategy, $scope.thematicLayerModel.geoNodeId);
-	    	
+	    		$scope.thematicStyleModel.labelFont = $scope.availableFonts[0];
+	    		
+	    		$scope.thematicLayerModel.geoNodeId = $scope.thematicLayerModel.geoNodeId || $scope.geoNodes[0]; // this is set in the init function but may be null if new layer
+	    		$scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategyOptions, $scope.thematicLayerModel.aggregationStrategy)
+	    		
 	    		$scope.$apply();
-//	    	}, 0);
 	    }
 	    
 	    
@@ -385,7 +416,7 @@
               }
 	    });
 	    
-	    $scope.$watch("thematicLayerModel.aggregationMethod", function(newValue, oldValue) {
+	    $scope.$watch("thematicStyleModel.labelHalo", function(newValue, oldValue) {
 	        console.log("watching agg method", " : ", "new val = ", newValue, " old val = ", oldValue)
 	    });
 	    
@@ -427,36 +458,30 @@
          * @aggregations - JSON representing geo aggregation levels
          */
          $scope.setGeographicAggregationOptions = function(aggregations, selectedOption) {
-	             var selected = "";
-	             
-	             // Get the original name value from the originally rendered dropdown because this
-	             // data was already passed from server to client in the jsp
-	             // TODO: Move this data into the model
-	             var layerTypes = $(geoTypeHolder).data("layertypes");
-	             
-	             for(var i=0; i<aggregations.length; i++){
-	               var agg = aggregations[i];
-	               if(selectedOption.aggStrategyId === agg.aggStrategyId){
-	                 selected = "selected";
-	               }
-	               else if(i === 0){
-	                 selected = "selected";
-	               }
-	               else{
-	                 selected = "";
-	               }
-	               
-	               var thisAgg = {"value":agg.aggStrategyValue, "type":agg.aggStrategyType, "geomTypes":agg.aggStrategyGeomTypes, "displayLabel":agg.aggStrategyLabel}
-	             }
+//	             var selected = "";
+//	             for(var i=0; i<aggregations.length; i++){
+//	               var agg = aggregations[i];
+//	               if(selectedOption.aggStrategyId === agg.aggStrategyId){
+//	                 selected = "selected";
+//	               }
+//	               else if(i === 0){
+//	                 selected = "selected";
+//	               }
+//	               else{
+//	                 selected = "";
+//	               }
+//	               agg._isSelected = true
+//	             }
 
 	             // Re-sets the options property on the model
-	             $scope.dynamicDataModel.aggregationLevelOptions = aggregations;
-
-//	             jcf.customForms.replaceAll($(geoAggLevelSelectId).parent().get(0));
+	             $scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
+	             
+	             $scope.$apply();
+	             
+	             //jcf.customForms.replaceAll($(geoAggLevelSelectId).parent().get(0));
 	             
 //	             $(geoAggLevelHolder).show();
 	             
-//	             var selectedOption = $(geoAggLevelSelectId).find(":selected");
 	             _setLayerTypeOptions($scope.thematicLayerModel.aggregationStrategy);
         }
          
@@ -468,7 +493,7 @@
          function _setLayerTypeOptions(selectedOption) {
            var type = selectedOption.aggStrategyType;
            // TODO: Move this data into the model
-           var layerTypesJSON = $(geoTypeHolder).data("layertypes");
+           var layerTypesJSON = $scope.dynamicDataModel.layerTypeNames;
            
            if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
              for(var i=0; i<layerTypesJSON.length; i++){
@@ -484,7 +509,8 @@
                $("." + lType).hide();
              }
              
-             var geomTypes = getValueFromHTML(selectedOption.data("geomtypes"));
+             // TODO: replace data attribute with model property
+             var geomTypes = selectedOption.aggStrategyGeomTypes;
              
              for(var i=0; i<geomTypes.length; i++){
                var geomType = geomTypes[i];

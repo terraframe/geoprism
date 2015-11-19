@@ -72,6 +72,22 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getOptionsJSON(request, attributeId, dashboardId);
     }
     
+    // 
+    // Get the aggregation type from the model based on an aggregation Value
+    // @param $scope
+    // @param aggStratVal - aggregation strategy value (not id)
+    //
+    service.getAggregationStrategyType = function($scope, aggStratVal) {
+    	var aggStratOpts = $scope.dynamicDataModel.aggregationStrategyOptions;
+    	for(var i=0; i<aggStratOpts.length; i++){
+    		var aggStrat = aggStratOpts[i];
+    		if(aggStrat.aggStrategyValue === aggStratVal){
+    			return aggStrat.aggStrategyType;
+    		}
+    	}
+    	return
+    }
+    
     return service;
   }
   

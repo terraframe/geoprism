@@ -816,7 +816,7 @@
         $.each($('.category-input'), function() {
           var value = $(this).val();
           if(value != null && value.length > 0) {
-            var categoryType = $(this).data("type");
+            var categoryType = $(this).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
             if(categoryType == "number") {
               var number = parseFloat(value);
               var localized = that._map.getFormatter()(number);
@@ -1706,7 +1706,7 @@
       _handleSecondaryChange : function(e){
         var option = e.target.selectedOptions[0];
         var mdAttributeId = option.value;
-        var type = $(option).data("type");
+        var type = $(option).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
         
         if(mdAttributeId == '') {
           $('#secondary-content').hide();

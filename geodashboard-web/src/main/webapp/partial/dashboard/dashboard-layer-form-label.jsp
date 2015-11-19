@@ -48,8 +48,7 @@
                   <label for="f55"><gdb:localize var="dl_form_font" key="DashboardLayer.form.font"/>${dl_form_font}</label>
                   <div class="select-holder">
                   		<select class="font-select" name="style.labelFont" id="f55" 
-                  			ng-options="item as item.value for item in availableFonts track by item.value" ng-model="thematicStyleModel.labelFont"
-                  			ng-init="thematicStyleModel.labelFont = availableFonts[0]">
+                  			ng-options="item as item.value for item in availableFonts track by item.value" ng-model="thematicStyleModel.labelFont">
                   		</select>
                   </div>
                 </div>
@@ -80,22 +79,20 @@
                 
                 <div class="cell">
                   <span><gdb:localize var="dl_form_labelColor" key="DashboardLayer.form.labelColor"/>${dl_form_labelColor}</span>
-                  <div class="color-holder">
+                  <div id="label-text-color" class="color-holder">
                     <a href="#" class="color-choice">
                       <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
                       <span class="arrow">arrow</span>
-                      <input type="hidden" class="color-input" name="style.labelColor" value="{{thematicStyleModel.labelColor}}" ng-model="thematicStyleModel.labelColor" />
                     </a>
                   </div>
                 </div>
                 
                 <div class="cell">
                   <span><gdb:localize var="dl_form_labelHalo" key="DashboardLayer.form.labelHalo"/>${dl_form_labelHalo}</span>
-                  <div class="color-holder">
+                  <div id="label-halo-color" class="color-holder">
                     <a href="#" class="color-choice">
                       <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
                       <span class="arrow">arrow</span>
-                      <input type="hidden" class="color-input" name="style.labelHalo" value="{{thematicStyleModel.labelHalo}}" ng-model="thematicStyleModel.labelHalo"/>
                     </a>
                   </div>
                 </div>

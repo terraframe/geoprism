@@ -280,7 +280,7 @@
                Begin Layer Types
              -->
 			<mjl:component param="layer" item="${layer}">
-	            <div id="geom-type-holder" class="row-holder" style="display:none" data-layerTypes="${layerTypeNamesJSON}">
+	            <div id="geom-type-holder" class="row-holder" style="display:none">
 	              <div class="label-holder style04">
 	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardThematicLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
 	              </div>
