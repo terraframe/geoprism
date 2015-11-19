@@ -150,6 +150,18 @@
       com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
     }
     
+    service.setDataSetOrder = function(dashboardId, typeIds, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+        
+      com.runwaysdk.geodashboard.Dashboard.setMetadataWrapperOrder(request, dashboardId, typeIds);
+    }
+    
+    service.setDataSetAttributeOrder = function(dashboardId, typeId, attributeIds, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+    
+      com.runwaysdk.geodashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
+    }
+    
     return service;
   }
   

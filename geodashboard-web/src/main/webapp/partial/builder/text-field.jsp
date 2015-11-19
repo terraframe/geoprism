@@ -21,9 +21,15 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <div class="field-row clearfix">
-  <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
-  <input ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}" class="com-runwaysdk-ui-factory-runway-TextInput com-runwaysdk-ui-factory-runway-FormInput com-runwaysdk-ui-factory-runway-Widget" type="text">
-  <div class="error-message">
-    <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
+  <div ng-if="field.writable">
+    <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+    <input ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}" class="com-runwaysdk-ui-factory-runway-TextInput com-runwaysdk-ui-factory-runway-FormInput com-runwaysdk-ui-factory-runway-Widget" type="text">
+    <div class="error-message">
+      <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
+    </div>
+  </div>
+  <div ng-if="!field.writable && field.readable">
+    <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+    <p>{{model[field.name]}}</p>
   </div>
 </div>

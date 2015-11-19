@@ -24,10 +24,14 @@ import java.util.Locale;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
@@ -192,4 +196,65 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     return clone;
   }
 
+  public int getMaxOrder()
+  {
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+
+    DashboardAttributesQuery query = new DashboardAttributesQuery(vQuery);
+
+    vQuery.WHERE(query.getParent().EQ(this));
+
+    MAX selectable = F.MAX(query.getListOrder());
+    selectable.setColumnAlias("order_max");
+    selectable.setUserDefinedAlias("order_max");
+
+    vQuery.SELECT(selectable);
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ValueObject result = iterator.next();
+        String value = result.getValue("order_max");
+
+        if (value != null && value.length() > 0)
+        {
+          return Integer.parseInt(value);
+        }
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return 0;
+  }
+
+  public static MetadataWrapper getByWrappedMdClassId(Dashboard dashboard, String classId)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(dashboard));
+    query.AND(query.getWrappedMdClass().EQ(classId));
+
+    OIterator<? extends MetadataWrapper> it = query.getIterator();
+
+    try
+    {
+      if (it.hasNext())
+      {
+        MetadataWrapper wrapper = it.next();
+
+        return wrapper;
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return null;
+  }
 }

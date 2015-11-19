@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1859769976)
+@com.runwaysdk.business.ClassSignature(hash = -11169086)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -51,7 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1859769976;
+  private static final long serialVersionUID = -11169086;
   
   public DashboardBase()
   {
@@ -925,6 +925,30 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     _instance.setBaseLayerState(baseLayerState);
+  }
+  
+  public void setDashboardAttributesOrder(java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setDashboardAttributesOrder(java.lang.String id, java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setDashboardAttributesOrder(typeId, attributeIds);
+  }
+  
+  public void setMetadataWrapperOrder(java.lang.String[] typeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setMetadataWrapperOrder(java.lang.String id, java.lang.String[] typeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setMetadataWrapperOrder(typeIds);
   }
   
   public static Dashboard lock(java.lang.String id)

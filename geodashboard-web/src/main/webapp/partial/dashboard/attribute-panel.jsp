@@ -19,13 +19,6 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-
-<div class="sales-accortion panel-group" id="type-accordion">
-  <div ng-repeat="type in types" class="panel panel-default" data-id="{{type.id}}">
-    <a class="opener" data-toggle="collapse" ng-href="#collapse{{$index}}">{{type.label}}</a>
-  
-    <div id="{{'collapse' + $index}}" class="panel-collapse collapse">
-      <attribute-panel type="type" index="$index"></attribute-panel>
-    </div>
-  </div>
+<div class="panel-body attribute-panel">
+  <accordion-attribute ng-repeat="attribute in type.attributes" attribute="attribute" identifier="{{index}}-{{$index}}"></accordion-attribute>
 </div>

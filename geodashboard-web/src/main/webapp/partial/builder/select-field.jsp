@@ -21,13 +21,21 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <div class="field-row clearfix">
-  <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
-  <div class="select-holder">
-    <select ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}">
-      <option ng-repeat="option in field.options" value="{{option.value}}">{{option.displayLabel}}</option>
-    </select>  
+  <div ng-if="field.writable">
+    <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+    <div class="select-holder">
+      <select ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}">
+        <option ng-repeat="option in field.options" value="{{option.value}}">{{option.displayLabel}}</option>
+      </select>  
+    </div>
+    <div class="error-message">
+      <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>
+    </div>
   </div>
-  <div class="error-message">
-    <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>
-  </div>
+  <div ng-if="!field.writable && field.readable">
+    <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+    <div ng-repeat="option in field.options">
+      <p ng-if="model[field.name] == option.value">{{option.displayLabel}}</p>
+    </div>
+  </div>  
 </div>

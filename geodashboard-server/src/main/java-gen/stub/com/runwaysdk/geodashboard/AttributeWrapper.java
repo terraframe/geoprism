@@ -70,6 +70,5 @@ public class AttributeWrapper extends AttributeWrapperBase implements com.runway
     attribute.apply();
     
     return clone;
-  }
-  
+  }  
 }

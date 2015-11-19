@@ -104,6 +104,7 @@
           if(!$.isEmptyObject(field)) {        	
         	field.required = attributeMd.isRequired();
         	field.readable = attributeDTO.isReadable();
+        	field.writable = attributeDTO.isWritable();
         	
             fields.push(field);
           }

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,6 +57,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.facade.Facade;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
@@ -76,11 +76,13 @@ import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
+import com.runwaysdk.geodashboard.report.ReportItem;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
@@ -108,8 +110,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     private Dashboard        dashboard;
 
     private GeodashboardUser user;
-    
-    private String sessionId;
+
+    private String           sessionId;
 
     public ThumbnailThread(Dashboard dashboard, GeodashboardUser user, String sessionId)
     {
@@ -121,29 +123,15 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     @Override
     public void run()
     {
-      System.out.println(sessionId);
-      
       this.execute(this.sessionId);
     }
-    
+
     @Request(RequestType.SESSION)
     public void execute(String sessionId)
     {
-      System.out.println(Session.getCurrentSession().getId());
-      
-      dashboard.generateThumbnailImage(user);      
+      dashboard.generateThumbnailImage(user);
     }
 
-  }
-
-  private static class MdClassComparator implements Comparator<MdClass>, Reloadable
-  {
-
-    @Override
-    public int compare(MdClass m1, MdClass m2)
-    {
-      return m1.getDisplayLabel().getValue().compareTo(m2.getDisplayLabel().getValue());
-    }
   }
 
   private static final long serialVersionUID = 2043512251;
@@ -241,6 +229,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       mIterator.close();
     }
 
+    // Delete the corresponding report item
+    ReportItem report = ReportItem.getByDashboard(this.getId());
+    report.delete();
+
     Roles role = this.getDashboardRole();
 
     super.delete();
@@ -287,14 +279,21 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public MdClass[] getSortedTypes()
   {
     // This operation should use only cached objects
-    OIterator<? extends MetadataWrapper> iter = this.getAllMetadata();
+    DashboardMetadataQuery query = new DashboardMetadataQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(this));
+    query.ORDER_BY_ASC(query.getListOrder());
+
+    OIterator<? extends DashboardMetadata> iter = query.getIterator();
 
     List<MdClass> mdClasses = new LinkedList<MdClass>();
+
     try
     {
       while (iter.hasNext())
       {
-        MetadataWrapper mw = iter.next();
+        DashboardMetadata dm = iter.next();
+        MetadataWrapper mw = dm.getChild();
+
         mdClasses.add(mw.getWrappedMdClass());
       }
     }
@@ -302,8 +301,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       iter.close();
     }
-
-    Collections.sort(mdClasses, new MdClassComparator());
 
     return mdClasses.toArray(new MdClass[mdClasses.size()]);
   }
@@ -1160,6 +1157,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     DashboardState state = DashboardState.getDashboardState(this, user);
 
+    if (state == null)
+    {
+      state = DashboardState.getDashboardState(this, null);
+    }
+
     if (state != null)
     {
       state.lock();
@@ -1175,7 +1177,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     BufferedImage base = null;
     Graphics mapBaseGraphic = null;
     BufferedImage resizedImage = null;
-    int defaultWidth = 800;
+    int defaultWidth = 1179;
     int defaultHeight = 750;
     Double bottom;
     Double top;
@@ -1257,7 +1259,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     try
     {
-      resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
+      resizedImage = Thumbnails.of(base).size(330, 210).asBufferedImage();
     }
     catch (IOException e)
     {
@@ -1452,6 +1454,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     state.setConditions(DashboardCondition.serialize(conditions));
     state.apply();
 
+    this.generateThumbnailImage();
+
     return "";
   }
 
@@ -1597,6 +1601,122 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public int getMaxOrder()
+  {
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+
+    MetadataWrapperQuery wQuery = new MetadataWrapperQuery(vQuery);
+    DashboardMetadataQuery dmQuery = new DashboardMetadataQuery(vQuery);
+
+    vQuery.WHERE(wQuery.getDashboard().EQ(this));
+    vQuery.AND(dmQuery.hasChild(wQuery));
+
+    MAX selectable = F.MAX(dmQuery.getListOrder());
+    selectable.setColumnAlias("order_max");
+    selectable.setUserDefinedAlias("order_max");
+
+    vQuery.SELECT(selectable);
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ValueObject result = iterator.next();
+        String value = result.getValue("order_max");
+
+        if (value != null && value.length() > 0)
+        {
+          return Integer.parseInt(value);
+        }
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return 0;
+  }
+
+  @Override
+  @Transaction
+  public void setMetadataWrapperOrder(String[] typeIds)
+  {
+    DashboardMetadataQuery query = new DashboardMetadataQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(this));
+
+    OIterator<? extends DashboardMetadata> it = query.getIterator();
+
+    try
+    {
+      List<? extends DashboardMetadata> dms = it.getAll();
+
+      for (DashboardMetadata dm : dms)
+      {
+        MetadataWrapper wrapper = dm.getChild();
+
+        for (int i = 0; i < typeIds.length; i++)
+        {
+          String typeId = typeIds[i];
+
+          if (wrapper.getWrappedMdClassId().equals(typeId))
+          {
+            dm.lock();
+            dm.setListOrder(i);
+            dm.apply();
+          }
+        }
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+  
+  @Override
+  @Transaction
+  public void setDashboardAttributesOrder(String classId, String[] attributeIds)
+  {
+    MetadataWrapper wrapper = MetadataWrapper.getByWrappedMdClassId(this, classId);
+    
+    if(wrapper != null)
+    {
+      DashboardAttributesQuery query = new DashboardAttributesQuery(new QueryFactory());
+      query.WHERE(query.getParent().EQ(wrapper));
+      
+      OIterator<? extends DashboardAttributes> it = query.getIterator();
+      
+      try
+      {
+        List<? extends DashboardAttributes> attributes = it.getAll();
+
+        for (DashboardAttributes attribute : attributes)
+        {
+          AttributeWrapper aw = attribute.getChild();
+          
+          for (int i = 0; i < attributeIds.length; i++)
+          {
+            String attributeId = attributeIds[i];
+
+            if (aw.getWrappedMdAttributeId().equals(attributeId))
+            {
+              attribute.lock();
+              attribute.setListOrder(i);
+              attribute.apply();
+            }
+          }
+        }
+      }
+      finally
+      {
+        it.close();
+      }
     }
   }
 }

@@ -218,6 +218,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     try
     {
+      int index = dashboard.getMaxOrder() + 1;      
+      
       for (int i = 0; i < types.length(); i++)
       {
         JSONObject type = types.getJSONObject(i);
@@ -226,7 +228,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
         MappableClass mClass = MappableClass.get(id);
         MdClass mdClass = mClass.getWrappedMdClass();
-
+        
         MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
         query.WHERE(query.getDashboard().EQ(dashboard));
         query.AND(query.getWrappedMdClass().EQ(mdClass));
@@ -241,7 +243,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
             wrapper.apply();
 
             DashboardMetadata metadata = dashboard.addMetadata(wrapper);
-            metadata.setListOrder(i);
+            metadata.setListOrder(index + i);
             metadata.apply();
             
             // Add all of the attributes
@@ -301,6 +303,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     try
     {
+      int index = wrapper.getMaxOrder() + 1;
+      
       for (int i = 0; i < attributes.length(); i++)
       {
         JSONObject type = attributes.getJSONObject(i);
@@ -325,7 +329,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
           attribute.apply();
 
           DashboardAttributes dAttribute = wrapper.addAttributeWrapper(attribute);
-          dAttribute.setListOrder(i);
+          dAttribute.setListOrder(index + i);
           dAttribute.apply();
         }
         else if (!checked && query.getCount() > 0)

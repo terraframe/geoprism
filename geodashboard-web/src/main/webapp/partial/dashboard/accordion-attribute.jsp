@@ -19,7 +19,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="panel">
+<div class="panel" data-id="{{attribute.mdAttributeId}}">
   <h4 class="panel-title">
     <a class="opener-link" data-toggle="collapse" ng-href="#collapse00{{identifier}}">{{attribute.label}}</a>
           

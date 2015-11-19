@@ -49,11 +49,9 @@
   <ng-form name="form">    
     <!-- Global geo filter -->
     <location-filter filter="dashboard.model.location" dashboard-id="dashboard.dashboardId"></location-filter>
-                                            
-    <div class="sales-accortion panel-group" id="type-accordion">
-      <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
-    </div> <!-- END sales-accortion panel-group -->
-    
+
+    <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
+                                                
     <div id="filter-buttons-container">
       <a href="#" ng-click="form.$invalid || dashboard.refresh()" ng-disabled="form.$invalid" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
       <a href="#" ng-click="form.$invalid || dashboard.save(false)" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left""></a>
