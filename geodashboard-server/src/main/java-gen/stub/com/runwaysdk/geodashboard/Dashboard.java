@@ -57,7 +57,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.facade.Facade;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;

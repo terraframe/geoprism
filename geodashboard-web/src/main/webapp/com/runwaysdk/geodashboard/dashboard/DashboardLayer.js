@@ -20,6 +20,55 @@
 	
   /**
    * 
+   * MAP PANEL CONTROLLER AND WIDGET
+   * 
+   */
+  function MapPanelController($scope, $timeout) {
+    var controller = this;
+    controller.expanded = true;
+    
+    controller.toggle = function() {
+      var speed = 500;
+        
+      if(controller.expanded){
+        $("#control-form").animate({left: "-=236"}, speed, function() {
+          controller.expanded = false;
+          
+          $scope.$apply();
+        });
+        
+        $(".ol-zoom.ol-unselectable.ol-control").animate({left: "-=236"}, speed );
+      }
+      else{
+        $("#control-form").animate({left: "+=236"}, speed, function() {
+          controller.expanded = true;
+
+          $scope.$apply();          
+        });
+        
+        $(".ol-zoom.ol-unselectable.ol-control").animate({left: "+=236"}, speed );        
+      }
+    }
+  }
+  
+  function MapPanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/map-panel.jsp',
+      scope: {
+        dashboard:'='
+      },
+      controller : MapPanelController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }  
+
+
+  /**
+   * 
    * THEMATIC LAYER CONTROLLER AND WIDGET
    * 
    */
@@ -410,6 +459,7 @@
   
   angular.module("dashboard-layer", ["dashboard-service", "map-service"]);
   angular.module('dashboard-layer')
+    .directive('mapPanel', MapPanel)
     .directive('thematicPanel', ThematicPanel)
     .directive('referencePanel', ReferencePanel)
     .directive('basePanel', BasePanel)  

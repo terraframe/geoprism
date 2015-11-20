@@ -90,76 +90,42 @@
 
   <body ng-controller="DashboardController as dashboard" ng-init="init('${workspace}', ${editDashboard}, ${editData})">
 
-    <form action="#" class="control-form" id="control-form" ng-cloak>
-      <div id="control-form-collapse-button">
-        <i class="fa fa-angle-double-left toggle-left expanded"></i>
-      </div>
-      <fieldset>
-        <legend class="none"><gdb:localize key="dashboardViewer.controlForm"/></legend>
-        <button class="none"><gdb:localize key="dashboardViewer.save"/></button>
-        
-        <!-- Overlay Layers Panel -->
-        <thematic-panel cache="dashboard.thematicLayerCache" dashboard="dashboard" ></thematic-panel>
-        
-        <!-- Reference Layer Panel -->       
-        <reference-panel cache="dashboard.referenceLayerCache" dashboard="dashboard" ></reference-panel>
-
-        <!-- Base Layers Panel -->     
-        <base-panel layers="dashboard.baseLayers" dashboard="dashboard" ></base-panel>
-        
-        <!-- Legend Panel --> 
-        <legend-panel thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache"></legend-panel>      
-     
-        <!-- Map Tools Panel -->       
-        <article class="accordion info-box" id="map-tools-collapse-container">
-          <div class="accordion-group sales-accortion" id="map-tools-sub-container">
-            <div id="collapse-map-tools" class="accordion-body">
-              <div class="accordion-inner holder" id="mapToolsContainer">
-                <a ng-click="dashboard.exportMap()" class="fa fa-file-image-o map-tool-icon" download="map.png" title="<gdb:localize key='dashboardViewer.exportMapTooltip'/>" ></a>
-                <a ng-click="dashboard.centerMap()" class="fa fa-arrows-alt map-tool-icon" title="<gdb:localize key='dashboardViewer.zoomMapToExtentTooltip'/>" ></a>
-              </div>              
-            </div>
-          </div>
-        </article>     
-      </fieldset>
-    </form>
-    
+    <map-panel dashboard="dashboard"></map-panel>
     <dashboard-panel dashboard="dashboard"></dashboard-panel>
   
-  <!-- modal -->
-  <!-- <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false"> -->
-  <div class="modal fade" id="modal01" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <!-- Filled in by ajax call to create/edit layer -->
-  </div>
-  
-  <!-- modal -->
-  <div class="modal fade" id="dashboardModal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <!-- Filled in by ajax call to create new dashboard -->
-  </div>
-
-  <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache"></floating-legends>  
-  
-  <!-- map container -->
-  <div class="bg-stretch">
-    <div id="mapDivId" class="dynamicMap">
-      <map-popup ng-if="dashboard.feature != null" feature="dashboard.feature"></map-popup>
+    <!-- modal -->
+    <!-- <div class="modal fade" id="modal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false"> -->
+    <div class="modal fade" id="modal01" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <!-- Filled in by ajax call to create/edit layer -->
     </div>
-  </div>
   
-  <!-- reporting container -->
-  <report-panel has-report="dashboard.model.hasReport"></report-panel>
+    <!-- modal -->
+    <div class="modal fade" id="dashboardModal01" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <!-- Filled in by ajax call to create new dashboard -->
+    </div>
+
+    <floating-legends thematic-cache="dashboard.thematicLayerCache" reference-cache="dashboard.referenceLayerCache"></floating-legends>  
   
-  <!-- allow a user to go to the top of the page -->
-  <div class="skip">
-    <a href="#wrapper"><gdb:localize key="dashboardViewer.backToTop"/></a>
-  </div>
+    <!-- map container -->
+    <div class="bg-stretch">
+      <div id="mapDivId" class="dynamicMap">
+        <map-popup ng-if="dashboard.feature != null" feature="dashboard.feature"></map-popup>
+      </div>
+    </div>
+  
+    <!-- reporting container -->
+    <report-panel has-report="dashboard.model.hasReport"></report-panel>
+  
+    <!-- allow a user to go to the top of the page -->
+    <div class="skip">
+      <a href="#wrapper"><gdb:localize key="dashboardViewer.backToTop"/></a>
+    </div>
 
-  <!-- dashboard builder modal -->  
-  <builder-dialog ng-if="dashboard.builder != null" show="dashboard.builder" callback="dashboard"></builder-dialog>  
-</body>
-
-<!-- Dialog for cloning a dashboard  -->
-<div id="clone-container"></div>  
-<div id="dashboard-edit-container"></div>  
-
+    <!-- dashboard builder modal -->  
+    <builder-dialog ng-if="dashboard.builder != null" show="dashboard.builder" callback="dashboard"></builder-dialog>
+    
+    <!-- Dialog for cloning a dashboard  -->
+    <div id="clone-container"></div>  
+    <div id="dashboard-edit-container"></div>      
+  </body>
 </html>
