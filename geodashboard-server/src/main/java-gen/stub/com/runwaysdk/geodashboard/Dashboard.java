@@ -230,7 +230,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     // Delete the corresponding report item
     ReportItem report = ReportItem.getByDashboard(this.getId());
-    report.delete();
+
+    if (report != null)
+    {
+      report.delete();
+    }
 
     Roles role = this.getDashboardRole();
 
@@ -1133,10 +1137,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public void generateThumbnailImage()
   {
     /*
-     * This method is only invoked when a new layer is created.  As such, 
-     * it generates a thumbnail for both the current users state
-     * and the global state.  Normally you just want to generate a thumbnail
-     * for one or the other.
+     * This method is only invoked when a new layer is created. As such, it generates a thumbnail for both the current
+     * users state and the global state. Normally you just want to generate a thumbnail for one or the other.
      */
     this.executeThumbnailThread(GeodashboardUser.getCurrentUser(), null);
   }
@@ -1460,7 +1462,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     state.setConditions(DashboardCondition.serialize(conditions));
     state.apply();
-    
+
     this.executeThumbnailThread(user);
 
     return "";
