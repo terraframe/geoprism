@@ -624,6 +624,8 @@
         dashboardId : dashboardId,
         label : label
       });
+      
+      controller.setDashboardId(dashboardId);
     }
     
     controller.editOptions = function() {
