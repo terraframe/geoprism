@@ -229,6 +229,8 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     if (layer instanceof DashboardThematicLayerDTO)
     {
 
+      req.setAttribute("mapId", mapId);
+      
       DashboardThematicLayerDTO tLayer = (DashboardThematicLayerDTO) layer;
       req.setAttribute("layer", tLayer);
 
@@ -268,51 +270,51 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       req.setAttribute("aggregations", encodeString(formatAggregationMethods(aggregations).toString()) );
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
 
-      List<String> pointTypes = new ArrayList<String>();
-      pointTypes.add("CIRCLE");
-      pointTypes.add("STAR");
-      pointTypes.add("SQUARE");
-      pointTypes.add("TRIANGLE");
-      pointTypes.add("CROSS");
-      pointTypes.add("X");
-      req.setAttribute("pointTypes", pointTypes);
-      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
-      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
-      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
+//      List<String> pointTypes = new ArrayList<String>();
+//      pointTypes.add("CIRCLE");
+//      pointTypes.add("STAR");
+//      pointTypes.add("SQUARE");
+//      pointTypes.add("TRIANGLE");
+//      pointTypes.add("CROSS");
+//      pointTypes.add("X");
+//      req.setAttribute("pointTypes", pointTypes);
+//      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
+//      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
+//      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
 
       // layer types
-      Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
+//      Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
 
-      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+//      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
 
       // Set possible layer types based on attribute type
       MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
-      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-      }
-      else if (mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO)
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
-      }
-      else
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
-      }
+//      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//      }
+//      else if (mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO)
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
+//      }
+//      else
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
+//      }
 
-      req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
-      req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribute(new JSONArray(layerTypes.keySet()).toString()));
+//      req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
+//      req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
+//      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribute(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)

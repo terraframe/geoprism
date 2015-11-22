@@ -45,13 +45,16 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.Dashboard;
+import com.runwaysdk.geodashboard.MdAttributeView;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
+import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
+import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
-import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -172,6 +175,114 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     return ( (MdAttributeConcrete) mdAttr );
   }
   
+  
+  private static JSONObject getMdAttributeType(MdAttribute mdAttribute)
+  {
+      JSONObject attrObj = new JSONObject();
+      MdAttributeConcrete mdAttributeConcrete = getMdAttributeConcrete(mdAttribute);
+      
+      // Determine if the attribute is an ontology attribute
+      if (mdAttributeConcrete instanceof MdAttributeTerm)
+      {
+        try
+        {
+          attrObj.put("isOntologyAttribute", true);
+          attrObj.put("isTextAttribute", false);
+          attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
+          attrObj.put("termType", Classifier.CLASS);
+        }
+        catch (JSONException e1)
+        {
+          throw new RuntimeException(e1);
+        }
+        
+        Classifier[] roots = Dashboard.getClassifierRoots(mdAttribute.getId());
+        JSONObject rootsIds = new JSONObject();
+        JSONArray ids = new JSONArray();
+  
+        Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
+        for (Classifier root : roots)
+        {
+          JSONObject newJSON = new JSONObject();
+          try
+          {
+            newJSON.put("termId", root.getId());
+          }
+          catch (JSONException e)
+          {
+            throw new RuntimeException(e);
+          }
+          
+          // TODO: verify that getAllClassifierTermAttributeRootsRel() is the correct method
+          OIterator<? extends ClassifierTermAttributeRoot> relationships = root.getAllClassifierTermAttributeRootsRel();
+          for (ClassifierTermAttributeRoot relationship : relationships)
+          {
+            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
+            {
+              try
+              {
+                newJSON.put("selectable", relationship.getSelectable());
+              }
+              catch (JSONException e)
+              {
+                throw new RuntimeException(e);
+              }
+              selectableMap.put(root.getId(), relationship.getSelectable());
+            }
+          }
+  
+          ids.put(newJSON);
+        }
+  
+        try
+        {
+          rootsIds.put("roots", ids);
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+  
+        // Passing ontology root to layer form categories
+        try
+        {
+          attrObj.put("roots", rootsIds);
+          attrObj.put("selectableMap", selectableMap);
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+      }
+      else if (mdAttributeConcrete instanceof MdAttributeCharacter || mdAttributeConcrete instanceof MdAttributeText)
+      {
+        try
+        {
+          attrObj.put("isTextAttribute", true);
+          attrObj.put("isOntologyAttribute", false);
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+      }
+      else
+      {
+        try
+        {
+          attrObj.put("isOntologyAttribute", false);
+          attrObj.put("isTextAttribute", false);
+        }
+        catch (JSONException e)
+        {
+          throw new RuntimeException(e);
+        }
+      }
+    
+      return attrObj;
+  }
+  
+  
   public static String getOptionsJSON(String thematicAttributeId, String dashboardId)
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
@@ -241,6 +352,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       aggStrategiesJSON.put(nodeObj);
     }
     
+    JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
+    JSONObject attributeType = getMdAttributeType(tAttr);
     
     // Set possible layer types based on attribute type
     Map<String, String> layerTypes = new LinkedHashMap<String, String>();
@@ -275,6 +388,10 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("aggegationStrategies", aggStrategiesJSON);
       json.put("fonts", new JSONArray(Arrays.asList(fonts)));
       json.put("geoNodes", new JSONArray(geoNodesJSON));
+      
+      json.put("attributeType", attributeType);
+      
+      json.put("secondaryAttributes", secondaryAttributes);
       
       json.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
       json.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
@@ -337,6 +454,30 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     
     return value;
   }
+  
+  private static JSONArray getSecodaryAttributesJSON(String mapId, String mdAttributeId)
+  {
+    JSONArray secAttrs = new JSONArray();
+    MdAttributeView[] secondaryAttributes = DashboardMap.getSecondaryAttributes(mapId, mdAttributeId);
+    for(MdAttributeView secAttr : secondaryAttributes)
+    {
+      JSONObject secAttrObj = new JSONObject();
+      try
+      {
+        secAttrObj.put("id", secAttr.getId());
+        secAttrObj.put("type", secAttr.getAttributeType());
+        secAttrObj.put("label", secAttr.getDisplayLabel());
+        secAttrs.put(secAttrObj);
+      }
+      catch (JSONException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    
+    return secAttrs;
+  }
 
   public JSONObject toJSON()
   {
@@ -382,7 +523,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         jsonStyles.put(style.toJSON());
       }
       json.put("styles", jsonStyles);
-
+      
       return json;
     }
     catch (JSONException ex)

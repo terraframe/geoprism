@@ -1,0 +1,1007 @@
+<%--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+--%>
+<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+       
+	            <div class="row-holder">
+	              <div class="label-holder">
+	                <strong><gdb:localize key="DashboardThematicLayer.form.styleTheLayer"/></strong>
+	              </div>
+	              <div class="holder">
+	                <div id="layer-type-styler-container" class="tab-content"> 
+	                  
+	                  <!-- BASICPOINT -->
+<!-- 	                  <div ng-show="'{{thematicLayerModel.layerType}}' == 'BASICPOINT'" class="tab-pane" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOINT' }" id="tab001basicpoint"> -->
+	                  <div ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOINT' }" class="tab-pane" id="tab001basicpoint">
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+	                      <div class="cell-holder">
+		                        <div class="cell">
+		                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+		                          <div class="color-holder">
+		                            <a href="#" class="color-choice">
+		                              <span class="ico" style="background:{{thematicStyleModel.pointFill}}">icon</span>
+		                              <span class="arrow">arrow</span>
+		                              <input type="hidden" class="color-input" name="style.pointFill" value="{{thematicStyleModel.pointFill}}" />
+		                            </a>
+		                          </div>
+		                        </div>
+		                        <div class="cell">
+		                          <label for="basic-point-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+		                          <div class="text">
+		                          
+		                          
+		                            <select id="basic-point-opacity-select" class="tab-select" name="style.pointOpacity"
+	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-model="thematicStyleModel.pointOpacity">
+	                             	</select>
+		                          
+<!-- 		                            <select id="basic-point-opacity-select" class="tab-select" name="style.pointOpacity"> -->
+<!-- 		                              <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 		                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                               --%>
+<!-- 		                                <c:choose> -->
+<%-- 		                                  <c:when test="${style.pointOpacity*100 == size}"> --%>
+<%-- 		                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 		                                  </c:when> -->
+<!-- 		                                  <c:otherwise> -->
+<%-- 		                                    <option value="${potentialValue}">${size}</option> --%>
+<!-- 		                                  </c:otherwise> -->
+<!-- 		                                </c:choose> -->
+<!-- 		                              </c:forEach> -->
+<!-- 		                            </select>                           -->
+		                          </div>
+		                        </div>
+	                      	</div>
+	                    </div>
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize key="DashboardLayer.form.stroke"/></strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicLayerModel.pointStroke}};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.pointStroke" value="{{thematicLayerModel.pointStroke}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="basic-point-stroke-select"><gdb:localize key="DashboardLayer.form.width"/></label>
+	                          <div class="select-holder">
+	                          	 <select name="style.pointStrokeWidth" id="basic-point-stroke-select" class="tab-select" 
+	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-model="thematicStyleModel.pointStrokeWidth">
+	                             </select>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="basic-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+	                          <div class="text">
+	                             	<select id="basic-point-stroke-opacity-select" class="tab-select" name="style.pointStrokeOpacity"
+	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-model="thematicStyleModel.pointStrokeOpacity">
+	                             	</select>
+	                             
+<!-- 	                             <select id="basic-point-stroke-opacity-select" class="tab-select" name="style.pointStrokeOpacity"> -->
+<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.pointStrokeOpacity*100 == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select>    -->
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="basic-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
+		                          <div class="text">
+		                          	<input id="basic-point-radius-select" name="style.basicPointSize" type="text" value="{{thematicStyleModel.basicPointSize}}" placeholder="{{thematicStyleModel.basicPointSize}}"></input>
+		                          </div>
+		                        </div>
+	                      </div>
+	                    
+		                    <div id="point-type-container" class="cell">
+			                  <label for="point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
+			                  <div class="select-box">
+			                    
+			                    <select id="point-type" class="method-select" name="style.pointWellKnownName" 
+			                      ng-model="thematicStyleModel.pointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
+			                    </select>
+			                    
+			                  </div>
+			                </div>
+		                </div>
+	                  </div>
+	                  
+	                  
+	                  <!-- GRADIENT POINT -->
+<!-- 	                  <div ng-show="'{{thematicLayerModel.layerType}}' == 'GRADIENTPOINT'" class="tab-pane" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOINT' }" id="tab006gradientpoint"> -->
+	                  <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOINT' }">
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+
+						  <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.minFill"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointMinFill}}">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.gradientPointMinFill" value="{{thematicStyleModel.gradientPointMinFill}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.maxFill"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointMaxFill}};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.${style.gradientPointMaxFillMd.name}" value="{{thematicStyleModel.gradientPointMaxFill}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div id="gradient-point-fill-opacity-cell" class="cell">
+			                    <label for="gradient-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+			                    <div class="text">
+			                    	<select id="gradient-point-fill-opacity-select" class="tab-select" name="style.gradientPointFillOpacity"
+	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-model="thematicStyleModel.gradientPointFillOpacity">
+	                             	</select>  
+			                      
+<!-- 			                      <select id="gradient-point-fill-opacity-select" class="tab-select" name="style.gradientPointFillOpacity"> -->
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.gradientPointFillOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select>  -->
+			                       
+			                    </div>
+			                  </div>
+	                      </div>
+	                    </div>
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointStroke}};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.gradientPointStroke" value="{{thematicStyleModel.gradientPointStroke}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="gradient-point-stroke-select"><gdb:localize key="DashboardLayer.form.width"/></label>
+	                          <div class="select-holder">
+	                              
+	                             <select name="style.gradientPointStrokeWidth" id="gradient-point-stroke-select" class="tab-select" 
+	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-model="thematicStyleModel.gradientPointStrokeWidth">
+	                             </select>
+	                            
+<!-- 	                            <select name="style.gradientPointStrokeWidth" id="gradient-point-stroke-select" class="tab-select"> -->
+<!-- 	                              <c:forEach begin="0" end="15" var="size"> -->
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.gradientPointStrokeWidth == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${size}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select> -->
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="gradient-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+	                          <div class="text">
+	                             
+	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.gradientPointStrokeOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.gradientPointStrokeOpacity">
+	                             </select>
+	                             
+<!-- 	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.gradientPointStrokeOpacity"> -->
+<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+	                                
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.gradientPointStrokeOpacity*100 == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select>    -->
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="fill-block">
+	                     <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="gradient-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
+		                          <div class="text">
+		                          	<input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" value="{{thematicStyleModel.gradientPointSize}}"></input>
+		                          </div>
+		                        </div>
+	                      </div>
+	                      <div id="gradient-point-type-container" class="cell">
+			                  <label for="gradient-point-type"><gdb:localize var="pt_type" key="DashboardLayer.form.pointType"/>${pt_type}</label>
+			                  <div class="select-box">
+			                    
+			                    <select id="gradient-point-type" class="method-select" name="style.gradientPointWellKnownName"
+			                      ng-model="thematicStyleModel.gradientPointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
+			                    </select>
+			                    
+			                    
+<!-- 			                    <select id="gradient-point-type" class="method-select" name="style.gradientPointWellKnownName"> -->
+<%-- 			                      <c:forEach items="${pointTypes}" var="type"> --%>
+<!-- 			                         	<c:choose> -->
+<%-- 			                           		<c:when test="${type == activeGradientPointType}"> --%>
+<%-- 			                             		<option value="${type}" selected="selected"> --%>
+<%-- 			                               			${type} --%>
+<!-- 			                             		</option> -->
+<!-- 			                           		</c:when> -->
+<!-- 			                           		<c:otherwise> -->
+<%-- 			                             		<option value="${type}"> --%>
+<%-- 			                               			${type} --%>
+<!-- 			                             		</option> -->
+<!-- 			                           		</c:otherwise> -->
+<!-- 			                         	</c:choose> -->
+<!-- 			                      </c:forEach> -->
+<!-- 			                    </select> -->
+			                    
+			                  </div>
+			                </div>
+	                    </div>
+	                  </div>
+	                  
+	                  
+	                  <!-- CATEGORY POINT -->
+	                  <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'CATEGORYPOINT' }">
+	                  
+	                    <div class="color-section">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+	                      <div class="heading-list">
+	                        <span><gdb:localize key="DashboardThematicLayer.form.category"/></span>
+	                        <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
+	                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardThematicLayer.form.catInputPlaceholder"/></span>
+	                      </div>
+	                    <div class="category-block" id="category-point-colors-container">
+	                      	  
+						<!-- TODO: remove this input after full angular integration -->
+	                    <input id="categories-point-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${pointcategories}' type="hidden" class="category-input" name="style.categoryPointStyles" ></input>
+									
+									<!-- RENDER ONTOLOGY TREE DATA  -->
+		                      		<div class="ontology-category-input-container" ng-if="dynamicDataModel.isOntologyAttribute">
+										<div id="points-ontology-tree" data-termtype="{{dynamicDataModel.termType}}" data-reltype="{{dynamicDataModel.relationshipType}}" data-roots='{{dynamicDataModel.roots}}' ></div>
+										<div id="other-cat-point-container" class="other-cat-container">
+											<ul class="color-list other-cat">							                       
+											   <li>
+						                         <div class="category-container">
+							                       	 <div class="text category-input-container">
+							                       	 	<p id="cat-point-other-basic-label" ><gdb:localize key="Other"/></p>
+							                       	 </div>
+							                       	 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+	                  									<span id="cat-point-other-color-selector" class="ico ontology-category-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
+	                								 </a>
+					                   	 		 </div>
+						                       </li>	                       
+						                    </ul>
+						                </div>
+									  	<div class="check-block">
+								      		<input id="ont-cat-point-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input>
+								        	<label for="ont-cat-point-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
+								      	</div>
+									</div>
+
+									<!-- RENDER BASIC CATEGORIES -->
+			                        <div class="panel-group choice-color category-group"  ng-if="!dynamicDataModel.isOntologyAttribute">
+										<div class="panel">
+					                    	<div id="choice-color02" class="panel-collapse">
+	  					                    </div>
+							            </div>
+							            <div class="style-options-block">
+										  <div class="check-block">
+										    <input id="basic-cat-point-other-option" class="other-option-check-box" type="checkbox" name="" checked></input>
+										    <label for="basic-cat-point-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
+										  </div>
+						                </div>
+			                        </div>
+	                      </div>
+	                    </div>
+	                    
+	                    
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
+	                      <div class="cell-holder">
+	                        	<div class="cell">
+				                    <span><gdb:localize key="DashboardLayer.form.color"/></span>
+				                    <div class="color-holder">
+				                      <a href="#" class="color-choice">
+				                       	<span class="ico" style="background:{{thematicStyleModel.categoryPointStroke}}">icon</span>
+				                       	<span class="arrow">arrow</span>
+				                       	<input type="hidden" class="color-input" name="style.categoryPointStroke" value="{{thematicStyleModel.categoryPointStroke}}" />
+					                  </a>
+					                </div>
+				                </div>
+				                <div class="cell">
+			                    <label for="category-point-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
+			                    <div class="select-holder">
+			                      
+			                     <select id="category-point-stroke-width-select" class="tab-select" name="style.categoryPointStrokeWidth"
+	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-model="thematicStyleModel.categoryPointStrokeWidth">
+	                             </select>
+	                             
+<!-- 			                      <select id="category-point-stroke-width-select" class="tab-select" name="style.categoryPointStrokeWidth"> -->
+<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.categoryPointStrokeWidth == size}"> --%>
+<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${size}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+			                    </div>
+			                  </div>
+			                  <div class="cell">
+			                    <label for="category-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+			                    <div class="text">
+			                      
+			                     <select id="category-point-stroke-opacity-select" class="tab-select" name="style.categoryPointStrokeOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.categoryPointStrokeOpacity">
+	                             </select>
+			                      
+<!-- 			                      <select id="category-point-stroke-opacity-select" class="tab-select" name="style.categoryPointStrokeOpacity"> -->
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.categoryPointStrokeOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+			                      
+			                    </div>
+			                  </div>
+	                      </div>
+
+	                    <div id="category-point-radius-block" class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
+	                      <div class="cell-holder">
+		                    	<div class="cell">
+		                          <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
+		                          <div class="text">
+		                          	<input id="category-point-radius-select" name="style.categoryPointSize" type="text" value="{{thematicStyleModel.categoryPointSize}}"></input>
+		                          </div>
+		                        </div>
+		                        <div class="cell">
+			                    <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+			                    <div class="text">
+			                      
+			                      
+			                      	<select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
+	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-model="thematicStyleModel.categoryPointFillOpacity">
+	                             	</select>  
+			                      
+<!-- 			                      <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"> -->
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.categoryPointFillOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select>   -->
+			                      
+			                    </div>
+			                  </div>
+	                      </div>
+	                      
+	                      	<div id="category-point-type-container" class="cell">
+			                  <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
+			                  <div class="select-box">
+			                    
+			                    
+			                    <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName" 
+			                      ng-model="thematicStyleModel.categoryPointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
+			                    </select>
+			                    
+<!-- 			                    <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName"> -->
+<%-- 			                      <c:forEach items="${pointTypes}" var="type"> --%>
+<!-- 			                         	<c:choose> -->
+<%-- 			                           		<c:when test="${type == activeCategoryPointType}"> --%>
+<%-- 			                             		<option value="${type}" selected="selected"> --%>
+<%-- 			                               			${type} --%>
+<!-- 			                             		</option> -->
+<!-- 			                           		</c:when> -->
+<!-- 			                           		<c:otherwise> -->
+<%-- 			                             		<option value="${type}"> --%>
+<%-- 			                               			${type} --%>
+<!-- 			                             		</option> -->
+<!-- 			                           		</c:otherwise> -->
+<!-- 			                         	</c:choose> -->
+<!-- 			                      </c:forEach> -->
+<!-- 			                    </select> -->
+			                    
+			                  </div>
+			                </div>
+	                      </div>
+	                    </div>
+	                </div>
+	                
+	                  
+	                  <!-- BUBBLE -->
+	                  <div class="tab-pane" id="tab002bubble" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BUBBLE' }">
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicStyleModel.bubbleFill}};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.bubbleFill" value="{{thematicStyleModel.bubbleFill}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="f71"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+	                          <div class="text">
+	                            
+	                            
+								 <select id="f71" class="tab-select" name="style.bubbleOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.bubbleOpacity">
+	                             </select>
+	                             
+<!-- 	                            <select id="f71" class="tab-select" name="style.bubbleOpacity"> -->
+<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                               --%>
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.bubbleOpacity*100 == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select> -->
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{thematicStyleModel.bubbleStroke}};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.bubbleStroke" value="{{thematicStyleModel.bubbleStroke}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="f33"><gdb:localize key="DashboardLayer.form.width"/></label>
+	                          <div class="select-holder">
+	                            
+	                             <select name="style.bubbleStrokeWidth" id="f73" class="tab-select"
+	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-model="thematicStyleModel.bubbleStrokeWidth">
+	                             </select>
+	                             
+	                             
+<%-- 	                            <select name="style.${style.bubbleStrokeWidthMd.name}" id="f73" class="tab-select"> --%>
+<!-- 	                              <c:forEach begin="0" end="15" var="size"> -->
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.bubbleStrokeWidth == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${size}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select> -->
+	                            
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+	                          <label for="f74"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+	                          <div class="text">
+	                             
+	                             <select id="f74" class="tab-select" name="style.bubbleStrokeOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.bubbleStrokeOpacity">
+	                             </select>
+	                             
+<!-- 	                             <select id="f74" class="tab-select" name="style.bubbleStrokeOpacity"> -->
+<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+	                                
+<!-- 	                                <c:choose> -->
+<%-- 	                                  <c:when test="${style.bubbleStrokeOpacity*100 == size}"> --%>
+<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:when> -->
+<!-- 	                                  <c:otherwise> -->
+<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
+<!-- 	                                  </c:otherwise> -->
+<!-- 	                                </c:choose> -->
+<!-- 	                              </c:forEach> -->
+<!-- 	                            </select>    -->
+	                            
+	                          </div>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
+	                      <div class="cell-holder">
+		                        <div class="cell">
+		                          <label for="f76"><gdb:localize key="DashboardLayer.form.min"/></label>
+		                          <div class="text">
+		                          	 <input id="f76" name="style.bubbleMinSize" type="text" value="{{thematicStyleModel.bubbleMinSize}}"/>
+		                          </div>
+		                        </div>
+		                        <div class="cell">
+		                          <label for="f77"><gdb:localize key="DashboardLayer.form.max"/></label>
+		                          <div class="text">
+		                            <input id="f77" name="style.bubbleMaxSize" type="text" value="{{thematicStyleModel.bubbleMaxSize}}"></input>
+		                          </div>
+		                        </div>
+		                        
+<!-- 		                        <div class="check-block"> -->
+<%-- 				                    <input id="f52" type="checkbox" <c:if test="${style.bubbleContinuousSize}">checked</c:if> name="style.bubbleContinuousSize"></input> --%>
+<%-- 				                    <label for="f52">${style.bubbleContinuousSizeMd.displayLabel}</label> --%>
+<!-- 				                    <mjl:messages attribute="bubbleContinuousSize" classes="error-message"> -->
+<!-- 				                      <mjl:message /> -->
+<!-- 				                    </mjl:messages> -->
+<!-- 				                </div> -->
+	                      </div>
+	                    </div>
+	                    
+<!-- 	                    TODO: THIS SECONDARY BOX -->
+	                    <div class="secondary-box">
+	                      <input type="hidden" id="secondaryCategories" data-categoriesstore="${secondaryCategories}" />
+	                      <input type="hidden" id="secondaryAggregationValue" value="${secondaryAggregation}" />
+	                      
+	                      <strong class="title"><gdb:localize key="DashboardLayer.form.secondaryAttributeStyle"/></strong>
+	                      <div class="cell-holder">	                    
+	                        <label class="secondary-label" for="secondaryAttribute" ><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
+  	                        <div id="secondary-select-box" class="select-box">
+	                          
+	                          	<select id="secondaryAttribute" class="method-select" name="secondaryAttribute"
+			                      ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label for attr in dynamicDataModel.secondaryAttributes track by attr.id">
+			                    	<option label="" value=""></option>
+			                    </select>
+			                    
+<!-- 	                          <select id="secondaryAttribute" class="method-select" name="secondaryAttribute"> -->
+<%-- 	                            <option ${style.secondaryAttributeId == '' ? 'selected="selected"' : ''} value=""><gdb:localize key="DashboardLayer.form.none"/></option> --%>
+<%-- 	                            <c:forEach items="${secondaryAttributes}" var="secondaryAttribute"> --%>
+<%-- 		                          <option ${style.secondaryAttributeId == secondaryAttribute.mdAttributeId ? 'selected="selected"' : ''} value="${secondaryAttribute.mdAttributeId}" data-type="${secondaryAttribute.attributeType}">${secondaryAttribute.displayLabel}</option> --%>
+<!-- 		                        </c:forEach> -->
+<!-- 		                      </select> -->
+	                        </div>
+	                      </div>
+						  <%-- ${style.secondaryAttributeId == '' ? 'style="display:none;"' : ''} --%>
+	                      <div id="secondary-content" ng-show="secondaryAttributeIsValid()" >
+     	                    <div class="cell-holder">
+	                          <label class="secondary-label" for="secondaryAggregation"><gdb:localize key="DashboardLayer.form.secondaryAggregation"/></label>
+	                          <div class="select-box" id="secondary-aggregation-container"> 
+	                          </div> 
+	                        </div>
+	                        <div id="secondary-cateogries"></div>
+	                      </div>
+                        </div>
+	                  </div>
+	                  
+	                  
+	                  <!-- BASICPOLYGON -->
+	                  <div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOLYGON' }">
+	                    <div class="fill-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+	                      <div class="cell-holder">
+	                        <div class="cell">
+	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
+	                          <div class="color-holder">
+	                            <a href="#" class="color-choice">
+	                              <span class="ico" style="background:{{ thematicStyleModel.polygonFill }};">icon</span>
+	                              <span class="arrow">arrow</span>
+	                              <input type="hidden" class="color-input" name="style.polygonFill" value="{{thematicStyleModel.polygonFill}}" />
+	                            </a>
+	                          </div>
+	                        </div>
+	                        <div class="cell">
+			                    <label for="basic-polygon-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+			                    <div class="text">
+			                      
+			                     <select id="basic-polygon-fill-opacity-select" class="tab-select" name="style.polygonFillOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.polygonFillOpacity">
+	                             </select>
+	                             
+	                             
+<!-- 			                      <select id="basic-polygon-fill-opacity-select" class="tab-select" name="style.polygonFillOpacity"> -->
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.polygonFillOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select>   -->
+			                      
+			                    </div>
+			                  </div>
+	                      </div>
+	                    </div>
+	                      
+	                    <div class="stroke-block">
+	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
+	                      <div class="cell-holder">
+	                        	<div class="cell">
+				                    <span><gdb:localize key="DashboardLayer.form.color"/></span>
+				                    <div class="color-holder">
+				                      <a href="#" class="color-choice">
+				                       	<span class="ico" style="background:{{thematicStyleModel.polygonStroke}};">icon</span>
+				                       	<span class="arrow">arrow</span>
+				                       	<input type="hidden" class="color-input" name="style.polygonStroke" value="{{thematicStyleModel.polygonStroke}}" />
+					                  </a>
+					                </div>
+				                </div>
+				                <div class="cell">
+			                    <label for="basic-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.strokeWidth"/></label>
+			                    <div class="select-holder">
+			                      
+			                     <select id="basic-polygon-stroke-width-select" class="tab-select" name="style.polygonStrokeWidth"
+	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-model="thematicStyleModel.polygonStrokeWidth">
+	                             </select>
+	                             
+<!-- 			                      <select id="basic-polygon-stroke-width-select" class="tab-select" name="style.polygonStrokeWidth"> -->
+<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.polygonStrokeWidth == size}"> --%>
+<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${size}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+			                      
+			                    </div>
+			                  </div>
+			                  <div class="cell">
+			                    <label for="basic-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+			                    <div class="text">
+			                      
+			                      
+			                     <select id="basic-polygon-stroke-opacity-select" class="tab-select" name="style.polygonStrokeOpacity"
+	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-model="thematicStyleModel.polygonStrokeOpacity">
+	                             </select>
+	                             
+			                      
+<%-- 			                      <select id="basic-polygon-stroke-opacity-select" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}"> --%>
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.polygonStrokeOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+			                      
+			                    </div>
+			                  </div>
+	                      </div>
+	                    </div>
+	                  </div>
+	                  
+	                  
+	                  <!-- GRADIENT POLYGON -->
+<!-- 	                  <div -->
+<!-- 	                    <c:choose> -->
+<%-- 	                      <c:when test="${'GRADIENTPOLYGON' == activeLayerTypeName}"> --%>
+<!-- 	                        class="tab-pane active" -->
+<!-- 	                      </c:when> -->
+<!-- 	                      <c:otherwise> -->
+<!-- 	                        class="tab-pane" style="display: none;" -->
+<!-- 	                      </c:otherwise> -->
+<!-- 	                    </c:choose> -->
+	                    
+<!-- 	                    id="tab004gradientpolygon" -->
+<!-- 	                  > -->
+<!-- 	                    <div class="gradient-block"> -->
+<%-- 	                      <strong class="title"><gdb:localize var="dl_form_fill" key="DashboardThematicLayer.form.fill"/>${dl_form_fill}</strong> --%>
+<!-- 	                      <div class="cell-holder"> -->
+<!-- 	                        <div class="cell"> -->
+<%-- 	                          <span>${style.gradientPolygonMinFillMd.displayLabel}</span> --%>
+<!-- 	                          <div class="color-holder"> -->
+<!-- 	                            <a href="#" class="color-choice"> -->
+<%-- 	                              <span class="ico" style="background:${style.gradientPolygonMinFill};">icon</span> --%>
+<!-- 	                              <span class="arrow">arrow</span> -->
+<%-- 	                              <input type="hidden" class="color-input" name="style.${style.gradientPolygonMinFillMd.name}" value="${style.gradientPolygonMinFill}" /> --%>
+<!-- 	                            </a> -->
+<!-- 	                          </div> -->
+<!-- 	                        </div> -->
+<!-- 	                        <div class="cell"> -->
+<%-- 	                          <span>${style.gradientPolygonMaxFillMd.displayLabel}</span> --%>
+<!-- 	                          <div class="color-holder"> -->
+<!-- 	                            <a href="#" class="color-choice"> -->
+<%-- 	                              <span class="ico" style="background:${style.gradientPolygonMaxFill};">icon</span> --%>
+<!-- 	                              <span class="arrow">arrow</span> -->
+<%-- 	                              <input type="hidden" class="color-input" name="style.${style.gradientPolygonMaxFillMd.name}" value="${style.gradientPolygonMaxFill}" /> --%>
+<!-- 	                            </a> -->
+<!-- 	                          </div> -->
+<!-- 	                        </div> -->
+<!-- 	                        <div class="cell"> -->
+<%-- 			                    <label for="gradient-polygon-fill-opacity-select">${style.gradientPolygonFillOpacityMd.displayLabel}</label> --%>
+<!-- 			                    <div class="text"> -->
+<%-- 			                      <select id="gradient-polygon-fill-opacity-select" class="tab-select" name="style.${style.gradientPolygonFillOpacityMd.name}"> --%>
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.gradientPolygonFillOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select>   -->
+<!-- 			                    </div> -->
+<!-- 			                  </div> -->
+<!-- 	                      </div> -->
+<!-- 	                    </div> -->
+	                    
+<!-- 	                    <div class="stroke-block"> -->
+<%-- 	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong> --%>
+<!-- 	                      <div class="cell-holder"> -->
+<!-- 	                        	<div class="cell"> -->
+<%-- 				                    <span>${style.gradientPolygonStrokeMd.displayLabel}</span> --%>
+<!-- 				                    <div class="color-holder"> -->
+<!-- 				                      <a href="#" class="color-choice"> -->
+<%-- 				                       	<span class="ico" style="background:${style.gradientPolygonStroke};">icon</span> --%>
+<!-- 				                       	<span class="arrow">arrow</span> -->
+<%-- 				                       	<input type="hidden" class="color-input" name="style.${style.gradientPolygonStrokeMd.name}" value="${style.gradientPolygonStroke}" /> --%>
+<!-- 					                  </a> -->
+<!-- 					                </div> -->
+<!-- 				                </div> -->
+<!-- 				                <div class="cell"> -->
+<%-- 			                    <label for="gradient-polygon-stroke-width-select">${style.gradientPolygonStrokeWidthMd.displayLabel}</label> --%>
+<!-- 			                    <div class="select-holder"> -->
+<%-- 			                      <select id="gradient-polygon-stroke-width-select" class="tab-select" name="style.${style.gradientPolygonStrokeWidthMd.name}"> --%>
+<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.gradientPolygonStrokeWidth == size}"> --%>
+<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${size}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+<!-- 			                    </div> -->
+<!-- 			                  </div> -->
+<!-- 			                  <div class="cell"> -->
+<%-- 			                    <label for="gradient-polygon-stroke-opacity-select">${style.gradientPolygonStrokeOpacityMd.displayLabel}</label> --%>
+<!-- 			                    <div class="text"> -->
+<%-- 			                      <select id="gradient-polygon-stroke-opacity-select" class="tab-select" name="style.${style.gradientPolygonStrokeOpacityMd.name}"> --%>
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.gradientPolygonStrokeOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+<!-- 			                    </div> -->
+<!-- 			                  </div> -->
+<!-- 	                      </div> -->
+<!-- 	                    </div> -->
+<!-- 	                  </div> -->
+	                  
+	                 
+	                  <!-- CATEGORY POLYGON -->
+<!-- 	                  <div -->
+<!-- 	                    <c:choose> -->
+<%-- 	                      <c:when test="${'CATEGORYPOLYGON' == activeLayerTypeName}"> --%>
+<!-- 	                        class="tab-pane active" -->
+<!-- 	                      </c:when> -->
+<!-- 	                      <c:otherwise> -->
+<!-- 	                        class="tab-pane" style="display: none;" -->
+<!-- 	                      </c:otherwise> -->
+<!-- 	                    </c:choose> -->
+<!-- 	                  	id="tab005categoriespolygon"  -->
+<!-- 	                  > -->
+	                  
+<!-- 	                    <div class="color-section"> -->
+<%-- 	                      <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong> --%>
+<!-- 	                      <div class="heading-list"> -->
+<%-- 	                        <span><gdb:localize key="DashboardThematicLayer.form.category"/></span> --%>
+<%-- 	                        <span><gdb:localize key="DashboardThematicLayer.form.color"/></span> --%>
+<%-- 	                        <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardThematicLayer.form.catInputPlaceholder"/></span> --%>
+<!-- 	                      </div> -->
+<!-- 	                    <div class="category-block" id="category-colors-container"> -->
+	                      	  
+<%-- 	                    <input id="categories-polygon-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${polygoncategories}' type="hidden" class="category-input" name="style.styleCategories" ></input> --%>
+<!-- 		                     <c:choose> -->
+<%-- 		                      	<c:when test="${'true' == isOntologyAttribute}"> --%>
+<!-- 		                      		RENDER ONTOLOGY TREE DATA -->
+<!-- 		                      		<div class="ontology-category-input-container"> -->
+<%-- 										<div id="polygon-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div> --%>
+<!-- 										<div id="other-cat-poly-container" class="other-cat-container"> -->
+<!-- 											<ul class="color-list other-cat">							                       <li> -->
+<!-- 						                         <div class="category-container"> -->
+<!-- 							                       	 <div class="text category-input-container"> -->
+<%-- 							                       	    <gdb:localize var="other" key="Other"/>								                       	  --%>
+<%-- 							                       	 	<p id="cat-other-basic-label" >${other}</p> --%>
+<!-- 							                       	 </div> -->
+<!-- 							                       	 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;"> -->
+<!-- 	                  									<span id="cat-other-color-selector" class="ico ontology-category-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span> -->
+<!-- 	                								 </a> -->
+<!-- 					                   	 		 </div> -->
+<!-- 						                       </li>	                        -->
+<!-- 						                    </ul> -->
+<!-- 						                </div> -->
+<!-- 									  	<div class="check-block"> -->
+<!-- 								      		<input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input> -->
+<%-- 								        	<label for="ont-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
+<!-- 								      	</div> -->
+<!-- 									</div> -->
+<!-- 		                      	</c:when> -->
+<!-- 		                      	<c:otherwise> -->
+		                      		<!-- RENDER BASIC CATEGORIES -->
+<!-- 			                        <div class="panel-group choice-color category-group"> -->
+<!-- 										<div class="panel"> -->
+<!-- 					                    	<div id="choice-color01" class="panel-collapse"></div> -->
+<!-- 							            </div> -->
+<!-- 							            <div class="style-options-block"> -->
+<!-- 										  <div class="check-block"> -->
+<!-- 										    <input id="basic-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="" checked ></input> -->
+<%-- 										    <label for="basic-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
+<!-- 										  </div> -->
+<!-- 						                </div> -->
+<!-- 			                        </div> -->
+<!-- 		                      	</c:otherwise> -->
+<!-- 		                      </c:choose> -->
+<!-- 	                      </div> -->
+<!-- 	                    </div> -->
+	                    
+	                    
+<!-- 	                    <div class="stroke-block"> -->
+<%-- 	                      <strong class="title"><gdb:localize var="dl_form_stroke" key="DashboardThematicLayer.form.stroke"/>${dl_form_stroke}</strong> --%>
+<!-- 	                      <div class="cell-holder"> -->
+<!-- 	                        	<div class="cell"> -->
+<%-- 				                    <span>${style.categoryPolygonStrokeMd.displayLabel}</span> --%>
+<!-- 				                    <div class="color-holder"> -->
+<!-- 				                      <a href="#" class="color-choice"> -->
+<%-- 				                       	<span class="ico" style="background:${style.categoryPolygonStroke};">icon</span> --%>
+<!-- 				                       	<span class="arrow">arrow</span> -->
+<%-- 				                       	<input type="hidden" class="color-input" name="style.${style.categoryPolygonStrokeMd.name}" value="${style.categoryPolygonStroke}" /> --%>
+<!-- 					                  </a> -->
+<!-- 					                </div> -->
+<!-- 				                </div> -->
+<!-- 				                <div class="cell"> -->
+<%-- 			                    <label for="category-polygon-stroke-width-select">${style.categoryPolygonStrokeWidthMd.displayLabel}</label> --%>
+<!-- 			                    <div class="select-holder"> -->
+<%-- 			                      <select id="category-polygon-stroke-width-select" class="tab-select" name="style.${style.categoryPolygonStrokeWidthMd.name}"> --%>
+<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.categoryPolygonStrokeWidth == size}"> --%>
+<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${size}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+<!-- 			                    </div> -->
+<!-- 			                  </div> -->
+<!-- 			                  <div class="cell"> -->
+<%-- 			                    <label for="category-polygon-stroke-opacity-select">${style.categoryPolygonStrokeOpacityMd.displayLabel}</label> --%>
+<!-- 			                    <div class="text"> -->
+<%-- 			                      <select id="category-polygon-stroke-opacity-select" class="tab-select" name="style.${style.categoryPolygonStrokeOpacityMd.name}"> --%>
+<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
+<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
+<!-- 			                          <c:choose> -->
+<%-- 			                            <c:when test="${style.categoryPolygonStrokeOpacity*100 == size}"> --%>
+<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:when> -->
+<!-- 			                            <c:otherwise> -->
+<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
+<!-- 			                            </c:otherwise> -->
+<!-- 			                          </c:choose> -->
+<!-- 			                        </c:forEach> -->
+<!-- 			                      </select> -->
+<!-- 			                    </div> -->
+<!-- 			                  </div> -->
+<!-- 	                      </div> -->
+<!-- 	                    </div> -->
+	                
+	                
+	                </div> <!--  end style container  -->
+	              </div>  <!--  end holder  -->
+	            </div> 

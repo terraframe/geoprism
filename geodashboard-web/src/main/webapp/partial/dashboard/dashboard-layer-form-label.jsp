@@ -58,7 +58,7 @@
                   <label for="f95"><gdb:localize var="dl_form_labelSize" key="DashboardLayer.form.labelSize"/>${dl_form_labelSize}</label>
                   <div class="select-holder">
                   
-                  	<select ng-init="thematicStyleModel.labelSize = 12" class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | range:1:31" ></select>
+                  	<select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | range:1:31" ></select>
                   
 <!--                     <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-init="thematicStyleModel.labelSize = 12"> -->
 <%--                       <c:forEach begin="0" end="30" var="size"> --%>
@@ -104,18 +104,25 @@
                     
 <!--                     <select ng-init="thematicStyleModel.labelHaloWidth = 2" class="size-select" id="f54" name="style.haloWidth" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | range:0:15" ></select> -->
                     
-                    <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" >
-                      <c:forEach begin="0" end="15" var="size">
-                        <c:choose>
-                          <c:when test="{{thematicStyleModel.labelHaloWidth}} == ${size}">
-                            <option selected="selected" value="${size}">${size}</option>
-                          </c:when>
-                          <c:otherwise>
-                            <option value="${size}">${size}</option>
-                          </c:otherwise>
-                        </c:choose>
-                      </c:forEach>
-                    </select>
+					
+					
+					<select class="size-select" name="style.haloWidth" id="f54"
+					  ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | range:1:16" >
+					</select>
+					
+					
+<!--                     <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" > -->
+<%--                       <c:forEach begin="0" end="15" var="size"> --%>
+<%--                         <c:choose> --%>
+<%--                           <c:when test="{{thematicStyleModel.labelHaloWidth}} == ${size}"> --%>
+<%--                             <option selected="selected" value="${size}">${size}</option> --%>
+<%--                           </c:when> --%>
+<%--                           <c:otherwise> --%>
+<%--                             <option value="${size}">${size}</option> --%>
+<%--                           </c:otherwise> --%>
+<%--                         </c:choose> --%>
+<%--                       </c:forEach> --%>
+<!--                     </select> -->
                     
                   </div>
                 </div>

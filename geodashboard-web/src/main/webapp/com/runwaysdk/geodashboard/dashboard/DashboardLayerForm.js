@@ -184,6 +184,48 @@
 	    }    
 	}
 	
+	 
+	function layerTypes() {
+	    return {
+	      restrict: 'E',
+	      replace: true,
+	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types.jsp',    
+	      scope: true,
+	      link: function (scope, element, attrs) {
+	    	  // format the partial
+		      jcf.customForms.replaceAll(element[0]);
+	      }
+	    }    
+	}
+	
+	function layerTypesSelectionDirective() {
+		  return function(scope, element, attrs) {
+			  // This is needed to process the ng-repeat html
+			  // It processes just the layer type selector widget
+			  // Timeout is a bit of a hack to make sure all angular based html is finished
+			  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+			  }, 100);
+		  };
+	}
+	
+	function layerTypesStyle() {
+	    return {
+	      restrict: 'E',
+	      replace: true,
+	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
+	      scope: true,
+	      link: function (scope, element, attrs) {
+	    	  // format the partial
+//		      jcf.customForms.replaceAll(element[0]);
+	    	  
+	    	  //TODO: coppied from layer form but needs to be converted to angular
+//	    	  $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
+	      }
+	    }    
+	}
+	
+	
 	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService) {
 		var controller = this;
 		var geoNodeSelectId = "#geonode-select";
@@ -198,7 +240,8 @@
 	    controller.$scope = $scope;
 	    
 		/* Initialization Function */
-	    $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId) {
+	    $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
+	    	// TODO: possibly remove mapId
 	    	$scope.layerId = layerId;
 	    	$scope.newInstance = Boolean(newInstance);
 	    	$scope.thematicLayerModel.mdAttributeId = mdAttributeId;
@@ -223,7 +266,15 @@
 	    $scope.dynamicDataModel = {
 	    	aggregationStrategyOptions : [],
 	    	aggregationMethods : [], 
-	    	layerTypeNams : []
+	    	layerTypeNams : [],
+	    	layerTypeLabels : [],
+	    	secondaryAttributes : [],
+	    	isOntologyAttribute : false,
+	    	isTextAttribute : false,
+	    	roots : [],
+	    	selectableMap : {},
+	    	termType : '',
+	    	relationshipType : ''
 	    };
 
 		$scope.thematicLayerModel = {
@@ -248,75 +299,75 @@
 		};
 		
 		$scope.thematicStyleModel = {
-			basicPointSize : '',
+			basicPointSize : 10,
 			enableLabel : true,
 			enableValue : true,
 			id : '',
 			labelColor : '#000000;',
 			labelFont : '', 
 			labelHalo : '#ffffff',
-			labelHaloWidth : '2',
-			labelSize : "12",
+			labelHaloWidth : 2,
+			labelSize : 12,
 			lineOpacity : '',
 			lineStroke : '',
 			lineStrokeCap : '',
 			lineStrokeWidth : '',
 			name : '',
-			pointFill : '',
-			pointOpacity : '',
+			pointFill : '#00bfff',
+			pointOpacity : 90,
 			pointRotation : '',
-			pointStroke : '',
-			pointStrokeOpacity : '',
-			pointStrokeWidth : '',
-			pointWellKnownName : '',
-			polygonFill : '',
-			polygonFillOpacity : '',
-			polygonStroke : '',
-			polygonStrokeOpacity : '',
-			polygonStrokeWidth : '',
+			pointStroke : '#000000;',
+			pointStrokeOpacity : 90,
+			pointStrokeWidth : 1,
+			pointWellKnownName : 'CIRCLE',
+			polygonFill : '#00bfff',
+			polygonFillOpacity : 90,
+			polygonStroke : '#000000',
+			polygonStrokeOpacity : 90,
+			polygonStrokeWidth : 1,
 			type : '',
-			valueColor : '',
+			valueColor : '#000000',
 			valueFont : '',
-			valueHalo : '',
-			valueHaloWidth : '',
-			valueSize : '',
-			bubbleContinuousSize : '',
-			bubbleFill : '',
-			bubbleMaxSize : '',
-			bubbleMinSize : '',
-			bubbleOpacity : '',
+			valueHalo : '#ffffff',
+			valueHaloWidth : 2,
+			valueSize : '12',
+			bubbleContinuousSize : true,
+			bubbleFill : '#00bfff',
+			bubbleMaxSize : 70,
+			bubbleMinSize : 20,
+			bubbleOpacity : 90,
 			bubbleRotation : '',
-			bubbleSize : '',
-			bubbleStroke : '',
-			bubbleStrokeOpacity : '',
-			bubbleStrokeWidth : '',
-			bubbleWellKnownName : '',
-			categoryPointFillOpacity : '',
-			categoryPointSize : '',
-			categoryPointStroke : '',
-			categoryPointStrokeOpacity : '',
-			categoryPointStrokeWidth : '',
+			bubbleSize : 10,
+			bubbleStroke : '#000000',
+			bubbleStrokeOpacity : 90,
+			bubbleStrokeWidth : 1,
+			bubbleWellKnownName : 'CIRCLE',
+			categoryPointFillOpacity : 90,
+			categoryPointSize : 10,
+			categoryPointStroke : '#000000',
+			categoryPointStrokeOpacity : 90,
+			categoryPointStrokeWidth : 1,
 			categoryPointStyles : '',
-			categoryPointWellKnownName : '',
-			categoryPolygonFillOpacity : '',
-			categoryPolygonStroke : '',
-			categoryPolygonStrokeOpacity : '',
-			categoryPolygonStrokeWidth : '',
+			categoryPointWellKnownName : 'CIRCLE',
+			categoryPolygonFillOpacity : 90,
+			categoryPolygonStroke : '#000000',
+			categoryPolygonStrokeOpacity : 90,
+			categoryPolygonStrokeWidth : 1,
 			categoryPolygonStyles : '',
-			gradientPointFillOpacity : '',
-			gradientPointMaxFill : '',
-			gradientPointMinFill : '',
-			gradientPointSize : '',
-			gradientPointStroke : '',
-			gradientPointStrokeOpacity : '',
-			gradientPointStrokeWidth : '',
-			gradientPointWellKnownName : '',
-			gradientPolygonFillOpacity : '',
-			gradientPolygonMaxFill : '',
-			gradientPolygonMinFill : '',
-			gradientPolygonStroke : '',
-			gradientPolygonStrokeOpacity : '',
-			gradientPolygonStrokeWidth : '',
+			gradientPointFillOpacity : 90,
+			gradientPointMaxFill : '#505050',
+			gradientPointMinFill : '#ffffff',
+			gradientPointSize : 10,
+			gradientPointStroke : '#000000',
+			gradientPointStrokeOpacity : 90,
+			gradientPointStrokeWidth : 1,
+			gradientPointWellKnownName : 'CIRCLE',
+			gradientPolygonFillOpacity : 90,
+			gradientPolygonMaxFill : '#505050',
+			gradientPolygonMinFill : '#ffffff',
+			gradientPolygonStroke : '#000000',
+			gradientPolygonStrokeOpacity : 90,
+			gradientPolygonStrokeWidth : 1,
 			secondaryAggregationType : '',
 			secondaryAttribute : '',
 			secondaryCategories : '',
@@ -351,9 +402,24 @@
 	    		$scope.dynamicDataModel.nodeAggregationStrategiesLookup = options.aggegationStrategies;
 	    		$scope.dynamicDataModel.aggregationStrategyOptions = options.aggegationStrategies[0].aggregationStrategies;
 	    		$scope.dynamicDataModel.layerTypeNames = options.layerTypeNames;
+	    		$scope.dynamicDataModel.layerTypeLabels = options.layerTypeLabels;
+	    		$scope.dynamicDataModel.pointTypes = options.pointTypes;
+	    		$scope.dynamicDataModel.secondaryAttributes = options.secondaryAttributes;
+	    		
+	    		$scope.dynamicDataModel.isOntologyAttribute = options.attributeType.isOntologyAttribute;
+	    		$scope.dynamicDataModel.isTextAttribute = options.attributeType.isTextAttribute;
+	    		
+	    		if(options.attributeType.isOntologyAttribute){
+		    		$scope.dynamicDataModel.roots = options.attributeType.roots;
+		    		$scope.dynamicDataModel.selectableMap = options.attributeType.selectableMap;
+		    		$scope.dynamicDataModel.termType = options.attributeType.termType;
+		    		$scope.dynamicDataModel.relationshipType = options.attributeType.relationshipType;
+	    		}
 	    	
+	    		$scope.thematicLayerModel.layerType = options.layerTypeNames[0];
 	    		$scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
 	    		$scope.thematicLayerModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
+	    		$scope.thematicLayerModel.pointWellKnownName = options.pointTypes[0];
 	    		
 	    		$scope.availableFonts = processFonts(options.fonts);
 	    		$scope.geoNodes = options.geoNodes;
@@ -404,9 +470,18 @@
     	}
 	    
     	
+    	$scope.secondaryAttributeIsValid = function(){
+  	    	var selection = $scope.thematicStyleModel.secondaryAttribute;
+  	    	if(selection && selection.id.length > 0 && selection.type.length > 0 && selection.label.length > 0 ){
+  	    		return true;
+  	    	}
+  	    	return false;
+  	    }
+    	  
+    	
 	    // Aggregation strategy watcher
 	    $scope.$watch("thematicLayerModel.aggregationStrategy", function(newValue, oldValue) {
-	        console.log("watching agg strategy", " : ", "new val = ", newValue, " old val = ", oldValue)
+	        //console.log("watching agg strategy", " : ", "new val = ", newValue, " old val = ", oldValue)
             if($(geoAggLevelSelectId+" option:selected").hasClass("universal-leaf")){
                 // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
                 $(geoAggMethodSelectId).parent().parent().hide();
@@ -416,10 +491,55 @@
               }
 	    });
 	    
-	    $scope.$watch("thematicStyleModel.labelHalo", function(newValue, oldValue) {
+	    $scope.$watch("thematicLayerModel.layerType", function(newValue, oldValue) {
 	        console.log("watching agg method", " : ", "new val = ", newValue, " old val = ", oldValue)
+	        if(newValue !== ""){
+	        	$(".tab-pane").removeClass("active");
+	        	
+	        	if(newValue === "BASICPOINT"){
+	        		$("#tab001basicpoint").addClass("active")
+	        	}
+	        	else if(newValue === "GRADIENTPOINT"){
+	        		$("#tab006gradientpoint").addClass("active")
+	        	}
+	        	else if(newValue === "CATEGORYPOINT"){
+	        		$("#tab007categoriespoint").addClass("active")
+	        	}
+	        	else if(newValue === "BUBBLE"){
+	        		$("#tab002bubble").addClass("active")
+	        	}
+	        	else if(newValue === "BASICPOLYGON"){
+	        		$("#tab006gradientpoint").addClass("active")
+	        	}
+	        	else if(newValue === "GRADIENTPOLYGON"){
+	        		$("#tab004gradientpolygon").addClass("active")
+	        	}
+	        	else if(newValue === "CATEGORYPOLYGON"){
+	        		$("#tab005categoriespolygon").addClass("active")
+	        	}
+	        }
 	    });
 	    
+	    
+	    $scope.$watch("thematicStyleModel.secondaryAttribute", function(newValue, oldValue) {
+	        console.log("watching secondary attr", " : ", "new val = ", newValue, " old val = ", oldValue)
+	        
+//	       function _handleSecondaryChange(e){
+//	            var option = e.target.selectedOptions[0];
+//	            var mdAttributeId = option.value;
+//	            var type = $(option).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
+//	            
+//	            if(mdAttributeId == '') {
+//	              $('#secondary-content').hide();
+//	            }
+//	            else if(type == 'com.runwaysdk.system.metadata.MdAttributeTerm') {
+//	              this._renderSecondaryTermTree(mdAttributeId, type);
+//	            }
+//	            else {
+//	              this._renderSecondaryCategoryGroup(mdAttributeId, type);
+//	            }
+//	          }
+	    });
 	    
 	    
 	    $scope.setEnableValue = function(val){
@@ -554,6 +674,9 @@
 		.directive('layerLabel', layerLabel)
 		.directive('layerGeoNode', layerGeoNode)
 		.directive('layerAggregation', layerAggregation)
+		.directive('layerTypes', layerTypes)
+		.directive('layerTypesSelectionDirective', layerTypesSelectionDirective)
+		.directive('layerTypesStyle', layerTypesStyle)
 		.filter('range', function() {
 		  return function(input, min, max) {
 		    min = parseInt(min); 

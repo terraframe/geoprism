@@ -739,18 +739,18 @@
        * 
        */
       _selectLayerType : function(){
-      
-        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
-        
-        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
-              
-          // hide all the styling options
-          $.each($('.tab-pane'), function(){
-            if($(this).is(":visible")){
-              $(this).hide(); 
-            }
-          });
-        });
+    	  // TODO: replicate in angular
+//        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
+//        
+//        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
+//              
+//          // hide all the styling options
+//          $.each($('.tab-pane'), function(){
+//            if($(this).is(":visible")){
+//              $(this).hide(); 
+//            }
+//          });
+//        });
       },
       
       
@@ -772,44 +772,45 @@
                 
         jcf.customForms.replaceAll(modal[0]);
         
+     // TODO: replicate in angular
         // Add layer styling event listeners
-        this._selectColor();
-        this._selectLayerType();
-        
-        // Move reusable cells to active cell holder
-        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
-        if (activeTab === "tab003basicpolygon") {
-          $("#tab003basicpolygon").show();
-        }
-        else if (activeTab === "tab001basicpoint") {
-          $("#tab001basicpoint").show();
-        }
-        else if (activeTab === "tab006gradientpoint") {
-          $("#tab006gradientpoint").show();
-        }
-        else if (activeTab === "tab007categoriespoint") {
-          $("#tab007categoriespoint").show();
-        }
-        else if (activeTab === "tab004gradientpolygon") {
-          $("#tab004gradientpolygon").show();
-        }
-        else if (activeTab === "tab005categoriespolygon") {
-          $("#tab005categoriespolygon").show();
-        }
-        
-        // Attach listeners
-        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
-     
-        // Attach event listeners for the universal (geo) aggregation dropdown.
-        $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
-          if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+"option:selected").hasClass("universal-leaf")){
-            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
-          }
-          else{
-            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
-          }
-        });
+//        this._selectColor();
+//        this._selectLayerType();
+//        
+//        // Move reusable cells to active cell holder
+//        var activeTab = $("#layer-type-styler-container").children(".tab-pane.active")[0].id;
+//        if (activeTab === "tab003basicpolygon") {
+//          $("#tab003basicpolygon").show();
+//        }
+//        else if (activeTab === "tab001basicpoint") {
+//          $("#tab001basicpoint").show();
+//        }
+//        else if (activeTab === "tab006gradientpoint") {
+//          $("#tab006gradientpoint").show();
+//        }
+//        else if (activeTab === "tab007categoriespoint") {
+//          $("#tab007categoriespoint").show();
+//        }
+//        else if (activeTab === "tab004gradientpolygon") {
+//          $("#tab004gradientpolygon").show();
+//        }
+//        else if (activeTab === "tab005categoriespolygon") {
+//          $("#tab005categoriespolygon").show();
+//        }
+//        
+//        // Attach listeners
+//        $('a[data-toggle="tab"]').on('shown.bs.tab', Mojo.Util.bind(this, this._onLayerTypeTabChange));
+//     
+//        // Attach event listeners for the universal (geo) aggregation dropdown.
+//        $(ThematicLayerForm.GEO_AGG_LEVEL_DD).change(function(){ 
+//          if($(ThematicLayerForm.GEO_AGG_LEVEL_DD+"option:selected").hasClass("universal-leaf")){
+//            // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
+//            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().hide();
+//          }
+//          else{
+//            $(ThematicLayerForm.GEO_AGG_METHOD_DD).parent().parent().show();
+//          }
+//        });
         
         
         // Localize any existing number cateogry values
@@ -1510,18 +1511,18 @@
        * 
        */
       _selectLayerType : function(){
-      
-        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
-        
-        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
-              
-          // hide all the styling options
-          $.each($('.tab-pane'), function(){
-            if($(this).is(":visible")){
-              $(this).hide(); 
-            }
-          });
-        });
+    	// TODO: replicate in angular
+//        var layerType = com.runwaysdk.geodashboard.gis.persist.DashboardLayer.LAYERTYPE;
+//        
+//        $('input:radio[name="layer.'+layerType+'"]').change(function(){   
+//              
+//          // hide all the styling options
+//          $.each($('.tab-pane'), function(){
+//            if($(this).is(":visible")){
+//              $(this).hide(); 
+//            }
+//          });
+//        });
       },
       
       /**
