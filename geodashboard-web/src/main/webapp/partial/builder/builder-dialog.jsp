@@ -25,10 +25,10 @@
   <modal-dialog ng-show="ctrl.dashboard != null" width='600px'>
     <div id="builder-div" role="dialog" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable com-runwaysdk-ui-factory-jquery-Dialog com-runwaysdk-ui-factory-runway-Widget ui-dialog-buttons">
       <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-        <span class="ui-dialog-title"><gdb:localize key="dashboard.form.heading"/></span>
+        <span class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></span>
       </div>
-      <div class="ui-dialog-content ui-widget-content" style="display: block; width: auto; min-height: 23px; max-height: 630px; height: auto;">
-        <form name="form" class="com-runwaysdk-geodashboard-Form com-runwaysdk-ui-factory-runway-Widget">
+      <form name="form" class="com-runwaysdk-geodashboard-Form com-runwaysdk-ui-factory-runway-Widget">
+        <div class="ui-dialog-content ui-widget-content" style="display: block; width: auto; min-height: 23px; max-height: 630px; height: auto;">
           <fieldset class="com-runwaysdk-geodashboard-FormList com-runwaysdk-ui-factory-runway-Widget">
             <section class="form-container">
               <div ng-repeat="field in ctrl.fields">
@@ -70,19 +70,19 @@
               </div>
             </div>
           </div>
+        </div>      
           
-          <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-            <div class="ui-dialog-buttonset">
-              <button ng-disabled="form.$invalid" ng-click="ctrl.persist()" aria-disabled="false" role="button" class="btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
-                <span class="ui-button-text"><gdb:localize key="dashboard.Ok"/></span>
-              </button>
-              <button ng-click="ctrl.cancel()" aria-disabled="false" role="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
-                <span class="ui-button-text"><gdb:localize key="dashboard.Cancel"/></span>
-              </button>
-            </div>      
-          </div>
-        </form>
-      </div>      
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <div class="ui-dialog-buttonset">
+            <button ng-disabled="form.$invalid" ng-click="ctrl.persist()" aria-disabled="false" role="button" class="btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
+              <span class="ui-button-text"><gdb:localize key="dashboard.Ok"/></span>
+            </button>
+            <button ng-click="ctrl.cancel()" aria-disabled="false" role="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" primary="true" type="button">
+              <span class="ui-button-text"><gdb:localize key="dashboard.Cancel"/></span>
+            </button>
+          </div>      
+        </div>
+      </form>
     </div>
   </modal-dialog>       
 </div>

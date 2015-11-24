@@ -116,7 +116,7 @@
             $scope.$apply();
           };          
           
-          dashboardService.removeDashboard(dashboardId, "#dashboardModal01", onSuccess);
+          dashboardService.removeDashboard(dashboardId, "#container", onSuccess);
         }
       }));
           

@@ -1,21 +1,3 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = -1397182939)
@@ -51,7 +33,11 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
+<<<<<<< HEAD
   private static final long serialVersionUID = -1397182939;
+=======
+  private static final long serialVersionUID = -823540027;
+>>>>>>> 2fc979ea1e6e3e357cdbb50ef0412d64331c1895
   
   public DashboardBase()
   {
@@ -747,7 +733,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, java.lang.String state)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -937,6 +923,30 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     _instance.setBaseLayerState(baseLayerState);
+  }
+  
+  public void setDashboardAttributesOrder(java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setDashboardAttributesOrder(java.lang.String id, java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setDashboardAttributesOrder(typeId, attributeIds);
+  }
+  
+  public void setMetadataWrapperOrder(java.lang.String[] typeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setMetadataWrapperOrder(java.lang.String id, java.lang.String[] typeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setMetadataWrapperOrder(typeIds);
   }
   
   public static Dashboard lock(java.lang.String id)

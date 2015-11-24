@@ -34,7 +34,14 @@
         </mdMethod>
         <create>
           <mdMethod name="getDashboardDefinition" label="Get Dashboard Definition" returnType="java.lang.String" />
-        </create>      
+          <mdMethod name="setMetadataWrapperOrder" label="Set metadata wrapper order" returnType="void" static="false">
+            <mdParameter name="typeIds" label="Type Ids" order="0" type="java.lang.String[]"/>
+          </mdMethod>
+          <mdMethod name="setDashboardAttributesOrder" label="Set metadata wrapper order" returnType="void" static="false">
+            <mdParameter name="typeId" label="Type Id" order="0" type="java.lang.String"/>
+            <mdParameter name="attributeIds" label="Attribute ids" order="1" type="java.lang.String[]"/>
+          </mdMethod>          
+        </create>
       </mdBusiness>
       <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
         <create>

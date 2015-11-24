@@ -82,6 +82,42 @@
     }    
   }  
   
+  function TypeAccordionController($scope, $timeout, dashboardService) {
+    var controller = this;
+
+    controller.move = function(element, event, ui) {
+      if(dashboardService.canEdit()){
+
+        var typeIds = [];
+         
+        var children = element.children();
+          
+        for (var i = 0; i < children.length; i++) {
+          var typeId = $(children[i]).data('id');
+          
+          typeIds.push(typeId);
+        }      
+        
+        var dashboardId = dashboardService.getDashboard().getDashboardId();
+      
+        dashboardService.setDataSetOrder(dashboardId, typeIds);
+      }
+    }
+    
+    controller.init = function(element) {
+      if(dashboardService.canEdit()) {      
+        element.ready(function(){
+          // Add support for sorting the dashboard data sets
+          element.sortable({
+            update: function(e, ui){
+              controller.move(element, e, ui)
+            }
+          });
+        });          
+      }
+    }
+  }
+  
   function TypeAccordion() {
     return {
       restrict: 'E',
@@ -91,7 +127,66 @@
         types:'=',
         newLayer:'&'
       },
-      link: function (scope, element, attrs) {
+      controller : TypeAccordionController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        /* Hook-up drag and drop */    	  
+        ctrl.init(element);
+      }
+    }    
+  }
+  
+  function AttributePanelController($scope, dashboardService) {
+    var controller = this;
+    
+    controller.move = function(element, event, ui) {
+      if(dashboardService.canEdit()){
+
+        var attributeIds = [];
+             
+        var children = element.children();
+              
+        for (var i = 0; i < children.length; i++) {
+          var attributeId = $(children[i]).data('id');
+              
+          attributeIds.push(attributeId);
+        }      
+            
+        var dashboardId = dashboardService.getDashboard().getDashboardId();
+        var typeId = $scope.type.id;
+          
+        dashboardService.setDataSetAttributeOrder(dashboardId, typeId, attributeIds);
+      }
+    }
+    
+    controller.init = function(element) {
+      if(dashboardService.canEdit()) {      
+        element.ready(function(){
+          // Add support for sorting the dashboard data sets
+          element.sortable({
+            update: function(e, ui){
+              controller.move(element, e, ui)
+            }
+          });
+        });          
+      }
+    }
+  }
+  
+  function AttributePanel() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/dashboard/attribute-panel.jsp',      
+      scope: {
+        type:'=',
+        index:'='
+      },
+      controller : AttributePanelController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        /* Hook-up drag and drop */        
+        ctrl.init(element);
       }
     }    
   }
@@ -124,7 +219,6 @@
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/dashboard/accordion-attribute.jsp', 
-      transclude: true,
       scope: {
         attribute:'=',
         identifier:'@'
@@ -434,6 +528,7 @@
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)
+  .directive('attributePanel', AttributePanel)
   .directive('accordionAttribute', AccordionAttribute)
   .directive('numberType', NumberType)
   .directive('dateType', DateType)

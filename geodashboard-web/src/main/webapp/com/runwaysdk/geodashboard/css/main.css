@@ -1462,7 +1462,8 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	border:solid;
 	border-width:1px 0 0;
 	border-color:rgba(0,0,0,0.2);
-	overflow-y: auto;
+	overflow-y:auto;
+	max-height:calc(100% - 115px);
 }
 .sales-accortion.panel-group .panel .panel{
 	border:solid;
@@ -1503,8 +1504,6 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	background:rgba(255,255,255,0.05);
 	padding:0;
 	margin:2px 0 0;
-	overflow-y: auto;
-    max-height: 500px;
 }
 .sales-accortion .panel-collapse .panel-title{
 	font-weight:normal;

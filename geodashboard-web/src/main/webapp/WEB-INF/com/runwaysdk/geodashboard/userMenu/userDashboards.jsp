@@ -211,7 +211,7 @@
             <a ng-href="DashboardViewer?dashboard={{dashboard.dashboardId}}" class="" >
               
               <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{dashboard.dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon.png';" alt="Dashboard">
+              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{dashboard.dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
               
               <div class="caption">
                 <h3>{{dashboard.label}}</h3>

@@ -124,6 +124,8 @@
               var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
                 onSuccess : function(dashboard){
                   that._controller.addDashboard(dashboard.getId(), dashboard.getDisplayLabel().getLocalizedValue());
+                  
+                  $( "#dashboard-dialog" ).dialog( "close" );
                 },
                 onFailure : function(e){
                   $( "#dashboard-dialog" ).dialog( "close" );

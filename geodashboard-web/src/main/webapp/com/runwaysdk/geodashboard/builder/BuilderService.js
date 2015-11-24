@@ -51,8 +51,13 @@
         var result = {};
         /* Populate the list of country options */ 
         result.fields = runwayService.getFields(service.dto, ['name', 'displayLabel', 'country']);      
+        
+        // Overwrite name field options
+        result.fields[0].writable = dto.isNewInstance();      
+        
+        // Overwrite country field options
         result.fields[2].options = object.countries;      
-        result.fields[2].readable = dto.isNewInstance();      
+        result.fields[2].writable = dto.isNewInstance();      
         
         result.object = object;
       

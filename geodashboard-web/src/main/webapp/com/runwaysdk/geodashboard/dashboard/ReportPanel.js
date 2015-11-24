@@ -113,6 +113,8 @@
           $("#report-export-container").show();
           
           $scope.hasReport = true;
+          
+          $scope.$apply();
         },
         onFailure : function(e) {
           GDB.ExceptionHandler.handleException(e);

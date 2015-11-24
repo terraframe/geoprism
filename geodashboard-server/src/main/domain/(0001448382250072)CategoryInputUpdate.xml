@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,15 +17,24 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
+    </delete>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <mdMethod name="getCategoryInputSuggestions">
+          <create>
+            <mdParameter name="state" label="State" order="8" type="java.lang.String"/>
+          </create>
+        </mdMethod>
+      </mdBusiness>
 
-<div class="sales-accortion panel-group" id="type-accordion">
-  <div ng-repeat="type in types" class="panel panel-default" data-id="{{type.id}}">
-    <a class="opener" data-toggle="collapse" ng-href="#collapse{{$index}}">{{type.label}}</a>
-  
-    <div id="{{'collapse' + $index}}" class="panel-collapse collapse">
-      <attribute-panel type="type" index="$index"></attribute-panel>
-    </div>
-  </div>
-</div>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

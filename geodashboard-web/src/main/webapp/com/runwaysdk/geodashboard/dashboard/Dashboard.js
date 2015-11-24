@@ -129,12 +129,8 @@
     
     controller.save = function(global) {
       var state = controller.getCompressedState();
-      
-      var onSuccess = function() {
-        dashboardService.generateThumbnailImage(controller.dashboardId);      
-      }
-      
-      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container', onSuccess);
+            
+      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container');
     }
     
     /* Create a new layer */
@@ -337,17 +333,17 @@
     }
     
     controller.renderMap = function() {
-      if(controller.renderBase) {
-        controller.refreshBaseLayer();
-        
-        controller.renderBase = false;
-      }
-    
       var rLayers = controller.getReferenceLayers();
       mapService.createReferenceLayers(rLayers, true);
             
       var tLayers = controller.getThematicLayers();
       mapService.createUserLayers(tLayers, true);      
+
+      if(controller.renderBase) {
+        controller.refreshBaseLayer();
+          
+        controller.renderBase = false;
+      }
     }
     
     controller.toggleLayer = function(layer) {
@@ -632,6 +628,8 @@
         dashboardId : dashboardId,
         label : label
       });
+      
+      controller.setDashboardId(dashboardId);
     }
     
     controller.editOptions = function() {
@@ -667,10 +665,13 @@
             
         for(var j = 0; j < type.attributes.length; j++) {
           var attribute = type.attributes[j];          
-          var filter = filters[type.id][attribute.mdAttributeId];
           
-          if(filter != null) {
-            attribute.filter = filter;
+          if(filters[type.id] != null) {        	  
+            var filter = filters[type.id][attribute.mdAttributeId];
+            
+            if(filter != null) {
+              attribute.filter = filter;
+            }
           }
         }        
       }
