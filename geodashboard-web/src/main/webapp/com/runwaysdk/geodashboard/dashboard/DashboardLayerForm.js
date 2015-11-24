@@ -347,41 +347,8 @@
 				
 				setTimeout(function(){
 				    
-				  var mdAttribute = scope.thematicLayerModel.mdAttributeId;  
-		    	  var categoryType = attr.mdattributetype;
-			          
-				        var onSuccess = function(results){
-			                // We need to localize the results for numbers
-			                if(categoryType == 'number') {
-			                  for(var i = 0; i < results.length; i++) {
-			                    var number = parseFloat(results[i]);
-			                    var localized = that._formatter(number);
-			                    results[i] = localized;
-			                  }
-			                }
-			                response( results );
-			             };
-			              
-			           var onFailure = function(e){
-			            	  console.log(e);
-			            	  //TODO:  fix me
-			            	  //that._map.handleException(e);
-		              }
-			            
-			           // values are scraped from hidden input elements on the layer create form
-//			          var conditions = that._map.getCurrentConditions();
-			          var universalId = scope.thematicLayerModel.aggregationStrategy.aggStrategyValue;
-			          var geoNodeId = scope.thematicLayerModel.geoNodeId.id;
-			          var aggregationVal = scope.thematicLayerModel.aggregationMethod.method;
-			          var conditions = []; //TODO: set these to the actual conditions (scope.dashboard.getFilterMap() ???)
-			          var limit = 10;
-		            
 			    	  $(element[0]).autocomplete({
-			    		  source: function(request, response){
-			    			  var text = request.term;
-			    			  
-			    			  layerFormService.categoryAutoCompleteService(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure );
-			    		  },
+			    		  source: scope.basicCategoryAutocompleteSource,
 			    		  minLength: 1
 			    	  });
 				}, 500); 
@@ -961,6 +928,40 @@
             }
           }
         }
+    	
+    	$scope.basicCategoryAutocompleteSource = function( request, response ) {
+    	   var _parser = Globalize.numberParser();
+    	   var _formatter = Globalize.numberFormatter();
+    			
+		   var mdAttribute = $scope.thematicLayerModel.mdAttributeId;  
+		   var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
+	       var universalId = $scope.thematicLayerModel.aggregationStrategy.aggStrategyValue;
+	       var geoNodeId = $scope.thematicLayerModel.geoNodeId.id;
+	       var aggregationVal = $scope.thematicLayerModel.aggregationMethod.method;
+	       var conditions = $scope.dashboard.getCompressedState(); 
+	       var limit = 10;
+		          
+	       var onSuccess = function(results){
+                // We need to localize the results for numbers
+                if(categoryType == 'number') {
+                  for(var i = 0; i < results.length; i++) {
+                    var number = parseFloat(results[i]);
+                    var localized = _formatter(number);
+                    results[i] = localized;
+                  }
+                }
+                
+                response( results );
+           };
+              
+           var onFailure = function(e){
+        	   GDB.ExceptionHandler.handleException(e.message);
+           }
+           
+           var text = request.term;
+ 			  
+           layerFormService.categoryAutoCompleteService(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure );
+    	}
     	
     	
 	    // Aggregation strategy watcher
