@@ -288,7 +288,7 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
 //      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
 
       // Set possible layer types based on attribute type
-      MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
+//      MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
 //      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
 //      {
 //        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
@@ -328,77 +328,77 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       // Determine if the attribute is an ontology attribute
-      if (mdAttributeConcrete instanceof MdAttributeTermDTO)
-      {
-        req.setAttribute("isOntologyAttribute", true);
-        req.setAttribute("isTextAttribute", false);
-        req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
-        req.setAttribute("termType", ClassifierDTO.CLASS);
+//      if (mdAttributeConcrete instanceof MdAttributeTermDTO)
+//      {
+//        req.setAttribute("isOntologyAttribute", true);
+//        req.setAttribute("isTextAttribute", false);
+//        req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
+//        req.setAttribute("termType", ClassifierDTO.CLASS);
+//
+//        ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
+//        JSONObject rootsIds = new JSONObject();
+//        JSONArray ids = new JSONArray();
+//
+//        Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
+//        for (ClassifierDTO root : roots)
+//        {
+//          JSONObject newJSON = new JSONObject();
+//          try
+//          {
+//            newJSON.put("termId", root.getId());
+//          }
+//          catch (JSONException e)
+//          {
+//            throw new RuntimeException(e);
+//          }
+//
+//          List<? extends ClassifierTermAttributeRootDTO> relationships = root.getAllClassifierTermAttributeRootsRelationships();
+//          for (ClassifierTermAttributeRootDTO relationship : relationships)
+//          {
+//            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
+//            {
+//              try
+//              {
+//                newJSON.put("selectable", relationship.getSelectable());
+//              }
+//              catch (JSONException e)
+//              {
+//                throw new RuntimeException(e);
+//              }
+//              selectableMap.put(root.getId(), relationship.getSelectable());
+//            }
+//          }
+//
+//          ids.put(newJSON);
+//        }
+//
+//        try
+//        {
+//          rootsIds.put("roots", ids);
+//        }
+//        catch (JSONException e)
+//        {
+//          throw new RuntimeException(e);
+//        }
+//
+//        // Passing ontology root to layer form categories
+//        req.setAttribute("roots", rootsIds);
+//        req.setAttribute("selectableMap", selectableMap);
+//
+//        JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
+//      }
+//      else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
+//      {
+//        req.setAttribute("isTextAttribute", true);
+//        req.setAttribute("isOntologyAttribute", false);
+//      }
+//      else
+//      {
+//        req.setAttribute("isOntologyAttribute", false);
+//        req.setAttribute("isTextAttribute", false);
+//      }
 
-        ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
-        JSONObject rootsIds = new JSONObject();
-        JSONArray ids = new JSONArray();
-
-        Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
-        for (ClassifierDTO root : roots)
-        {
-          JSONObject newJSON = new JSONObject();
-          try
-          {
-            newJSON.put("termId", root.getId());
-          }
-          catch (JSONException e)
-          {
-            throw new RuntimeException(e);
-          }
-
-          List<? extends ClassifierTermAttributeRootDTO> relationships = root.getAllClassifierTermAttributeRootsRelationships();
-          for (ClassifierTermAttributeRootDTO relationship : relationships)
-          {
-            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
-            {
-              try
-              {
-                newJSON.put("selectable", relationship.getSelectable());
-              }
-              catch (JSONException e)
-              {
-                throw new RuntimeException(e);
-              }
-              selectableMap.put(root.getId(), relationship.getSelectable());
-            }
-          }
-
-          ids.put(newJSON);
-        }
-
-        try
-        {
-          rootsIds.put("roots", ids);
-        }
-        catch (JSONException e)
-        {
-          throw new RuntimeException(e);
-        }
-
-        // Passing ontology root to layer form categories
-        req.setAttribute("roots", rootsIds);
-        req.setAttribute("selectableMap", selectableMap);
-
-        JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
-      }
-      else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
-      {
-        req.setAttribute("isTextAttribute", true);
-        req.setAttribute("isOntologyAttribute", false);
-      }
-      else
-      {
-        req.setAttribute("isOntologyAttribute", false);
-        req.setAttribute("isTextAttribute", false);
-      }
-
-      req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
+//      req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
       req.setAttribute("polygoncategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPolygonStyles()));
       req.setAttribute("pointcategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPointStyles()));
       req.setAttribute("secondaryCategories", EscapeUtil.escapeHTMLAttribute(style.getSecondaryCategories()));

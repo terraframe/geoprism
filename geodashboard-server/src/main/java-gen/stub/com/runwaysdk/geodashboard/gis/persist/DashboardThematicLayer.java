@@ -55,6 +55,7 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
+import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -69,7 +70,12 @@ import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
+import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDate;
+import com.runwaysdk.system.metadata.MdAttributeDateDTO;
+import com.runwaysdk.system.metadata.MdAttributeNumber;
+import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -173,6 +179,23 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     }
 
     return ( (MdAttributeConcrete) mdAttr );
+  }
+  
+  
+  private static String getCategoryType(MdAttribute mdAttr)
+  {
+    MdAttributeConcrete concrete = getMdAttributeConcrete(mdAttr);
+
+    if (concrete instanceof MdAttributeDate)
+    {
+      return "date";
+    }
+    else if (concrete instanceof MdAttributeNumber)
+    {
+      return "number";
+    }
+
+    return "text";
   }
   
   
@@ -354,6 +377,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     
     JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
     JSONObject attributeType = getMdAttributeType(tAttr);
+    String attrDataType = getCategoryType(tAttr);
     
     // Set possible layer types based on attribute type
     Map<String, String> layerTypes = new LinkedHashMap<String, String>();
@@ -390,12 +414,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("geoNodes", new JSONArray(geoNodesJSON));
       
       json.put("attributeType", attributeType);
+      json.put("attributeDataType", attrDataType);
       
       json.put("secondaryAttributes", secondaryAttributes);
       
       json.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
       json.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
-//      json.put("layerTypeNamesJSON", new JSONArray(layerTypes.keySet()));
       
       JSONArray pointTypes = new JSONArray();
       pointTypes.put("CIRCLE");

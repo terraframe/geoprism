@@ -32,23 +32,23 @@
       },
       attachCategoryColorPickers : function (){
         // ontology category layer type colors
-        $(".cat-color-selector").colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj){
-            var that = this;
-              $(LayerForm.LAYER_MODAL).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-                colorPicker.css({ top: diffStr });
-              });
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        });
+//        $(".cat-color-selector").colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj){
+//            var that = this;
+//              $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                var colPick = $(that);
+//                var diff = colPick.offset().top + colPick.height() + 2; 
+//                var diffStr = diff.toString() + "px";
+//                colorPicker.css({ top: diffStr });
+//              });
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).css('background','#'+hex);
+//            $(el).find('.color-input').attr('value', '#'+hex);
+//          }
+//        });
       }
     },
     Static : {
@@ -90,68 +90,68 @@
         this._checkOther = checkOther;  
       },
       getGeomType : function() {
-        var type = this._geomType.toLowerCase();
-        if(type === "poly" || type === "polygon"){
-          return "polygon";
-        }
-        else if(type === "point"){
-          return "point";
-        }
-        else{
-          return null;
-        }
+//        var type = this._geomType.toLowerCase();
+//        if(type === "poly" || type === "polygon"){
+//          return "polygon";
+//        }
+//        else if(type === "point"){
+//          return "point";
+//        }
+//        else{
+//          return null;
+//        }
       },
-      setOtherCatInputId : function(id){
-       this._otherCatInputId = id;
-      },
+//      setOtherCatInputId : function(id){
+//       this._otherCatInputId = id;
+//      },
       getOtherCatInputId : function(){
         return this._otherCatInputId;
        },
       
-      _getCategoryHTML : function(index) {
+//      _getCategoryHTML : function(index) {
                 
-        var autocomplete = 'on';
-        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "catInputPlaceholder");  
-        var disabled = "";
-        var color = "#000000";
-        var value = "";
-        var id = this._prefix + '-' + index;
+//        var autocomplete = 'on';
+//        var fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "catInputPlaceholder");  
+//        var disabled = "";
+//        var color = "#000000";
+//        var value = "";
+//        var id = this._prefix + '-' + index;
         
-        if(index == CategoryWidget.OTHER) {
-          autocomplete = 'off';
-          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other");
-          disabled = "disabled";
-          value = "other";
-          color = "#737678";
-          if(this.getGeomType() === "polygon"){
-            id += "-poly";
-          }
-          else if(this.getGeomType() === "point"){
-            id += "-point";
-          }
+//        if(index == CategoryWidget.OTHER) {
+//          autocomplete = 'off';
+//          fillLabel =  com.runwaysdk.Localize.localize("DashboardThematicLayer.form", "Other");
+//          disabled = "disabled";
+//          value = "other";
+//          color = "#737678";
+//          if(this.getGeomType() === "polygon"){
+//            id += "-poly";
+//          }
+//          else if(this.getGeomType() === "point"){
+//            id += "-point";
+//          }
           
           // TODO: move this outside of this method
-          this.setOtherCatInputId(id);
-        }       
+//          this.setOtherCatInputId(id);
+//        }       
                   
-        var html = '<li>' +
-          '<div class="category-container">' +
-            '<div class="text category-input-container">' +
-              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" type="text" value="' + value + '" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
-            '</div>' +
-            '<div class="cell">' +
-              '<div class="color-holder">' +
-                '<a href="#" class="color-choice">' +
-                  '<span id="' + id  + '-color-selector" class="ico cat-color-selector" style="background:' + color +'">icon</span>' +
-                  '<span class="arrow">arrow</span>' +
-                '</a>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</li>';
-            
-        return html;        
-      },
+//        var html = '<li>' +
+//          '<div class="category-container">' +
+//            '<div class="text category-input-container">' +
+//              '<input id="' + id  + '" data-mdattributeid="' + this._mdAttributeId + '" data-type="' + this._categoryType + '" class="category-input" type="text" value="' + value + '" placeholder="' + fillLabel +'" autocomplete="' + autocomplete + '" ' + disabled + ' >' +
+//            '</div>' +
+//            '<div class="cell">' +
+//              '<div class="color-holder">' +
+//                '<a href="#" class="color-choice">' +
+//                  '<span id="' + id  + '-color-selector" class="ico cat-color-selector" style="background:' + color +'">icon</span>' +
+//                  '<span class="arrow">arrow</span>' +
+//                '</a>' +
+//              '</div>' +
+//            '</div>' +
+//          '</div>' +
+//        '</li>';
+//            
+//        return html;        
+//      },
         
       
       /**
@@ -161,25 +161,25 @@
        */
       render : function() {
         
-        var html = '<ul class="color-list">';
-        html += this._getCategoryHTML(1);
-        html += this._getCategoryHTML(2);
-        html += this._getCategoryHTML(3);
-        html += this._getCategoryHTML(4);
-        html += this._getCategoryHTML(5);
+//        var html = '<ul class="color-list">';
+//        html += this._getCategoryHTML(1);
+//        html += this._getCategoryHTML(2);
+//        html += this._getCategoryHTML(3);
+//        html += this._getCategoryHTML(4);
+//        html += this._getCategoryHTML(5);
 
-        if(this._checkOther) {
-          html += this._getCategoryHTML(CategoryWidget.OTHER);
-        }
-        html += '</ul>';
-      
-        this.getImpl().html(html);
+//        if(this._checkOther) {
+//          html += this._getCategoryHTML(CategoryWidget.OTHER);
+//        }
+//        html += '</ul>';
+//      
+//        this.getImpl().html(html);
         
         // Load the existing data 
-        this._addCategoryAutoComplete();        
-        this._loadExistingCategories();
+//        this._addCategoryAutoComplete();        
+//        this._loadExistingCategories();
         
-        this.attachCategoryColorPickers();
+//        this.attachCategoryColorPickers();
       },
       
       /**
@@ -187,170 +187,170 @@
        */
       _addCategoryAutoComplete : function(){
         
-        var that = this;
-        
-        // Hook up the auto-complete for category input options new layers
-        // existing layers have a seperate autocomplete hookup that queries 
-        // the layer database view directly. 
-        this.getImpl().find('.category-input').each(function(){
-          
-          var mdAttribute = $(this).data('mdattributeid');  
-          var categoryType = $(this).data('type');
-          
-          $(this).autocomplete({
-            source: function( request, response ) {
-              var req = new Mojo.ClientRequest({
-                onSuccess : function(results){
-                  
-                  // We need to localize the results for numbers
-                  if(categoryType == 'number') {
-                    for(var i = 0; i < results.length; i++) {
-                      var number = parseFloat(results[i]);
-                      var localized = that._formatter(number);
-                      
-                      results[i] = localized;
-                    }
-                  }
-                  
-                  response( results );
-                },
-                onFailure : function(e){
-                  that._map.handleException(e);
-                }
-              });
-              
-              // values are scraped from hidden input elements on the layer create form
-              var universalId = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
-              var geoNodeId = $(ThematicLayerForm.GEO_NODE_SELECT_EL).val();
-              var aggregationVal = $(that._aggregationId).val();
-              var conditions = that._map.getCurrentConditions();
-              
-              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, geoNodeId, universalId, aggregationVal, request.term, 10, conditions);
-            },
-            minLength: 1
-          });
-        });
+//        var that = this;
+//        
+//        // Hook up the auto-complete for category input options new layers
+//        // existing layers have a seperate autocomplete hookup that queries 
+//        // the layer database view directly. 
+//        this.getImpl().find('.category-input').each(function(){
+//          
+//          var mdAttribute = $(this).data('mdattributeid');  
+//          var categoryType = $(this).data('type');
+//          
+//          $(this).autocomplete({
+//            source: function( request, response ) {
+//              var req = new Mojo.ClientRequest({
+//                onSuccess : function(results){
+//                  
+//                  // We need to localize the results for numbers
+//                  if(categoryType == 'number') {
+//                    for(var i = 0; i < results.length; i++) {
+//                      var number = parseFloat(results[i]);
+//                      var localized = that._formatter(number);
+//                      
+//                      results[i] = localized;
+//                    }
+//                  }
+//                  
+//                  response( results );
+//                },
+//                onFailure : function(e){
+//                  that._map.handleException(e);
+//                }
+//              });
+//              
+//              // values are scraped from hidden input elements on the layer create form
+//              var universalId = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).val();
+//              var geoNodeId = $(ThematicLayerForm.GEO_NODE_SELECT_EL).val();
+//              var aggregationVal = $(that._aggregationId).val();
+//              var conditions = that._map.getCurrentConditions();
+//              
+//              com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(req, mdAttribute, geoNodeId, universalId, aggregationVal, request.term, 10, conditions);
+//            },
+//            minLength: 1
+//          });
+//        });
       },
       
       
       /**
        * Add existing categories to the ui
        */
-      _loadExistingCategories : function() {
-        var catsJSONObj = $(this._storeId).data("categoriesstore");
-          
-        if(catsJSONObj){
-          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
-          var catsJSONArr = catsJSONObj.catLiElems;
-            
-          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-            catsJSONArr = catsJSONObj;
-          }          
-                      
-          if(catsJSONArr != null) {
-            
-            var catInputId;
-            var catOtherEnabled = true;
-          
-            for(var i=0; i<catsJSONArr.length; i++){
-              var cat = catsJSONArr[i];
-                
-              // Controlling for 'other' category 
-              if(cat.otherCat){
-                catInputId = this.getOtherCatInputId();
-              }
-              else{
-                catInputId = this._prefix + "-" + (i+1);
-              }
-                
-              var catColorSelectorId = catInputId + "-color-selector";
-            
-              var value = cat.val;            
-              var categoryType = $("#"+catInputId).data("type");
-            
-              // Localize any existing number category values
-              if(!cat.otherCat && categoryType == "number") {
-                var number = parseFloat(value);
-                var localized = this._formatter(number);
-                
-                value = localized;
-              }            
-            
-              $("#"+catInputId).val(value);
-              $("#"+catColorSelectorId).css("background", cat.color);
-              catOtherEnabled = cat.otherEnabled;
-            }
-              
-            // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-            // The 'other' option is checked by default making this a valid sequence
-            if(this._checkOther && !catOtherEnabled){
-            
-            if(this.getGeomType() === "polygon"){
-                $("#basic-cat-poly-other-option").click();
-              }
-              else if(this.getGeomType() === "point"){
-                $("#basic-cat-point-other-option").click();
-              }
-              $("#" + catInputId).parent().parent().hide();
-            }
-          }
-        }
-      },        
+//      _loadExistingCategories : function() {
+//        var catsJSONObj = $(this._storeId).data("categoriesstore");
+//          
+//        if(catsJSONObj){
+//          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
+//          var catsJSONArr = catsJSONObj.catLiElems;
+//            
+//          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
+//            catsJSONArr = catsJSONObj;
+//          }          
+//                      
+//          if(catsJSONArr != null) {
+//            
+//            var catInputId;
+//            var catOtherEnabled = true;
+//          
+//            for(var i=0; i<catsJSONArr.length; i++){
+//              var cat = catsJSONArr[i];
+//                
+//              // Controlling for 'other' category 
+//              if(cat.otherCat){
+//                catInputId = this.getOtherCatInputId();
+//              }
+//              else{
+//                catInputId = this._prefix + "-" + (i+1);
+//              }
+//                
+//              var catColorSelectorId = catInputId + "-color-selector";
+//            
+//              var value = cat.val;            
+//              var categoryType = $("#"+catInputId).data("type");
+//            
+//              // Localize any existing number category values
+//              if(!cat.otherCat && categoryType == "number") {
+//                var number = parseFloat(value);
+//                var localized = this._formatter(number);
+//                
+//                value = localized;
+//              }            
+//            
+//              $("#"+catInputId).val(value);
+//              $("#"+catColorSelectorId).css("background", cat.color);
+//              catOtherEnabled = cat.otherEnabled;
+//            }
+//              
+//            // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
+//            // The 'other' option is checked by default making this a valid sequence
+//            if(this._checkOther && !catOtherEnabled){
+//            
+//            if(this.getGeomType() === "polygon"){
+//                $("#basic-cat-poly-other-option").click();
+//              }
+//              else if(this.getGeomType() === "point"){
+//                $("#basic-cat-point-other-option").click();
+//              }
+//              $("#" + catInputId).parent().parent().hide();
+//            }
+//          }
+//        }
+//      },        
       
       /**
        * Scrape categries for values and colors
        */
       getCategories : function () {    
-        var elements = this.getImpl().find(".category-container");
-        var categories = [];        
-            
-        for(var i=0; i< elements.length; i++){
-          var catInputElem = $(elements[i]).find(".category-input");
-          var catColorElem = $(elements[i]).find(".cat-color-selector");
-          var catColor = LayerForm.rgb2hex($(catColorElem).css("background-color"));
-          var catVal = catInputElem.val();
-                
-          // parse the formatted number to the format of the data so the SLD can apply categories by this value
-          if(catInputElem.data("type") == "number" ) {
-            var thisNum = this._parser(catVal);
-              
-            if($.isNumeric(thisNum)) {
-              catVal = thisNum;                
-            }
-          }
-                
-          // Filter out categories with no input values
-          if(catVal !== ""){
-            var category = new Object();
-            category.val = catVal;
-            category.color = catColor;
-            category.isOntologyCat = false;
-                
-            if(this._checkOther) {
-              if(this.getGeomType() === "polygon"){
-                category.otherEnabled = $("#basic-cat-poly-other-option").prop("checked");
-              }
-              else if(this.getGeomType() === "point"){
-                category.otherEnabled = $("#basic-cat-point-other-option").prop("checked");
-              }
-              
-              if(catInputElem[0].id === this.getOtherCatInputId()){
-                category.otherCat = true;
-              }
-              else{
-                category.otherCat = false;
-              }
-            }
-            else {
-              category.otherEnabled = false;
-              category.otherCat = false;
-            }
-                     
-            categories.push(category);
-          }
-        }  
-                      
-        return categories;
+//        var elements = this.getImpl().find(".category-container");
+//        var categories = [];        
+//            
+//        for(var i=0; i< elements.length; i++){
+//          var catInputElem = $(elements[i]).find(".category-input");
+//          var catColorElem = $(elements[i]).find(".cat-color-selector");
+//          var catColor = LayerForm.rgb2hex($(catColorElem).css("background-color"));
+//          var catVal = catInputElem.val();
+//                
+//          // parse the formatted number to the format of the data so the SLD can apply categories by this value
+//          if(catInputElem.data("type") == "number" ) {
+//            var thisNum = this._parser(catVal);
+//              
+//            if($.isNumeric(thisNum)) {
+//              catVal = thisNum;                
+//            }
+//          }
+//                
+//          // Filter out categories with no input values
+//          if(catVal !== ""){
+//            var category = new Object();
+//            category.val = catVal;
+//            category.color = catColor;
+//            category.isOntologyCat = false;
+//                
+//            if(this._checkOther) {
+//              if(this.getGeomType() === "polygon"){
+//                category.otherEnabled = $("#basic-cat-poly-other-option").prop("checked");
+//              }
+//              else if(this.getGeomType() === "point"){
+//                category.otherEnabled = $("#basic-cat-point-other-option").prop("checked");
+//              }
+//              
+//              if(catInputElem[0].id === this.getOtherCatInputId()){
+//                category.otherCat = true;
+//              }
+//              else{
+//                category.otherCat = false;
+//              }
+//            }
+//            else {
+//              category.otherEnabled = false;
+//              category.otherCat = false;
+//            }
+//                     
+//            categories.push(category);
+//          }
+//        }  
+//                      
+//        return categories;
       },
     }
   });
@@ -382,16 +382,16 @@
         return $(this._elementId);
       },
       getGeomType : function() {
-        var type = this._geomType.toLowerCase();
-        if(type === "poly" || type === "polygon"){
-          return "polygon";
-        }
-        else if(type === "point"){
-          return "point";
-        }
-        else{
-          return null;
-        }
+//        var type = this._geomType.toLowerCase();
+//        if(type === "poly" || type === "polygon"){
+//          return "polygon";
+//        }
+//        else if(type === "point"){
+//          return "point";
+//        }
+//        else{
+//          return null;
+//        }
       },
       
       /**
@@ -400,69 +400,69 @@
        */        
       render : function(rootTerms, nodes) {
         
-        if(rootTerms == null) {
-          var rootsJSON = this.getImpl().data("roots");
-          rootTerms = rootsJSON.roots;        
-        }
+//        if(rootTerms == null) {
+//          var rootsJSON = this.getImpl().data("roots");
+//          rootTerms = rootsJSON.roots;        
+//        }
         
-        var that = this;
+//        var that = this;
         
-        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
-          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
-          rootTerms : rootTerms,
-          editable : false,
-          slide : false,
-          selectable : false,
-          onCreateLi: function(node, $li) {
-            if(!node.phantom) {
-              var termId = node.runwayId;
-
-              var catColor = that._getCategoryColor(termId);
-          
-              var thisLi = $.parseHTML(
-                '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-                  '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-                '</a>');
-
-              // Add the color icon for category ontology nodes              
-              $li.find('> div').append(thisLi);
-              
-            // ontology category layer type colors
-            $(thisLi).find("span").colpick({
-              submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onShow:function(colPickObj) {
-              var that = this;
-                var currColor = LayerForm.rgb2hex($(this).css("background-color"));
-                $(this).colpickSetColor(currColor,false);
-
-                $(LayerForm.LAYER_MODAL).scroll(function(){  
-                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                  var colPick = $(that);
-                  var diff = colPick.offset().top + colPick.height() + 2; 
-                  var diffStr = diff.toString() + "px";
-                  colorPicker.css({ top: diffStr });
-                });
-              },
-              onChange: function(hsb,hex,rgb,el,bySetColor) {
-                var hexStr = '#'+hex;
-                $(el).css('background', hexStr);
-                $(el).next(".color-input").attr('value', hexStr);                                  
-              },
-              /* checkable: true, */
-              crud: {
-                create: { // This configuration gets merged into the jquery create dialog.
-                  height: 320
-                },
-                update: {
-                  height: 320
-                }
-              }
-            });
-           }
-          }
-        });
-        tree.render(this._elementId, nodes);
+//        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+//          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
+//          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+//          rootTerms : rootTerms,
+//          editable : false,
+//          slide : false,
+//          selectable : false,
+//          onCreateLi: function(node, $li) {
+//            if(!node.phantom) {
+//              var termId = node.runwayId;
+//
+//              var catColor = that._getCategoryColor(termId);
+//          
+//              var thisLi = $.parseHTML(
+//                '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+//                  '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+//                '</a>');
+//
+//              // Add the color icon for category ontology nodes              
+//              $li.find('> div').append(thisLi);
+//              
+//            // ontology category layer type colors
+//            $(thisLi).find("span").colpick({
+//              submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+//              onShow:function(colPickObj) {
+//              var that = this;
+//                var currColor = LayerForm.rgb2hex($(this).css("background-color"));
+//                $(this).colpickSetColor(currColor,false);
+//
+//                $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                  var colPick = $(that);
+//                  var diff = colPick.offset().top + colPick.height() + 2; 
+//                  var diffStr = diff.toString() + "px";
+//                  colorPicker.css({ top: diffStr });
+//                });
+//              },
+//              onChange: function(hsb,hex,rgb,el,bySetColor) {
+//                var hexStr = '#'+hex;
+//                $(el).css('background', hexStr);
+//                $(el).next(".color-input").attr('value', hexStr);                                  
+//              },
+//              /* checkable: true, */
+//              crud: {
+//                create: { // This configuration gets merged into the jquery create dialog.
+//                  height: 320
+//                },
+//                update: {
+//                  height: 320
+//                }
+//              }
+//            });
+//           }
+//          }
+//        });
+//        tree.render(this._elementId, nodes);
         
         this.attachCategoryColorPickers();
       },
@@ -472,86 +472,86 @@
        * 
        * @paarm nodeId - id of the node in the ui to get the color for.
        */
-      _getCategoryColor : function(termId) {
-        var catsJSONObj = $(this._storeId).data("categoriesstore");
-          
-        if(catsJSONObj){          
-          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
-          
-          var catsJSONArr = catsJSONObj.catLiElems;
-          
-          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-            catsJSONArr = catsJSONObj;
-          }          
-
-          if(catsJSONArr != null) {            
-            if(this.getImpl().length > 0){
-              for(var i=0; i<catsJSONArr.length; i++){
-                var cat = catsJSONArr[i];
-                var catId = cat.id;
-               
-                if(catId === termId){
-                  return cat.color;
-                }
-                else if(catId === "cat-other-color-selector"){
-                  return cat.color;
-                }
-                else if(catId === "cat-point-other-color-selector"){
-                  return cat.color;
-                }
-              }
-            }          
-          }
-        }
-        
-        // if no match is found return the default
-        return "#00bfff";
-      },
+//      _getCategoryColor : function(termId) {
+//        var catsJSONObj = $(this._storeId).data("categoriesstore");
+//          
+//        if(catsJSONObj){          
+//          catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
+//          
+//          var catsJSONArr = catsJSONObj.catLiElems;
+//          
+//          if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
+//            catsJSONArr = catsJSONObj;
+//          }          
+//
+//          if(catsJSONArr != null) {            
+//            if(this.getImpl().length > 0){
+//              for(var i=0; i<catsJSONArr.length; i++){
+//                var cat = catsJSONArr[i];
+//                var catId = cat.id;
+//               
+//                if(catId === termId){
+//                  return cat.color;
+//                }
+//                else if(catId === "cat-other-color-selector"){
+//                  return cat.color;
+//                }
+//                else if(catId === "cat-point-other-color-selector"){
+//                  return cat.color;
+//                }
+//              }
+//            }          
+//          }
+//        }
+//        
+//        // if no match is found return the default
+//        return "#00bfff";
+//      },
       
       getCategories: function () {
           
-        if(this.getImpl().length > 0) {
-          var categories = [];
-              
-          var elements = this.getImpl().find(".ontology-category-color-icon");
-              
-          $.each(elements, function( index, element ) {
-            var category = new Object();
-            category.id = element.dataset.rwid; 
-            category.val = element.parentElement.previousSibling.textContent;
-            category.color = LayerForm.rgb2hex($(element).css("background-color"));
-            category.isOntologyCat = true;
-                            
-            categories.push(category);
-          });
-              
-          // Get the other category for the a layer create/edit form term tree
-          var thisId = this.getImpl().next().attr('id');
-          if(thisId === "other-cat-point-container"){
-            var otherCat = new Object();
-            otherCat.id = "cat-point-other-color-selector"; 
-            otherCat.val = "Other";
-            otherCat.color = LayerForm.rgb2hex($("#cat-point-other-color-selector").css("background-color"));
-            otherCat.isOntologyCat = false;
-            otherCat.otherCat = true;
-            otherCat.otherEnabled =  $("#ont-cat-point-other-option").prop("checked");
-            categories.push(otherCat);
-          }
-          else if(thisId === "other-cat-poly-container"){
-            var otherCat = new Object();
-              otherCat.id = "cat-other-color-selector"; 
-              otherCat.val = "Other";
-              otherCat.color = LayerForm.rgb2hex($("#cat-other-color-selector").css("background-color"));
-              otherCat.isOntologyCat = false;
-              otherCat.otherCat = true;
-              otherCat.otherEnabled =  $("#ont-cat-poly-other-option").prop("checked");
-              categories.push(otherCat);
-          }
-                    
-          return categories;
-        }
-            
-        return null;        
+//        if(this.getImpl().length > 0) {
+//          var categories = [];
+//              
+//          var elements = this.getImpl().find(".ontology-category-color-icon");
+//              
+//          $.each(elements, function( index, element ) {
+//            var category = new Object();
+//            category.id = element.dataset.rwid; 
+//            category.val = element.parentElement.previousSibling.textContent;
+//            category.color = LayerForm.rgb2hex($(element).css("background-color"));
+//            category.isOntologyCat = true;
+//                            
+//            categories.push(category);
+//          });
+//              
+//          // Get the other category for the a layer create/edit form term tree
+//          var thisId = this.getImpl().next().attr('id');
+//          if(thisId === "other-cat-point-container"){
+//            var otherCat = new Object();
+//            otherCat.id = "cat-point-other-color-selector"; 
+//            otherCat.val = "Other";
+//            otherCat.color = LayerForm.rgb2hex($("#cat-point-other-color-selector").css("background-color"));
+//            otherCat.isOntologyCat = false;
+//            otherCat.otherCat = true;
+//            otherCat.otherEnabled =  $("#ont-cat-point-other-option").prop("checked");
+//            categories.push(otherCat);
+//          }
+//          else if(thisId === "other-cat-poly-container"){
+//            var otherCat = new Object();
+//              otherCat.id = "cat-other-color-selector"; 
+//              otherCat.val = "Other";
+//              otherCat.color = LayerForm.rgb2hex($("#cat-other-color-selector").css("background-color"));
+//              otherCat.isOntologyCat = false;
+//              otherCat.otherCat = true;
+//              otherCat.otherEnabled =  $("#ont-cat-poly-other-option").prop("checked");
+//              categories.push(otherCat);
+//          }
+//                    
+//          return categories;
+//        }
+//            
+//        return null;        
       },
     }
   });
@@ -589,20 +589,22 @@
        * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
        * 
        */
-      _injectFontStylesForDropdown : function(){
-        var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
-        var selectedOption = $(".select-font-select.select-area").find(".center");
-        selectedOption.css("font-family", selectedOption.text());
-        
-        for(var i=0; i<convertedOptions.length; i++){
-          var targetSpan = $(convertedOptions[i]).find("span");
-          
-          if(targetSpan.text().length > 0){
-            targetSpan.css("font-family", targetSpan.text());
-          }
-        }
-      },
+//      _injectFontStylesForDropdown : function(){
+//        var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
+//        var selectedOption = $(".select-font-select.select-area").find(".center");
+//        selectedOption.css("font-family", selectedOption.text());
+//        
+//        for(var i=0; i<convertedOptions.length; i++){
+//          var targetSpan = $(convertedOptions[i]).find("span");
+//          
+//          if(targetSpan.text().length > 0){
+//            targetSpan.css("font-family", targetSpan.text());
+//          }
+//        }
+//      },
       
+      
+      // TODO: What does this method do?
       _addLayerFormControls : function(){
         // Scroll selector dropdown options on page scroll
         this.getImpl().scroll(function(){         
@@ -620,117 +622,118 @@
           
         });
               
-        this._injectFontStylesForDropdown();
+//        this._injectFontStylesForDropdown();
       },          
       
       _setupCategoryColorPicker : function(elements) {
           
-        // color dropdown buttons
-        elements.colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj) {
-          var that = this;
-          var icoEl;
-          var currColor;
-          
-          if($(this).find(".ico")){
-            currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
-          }
-          else if($(this).hasClass("ico")){
-            currColor = LayerForm.rgb2hex($(this).css("background-color"));
-          }
-          
-            $(this).colpickSetColor(currColor,false);
-            
-            $(LayerForm.LAYER_MODAL).scroll(function(){  
-              var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-              var colPick = $(that);
-              var diff = colPick.offset().top + colPick.height() + 2; 
-              var diffStr = diff.toString() + "px";
-              colorPicker.css({ top: diffStr });
-            });
-            
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).find(".ico").css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);
-          }
-        }); 
+//        // color dropdown buttons
+//        elements.colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj) {
+//          var that = this;
+//          var icoEl;
+//          var currColor;
+//          
+//          if($(this).find(".ico")){
+//            currColor = LayerForm.rgb2hex($(this).find(".ico").css("background-color"));
+//          }
+//          else if($(this).hasClass("ico")){
+//            currColor = LayerForm.rgb2hex($(this).css("background-color"));
+//          }
+//          
+//            $(this).colpickSetColor(currColor,false);
+//            
+//            $(LayerForm.LAYER_MODAL).scroll(function(){  
+//              var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//              var colPick = $(that);
+//              var diff = colPick.offset().top + colPick.height() + 2; 
+//              var diffStr = diff.toString() + "px";
+//              colorPicker.css({ top: diffStr });
+//            });
+//            
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).find(".ico").css('background','#'+hex);
+//            $(el).find('.color-input').attr('value', '#'+hex);
+//          }
+//        }); 
       },       
       
-      _onLayerTypeTabChange : function(e) {
-        var activeTab = e.target;
+//      _onLayerTypeTabChange : function(e) {
+//        var activeTab = e.target;
           
-        var type = activeTab.dataset["gdbTabType"];
+//        var type = activeTab.dataset["gdbTabType"];
           
-        if (type === "BASICPOLYGON") {
-          $("#tab003basicpolygon").show();
-        }
-        else if (type === "BASICPOINT") {
-            $("#tab001basicpoint").show();
-        }
-        else if (type === "GRADIENTPOINT") {
-            $("#tab006gradientpoint").show();
-        }
-        else if (type === "CATEGORYPOINT") {
-            $("#tab007categoriespoint").show();
-        }
-        else if (type === "BUBBLE") {
-          $("#tab002bubble").show();
-        }
-        else if (type === "GRADIENTPOLYGON") {
-          $("#tab004gradientpolygon").show();
-        }
-        else if (type === "CATEGORYPOLYGON") {
-          $("#tab005categoriespolygon").show();
-        }
-      },
+//        if (type === "BASICPOLYGON") {
+//          $("#tab003basicpolygon").show();
+//        }
+//        else if (type === "BASICPOINT") {
+//            $("#tab001basicpoint").show();
+//        }
+//        else if (type === "GRADIENTPOINT") {
+//            $("#tab006gradientpoint").show();
+//        }
+//        else if (type === "CATEGORYPOINT") {
+//            $("#tab007categoriespoint").show();
+//        }
+//        else if (type === "BUBBLE") {
+//          $("#tab002bubble").show();
+//        }
+//        else if (type === "GRADIENTPOLYGON") {
+//          $("#tab004gradientpolygon").show();
+//        }
+//        else if (type === "CATEGORYPOLYGON") {
+//          $("#tab005categoriespolygon").show();
+//        }
+//      },
         
       /**
        * Handles the selection of colors from the color picker 
        * 
        * 
        */
+   // TODO: not really a todo but a note that i did not move this to angular because it does not seem to be needed
       _selectColor : function(){
-        this._setupCategoryColorPicker($('.color-holder'));
-        
-        // category layer type colors
-        $("#category-colors-container").find('.icon-color').colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj){
-            var that = this;
-              $(LayerForm.LAYER_MODAL).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-                colorPicker.css({ top: diffStr });
-              });
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);          
-          }
-        });
-        
-        // ontology category layer type colors
-        $(".ontology-category-color-icon").colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj){
-            var that = this;
-              $(LayerForm.LAYER_MODAL).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-                colorPicker.css({ top: diffStr });
-              });
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).next(".color-input").attr('value', '#'+hex);
-          }
-        });        
+//        this._setupCategoryColorPicker($('.color-holder'));
+//        
+//        // category layer type colors
+//        $("#category-colors-container").find('.icon-color').colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj){
+//            var that = this;
+//              $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                var colPick = $(that);
+//                var diff = colPick.offset().top + colPick.height() + 2; 
+//                var diffStr = diff.toString() + "px";
+//                colorPicker.css({ top: diffStr });
+//              });
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).css('background','#'+hex);
+//            $(el).find('.color-input').attr('value', '#'+hex);          
+//          }
+//        });
+//        
+//        // ontology category layer type colors
+//        $(".ontology-category-color-icon").colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj){
+//            var that = this;
+//              $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                var colPick = $(that);
+//                var diff = colPick.offset().top + colPick.height() + 2; 
+//                var diffStr = diff.toString() + "px";
+//                colorPicker.css({ top: diffStr });
+//              });
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).css('background','#'+hex);
+//            $(el).next(".color-input").attr('value', '#'+hex);
+//          }
+//        });        
       },   
       
       /**
@@ -772,7 +775,6 @@
                 
         jcf.customForms.replaceAll(modal[0]);
         
-     // TODO: replicate in angular
         // Add layer styling event listeners
 //        this._selectColor();
 //        this._selectLayerType();
@@ -814,6 +816,7 @@
         
         
         // Localize any existing number cateogry values
+        // TODO: move all localization to angular
         $.each($('.category-input'), function() {
           var value = $(this).val();
           if(value != null && value.length > 0) {
@@ -873,30 +876,30 @@
        * Convert an RGB or RGBA string in the form RBG(255,255,255) to #ffffff
        * 
        */
-      rgb2hex : function(rgb) {
-        if(rgb != null) {
-            
-          if (/^#[0-9A-F]{6}$/i.test(rgb)){
-            return rgb;
-          }
-
-          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-          if(rgbMatch){
-            function hex(x) {
-              return ("0" + parseInt(x).toString(16)).slice(-2);
-            }
-            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-          }
-            
-          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-          if(rgbaMatch){
-            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-          }
-        }
-      },
+//      rgb2hex : function(rgb) {
+//        if(rgb != null) {
+//            
+//          if (/^#[0-9A-F]{6}$/i.test(rgb)){
+//            return rgb;
+//          }
+//
+//          var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+//          if(rgbMatch){
+//            function hex(x) {
+//              return ("0" + parseInt(x).toString(16)).slice(-2);
+//            }
+//            return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+//          }
+//            
+//          var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+//          if(rgbaMatch){
+//            return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+//               ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+//               ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+//               ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+//          }
+//        }
+//      },
     }
   });
   
@@ -936,6 +939,7 @@
         this._thematicAttributeId = $(".category-input").data("mdattributeid"); // There can be multiple elements matching but all have same mdattributeid val
       },
       
+      // TODO: move edit functionality to angular
       edit : function(id) {
         var that = this;
         
@@ -1136,25 +1140,24 @@
        * 
        */
       _getPossibleGeometryTypes : function(){
-        var that = this;
-        var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
-        var geomTypes;
-        
-          var clientRequest = new Mojo.ClientRequest({
-            onSuccess : function(data) {
-              geomTypes = data;
-              console.log('in')
-              return geomTypes
-            },
-            onFailure : function(e) {
-              that.handleException(e);
-            }
-          });
-          
-          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getGeoNodeGeometryTypesJSON(clientRequest, selectedVal);
-          
-          console.log("out")
-          return geomTypes;
+//        var that = this;
+//        var selectedVal = $(ThematicLayerForm.GEO_NODE_SELECT_EL+" option:selected").val();
+//        var geomTypes;
+//        
+//          var clientRequest = new Mojo.ClientRequest({
+//            onSuccess : function(data) {
+//              geomTypes = data;
+//              console.log('in')
+//              return geomTypes
+//            },
+//            onFailure : function(e) {
+//              that.handleException(e);
+//            }
+//          });
+//          
+//          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getGeoNodeGeometryTypesJSON(clientRequest, selectedVal);
+//          
+//          return geomTypes;
       },
       
 //      _setGeoAggEventListeners : function(){
@@ -1221,50 +1224,51 @@
        * 
        * @selectedOption - selected option from the geographic aggregation level dropdown
        */
-      _setLayerTypeOptions : function(selectedOption) {
-        var type = selectedOption.data('type');
-        var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
-        var layerTypesJSON = CategoryWidget.getValueFromHTML(layerTypes);
-        
-        if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
-          for(var i=0; i<layerTypesJSON.length; i++){
-            var lType = layerTypesJSON[i];
-            
-            $("." + lType).show();
-          }
-        }
-        else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
-          for(var i=0; i<layerTypesJSON.length; i++){
-            var lType = layerTypesJSON[i];
-            
-            $("." + lType).hide();
-          }
-          
-          var geomTypes = CategoryWidget.getValueFromHTML(selectedOption.data("geomtypes"));
-          
-          for(var i=0; i<geomTypes.length; i++){
-            var geomType = geomTypes[i];
-            if(geomType === "geoPoint"){
-              $(".BUBBLE").show();
-              $(".BASICPOINT").show();
-              $(".GRADIENTPOINT").show();
-              $(".CATEGORYPOINT").show();
-            }
-            else if(geomType === "geoMultiPolygon"){
-              $(".BASICPOLYGON").show();
-              $(".CATEGORYPOLYGON").show();
-                $(".GRADIENTPOLYGON").show();
-            }
-            else{
-              //TODO: this needs to be an else if (geomType === "some line geom type") which isnt defined yet
-            }
-          }
-        }
-        
-        $(ThematicLayerForm.GEO_TYPE_HOLDER).show();
-      },
+//      _setLayerTypeOptions : function(selectedOption) {
+//        var type = selectedOption.data('type');
+//        var layerTypes = $(ThematicLayerForm.GEO_TYPE_HOLDER).data("layertypes");
+//        var layerTypesJSON = CategoryWidget.getValueFromHTML(layerTypes);
+//        
+//        if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
+//          for(var i=0; i<layerTypesJSON.length; i++){
+//            var lType = layerTypesJSON[i];
+//            
+//            $("." + lType).show();
+//          }
+//        }
+//        else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
+//          for(var i=0; i<layerTypesJSON.length; i++){
+//            var lType = layerTypesJSON[i];
+//            
+//            $("." + lType).hide();
+//          }
+//          
+//          var geomTypes = CategoryWidget.getValueFromHTML(selectedOption.data("geomtypes"));
+//          
+//          for(var i=0; i<geomTypes.length; i++){
+//            var geomType = geomTypes[i];
+//            if(geomType === "geoPoint"){
+//              $(".BUBBLE").show();
+//              $(".BASICPOINT").show();
+//              $(".GRADIENTPOINT").show();
+//              $(".CATEGORYPOINT").show();
+//            }
+//            else if(geomType === "geoMultiPolygon"){
+//              $(".BASICPOLYGON").show();
+//              $(".CATEGORYPOLYGON").show();
+//                $(".GRADIENTPOLYGON").show();
+//            }
+//            else{
+//              //TODO: this needs to be an else if (geomType === "some line geom type") which isnt defined yet
+//            }
+//          }
+//        }
+//        
+//        $(ThematicLayerForm.GEO_TYPE_HOLDER).show();
+//      },
 
       
+      // TODO: wire all these controls up in angular
       _addLayerFormControls : function(){
         this._categoryWidgets = [];
         $("#secondary-select-box").change(Mojo.Util.bind(this, this._handleSecondaryChange));
@@ -1381,21 +1385,21 @@
             }
           }
           else{
-              var categoryType = $("#categories-point-input").data('type');
-              
-              var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color02", "#categories-point-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD, "point");
-              this._categoryWidgets.push(categoryWidget);
-              categoryWidget.render();
-              
-              // category 'other' option
-              $("#basic-cat-point-other-option").change(function() {
-                if($(this).is(":checked")) {
-                  $("#cat-other-point").parent().parent().show();
-                }
-                else{
-                  $("#cat-other-point").parent().parent().hide();
-                }     
-              });
+//              var categoryType = $("#categories-point-input").data('type');
+//              
+//              var categoryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#choice-color02", "#categories-point-input", true, "cat", this._thematicAttributeId, categoryType, ThematicLayerForm.GEO_AGG_METHOD_DD, "point");
+//              this._categoryWidgets.push(categoryWidget);
+//              categoryWidget.render();
+//              
+//              // category 'other' option
+//              $("#basic-cat-point-other-option").change(function() {
+//                if($(this).is(":checked")) {
+//                  $("#cat-other-point").parent().parent().show();
+//                }
+//                else{
+//                  $("#cat-other-point").parent().parent().hide();
+//                }     
+//              });
           }
              
             attachCategoryColorPickers();
@@ -1403,25 +1407,27 @@
           
         function attachCategoryColorPickers(){
           // ontology category layer type colors
-          $(".category-color-icon").colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-            onShow:function(colPickObj){
-              var that = this;
-                $(LayerForm.LAYER_MODAL).scroll(function(){  
-                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                  var colPick = $(that);
-                  var diff = colPick.offset().top + colPick.height() + 2; 
-                  var diffStr = diff.toString() + "px";
-                  colorPicker.css({ top: diffStr });
-                });
-            },
-            onChange:function(hsb,hex,rgb,el,bySetColor) {
-              $(el).css('background','#'+hex);
-              $(el).find('.color-input').attr('value', '#'+hex);
-            }
-          });
+//          $(".category-color-icon").colpick({
+//            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//            onShow:function(colPickObj){
+//              var that = this;
+//                $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                  var colPick = $(that);
+//                  var diff = colPick.offset().top + colPick.height() + 2; 
+//                  var diffStr = diff.toString() + "px";
+//                  colorPicker.css({ top: diffStr });
+//                });
+//            },
+//            onChange:function(hsb,hex,rgb,el,bySetColor) {
+//              $(el).css('background','#'+hex);
+//              $(el).find('.color-input').attr('value', '#'+hex);
+//            }
+//          });
         }
           
+        //TODO: move secondary categories to angular
+        
         // Load the secondary values
         var secondaryAttribute = $("#secondaryAttribute").val();
           
@@ -1437,22 +1443,22 @@
         }
           
         // Scroll selector dropdown options on page scroll
-        $(LayerForm.LAYER_MODAL).scroll(function(){         
-          var drops = $(".select-options");
+//        $(LayerForm.LAYER_MODAL).scroll(function(){         
+//          var drops = $(".select-options");
+//          
+//          for(var i=0; i<drops.length; i++){
+//            var drop = $(drops[i]);
+//            
+//            if(!drop.hasClass("options-hidden")){
+//              var dropSelector = $(".select-active");
+//              var diff = dropSelector.offset().top + dropSelector.height() + 2; 
+//              var diffStr = diff.toString() + "px";
+//              drop.css({ top: diffStr });
+//            }
+//          }
+//        });
           
-          for(var i=0; i<drops.length; i++){
-            var drop = $(drops[i]);
-            
-            if(!drop.hasClass("options-hidden")){
-              var dropSelector = $(".select-active");
-              var diff = dropSelector.offset().top + dropSelector.height() + 2; 
-              var diffStr = diff.toString() + "px";
-              drop.css({ top: diffStr });
-            }
-          }
-        });
-          
-        this._injectFontStylesForDropdown();
+//        this._injectFontStylesForDropdown();
       },
       
       /**
@@ -1460,49 +1466,50 @@
        * 
        * 
        */
+      // TODO: not really a todo but a note that i did not move this to angular because it does not seem to be needed
       _selectColor : function(){
-        this._setupCategoryColorPicker($('.color-holder'));
-        
-        // category layer type colors
-        $("#category-colors-container").find('.icon-color').colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj){
-            var that = this;
-              $(LayerForm.LAYER_MODAL).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-                colorPicker.css({ top: diffStr });
-              });
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).find('.color-input').attr('value', '#'+hex);          
-          }
-        });
-        
-        // ontology category layer type colors
-        $(".ontology-category-color-icon").colpick({
-          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-          onShow:function(colPickObj){
-            var that = this;
-            var currColor = LayerForm.rgb2hex($(this).css("background-color"));
-              $(this).colpickSetColor(currColor,false);
-              
-              $(LayerForm.LAYER_MODAL).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-                colorPicker.css({ top: diffStr });
-              });
-          },
-          onChange:function(hsb,hex,rgb,el,bySetColor) {
-            $(el).css('background','#'+hex);
-            $(el).next(".color-input").attr('value', '#'+hex);
-          }
-        });        
+//        this._setupCategoryColorPicker($('.color-holder'));
+//        
+//        // category layer type colors
+//        $("#category-colors-container").find('.icon-color').colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj){
+//            var that = this;
+//              $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                var colPick = $(that);
+//                var diff = colPick.offset().top + colPick.height() + 2; 
+//                var diffStr = diff.toString() + "px";
+//                colorPicker.css({ top: diffStr });
+//              });
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).css('background','#'+hex);
+//            $(el).find('.color-input').attr('value', '#'+hex);          
+//          }
+//        });
+//        
+//        // ontology category layer type colors
+//        $(".ontology-category-color-icon").colpick({
+//          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//          onShow:function(colPickObj){
+//            var that = this;
+//            var currColor = LayerForm.rgb2hex($(this).css("background-color"));
+//              $(this).colpickSetColor(currColor,false);
+//              
+//              $(LayerForm.LAYER_MODAL).scroll(function(){  
+//                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//                var colPick = $(that);
+//                var diff = colPick.offset().top + colPick.height() + 2; 
+//                var diffStr = diff.toString() + "px";
+//                colorPicker.css({ top: diffStr });
+//              });
+//          },
+//          onChange:function(hsb,hex,rgb,el,bySetColor) {
+//            $(el).css('background','#'+hex);
+//            $(el).next(".color-input").attr('value', '#'+hex);
+//          }
+//        });        
       },   
 
       /**
@@ -1746,6 +1753,7 @@
        * 
        * @inputId - The id for the <input> element used to store categories data
        */
+      // TODO:  This will be replaced by scraping the model in angular
       _updateCategoriesJSON : function(inputId) {
         var styleArr = new Object();
         styleArr.catLiElems = []; // create an empty array to prevent system errors if the ontolgy tree doesnt render leaving catLiElems undefined
