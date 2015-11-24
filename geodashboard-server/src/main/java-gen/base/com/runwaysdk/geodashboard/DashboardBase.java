@@ -1,6 +1,6 @@
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1397182939)
+@com.runwaysdk.business.ClassSignature(hash = 1196059938)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,11 +33,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-<<<<<<< HEAD
-  private static final long serialVersionUID = -1397182939;
-=======
-  private static final long serialVersionUID = -823540027;
->>>>>>> 2fc979ea1e6e3e357cdbb50ef0412d64331c1895
+  private static final long serialVersionUID = 1196059938;
   
   public DashboardBase()
   {

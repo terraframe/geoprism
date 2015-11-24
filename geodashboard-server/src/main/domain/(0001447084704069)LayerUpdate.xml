@@ -52,6 +52,15 @@
     		</create>
     	</mdBusiness>
     	
+    	<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+    		<create>
+    			<mdMethod name="getOptionsJSON" label="Get Options JSON" static="true" returnType="java.lang.String">
+    				<mdParameter name="thematicAttributeId" label="Thematic attribute Id" order="0" type="java.lang.String" />
+    				<mdParameter name="dashboardId" label="Dashboard Id" order="1" type="java.lang.String" />
+    			</mdMethod>
+    		</create>
+    	</mdBusiness>
+    	
     </update>
   </doIt>
   <undoIt>
