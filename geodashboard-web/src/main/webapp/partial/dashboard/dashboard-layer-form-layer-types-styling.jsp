@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
-	            <div class="row-holder">
+	            <div class="row-holder" style="display:none">
 	              <div class="label-holder">
 	                <strong><gdb:localize key="DashboardThematicLayer.form.styleTheLayer"/></strong>
 	              </div>
@@ -678,7 +678,7 @@
 	                        <label class="secondary-label" for="secondaryAttribute" ><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
   	                        <div id="secondary-select-box" class="select-box">
 	                          
-	                          	<select id="secondaryAttribute" class="method-select" name="secondaryAttribute"
+	                          	<select rebuild-secondary-agg-method-dropdown id="secondaryAttribute" class="method-select" name="secondaryAttribute"
 			                      ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label for attr in dynamicDataModel.secondaryAttributes track by attr.id">
 			                    	<option label="<gdb:localize key="DashboardLayer.form.noSelection"/>" value=""></option>
 			                    </select>
@@ -696,10 +696,10 @@
      	                    <div class="cell-holder">
 	                          <label class="secondary-label" for="secondaryAggregation"><gdb:localize key="DashboardLayer.form.secondaryAggregation"/></label>
 	                          <div class="select-box" id="secondary-aggregation-container"> 
-	                          		<select id="secondaryAggregation" class="method-select" name="secondaryAggregation" 
-	                          		ng-model="thematicStyleModel.secondaryAggregationType"
-	                          		ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.id">
-	                          		</select>
+<!-- 	                          		<select rebuild-secondary-agg-method-dropdown id="secondaryAggregation" class="method-select" name="secondaryAggregation"  -->
+<!-- 	                          		ng-model="thematicStyleModel.secondaryAggregationType" -->
+<!-- 	                          		ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.id"> -->
+<!-- 	                          		</select> -->
 	                          </div> 
 	                        </div>
 	                        <div id="secondary-cateogries">

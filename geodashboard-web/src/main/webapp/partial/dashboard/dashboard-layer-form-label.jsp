@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
-		<div class="row-holder">
+		<div class="row-holder" style="display:none">
             <div class="label-holder style02">
               <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardThematicLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
             </div>

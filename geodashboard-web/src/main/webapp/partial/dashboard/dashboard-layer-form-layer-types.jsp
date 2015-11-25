@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
-	            <div id="geom-type-holder" class="row-holder">  
+	            <div id="geom-type-holder" class="row-holder" style="display:none">  
 	              <div class="label-holder style04">
 	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardThematicLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
 	              </div>

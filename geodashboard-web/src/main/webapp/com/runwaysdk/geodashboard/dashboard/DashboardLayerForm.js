@@ -45,7 +45,10 @@
 	      },
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-	    	  jcf.customForms.replaceAll(element[0]);
+	    	  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+				  $(element[0]).show();
+			  }, 100);
 	      }
 	    };    
 	 };
@@ -58,12 +61,13 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-label.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  jcf.customForms.replaceAll(element[0]);
 	    	  
 	    	  // set style of font labels in the dropdown to the font they represent
 	    	  setTimeout(function(){ 
 	    		  scope._injectFontStylesForDropdown();
+	    		  // format the partial
+		    	  jcf.customForms.replaceAll(element[0]);
+		    	  $(element[0]).show();
 	    	  }, 100);
 	    
 	    	  //
@@ -152,7 +156,10 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-	    	  jcf.customForms.replaceAll(element[0]);
+	    	  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+				  $(element[0]).show();
+			  }, 100);
 	      }
 	    };    
 	 };
@@ -166,8 +173,12 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-		      jcf.customForms.replaceAll(element[0]);
+	    	  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+				  $(element[0]).show();
+			  }, 100);
 	    	  
+	    	  // TODO: get these from scope constants
 	    	  var geoNodeSelectId = "#geonode-select";
 	    	  var geoAggLevelId = "#agg-level-dd";
 	    	  var aggMedthodId = "#agg-method-dd";
@@ -200,7 +211,10 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-		      jcf.customForms.replaceAll(element[0]);
+	    	  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+				  $(element[0]).show();
+			  }, 100);
 	      }
 	    };    
 	};
@@ -225,11 +239,12 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-		      jcf.customForms.replaceAll(element[0]);
 		      
 		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
 		      setTimeout(function(){
+		    	  // format the partial
+		    	  jcf.customForms.replaceAll(element[0]);
+		    	  
 		    	  if(scope.dynamicDataModel.isOntologyAttribute){
 			    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
 			    	  for(var i=0; i<layerTypes.length; i++){
@@ -335,6 +350,8 @@
 		    	  else{
 		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
 		    	  }
+		    	  
+		    	  $(element[0]).show();
 		          	
 		      }, 500);
 	      }
@@ -350,7 +367,9 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-	    	  jcf.customForms.replaceAll(element[0]);
+	    	  setTimeout(function(){ 
+				  jcf.customForms.replaceAll(element[0]);
+			  }, 100);
 	    	  
 	    	  //
 	    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
@@ -391,6 +410,37 @@
 			}
 		};
 	 };
+	 
+	 
+	 /**
+	  * Directive for dynamically setting secondary aggregation method dropdown 
+	  * when user slects a secondary attribute.
+	  */
+	 function RebuildSecodaryAggMethodDropdown($compile){
+		    return function(scope, element, attrs){
+		        $(element).change(function(){
+		        	scope.count++;
+		        	$('#secondary-aggregation-container').html("");
+		        	angular.element(
+		        			document.getElementById('secondary-aggregation-container'))
+		        				.append($compile(
+		                          		'<select style="display:none" id="secondaryAggregation" class="method-select" name="secondaryAggregation"'+ 
+			                          		'ng-model="thematicStyleModel.secondaryAggregationType"'+
+			                          		'ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.value">'+
+			                          	'</select>'
+		        						)(scope));
+		        	
+		        	
+		        	setTimeout(function(){ 
+		        		jcf.customForms.replaceAll($('#secondary-aggregation-container').get(0));
+		        		
+		        		// ui hack to hide the select list while the UI process manipulates dom elements. 
+		        		$("#secondaryAggregation").show();
+					}, 50);
+		        });
+		        
+		    };
+		};
 	
 	
 	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService) {
@@ -640,6 +690,10 @@
 	    
    	 	$scope.setAggregationStrategyOptions = function(aggregations){
    	 		$scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
+   	 	};
+   	 	
+   	 	$scope.setSecondaryAggregationType = function(type){
+   	 		$scope.thematicStyleModel.secondaryAggregationType = type;
    	 	};
 		
 	    /**
@@ -1281,7 +1335,11 @@
 	    $scope.setSecondaryAggregationMethods = function(type) {
 	    	var options = $scope.categoryWidget.aggregationMap[type];
 	    	$scope.dynamicDataModel.secondaryAggregationMethods = options;
-	    	//jcf.customForms.replaceAll($('#secondary-aggregation-container').get(0));
+	    	$scope.setSecondaryAggregationType($scope.dynamicDataModel.secondaryAggregationMethods[0]);
+	    	
+	    	// UI manipulation is handled from the rebuildSecondaryAggMethodDropdown directive
+	    	//jcf.customForms.refreshAll($('#secondary-aggregation-container').get(0));
+	    	//jcf.customForms.refreshAll($('#secondaryAggregation').get(0));
 	    };
 	    
 	    
@@ -1383,7 +1441,7 @@
         	 $scope.setAggregationStrategyOptions(aggregations);
              $scope.$apply();
              
-             //jcf.customForms.replaceAll($(geoAggLevelSelectId).parent().get(0));
+             jcf.customForms.replaceAll($($scope.FORM_CONSTANTS.GEO_AGG_STRATEGY_SELECT_ID).parent().get(0));
              
              $scope._setLayerTypeOptions($scope.thematicLayerModel.aggregationStrategy);
          };
@@ -1456,6 +1514,28 @@
          }
          
          
+         $scope.localizeAllCategoryInputs = function() {
+        	 // TODO: Move these to a more global or better context
+      	   	 var _parser = Globalize.numberParser();
+      	   	 var _formatter = Globalize.numberFormatter();
+    	   
+	         // Localize any existing number cateogry values
+	         // TODO: move all localization to angular
+	         $.each($('.category-input'), function() {
+	           var value = $(this).val();
+	           if(value != null && value.length > 0) {
+	             var categoryType = $(this).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
+	             if(categoryType == "number") {
+	               var number = parseFloat(value);
+	               var localized = _formatter(number);
+	               
+	               $(this).val(localized);
+	             }
+	           }
+	         });  
+         }
+         
+         
  	    /**
  	     * Converts rgb or rgba to hex equivilent.
  	     * 
@@ -1500,6 +1580,7 @@
 		.directive('layerTypesStyle', LayerTypesStyle)
 		.directive('categoryAutoComplete', CategoryAutoComplete)
 		.directive('legendOptions', LegendOptions)
+		.directive('rebuildSecondaryAggMethodDropdown', RebuildSecodaryAggMethodDropdown)
 		.filter('range', function() {
 		  return function(input, min, max) {
 		    min = parseInt(min); 
@@ -1508,8 +1589,7 @@
 		      input.push(i);
 		    return input;
 		  };
-		})
+		});
 		  
-	
 	
 })();

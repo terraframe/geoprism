@@ -54,8 +54,6 @@
        */
       _displayLayerForm : function(html, layer){
         
-        var that = this;
-        
         // clear all previous color picker dom elements
         $(".colpick.colpick_full.colpick_full_ns").remove();
         
@@ -63,29 +61,16 @@
         var modal = this.getImpl().first();
         modal.html(html);
                 
-//        jcf.customForms.replaceAll(modal[0]);
-        
-        
-        // Localize any existing number cateogry values
-        // TODO: move all localization to angular
-        $.each($('.category-input'), function() {
-          var value = $(this).val();
-          if(value != null && value.length > 0) {
-            var categoryType = $(this).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
-            if(categoryType == "number") {
-              var number = parseFloat(value);
-              var localized = that._map.getFormatter()(number);
-              
-              $(this).val(localized);
-            }
-          }
-        });    
         
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
-        modal.modal('show');
+//        setTimeout(function(){ 
+        	modal.modal('show');
+//		}, 200);
+        
       },
 
+      
       /**
        * Called when a user submits (creates/updates) a layer with styles.
        * 
