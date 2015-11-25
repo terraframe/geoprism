@@ -331,8 +331,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
       catch (JSONException e)
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new ProgrammingErrorException(e);
       }
       
       JSONArray aggArr = new JSONArray();
@@ -357,8 +356,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         }
         catch (JSONException e)
         {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          throw new ProgrammingErrorException(e);
         }
       }
       
@@ -368,8 +366,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
       catch (JSONException e)
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new ProgrammingErrorException(e);
       }
       
       aggStrategiesJSON.put(nodeObj);
@@ -418,6 +415,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       
       json.put("secondaryAttributes", secondaryAttributes);
       
+      json.put("aggregationMap", DashboardStyle.getAggregationJSON());
+      
       json.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
       json.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
       
@@ -432,8 +431,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     }
     catch (JSONException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new ProgrammingErrorException(e);
     }
     return json.toString();
   }
@@ -454,8 +452,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
       catch (JSONException e)
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new ProgrammingErrorException(e);
       }
     }
     
@@ -489,14 +486,14 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       try
       {
         secAttrObj.put("id", secAttr.getId());
+        secAttrObj.put("mdAttributeId", secAttr.getMdAttributeId());
         secAttrObj.put("type", secAttr.getAttributeType());
         secAttrObj.put("label", secAttr.getDisplayLabel());
         secAttrs.put(secAttrObj);
       }
       catch (JSONException e)
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new ProgrammingErrorException(e);
       }
     }
     

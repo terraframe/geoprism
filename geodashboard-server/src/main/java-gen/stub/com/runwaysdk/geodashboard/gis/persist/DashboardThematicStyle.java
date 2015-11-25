@@ -104,6 +104,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       json.put("secondaryCategories", this.getSecondaryCategories());
       json.put("styleCondition", this.getStyleCondition());
       
+      json.put("aggregationMap", DashboardStyle.getAggregationJSON());
       
 
       return json;

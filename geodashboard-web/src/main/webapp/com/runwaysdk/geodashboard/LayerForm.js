@@ -773,7 +773,7 @@
         var modal = this.getImpl().first();
         modal.html(html);
                 
-        jcf.customForms.replaceAll(modal[0]);
+//        jcf.customForms.replaceAll(modal[0]);
         
         // Add layer styling event listeners
 //        this._selectColor();
@@ -1603,112 +1603,112 @@
       
 
       _renderSecondaryAggregation : function(type) {
-        
-        var options = this._map.getAggregationMap()[type];
-      
-        if(options == null) {
-          options = [];
-        }
-      
-        var html = '<select id="secondaryAggregation" class="method-select" name="secondaryAggregation">';
-        
-        for(var i = 0; i < options.length; i++) {
-          var option = options[i];
-          
-          html += '<option value="' + option.value + '">' + option.label + '</option>';
-        }
-        
-        html += '</select>';
-        
-        $("#secondary-aggregation-container").html(html);
-        
-        // Set the saved value
-        var value = $('#secondaryAggregationValue').val();        
-        $("#secondaryAggregation").val(value);
+//        
+//        var options = this._map.getAggregationMap()[type];
+//      
+//        if(options == null) {
+//          options = [];
+//        }
+//      
+//        var html = '<select id="secondaryAggregation" class="method-select" name="secondaryAggregation">';
+//        
+//        for(var i = 0; i < options.length; i++) {
+//          var option = options[i];
+//          
+//          html += '<option value="' + option.value + '">' + option.label + '</option>';
+//        }
+//        
+//        html += '</select>';
+//        
+//        $("#secondary-aggregation-container").html(html);
+//        
+//        // Set the saved value
+//        var value = $('#secondaryAggregationValue').val();        
+//        $("#secondaryAggregation").val(value);
       },
       
       _renderSecondaryCategoryGroup : function(mdAttributeId, type) {
-        $('#secondary-content').hide();
-        
-        this._renderSecondaryAggregation(type);
-        
-        var categoryType = this._getCategoryType(type);
-        
-        var html =
-          '<div class="color-section">' +
-            '<div class="heading-list">' +
-              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
-              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
-              '<span></span>'+
-            '</div>' +
-            '<div class="category-block">' +
-              '<div class="panel-group choice-color category-group">' +
-                '<div class="panel">' +
-                  '<div id="secondary-choice-color" class="panel-collapse">' +
-                  '</div>' +                              
-                '</div>' +              
-              '</div>' +            
-            '</div>' +
-          '</div>';          
-                 
-        $('#secondary-cateogries').html(html);
-        
-        
-        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation", null);
-        this._secondaryWidget.render();
-        
-        this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
-        
-        jcf.customForms.replaceAll($('#secondary-content').get(0));
-        
-        $('#secondary-content').show();        
+//        $('#secondary-content').hide();
+//        
+//        this._renderSecondaryAggregation(type);
+//        
+//        var categoryType = this._getCategoryType(type);
+//        
+//        var html =
+//          '<div class="color-section">' +
+//            '<div class="heading-list">' +
+//              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
+//              '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
+//              '<span></span>'+
+//            '</div>' +
+//            '<div class="category-block">' +
+//              '<div class="panel-group choice-color category-group">' +
+//                '<div class="panel">' +
+//                  '<div id="secondary-choice-color" class="panel-collapse">' +
+//                  '</div>' +                              
+//                '</div>' +              
+//              '</div>' +            
+//            '</div>' +
+//          '</div>';          
+//                 
+//        $('#secondary-cateogries').html(html);
+//        
+//        
+//        this._secondaryWidget  = new com.runwaysdk.geodashboard.gis.CategoryListWidget(this._map, "#secondary-choice-color", "#secondaryCategories", false, "secondary", mdAttributeId, categoryType, "#secondaryAggregation", null);
+//        this._secondaryWidget.render();
+//        
+//        this._setupCategoryColorPicker($('#secondary-content').find('.color-holder'));
+//        
+//        jcf.customForms.replaceAll($('#secondary-content').get(0));
+//        
+//        $('#secondary-content').show();        
       },
       
       _renderSecondaryTermTree : function(mdAttributeId, type) {
-        $('#secondary-content').hide();
-        
-        this._renderSecondaryAggregation(type);
-        
-        var html =
-         '<div class="color-section">' +
-           '<div class="heading-list">' +
-             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
-             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
-             '<span></span>'+
-           '</div>' +              
-           '<div class="category-block">' +
-             '<div class="ontology-category-input-container">' +
-             '<div id="secondary-tree"></div>' +
-           '</div>' +
-         '</div>';
-            
-        $('#secondary-cateogries').html(html);
-
-        // Get the term roots and setup the tree widget
-        var that = this;
-        var req = new Mojo.ClientRequest({
-          onSuccess : function(results){
-            var nodes = JSON.parse(results);
-            var rootTerms = [];
-                
-            for(var i = 0; i < nodes.length; i++) {
-              var id = nodes[i].id;              
-              rootTerms.push({termId : id});
-            }
-            
-            that._secondaryWidget = new CategoryTreeWidget("#secondary-tree", '#secondaryCategories', null);
-            that._secondaryWidget.render(rootTerms, nodes);
-            
-            $('#secondary-content').show();
-          },
-          onFailure : function(e){
-            that.handleException(e);
-          }
-        });
-        
-        jcf.customForms.replaceAll($('#secondary-content').get(0));
-            
-        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);            
+//        $('#secondary-content').hide();
+//        
+//        this._renderSecondaryAggregation(type);
+//        
+//        var html =
+//         '<div class="color-section">' +
+//           '<div class="heading-list">' +
+//             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "category") + '</span>' +
+//             '<span>' + com.runwaysdk.Localize.localize("DashboardLayer.form", "color") + '</span>' +
+//             '<span></span>'+
+//           '</div>' +              
+//           '<div class="category-block">' +
+//             '<div class="ontology-category-input-container">' +
+//             '<div id="secondary-tree"></div>' +
+//           '</div>' +
+//         '</div>';
+//            
+//        $('#secondary-cateogries').html(html);
+//
+//        // Get the term roots and setup the tree widget
+//        var that = this;
+//        var req = new Mojo.ClientRequest({
+//          onSuccess : function(results){
+//            var nodes = JSON.parse(results);
+//            var rootTerms = [];
+//                
+//            for(var i = 0; i < nodes.length; i++) {
+//              var id = nodes[i].id;              
+//              rootTerms.push({termId : id});
+//            }
+//            
+//            that._secondaryWidget = new CategoryTreeWidget("#secondary-tree", '#secondaryCategories', null);
+//            that._secondaryWidget.render(rootTerms, nodes);
+//            
+//            $('#secondary-content').show();
+//          },
+//          onFailure : function(e){
+//            that.handleException(e);
+//          }
+//        });
+//        
+//        jcf.customForms.replaceAll($('#secondary-content').get(0));
+//            
+//        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);            
       },
       
       _handleSecondaryChange : function(e){

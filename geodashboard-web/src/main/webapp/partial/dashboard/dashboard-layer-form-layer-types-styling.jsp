@@ -680,7 +680,7 @@
 	                          
 	                          	<select id="secondaryAttribute" class="method-select" name="secondaryAttribute"
 			                      ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label for attr in dynamicDataModel.secondaryAttributes track by attr.id">
-			                    	<option label="" value=""></option>
+			                    	<option label="<gdb:localize key="DashboardLayer.form.noSelection"/>" value=""></option>
 			                    </select>
 			                    
 <!-- 	                          <select id="secondaryAttribute" class="method-select" name="secondaryAttribute"> -->
@@ -691,14 +691,72 @@
 <!-- 		                      </select> -->
 	                        </div>
 	                      </div>
-						  <%-- ${style.secondaryAttributeId == '' ? 'style="display:none;"' : ''} --%>
+					
 	                      <div id="secondary-content" ng-show="secondaryAttributeIsValid()" >
      	                    <div class="cell-holder">
 	                          <label class="secondary-label" for="secondaryAggregation"><gdb:localize key="DashboardLayer.form.secondaryAggregation"/></label>
 	                          <div class="select-box" id="secondary-aggregation-container"> 
+	                          		<select id="secondaryAggregation" class="method-select" name="secondaryAggregation" 
+	                          		ng-model="thematicStyleModel.secondaryAggregationType"
+	                          		ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.id">
+	                          		</select>
 	                          </div> 
 	                        </div>
-	                        <div id="secondary-cateogries"></div>
+	                        <div id="secondary-cateogries">
+								<!-- Ontology categories -->
+                                <div class="color-section" ng-show="thematicStyleModel.secondaryAttribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm'">
+						           <div class="heading-list">
+						             <span><gdb:localize key="DashboardLayer.form.category"/></span>
+						             <span><gdb:localize key="DashboardLayer.form.color"/></span>
+						             <span></span>
+						           </div>              
+						           <div class="category-block">
+						             <div class="ontology-category-input-container"></div>
+						             <div id="secondary-tree"></div>
+						           </div>
+						        </div>
+						        
+	         					<!-- Basic categories -->
+		                        <div class="color-section" ng-show="thematicStyleModel.secondaryAttribute.type != 'com.runwaysdk.system.metadata.MdAttributeTerm'">
+						            <div class="heading-list">
+						              <span><gdb:localize key="DashboardLayer.form.category"/></span>
+						              <span><gdb:localize key="DashboardLayer.form.color"/></span>
+						              <span></span>
+						            </div>
+						            <div class="category-block">
+						              <div class="panel-group choice-color category-group">
+						                <div class="panel">
+						                  <div id="secondary-choice-color" class="panel-collapse">
+						                  		<ul class="color-list">
+					                    			<li ng-repeat="cat in categoryWidget.secondaryCatOptionsObj.catLiElems track by $index">
+												       <div class="category-container">
+												          <div class="text category-input-container">
+															<!-- thematicStyleModel.categoryPolygonStyles -->
+															<!-- Regular cat  -->
+												          	<input ng-show="!cat.otherCat" id="secondary-{{$index}}" class="category-input"  data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-mdattributetype="{{dynamicDataModel.thematicAttributeDataType}}" type="text" value="{{cat.val}}" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete>
+												          	<!-- OTHER cat  -->
+												          	<input ng-show="cat.otherCat" id="secondary-{{$index}}-poly" class="category-input"  data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-mdattributetype="{{dynamicDataModel.thematicAttributeDataType}}" type="text" value="{{cat.val}}" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="off" disabled >
+												          </div>
+												          <div class="cell">
+												            <div class="color-holder">
+												              <a href="#" class="color-choice">
+												              	<!-- Regular cat  -->
+												                <span ng-show="!cat.otherCat" id="secondary-{{$index}}-color-selector" class="ico cat-color-selector" style="background:{{cat.color}}">icon</span>
+												                <!-- OTHER cat  -->
+												                <span ng-show="cat.otherCat" id="secondary-{{$index}}-poly-color-selector" class="ico cat-color-selector" style="background:{{cat.color}}">icon</span>
+												                <span class="arrow">arrow</span>
+												              </a>
+												            </div>
+												          </div>
+												        </div>
+												     </li>
+					                    		</ul>
+						                  </div>                              
+						                </div>              
+						              </div>            
+						            </div>
+						        </div>  
+	                        </div>
 	                      </div>
                         </div>
 	                  </div>
