@@ -27,11 +27,11 @@
             <div class="holder">
               <div class="row-holder">
                 <div class="check-block">
-          	 		<input id="f51" type="checkbox" name="style.enableValue"></input>
+          	 		<input id="f51" type="checkbox" name="style.enableValue" ng-model="thematicStyleModel.enableValue"></input>
 					<label for="f51"><gdb:localize var="dl_form_enableVal" key="DashboardLayer.form.enableValue"/>${dl_form_enableVal}</label>
                 </div>
                 <div class="check-block">
-        	 		<input id="f94" type="checkbox" name="style.enableLabel"></input>
+        	 		<input id="f94" type="checkbox" name="style.enableLabel" ng-model="thematicStyleModel.enableLabel"></input>
                   <label for="f94"><gdb:localize var="dl_form_enableLabel" key="DashboardLayer.form.enableLabel"/>${dl_form_enableLabel}</label>
                 </div>              
               </div>
