@@ -82,32 +82,30 @@
    
 			<layer-types-style></layer-types-style>
 
+			<legend-options></legend-options>
 
 
-
-            <div class="row-holder">
-              <div class="label-holder"></div>
-              <div class="holder">
-                <div class="row-holder">
-                  <div class="check-block style02">
-					<mjl:component param="layer" item="${layer}">
-                    	<input id="f65" type="checkbox" <c:if test="${layer.displayInLegend}">checked</c:if> name="layer.${layer.displayInLegendMd.name}" ></input>
-                    	<label for="f65">${layer.displayInLegendMd.displayLabel}</label>
-					</mjl:component>
-                  </div>
-                </div>
-                <div class="button-holder">
-							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button" 
-							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle.mojo"
-							      classes="btn btn-primary"  />
-							    <!-- <input id="DashboardThematicLayer-create-button" name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button" value="Map It" class="btn btn-primary" type="button"> -->
-							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
-							      value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.cancel.mojo"
-							      classes="btn btn-default" />
-                </div>
-              </div>
-            </div>
-          </fieldset>
+			<div class="row-holder">
+				<div class="label-holder"></div>
+				<div class="holder">
+				<!-- LEAVE THIS MJL:COMPONENT HERE! IT IS NEEDED TO STORE LAYER ID FOR SUBMIT/CANCEL ACTIONS -->
+				<mjl:component param="layer" item="${layer}"></mjl:component>
+					<div class="button-holder">
+						<mjl:command
+							name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
+							value="Map It"
+							action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle.mojo"
+							classes="btn btn-primary" />
+						<!-- <input id="DashboardThematicLayer-create-button" name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button" value="Map It" class="btn btn-primary" type="button"> -->
+						<mjl:command
+							name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
+							value="Cancel"
+							action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.cancel.mojo"
+							classes="btn btn-default" />
+					</div>
+				</div>
+			</div>
+		</fieldset>
       </div>
     </div>
     

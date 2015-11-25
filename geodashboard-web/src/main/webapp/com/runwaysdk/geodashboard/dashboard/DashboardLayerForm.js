@@ -59,7 +59,7 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-//	    	  jcf.customForms.replaceAll(element[0]);
+	    	  jcf.customForms.replaceAll(element[0]);
 	    	  
 	    	  // set style of font labels in the dropdown to the font they represent
 	    	  setTimeout(function(){ 
@@ -80,7 +80,7 @@
 	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
 	    			  scope.setEnableValue(true); // manually set the model to true because the change event hasn't occured yet
 	    		  }
-	    	  }
+	    	  };
 	    	  
 	    	  //
 	    	  // Setting up click events for checkboxes manually to hook the custom ui elements to the angular model binding.
@@ -96,7 +96,7 @@
 	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
 	    			  scope.setEnableLabel(true); // manually set the model to true because the change event hasn't occured yet
 	    		  }
-	    	  }
+	    	  };
 	    	  
 	          $("#label-text-color").colpick({
 	              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
@@ -152,7 +152,7 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-//		    	  jcf.customForms.replaceAll(element[0]);
+	    	  jcf.customForms.replaceAll(element[0]);
 	      }
 	    };    
 	 };
@@ -166,7 +166,7 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-		      //jcf.customForms.replaceAll(element[0]);
+		      jcf.customForms.replaceAll(element[0]);
 	    	  
 	    	  var geoNodeSelectId = "#geonode-select";
 	    	  var geoAggLevelId = "#agg-level-dd";
@@ -188,7 +188,7 @@
 	              }
 	    	  });
 	      }
-	    }    
+	    };    
 	};
 	
 	 
@@ -202,7 +202,7 @@
 	    	  // format the partial
 		      jcf.customForms.replaceAll(element[0]);
 	      }
-	    }    
+	    };    
 	};
 	
 	
@@ -226,7 +226,7 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
-//		      jcf.customForms.replaceAll(element[0]);
+		      jcf.customForms.replaceAll(element[0]);
 		      
 		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
 		      setTimeout(function(){
@@ -338,11 +338,45 @@
 		          	
 		      }, 500);
 	      }
-	    }    
+	    };    
 	};
 	
 	
-	function CategoryAutoComplete(layerFormService) {
+	 function LegendOptions() {
+	    return {
+	      restrict: 'E',
+	      replace: true,
+	      templateUrl: '/partial/dashboard/dashboard-layer-form-legend-option.jsp',    
+	      scope: true,
+	      link: function (scope, element, attrs) {
+	    	  // format the partial
+	    	  jcf.customForms.replaceAll(element[0]);
+	    	  
+	    	  //
+	    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
+	    	  //
+	    	  var enableValEl = document.getElementById("f65").previousSibling;
+	    	  enableValEl.onclick = function() { 
+	    		  var theEl = angular.element($(this).next()[0]);
+	    		  if($(this).hasClass("chk-checked")){
+	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+	    			  scope.setInLegend(false); // manually set the model to false because the change event hasn't occured yet
+	    		  }
+	    		  else{
+	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+	    			  scope.setInLegend(true); // manually set the model to true because the change event hasn't occured yet
+	    		  }
+	    	  };
+	      }
+	    };    
+	 };
+		 
+	
+	 /**
+	  * Directive attached to all basic category input elements to hook the actual 
+	  * autocomplete action.
+	  */
+	 function CategoryAutoComplete(layerFormService) {
 		return {
 			restrict: "A",
 			link: function (scope, element, attr, ctrl) {
@@ -356,7 +390,7 @@
 				}, 500); 
 			}
 		};
-	};
+	 };
 	
 	
 	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService) {
@@ -582,7 +616,31 @@
 				              ]
 			}
 		};
+		
+		
+	    $scope.setEnableValue = function(val){
+	        $scope.thematicStyleModel.enableValue = val;
+	    }; 
 	    
+	    $scope.setEnableLabel = function(val){
+	        $scope.thematicStyleModel.enableLabel = val;
+	    }; 
+	    
+	    $scope.setInLegend = function(val){
+	    	$scope.thematicLayerModel.inLegend = val;
+	    };
+	    
+	    $scope.setPointCategoriesStore = function(catObjects){
+	    	$scope.dynamicDataModel.pointCategoriesStore = {catLiElems:catObjects};
+	    };
+	    
+	    $scope.setPolygonCategoriesStore = function(catObjects){
+	    	$scope.dynamicDataModel.polyCategoriesStore = {catLiElems:catObjects};
+	    };
+	    
+   	 	$scope.setAggregationStrategyOptions = function(aggregations){
+   	 		$scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
+   	 	};
 		
 	    /**
 	     * Request for existing layer data 
@@ -932,6 +990,23 @@
                         
           return categories;
         };
+        
+        
+        /**
+         * Get general type representation of a thematic attribte type
+         * 
+         * @param type : thematic attribute type <string>
+         */
+        $scope.getCategoryType = function(type) {
+            if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
+                return 'number';
+              }
+              else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
+                return 'date';
+              }
+              
+              return 'text';
+        };
     	
     	
     	/**
@@ -1000,6 +1075,12 @@
         };
         
     	
+        /**
+         * Handle the ajax request/response for basic category auto complete.
+         * 
+         * @param request : JQuery signature var
+         * @param response : JQuery signature var
+         */
     	$scope.basicCategoryAutocompleteSource = function( request, response ) {
     	   var _parser = Globalize.numberParser();
     	   var _formatter = Globalize.numberFormatter();
@@ -1035,7 +1116,10 @@
     	};
     	
     	
-	    // Aggregation strategy watcher
+	    /**
+	     * Aggregation strategy (universals) watcher.
+	     * Hides the aggregation method dropdown if aggregation is not relevant for the strategy level.
+	     */
 	    $scope.$watch("thematicLayerModel.aggregationStrategy", function(newValue, oldValue) {
 	        //console.log("watching agg strategy", " : ", "new val = ", newValue, " old val = ", oldValue)
             if($($scope.FORM_CONSTANTS.GEO_AGG_STRATEGY_SELECT_ID+" option:selected").hasClass("universal-leaf")){
@@ -1080,7 +1164,12 @@
 	    });
 	    
 	    
-	    $scope._renderSecondaryCategoryGroup = function(mdAttributeId, type) {
+	    /**
+	     * Render basic categories for the secondary categories widget.
+	     * 
+	     * @param type : thematic attribute type <string>
+	     */
+	    $scope._renderSecondaryCategoryGroup = function(type) {
 	        $scope.setSecondaryAggregationMethods(type);
 	        
 //	        jcf.customForms.replaceAll($('#secondary-content').get(0));
@@ -1088,7 +1177,10 @@
 	    
 	    
 	    /**
-	     * Render the ontology tree for secondary categories
+	     * Render the ontology tree for the secondary categories widget
+	     * 
+	     * @param mdAttributeId : thematic attribute id
+	     * @param type : thematic attribute type <string>
 	     */
 	    $scope._renderSecondaryTermTree = function(mdAttributeId, type) {
 	        
@@ -1107,7 +1199,7 @@
 	              rootTerms.push({termId : id});
 	            }
 	            
-	            var _secondaryWidget = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+	            var secondaryWidget = new com.runwaysdk.geodashboard.ontology.OntologyTree({
 		              termType : "com.runwaysdk.geodashboard.ontology.Classifier",
 		              relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
 		              rootTerms : rootTerms,
@@ -1165,9 +1257,9 @@
 			                });
 		                }
 		              }
-	    		  });
+	    		});
 	    		  
-	            _secondaryWidget.render("#secondary-tree", nodes);
+	            secondaryWidget.render("#secondary-tree", nodes);
 	          },
 	          onFailure : function(e){
 	        	  GDB.ExceptionHandler.handleException(e.message);
@@ -1183,6 +1275,8 @@
 	    /**
 	     * Setter for dynamic secondary aggregation methods which are updated on
 	     * selection of secondary attributes by the user.
+	     * 
+	     * @param type : thematic attribute type <string>
 	     */
 	    $scope.setSecondaryAggregationMethods = function(type) {
 	    	var options = $scope.categoryWidget.aggregationMap[type];
@@ -1203,29 +1297,37 @@
 		            	$scope._renderSecondaryTermTree(mdAttributeId, type);
 		            }
 		            else {
-		            	$scope._renderSecondaryCategoryGroup(mdAttributeId, type);
+		            	$scope._renderSecondaryCategoryGroup(type);
 		            }
 	        	}
 	        }
 	    });
 	    
 	    
-	    $scope.setEnableValue = function(val){
-	        $scope.thematicStyleModel.enableValue = val;
-	    }; 
-	    
-	    $scope.setEnableLabel = function(val){
-	        $scope.thematicStyleModel.enableLabel = val;
-	    }; 
-	    
-	    $scope.setPointCategoriesStore = function(catObjects){
-	    	$scope.dynamicDataModel.pointCategoriesStore = {catLiElems:catObjects};
+	    /**
+	     * Dropdown elements are non-standard UI elements (<div>s) that are not fixed to a position on the form. 
+	     * This helps keep the in place.
+	     * 
+	     * TODO: Call this method
+	     */
+	    $scope.attachDropdownScrollControls = function(){
+	          // Scroll selector dropdown options on page scroll
+		      $($scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){         
+		        var drops = $(".select-options");
+		        
+		        for(var i=0; i<drops.length; i++){
+		          var drop = $(drops[i]);
+		          
+		          if(!drop.hasClass("options-hidden")){
+		            var dropSelector = $(".select-active");
+		            var diff = dropSelector.offset().top + dropSelector.height() + 2; 
+		            var diffStr = diff.toString() + "px";
+		            drop.css({ top: diffStr });
+		          }
+		        }
+		      });
 	    };
-	    
-	    $scope.setPolygonCategoriesStore = function(catObjects){
-	    	$scope.dynamicDataModel.polyCategoriesStore = {catLiElems:catObjects};
-	    };
-	    
+
 	    
 	    /**
 	     * Scrapes the category point and category polygon ontology trees for style settings.
@@ -1243,37 +1345,6 @@
 	    			$scope.setPolygonCategoriesStore(scrapedCategoryEls);
 	    		}
 	    	}
-	    };
-	    
-	    
-	    /**
-	     * Converts rgb or rgba to hex equivilent.
-	     * 
-	     * @param rgb or rgba 
-	     */
-	    $scope.rgb2hex = function(rgb) {
-	        if(rgb != null) {
-	            
-	            if (/^#[0-9A-F]{6}$/i.test(rgb)){
-	              return rgb;
-	            }
-
-	            var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-	            if(rgbMatch){
-	              function hex(x) {
-	                return ("0" + parseInt(x).toString(16)).slice(-2);
-	              }
-	              return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
-	            }
-	              
-	            var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-	            if(rgbaMatch){
-	              return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
-	                 ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
-	                 ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
-	                 ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
-	            }
-	         }
 	    };
 	    
 	    
@@ -1304,11 +1375,12 @@
          * Populate the geographic aggregation dropdown
          * 
          * @aggregations - JSON representing geo aggregation levels
+         * @selectedOption - selected option <object> from the geographic aggregation level dropdown
          */
          $scope.setGeographicAggregationOptions = function(aggregations, selectedOption) {
              // Re-sets the options property on the model
-             $scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
-             
+        	 
+        	 $scope.setAggregationStrategyOptions(aggregations);
              $scope.$apply();
              
              //jcf.customForms.replaceAll($(geoAggLevelSelectId).parent().get(0));
@@ -1320,7 +1392,7 @@
          /**
           * Populate the layer type block based on the selection of the geonode and geo aggregation level dropdown
           * 
-          * @selectedOption - selected option from the geographic aggregation level dropdown
+          * @selectedOption - selected option <object> from the geographic aggregation level dropdown
           */
          $scope._setLayerTypeOptions = function(selectedOption) {
            var type = selectedOption.aggStrategyType;
@@ -1382,6 +1454,37 @@
            // Nothing else is required.
            return html;
          }
+         
+         
+ 	    /**
+ 	     * Converts rgb or rgba to hex equivilent.
+ 	     * 
+ 	     * @param rgb or rgba 
+ 	     */
+ 	    $scope.rgb2hex = function(rgb) {
+ 	        if(rgb != null) {
+ 	            
+ 	            if (/^#[0-9A-F]{6}$/i.test(rgb)){
+ 	              return rgb;
+ 	            }
+
+ 	            var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+ 	            if(rgbMatch){
+ 	              function hex(x) {
+ 	                return ("0" + parseInt(x).toString(16)).slice(-2);
+ 	              }
+ 	              return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+ 	            }
+ 	              
+ 	            var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+ 	            if(rgbaMatch){
+ 	              return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+ 	                 ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+ 	                 ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+ 	                 ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+ 	            }
+ 	         }
+ 	    };
 	};
 	
 	 
@@ -1396,6 +1499,7 @@
 		.directive('layerTypesSelectionDirective', LayerTypesSelectionDirective)
 		.directive('layerTypesStyle', LayerTypesStyle)
 		.directive('categoryAutoComplete', CategoryAutoComplete)
+		.directive('legendOptions', LegendOptions)
 		.filter('range', function() {
 		  return function(input, min, max) {
 		    min = parseInt(min); 
