@@ -60,6 +60,7 @@ import com.runwaysdk.dataaccess.MdAttributeDoubleDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeFloatDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeLongDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
@@ -498,6 +499,10 @@ public class ShapefileExporter implements Reloadable
     else if (attribute instanceof MdAttributeIntegerDAOIF)
     {
       descriptions.add(new AttributeDescription(name, Integer.class));
+    }
+    else if (attribute instanceof MdAttributeLongDAOIF)
+    {
+      descriptions.add(new AttributeDescription(name, Long.class));
     }
     else if (attribute instanceof MdAttributeDoubleDAOIF)
     {

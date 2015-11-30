@@ -18,149 +18,222 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.runwaysdk</groupId>
-		<artifactId>geodashboard</artifactId>
-		<version>1.01.0005</version>
-	</parent>
-	
-	<artifactId>geodashboard-test</artifactId>
-	<packaging>jar</packaging>
-	
-	<dependencies>
-		<dependency>
-			<groupId>com.runwaysdk</groupId>
-			<artifactId>geodashboard-server</artifactId>
-			<version>1.01.0005</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-		</dependency>
-	</dependencies>
-	
-	<profiles>
-	
-	   <profile>
-      <id>import-test-data</id>
-      <activation>
-        <property>
-          <name>import-test-data</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>import-test-data</id>
-                <phase>install</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>com.runwaysdk.geodashboard.gis.geoserver.GeoserverTestSetup</mainClass>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>server.root</key>
-                      <value>ideiq-server</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>client.root</key>
-                      <value>ideiq-client</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>common.root</key>
-                      <value>ideiq-common</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>jsp.dir</key>
-                      <value>ideiq-web/src/main/webapp/WEB-INF</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>server.classpath.append</key>
-                      <value>../geodashboard/geodashboard-common/target/classes;../geodashboard/geodashboard-server/target/classes</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>client.classpath.append</key>
-                      <value>../geodashboard/geodashboard-common/target/classes;../geodashboard/geodashboard-client/target/classes</value>
-                    </systemProperty>
-                  </systemProperties>                                   
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-	
-	</profiles>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.runwaysdk</groupId>
+    <artifactId>geodashboard</artifactId>
+    <version>1.01.0005</version>
+  </parent>
 
-	<build>
-	  <!-- This tells maven to resolve variables in our properties files (like 
-      maven.basedir) -->
+  <artifactId>geodashboard-test</artifactId>
+  <packaging>war</packaging>
+
+  <properties>
+    <geoserver.version>2.5.0.1</geoserver.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geodashboard-server</artifactId>
+      <version>1.01.0005</version>
+    </dependency>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geodashboard-web</artifactId>
+      <version>1.01.0005</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>geoserver</artifactId>
+      <version>${geoserver.version}</version>
+      <type>war</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <!-- This tells maven to resolve variables in our properties files (like maven.basedir) -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
     </resources>
-	
-		<plugins>
-		
-				
-		
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<!-- Weave Aspects -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>${aspectj.plugin.version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>test-compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<aspectLibraries>
-						<aspectLibrary>
-							<groupId>com.runwaysdk</groupId>
-							<artifactId>runwaysdk-server</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-                    <complianceLevel>${maven.compiler.target}</complianceLevel>
-					<fork>true</fork>
-					<meminitial>512m</meminitial>
-					<maxmem>1024m</maxmem>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <!-- Weave Aspects -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>${aspectj.plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aspectLibraries>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-server</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
+          <fork>true</fork>
+          <meminitial>512m</meminitial>
+          <maxmem>1024m</maxmem>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <packagingExcludes>
+            <!-- Exclude all jars provided by tomcat -->
+            **/catalina*.jar,
+            **/servlet-api*.jar,
+            **/annotations-api*.jar
+          </packagingExcludes>
+          <overlays>
+            <overlay>
+              <!-- empty groupId/artifactId represents the current build -->
+            </overlay>
+            <overlay>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>geodashboard-web</artifactId>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
+
+      <!-- Failsafe for running integration tests with JUNIT -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.12</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Cargo for integration test -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.4.15</version>
+        <configuration>
+          <container>
+            <containerId>tomcat8x</containerId>
+            <zipUrlInstaller>
+              <url>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.zip</url>
+              <downloadDir>${project.build.directory}/downloads</downloadDir>
+              <extractDir>${project.build.directory}/extracts</extractDir>
+            </zipUrlInstaller>
+            <timeout>480000</timeout>
+          </container>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>8443</cargo.servlet.port>
+              <cargo.protocol>https</cargo.protocol>
+              <cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
+              <cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
+              <cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
+              <cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
+              <cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
+              <cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
+              <cargo.jvmargs>
+                -Xmx5120M
+                -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
+                -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
+                -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
+                -Djavax.net.ssl.trustStore=/${project.basedir}/src/test/resources/tomcat.truststore
+                -Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
+                -Djava.rmi.server.hostname=127.0.0.1
+                -Dbirt-server=true
+              </cargo.jvmargs>
+            </properties>
+          </configuration>
+          <deployables>
+            <deployable>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>geodashboard-test</artifactId>
+              <type>war</type>
+              <properties>
+                <context>ROOT</context>
+              </properties>
+            </deployable>
+            <deployable>
+              <groupId>org.geoserver</groupId>
+              <artifactId>geoserver</artifactId>
+              <type>war</type>
+              <properties>
+                <context>geoserver</context>
+              </properties>
+            </deployable>
+          </deployables>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-tomcat</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-tomcat</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

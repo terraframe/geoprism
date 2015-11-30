@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
@@ -851,14 +853,19 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
 
-    Boolean access = currentUser.isAssigned(this.getDashboardRole());
-
-    if (!access)
+    if (currentUser != null)
     {
-      return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      Boolean access = currentUser.isAssigned(this.getDashboardRole());
+
+      if (!access)
+      {
+        return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   /*
@@ -1369,11 +1376,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       throw new ReadPermissionException("", this, user);
     }
 
+    return getJSON(this.getConditionMap());
+  }
+
+  public JSONObject getJSON(Map<String, DashboardCondition> conditions) throws JSONException
+  {
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();
-
-    Map<String, DashboardCondition> conditions = this.getConditionMap();
 
     for (MdClass mdClass : mdClasses)
     {
