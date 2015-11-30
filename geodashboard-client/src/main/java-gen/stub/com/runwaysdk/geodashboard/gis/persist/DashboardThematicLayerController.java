@@ -19,7 +19,10 @@
 package com.runwaysdk.geodashboard.gis.persist;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -164,7 +167,49 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
   {
     resp.sendError(500);
   }
+  
+  private static String encodeString(String val)
+  {
+    
+    String value = null;
+    try
+    {
+      value = URLEncoder.encode(val, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return value;
+  }
+  
+  private JSONArray formatAggregationMethods(List<AggregationTypeDTO> aggMethods)
+  {
+    JSONArray formattedAggMethods = new JSONArray();
+    for(AggregationTypeDTO aggMethod : aggMethods)
+    {
+      try
+      {
+        JSONObject aggMethodObj = new JSONObject();
+        String formattedAggMethod = aggMethod.toString().replaceAll(".*\\.", "");
+        aggMethodObj.put("method", formattedAggMethod);
+        aggMethodObj.put("label", aggMethod.getDisplayLabel());
+        aggMethodObj.put("id", aggMethod.getId());
+        formattedAggMethods.put(aggMethodObj);
+      }
+      catch (JSONException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    
+    return formattedAggMethods;
+  }
 
+  
   /**
    * Loads artifacts for layer/style CRUD.
    * 
@@ -184,13 +229,15 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
     if (layer instanceof DashboardThematicLayerDTO)
     {
 
+      req.setAttribute("mapId", mapId);
+      
       DashboardThematicLayerDTO tLayer = (DashboardThematicLayerDTO) layer;
       req.setAttribute("layer", tLayer);
 
       req.setAttribute("style", style);
 
       String[] fonts = DashboardThematicStyleDTO.getSortedFonts(clientRequest);
-      req.setAttribute("fonts", fonts);
+      req.setAttribute("fonts", encodeString(new JSONArray(Arrays.asList(fonts)).toString()) );
 
       // selected attribute
       MdAttributeDTO mdAttr;
@@ -207,8 +254,12 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       DashboardMapDTO map = DashboardMapDTO.get(clientRequest, mapId);
       DashboardDTO dashboard = map.getDashboard();
 
-      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
-      req.setAttribute("nodes", nodes);
+      String geoNodesJSON = dashboard.getGeoNodesJSON(mdAttr);
+      req.setAttribute("geoNodes", encodeString(geoNodesJSON));
+      
+      // TODO: REMOVE 'nodes' - geoNodes replaces it
+//      GeoNodeDTO[] nodes = dashboard.getGeoNodes(mdAttr);
+//      req.setAttribute("nodes", nodes);
 
       req.setAttribute("mdAttributeId", mdAttr.getId());
       req.setAttribute("activeMdAttributeLabel", this.getDisplayLabel(mdAttr));
@@ -216,54 +267,54 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       // aggregations
       List<AggregationTypeDTO> aggregations = (List<AggregationTypeDTO>) DashboardStyleDTO.getSortedAggregations(clientRequest, mdAttr.getId()).getResultSet();
 
-      req.setAttribute("aggregations", aggregations);
+      req.setAttribute("aggregations", encodeString(formatAggregationMethods(aggregations).toString()) );
       req.setAttribute("activeAggregation", tLayer.getActiveAggregationLabel(aggregations));
 
-      List<String> pointTypes = new ArrayList<String>();
-      pointTypes.add("CIRCLE");
-      pointTypes.add("STAR");
-      pointTypes.add("SQUARE");
-      pointTypes.add("TRIANGLE");
-      pointTypes.add("CROSS");
-      pointTypes.add("X");
-      req.setAttribute("pointTypes", pointTypes);
-      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
-      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
-      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
+//      List<String> pointTypes = new ArrayList<String>();
+//      pointTypes.add("CIRCLE");
+//      pointTypes.add("STAR");
+//      pointTypes.add("SQUARE");
+//      pointTypes.add("TRIANGLE");
+//      pointTypes.add("CROSS");
+//      pointTypes.add("X");
+//      req.setAttribute("pointTypes", pointTypes);
+//      req.setAttribute("activeBasicPointType", style.getPointWellKnownName());
+//      req.setAttribute("activeGradientPointType", style.getGradientPointWellKnownName());
+//      req.setAttribute("activeCategoryPointType", style.getCategoryPointWellKnownName());
 
       // layer types
-      Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
+//      Map<String, String> labels = tLayer.getLayerTypeMd().getEnumItems();
 
-      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+//      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
 
       // Set possible layer types based on attribute type
-      MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
-      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-      }
-      else if (mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO)
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
-      }
-      else
-      {
-        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
-        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
-        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
-        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
-      }
+//      MdAttributeConcreteDTO mdAttributeConcrete = this.getMdAttributeConcrete(mdAttr);
+//      if (mdAttributeConcrete instanceof MdAttributeDateDTO)
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//      }
+//      else if (mdAttributeConcrete instanceof MdAttributeTermDTO || mdAttributeConcrete instanceof MdAttributeTextDTO || mdAttributeConcrete instanceof MdAttributeCharacterDTO)
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
+//      }
+//      else
+//      {
+//        layerTypes.put(AllLayerTypeDTO.BASICPOINT.getName(), labels.get(AllLayerTypeDTO.BASICPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.GRADIENTPOINT.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOINT.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOINT.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BUBBLE.getName(), labels.get(AllLayerTypeDTO.BUBBLE.getName()));
+//        layerTypes.put(AllLayerTypeDTO.BASICPOLYGON.getName(), labels.get(AllLayerTypeDTO.BASICPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.GRADIENTPOLYGON.getName(), labels.get(AllLayerTypeDTO.GRADIENTPOLYGON.getName()));
+//        layerTypes.put(AllLayerTypeDTO.CATEGORYPOLYGON.getName(), labels.get(AllLayerTypeDTO.CATEGORYPOLYGON.getName()));
+//      }
 
-      req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
-      req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
-      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribute(new JSONArray(layerTypes.keySet()).toString()));
+//      req.setAttribute("layerTypeNames", layerTypes.keySet().toArray());
+//      req.setAttribute("layerTypeLabels", layerTypes.values().toArray());
+//      req.setAttribute("layerTypeNamesJSON", EscapeUtil.escapeHTMLAttribute(new JSONArray(layerTypes.keySet()).toString()));
 
       List<String> activeLayerType = tLayer.getLayerTypeEnumNames();
       if (activeLayerType.size() > 0)
@@ -277,77 +328,77 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       }
 
       // Determine if the attribute is an ontology attribute
-      if (mdAttributeConcrete instanceof MdAttributeTermDTO)
-      {
-        req.setAttribute("isOntologyAttribute", true);
-        req.setAttribute("isTextAttribute", false);
-        req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
-        req.setAttribute("termType", ClassifierDTO.CLASS);
+//      if (mdAttributeConcrete instanceof MdAttributeTermDTO)
+//      {
+//        req.setAttribute("isOntologyAttribute", true);
+//        req.setAttribute("isTextAttribute", false);
+//        req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
+//        req.setAttribute("termType", ClassifierDTO.CLASS);
+//
+//        ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
+//        JSONObject rootsIds = new JSONObject();
+//        JSONArray ids = new JSONArray();
+//
+//        Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
+//        for (ClassifierDTO root : roots)
+//        {
+//          JSONObject newJSON = new JSONObject();
+//          try
+//          {
+//            newJSON.put("termId", root.getId());
+//          }
+//          catch (JSONException e)
+//          {
+//            throw new RuntimeException(e);
+//          }
+//
+//          List<? extends ClassifierTermAttributeRootDTO> relationships = root.getAllClassifierTermAttributeRootsRelationships();
+//          for (ClassifierTermAttributeRootDTO relationship : relationships)
+//          {
+//            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
+//            {
+//              try
+//              {
+//                newJSON.put("selectable", relationship.getSelectable());
+//              }
+//              catch (JSONException e)
+//              {
+//                throw new RuntimeException(e);
+//              }
+//              selectableMap.put(root.getId(), relationship.getSelectable());
+//            }
+//          }
+//
+//          ids.put(newJSON);
+//        }
+//
+//        try
+//        {
+//          rootsIds.put("roots", ids);
+//        }
+//        catch (JSONException e)
+//        {
+//          throw new RuntimeException(e);
+//        }
+//
+//        // Passing ontology root to layer form categories
+//        req.setAttribute("roots", rootsIds);
+//        req.setAttribute("selectableMap", selectableMap);
+//
+//        JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
+//      }
+//      else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
+//      {
+//        req.setAttribute("isTextAttribute", true);
+//        req.setAttribute("isOntologyAttribute", false);
+//      }
+//      else
+//      {
+//        req.setAttribute("isOntologyAttribute", false);
+//        req.setAttribute("isTextAttribute", false);
+//      }
 
-        ClassifierDTO[] roots = DashboardDTO.getClassifierRoots(clientRequest, mdAttr.getId());
-        JSONObject rootsIds = new JSONObject();
-        JSONArray ids = new JSONArray();
-
-        Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
-        for (ClassifierDTO root : roots)
-        {
-          JSONObject newJSON = new JSONObject();
-          try
-          {
-            newJSON.put("termId", root.getId());
-          }
-          catch (JSONException e)
-          {
-            throw new RuntimeException(e);
-          }
-
-          List<? extends ClassifierTermAttributeRootDTO> relationships = root.getAllClassifierTermAttributeRootsRelationships();
-          for (ClassifierTermAttributeRootDTO relationship : relationships)
-          {
-            if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
-            {
-              try
-              {
-                newJSON.put("selectable", relationship.getSelectable());
-              }
-              catch (JSONException e)
-              {
-                throw new RuntimeException(e);
-              }
-              selectableMap.put(root.getId(), relationship.getSelectable());
-            }
-          }
-
-          ids.put(newJSON);
-        }
-
-        try
-        {
-          rootsIds.put("roots", ids);
-        }
-        catch (JSONException e)
-        {
-          throw new RuntimeException(e);
-        }
-
-        // Passing ontology root to layer form categories
-        req.setAttribute("roots", rootsIds);
-        req.setAttribute("selectableMap", selectableMap);
-
-        JavascriptUtil.loadOntologyBundle(this.getClientRequest(), req);
-      }
-      else if (mdAttributeConcrete instanceof MdAttributeCharacterDTO || mdAttributeConcrete instanceof MdAttributeTextDTO)
-      {
-        req.setAttribute("isTextAttribute", true);
-        req.setAttribute("isOntologyAttribute", false);
-      }
-      else
-      {
-        req.setAttribute("isOntologyAttribute", false);
-        req.setAttribute("isTextAttribute", false);
-      }
-
-      req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
+//      req.setAttribute("categoryType", this.getCategoryType(mdAttributeConcrete));
       req.setAttribute("polygoncategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPolygonStyles()));
       req.setAttribute("pointcategories", EscapeUtil.escapeHTMLAttribute(style.getCategoryPointStyles()));
       req.setAttribute("secondaryCategories", EscapeUtil.escapeHTMLAttribute(style.getSecondaryCategories()));

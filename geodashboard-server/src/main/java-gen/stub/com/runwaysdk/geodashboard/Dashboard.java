@@ -1021,6 +1021,31 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return this.getGeoNodes(thematicAttributeDAO);
   }
+  
+  @Override
+  public String getGeoNodesJSON(MdAttribute thematicAttribute)
+  {
+    JSONArray nodesArr = new JSONArray();
+    GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
+    for(GeoNode node : nodes)
+    {
+      try
+      {
+        JSONObject nodeJSON = new JSONObject();
+        nodeJSON.put("id", node.getId());
+        nodeJSON.put("type", node.getType());
+        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+        nodesArr.put(nodeJSON);
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not build GeoNode JSON.";
+        throw new ProgrammingErrorException(error, e);
+      }
+    }
+    
+    return nodesArr.toString();
+  }
 
   public GeoNode[] getGeoNodes(MdAttributeDAOIF thematicAttribute)
   {

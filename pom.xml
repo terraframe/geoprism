@@ -162,6 +162,7 @@
             <exclude>**/webapp/globalize-1.0.0-alpha.17/**</exclude>
             <exclude>**/webapp/com/runwaysdk/geodashboard/fonts/**</exclude>
             <exclude>**/webapp/ie.js</exclude>
+            <exclude>**/webapp/angular/**</exclude>
           </excludes>
           <properties>
             <name>${project.name}</name>

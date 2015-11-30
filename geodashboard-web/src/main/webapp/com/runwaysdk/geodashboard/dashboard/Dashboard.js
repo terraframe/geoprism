@@ -18,8 +18,12 @@
  */
 (function(){
 
-  function DashboardController($scope, $timeout, dashboardService, mapService) {
+  function DashboardController($scope, $compile, $timeout, dashboardService, mapService) {
     var controller = this;
+    
+    /* Getting the $compile method reference for use with later functions  */
+    controller.$compile = $compile;
+    controller.$scope = $scope;
     
     controller.baseLayers = mapService.createBaseLayers();
 
@@ -132,7 +136,7 @@
     /* Create a new layer */
     controller.newLayer = function(mdAttributeId) {    
       var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(controller, controller.model.mapId);
-      form.open(mdAttributeId);
+      form.open(mdAttributeId, controller.$compile, controller.$scope);
     }  
     
     controller.getDashboardId = function() {
@@ -685,7 +689,7 @@
     }
   }
   
-  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder"]);
+  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder", "dashboard-layer-form"]);
   angular.module("dashboard")
    .controller('DashboardController', DashboardController)
 })();

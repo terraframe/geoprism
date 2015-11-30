@@ -81,7 +81,17 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   @Override
   public FeatureStrategy getFeatureStrategy()
   {
-    AllLayerType type = this.getLayerType().get(0);
+    AllLayerType type = null;
+    List<AllLayerType> types = this.getLayerType();
+    if(types.size() < 1)
+    {
+      // This will occur for new layers where layer types don't exist yet
+      type = AllLayerType.getDefault();
+    }
+    else
+    {
+      type = types.get(0);
+    }
     return FeatureStrategy.valueOf(type.name());
   }
 

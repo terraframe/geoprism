@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -823540027)
+@com.runwaysdk.business.ClassSignature(hash = 1196059938)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -51,7 +51,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -823540027;
+  private static final long serialVersionUID = 1196059938;
   
   public DashboardBase()
   {
@@ -817,6 +817,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getGeoNodes(thematicAttribute);
+  }
+  
+  public java.lang.String getGeoNodesJSON(com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getGeoNodesJSON(java.lang.String id, com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getGeoNodesJSON(thematicAttribute);
   }
   
   public java.lang.String getJSON()
