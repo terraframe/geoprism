@@ -853,14 +853,19 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
 
-    Boolean access = currentUser.isAssigned(this.getDashboardRole());
-
-    if (!access)
+    if (currentUser != null)
     {
-      return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      Boolean access = currentUser.isAssigned(this.getDashboardRole());
+
+      if (!access)
+      {
+        return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   /*
@@ -1396,11 +1401,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       throw new ReadPermissionException("", this, user);
     }
 
+    return getJSON(this.getConditionMap());
+  }
+
+  public JSONObject getJSON(Map<String, DashboardCondition> conditions) throws JSONException
+  {
     MdClass[] mdClasses = this.getSortedTypes();
 
     JSONArray types = new JSONArray();
-
-    Map<String, DashboardCondition> conditions = this.getConditionMap();
 
     for (MdClass mdClass : mdClasses)
     {

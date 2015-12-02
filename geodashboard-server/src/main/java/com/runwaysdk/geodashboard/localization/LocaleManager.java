@@ -23,7 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.LocaleUtils;
@@ -70,23 +76,69 @@ public class LocaleManager implements Reloadable
 
   private Collection<Locale> loadCLDRs()
   {
-    // Get the list of known CLDR locale
-    Set<Locale> locales = new HashSet<Locale>();
-
-    URL resource = this.getClass().getResource("/cldr/main");
-    String url = resource.getPath();
-    File root = new File(url);
-
-    File[] files = root.listFiles(new DirectoryFilter());
-
-    for (File file : files)
+    try
     {
-      String filename = file.getName();
 
-      locales.add(LocaleManager.getLocaleForName(filename));
+      // Get the list of known CLDR locale
+      Set<Locale> locales = new HashSet<Locale>();
+
+      Set<String> paths = new HashSet<String>();
+
+      URL resource = this.getClass().getResource("/cldr/main");
+      URI uri = resource.toURI();
+
+      if (uri.getScheme().equals("jar"))
+      {
+        FileSystem fileSystem = FileSystems.newFileSystem(uri, new HashMap<String, Object>());
+        Path path = fileSystem.getPath("/cldr/main");
+
+        Stream<Path> walk = Files.walk(path, 1);
+
+        try
+        {
+          for (Iterator<Path> it = walk.iterator(); it.hasNext();)
+          {
+            Path location = it.next();
+            
+            paths.add(location.toAbsolutePath().toString());            
+          }
+        }
+        finally
+        {
+          walk.close();
+        }
+      }
+      else
+      {
+        String url = resource.getPath();
+        File root = new File(url);
+
+        File[] files = root.listFiles(new DirectoryFilter());
+
+        if (files != null)
+        {
+          for (File file : files)
+          {
+            paths.add(file.getAbsolutePath());
+          }
+        }
+      }
+
+      for (String path : paths)
+      {
+        File file = new File(path);
+
+        String filename = file.getName();
+
+        locales.add(LocaleManager.getLocaleForName(filename));
+      }
+
+      return locales;
     }
-
-    return locales;
+    catch (Exception e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   private Collection<Locale> loadDatepickers()
@@ -154,7 +206,7 @@ public class LocaleManager implements Reloadable
       paths.add("/cldr/supplemental/numberingSystems.json");
       paths.add("/cldr/supplemental/timeData.json");
       paths.add("/cldr/supplemental/weekData.json");
-      
+
       try
       {
         JSONObject merged = new JSONObject();

@@ -31,22 +31,16 @@
       var speed = 500;
         
       if(controller.expanded){
-        $("#control-form").animate({left: "-=236"}, speed, function() {
-          controller.expanded = false;
-          
-          $scope.$apply();
-        });
-        
+        $("#control-form").animate({left: "-=236"}, speed);        
         $(".ol-zoom.ol-unselectable.ol-control").animate({left: "-=236"}, speed );
+        
+        controller.expanded = false;        
       }
       else{
-        $("#control-form").animate({left: "+=236"}, speed, function() {
-          controller.expanded = true;
-
-          $scope.$apply();          
-        });
-        
+        $("#control-form").animate({left: "+=236"}, speed);        
         $(".ol-zoom.ol-unselectable.ol-control").animate({left: "+=236"}, speed );        
+        
+        controller.expanded = true;
       }
     }
   }
@@ -138,31 +132,36 @@
         var layerId = $(elements[i]).data('id');
         
         layerIds.push(layerId);
-      }      
+      }  
+      
+      controller.orderLayers(layerIds);
+    }
+    
+    controller.orderLayers = function(layerIds) {
     	
       if(dashboardService.edit){
-    	var mapId = $scope.dashboard.model.mapId;
-    	
-    	var onSuccess = function(json) {
+        var mapId = $scope.dashboard.model.mapId;
+        
+        var onSuccess = function(json) {
           controller.setLayerIndexes(layerIds);
         };
-        
+          
         var onFailure = function(e) {
           $scope.$apply();
         };
-        
+          
         /* 
          * DashboardService.orderedLayers is expecting the ids to be passed
          * in the opposite order of the front end.
          */
         var reversed = layerIds.slice();
         reversed.reverse();
-    	
-    	dashboardService.orderLayers(mapId, reversed, '#overlay-container', onSuccess, onFailure);
+        
+        dashboardService.orderLayers(mapId, reversed, '#overlay-container', onSuccess, onFailure);
       }
       else{
-        controller.setLayerIndexes(layerIds);    	  
-      }
+        controller.setLayerIndexes(layerIds);        
+      }    	
     }
     
     controller.hasValues = function() {
@@ -257,11 +256,11 @@
       dashboardService.removeLayer(layerId, '#ref-layer-container', onSuccess);
     }
     
-    controller.hasValues = function(cache) {
-      if(cache.ids.length > 0) {
-        for(var i = 0; i < cache.ids.length; i++) {
-          var id = cache.ids[i];
-          var layer = cache.values[id];
+    controller.hasValues = function() {
+      if($scope.cache != null && $scope.cache.ids.length > 0) {
+        for(var i = 0; i < $scope.cache.ids.length; i++) {
+          var id = $scope.cache.ids[i];
+          var layer = $scope.cache.values[id];
           
           if(layer.layerExists) {
             return true;
@@ -289,7 +288,7 @@
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
           element.ready(function() {
-            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues(scope.cache)) {
+            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
               $(element).find("#ref-layer-opener-button").click();            
             }            
           });

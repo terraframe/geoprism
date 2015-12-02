@@ -75,7 +75,7 @@
       var fields = [];
       
       if(attributeNames == null) {
-        attributeNames = dto.getAttributeNames();    	  
+        attributeNames = dto.getAttributeNames();        
       }
         
       for(var i = 0; i < attributeNames.length; i++) {
@@ -101,11 +101,11 @@
             field.options = [];
           }
             
-          if(!$.isEmptyObject(field)) {        	
-        	field.required = attributeMd.isRequired();
-        	field.readable = attributeDTO.isReadable();
-        	field.writable = attributeDTO.isWritable();
-        	
+          if(!$.isEmptyObject(field)) {          
+          field.required = attributeMd.isRequired();
+          field.readable = attributeDTO.isReadable();
+          field.writable = attributeDTO.isWritable();
+          
             fields.push(field);
           }
         }        
@@ -149,8 +149,8 @@
           var value = object[key];
           
           if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeLocalCharacterDTO) {
-        	var struct = attributeDTO.getStructDTO();
-        	
+            var struct = attributeDTO.getStructDTO();
+           
             struct.localizedValue = value;
           }
           else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeEnumerationDTO) {
@@ -162,7 +162,7 @@
         }
         else{
         	// Model properties that do not map to server object properties
-        	console.log(key)
+        	//console.log(key);
         }
       }
     }

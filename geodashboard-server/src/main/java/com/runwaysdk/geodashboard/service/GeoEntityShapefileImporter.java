@@ -355,43 +355,47 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
 
     Geometry geometry = (Geometry) feature.getDefaultGeometry();
     String entityName = this.getName(feature);
-    Universal universal = this.getUniversal(feature);
 
-    entity.setWkt(geometry.toText());
-    entity.setGeoPoint(helper.getGeoPoint(geometry));
-    entity.setGeoMultiPolygon(helper.getGeoMultiPolygon(geometry));
-    entity.getDisplayLabel().setValue(entityName);
-    entity.setUniversal(universal);
-    entity.setGeoId(geoId);
-    try
+    if (entityName != null)
     {
-      entity.apply();
+      Universal universal = this.getUniversal(feature);
+
+      entity.setWkt(geometry.toText());
+      entity.setGeoPoint(helper.getGeoPoint(geometry));
+      entity.setGeoMultiPolygon(helper.getGeoMultiPolygon(geometry));
+      entity.getDisplayLabel().setValue(entityName);
+      entity.setUniversal(universal);
+      entity.setGeoId(geoId);
+      try
+      {
+        entity.apply();
+      }
+      catch (Exception e)
+      {
+        throw new RuntimeException(e);
+      }
+
+      if (isNew)
+      {
+        GeoEntity parent = this.getParent(feature);
+
+        entity.addLink(parent, LocatedIn.CLASS);
+      }
+
+      // We must ensure that any problems created during the transaction are
+      // logged now instead of when the request returns. As such, if any problems
+      // exist immediately throw a ProblemException so that normal exception
+      // handling can occur.
+      List<ProblemIF> problems = RequestState.getProblemsInCurrentRequest();
+
+      if (problems.size() != 0)
+      {
+        throw new ProblemException(null, problems);
+      }
+
+      // The entity was succesfully applied without any problems or exceptions
+      this.entityIdMap.put(feature.getID(), entity.getId());
     }
-    catch (Exception e)
-    {
-      throw new RuntimeException(e);
-    }
-
-    if (isNew)
-    {
-      GeoEntity parent = this.getParent(feature);
-
-      entity.addLink(parent, LocatedIn.CLASS);
-    }
-
-    // We must ensure that any problems created during the transaction are
-    // logged now instead of when the request returns. As such, if any problems
-    // exist immediately throw a ProblemException so that normal exception
-    // handling can occur.
-    List<ProblemIF> problems = RequestState.getProblemsInCurrentRequest();
-
-    if (problems.size() != 0)
-    {
-      throw new ProblemException(null, problems);
-    }
-
-    // The entity was succesfully applied without any problems or exceptions
-    this.entityIdMap.put(feature.getID(), entity.getId());
   }
 
   /**
@@ -466,7 +470,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       }
       else
       {
-        throw new UnknownUniversalException(universalId);
+        throw new UnknownUniversalException(name);
       }
     }
 
@@ -552,7 +556,14 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    */
   private String getName(SimpleFeature feature)
   {
-    return feature.getAttribute(this.name).toString();
+    Object attribute = feature.getAttribute(this.name);
+
+    if (attribute != null)
+    {
+      return attribute.toString();
+    }
+
+    return null;
   }
 
   /**
