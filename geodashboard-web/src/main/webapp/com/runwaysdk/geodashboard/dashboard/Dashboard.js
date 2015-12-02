@@ -224,7 +224,10 @@
     }
     
     controller.getLayer = function(layerId) {
-      return controller.getLayerCache()[layerId];        
+      //// replaced because this doesn't actually get the layer
+      //return controller.getLayerCache()[layerId];   
+      ////
+      return controller.getLayerCache().values[layerId];
     }
     
     controller.getThematicLayers = function() {

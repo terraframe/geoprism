@@ -62,6 +62,12 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
     {
       JSONObject json = new JSONObject();
       json.put("bubbleContinuousSize", this.getBubbleContinuousSize());
+      
+      JSONObject dashboardLayerJSON = super.toJSON();
+      for(String key : JSONObject.getNames(dashboardLayerJSON))
+      {
+        json.put(key, dashboardLayerJSON.get(key));
+      }
 
       json.put("bubbleFill", this.getBubbleFill());
       json.put("bubbleMaxSize", this.getBubbleMaxSize());

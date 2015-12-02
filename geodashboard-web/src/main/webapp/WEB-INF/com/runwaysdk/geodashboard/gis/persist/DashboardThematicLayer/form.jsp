@@ -34,7 +34,6 @@
 <!-- Ontologies CSS -->
 <jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
 
-<!-- <script type="text/javascript" src="/com/runwaysdk/geodashboard/dashboard/DashboardLayerForm.js"></script> -->
 
 <!-- Ontologies Javascript -->
 <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
@@ -47,7 +46,9 @@
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}"></mjl:component>
 
-    <div id="DashboardLayer-mainDiv" class="modal-dialog" ng-controller="LayerFormController" ng-init="init('${layer.id}', '${style.newInstance}', '${layer.geoNodeId}', '${mdAttributeId}', '${mapId}' )">
+    <div id="DashboardLayer-mainDiv" class="modal-dialog" 
+    	ng-controller="LayerFormController" 
+    	ng-init="init('${layer.id}', '${style.newInstance}', '${layer.geoNodeId}', '${mdAttributeId}', '${mapId}' )">
       <div class="modal-content">
         <div class="heading">
           <c:if test="${style.newInstance}">
@@ -84,26 +85,11 @@
 
 			<legend-options></legend-options>
 
+			<form-action-buttons></form-action-buttons>
 
-			<div class="row-holder">
-				<div class="label-holder"></div>
-				<div class="holder">
+			<div>
 				<!-- LEAVE THIS MJL:COMPONENT HERE! IT IS NEEDED TO STORE LAYER ID FOR SUBMIT/CANCEL ACTIONS -->
 				<mjl:component param="layer" item="${layer}"></mjl:component>
-					<div class="button-holder">
-						<mjl:command
-							name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
-							value="Map It"
-							action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle.mojo"
-							classes="btn btn-primary" />
-						<!-- <input id="DashboardThematicLayer-create-button" name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button" value="Map It" class="btn btn-primary" type="button"> -->
-						<mjl:command
-							name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
-							value="Cancel"
-							action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.cancel.mojo"
-							classes="btn btn-default" />
-					</div>
-				</div>
 			</div>
 		</fieldset>
       </div>

@@ -55,7 +55,6 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
-import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -70,12 +69,8 @@ import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
-import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDate;
-import com.runwaysdk.system.metadata.MdAttributeDateDTO;
 import com.runwaysdk.system.metadata.MdAttributeNumber;
-import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -347,11 +342,11 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         
         try
         {
-          aggObj.put("aggStrategyId", aggStratId);
-          aggObj.put("aggStrategyLabel", aggStratLabel);
-          aggObj.put("aggStrategyType", aggType);
-          aggObj.put("aggStrategyGeomTypes", aggGeomTypes);
-          aggObj.put("aggStrategyValue", aggValue);
+          aggObj.put("id", aggStratId);
+          aggObj.put("label", aggStratLabel);
+          aggObj.put("type", aggType);
+          aggObj.put("geomTypes", aggGeomTypes);
+          aggObj.put("value", aggValue);
           aggArr.put(aggObj);
         }
         catch (JSONException e)
@@ -544,6 +539,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         jsonStyles.put(style.toJSON());
       }
       json.put("styles", jsonStyles);
+      
+      json.put("optionsJSON", getOptionsJSON(this.getMdAttributeId(), this.getDashboardMap().getDashboardId()));
       
       return json;
     }

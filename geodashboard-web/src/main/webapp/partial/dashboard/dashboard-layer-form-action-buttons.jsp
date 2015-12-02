@@ -18,16 +18,27 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-        
-            <div class="row-holder" style="display:none">
-              <div class="label-holder">
-                <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
-              </div>
-              <div class="holder" >
-	                <label class="none" for="f312">{{thematicLayerModel.name}}</label>
-	                <span class="text">
-						<input type="text" id="layer.name" ng-model="thematicLayerModel.name" name="layer.name" required>
-	                </span>
-              </div>
-            </div>
+<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
+
+<div class="row-holder">
+	<div class="label-holder"></div>
+	<div class="holder">
+		<div class="button-holder">
+			<input
+				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
+				type="button"
+				value="Map It"
+				class="btn btn-primary" 
+				ng-click="persist()"
+				/>
+			<input
+				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
+				type="button"
+				value="Cancel"
+				class="btn btn-default" 
+				ng-click="cancel()"
+				/>
+		</div>
+	</div>
+</div>

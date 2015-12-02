@@ -21,12 +21,8 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -39,19 +35,11 @@ import org.json.JSONObject;
 import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.geodashboard.DashboardDTO;
 import com.runwaysdk.geodashboard.GDBErrorUtility;
-import com.runwaysdk.geodashboard.JavascriptUtil;
-import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootDTO;
 import com.runwaysdk.geodashboard.util.EscapeUtil;
-import com.runwaysdk.system.gis.geo.GeoNodeDTO;
-import com.runwaysdk.system.metadata.MdAttributeCharacterDTO;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeDateDTO;
 import com.runwaysdk.system.metadata.MdAttributeNumberDTO;
-import com.runwaysdk.system.metadata.MdAttributeTermDTO;
-import com.runwaysdk.system.metadata.MdAttributeTextDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
