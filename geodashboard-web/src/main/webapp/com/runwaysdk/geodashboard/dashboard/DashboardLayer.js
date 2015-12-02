@@ -23,7 +23,7 @@
    * MAP PANEL CONTROLLER AND WIDGET
    * 
    */
-  function MapPanelController($scope, $timeout) {
+  function MapPanelController($scope, $timeout, jQueryService) {
     var controller = this;
     controller.expanded = true;
     
@@ -31,16 +31,19 @@
       var speed = 500;
         
       if(controller.expanded){
-        $("#control-form").animate({left: "-=236"}, speed);        
-        $(".ol-zoom.ol-unselectable.ol-control").animate({left: "-=236"}, speed );
+        jQueryService.animate("#control-form", {left: "-=236"}, speed, function(){
+            controller.expanded = false;
+            $scope.$apply();
+        });
         
-        controller.expanded = false;        
+        jQueryService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=236"}, speed);
       }
       else{
-        $("#control-form").animate({left: "+=236"}, speed);        
-        $(".ol-zoom.ol-unselectable.ol-control").animate({left: "+=236"}, speed );        
-        
-        controller.expanded = true;
+        jQueryService.animate("#control-form", {left: "+=236"}, speed, function(){
+            controller.expanded = true;
+            $scope.$apply();
+        });        
+        jQueryService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=236"}, speed);
       }
     }
   }
@@ -383,20 +386,6 @@
       
       dashboardService.updateLegend(layer);        
     }
-
-    controller.move = function(e,ui) {
-      var layer = $scope.layer;
-    	
-      var target = e.currentTarget;
-      var newPosition = $(target).position();
-      var x = newPosition.left;
-      var y = newPosition.top;
-      
-      layer.legendXPosition = x;        
-      layer.legendYPosition = y;   
-      
-      dashboardService.updateLegend(layer);        
-    }
   }
   
   function LegendPanel() {
@@ -431,13 +420,31 @@
     }    
   }   
   
+  function LegendDragController(dashboardService) {
+    var controller = this;
+
+    controller.move = function(e,ui) {
+      var layer = $scope.layer;
+        
+      var target = e.currentTarget;
+      var newPosition = $(target).position();
+      var x = newPosition.left;
+      var y = newPosition.top;
+        
+      layer.legendXPosition = x;        
+      layer.legendYPosition = y;   
+        
+      dashboardService.updateLegend(layer);        
+    }
+  }
+  
   function LegendDrag() {
     return {
       restrict:'A',
       scope: {
         layer: "="
       },
-      controller : LegendController,
+      controller : LegendDragController,
       controllerAs : 'ctrl',      
 	  link: function(scope, element, attrs, ctrl) {
         element.ready(function(){
@@ -456,7 +463,7 @@
     }
   }
   
-  angular.module("dashboard-layer", ["dashboard-service", "map-service"]);
+  angular.module("dashboard-layer", ["dashboard-service", "map-service", "jquery-service"]);
   angular.module('dashboard-layer')
     .directive('mapPanel', MapPanel)
     .directive('thematicPanel', ThematicPanel)
