@@ -22,55 +22,38 @@
        
 		<div class="row-holder" style="display:none">
             <div class="label-holder style02">
-              <strong><gdb:localize var="dl_form_labelsAndValues" key="DashboardThematicLayer.form.labelsAndValues"/>${dl_form_labelsAndValues}</strong>
+              <strong><gdb:localize key="DashboardThematicLayer.form.labelsAndValues"/></strong>
             </div>
             <div class="holder">
               <div class="row-holder">
                 <div class="check-block">
           	 		<input id="f51" type="checkbox" name="style.enableValue" ng-model="thematicStyleModel.enableValue"></input>
-					<label for="f51"><gdb:localize var="dl_form_enableVal" key="DashboardLayer.form.enableValue"/>${dl_form_enableVal}</label>
+					<label for="f51"><gdb:localize key="DashboardLayer.form.enableValue"/></label>
                 </div>
                 <div class="check-block">
         	 		<input id="f94" type="checkbox" name="style.enableLabel" ng-model="thematicStyleModel.enableLabel"></input>
-                  <label for="f94"><gdb:localize var="dl_form_enableLabel" key="DashboardLayer.form.enableLabel"/>${dl_form_enableLabel}</label>
+                  <label for="f94"><gdb:localize key="DashboardLayer.form.enableLabel"/></label>
                 </div>              
               </div>
               <div class="row-holder">
                 <div class="cell style02">
-                  <label for="f55"><gdb:localize var="dl_form_font" key="DashboardLayer.form.font"/>${dl_form_font}</label>
+                  <label for="f55"><gdb:localize key="DashboardLayer.form.font"/></label>
                   <div class="select-holder">
                   		<select class="font-select" name="style.labelFont" id="f55" 
-                  			ng-options="item as item.value for item in availableFonts track by item.value" ng-model="thematicStyleModel.labelFont">
+                  			ng-options="item for item in availableFonts track by item" ng-model="thematicStyleModel.labelFont">
                   		</select>
                   </div>
                 </div>
                 
-                
                 <div class="cell">
-                  <label for="f95"><gdb:localize var="dl_form_labelSize" key="DashboardLayer.form.labelSize"/>${dl_form_labelSize}</label>
+                  <label for="f95"><gdb:localize key="DashboardLayer.form.labelSize"/></label>
                   <div class="select-holder">
-                  
-                  	<select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | range:1:31" ></select>
-                  
-<!--                     <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-init="thematicStyleModel.labelSize = 12"> -->
-<%--                       <c:forEach begin="0" end="30" var="size"> --%>
-<%--                         <c:choose> --%>
-<%--                           <c:when test="{{thematicStyleModel.labelSize}} == ${size}"> --%>
-<%--                             <option selected="selected" value=${size}>${size}</option> --%>
-<%--                           </c:when> --%>
-<%--                           <c:otherwise> --%>
-<%--                             <option value="${size}">${size}</option> --%>
-<%--                           </c:otherwise> --%>
-<%--                         </c:choose> --%>
-<%--                       </c:forEach> --%>
-<!--                     </select> -->
-                    
+                  	<select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | intrange:1:31" ></select>
                   </div>
                 </div>
                 
-                
                 <div class="cell">
-                  <span><gdb:localize var="dl_form_labelColor" key="DashboardLayer.form.labelColor"/>${dl_form_labelColor}</span>
+                  <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
                   <div id="label-text-color" class="color-holder">
                     <a href="#" class="color-choice">
                       <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
@@ -80,7 +63,7 @@
                 </div>
                 
                 <div class="cell">
-                  <span><gdb:localize var="dl_form_labelHalo" key="DashboardLayer.form.labelHalo"/>${dl_form_labelHalo}</span>
+                  <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
                   <div id="label-halo-color" class="color-holder">
                     <a href="#" class="color-choice">
                       <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
@@ -93,29 +76,10 @@
                 <div class="cell">
                 <label for="f54"><gdb:localize var="dl_form_haloWidth" key="DashboardLayer.form.haloWidth"/>${dl_form_haloWidth}</label>
                   <div class="select-holder">
-                    
-<!--                     <select ng-init="thematicStyleModel.labelHaloWidth = 2" class="size-select" id="f54" name="style.haloWidth" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | range:0:15" ></select> -->
-                    
-					
-					
+<!--                     <select ng-init="thematicStyleModel.labelHaloWidth = 2" class="size-select" id="f54" name="style.haloWidth" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:0:15" ></select> -->
 					<select class="size-select" name="style.haloWidth" id="f54"
-					  ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | range:1:16" >
+					  ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:1:16" >
 					</select>
-					
-					
-<!--                     <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" > -->
-<%--                       <c:forEach begin="0" end="15" var="size"> --%>
-<%--                         <c:choose> --%>
-<%--                           <c:when test="{{thematicStyleModel.labelHaloWidth}} == ${size}"> --%>
-<%--                             <option selected="selected" value="${size}">${size}</option> --%>
-<%--                           </c:when> --%>
-<%--                           <c:otherwise> --%>
-<%--                             <option value="${size}">${size}</option> --%>
-<%--                           </c:otherwise> --%>
-<%--                         </c:choose> --%>
-<%--                       </c:forEach> --%>
-<!--                     </select> -->
-                    
                   </div>
                 </div>
               </div>

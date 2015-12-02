@@ -30,11 +30,11 @@
                   <label for="geonode-select"><gdb:localize var="dl_form_geoNode" key="DashboardThematicLayer.form.geoNode"/>${dl_form_geoNode}</label>
                   <div class="select-box">
                   
-<!--                         <select id="geonode-select" class="method-select" name="layer.geoNode" ng-model="thematicLayerModel.geoNodeId"> -->
-<!--                           <option ng-repeat="node in geoNodes" value="{{node.id}}" ng-selected="{{node == geoNodes[0]}}" data-type="{{node.type}}">{{node.displayLabel}}</option> -->
-<!--                         </select> -->
+                        <select id="geonode-select" class="method-select" name="layer.geoNode" ng-model="thematicLayerModel.geoNode">
+                          <option ng-repeat="node in geoNodes" value="{{node.id}}" ng-selected="{{node.id == thematicLayerModel.geoNode}}">{{node.displayLabel}}</option>
+                        </select>
                         
-                        <select id="geonode-select" class="method-select" name="layer.geoNode" ng-model="thematicLayerModel.geoNodeId" ng-options="node.displayLabel for node in geoNodes track by node.id"></select>
+<!--                         <select id="geonode-select" class="method-select" name="layer.geoNode" ng-model="thematicLayerModel.geoNodeId" ng-options="node.displayLabel for node in geoNodes track by node.id"></select> -->
                         
                   
                   </div>

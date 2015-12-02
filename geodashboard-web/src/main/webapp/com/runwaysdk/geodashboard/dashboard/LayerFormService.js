@@ -18,9 +18,10 @@
  */
 (function(){
   
-  function LayerFormService() {
+  function LayerFormService(runwayService) {
     var service = {};
-    
+    service.thematicLayerDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer();
+    service.thematicStyleDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle();
     
     service.createRequest = function(onSuccess, onFailure){
         var request = new Mojo.ClientRequest({
@@ -73,6 +74,51 @@
     }
     
     
+    
+    
+    
+    
+    service.applyWithStyle = function(thematicLayerModel, thematicStyleModel, dynamicDataModel, state, element, onSuccess, onFailure) {
+    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    	 
+    	 if(dynamicDataModel.aggregationStrategy.type.indexOf("UniversalAggregationStrategy")  > -1){
+    		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy();
+    	 }
+    	 else if(dynamicDataModel.aggregationStrategy.type.indexOf("GeometryAggregationStrategy")  > -1){
+    		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy();
+    	 }			
+
+         runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
+         runwayService.populate(service.thematicStyleDTO, thematicStyleModel);
+         
+         // the universal property will be skipped for geometry agg in the populate method because that property
+         // doesn't exist on the server object.
+         runwayService.populate(service.aggregationStrategyDTO, {
+        	 "id": dynamicDataModel.aggregationStrategy.id, 
+        	 "universal": dynamicDataModel.aggregationStrategy.value
+         	}
+         );
+
+         service.thematicLayerDTO.applyWithStyleAndStrategy(request, service.thematicStyleDTO, state.mapId, service.aggregationStrategyDTO, state);
+    }
+    
+    
+    service.unlock = function(object, onSuccess, onFailure) {
+        if(service.thematicLayerDTO == null || service.thematicLayerDTO.isNewInstance()) {
+          onSuccess();  
+        }
+        else {
+          var request = runwayService.createRequest(onSuccess, onFailure);
+          
+          service.thematicLayerDTO.unlock(request);  
+        }
+    }
+    
+    
+    
+    
+    
+    
     service.categoryAutoCompleteService = function(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure){
     	var request = service.createRequest(onSuccess, onFailure);
 		com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(request, mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions);
@@ -81,7 +127,7 @@
     return service;
   }
   
-  angular.module("layer-form-service", []);
+  angular.module("layer-form-service", ["runway-service"]);
   angular.module('layer-form-service')
     .factory('layerFormService', LayerFormService);
 })();

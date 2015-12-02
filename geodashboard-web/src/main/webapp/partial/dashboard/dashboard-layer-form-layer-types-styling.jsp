@@ -39,33 +39,17 @@
 		                            <a href="#" class="color-choice">
 		                              <span class="ico" style="background:{{thematicStyleModel.pointFill}}">icon</span>
 		                              <span class="arrow">arrow</span>
-		                              <input type="hidden" class="color-input" name="style.pointFill" value="{{thematicStyleModel.pointFill}}" />
+		                              <input type="text" style="display: none;" class="color-input" name="style.pointFill" ng-model="thematicStyleModel.pointFill" />
 		                            </a>
 		                          </div>
 		                        </div>
 		                        <div class="cell">
 		                          <label for="basic-point-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 		                          <div class="text">
-		                          
-		                          
 		                            <select id="basic-point-opacity-select" class="tab-select" name="style.pointOpacity"
-	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             		ng-model="thematicStyleModel.pointOpacity">
 	                             	</select>
-		                          
-<!-- 		                            <select id="basic-point-opacity-select" class="tab-select" name="style.pointOpacity"> -->
-<!-- 		                              <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 		                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                               --%>
-<!-- 		                                <c:choose> -->
-<%-- 		                                  <c:when test="${style.pointOpacity*100 == size}"> --%>
-<%-- 		                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 		                                  </c:when> -->
-<!-- 		                                  <c:otherwise> -->
-<%-- 		                                    <option value="${potentialValue}">${size}</option> --%>
-<!-- 		                                  </c:otherwise> -->
-<!-- 		                                </c:choose> -->
-<!-- 		                              </c:forEach> -->
-<!-- 		                            </select>                           -->
 		                          </div>
 		                        </div>
 	                      	</div>
@@ -80,7 +64,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicLayerModel.pointStroke}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.pointStroke" value="{{thematicLayerModel.pointStroke}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.pointStroke" ng-model="thematicStyleModel.pointStroke" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -88,7 +72,7 @@
 	                          <label for="basic-point-stroke-select"><gdb:localize key="DashboardLayer.form.width"/></label>
 	                          <div class="select-holder">
 	                          	 <select name="style.pointStrokeWidth" id="basic-point-stroke-select" class="tab-select" 
-	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-options="n for n in [] | intrange:1:16"
 	                             	ng-model="thematicStyleModel.pointStrokeWidth">
 	                             </select>
 	                          </div>
@@ -97,23 +81,9 @@
 	                          <label for="basic-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 	                          <div class="text">
 	                             	<select id="basic-point-stroke-opacity-select" class="tab-select" name="style.pointStrokeOpacity"
-	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             		ng-model="thematicStyleModel.pointStrokeOpacity">
 	                             	</select>
-	                             
-<!-- 	                             <select id="basic-point-stroke-opacity-select" class="tab-select" name="style.pointStrokeOpacity"> -->
-<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.pointStrokeOpacity*100 == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select>    -->
 	                          </div>
 	                        </div>
 	                      </div>
@@ -132,11 +102,9 @@
 		                    <div id="point-type-container" class="cell">
 			                  <label for="point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
 			                  <div class="select-box">
-			                    
 			                    <select id="point-type" class="method-select" name="style.pointWellKnownName" 
 			                      ng-model="thematicStyleModel.pointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
 			                    </select>
-			                    
 			                  </div>
 			                </div>
 		                </div>
@@ -155,7 +123,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointMinFill}}">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.gradientPointMinFill" value="{{thematicStyleModel.gradientPointMinFill}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.gradientPointMinFill" ng-model="thematicStyleModel.gradientPointMinFill" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -165,7 +133,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointMaxFill}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.${style.gradientPointMaxFillMd.name}" value="{{thematicStyleModel.gradientPointMaxFill}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.${style.gradientPointMaxFillMd.name}" ng-model="thematicStyleModel.gradientPointMaxFill" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -173,24 +141,9 @@
 			                    <label for="gradient-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
 			                    	<select id="gradient-point-fill-opacity-select" class="tab-select" name="style.gradientPointFillOpacity"
-	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             		ng-model="thematicStyleModel.gradientPointFillOpacity">
 	                             	</select>  
-			                      
-<!-- 			                      <select id="gradient-point-fill-opacity-select" class="tab-select" name="style.gradientPointFillOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.gradientPointFillOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select>  -->
-			                       
 			                    </div>
 			                  </div>
 	                      </div>
@@ -205,7 +158,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.gradientPointStroke}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.gradientPointStroke" value="{{thematicStyleModel.gradientPointStroke}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.gradientPointStroke" ng-model="thematicStyleModel.gradientPointStroke" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -214,22 +167,9 @@
 	                          <div class="select-holder">
 	                              
 	                             <select name="style.gradientPointStrokeWidth" id="gradient-point-stroke-select" class="tab-select" 
-	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-options="n for n in [] | intrange:1:16"
 	                             	ng-model="thematicStyleModel.gradientPointStrokeWidth">
 	                             </select>
-	                            
-<!-- 	                            <select name="style.gradientPointStrokeWidth" id="gradient-point-stroke-select" class="tab-select"> -->
-<!-- 	                              <c:forEach begin="0" end="15" var="size"> -->
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.gradientPointStrokeWidth == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${size}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select> -->
 	                          </div>
 	                        </div>
 	                        <div class="cell">
@@ -237,24 +177,9 @@
 	                          <div class="text">
 	                             
 	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.gradientPointStrokeOpacity"
-	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             	ng-model="thematicStyleModel.gradientPointStrokeOpacity">
 	                             </select>
-	                             
-<!-- 	                             <select id="gradient-point-stroke-opacity-select" class="tab-select" name="style.gradientPointStrokeOpacity"> -->
-<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-	                                
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.gradientPointStrokeOpacity*100 == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select>    -->
 	                          </div>
 	                        </div>
 	                      </div>
@@ -276,25 +201,6 @@
 			                    <select id="gradient-point-type" class="method-select" name="style.gradientPointWellKnownName"
 			                      ng-model="thematicStyleModel.gradientPointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
 			                    </select>
-			                    
-			                    
-<!-- 			                    <select id="gradient-point-type" class="method-select" name="style.gradientPointWellKnownName"> -->
-<%-- 			                      <c:forEach items="${pointTypes}" var="type"> --%>
-<!-- 			                         	<c:choose> -->
-<%-- 			                           		<c:when test="${type == activeGradientPointType}"> --%>
-<%-- 			                             		<option value="${type}" selected="selected"> --%>
-<%-- 			                               			${type} --%>
-<!-- 			                             		</option> -->
-<!-- 			                           		</c:when> -->
-<!-- 			                           		<c:otherwise> -->
-<%-- 			                             		<option value="${type}"> --%>
-<%-- 			                               			${type} --%>
-<!-- 			                             		</option> -->
-<!-- 			                           		</c:otherwise> -->
-<!-- 			                         	</c:choose> -->
-<!-- 			                      </c:forEach> -->
-<!-- 			                    </select> -->
-			                    
 			                  </div>
 			                </div>
 	                    </div>
@@ -366,25 +272,6 @@
 												          </div>
 												        </div>
 												     </li>
-													 <!-- The OTHER option -->
-													 <!-- Actually, the OTHER option is included in the model so this isnt needed but i want to keep it for a minute or two-->
-<!-- 												     <li> -->
-<!-- 												       <div class="category-container"> -->
-<!-- 												          <div class="text category-input-container"> -->
-<!-- <!-- 												          thematicStyleModel.categoryPointStyles --> 
-<!-- <!-- 															TODO: remove these data attributes --> 
-<!-- 												          	<input id="cat-{{$index}}-point" data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-type="{{dynamicDataModel.thematicAttributeDataType}}" class="category-input" type="text" value="value" placeholder="fillLabel" autocomplete="autocomplete" disabled > -->
-<!-- 												          </div> -->
-<!-- 												          <div class="cell"> -->
-<!-- 												            <div class="color-holder"> -->
-<!-- 												              <a href="#" class="color-choice"> -->
-<!-- 												                <span id="cat-{{$index}}-point-color-selector" class="ico cat-color-selector" style="background:{{categoryWidget.pointCatOtherOptionColor}}">icon</span> -->
-<!-- 												                <span class="arrow">arrow</span> -->
-<!-- 												              </a> -->
-<!-- 												            </div> -->
-<!-- 												          </div> -->
-<!-- 												        </div> -->
-<!-- 												     </li> -->
 					                    		</ul>
 	  					                    </div>
 							            </div>
@@ -410,56 +297,26 @@
 				                      <a href="#" class="color-choice">
 				                       	<span class="ico" style="background:{{thematicStyleModel.categoryPointStroke}}">icon</span>
 				                       	<span class="arrow">arrow</span>
-				                       	<input type="hidden" class="color-input" name="style.categoryPointStroke" value="{{thematicStyleModel.categoryPointStroke}}" />
+				                       	<input type="text" style="display: none;" class="color-input" name="style.categoryPointStroke" ng-model="thematicStyleModel.categoryPointStroke" />
 					                  </a>
 					                </div>
 				                </div>
 				                <div class="cell">
 			                    <label for="category-point-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
 			                    <div class="select-holder">
-			                      
 			                     <select id="category-point-stroke-width-select" class="tab-select" name="style.categoryPointStrokeWidth"
-	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-options="n for n in [] | intrange:1:16"
 	                             	ng-model="thematicStyleModel.categoryPointStrokeWidth">
 	                             </select>
-	                             
-<!-- 			                      <select id="category-point-stroke-width-select" class="tab-select" name="style.categoryPointStrokeWidth"> -->
-<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.categoryPointStrokeWidth == size}"> --%>
-<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${size}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
 			                    </div>
 			                  </div>
 			                  <div class="cell">
 			                    <label for="category-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
-			                      
 			                     <select id="category-point-stroke-opacity-select" class="tab-select" name="style.categoryPointStrokeOpacity"
-	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             	ng-model="thematicStyleModel.categoryPointStrokeOpacity">
 	                             </select>
-			                      
-<!-- 			                      <select id="category-point-stroke-opacity-select" class="tab-select" name="style.categoryPointStrokeOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.categoryPointStrokeOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
-			                      
 			                    </div>
 			                  </div>
 	                      </div>
@@ -476,27 +333,10 @@
 		                        <div class="cell">
 			                    <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
-			                      
-			                      
 			                      	<select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
-	                             		ng-options="n for n in [] | range:1:101"
+	                             		ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             		ng-model="thematicStyleModel.categoryPointFillOpacity">
 	                             	</select>  
-			                      
-<!-- 			                      <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.categoryPointFillOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select>   -->
-			                      
 			                    </div>
 			                  </div>
 	                      </div>
@@ -504,29 +344,9 @@
 	                      	<div id="category-point-type-container" class="cell">
 			                  <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
 			                  <div class="select-box">
-			                    
-			                    
 			                    <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName" 
 			                      ng-model="thematicStyleModel.categoryPointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
 			                    </select>
-			                    
-<!-- 			                    <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName"> -->
-<%-- 			                      <c:forEach items="${pointTypes}" var="type"> --%>
-<!-- 			                         	<c:choose> -->
-<%-- 			                           		<c:when test="${type == activeCategoryPointType}"> --%>
-<%-- 			                             		<option value="${type}" selected="selected"> --%>
-<%-- 			                               			${type} --%>
-<!-- 			                             		</option> -->
-<!-- 			                           		</c:when> -->
-<!-- 			                           		<c:otherwise> -->
-<%-- 			                             		<option value="${type}"> --%>
-<%-- 			                               			${type} --%>
-<!-- 			                             		</option> -->
-<!-- 			                           		</c:otherwise> -->
-<!-- 			                         	</c:choose> -->
-<!-- 			                      </c:forEach> -->
-<!-- 			                    </select> -->
-			                    
 			                  </div>
 			                </div>
 	                      </div>
@@ -545,33 +365,17 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.bubbleFill}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.bubbleFill" value="{{thematicStyleModel.bubbleFill}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.bubbleFill" ng-model="thematicStyleModel.bubbleFill" />
 	                            </a>
 	                          </div>
 	                        </div>
 	                        <div class="cell">
 	                          <label for="f71"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 	                          <div class="text">
-	                            
-	                            
 								 <select id="f71" class="tab-select" name="style.bubbleOpacity"
-	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             	ng-model="thematicStyleModel.bubbleOpacity">
 	                             </select>
-	                             
-<!-- 	                            <select id="f71" class="tab-select" name="style.bubbleOpacity"> -->
-<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                               --%>
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.bubbleOpacity*100 == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select> -->
 	                          </div>
 	                        </div>
 	                      </div>
@@ -585,7 +389,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.bubbleStroke}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.bubbleStroke" value="{{thematicStyleModel.bubbleStroke}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.bubbleStroke" ng-model="thematicStyleModel.bubbleStroke" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -594,24 +398,9 @@
 	                          <div class="select-holder">
 	                            
 	                             <select name="style.bubbleStrokeWidth" id="f73" class="tab-select"
-	                             	ng-options="n for n in [] | range:1:16"
+	                             	ng-options="n for n in [] | intrange:1:16"
 	                             	ng-model="thematicStyleModel.bubbleStrokeWidth">
 	                             </select>
-	                             
-	                             
-<%-- 	                            <select name="style.${style.bubbleStrokeWidthMd.name}" id="f73" class="tab-select"> --%>
-<!-- 	                              <c:forEach begin="0" end="15" var="size"> -->
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.bubbleStrokeWidth == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${size}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select> -->
-	                            
 	                          </div>
 	                        </div>
 	                        <div class="cell">
@@ -619,25 +408,9 @@
 	                          <div class="text">
 	                             
 	                             <select id="f74" class="tab-select" name="style.bubbleStrokeOpacity"
-	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             	ng-model="thematicStyleModel.bubbleStrokeOpacity">
 	                             </select>
-	                             
-<!-- 	                             <select id="f74" class="tab-select" name="style.bubbleStrokeOpacity"> -->
-<!-- 	                              <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 	                                <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-	                                
-<!-- 	                                <c:choose> -->
-<%-- 	                                  <c:when test="${style.bubbleStrokeOpacity*100 == size}"> --%>
-<%-- 	                                    <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:when> -->
-<!-- 	                                  <c:otherwise> -->
-<%-- 	                                    <option value="${potentialValue}">${size}</option> --%>
-<!-- 	                                  </c:otherwise> -->
-<!-- 	                                </c:choose> -->
-<!-- 	                              </c:forEach> -->
-<!-- 	                            </select>    -->
-	                            
 	                          </div>
 	                        </div>
 	                      </div>
@@ -773,34 +546,17 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{ thematicStyleModel.polygonFill }};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.polygonFill" value="{{thematicStyleModel.polygonFill}}"  />
+	                              <input type="text" style="display: none;" class="color-input" name="style.polygonFill" ng-model="thematicStyleModel.polygonFill"  />
 	                            </a>
 	                          </div>
 	                        </div>
 	                        <div class="cell">
 			                    <label for="basic-polygon-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
-			                      
 			                     <select id="basic-polygon-fill-opacity-select" class="tab-select" name="style.polygonFillOpacity"
-	                             	ng-options="n for n in [] | range:1:101"
+	                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 	                             	ng-model="thematicStyleModel.polygonFillOpacity">
 	                             </select>
-	                             
-	                             
-<!-- 			                      <select id="basic-polygon-fill-opacity-select" class="tab-select" name="style.polygonFillOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.polygonFillOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select>   -->
-			                      
 			                    </div>
 			                  </div>
 	                      </div>
@@ -815,7 +571,7 @@
 				                      <a href="#" class="color-choice">
 				                       	<span class="ico" style="background:{{thematicStyleModel.polygonStroke}};">icon</span>
 				                       	<span class="arrow">arrow</span>
-				                       	<input type="hidden" class="color-input" name="style.polygonStroke" value="{{thematicStyleModel.polygonStroke}}"  />
+				                       	<input type="text" style="display: none;" class="color-input" name="style.polygonStroke" ng-model="thematicStyleModel.polygonStroke"  />
 					                  </a>
 					                </div>
 				                </div>
@@ -823,48 +579,18 @@
 			                    <label for="basic-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
 			                    <div class="select-holder">
 				                     <select id="basic-polygon-stroke-width-select" class="tab-select" name="style.polygonStrokeWidth"
-		                             	ng-options="n for n in [] | range:1:16"
+		                             	ng-options="n for n in [] | intrange:1:16"
 		                             	ng-model="thematicStyleModel.polygonStrokeWidth">
 		                             </select>
-	                             
-<!-- 			                      <select id="basic-polygon-stroke-width-select" class="tab-select" name="style.polygonStrokeWidth"> -->
-<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.polygonStrokeWidth == size}"> --%>
-<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${size}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
-			                      
 			                    </div>
 			                  </div>
 			                  <div class="cell">
 			                    <label for="basic-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
 				                     <select id="basic-polygon-stroke-opacity-select" class="tab-select" name="style.polygonStrokeOpacity"
-		                             	ng-options="n for n in [] | range:1:101"
+		                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 		                             	ng-model="thematicStyleModel.polygonStrokeOpacity">
 		                             </select>
-	                             
-			                      
-<%-- 			                      <select id="basic-polygon-stroke-opacity-select" class="tab-select" name="style.${style.polygonStrokeOpacityMd.name}"> --%>
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.polygonStrokeOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
-			                      
 			                    </div>
 			                  </div>
 	                      </div>
@@ -883,7 +609,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.gradientPolygonMinFill}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.gradientPolygonMinFill" value="{{thematicStyleModel.gradientPolygonMinFill}}"/>
+	                              <input type="text" style="display: none;" class="color-input" name="style.gradientPolygonMinFill" ng-model="thematicStyleModel.gradientPolygonMinFill"/>
 	                            </a>
 	                          </div>
 	                        </div>
@@ -893,7 +619,7 @@
 	                            <a href="#" class="color-choice">
 	                              <span class="ico" style="background:{{thematicStyleModel.gradientPolygonMaxFill}};">icon</span>
 	                              <span class="arrow">arrow</span>
-	                              <input type="hidden" class="color-input" name="style.gradientPolygonMaxFill" value="{{thematicStyleModel.gradientPolygonMaxFill}}" />
+	                              <input type="text" style="display: none;" class="color-input" name="style.gradientPolygonMaxFill" ng-model="thematicStyleModel.gradientPolygonMaxFill" />
 	                            </a>
 	                          </div>
 	                        </div>
@@ -902,23 +628,9 @@
 			                    <div class="text">
 			                      
 			                         <select id="gradient-polygon-fill-opacity-select" class="tab-select" name="style.gradientPolygonFillOpacity"
-		                             	ng-options="n for n in [] | range:1:101"
+		                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 		                             	ng-model="thematicStyleModel.gradientPolygonFillOpacity">
 		                             </select>
-		                             
-<%-- 			                      <select id="gradient-polygon-fill-opacity-select" class="tab-select" name="style.${style.gradientPolygonFillOpacityMd.name}"> --%>
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.gradientPolygonFillOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select>   -->
 			                    </div>
 			                  </div>
 	                      </div>
@@ -933,7 +645,7 @@
 				                      <a href="#" class="color-choice">
 				                       	<span class="ico" style="background:{{thematicStyleModel.gradientPolygonStroke}};">icon</span>
 				                       	<span class="arrow">arrow</span>
-				                       	<input type="hidden" class="color-input" name="style.gradientPolygonStroke" value="{{thematicStyleModel.gradientPolygonStroke}}" />
+				                       	<input type="text" style="display: none;" class="color-input" name="style.gradientPolygonStroke" ng-model="thematicStyleModel.gradientPolygonStroke" />
 					                  </a>
 					                </div>
 				                </div>
@@ -942,22 +654,9 @@
 			                    <div class="select-holder">
 			                      
 			                      	 <select id="gradient-polygon-stroke-width-select" class="tab-select" name="style.gradientPolygonStrokeWidth"
-		                             	ng-options="n for n in [] | range:1:16"
+		                             	ng-options="n for n in [] | intrange:1:16"
 		                             	ng-model="thematicStyleModel.gradientPolygonStrokeWidth">
 		                             </select>
-			                      
-<!-- 			                      <select id="gradient-polygon-stroke-width-select" class="tab-select" name="style.gradientPolygonStrokeWidth"> -->
-<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.gradientPolygonStrokeWidth == size}"> --%>
-<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${size}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
 			                    </div>
 			                  </div>
 			                  <div class="cell">
@@ -965,23 +664,9 @@
 			                    <div class="text">
 			                    
 			            			 <select id="gradient-polygon-stroke-opacity-select" class="tab-select" name="style.gradientPolygonStrokeOpacity"
-		                             	ng-options="n for n in [] | range:1:101"
+		                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 		                             	ng-model="thematicStyleModel.gradientPolygonStrokeOpacity">
 		                             </select>          
-			                      
-<!-- 			                      <select id="gradient-polygon-stroke-opacity-select" class="tab-select" name="style.gradientPolygonStrokeOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.gradientPolygonStrokeOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
 			                    </div>
 			                  </div>
 	                      </div>
@@ -1053,25 +738,6 @@
 										          </div>
 										        </div>
 										     </li>
-											 <!-- The OTHER option -->
-											 <!-- Actually, the OTHER option is included in the model so this isnt needed but i want to keep it for a minute or two-->
-<!-- 												     <li> -->
-<!-- 												       <div class="category-container"> -->
-<!-- 												          <div class="text category-input-container"> -->
-<!-- <!-- 												          thematicStyleModel.categoryPointStyles --> 
-<!-- <!-- 															TODO: remove these data attributes --> 
-<!-- 												          	<input id="cat-{{$index}}-point" data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-type="{{dynamicDataModel.thematicAttributeDataType}}" class="category-input" type="text" value="value" placeholder="fillLabel" autocomplete="autocomplete" disabled > -->
-<!-- 												          </div> -->
-<!-- 												          <div class="cell"> -->
-<!-- 												            <div class="color-holder"> -->
-<!-- 												              <a href="#" class="color-choice"> -->
-<!-- 												                <span id="cat-{{$index}}-point-color-selector" class="ico cat-color-selector" style="background:{{categoryWidget.pointCatOtherOptionColor}}">icon</span> -->
-<!-- 												                <span class="arrow">arrow</span> -->
-<!-- 												              </a> -->
-<!-- 												            </div> -->
-<!-- 												          </div> -->
-<!-- 												        </div> -->
-<!-- 												     </li> -->
 			                    		</ul>
  					                    </div>
 					            </div>
@@ -1084,57 +750,6 @@
 								  </div>
 				                </div>
 	                        </div>
-			                        
-			                        
-			                        
-			                        
-			                        
-			                        
-			                        
-			                        
-			                        
-			                        
-<%-- 	                    <input id="categories-polygon-input" data-mdattributeid="${mdAttributeId}" data-type="${categoryType}" data-categoriesstore='${polygoncategories}' type="hidden" class="category-input" name="style.styleCategories" ></input> --%>
-<!-- 		                     <c:choose> -->
-<%-- 		                      	<c:when test="${'true' == isOntologyAttribute}"> --%>
-<!-- 		                      		RENDER ONTOLOGY TREE DATA -->
-<!-- 		                      		<div class="ontology-category-input-container"> -->
-<%-- 										<div id="polygon-ontology-tree" data-termtype="${termType}" data-reltype="${relationshipType}" data-roots='${roots}' ></div> --%>
-<!-- 										<div id="other-cat-poly-container" class="other-cat-container"> -->
-<!-- 											<ul class="color-list other-cat">							                       <li> -->
-<!-- 						                         <div class="category-container"> -->
-<!-- 							                       	 <div class="text category-input-container"> -->
-<%-- 							                       	    <gdb:localize var="other" key="Other"/>								                       	  --%>
-<%-- 							                       	 	<p id="cat-other-basic-label" >${other}</p> --%>
-<!-- 							                       	 </div> -->
-<!-- 							                       	 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;"> -->
-<!-- 	                  									<span id="cat-other-color-selector" class="ico ontology-category-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span> -->
-<!-- 	                								 </a> -->
-<!-- 					                   	 		 </div> -->
-<!-- 						                       </li>	                        -->
-<!-- 						                    </ul> -->
-<!-- 						                </div> -->
-<!-- 									  	<div class="check-block"> -->
-<!-- 								      		<input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" checked></input> -->
-<%-- 								        	<label for="ont-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
-<!-- 								      	</div> -->
-<!-- 									</div> -->
-<!-- 		                      	</c:when> -->
-<!-- 		                      	<c:otherwise> -->
-<!-- 									RENDER BASIC CATEGORIES -->
-<!-- 			                        <div class="panel-group choice-color category-group"> -->
-<!-- 										<div class="panel"> -->
-<!-- 					                    	<div id="choice-color01" class="panel-collapse"></div> -->
-<!-- 							            </div> -->
-<!-- 							            <div class="style-options-block"> -->
-<!-- 										  <div class="check-block"> -->
-<!-- 										    <input id="basic-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="" checked ></input> -->
-<%-- 										    <label for="basic-cat-poly-other-option"><gdb:localize var="dl_form_other_label" key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>${dl_form_other_label}</label> --%>
-<!-- 										  </div> -->
-<!-- 						                </div> -->
-<!-- 			                        </div> -->
-<!-- 		                      	</c:otherwise> -->
-<!-- 		                      </c:choose> -->
 	                      </div>
 	                    </div>
 	                    
@@ -1148,7 +763,7 @@
 				                      <a href="#" class="color-choice">
 				                       	<span class="ico" style="background:{{thematicStyleModel.categoryPolygonStroke}};">icon</span>
 				                       	<span class="arrow">arrow</span>
-				                       	<input type="hidden" class="color-input" name="style.categoryPolygonStroke" value="{{thematicStyleModel.categoryPolygonStroke}}" />
+				                       	<input type="text" style="display: none;" class="color-input" name="style.categoryPolygonStroke" ng-model="thematicStyleModel.categoryPolygonStroke" />
 					                  </a>
 					                </div>
 				                </div>
@@ -1156,46 +771,18 @@
 			                    <label for="category-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
 			                    <div class="select-holder">
 			                      	 <select id="category-polygon-stroke-width-select" class="tab-select" name="style.categoryPolygonStrokeWidth"
-		                             	ng-options="n for n in [] | range:1:16"
+		                             	ng-options="n for n in [] | intrange:1:16"
 		                             	ng-model="thematicStyleModel.categoryPolygonStrokeWidth">
 		                             </select>
-		                             
-<!-- 			                      <select id="category-polygon-stroke-width-select" class="tab-select" name="style.categoryPolygonStrokeWidth"> -->
-<!-- 			                        <c:forEach begin="0" end="15" var="size"> -->
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.categoryPolygonStrokeWidth == size}"> --%>
-<%-- 			                              <option selected="selected" value="${size}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${size}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
 			                    </div>
 			                  </div>
 			                  <div class="cell">
 			                    <label for="category-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
 			                    <div class="text">
-			                      
 			                      	 <select id="category-polygon-stroke-opacity-select" class="tab-select" name="style.categoryPolygonStrokeOpacity"
-		                             	ng-options="n for n in [] | range:1:101"
+		                             	ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
 		                             	ng-model="thematicStyleModel.categoryPolygonStrokeOpacity">
 		                             </select>
-		                             
-<!-- 			                      <select id="category-polygon-stroke-opacity-select" class="tab-select" name="style.categoryPolygonStrokeOpacity"> -->
-<!-- 			                        <c:forEach step="5" begin="0" end="100" var="size"> -->
-<%-- 			                          <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/> --%>
-<!-- 			                          <c:choose> -->
-<%-- 			                            <c:when test="${style.categoryPolygonStrokeOpacity*100 == size}"> --%>
-<%-- 			                              <option selected="selected" value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:when> -->
-<!-- 			                            <c:otherwise> -->
-<%-- 			                              <option value="${potentialValue}">${size}</option> --%>
-<!-- 			                            </c:otherwise> -->
-<!-- 			                          </c:choose> -->
-<!-- 			                        </c:forEach> -->
-<!-- 			                      </select> -->
 			                    </div>
 			                  </div>
 	                      </div>

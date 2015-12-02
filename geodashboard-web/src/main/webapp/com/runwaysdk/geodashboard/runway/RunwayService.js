@@ -153,9 +153,16 @@
         	
             struct.localizedValue = value;
           }
+          else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeEnumerationDTO) {
+              attributeDTO.add(value);            
+          }
           else {
             attributeDTO.setValue(value);
           }
+        }
+        else{
+        	// Model properties that do not map to server object properties
+        	console.log(key)
         }
       }
     }

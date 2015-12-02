@@ -18,31 +18,12 @@
  */
 (function(){
 	
-//    $scope.apply = function() {
-//        var request = new Mojo.ClientRequest({
-//          onSuccess : function(dto){
-//            $scope.dto = new com.runwaysdk.geodashboard.GeodashboardUser();              
-//            $scope.$apply();
-//            
-//            $scope.refresh();
-//          },
-//          onFailure : function(e){
-//            alert(e);
-//          }
-//        });
-//        
-//        populateFromJSON($scope.dto, $scope.model);
-//        
-//        $scope.dto.apply(request);
-//      }
-	
 	 function LayerNameInput() {
 	    return {
 	      restrict: 'E',
 	      replace: true,
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-name.jsp',    
-	      scope: {
-	      },
+	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
 	    	  setTimeout(function(){ 
@@ -68,81 +49,84 @@
 	    		  // format the partial
 		    	  jcf.customForms.replaceAll(element[0]);
 		    	  $(element[0]).show();
-	    	  }, 100);
+		    	  
+		    	  //
+		    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
+		    	  //
+		    	  var enableValEl = document.getElementById("f51").previousSibling;
+		    	  enableValEl.onclick = function() { 
+		    		  var theEl = angular.element($(this).next()[0]);
+		    		  if($(this).hasClass("chk-checked")){
+		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+		    			  scope.setEnableValue(false); // manually set the model to false because the change event hasn't occured yet
+		    		  }
+		    		  else{
+		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+		    			  scope.setEnableValue(true); // manually set the model to true because the change event hasn't occured yet
+		    		  }
+		    	  };
+		    	  
+		    	  //
+		    	  // Setting up click events for checkboxes manually to hook the custom ui elements to the angular model binding.
+		    	  //
+		    	  var enableLabelEl = document.getElementById("f94").previousSibling;
+		    	  enableLabelEl.onclick = function() { 
+		    		  var theEl = angular.element($(this).next()[0]);
+		    		  if($(this).hasClass("chk-checked")){
+		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+		    			  scope.setEnableLabel(false); // manually set the model to false because the change event hasn't occured yet
+		    		  }
+		    		  else{
+		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
+		    			  scope.setEnableLabel(true); // manually set the model to true because the change event hasn't occured yet
+		    		  }
+		    	  };
+		    	  
+		    	  
+		    	  $("#label-text-color").colpick({
+		              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+		              onShow:function(colPickObj){
+		            	  var that = this;
+		                  $('#modal01').scroll(function(){  
+		                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+		                    var colPick = $(that);
+		                    var diff = colPick.offset().top + colPick.height() + 2; 
+		                    var diffStr = diff.toString() + "px";
+		                    colorPicker.css({ top: diffStr });
+		                  });
+		              },
+		              onChange:function(hsb,hex,rgb,el,bySetColor) {
+		            	$(el).find(".ico").css('background','#'+hex);
+		            	scope.thematicStyleModel.labelColor = '#'+hex;
+		              },
+		              onHide:function(el) {
+		            	 scope.$apply();
+		              }
+		           });
+		          
+		          $("#label-halo-color").colpick({
+		              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+		              onShow:function(colPickObj){
+		            	  var that = this;
+		                  $('#modal01').scroll(function(){  
+		                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+		                    var colPick = $(that);
+		                    var diff = colPick.offset().top + colPick.height() + 2; 
+		                    var diffStr = diff.toString() + "px";
+		                    colorPicker.css({ top: diffStr });
+		                  });
+		              },
+		              onChange:function(hsb,hex,rgb,el,bySetColor) {
+		            	$(el).find(".ico").css('background','#'+hex);
+		            	scope.thematicStyleModel.labelHalo = '#'+hex;
+		              },
+		              onHide:function(el) {
+		            	 scope.$apply();
+		              }
+		           });
+		    	  
+	    	  }, 100); // end timeout
 	    
-	    	  //
-	    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
-	    	  //
-	    	  var enableValEl = document.getElementById("f51").previousSibling;
-	    	  enableValEl.onclick = function() { 
-	    		  var theEl = angular.element($(this).next()[0]);
-	    		  if($(this).hasClass("chk-checked")){
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setEnableValue(false); // manually set the model to false because the change event hasn't occured yet
-	    		  }
-	    		  else{
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setEnableValue(true); // manually set the model to true because the change event hasn't occured yet
-	    		  }
-	    	  };
-	    	  
-	    	  //
-	    	  // Setting up click events for checkboxes manually to hook the custom ui elements to the angular model binding.
-	    	  //
-	    	  var enableLabelEl = document.getElementById("f94").previousSibling;
-	    	  enableLabelEl.onclick = function() { 
-	    		  var theEl = angular.element($(this).next()[0]);
-	    		  if($(this).hasClass("chk-checked")){
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setEnableLabel(false); // manually set the model to false because the change event hasn't occured yet
-	    		  }
-	    		  else{
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setEnableLabel(true); // manually set the model to true because the change event hasn't occured yet
-	    		  }
-	    	  };
-	    	  
-	          $("#label-text-color").colpick({
-	              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-	              onShow:function(colPickObj){
-	            	  var that = this;
-	                  $('#modal01').scroll(function(){  
-	                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-	                    var colPick = $(that);
-	                    var diff = colPick.offset().top + colPick.height() + 2; 
-	                    var diffStr = diff.toString() + "px";
-	                    colorPicker.css({ top: diffStr });
-	                  });
-	              },
-	              onChange:function(hsb,hex,rgb,el,bySetColor) {
-	            	$(el).find(".ico").css('background','#'+hex);
-	            	scope.thematicStyleModel.labelColor = '#'+hex;
-	              },
-	              onHide:function(el) {
-	            	 scope.$apply();
-	              }
-	           });
-	          
-	          $("#label-halo-color").colpick({
-	              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-	              onShow:function(colPickObj){
-	            	  var that = this;
-	                  $('#modal01').scroll(function(){  
-	                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-	                    var colPick = $(that);
-	                    var diff = colPick.offset().top + colPick.height() + 2; 
-	                    var diffStr = diff.toString() + "px";
-	                    colorPicker.css({ top: diffStr });
-	                  });
-	              },
-	              onChange:function(hsb,hex,rgb,el,bySetColor) {
-	            	$(el).find(".ico").css('background','#'+hex);
-	            	scope.thematicStyleModel.labelHalo = '#'+hex;
-	              },
-	              onHide:function(el) {
-	            	 scope.$apply();
-	              }
-	           });
 	      }
 	    };    
 	 };
@@ -184,7 +168,7 @@
 	    	  var aggMedthodId = "#agg-method-dd";
 	          
 	    	  $(geoNodeSelectId).change(function(){ 
-	    		  scope.getGeographicAggregationOptions(scope.thematicLayerModel.aggregationStrategy, scope.thematicLayerModel.geoNodeId);
+	    		  scope.getGeographicAggregationOptions(scope.dynamicDataModel.aggregationStrategy, scope.thematicLayerModel.geoNode);
 	    	  });
 	    	  
 	    	  
@@ -239,7 +223,7 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-		      
+	    	  
 		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
 		      setTimeout(function(){
 		    	  // format the partial
@@ -318,31 +302,31 @@
 						                });
 					                }
 					              }
-				    		  });
+				    		  }); // end tree
 				    		  
 				    		  tree.render(targetEl, null);
 			    		  }
 			    	  	}
 		    	  
 			          	function attachOtherCategoryColorPicker(){
-			              // ontology category layer type colors
-			              $(".ontology-other-color-icon").colpick({
-			                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-			                onShow:function(colPickObj){
-			                  var that = this;
-			                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-			                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-			                      var colPick = $(that);
-			                      var diff = colPick.offset().top + colPick.height() + 2; 
-			                      var diffStr = diff.toString() + "px";
-			                      colorPicker.css({ top: diffStr });
-			                    });
-			                },
-			                onChange:function(hsb,hex,rgb,el,bySetColor) {
-			                  $(el).css('background','#'+hex);
-			                  $(el).find('.color-input').attr('value', '#'+hex);
-			                }
-			              });
+				              // ontology category layer type colors
+				              $(".ontology-other-color-icon").colpick({
+				                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+				                onShow:function(colPickObj){
+				                  var that = this;
+				                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
+				                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+				                      var colPick = $(that);
+				                      var diff = colPick.offset().top + colPick.height() + 2; 
+				                      var diffStr = diff.toString() + "px";
+				                      colorPicker.css({ top: diffStr });
+				                    });
+				                },
+				                onChange:function(hsb,hex,rgb,el,bySetColor) {
+				                  $(el).css('background','#'+hex);
+				                  $(el).find('.color-input').attr('value', '#'+hex);
+				                }
+				              });
 			            }
 			          	
 			          	attachOtherCategoryColorPicker();
@@ -350,6 +334,33 @@
 		    	  else{
 		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
 		    	  }
+		    	  
+		    	  // set color pickers on non-category layer types
+	              $($(element[0]).find(".ico")).colpick({
+		                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+		                onShow:function(colPickObj){
+		                  var that = this;
+		                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
+		                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+		                      var colPick = $(that);
+		                      var diff = colPick.offset().top + colPick.height() + 2; 
+		                      var diffStr = diff.toString() + "px";
+		                      colorPicker.css({ top: diffStr });
+		                    });
+		                },
+		                onChange:function(hsb,hex,rgb,el,bySetColor) {
+		                  $(el).css('background','#'+hex);
+		                  $(el).parent().find('.color-input').attr('value', '#'+hex);
+		                  
+		                  var modelAttributeName = $(el).parent().find('.color-input').attr("name").replace("style.", "");
+		                  fillElement($('[ng-model="thematicStyleModel.'+modelAttributeName+'"]'), '#'+hex)
+		                  
+		                  // set ng-model val and trigger the input event so angular registers the change
+		                  function fillElement($el, text) {
+		                	 $el.val(text).trigger('input');
+		                  }
+		                }
+		          });
 		    	  
 		    	  $(element[0]).show();
 		          	
@@ -389,6 +400,23 @@
 	      }
 	    };    
 	 };
+	 
+	 
+	 function FormActionButtons() {
+		    return {
+		      restrict: 'E',
+		      replace: true,
+		      templateUrl: '/partial/dashboard/dashboard-layer-form-action-buttons.jsp',    
+		      scope: true,
+		      link: function (scope, element, attrs) {
+		    	  // format the partial
+		    	  setTimeout(function(){ 
+					  jcf.customForms.replaceAll(element[0]);
+				  }, 100);
+		    	  
+		      }
+		    };    
+		 };
 		 
 	
 	 /**
@@ -457,13 +485,14 @@
 		 */
 	    $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
 	    	// TODO: possibly remove mapId
-	    	$scope.layerId = layerId;
-	    	$scope.newInstance = Boolean(newInstance);
-	    	$scope.thematicLayerModel.mdAttributeId = mdAttributeId;
-	    	$scope.thematicLayerModel.geoNodeId = geoNodeId;
+	    	$scope.newInstance = (newInstance === 'true');
+	    	$scope.thematicLayerModel.id = layerId;
+	    	$scope.thematicLayerModel.mdAttribute = mdAttributeId;
+	    	$scope.thematicLayerModel.geoNode = geoNodeId;
+	    	$scope.mapId;
 	    	
-	    	if(newInstance){
-	    		controller.loadLayerOptions($scope.thematicLayerModel.mdAttributeId);
+	    	if($scope.newInstance){
+	    		controller.loadLayerOptions($scope.thematicLayerModel.mdAttribute);
 	    	}
 	    	else{
 	    	  controller.loadLayerState();
@@ -493,6 +522,7 @@
 	     */
 	    $scope.newInstance = true; 
 	    $scope.availableFonts = [];
+	    $scope.showModal = true; 
 	    
 	    
 	    /**
@@ -501,6 +531,7 @@
 	     */
 	    $scope.dynamicDataModel = {
 	    	aggregationStrategyOptions : [],
+	    	aggregationStrategy : '', // using dynamicDataModel because the json representation is different from the actual model
 	    	aggregationMethods : [], 
 	    	layerTypeNames : [],
 	    	layerTypeLabels : [],
@@ -523,23 +554,23 @@
 	     */
 		$scope.thematicLayerModel = {
 			viewName : '',
-			sldName : '',
-			layerName : '',
-			layerId : '',
-			inLegend : true,
-			legendXPosition : 0,
-			legendYPosition : 0,
-			groupedInLegend : true,
-			featureStrategy : '',
-			mdAttributeId : '',
-			attributeType : '',
-			aggregationMethod : '', 
-			aggregationAttribute : '',
+//			sldName : '', // not needed on the client because geoserver uses the sld set on the server based on layer submission
+			name : '',
+			id : '',
+			displayInLegend : true,
+//			legendXPosition : 0,  // not on the dto
+//			legendYPosition : 0,  // not on the dto
+//			groupedInLegend : true,  // not on the dto
+			mdAttribute : '',
+			attributeType : '',  // not on the dto
+			aggregationMethod : '', // not on the dto
+			aggregationAttribute : '',  // not on the dto
 			layerType : '',
-			attributeLabel : '',
-			geoNodeId : '',
-			aggregationStrategy : '',
-			styles : ''
+			attributeLabel : '',  // not on the dto
+			geoNode : '',
+			aggregationStrategy : '', // should always be null since we are passing in new aggregation with applyWithStyle
+			aggregationType : '',
+//			styles : ''  // not on the dto
 		};
 		
 		
@@ -551,27 +582,27 @@
 			enableLabel : true,
 			enableValue : true,
 			id : '',
-			labelColor : '#000000;',
+			labelColor : '#000000',
 			labelFont : '', 
 			labelHalo : '#ffffff',
 			labelHaloWidth : 2,
 			labelSize : 12,
-			lineOpacity : '',
-			lineStroke : '',
+			lineOpacity : 0.9,
+			lineStroke : '#000000',
 			lineStrokeCap : '',
-			lineStrokeWidth : '',
+			lineStrokeWidth : 2,
 			name : '',
 			pointFill : '#00bfff',
-			pointOpacity : 90,
+			pointOpacity : 0.9,
 			pointRotation : '',
-			pointStroke : '#000000;',
-			pointStrokeOpacity : 90,
+			pointStroke : '#000000',
+			pointStrokeOpacity : 0.9,
 			pointStrokeWidth : 1,
 			pointWellKnownName : 'CIRCLE',
 			polygonFill : '#00bfff',
-			polygonFillOpacity : 90,
+			polygonFillOpacity : 0.9,
 			polygonStroke : '#000000',
-			polygonStrokeOpacity : 90,
+			polygonStrokeOpacity : 0.9,
 			polygonStrokeWidth : 1,
 			type : '',
 			valueColor : '#000000',
@@ -583,38 +614,38 @@
 			bubbleFill : '#00bfff',
 			bubbleMaxSize : 70,
 			bubbleMinSize : 20,
-			bubbleOpacity : 90,
+			bubbleOpacity : 0.9,
 			bubbleRotation : '',
 			bubbleSize : 10,
 			bubbleStroke : '#000000',
-			bubbleStrokeOpacity : 90,
+			bubbleStrokeOpacity : 0.9,
 			bubbleStrokeWidth : 1,
 			bubbleWellKnownName : 'CIRCLE',
-			categoryPointFillOpacity : 90,
+			categoryPointFillOpacity : 0.9,
 			categoryPointSize : 10,
 			categoryPointStroke : '#000000',
-			categoryPointStrokeOpacity : 90,
+			categoryPointStrokeOpacity : 0.9,
 			categoryPointStrokeWidth : 1,
 			categoryPointStyles : '',
 			categoryPointWellKnownName : 'CIRCLE',
-			categoryPolygonFillOpacity : 90,
+			categoryPolygonFillOpacity : 0.9,
 			categoryPolygonStroke : '#000000',
-			categoryPolygonStrokeOpacity : 90,
+			categoryPolygonStrokeOpacity : 0.9,
 			categoryPolygonStrokeWidth : 1,
 			categoryPolygonStyles : '',
-			gradientPointFillOpacity : 90,
+			gradientPointFillOpacity : 0.9,
 			gradientPointMaxFill : '#505050',
 			gradientPointMinFill : '#ffffff',
 			gradientPointSize : 10,
 			gradientPointStroke : '#000000',
-			gradientPointStrokeOpacity : 90,
+			gradientPointStrokeOpacity : 0.9,
 			gradientPointStrokeWidth : 1,
 			gradientPointWellKnownName : 'CIRCLE',
-			gradientPolygonFillOpacity : 90,
+			gradientPolygonFillOpacity : 0.9,
 			gradientPolygonMaxFill : '#505050',
 			gradientPolygonMinFill : '#ffffff',
 			gradientPolygonStroke : '#000000',
-			gradientPolygonStrokeOpacity : 90,
+			gradientPolygonStrokeOpacity : 0.9,
 			gradientPolygonStrokeWidth : 1,
 			secondaryAggregationType : '',
 			secondaryAttribute : '',  
@@ -695,20 +726,69 @@
    	 	$scope.setSecondaryAggregationType = function(type){
    	 		$scope.thematicStyleModel.secondaryAggregationType = type;
    	 	};
+   	 	
+   	 	$scope.setValueFont = function(val){
+   	 		$scope.thematicStyleModel.valueFont = val
+   	 	};
+   	 	
+	    $scope.getFormattedInt = function(n){
+	    	return Math.round(n*100)
+	    };
+   	 	
+   	 	
+   	 	/**
+   	 	 * Perist thematic layer to the server
+   	 	 * TODO: add error handling
+   	 	 */
+   	 	$scope.persist = function() {
+	   	      var onSuccess = function(response) {      
+	   	    	$scope.closeLayerModal();
+	   	    	
+	   	    	var jsonObj = {};
+	            jsonObj["layers"] = [Mojo.Util.toObject(response)];
+	            
+	   	    	$scope.dashboard.handleLayerEvent(jsonObj);
+	   	      };    
+	   	      
+   	 		// TODO: double check modal01 is the correct el to pass in
+   	 		layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess);
+   	    };
+   	 	
+   	    
+   	 	/**
+   	 	 * Action on cancel of layer form
+   	 	 */
+   	    $scope.cancel = function() {
+	   	      var onSuccess = function() {  
+   	    		$scope.closeLayerModal();
+	   	      }
+	   	        
+   	    	layerFormService.unlock($scope.thematicLayerModel.id, onSuccess);
+   	    };
+   	    
+   	    
+   	    /**
+   	     * Close the form html
+   	     */
+   	    $scope.closeLayerModal = function() {
+   	    	// TODO: replace jquery with angular mechanism
+   	    	$($scope.FORM_CONSTANTS.LAYER_MODAL).modal('hide').html('');
+   	    };
+   	    
 		
 	    /**
-	     * Request for existing layer data 
-	     * 
-	     */
+		 * Request for existing layer data
+		 * 
+		 */
 	    controller.loadLayerState = function() {
 	        
 	        var onSuccess = function(json){
 	          var state = JSON.parse(json);
-	            
-//	          controller.setLayerState(state);
+	          controller.setLayerOptions(JSON.parse(state.optionsJSON), false);  
+	          controller.setLayerState(state);
 	        };
 	          
-	        layerFormService.getThematicLayerJSON($scope.layerId, onSuccess);
+	        layerFormService.getThematicLayerJSON($scope.thematicLayerModel.id, onSuccess);
 	    };
 	    
 	    
@@ -718,11 +798,10 @@
 	     * @param attributeId : Id of the thematic attribute that the layer will be mapped against.
 	     */
 	    controller.loadLayerOptions = function(attributeId) {
-	        
 	        var onSuccess = function(json){
 	          var opts = JSON.parse(json);
 	            
-	          controller.setLayerOptions(opts);
+	          controller.setLayerOptions(opts, true);
 	        };
 	          
 	        layerFormService.getThematicLayerOptionsJSON(attributeId, $scope.dashboard.getDashboardId(), onSuccess);
@@ -734,81 +813,87 @@
 	     * 
 	     * @param options : the JSON object from the server describing a new layer, style, and supporting data.
 	     */
-	    controller.setLayerOptions = function(options) {
-	    		$scope.dynamicDataModel.aggregationMethods = options.aggregations;
-	    		$scope.dynamicDataModel.nodeAggregationStrategiesLookup = options.aggegationStrategies;
-	    		$scope.dynamicDataModel.aggregationStrategyOptions = options.aggegationStrategies[0].aggregationStrategies;
-	    		$scope.dynamicDataModel.layerTypeNames = options.layerTypeNames;
-	    		$scope.dynamicDataModel.layerTypeLabels = options.layerTypeLabels;
-	    		$scope.dynamicDataModel.pointTypes = options.pointTypes;
-	    		$scope.dynamicDataModel.secondaryAttributes = options.secondaryAttributes;
-	    		
-	    		$scope.dynamicDataModel.thematicAttributeDataType = options.attributeDataType;
-	    		$scope.dynamicDataModel.isOntologyAttribute = options.attributeType.isOntologyAttribute;
-	    		$scope.dynamicDataModel.isTextAttribute = options.attributeType.isTextAttribute;
-	    		
-	    		if(options.attributeType.isOntologyAttribute){
-		    		$scope.dynamicDataModel.roots = options.attributeType.roots;
-		    		$scope.dynamicDataModel.selectableMap = options.attributeType.selectableMap;
-		    		$scope.dynamicDataModel.termType = options.attributeType.termType;
-		    		$scope.dynamicDataModel.relationshipType = options.attributeType.relationshipType;
-	    		}
+	    controller.setLayerOptions = function(options, isNew) {
 	    	
+    		$scope.dynamicDataModel.aggregationMethods = options.aggregations;
+    		$scope.dynamicDataModel.nodeAggregationStrategiesLookup = options.aggegationStrategies;
+    		$scope.dynamicDataModel.aggregationStrategyOptions = options.aggegationStrategies[0].aggregationStrategies;
+    		$scope.dynamicDataModel.layerTypeNames = options.layerTypeNames;
+    		$scope.dynamicDataModel.layerTypeLabels = options.layerTypeLabels;
+    		$scope.dynamicDataModel.pointTypes = options.pointTypes;
+    		$scope.dynamicDataModel.secondaryAttributes = options.secondaryAttributes;
+    		
+    		$scope.dynamicDataModel.thematicAttributeDataType = options.attributeDataType;
+    		$scope.dynamicDataModel.isOntologyAttribute = options.attributeType.isOntologyAttribute;
+    		$scope.dynamicDataModel.isTextAttribute = options.attributeType.isTextAttribute;
+    		
+    		$scope.availableFonts = $scope.processFonts(options.fonts);
+    		$scope.geoNodes = options.geoNodes;
+    		
+    		if(options.attributeType.isOntologyAttribute){
+	    		$scope.dynamicDataModel.roots = options.attributeType.roots;
+	    		$scope.dynamicDataModel.selectableMap = options.attributeType.selectableMap;
+	    		$scope.dynamicDataModel.termType = options.attributeType.termType;
+	    		$scope.dynamicDataModel.relationshipType = options.attributeType.relationshipType;
+    		}
+    		
+    		$scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategyOptions, $scope.dynamicDataModel.aggregationStrategy);
+    		
+    		$scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap); // TODO: this might need the aggregation value/id for persisting to the database
+
+    		//$scope.thematicLayerModel.secondaryAttributes = options.secondaryAttributes[0];  //TODO: review if this actaully should be set
+    		
+    		// These properties should be set in setLayerState for existing layers (editing a layer)
+	    	if(isNew){
+	    		$scope.dynamicDataModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
+	    		
 	    		$scope.thematicLayerModel.layerType = options.layerTypeNames[0];
 	    		$scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
-	    		$scope.thematicLayerModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
-	    		$scope.thematicLayerModel.pointWellKnownName = options.pointTypes[0];
-	    		$scope.thematicLayerModel.secondaryAttributes = options.secondaryAttributes[0];  //TODO: review if this actaully should be set
-	    		
-	    		$scope.availableFonts = $scope.processFonts(options.fonts);
-	    		$scope.geoNodes = options.geoNodes;
-	    		
-	    		$scope.thematicStyleModel.labelFont = $scope.availableFonts[0];
-	    		
-	    		$scope.thematicLayerModel.geoNodeId = $scope.thematicLayerModel.geoNodeId || $scope.geoNodes[0]; // this is set in the init function but may be null if new layer
-	    		$scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategyOptions, $scope.thematicLayerModel.aggregationStrategy)
-	    		
-	    		$scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap); // TODO: this might need the aggregation value/id for persisting to the database
-	    		$scope.$apply();
+	    		$scope.thematicLayerModel.aggregationType = aggregationMethod = $scope.dynamicDataModel.aggregationMethods[0].method;
+	    		$scope.thematicLayerModel.geoNode = $scope.thematicLayerModel.geoNode || $scope.geoNodes[0].id; // TODO: remove geoNode from init function... this is set in the init function but may be null if new layer
+	    		$scope.thematicStyleModel.labelFont = $scope.availableFonts[0]; 
+	    		$scope.thematicStyleModel.valueFont = $scope.availableFonts[0];	
+//	    		$scope.thematicStyleModel.pointWellKnownName = options.pointTypes[0]; // TODO: why is this needed/required here?
+	    	}
+    		
+    		$scope.$apply();
 	    };
 	    
 	    
+	    /**
+	     * Set the model state for editing existing layers
+	     */
 	    controller.setLayerState = function(state) {
-//	        $timeout(function() {
-//	          controller.model = state;
-//	          controller.renderBase = true;
-//
-//	          // Initialize the default base map
-//	          var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
-//	              
-//	          for(var i = 0; i < controller.baseLayers.length; i++) {
-//	            var layer = controller.baseLayers[i];
-//	                  
-//	            if(layer.layerType == layerSourceType) {
-//	              layer.isActive = true;
-//	            }
-//	            else {
-//	              layer.isActive = false;            
-//	            }
-//	          }            
-//
-//	          $scope.$apply();
-//	                
-//	          controller.refresh();
-//	        }, 5);
+	    	
+	    	$scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy;
+	    	
+	    	$scope.thematicLayerModel.name = state.layerName;
+    		$scope.thematicLayerModel.layerType = state.featureStrategy;
+    		$scope.thematicLayerModel.aggregationMethod = state.aggregationMethod;
+    		$scope.thematicLayerModel.aggregationType = aggregationMethod = state.aggregationMethod;
+    		$scope.thematicLayerModel.geoNode = state.geoNodeId;
+    		
+    		$scope.thematicStyleModel = state.styles[0];
+    		
+//    		$scope.thematicStyleModel.labelFont = JSON.parse(state.styles[0].labelFont);
+//    		$scope.thematicStyleModel.valueFont = JSON.parse(state.styles[0].valueFont);
+//    		$scope.thematicStyleModel.pointWellKnownName = state.styles[0].pointWellKnownName;
+//    		$scope.thematicStyleModel.labelSize = state.styles[0].labelSize;
+//    		$scope.thematicStyleModel.labelColor = state.styles[0].labelColor;
+        	
+    		$scope.$apply();
 	    };
 	    
 	    
 		/**
 		 * Fonts from Java come in as simple json array. We need to add id's to each entry for Angular.
-		 * It's important to note the obvious, that these id's are completely generic.
 		 * 
 		 * @param fonts : Array of font names as strings
 		 */
     	$scope.processFonts = function(fonts){
     		var formattedFonts = [];
     		for(var i=0; i<fonts.length; i++){
-    			formattedFonts.push({ "id" : i, "value" : fonts[i].replace(/\+/g, " ") });
+    			formattedFonts.push(fonts[i].replace(/\+/g, " "));
     		}
     		return formattedFonts; 
     	};
@@ -843,8 +928,8 @@
         	var aggStratOpts = $scope.dynamicDataModel.aggregationStrategyOptions;
         	for(var i=0; i<aggStratOpts.length; i++){
         		var aggStrat = aggStratOpts[i];
-        		if(aggStrat.aggStrategyValue === aggStratVal){
-        			return aggStrat.aggStrategyType;
+        		if(aggStrat.value === aggStratVal){
+        			return aggStrat.type;
         		}
         	}
         	return
@@ -1139,10 +1224,10 @@
     	   var _parser = Globalize.numberParser();
     	   var _formatter = Globalize.numberFormatter();
     			
-		   var mdAttribute = $scope.thematicLayerModel.mdAttributeId;  
+		   var mdAttribute = $scope.thematicLayerModel.mdAttribute;  
 		   var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
-	       var universalId = $scope.thematicLayerModel.aggregationStrategy.aggStrategyValue;
-	       var geoNodeId = $scope.thematicLayerModel.geoNodeId.id;
+	       var universalId = $scope.dynamicDataModel.aggregationStrategy.value;
+	       var geoNodeId = $scope.thematicLayerModel.geoNode;
 	       var aggregationVal = $scope.thematicLayerModel.aggregationMethod.method;
 	       var conditions = $scope.dashboard.getCompressedState(); 
 	       var limit = 10;
@@ -1174,8 +1259,7 @@
 	     * Aggregation strategy (universals) watcher.
 	     * Hides the aggregation method dropdown if aggregation is not relevant for the strategy level.
 	     */
-	    $scope.$watch("thematicLayerModel.aggregationStrategy", function(newValue, oldValue) {
-	        //console.log("watching agg strategy", " : ", "new val = ", newValue, " old val = ", oldValue)
+	    $scope.$watch("dynamicDataModel.aggregationStrategy", function(newValue, oldValue) {
             if($($scope.FORM_CONSTANTS.GEO_AGG_STRATEGY_SELECT_ID+" option:selected").hasClass("universal-leaf")){
                 // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
                 $($scope.FORM_CONSTANTS.GEO_AGG_METHOD_SELECT_ID).parent().parent().hide();
@@ -1218,6 +1302,16 @@
 	    });
 	    
 	    
+	    $scope.$watch("thematicStyleModel.labelFont", function(newValue, oldValue) {
+	    	$scope.setValueFont(newValue);
+	    });
+	    
+	    // TESTING
+	    $scope.$watch("thematicStyleModel.pointFill", function(newValue, oldValue) {
+	    	console.log("new val ", newValue);
+	    });
+	    
+	    
 	    /**
 	     * Render basic categories for the secondary categories widget.
 	     * 
@@ -1233,10 +1327,10 @@
 	    /**
 	     * Render the ontology tree for the secondary categories widget
 	     * 
-	     * @param mdAttributeId : thematic attribute id
+	     * @param mdAttribute : thematic attribute id
 	     * @param type : thematic attribute type <string>
 	     */
-	    $scope._renderSecondaryTermTree = function(mdAttributeId, type) {
+	    $scope._renderSecondaryTermTree = function(mdAttribute, type) {
 	        
 	        $scope.setSecondaryAggregationMethods(type);
 	        
@@ -1322,7 +1416,7 @@
 	        
 //	        jcf.customForms.replaceAll($('#secondary-content').get(0));
 	            
-	        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttributeId);            
+	        com.runwaysdk.geodashboard.Dashboard.getClassifierTree(req, mdAttribute);            
 	    };
 	    
 	    
@@ -1443,7 +1537,7 @@
              
              jcf.customForms.replaceAll($($scope.FORM_CONSTANTS.GEO_AGG_STRATEGY_SELECT_ID).parent().get(0));
              
-             $scope._setLayerTypeOptions($scope.thematicLayerModel.aggregationStrategy);
+             $scope._setLayerTypeOptions($scope.dynamicDataModel.aggregationStrategy);
          };
          
          
@@ -1453,7 +1547,7 @@
           * @selectedOption - selected option <object> from the geographic aggregation level dropdown
           */
          $scope._setLayerTypeOptions = function(selectedOption) {
-           var type = selectedOption.aggStrategyType;
+           var type = selectedOption.type;
            // TODO: Move this data into the model
            var layerTypesJSON = $scope.dynamicDataModel.layerTypeNames;
            
@@ -1472,7 +1566,7 @@
              }
              
              // TODO: replace data attribute with model property
-             var geomTypes = selectedOption.aggStrategyGeomTypes;
+             var geomTypes = selectedOption.geomTypes;
              
              for(var i=0; i<geomTypes.length; i++){
                var geomType = geomTypes[i];
@@ -1580,13 +1674,31 @@
 		.directive('layerTypesStyle', LayerTypesStyle)
 		.directive('categoryAutoComplete', CategoryAutoComplete)
 		.directive('legendOptions', LegendOptions)
+		.directive('formActionButtons', FormActionButtons)
 		.directive('rebuildSecondaryAggMethodDropdown', RebuildSecodaryAggMethodDropdown)
-		.filter('range', function() {
+		.filter('decimalrange', function() {
 		  return function(input, min, max) {
 		    min = parseInt(min); 
 		    max = parseInt(max);
-		    for (var i=min; i<max; i++)
+		    for (var i=min; i<max; i++){
+		    	if(i === 0){
+		    		input.push(i);
+		    	}
+		    	else if(i % 5 === 0){
+		    		var formattedVal = i/100;
+		    		input.push(formattedVal);
+		    	}
+		    }
+		    return input;
+		  };
+		})
+		.filter('intrange', function() {
+		  return function(input, min, max) {
+		    min = parseInt(min); 
+		    max = parseInt(max);
+		    for (var i=min; i<max; i++){
 		      input.push(i);
+		    }
 		    return input;
 		  };
 		});

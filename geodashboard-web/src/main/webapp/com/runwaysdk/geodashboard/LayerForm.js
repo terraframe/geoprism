@@ -39,7 +39,7 @@
        * 
        */
       _closeLayerModal : function(){
-        this.getImpl().modal('hide').html('');
+//        this.getImpl().modal('hide').html('');
       },
 
       getImpl : function(){
@@ -64,10 +64,7 @@
         
         // IMPORTANT: This line must be run last otherwise the user will see javascript loading and modifying the DOM.
         //            It is better to finish all of the DOM modification before showing the modal to the user
-//        setTimeout(function(){ 
-        	modal.modal('show');
-//		}, 200);
-        
+        modal.modal('show');
       },
 
       
@@ -92,17 +89,17 @@
         params['mapId'] = this._mapId;
         
         // Custom conversion to turn the checkboxes into boolean true/false
-        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
+//        params['style.enableLabel'] = params['style.enableLabel'].length > 0;
         
         // A hack to set the enableValue property which is required on DashboardLayer but is
         // not allowed for the reference layer form since ther is no 'value' to display
-        if(!params['style.enableValue']){
-          params['style.enableValue'] = false;
-        }
-        else{
-          params['style.enableValue'] = params['style.enableValue'].length > 0;
-        }
-        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
+//        if(!params['style.enableValue']){
+//          params['style.enableValue'] = false;
+//        }
+//        else{
+//          params['style.enableValue'] = params['style.enableValue'].length > 0;
+//        }
+//        params['layer.displayInLegend'] = params['layer.displayInLegend'].length > 0;
         
         return request;
       }
@@ -133,13 +130,13 @@
       _displayLayerForm : function(html, layer) {
     	  var that = this;
       	  this.$_displayLayerForm(html, layer);
-      
-//        this._thematicAttributeId = $(".category-input").data("mdattributeid"); // There can be multiple elements matching but all have same mdattributeid val
       },
       
-      // TODO: move edit functionality to angular
-      edit : function(id) {
+      
+      edit : function(id, $compile, $scope) {
         var that = this;
+        that.$compile = $compile;
+        that.$scope = $scope;
         
         var layer = this._map.getLayer(id);
         that._layer = layer;
@@ -147,7 +144,9 @@
         this._LayerController.edit(new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
             that._displayLayerForm(html, that._layer);
-            that._addLayerFormControls();
+            
+            // compiling the new html for Angular
+            that.$compile($("#DashboardLayer-mainDiv")[0])($scope);
           },
           onFailure : function(e){
             that.handleException(e);
@@ -157,8 +156,8 @@
       
       open : function(thematicAttributeId, $compile, $scope) {
         var that = this;
-        that.$compile = $compile
-        that.$scope = $scope
+        that.$compile = $compile;
+        that.$scope = $scope;
           
         var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
           onSuccess : function(html){
@@ -181,51 +180,12 @@
        * 
        * @params
        */
+      // TODO: remove me
       _cancelLayerListener : function(params){
-        var that = this;
-        
-        if(params['layer.isNew'] === 'true')
-        {
-          this._closeLayerModal();
-        }
-        else
-        {
-          var that = this;
-          var request = new Mojo.ClientRequest({
-            onSuccess : function(params){
-              that._closeLayerModal();
-            },
-            onFailure : function(e){
-              that.handleException(e);
-            }
-          });
-          
-          //return request;
-          var id = params['layer.componentId'];
-          com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.unlock(request, id);
-        }
       },
       
+      // TODO: remove me
       _onApplySuccess : function(htmlOrJson, response) {
-        if (response.isJSON()) {
-          this._closeLayerModal();
-              
-          var jsonObj = {};
-          jsonObj["layers"] = [Mojo.Util.toObject(htmlOrJson)];
-              
-          this._map.handleLayerEvent(jsonObj);
-              
-          // TODO : Push this somewhere as a default handler.
-          this.handleMessages(response);
-        }
-        else if (response.isHTML()) {
-          // we got html back, meaning there was an error
-              
-          this._displayLayerForm(htmlOrJson, null);
-          this._addLayerFormControls();
-              
-          this.getImpl().animate({scrollTop:$('.heading').offset().top}, 'fast'); // Scroll to the top, so we can see the error
-        }
       },
       
       /**
@@ -235,60 +195,60 @@
        */
       _applyWithStyleListener : function(params){
         
-        var layer = this._map.getLayer(params["layer.componentId"]);
-        var mdAttribute = (layer != null) ? layer.mdAttributeId : this._thematicAttributeId;
-        
-        params['layer.mdAttribute'] = mdAttribute;        
-        params['state'] = JSON.stringify(this._map.getModel());
-        
-        if($("#tab005categoriespolygon").is(":visible")){
-          var catStyleArr = this._updateCategoriesJSON("#categories-polygon-input");
-          params['style.categoryPolygonStyles'] = JSON.stringify(catStyleArr);
-        }
-        
-        if($("#tab007categoriespoint").is(":visible")){
-            var catStyleArr = this._updateCategoriesJSON("#categories-point-input");
-            params['style.categoryPointStyles'] = JSON.stringify(catStyleArr);
-          }
-        
-        // Check for existense of dynamic settings which may not exist 
-        if(params['style.bubbleContinuousSize']){
-          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
-        }
-        
-        var secondaryAttribute = $("#secondaryAttribute").val();
-        
-        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
-          var secondaryCategories = this._getSecondaryAttriubteCategories();
-          var secondaryAggregationType = $("#secondaryAggregation").val();
-            
-          if(secondaryCategories != null && secondaryCategories.length > 0){
-            params['style.secondaryAttribute'] = secondaryAttribute;
-            params['style.secondaryAggregationType'] = secondaryAggregationType;
-            params['style.secondaryCategories'] = JSON.stringify(secondaryCategories);
-          }          
-        }
-        else {
-          params['style.secondaryAttribute'] = '';
-          params['style.secondaryAggregationType'] = '';
-          params['style.secondaryCategories'] = '';
-        }
-        
-        // Get the strategy information
-        var strategy = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
-        var strategyType = strategy.data('type');
-        var strategyValue = strategy.val();
-        
-        params["strategy.isNew"] = "true";
-        params["#strategy.actualType"] = strategyType;
-        
-        if(strategyType == "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy") {
-          params["strategy.universal"] = strategyValue;
-        }
-        
-        var request = this.$_applyWithStyleListener(params);
-        
-        return request;
+//        var layer = this._map.getLayer(params["layer.componentId"]);
+//        var mdAttribute = (layer != null) ? layer.mdAttributeId : this._thematicAttributeId;
+//        
+//        params['layer.mdAttribute'] = mdAttribute;        
+//        params['state'] = JSON.stringify(this._map.getModel());
+//        
+//        if($("#tab005categoriespolygon").is(":visible")){
+//          var catStyleArr = this._updateCategoriesJSON("#categories-polygon-input");
+//          params['style.categoryPolygonStyles'] = JSON.stringify(catStyleArr);
+//        }
+//        
+//        if($("#tab007categoriespoint").is(":visible")){
+//            var catStyleArr = this._updateCategoriesJSON("#categories-point-input");
+//            params['style.categoryPointStyles'] = JSON.stringify(catStyleArr);
+//          }
+//        
+//        // Check for existense of dynamic settings which may not exist 
+//        if(params['style.bubbleContinuousSize']){
+//          params['style.bubbleContinuousSize'] = params['style.bubbleContinuousSize'].length > 0;
+//        }
+//        
+//        var secondaryAttribute = $("#secondaryAttribute").val();
+//        
+//        if(secondaryAttribute != null && secondaryAttribute.length > 0) {
+//          var secondaryCategories = this._getSecondaryAttriubteCategories();
+//          var secondaryAggregationType = $("#secondaryAggregation").val();
+//            
+//          if(secondaryCategories != null && secondaryCategories.length > 0){
+//            params['style.secondaryAttribute'] = secondaryAttribute;
+//            params['style.secondaryAggregationType'] = secondaryAggregationType;
+//            params['style.secondaryCategories'] = JSON.stringify(secondaryCategories);
+//          }          
+//        }
+//        else {
+//          params['style.secondaryAttribute'] = '';
+//          params['style.secondaryAggregationType'] = '';
+//          params['style.secondaryCategories'] = '';
+//        }
+//        
+//        // Get the strategy information
+//        var strategy = $(ThematicLayerForm.GEO_AGG_LEVEL_DD).find(":selected");
+//        var strategyType = strategy.data('type');
+//        var strategyValue = strategy.val();
+//        
+//        params["strategy.isNew"] = "true";
+//        params["#strategy.actualType"] = strategyType;
+//        
+//        if(strategyType == "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy") {
+//          params["strategy.universal"] = strategyValue;
+//        }
+//        
+//        var request = this.$_applyWithStyleListener(params);
+//        
+//        return request;
       },
       
       

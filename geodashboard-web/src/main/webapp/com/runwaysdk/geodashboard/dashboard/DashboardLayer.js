@@ -72,8 +72,11 @@
    * THEMATIC LAYER CONTROLLER AND WIDGET
    * 
    */
-  function ThematicPanelController($scope, $timeout, dashboardService) {
+  function ThematicPanelController($scope, $compile, $timeout, dashboardService) {
     var controller = this;
+    /* Getting the $compile method reference for use with later functions  */
+    controller.$compile = $compile;
+    controller.$scope = $scope;
     
     controller.getLayer = function(layerId) {
       return $scope.cache.values[layerId];
@@ -88,7 +91,7 @@
     
     controller.edit = function(layerId) {
       var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-      form.edit(layerId);    	
+      form.edit(layerId, controller.$compile, controller.$scope);    	
     }
     
     controller.remove = function(layerId) {    	

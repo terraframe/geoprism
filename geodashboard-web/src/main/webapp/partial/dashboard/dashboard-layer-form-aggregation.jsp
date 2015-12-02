@@ -35,7 +35,7 @@
 <!-- 			                	<option ng-repeat="agg in dynamicDataModel.aggregationStrategyOptions track by agg.aggStrategyValue" value="{{agg.aggStrategyValue}}" ng-selected="{{agg.aggStrategyValue == thematicLayerModel.aggregationStrategy.aggStrategyValue}}">{{agg.aggStrategyLabel}}</option> -->
 <!-- 		                    </select> -->
 		                    
-		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" data-ng-options="agg.aggStrategyLabel for agg in dynamicDataModel.aggregationStrategyOptions track by agg.aggStrategyValue" data-ng-model="thematicLayerModel.aggregationStrategy"></select>
+		                    <select id="agg-level-dd" class="method-select" name="layer.aggregationStrategy" data-ng-options="agg.label for agg in dynamicDataModel.aggregationStrategyOptions track by agg.value" data-ng-model="dynamicDataModel.aggregationStrategy"></select>
 		                    
 	                  </div>
 	                </div>
@@ -46,11 +46,11 @@
 	                  <label for="agg-method-dd"><gdb:localize var="dl_form_accordingTo" key="DashboardThematicLayer.form.accordingTo"/>${dl_form_accordingTo}</label>
 	                  <div class="select-box">
 	                    
-	                          <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationMethod" ng-options="meth.label for meth in dynamicDataModel.aggregationMethods track by meth.id"></select>
+<!-- 	                          <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationType" ng-options="meth.label for meth in dynamicDataModel.aggregationMethods track by meth.id"></select> -->
 
-<!-- 	                        <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationMethod" > -->
-<!-- 					           	<option ng-repeat="aggMeth in dynamicDataModel.aggregationMethods" value="{{aggMeth.id}}" ng-selected="{{aggMeth.id == dynamicDataModel.aggregationMethods[0].id}}" >{{aggMeth.label}}</option> -->
-<!-- 							</select> -->
+	                        <select id="agg-method-dd" class="method-select" name="layer.aggregationType" ng-model="thematicLayerModel.aggregationType" >
+					           	<option ng-repeat="aggMeth in dynamicDataModel.aggregationMethods" value="{{aggMeth.method}}" ng-selected="{{aggMeth.method == thematicDataModel.aggregationType}}" >{{aggMeth.label}}</option>
+							</select>
 							
 	                  </div>
 	                </div>

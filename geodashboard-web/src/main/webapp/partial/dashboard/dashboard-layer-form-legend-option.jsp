@@ -24,11 +24,9 @@
 <div class="row-holder">
 	<div class="label-holder"></div>
 	<div class="holder">
-<!-- 		<div class="row-holder"> -->
-			<div class="check-block style02">
-					<input id="f65" type="checkbox" ng-model="thematicLayerModel.inLegend" name="layer.displayInLegend"></input>
-					<label for="f65"><gdb:localize key="DashboardLayer.form.displayInLegend"/></label>
-			</div>
-<!-- 		</div> -->
+		<div class="check-block style02">
+			<input id="f65" type="checkbox" ng-model="thematicLayerModel.displayInLegend" name="layer.displayInLegend"></input>
+			<label for="f65"><gdb:localize key="DashboardLayer.form.displayInLegend"/></label>
+		</div>
 	</div>
 </div>
