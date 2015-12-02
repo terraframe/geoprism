@@ -17,8 +17,6 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  var parser = Globalize.numberParser();
-  var formatter = Globalize.numberFormatter();  
   
   function LocationFilterController($scope, dashboardService) {
     var controller = this;
@@ -130,7 +128,7 @@
       controller : TypeAccordionController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-        /* Hook-up drag and drop */    	  
+        /* Hook-up drag and drop */        
         ctrl.init(element);
       }
     }    
@@ -434,35 +432,30 @@
     }    
   }
   
+  function NumberController($scope, localizationService) {
+    var controller = this;
+    
+    controller.parseNumber = function(value) {
+      return localizationService.parseNumber(value);
+    }
+    
+    controller.formatNumber = function(value) {
+      return localizationService.formatNumber(value);      
+    }
+  }
+  
   function IntegerOnly() {
     return {
       restrict: 'A',
-      require: 'ngModel',
-      link: function (scope, element, attrs, ngModel) {
-        ngModel.$parsers.push(function(value) {
-          if(value != null) {            
-            //convert data from view format to model format
-            var number = parser( value );
-            return number;
-          }
-          
-          return value;
-        });
-
-        ngModel.$formatters.push(function(value) {
-          if(value != null) {
-            var number = value;
-            
-            if(typeof number === 'string') {
-              number = parseInt(value);
-            }
-            
-            //convert data from model format to view format
-            return formatter(number);
-          }
-            
-          return value;
-        });
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'integerOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
+      
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
         
         ngModel.$validators.integer = function(modelValue, viewValue) {
           if (ngModel.$isEmpty(viewValue)) {
@@ -470,7 +463,7 @@
             return true;
           }
             
-          var number = parser( viewValue );
+          var number = ctrl.parseNumber( viewValue );
           var valid = ($.isNumeric(number) && Math.floor(number) == number);
           
           return valid;        
@@ -482,33 +475,16 @@
   function NumberOnly() {
     return {
       restrict: 'A',
-      require: 'ngModel',
-      link: function (scope, element, attrs, ngModel) {
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'numberOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
       
-        ngModel.$parsers.push(function(value) {
-          if(value != null) {          
-            //convert data from view format to model format
-            var number = parser( value );
-            return number;
-          }
-              
-          return value;
-        });
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
 
-        ngModel.$formatters.push(function(value) {
-          if(value != null) {
-            var number = value;
-                
-            if(typeof number === 'string') {
-              number = parseInt(value);
-            }
-                
-            //convert data from model format to view format
-            return formatter(number);
-          }
-                
-          return value;
-        });
       
         ngModel.$validators.integer = function(modelValue, viewValue) {
           if (ngModel.$isEmpty(viewValue)) {
@@ -516,7 +492,7 @@
             return true;
           }
           
-          var number = parser( viewValue );
+          var number = ctrl.parseNumber( viewValue );
           
           return $.isNumeric(number);        
         }
@@ -524,7 +500,7 @@
     }    
   }
   
-  angular.module("dashboard-accordion", ["dashboard-service"]);
+  angular.module("dashboard-accordion", ["dashboard-service", "localization-service"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)

@@ -76,7 +76,7 @@
 
             <layer-geo-node></layer-geo-node>
             
-			 <layer-aggregation></layer-aggregation>
+			<layer-aggregation></layer-aggregation>
 			
    			<layer-types></layer-types>
    
