@@ -190,7 +190,7 @@
 		                    	<div class="cell">
 		                          <label for="gradient-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
 		                          <div class="text">
-		                          	<input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" value="{{thematicStyleModel.gradientPointSize}}"></input>
+		                          	<input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" ng-model="thematicStyleModel.gradientPointSize"></input>
 		                          </div>
 		                        </div>
 	                      </div>
@@ -327,7 +327,7 @@
 		                    	<div class="cell">
 		                          <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
 		                          <div class="text">
-		                          	<input id="category-point-radius-select" name="style.categoryPointSize" type="text" value="{{thematicStyleModel.categoryPointSize}}"></input>
+		                          	<input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="thematicStyleModel.categoryPointSize"></input>
 		                          </div>
 		                        </div>
 		                        <div class="cell">
@@ -421,13 +421,13 @@
 		                        <div class="cell">
 		                          <label for="f76"><gdb:localize key="DashboardLayer.form.min"/></label>
 		                          <div class="text">
-		                          	 <input id="f76" name="style.bubbleMinSize" type="text" value="{{thematicStyleModel.bubbleMinSize}}"/>
+		                          	 <input id="f76" name="style.bubbleMinSize" type="text" ng-model="thematicStyleModel.bubbleMinSize"/>
 		                          </div>
 		                        </div>
 		                        <div class="cell">
 		                          <label for="f77"><gdb:localize key="DashboardLayer.form.max"/></label>
 		                          <div class="text">
-		                            <input id="f77" name="style.bubbleMaxSize" type="text" value="{{thematicStyleModel.bubbleMaxSize}}"></input>
+		                            <input id="f77" name="style.bubbleMaxSize" type="text" ng-model="thematicStyleModel.bubbleMaxSize"></input>
 		                          </div>
 		                        </div>
 		                        
