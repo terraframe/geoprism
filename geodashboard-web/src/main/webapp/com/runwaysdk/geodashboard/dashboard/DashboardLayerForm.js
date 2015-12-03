@@ -17,7 +17,6 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-	
 	 function LayerNameInput() {
 	    return {
 	      restrict: 'E',
@@ -25,108 +24,78 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-name.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
-				  $(element[0]).show();
-			  }, 100);
 	      }
 	    };    
 	 };
-	 
+	
+	function LayerLabelController($scope, $timeout) {
+	  var controller = this;
+	  
+	  controller.init = function(element) {
+        $timeout(function(){
+  		  $scope._injectFontStylesForDropdown();
+  		  
+          // format the partial
+//          jcf.customForms.replaceAll(element[0]);
+//          $(element).show();
+
+
+    	  
+    	  $("#label-text-color").colpick({
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj){
+            	  var that = this;
+                  $('#modal01').scroll(function(){  
+                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                    var colPick = $(that);
+                    var diff = colPick.offset().top + colPick.height() + 2; 
+                    var diffStr = diff.toString() + "px";
+                    colorPicker.css({ top: diffStr });
+                  });
+              },
+              onChange:function(hsb,hex,rgb,el,bySetColor) {
+            	$(el).find(".ico").css('background','#'+hex);
+            	$scope.thematicStyleModel.labelColor = '#'+hex;
+              },
+              onHide:function(el) {
+            	 $scope.$apply();
+              }
+           });
+          
+          $("#label-halo-color").colpick({
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj){
+            	  var that = this;
+                  $('#modal01').scroll(function(){  
+                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                    var colPick = $(that);
+                    var diff = colPick.offset().top + colPick.height() + 2; 
+                    var diffStr = diff.toString() + "px";
+                    colorPicker.css({ top: diffStr });
+                  });
+              },
+              onChange:function(hsb,hex,rgb,el,bySetColor) {
+            	$(el).find(".ico").css('background','#'+hex);
+            	$scope.thematicStyleModel.labelHalo = '#'+hex;
+              },
+              onHide:function(el) {
+            	 $scope.$apply();
+              }
+           });
+        }, 100);
+	  }
+	}
 	 
 	function LayerLabel() {
 	    return {
 	      restrict: 'E',
 	      replace: true,
-	      templateUrl: '/partial/dashboard/dashboard-layer-form-label.jsp',    
+	      templateUrl : '/partial/dashboard/dashboard-layer-form-label.jsp',    
 	      scope: true,
-	      link: function (scope, element, attrs) {
-	    	  
-	    	  // set style of font labels in the dropdown to the font they represent
-	    	  setTimeout(function(){ 
-	    		  scope._injectFontStylesForDropdown();
-	    		  // format the partial
-		    	  jcf.customForms.replaceAll(element[0]);
-		    	  $(element[0]).show();
-		    	  
-		    	  //
-		    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
-		    	  //
-		    	  var enableValEl = document.getElementById("f51").previousSibling;
-		    	  enableValEl.onclick = function() { 
-		    		  var theEl = angular.element($(this).next()[0]);
-		    		  if($(this).hasClass("chk-checked")){
-		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-		    			  scope.setEnableValue(false); // manually set the model to false because the change event hasn't occured yet
-		    		  }
-		    		  else{
-		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-		    			  scope.setEnableValue(true); // manually set the model to true because the change event hasn't occured yet
-		    		  }
-		    	  };
-		    	  
-		    	  //
-		    	  // Setting up click events for checkboxes manually to hook the custom ui elements to the angular model binding.
-		    	  //
-		    	  var enableLabelEl = document.getElementById("f94").previousSibling;
-		    	  enableLabelEl.onclick = function() { 
-		    		  var theEl = angular.element($(this).next()[0]);
-		    		  if($(this).hasClass("chk-checked")){
-		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-		    			  scope.setEnableLabel(false); // manually set the model to false because the change event hasn't occured yet
-		    		  }
-		    		  else{
-		    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-		    			  scope.setEnableLabel(true); // manually set the model to true because the change event hasn't occured yet
-		    		  }
-		    	  };
-		    	  
-		    	  
-		    	  $("#label-text-color").colpick({
-		              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-		              onShow:function(colPickObj){
-		            	  var that = this;
-		                  $('#modal01').scroll(function(){  
-		                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-		                    var colPick = $(that);
-		                    var diff = colPick.offset().top + colPick.height() + 2; 
-		                    var diffStr = diff.toString() + "px";
-		                    colorPicker.css({ top: diffStr });
-		                  });
-		              },
-		              onChange:function(hsb,hex,rgb,el,bySetColor) {
-		            	$(el).find(".ico").css('background','#'+hex);
-		            	scope.thematicStyleModel.labelColor = '#'+hex;
-		              },
-		              onHide:function(el) {
-		            	 scope.$apply();
-		              }
-		           });
-		          
-		          $("#label-halo-color").colpick({
-		              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-		              onShow:function(colPickObj){
-		            	  var that = this;
-		                  $('#modal01').scroll(function(){  
-		                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-		                    var colPick = $(that);
-		                    var diff = colPick.offset().top + colPick.height() + 2; 
-		                    var diffStr = diff.toString() + "px";
-		                    colorPicker.css({ top: diffStr });
-		                  });
-		              },
-		              onChange:function(hsb,hex,rgb,el,bySetColor) {
-		            	$(el).find(".ico").css('background','#'+hex);
-		            	scope.thematicStyleModel.labelHalo = '#'+hex;
-		              },
-		              onHide:function(el) {
-		            	 scope.$apply();
-		              }
-		           });
-		    	  
-	    	  }, 100); // end timeout
-	    
+	      controller : LayerLabelController,
+	      controllerAs : 'ctrl',
+	      link: function (scope, element, attrs, ctrl) {
+	        ctrl.init(element);
 	      }
 	    };    
 	 };
@@ -383,7 +352,7 @@
 	 
 	 /**
 	  * Directive for dynamically setting secondary aggregation method dropdown 
-	  * when user slects a secondary attribute.
+	  * when user selects a secondary attribute.
 	  */
 	 function RebuildSecodaryAggMethodDropdown($compile){
 		    return function(scope, element, attrs){
@@ -1668,7 +1637,7 @@
 	};
 	
 	 
-	angular.module("dashboard-layer-form", ["dashboard", "layer-form-service"]);
+	angular.module("dashboard-layer-form", ["dashboard", "styled-inputs", "layer-form-service"]);
 	angular.module("dashboard-layer-form")
 		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
 		.directive('layerNameInput', LayerNameInput)

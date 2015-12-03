@@ -46,53 +46,53 @@
 <!-- Include the types of this form to get the default values the MdAction needs -->
 <mjl:component param="style" item="${style}"></mjl:component>
 
-    <div id="DashboardLayer-mainDiv" class="modal-dialog" 
-    	ng-controller="LayerFormController" 
-    	ng-init="init('${layer.id}', '${style.newInstance}', '${layer.geoNodeId}', '${mdAttributeId}', '${mapId}' )">
-      <div class="modal-content">
-        <div class="heading">
-          <c:if test="${style.newInstance}">
-            <h1><gdb:localize key="DashboardThematicLayer.form.newHeading"/>${activeMdAttributeLabel}</h1>          
-          </c:if>
-          <c:if test="${!style.newInstance}">
-            <h1><gdb:localize key="DashboardThematicLayer.form.editHeading"/>${activeMdAttributeLabel}</h1>          
-          </c:if>
-        </div>
-          <fieldset>
-          
-          <c:if test="${errorMessage != null || errorMessageArray != null}">
-            <div class="row-holder">
-              <div class="label-holder">
-              </div>
-              <div class="holder">
-                <%@include file="../../../../../../templates/inlineError.jsp" %>
-              </div>
-            </div>
-          </c:if>
-            
-            
-            <layer-name-input></layer-name-input>
-            
-			<layer-label></layer-label>
-
-            <layer-geo-node></layer-geo-node>
-            
-			<layer-aggregation></layer-aggregation>
-			
-   			<layer-types></layer-types>
-   
-			<layer-types-style></layer-types-style>
-
-			<legend-options></legend-options>
-
-			<form-action-buttons></form-action-buttons>
-
-			<div>
-				<!-- LEAVE THIS MJL:COMPONENT HERE! IT IS NEEDED TO STORE LAYER ID FOR SUBMIT/CANCEL ACTIONS -->
-				<mjl:component param="layer" item="${layer}"></mjl:component>
-			</div>
-		</fieldset>
-      </div>
+<div id="DashboardLayer-mainDiv" class="modal-dialog" 
+  ng-controller="LayerFormController" 
+  ng-init="init('${layer.id}', '${style.newInstance}', '${layer.geoNodeId}', '${mdAttributeId}', '${mapId}' )">
+  <div class="modal-content">
+    <div class="heading">
+      <c:if test="${style.newInstance}">
+        <h1><gdb:localize key="DashboardThematicLayer.form.newHeading"/>${activeMdAttributeLabel}</h1>          
+      </c:if>
+      <c:if test="${!style.newInstance}">
+        <h1><gdb:localize key="DashboardThematicLayer.form.editHeading"/>${activeMdAttributeLabel}</h1>          
+      </c:if>
     </div>
+    <fieldset>
+          
+      <c:if test="${errorMessage != null || errorMessageArray != null}">
+        <div class="row-holder">
+          <div class="label-holder">
+          </div>
+          <div class="holder">
+            <%@include file="../../../../../../templates/inlineError.jsp" %>
+          </div>
+        </div>
+      </c:if>
+            
+            
+      <layer-name-input></layer-name-input>
+            
+      <layer-label></layer-label>
+
+      <layer-geo-node></layer-geo-node>
+            
+      <layer-aggregation></layer-aggregation>
+      
+      <layer-types></layer-types>
+   
+      <layer-types-style></layer-types-style>
+
+      <legend-options></legend-options>
+
+      <form-action-buttons></form-action-buttons>
+
+      <div>
+        <!-- LEAVE THIS MJL:COMPONENT HERE! IT IS NEEDED TO STORE LAYER ID FOR SUBMIT/CANCEL ACTIONS -->
+        <mjl:component param="layer" item="${layer}"></mjl:component>
+      </div>
+    </fieldset>
+  </div>
+</div>
     
 
