@@ -162,7 +162,7 @@
         }
         else{
         	// Model properties that do not map to server object properties
-        	//console.log(key);
+        	console.log(key);
         }
       }
     }

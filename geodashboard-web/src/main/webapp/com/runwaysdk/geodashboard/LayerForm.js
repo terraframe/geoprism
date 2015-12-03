@@ -259,19 +259,19 @@
        */
       // TODO:  This will be replaced by scraping the model in angular
       _updateCategoriesJSON : function(inputId) {
-        var styleArr = new Object();
-        styleArr.catLiElems = []; // create an empty array to prevent system errors if the ontolgy tree doesnt render leaving catLiElems undefined
-        
-        for(var i=0; i<this._categoryWidgets.length; i++){
-          if(this._categoryWidgets[i]._storeId === inputId){
-            styleArr.catLiElems = this._categoryWidgets[i].getCategories();
-           
-            // set the hidden input element in the layer creation/edit form 
-            $(this._categoryWidgets[i]._storeId).data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
-          }
-        }
-           
-        return  styleArr;
+//        var styleArr = new Object();
+//        styleArr.catLiElems = []; // create an empty array to prevent system errors if the ontolgy tree doesnt render leaving catLiElems undefined
+//        
+//        for(var i=0; i<this._categoryWidgets.length; i++){
+//          if(this._categoryWidgets[i]._storeId === inputId){
+//            styleArr.catLiElems = this._categoryWidgets[i].getCategories();
+//           
+//            // set the hidden input element in the layer creation/edit form 
+//            $(this._categoryWidgets[i]._storeId).data("categoriesstore", encodeURIComponent(JSON.stringify(styleArr)));
+//          }
+//        }
+//           
+//        return  styleArr;
       }
     }
   });

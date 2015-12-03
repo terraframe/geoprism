@@ -154,7 +154,9 @@
     	 
     	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
     	 if(dynamicDataModel.newInstance){
-             
+    	    service.thematicLayerDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer();
+    		service.thematicStyleDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle();
+    			
     		 service.setAggregationStrategy(dynamicDataModel.newInstance, dynamicDataModel);
     		 
 	         runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
