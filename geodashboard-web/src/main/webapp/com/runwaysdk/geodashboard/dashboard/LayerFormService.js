@@ -71,63 +71,11 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getOptionsJSON(request, attributeId, dashboardId);
     }
     
-    
-    
-
-    
-    
-    
-    
-//    service.getAndPopulateLayer = function() {
-//
-//    	 var onSuccess = function(response) {  
-//    	   service.thematicLayerDTO = response;
-//    	   runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
-//    	   
-//    	   service.getStrategy();
-//    	 }    
-//
-//    	 var onFailure = function(response) { console.log(response) };
-//
-//    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
-//    	 com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.get(layerRequest, thematicLayerModel.id);
-//    }
-//
-//    service.getStrategy = function() {
-//    	 var onSuccess = function(response) {      
-//    	   service.aggregationStrategyDTO = response;
-//    	     runwayService.populate(service.aggregationStrategyDTO, {
-//    	       "id": dynamicDataModel.aggregationStrategy.id, 
-//    	       "universal": dynamicDataModel.aggregationStrategy.value
-//    	   });
-//    	     
-//    	   service.getAndPopulateStyle();
-//    	 }
-//    	                       
-//    	 var onFailure = function(response) { console.log(response) }; 
-//    	 
-//    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
-//    	 com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy.get(request, dynamicDataModel.aggregationStrategy.id);
-//    }
-//
-//    service.getAndPopulateStyle = function() {
-//    	 var onSuccess = function(response) {      
-//    	   service.thematicStyleDTO = response;
-//    	   runwayService.populate(service.thematicStyleDTO, thematicLayerModel);
-//    	                           
-//    	   // Finally apply the layer
-//    	   service.apply();
-//    	 };  
-//
-//    	 var onFailure = function(response) { console.log(response) };
-//
-//    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
-//    	 com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.get(request, thematicStyleModel.id);  
-//    }
 
     service.apply = function(request, state) {
     	 service.thematicLayerDTO.applyWithStyleAndStrategy(request, service.thematicStyleDTO, state.mapId, service.aggregationStrategyDTO, state);
     }
+    
     
     service.setAggregationStrategy = function(newInstance, dynamicDataModel) {
 		 
@@ -145,9 +93,6 @@
        	 	"universal": dynamicDataModel.aggregationStrategy.value
         });
     };
-    
-    
-    
     
     
     service.applyWithStyle = function(thematicLayerModel, thematicStyleModel, dynamicDataModel, state, element, onSuccess, onFailure) {
@@ -183,7 +128,6 @@
 	 	   	    	service.thematicStyleDTO = response;
 	 	   	    	runwayService.populate(service.thematicStyleDTO, thematicStyleModel);
 	 	   	    	
- 	   	    		// Finally apply the layer
  	   	    		// IMPORTANT: We need all of the previous ajax requests to finish before applying
  	   	    		service.apply(request, state);
 	   	    	};  

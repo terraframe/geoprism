@@ -236,13 +236,11 @@
 		    	
 			    		  if(type === 'CATEGORYPOINT'){
 					          var targetEl = scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID;
-					          var catsJSONObj = scope.dynamicDataModel.pointCategoriesStore;
-					          scope.renderOntologyTree(targetEl, catsJSONObj);
+					          scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPointStyles));
 			    		  }
 			    		  else if(type === 'CATEGORYPOLYGON'){
 			    			  var targetEl = scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID;
-			    			  var catsJSONObj = scope.dynamicDataModel.polyCategoriesStore;
-			    			  scope.renderOntologyTree(targetEl, catsJSONObj);
+			    			  scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPolygonStyles));
 			    		  }
 			    	  	}
 		    	  
@@ -488,9 +486,7 @@
 	    	selectableMap : {},
 	    	termType : '',
 	    	relationshipType : '',
-	    	thematicAttributeDataType : '', 
-	    	polyCategoriesStore : {catLiElems:[]},
-	    	pointCategoriesStore : {catLiElems:[]}
+	    	thematicAttributeDataType : ''
 	    };
 
 	    
@@ -810,8 +806,9 @@
 	    controller.setLayerState = function(state) {
 	    	
 	    	$scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy;
-    		$scope.dynamicDataModel.polyCategoriesStore = JSON.parse(state.styles[0].categoryPolygonStyles);
-    		$scope.dynamicDataModel.pointCategoriesStore = JSON.parse(state.styles[0].categoryPointStyles);
+	    	
+	    	$scope.setPolygonCategories(JSON.parse(state.styles[0].categoryPolygonStyles).catLiElems);
+	    	$scope.setPointCategories(JSON.parse(state.styles[0].categoryPointStyles).catLiElems);
 	    	
 	    	$scope.thematicLayerModel.name = state.layerName;
     		$scope.thematicLayerModel.layerType = state.featureStrategy;
