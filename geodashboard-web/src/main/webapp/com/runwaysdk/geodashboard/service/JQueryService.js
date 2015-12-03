@@ -21,8 +21,16 @@
   function JQueryService() {
     var service = {};    
     
-    service.animate = function(qString, properties, duration, complete) {
-      $(qString).animate(properties, duration, complete);            	
+    service.animate = function(element, properties, duration, complete) {
+      $(element).animate(properties, duration, complete);            	
+    }
+    
+    service.sortable = function(element, update) {
+      element.ready(function(){
+        element.sortable({
+          update: update
+        });
+      });                
     }
     
     return service;

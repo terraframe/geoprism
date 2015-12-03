@@ -32,8 +32,8 @@
         
       if(controller.expanded){
         jQueryService.animate("#control-form", {left: "-=236"}, speed, function(){
-            controller.expanded = false;
-            $scope.$apply();
+          controller.expanded = false;
+          $scope.$apply();
         });
         
         jQueryService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=236"}, speed);
@@ -423,16 +423,14 @@
     }    
   }   
   
-  function LegendDragController(dashboardService) {
+  function LegendDragController($scope, dashboardService) {
     var controller = this;
 
-    controller.move = function(e,ui) {
+    controller.move = function(position) {      
       var layer = $scope.layer;
-        
-      var target = e.currentTarget;
-      var newPosition = $(target).position();
-      var x = newPosition.left;
-      var y = newPosition.top;
+      
+      var x = position.left;
+      var y = position.top;
         
       layer.legendXPosition = x;        
       layer.legendYPosition = y;   
@@ -460,7 +458,12 @@
             stack: ".legend-container"
           });
           
-          $(element).on('dragstop', ctrl.move); 
+          $(element).on('dragstop', function(e, ui){
+            var target = e.currentTarget;
+            var newPosition = $(target).position();
+            
+            ctrl.move(newPosition);
+          }); 
         });
 	  }
     }

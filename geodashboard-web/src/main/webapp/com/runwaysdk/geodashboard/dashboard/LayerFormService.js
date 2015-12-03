@@ -20,8 +20,6 @@
   
   function LayerFormService(runwayService) {
     var service = {};
-    service.thematicLayerDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer();
-    service.thematicStyleDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle();
     
     service.createRequest = function(onSuccess, onFailure){
         var request = new Mojo.ClientRequest({
@@ -73,33 +71,75 @@
         com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getOptionsJSON(request, attributeId, dashboardId);
     }
     
+
+    service.apply = function(request, state) {
+    	 service.thematicLayerDTO.applyWithStyleAndStrategy(request, service.thematicStyleDTO, state.mapId, service.aggregationStrategyDTO, state);
+    }
     
     
-    
+    service.setAggregationStrategy = function(newInstance, dynamicDataModel) {
+		 
+		if(dynamicDataModel.aggregationStrategy.type.indexOf("UniversalAggregationStrategy")  > -1){
+	   		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy();
+	   	}
+	   	else if(dynamicDataModel.aggregationStrategy.type.indexOf("GeometryAggregationStrategy")  > -1){
+	   		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy();
+	   	}	
+	        
+        // the universal property will be skipped for geometry agg in the populate method because that property
+        // doesn't exist on the server object.
+        runwayService.populate(service.aggregationStrategyDTO, {
+       	 	"id": dynamicDataModel.aggregationStrategy.id, 
+       	 	"universal": dynamicDataModel.aggregationStrategy.value
+        });
+    };
     
     
     service.applyWithStyle = function(thematicLayerModel, thematicStyleModel, dynamicDataModel, state, element, onSuccess, onFailure) {
-    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
     	 
-    	 if(dynamicDataModel.aggregationStrategy.type.indexOf("UniversalAggregationStrategy")  > -1){
-    		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy();
+    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    	 if(dynamicDataModel.newInstance){
+    	    service.thematicLayerDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer();
+    		service.thematicStyleDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle();
+    			
+    		 service.setAggregationStrategy(dynamicDataModel.newInstance, dynamicDataModel);
+    		 
+	         runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
+	         runwayService.populate(service.thematicStyleDTO, thematicStyleModel);
+	         
+	         service.apply(request, state);
     	 }
-    	 else if(dynamicDataModel.aggregationStrategy.type.indexOf("GeometryAggregationStrategy")  > -1){
-    		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy();
-    	 }			
-
-         runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
-         runwayService.populate(service.thematicStyleDTO, thematicStyleModel);
-         
-         // the universal property will be skipped for geometry agg in the populate method because that property
-         // doesn't exist on the server object.
-         runwayService.populate(service.aggregationStrategyDTO, {
-        	 "id": dynamicDataModel.aggregationStrategy.id, 
-        	 "universal": dynamicDataModel.aggregationStrategy.value
-         	}
-         );
-
-         service.thematicLayerDTO.applyWithStyleAndStrategy(request, service.thematicStyleDTO, state.mapId, service.aggregationStrategyDTO, state);
+    	 else{
+    		 var layerSuccess = function(response) {    
+    			service.thematicLayerDTO = response;
+    			
+    			// get/store saved layers agg strategy
+	    		var existingLayerAggStrat = response.attributeMap.aggregationStrategy.value;
+	    		
+	    		// populate the dto
+	   	    	runwayService.populate(service.thematicLayerDTO, thematicLayerModel);
+	   	    	
+	   	    	// add the agg strategy back to the dto after it has been populated from the model
+	   	    	service.thematicLayerDTO.setValue('aggregationStrategy', existingLayerAggStrat);
+	    		   
+   	    		service.setAggregationStrategy(dynamicDataModel.newInstance, dynamicDataModel);
+ 	   	    	
+	   	    	var styleSuccess = function(response) {      
+	 	   	    	service.thematicStyleDTO = response;
+	 	   	    	runwayService.populate(service.thematicStyleDTO, thematicStyleModel);
+	 	   	    	
+ 	   	    		// IMPORTANT: We need all of the previous ajax requests to finish before applying
+ 	   	    		service.apply(request, state);
+	   	    	};  
+	     		var styleFailure = function(response) { console.log(response); }; 
+	     		var styleRequest = runwayService.createRequest(styleSuccess, styleFailure);
+	    		com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.get(styleRequest, thematicStyleModel.id);
+	   	     };  
+    		 var layerFailure = function(response) { console.log(response); }; 
+    		 var layerRequest = runwayService.createRequest(layerSuccess, layerFailure);
+    		 com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.get(layerRequest, thematicLayerModel.id);
+    	 }
+    	 
     }
     
     

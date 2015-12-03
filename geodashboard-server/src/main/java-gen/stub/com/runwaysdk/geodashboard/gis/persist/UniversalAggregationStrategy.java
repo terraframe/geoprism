@@ -126,6 +126,7 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
       JSONObject object = new JSONObject();
       object.put("type", this.getClass().getSimpleName());
       object.put("value", this.getUniversalId());
+      object.put("id", this.getId());
 
       return object;
     }

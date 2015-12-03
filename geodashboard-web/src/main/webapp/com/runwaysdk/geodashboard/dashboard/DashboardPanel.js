@@ -18,7 +18,7 @@
  */
 (function(){
 	
-  function DashboardPanelController($scope, $timeout, dashboardService) {
+  function DashboardPanelController($scope, $timeout, jQueryService) {
     var controller = this;
     controller.expanded = true;
     
@@ -26,30 +26,28 @@
       var speed = 500;
         
       if(controller.expanded){
-        $("#dashboardMetadata").animate({right: "-=300"}, speed, function() {
+        jQueryService.animate("#dashboardMetadata", {right: "-=300"}, speed, function(){
           controller.expanded = false;
-          
           $scope.$apply();
         });
-          
-        // Report Panel background
-        $("#report-viewport").animate({marginRight: "0px"}, speed);
-          
-        // Repprt panel toolbar
-        $("#report-toolbar").animate({marginRight: "0px"}, speed);
-      }
-      else{
-        $("#dashboardMetadata").animate({right: "+=300"}, speed, function() {
-          controller.expanded = true;
 
-          $scope.$apply();          
-        });
-          
         // Report Panel background
-        $("#report-viewport").animate({marginRight: "300px"}, speed);
+        jQueryService.animate("#report-viewport", {marginRight: "0px"}, speed);
         
         // Repprt panel toolbar
-        $("#report-toolbar").animate({marginRight: "300px"},speed);
+        jQueryService.animate("#report-toolbar", {marginRight: "0px"}, speed);
+      }
+      else{    	  
+        jQueryService.animate("#dashboardMetadata", {right: "+=300"}, speed, function(){
+          controller.expanded = true;
+          $scope.$apply();
+        });
+
+        // Report Panel background
+        jQueryService.animate("#report-viewport", {marginRight: "300px"}, speed);
+            
+        // Repprt panel toolbar
+        jQueryService.animate("#report-toolbar", {marginRight: "300px"}, speed);
       }
     }
   }
@@ -69,7 +67,7 @@
     }    
   }  
 	
-  angular.module("dashboard-panel", ["dashboard-service", "dashboard-accordion"]);
+  angular.module("dashboard-panel", ["jquery-service", "dashboard-accordion"]);
   angular.module('dashboard-panel')
     .directive('dashboardPanel', DashboardPanel);  
 })();
