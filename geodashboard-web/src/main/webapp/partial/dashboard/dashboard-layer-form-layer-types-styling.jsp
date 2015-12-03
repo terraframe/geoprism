@@ -62,7 +62,7 @@
 	                          <span><gdb:localize key="DashboardLayer.form.color"/></span>
 	                          <div class="color-holder">
 	                            <a href="#" class="color-choice">
-	                              <span class="ico" style="background:{{thematicLayerModel.pointStroke}};">icon</span>
+	                              <span class="ico" style="background:{{thematicStyleModel.pointStroke}};">icon</span>
 	                              <span class="arrow">arrow</span>
 	                              <input type="text" style="display: none;" class="color-input" name="style.pointStroke" ng-model="thematicStyleModel.pointStroke" />
 	                            </a>
@@ -94,7 +94,7 @@
 		                    	<div class="cell">
 		                          <label for="basic-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
 		                          <div class="text">
-		                          	<input id="basic-point-radius-select" name="style.basicPointSize" type="text" value="{{thematicStyleModel.basicPointSize}}" placeholder="{{thematicStyleModel.basicPointSize}}"></input>
+		                          	<input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="thematicStyleModel.basicPointSize" placeholder="{{thematicStyleModel.basicPointSize}}"></input>
 		                          </div>
 		                        </div>
 	                      </div>
