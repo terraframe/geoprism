@@ -486,6 +486,7 @@
 	    $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
 	    	// TODO: possibly remove mapId
 	    	$scope.newInstance = (newInstance === 'true');
+	    	$scope.dynamicDataModel.newInstance = (newInstance === 'true');
 	    	$scope.thematicLayerModel.id = layerId;
 	    	$scope.thematicLayerModel.mdAttribute = mdAttributeId;
 	    	$scope.thematicLayerModel.geoNode = geoNodeId;
@@ -530,6 +531,7 @@
 	     * They are kept out of other models to keep those models replicating server models more closely.
 	     */
 	    $scope.dynamicDataModel = {
+	    	newInstance : true,
 	    	aggregationStrategyOptions : [],
 	    	aggregationStrategy : '', // using dynamicDataModel because the json representation is different from the actual model
 	    	aggregationMethods : [], 
