@@ -29,7 +29,7 @@
 	    	<div id="country-select-box" class="box">
 			    
 			    <!-- <label for="{{field.name}}" class="">{{field.label}}</label>  -->
-			    <styled-basic-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}"></styled-basic-select>               
+			    <styled-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}"></styled-select>               
 			    	
 <!-- 			      <select ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}"> -->
 <!-- 			        <option ng-repeat="option in field.options" value="{{option.value}}">{{option.displayLabel}}</option> -->
