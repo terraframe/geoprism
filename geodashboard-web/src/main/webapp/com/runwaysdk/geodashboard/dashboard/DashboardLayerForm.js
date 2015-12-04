@@ -18,6 +18,32 @@
  */
 (function(){
 	
+  function StyleStrokeController($scope) {
+    var controller = this;
+    
+    controller.getFormattedInt = function(n){
+      return Math.round(n*100);
+    };
+  }
+     
+  function StyleStroke($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/style-stroke.jsp',    
+      scope: {
+        pointStroke:'=',
+        pointStrokeWidth:'=',
+        pointStrokeOpacity:'='
+      },
+      controller : StyleStrokeController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    };    
+  };
+	
+	
 	
 	 function LayerNameInput() {
 	    return {
@@ -117,36 +143,12 @@
 	 function LayerAggregationController($scope) {
 	   var controller = this;
 	   
-	   console.log($scope.dynamicDataModel.aggregationMethods);
-	   console.log($scope.thematicLayerModel.aggregationType);
-	   
-       /**
-        * Get the aggregation type from the model based on an aggregation Value
-        * 
-        * @param aggStratVal : aggregation strategy value (not id)
-        */ 
-       controller.getAggregationStrategyType = function() {
-    	 var aggStratVal = $scope.dynamicDataModel.aggregationStrategy;
-         var aggStratOpts = $scope.dynamicDataModel.aggregationStrategyOptions;
-         
-         for(var i=0; i<aggStratOpts.length; i++){
-           var aggStrat = aggStratOpts[i];
-             
-           if(aggStrat.value === aggStratVal){
-             return aggStrat.type;
-           }
-         }
-           
-         return null;
-       }
-
        controller.showAggregationMethods = function() {
-         var type = controller.getAggregationStrategyType();
+    	 var strategy = $scope.getCurrentAggregationStrategy();
          
-         return (type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
+         return (strategy != null && strategy.type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
        }
-	 }
-	 
+	 }	 
 	 
 	 function LayerAggregation() {
 	    return {
@@ -169,11 +171,6 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  setTimeout(function(){ 
-				  // jcf.customForms.replaceAll(element[0]);
-				  $(element[0]).show();
-			  }, 100);
 	      }
 	    };    
 	};
@@ -185,7 +182,7 @@
 			  // It processes just the layer type selector widget
 			  // Timeout is a bit of a hack to make sure all angular based html is finished
 			  setTimeout(function(){ 
-				  // jcf.customForms.replaceAll(element[0]);
+				   jcf.customForms.replaceAll(element[0]);
 			  }, 100);
 		  };
 	};
@@ -1250,13 +1247,19 @@
 	    });
 	    
 	    /*
-	     * When the aggregation strategy is changed
-	     * the list of possible geoNodes needs to be
-	     * updated
+	     * When the aggregation strategy is changed the list of possible
+	     * geoNodes needs to be updated.
 	     */
 	    $scope.$watch("thematicLayerModel.geoNode", function(newValue, oldValue) {
-	    	$scope.getGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategy, newValue);
+	    	$scope.getGeographicAggregationOptions(newValue);
 	    });
+	    
+	    $scope.$watch("dynamicDataModel.aggregationStrategy", function(newValue, oldValue) {
+	    	if(newValue != null && newValue.length > 0) {
+	            $scope._setLayerTypeOptions(newValue);
+	    	}
+	    });
+
 
 	    
 	    
@@ -1455,14 +1458,8 @@
          * 
          * @param layer : the layer object representing the layer the form is targeting 
          */
-	    $scope.getGeographicAggregationOptions = function(aggregationStrategy, geoNodeId){
-	    	$timeout(function(){
-	            var selectedOption = null;
-	            
-	            if(aggregationStrategy){
-	                selectedOption = aggregationStrategy;
-	            }
-	            
+	    $scope.getGeographicAggregationOptions = function(geoNodeId){
+	    	$timeout(function(){	            
 	            var geoNodes = $scope.dynamicDataModel.nodeAggregationStrategiesLookup;
 	            
 	            if(geoNodes != null) {
@@ -1473,7 +1470,7 @@
 	                		var strategies = geoNode.aggregationStrategies;
 	                		
 	                		// Set options on the model
-	                		$scope.setGeographicAggregationOptions(strategies, selectedOption);
+	                		$scope.setGeographicAggregationOptions(strategies);
 	                	}
 	                }            	
 	            }
@@ -1488,24 +1485,46 @@
          * @aggregations - JSON representing geo aggregation levels
          * @selectedOption - selected option <object> from the geographic aggregation level dropdown
          */
-         $scope.setGeographicAggregationOptions = function(aggregations, selectedOption) {
-             // Re-sets the options property on the model
-        	 
-        	 $scope.setAggregationStrategyOptions(aggregations);
-             $scope.$apply();
-             
-//             $scope._setLayerTypeOptions($scope.dynamicDataModel.aggregationStrategy);
+         $scope.setGeographicAggregationOptions = function(aggregations) {
+           $timeout(function(){
+             // Re-sets the options property on the model           
+             $scope.setAggregationStrategyOptions(aggregations);
+             $scope.$apply();             
+           }, 1);
          };
          
+         
+         $scope.getAggregationStrategy = function(value) {
+             var options = $scope.dynamicDataModel.aggregationStrategyOptions;
+             
+             for(var i=0; i < options.length; i++){
+               var strategy = options[i];
+                 
+               if(strategy.value === value){
+                 return strategy;
+               }
+             }
+               
+             return null;        	 
+         }
+         
+         $scope.getCurrentAggregationStrategy = function() {
+        	 var value = $scope.dynamicDataModel.aggregationStrategy;
+        	 
+        	 return $scope.getAggregationStrategy(value);
+         }
          
          /**
           * Populate the layer type block based on the selection of the geonode and geo aggregation level dropdown
           * 
           * @selectedOption - selected option <object> from the geographic aggregation level dropdown
           */
-         $scope._setLayerTypeOptions = function(selectedOption) {
-           var type = selectedOption.type;
-           // TODO: Move this data into the model
+         $scope._setLayerTypeOptions = function(value) {
+        	 
+           var strategy = $scope.getCurrentAggregationStrategy();
+           
+           var type = strategy.type;
+           
            var layerTypesJSON = $scope.dynamicDataModel.layerTypeNames;
            
            if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
@@ -1522,8 +1541,7 @@
                $("." + lType).hide();
              }
              
-             // TODO: replace data attribute with model property
-             var geomTypes = selectedOption.geomTypes;
+             var geomTypes = strategy.geomTypes;
              
              for(var i=0; i<geomTypes.length; i++){
                var geomType = geomTypes[i];
@@ -1622,6 +1640,7 @@
 	angular.module("dashboard-layer-form", ["dashboard", "styled-inputs", "layer-form-service"]);
 	angular.module("dashboard-layer-form")
 		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
+		.directive('styleStroke', StyleStroke)
 		.directive('layerNameInput', LayerNameInput)
 		.directive('layerLabel', LayerLabel)
 		.directive('layerGeoNode', LayerGeoNode)

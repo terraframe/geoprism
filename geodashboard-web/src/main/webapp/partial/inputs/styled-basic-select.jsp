@@ -19,17 +19,12 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div>
-  <div class="select-holder">
-    <div class="select-box" ng-class="{{class}}">
-      <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
-        <span class="left"></span>
-        <span class="center jcf-unselectable" ng-style="ctrl.style(model)">{{model}}</span>
-        <a class="select-opener"></a>
-      </span>
-      <select ng-model="model" name="{{name}}" class="method-select jcf-hidden" ng-options="opt as opt for opt in options track by opt"></select>
-    </div>
-  </div>
+<div class="select-box" ng-class="selectClass">
+  <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
+    <span class="left"></span>
+    <span class="center jcf-unselectable" ng-style="ctrl.style(model)">{{model}}</span>
+    <a class="select-opener"></a>
+  </span>
   <div ng-show="ctrl.expand" style="position: fixed;" ng-style="{'top' : ctrl.offset.top + 35, 'width' : ctrl.width}" class="select-options drop-method-select">
     <div class="drop-holder">
       <div class="drop-list">

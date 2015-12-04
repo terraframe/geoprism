@@ -19,7 +19,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="select-box">
+<div class="select-box" ng-class="selectClass">
   <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
     <span class="left"></span>
     <span class="center jcf-unselectable">{{ctrl.label}}</span>

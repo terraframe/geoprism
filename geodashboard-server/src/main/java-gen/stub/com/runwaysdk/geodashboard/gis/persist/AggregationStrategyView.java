@@ -23,13 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.MappableClass;
 import com.runwaysdk.geodashboard.MappableClassGeoNode;
 import com.runwaysdk.geodashboard.MappableClassGeoNodeQuery;
-import com.runwaysdk.geodashboard.util.EscapeUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -84,6 +85,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
           view.setAggregationType(UniversalAggregationStrategy.CLASS);
           view.setValue(universal.getId());
           view.setDisplayLabel(universal.getDisplayLabel().getValue());
+          view.setAvailableGeometryTypes(new JSONArray().toString());
 
           list.add(view);
         }
@@ -104,6 +106,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       view.setDisplayLabel(label);
 
       JSONArray geomTypesJSONArr = new JSONArray();
+      
       MdAttribute geomAttr = node.getGeometryAttribute();
       if (geomAttr != null)
       {
@@ -122,7 +125,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
         geomTypesJSONArr.put(polyAttr.getAttributeName());
       }
 
-      view.setAvailableGeometryTypes(EscapeUtil.escapeHTMLAttribute(geomTypesJSONArr.toString()));
+      view.setAvailableGeometryTypes(geomTypesJSONArr.toString());
 
       list.add(view);
     }
@@ -150,5 +153,24 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
     }
 
     return attribute.getDisplayLabel().getValue();
+  }
+
+  public JSONObject toJSON() throws JSONException
+  {
+    JSONObject object = new JSONObject();
+    String aggStratId = this.getId();
+    String aggStratLabel = this.getDisplayLabel();
+    String aggType = this.getAggregationType();
+    String aggValue = this.getValue();
+
+    JSONArray aggGeomTypes = new JSONArray(this.getAvailableGeometryTypes());
+
+    object.put("id", aggStratId);
+    object.put("label", aggStratLabel);
+    object.put("type", aggType);
+    object.put("value", aggValue);
+    object.put("geomTypes", aggGeomTypes);
+
+    return object;
   }
 }

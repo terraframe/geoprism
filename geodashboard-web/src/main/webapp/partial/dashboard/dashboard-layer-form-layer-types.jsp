@@ -20,39 +20,24 @@
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
-	            <div id="geom-type-holder" class="row-holder" style="display:none">  
-	              <div class="label-holder style04">
-	                <strong><gdb:localize var="dl_form_chooseLayerType" key="DashboardThematicLayer.form.chooseLayerType"/>${dl_form_chooseLayerType}</strong>
-	              </div>
-	              <div class="holder style04">
-	                <ul class="nav-tabs type-tabs">
-		                
-			            <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{thematicLayerModel.layerType}}' }" layer-types-selection-directive>
-			            	<!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
-			            	<a href="#" data-gdb-tab-type="{{type}}"> 
-								<!-- ng-checked="'{{type}}' == '{{thematicLayerModel.layerType}}'"  NG-CHECKED NOT INTENDED TO BE USED WITH NG-MODEL-->
-			                	<input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="thematicLayerModel.layerType"></input>
-			                    <label for="radio{{$index}}">{{dynamicDataModel.layerTypeLabels[$index]}}</label>
-			            	</a>
-			            </li>
-		                
-<%-- 		                <c:forEach items="${layerTypeNames}" var="layerTypeName" varStatus="loop"> --%>
-<%-- 			                  <li id="${layerTypeName}"  class="${layerTypeName}   --%>
-<%-- 			                    <c:if test="${layerTypeName == activeLayerTypeName}"> --%>
-<!-- 			                        active -->
-<!-- 			                    </c:if> -->
-<!-- 			                    	" style="display:none;"> -->
-<%-- 			                    	<a href="#" data-toggle="tab" data-gdb-tab-type="${layerTypeName}"> --%>
-<!-- 			                      	<input -->
-<%-- 			                        	<c:if test="${layerTypeName == activeLayerTypeName}"> --%>
-<!-- 			                          		checked="checked" -->
-<!-- 			                        	</c:if> -->
-<%-- 			                        	id="radio${loop.index}" name="layer.layerType" value="${layerTypeName}" type="radio"> --%>
-<!-- 			                      	</input> -->
-<%-- 			                      	<label for="radio${loop.index}">${layerTypeLabels[loop.index]}</label> --%>
-<!-- 			                    	</a> -->
-<!-- 			                  </li> -->
-<!-- 		                </c:forEach> -->
-	                </ul>
-	              </div>
-	            </div>
+<div id="geom-type-holder" class="row-holder">  
+  <div class="label-holder style04">
+    <strong><gdb:localize key="DashboardThematicLayer.form.chooseLayerType"/></strong>
+  </div>  
+  <div class="holder style04">
+    <ul class="nav-tabs type-tabs">
+      
+      <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{thematicLayerModel.layerType}}' }" layer-types-selection-directive>
+    
+        <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
+        <a href="#" data-gdb-tab-type="{{type}}"> 
+      
+          <!-- ng-checked="'{{type}}' == '{{thematicLayerModel.layerType}}'"  NG-CHECKED NOT INTENDED TO BE USED WITH NG-MODEL-->
+          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="thematicLayerModel.layerType"></input>
+          <label for="radio{{$index}}">{{dynamicDataModel.layerTypeLabels[$index]}}</label>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
