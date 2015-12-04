@@ -76,21 +76,37 @@
     	 service.thematicLayerDTO.applyWithStyleAndStrategy(request, service.thematicStyleDTO, state.mapId, service.aggregationStrategyDTO, state);
     }
     
+    service.getCurrentAggregationStrategy = function(dynamicDataModel) {
+      var options = dynamicDataModel.aggregationStrategyOptions;
+   	  var value = dynamicDataModel.aggregationStrategy;
+        
+      for(var i=0; i < options.length; i++){
+        var strategy = options[i];
+            
+        if(strategy.value === value){
+          return strategy;
+        }
+      }
+          
+      return null;        	 
+    }
     
     service.setAggregationStrategy = function(newInstance, dynamicDataModel) {
+    	
+    	var strategy = service.getCurrentAggregationStrategy(dynamicDataModel);
 		 
-		if(dynamicDataModel.aggregationStrategy.type.indexOf("UniversalAggregationStrategy")  > -1){
+		if(strategy.type.indexOf("UniversalAggregationStrategy")  > -1){
 	   		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy();
 	   	}
-	   	else if(dynamicDataModel.aggregationStrategy.type.indexOf("GeometryAggregationStrategy")  > -1){
+	   	else if(strategy.type.indexOf("GeometryAggregationStrategy")  > -1){
 	   		 service.aggregationStrategyDTO = new com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy();
 	   	}	
 	        
         // the universal property will be skipped for geometry agg in the populate method because that property
         // doesn't exist on the server object.
         runwayService.populate(service.aggregationStrategyDTO, {
-       	 	"id": dynamicDataModel.aggregationStrategy.id, 
-       	 	"universal": dynamicDataModel.aggregationStrategy.value
+       	 	"id": strategy.id, 
+       	 	"universal": strategy.value
         });
     };
     

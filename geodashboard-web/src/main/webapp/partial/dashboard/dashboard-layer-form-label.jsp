@@ -32,11 +32,15 @@
     <div class="row-holder">
       <div class="cell style02">
         <label><gdb:localize key="DashboardLayer.form.font"/></label>
-        <styled-basic-select style="true" class="['font-select']" options="availableFonts" model="thematicStyleModel.labelFont" name="style.labelFont"></styled-basic-select>        
+        <div class="select-holder">
+          <styled-basic-select style="true" options="availableFonts" model="thematicStyleModel.labelFont" class="font-select"></styled-basic-select>
+        </div>
       </div>
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.labelSize"/></label>
-        <styled-basic-select class="['size-select']" options="ctrl.sizes" model="thematicStyleModel.labelSize" name="style.labelSize"></styled-basic-select>        
+        <div class="select-holder">
+          <styled-basic-select options="ctrl.sizes" model="thematicStyleModel.labelSize" class="size-select"></styled-basic-select>        
+        </div>
       </div>
                 
       <div class="cell">
@@ -61,7 +65,9 @@
                 
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.haloWidth"/></label>
-        <styled-basic-select class="['size-select']" options="ctrl.widths" model="thematicStyleModel.labelHaloWidth" name="style.haloWidth"></styled-basic-select>               
+        <div class="select-holder">
+          <styled-basic-select options="ctrl.widths" model="thematicStyleModel.labelHaloWidth" class="size-select"></styled-basic-select>
+        </div>        
       </div>
     </div>
   </div>

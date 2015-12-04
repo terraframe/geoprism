@@ -89,13 +89,16 @@
       scope: {
         model:'=',
         options:'=',
-        'class':'@',
-        name:'@',
         style:'@'        
       },
       controller : StyledBasicSelectController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+        scope.selectClass = {};
+          
+        if (attrs['class']) {
+          scope.selectClass = attrs['class'];        
+        }
       }
     }    
   }  
@@ -114,27 +117,28 @@
       $scope.label = 'label';  
     }   
     
-    // Set the default display label
-    if($scope.options != null) {
-      
-      if($scope.model != null) {        
-        for(var i = 0; i < $scope.options.length; i++) {
-          if($scope.options[i][$scope.value] == $scope.model) {
-            controller.label = $scope.options[i][$scope.label];
-          }
-        }
-      }
-      else if($scope.options.length > 0) {
-        $scope.model = $scope.options[0][$scope.value];
-        controller.label = $scope.options[0][$scope.label];        
-      }
-    }    
-    
     // Close the pop-up on any click
     angular.element($window).bind('click', function (event) {
       controller.expand = false;
       $scope.$apply();
     });
+    
+    controller.init = function() {
+      if($scope.options != null) {
+            
+        if($scope.model != null) {        
+          for(var i = 0; i < $scope.options.length; i++) {
+            if($scope.options[i][$scope.value] == $scope.model) {
+              controller.label = $scope.options[i][$scope.label];
+            }
+          }
+        }
+        else if($scope.options.length > 0) {
+          $scope.model = $scope.options[0][$scope.value];
+          controller.label = $scope.options[0][$scope.label];        
+        }
+      }          
+    }
     
     controller.toggle = function(e){
       e.stopPropagation();
@@ -154,18 +158,12 @@
     
     controller.isSelected = function(option) {
       return ($scope.model == option);
-    }
+    }  
     
-    controller.style = function(value) {
-      if($scope.style) {
-        return {'font-family' : value};
-      }
-      
-      return {};
-    }
-  }
-  
-  
+    $scope.$watch('options', function(){
+      controller.init();	
+    });
+  } 
   
   function StyledSelect() {
     return {
@@ -181,6 +179,11 @@
       controller : StyledSelectController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+        scope.selectClass = {};
+          
+        if (attrs['class']) {
+          scope.selectClass = attrs['class'];        
+        }
       }
     }    
   }  
