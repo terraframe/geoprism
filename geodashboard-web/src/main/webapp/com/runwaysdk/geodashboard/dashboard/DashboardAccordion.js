@@ -69,18 +69,12 @@
             }
           },
           minLength: 2
-        });
-        
-        scope.$watch('filter', function(){
-          if(scope.filter.value != null && scope.filter.value != '') {
-            input.val(scope.filter.label);          
-          }
-        }, true);
+        });        
       }
     }    
   }  
   
-  function TypeAccordionController($scope, $timeout, dashboardService) {
+  function TypeAccordionController($scope, $timeout, dashboardService, jQueryService) {
     var controller = this;
 
     controller.move = function(element, event, ui) {
@@ -103,15 +97,11 @@
     }
     
     controller.init = function(element) {
-      if(dashboardService.canEdit()) {      
-        element.ready(function(){
-          // Add support for sorting the dashboard data sets
-          element.sortable({
-            update: function(e, ui){
-              controller.move(element, e, ui)
-            }
-          });
-        });          
+      // Add support for sorting the dashboard data sets    	
+      if(element != null && dashboardService.canEdit()) {
+        jQueryService.sortable(element, function(e, ui){
+          controller.move(element, e, ui);
+        });        
       }
     }
   }
@@ -134,7 +124,7 @@
     }    
   }
   
-  function AttributePanelController($scope, dashboardService) {
+  function AttributePanelController($scope, dashboardService, jQueryService) {
     var controller = this;
     
     controller.move = function(element, event, ui) {
@@ -158,15 +148,10 @@
     }
     
     controller.init = function(element) {
-      if(dashboardService.canEdit()) {      
-        element.ready(function(){
-          // Add support for sorting the dashboard data sets
-          element.sortable({
-            update: function(e, ui){
-              controller.move(element, e, ui)
-            }
-          });
-        });          
+      if(element != null && dashboardService.canEdit()) {      
+        jQueryService.sortable(element, function(e, ui){
+          controller.move(element, e, ui);
+        });        
       }
     }
   }
@@ -500,7 +485,7 @@
     }    
   }
   
-  angular.module("dashboard-accordion", ["dashboard-service", "localization-service"]);
+  angular.module("dashboard-accordion", ["dashboard-service", "jquery-service", "localization-service"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)

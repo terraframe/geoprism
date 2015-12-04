@@ -19,15 +19,10 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-        
-<div class="row-holder" ng-cloak>
-  <div class="label-holder">
-    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
+<div class="check-block">
+  <div ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area chk-focus">
+    <span></span>
   </div>
-  <div class="holder" >
-	  <label class="none" >{{thematicLayerModel.name}}</label>
-	  <span class="text">
-		  <input type="text" ng-model="thematicLayerModel.name" name="layer.name" required>
-	  </span>
-  </div>
+  <input class="jcf-hidden" name="{{name}}" ng-model="model" type="checkbox">
+  <label>{{label}}</label>
 </div>

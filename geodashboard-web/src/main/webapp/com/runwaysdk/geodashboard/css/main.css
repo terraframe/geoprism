@@ -1882,6 +1882,38 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	margin:0 0 6px;
 	width:100%;
 }
+
+.font-select{
+  width: 100% !important;
+  margin:0;
+  font-size:13px;
+  line-height:16px;
+  background:#ddd;
+}
+
+.size-select{
+  width:62px !important;
+  margin:0;
+  font-size:13px;
+  line-height:16px;
+  background:#ddd;
+}
+
+.font-select.select-area .center,
+.size-select.select-area .center{
+  width:100%;
+  padding:5px 25px 5px 9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#333;
+}
+.font-select.select-area .select-opener,
+.size-select.select-area .select-opener{
+  top:10px;
+  right:7px;
+}
+
 .select-font-select.select-area{
 /* 	width:92px !important; */
 	width: 100% !important;
@@ -1891,6 +1923,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	line-height:16px;
 	background:#ddd;
 }
+
 .select-size-select.select-area{
 	width:62px !important;
 	height:28px;

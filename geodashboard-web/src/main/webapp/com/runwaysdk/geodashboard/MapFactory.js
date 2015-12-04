@@ -423,11 +423,11 @@
               this._cache[i] = baseObj;
                 
               var layer = {
-            layerId : i,
-            key : i,
+                layerId : i,
+                key : i,
                 isActive : false,
-            layerType : base.LAYER_SOURCE_TYPE,
-            layerLabel : this.localize(base.LOCLIZATION_KEY)
+                layerType : base.LAYER_SOURCE_TYPE,
+                layerLabel : this.localize(base.LOCLIZATION_KEY)
               };
               
               layers.push(layer);
@@ -702,7 +702,7 @@
           if(layers.length > 0) {
             var point = e.pixel;
             var coordinate = e.coordinate;
-        	  
+          
             var x = parseInt(point[0]);
             var y = parseInt(point[1]);
                         
