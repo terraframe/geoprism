@@ -175,9 +175,9 @@
           scope.dialogStyle.width = attrs.width;        
         }
         
-        if (attrs.height) {
-          scope.dialogStyle.height = attrs.height;        
-        }
+//        if (attrs.height) {
+//          scope.dialogStyle.height = attrs.height;        
+//        }
         
         scope.hideModal = function() {
           scope.show = false;

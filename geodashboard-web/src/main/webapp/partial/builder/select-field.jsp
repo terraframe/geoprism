@@ -22,7 +22,7 @@
 
 <div class="field-row clearfix">
   <div ng-if="field.writable">
-    <label class="com-runwaysdk-ui-factory-runway-Label com-runwaysdk-ui-factory-runway-Widget">{{field.label}}</label>
+    <label for="{{field.name}}" class="">{{field.label}}</label>
     <div class="select-holder">
       <select ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}">
         <option ng-repeat="option in field.options" value="{{option.value}}">{{option.displayLabel}}</option>
