@@ -31,53 +31,38 @@
     </div>
     <div class="row-holder">
       <div class="cell style02">
-        <label for="f55"><gdb:localize key="DashboardLayer.form.font"/></label>
-          <!-- 
-        <div class="select-holder">
-          <select class="font-select" name="style.labelFont" id="f55" ng-options="item for item in availableFonts track by item" ng-model="thematicStyleModel.labelFont">
-          </select>
-        </div>
-           -->
-        <styled-select options="availableFonts" model="thematicStyleModel.labelFont" name="style.labelFont"></styled-select>
+        <label><gdb:localize key="DashboardLayer.form.font"/></label>
+        <styled-basic-select style="true" class="['font-select']" options="availableFonts" model="thematicStyleModel.labelFont" name="style.labelFont"></styled-basic-select>        
+      </div>
+      <div class="cell">
+        <label><gdb:localize key="DashboardLayer.form.labelSize"/></label>
+        <styled-basic-select class="['size-select']" options="ctrl.sizes" model="thematicStyleModel.labelSize" name="style.labelSize"></styled-basic-select>        
       </div>
                 
-                <div class="cell">
-                  <label for="f95"><gdb:localize key="DashboardLayer.form.labelSize"/></label>
-                  <div class="select-holder">
-                  <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | intrange:1:31" ></select>
-                  </div>
-                </div>
+      <div class="cell">
+        <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
+        <div id="label-text-color" class="color-holder">
+          <a href="#" class="color-choice">
+            <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
+            <span class="arrow">arrow</span>
+          </a>
+        </div>
+      </div>
                 
-                <div class="cell">
-                  <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
-                  <div id="label-text-color" class="color-holder">
-                    <a href="#" class="color-choice">
-                      <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
-                      <span class="arrow">arrow</span>
-                    </a>
-                  </div>
-                </div>
+      <div class="cell">
+        <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
+        <div id="label-halo-color" class="color-holder">
+          <a href="#" class="color-choice">
+            <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
+            <span class="arrow">arrow</span>
+          </a>
+        </div>
+      </div>
                 
-                <div class="cell">
-                  <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
-                  <div id="label-halo-color" class="color-holder">
-                    <a href="#" class="color-choice">
-                      <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
-                      <span class="arrow">arrow</span>
-                    </a>
-                  </div>
-                </div>
-                
-                
-                <div class="cell">
-                <label for="f54"><gdb:localize var="dl_form_haloWidth" key="DashboardLayer.form.haloWidth"/>${dl_form_haloWidth}</label>
-                  <div class="select-holder">
-<!--                     <select ng-init="thematicStyleModel.labelHaloWidth = 2" class="size-select" id="f54" name="style.haloWidth" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:0:15" ></select> -->
-<select class="size-select" name="style.haloWidth" id="f54"
-  ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:1:16" >
-</select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="cell">
+        <label><gdb:localize key="DashboardLayer.form.haloWidth"/></label>
+        <styled-basic-select class="['size-select']" options="ctrl.widths" model="thematicStyleModel.labelHaloWidth" name="style.haloWidth"></styled-basic-select>               
+      </div>
+    </div>
+  </div>
+</div>

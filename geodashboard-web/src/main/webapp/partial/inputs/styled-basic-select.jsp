@@ -19,24 +19,30 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="select-box">
-  <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
-    <span class="left"></span>
-    <span class="center jcf-unselectable">{{ctrl.label}}</span>
-    <a class="select-opener"></a>
-  </span>
+<div>
+  <div class="select-holder">
+    <div class="select-box" ng-class="{{class}}">
+      <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
+        <span class="left"></span>
+        <span class="center jcf-unselectable" ng-style="ctrl.style(model)">{{model}}</span>
+        <a class="select-opener"></a>
+      </span>
+      <select ng-model="model" name="{{name}}" class="method-select jcf-hidden" ng-options="opt as opt for opt in options track by opt"></select>
+    </div>
+  </div>
   <div ng-show="ctrl.expand" style="position: fixed;" ng-style="{'top' : ctrl.offset.top + 35, 'width' : ctrl.width}" class="select-options drop-method-select">
     <div class="drop-holder">
       <div class="drop-list">
         <ul>
           <li ng-repeat="opt in options track by $index" rel="{{$index}}" class="jcfcalc"
-             ng-class="{'option-even':($index % 2 == 0), 'current-selected':ctrl.isSelected(opt[value]), 'item-selected':hovering}"
+             ng-style="ctrl.style(opt)"          
+             ng-class="{'option-even':($index % 2 == 0), 'current-selected':ctrl.isSelected(opt), 'item-selected':hovering}"
              ng-mouseenter="hovering=true"
              ng-mouseleave="hovering=false">
-            <a href="#" ng-click="ctrl.setValue(opt)"><span>{{opt[label]}}</span></a>
+            <a href="#" ng-click="ctrl.setValue(opt)"><span>{{opt}}</span></a>
           </li>
         </ul>
       </div>
     </div>
-  </div>
+  </div>  
 </div>

@@ -17,6 +17,8 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+	
+	
 	 function LayerNameInput() {
 	    return {
 	      restrict: 'E',
@@ -28,65 +30,23 @@
 	    };    
 	 };
 	
-	function LayerLabelController($scope, $timeout) {
+	function LayerLabelController($scope) {
 	  var controller = this;
+	  controller.sizes = []; 
+	  controller.widths = [];
 	  
-	  controller.init = function(element) {
-        $timeout(function(){
-  		  $scope._injectFontStylesForDropdown();
-  		  
-          // format the partial
-//          jcf.customForms.replaceAll(element[0]);
-//          $(element).show();
-
-
-    	  
-    	  $("#label-text-color").colpick({
-              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onShow:function(colPickObj){
-            	  var that = this;
-                  $('#modal01').scroll(function(){  
-                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                    var colPick = $(that);
-                    var diff = colPick.offset().top + colPick.height() + 2; 
-                    var diffStr = diff.toString() + "px";
-                    colorPicker.css({ top: diffStr });
-                  });
-              },
-              onChange:function(hsb,hex,rgb,el,bySetColor) {
-            	$(el).find(".ico").css('background','#'+hex);
-            	$scope.thematicStyleModel.labelColor = '#'+hex;
-              },
-              onHide:function(el) {
-            	 $scope.$apply();
-              }
-           });
-          
-          $("#label-halo-color").colpick({
-              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onShow:function(colPickObj){
-            	  var that = this;
-                  $('#modal01').scroll(function(){  
-                    var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                    var colPick = $(that);
-                    var diff = colPick.offset().top + colPick.height() + 2; 
-                    var diffStr = diff.toString() + "px";
-                    colorPicker.css({ top: diffStr });
-                  });
-              },
-              onChange:function(hsb,hex,rgb,el,bySetColor) {
-            	$(el).find(".ico").css('background','#'+hex);
-            	$scope.thematicStyleModel.labelHalo = '#'+hex;
-              },
-              onHide:function(el) {
-            	 $scope.$apply();
-              }
-           });
-        }, 100);
-	  }
+	  // Populate the potential font sizes
+      for(var i = 1; i < 31; i++) {
+        controller.sizes.push(i);
+      }
+      
+      // Populate the potential halo sizes
+      for(var i = 1; i < 16; i++) {
+        controller.widths.push(i);
+      }   
 	}
 	 
-	function LayerLabel() {
+	function LayerLabel($timeout) {
 	    return {
 	      restrict: 'E',
 	      replace: true,
@@ -95,12 +55,54 @@
 	      controller : LayerLabelController,
 	      controllerAs : 'ctrl',
 	      link: function (scope, element, attrs, ctrl) {
-	        ctrl.init(element);
+            $timeout(function(){
+              
+              $("#label-text-color").colpick({
+                    submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+                    onShow:function(colPickObj){
+                      var that = this;
+                        $('#modal01').scroll(function(){  
+                          var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                          var colPick = $(that);
+                          var diff = colPick.offset().top + colPick.height() + 2; 
+                          var diffStr = diff.toString() + "px";
+                          colorPicker.css({ top: diffStr });
+                        });
+                    },
+                    onChange:function(hsb,hex,rgb,el,bySetColor) {
+                      $(el).find(".ico").css('background','#'+hex);
+                      scope.thematicStyleModel.labelColor = '#'+hex;
+                    },
+                    onHide:function(el) {
+                      scope.$apply();
+                    }
+                 });
+                
+                $("#label-halo-color").colpick({
+                    submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+                    onShow:function(colPickObj){
+                      var that = this;
+                        $('#modal01').scroll(function(){  
+                          var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                          var colPick = $(that);
+                          var diff = colPick.offset().top + colPick.height() + 2; 
+                          var diffStr = diff.toString() + "px";
+                          colorPicker.css({ top: diffStr });
+                        });
+                    },
+                    onChange:function(hsb,hex,rgb,el,bySetColor) {
+                      $(el).find(".ico").css('background','#'+hex);
+                      scope.thematicStyleModel.labelHalo = '#'+hex;
+                    },
+                    onHide:function(el) {
+                      scope.$apply();
+                    }
+                 });
+              }, 100);
 	      }
 	    };    
 	 };
-	
-	
+	 
 	 function LayerGeoNode() {
 	    return {
 	      restrict: 'E',
@@ -108,49 +110,53 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-geonode.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
-				  $(element[0]).show();
-			  }, 100);
 	      }
 	    };    
 	 };
 	 
+	 function LayerAggregationController($scope) {
+	   var controller = this;
+	   
+	   console.log($scope.dynamicDataModel.aggregationMethods);
+	   console.log($scope.thematicLayerModel.aggregationType);
+	   
+       /**
+        * Get the aggregation type from the model based on an aggregation Value
+        * 
+        * @param aggStratVal : aggregation strategy value (not id)
+        */ 
+       controller.getAggregationStrategyType = function() {
+    	 var aggStratVal = $scope.dynamicDataModel.aggregationStrategy;
+         var aggStratOpts = $scope.dynamicDataModel.aggregationStrategyOptions;
+         
+         for(var i=0; i<aggStratOpts.length; i++){
+           var aggStrat = aggStratOpts[i];
+             
+           if(aggStrat.value === aggStratVal){
+             return aggStrat.type;
+           }
+         }
+           
+         return null;
+       }
+
+       controller.showAggregationMethods = function() {
+         var type = controller.getAggregationStrategyType();
+         
+         return (type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
+       }
+	 }
 	 
-	 function LayerAggregation(layerFormService) {
+	 
+	 function LayerAggregation() {
 	    return {
 	      restrict: 'E',
 	      replace: true,
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
 	      scope: true,
+	      controller : LayerAggregationController,
+	      controllerAs : 'ctrl',
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
-				  $(element[0]).show();
-			  }, 100);
-	    	  
-	    	  // TODO: get these from scope constants
-	    	  var geoNodeSelectId = "#geonode-select";
-	    	  var geoAggLevelId = "#agg-level-dd";
-	    	  var aggMedthodId = "#agg-method-dd";
-	          
-	    	  $(geoNodeSelectId).change(function(){ 
-	    		  scope.getGeographicAggregationOptions(scope.dynamicDataModel.aggregationStrategy, scope.thematicLayerModel.geoNode);
-	    	  });
-	    	  
-	    	  
-	    	  $(geoAggLevelId).change(function(e){ 
-	    		  // Hide aggregation dropdown when mapping against raw geometries (cant aggregate geometries)
-	    		  var type = scope.getAggregationStrategyType(e.currentTarget.selectedOptions[0].value);
-	              if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
-	            	  $(aggMedthodId).parent().parent().show();
-	              }
-	              else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
-	            	  $(aggMedthodId).parent().parent().hide();
-	              }
-	    	  });
 	      }
 	    };    
 	};
@@ -165,7 +171,7 @@
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
 	    	  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
+				  // jcf.customForms.replaceAll(element[0]);
 				  $(element[0]).show();
 			  }, 100);
 	      }
@@ -179,7 +185,7 @@
 			  // It processes just the layer type selector widget
 			  // Timeout is a bit of a hack to make sure all angular based html is finished
 			  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
+				  // jcf.customForms.replaceAll(element[0]);
 			  }, 100);
 		  };
 	};
@@ -196,7 +202,7 @@
 		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
 		      setTimeout(function(){
 		    	  // format the partial
-		    	  jcf.customForms.replaceAll(element[0]);
+		    	  // jcf.customForms.replaceAll(element[0]);
 		    	  
 		    	  if(scope.dynamicDataModel.isOntologyAttribute){
 			    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
@@ -289,7 +295,7 @@
 	      link: function (scope, element, attrs) {
 	    	  // format the partial
 	    	  setTimeout(function(){ 
-				  jcf.customForms.replaceAll(element[0]);
+				  // jcf.customForms.replaceAll(element[0]);
 			  }, 100);
 	    	  
 	    	  //
@@ -321,7 +327,7 @@
 		      link: function (scope, element, attrs) {
 		    	  // format the partial
 		    	  setTimeout(function(){ 
-					  jcf.customForms.replaceAll(element[0]);
+					  // jcf.customForms.replaceAll(element[0]);
 				  }, 100);
 		    	  
 		      }
@@ -755,7 +761,7 @@
     		
     		// These properties should be set in setLayerState for existing layers (editing a layer)
 	    	if(isNew){
-	    		$scope.dynamicDataModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0];
+	    		$scope.dynamicDataModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0].value;
 	    		
 	    		$scope.thematicLayerModel.layerType = options.layerTypeNames[0];
 	    		$scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
@@ -774,7 +780,7 @@
 	     */
 	    controller.setLayerState = function(state) {
 	    	
-	    	$scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy;
+	    	$scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy.value;
 	    	
 	    	$scope.setPolygonCategories(JSON.parse(state.styles[0].categoryPolygonStyles).catLiElems);
 	    	$scope.setPointCategories(JSON.parse(state.styles[0].categoryPointStyles).catLiElems);
@@ -802,45 +808,7 @@
     			formattedFonts.push(fonts[i].replace(/\+/g, " "));
     		}
     		return formattedFonts; 
-    	};
-    	
-    	
-    	 /**
-         * Adding font-family style property to dropdown options for better usability.
-         * Adding this method was necessary because the ux js code does not account for style properties in dropdowns
-         * 
-         */
-    	$scope._injectFontStylesForDropdown = function(){
-          var convertedOptions = $(".select-options.drop-font-select").find("ul").children();
-          var selectedOption = $(".select-font-select.select-area").find(".center");
-          selectedOption.css("font-family", selectedOption.text());
-          
-          for(var i=0; i<convertedOptions.length; i++){
-            var targetSpan = $(convertedOptions[i]).find("span");
-            
-            if(targetSpan.text().length > 0){
-              targetSpan.css("font-family", targetSpan.text());
-            }
-          }
-        };
-	    
-        
-        /**
-         * Get the aggregation type from the model based on an aggregation Value
-         * 
-         * @param aggStratVal : aggregation strategy value (not id)
-         */ 
-        $scope.getAggregationStrategyType = function(aggStratVal) {
-        	var aggStratOpts = $scope.dynamicDataModel.aggregationStrategyOptions;
-        	for(var i=0; i<aggStratOpts.length; i++){
-        		var aggStrat = aggStratOpts[i];
-        		if(aggStrat.value === aggStratVal){
-        			return aggStrat.type;
-        		}
-        	}
-        	return
-        };
-    	
+    	};    	
         
         /**
          * Test if the selected secondary attribute is valid (not null or empty string)
@@ -1281,10 +1249,15 @@
 	    	$scope.setValueFont(newValue);
 	    });
 	    
-	    // TESTING
-	    $scope.$watch("thematicLayerModel.layerType", function(newValue, oldValue) {
-	    	console.log("new val ", newValue);
+	    /*
+	     * When the aggregation strategy is changed
+	     * the list of possible geoNodes needs to be
+	     * updated
+	     */
+	    $scope.$watch("thematicLayerModel.geoNode", function(newValue, oldValue) {
+	    	$scope.getGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategy, newValue);
 	    });
+
 	    
 	    
 	    /**
@@ -1483,20 +1456,29 @@
          * @param layer : the layer object representing the layer the form is targeting 
          */
 	    $scope.getGeographicAggregationOptions = function(aggregationStrategy, geoNodeId){
-            var selectedOption = null;
-            
-            if(aggregationStrategy){
-                selectedOption = aggregationStrategy;
-            }
-            
-            var nodeAggLookup = $scope.dynamicDataModel.nodeAggregationStrategiesLookup;
-            for(var i=0; i<nodeAggLookup.length; i++){
-            	var thisNode = nodeAggLookup[i];
-            	if(thisNode.nodeId === geoNodeId){
-            		// Set options on the model
-            		$scope.setGeographicAggregationOptions(thisNode.aggregationStrategies, selectedOption);
-            	}
-            }
+	    	$timeout(function(){
+	            var selectedOption = null;
+	            
+	            if(aggregationStrategy){
+	                selectedOption = aggregationStrategy;
+	            }
+	            
+	            var geoNodes = $scope.dynamicDataModel.nodeAggregationStrategiesLookup;
+	            
+	            if(geoNodes != null) {
+	                for(var i=0; i<geoNodes.length; i++){
+	                	var geoNode = geoNodes[i];
+	                	
+	                	if(geoNode.nodeId === geoNodeId){
+	                		var strategies = geoNode.aggregationStrategies;
+	                		
+	                		// Set options on the model
+	                		$scope.setGeographicAggregationOptions(strategies, selectedOption);
+	                	}
+	                }            	
+	            }
+	    		
+	    	}, 10);
 	    };
 	    
 	    
@@ -1512,7 +1494,7 @@
         	 $scope.setAggregationStrategyOptions(aggregations);
              $scope.$apply();
              
-             $scope._setLayerTypeOptions($scope.dynamicDataModel.aggregationStrategy);
+//             $scope._setLayerTypeOptions($scope.dynamicDataModel.aggregationStrategy);
          };
          
          

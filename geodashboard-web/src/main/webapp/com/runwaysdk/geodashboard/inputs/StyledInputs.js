@@ -43,19 +43,23 @@
     }    
   }  
   
-  function StyledSelectController($scope) {
+  function StyledBasicSelectController($scope, $window) {
     var controller = this;
     controller.expand = false;
     
+    // Close the pop-up on any click
+    angular.element($window).bind('click', function (event) {
+      controller.expand = false;
+      $scope.$apply();
+    });
+    
     controller.toggle = function(e){
+      e.stopPropagation();
+      
       controller.offset = $(e.currentTarget).offset();      
       controller.width = $(e.currentTarget).width();      
       
-      controller.expand = !controller.expand;  
-    }
-    
-    controller.close = function() {
-      controller.expand = false;
+      controller.expand = !controller.expand;       
     }
     
     controller.setValue = function(option) {
@@ -63,7 +67,105 @@
       
       controller.expand = false;
     }
+    
+    controller.isSelected = function(option) {
+      return ($scope.model == option);
+    }
+    
+    controller.style = function(value) {
+      if($scope.style) {
+        return {'font-family' : value};
+      }
+      
+      return {};
+    }
   }
+  
+  function StyledBasicSelect() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/inputs/styled-basic-select.jsp',    
+      scope: {
+        model:'=',
+        options:'=',
+        'class':'@',
+        name:'@',
+        style:'@'        
+      },
+      controller : StyledBasicSelectController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }  
+  
+  function StyledSelectController($scope, $window) {
+    var controller = this;
+    controller.expand = false;
+    controller.label = '';
+    
+    // Set default value and label attributes
+    if($scope.value == null) {
+      $scope.value = 'value';  
+    }
+    
+    if($scope.label == null) {
+      $scope.label = 'label';  
+    }   
+    
+    // Set the default display label
+    if($scope.options != null) {
+      
+      if($scope.model != null) {        
+        for(var i = 0; i < $scope.options.length; i++) {
+          if($scope.options[i][$scope.value] == $scope.model) {
+            controller.label = $scope.options[i][$scope.label];
+          }
+        }
+      }
+      else if($scope.options.length > 0) {
+        $scope.model = $scope.options[0][$scope.value];
+        controller.label = $scope.options[0][$scope.label];        
+      }
+    }    
+    
+    // Close the pop-up on any click
+    angular.element($window).bind('click', function (event) {
+      controller.expand = false;
+      $scope.$apply();
+    });
+    
+    controller.toggle = function(e){
+      e.stopPropagation();
+    
+      controller.offset = $(e.currentTarget).offset();      
+      controller.width = $(e.currentTarget).width();      
+      
+      controller.expand = !controller.expand;       
+    }
+    
+    controller.setValue = function(option) {
+      $scope.model = option[$scope.value];
+      
+      controller.label = option[$scope.label];      
+      controller.expand = false;
+    }
+    
+    controller.isSelected = function(option) {
+      return ($scope.model == option);
+    }
+    
+    controller.style = function(value) {
+      if($scope.style) {
+        return {'font-family' : value};
+      }
+      
+      return {};
+    }
+  }
+  
+  
   
   function StyledSelect() {
     return {
@@ -73,7 +175,8 @@
       scope: {
         model:'=',
         options:'=',
-        name:'@'
+        value:'@',
+        label:'@'
       },
       controller : StyledSelectController,
       controllerAs : 'ctrl',
@@ -82,8 +185,10 @@
     }    
   }  
   
+  
   angular.module("styled-inputs", []);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
+    .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
 })();
