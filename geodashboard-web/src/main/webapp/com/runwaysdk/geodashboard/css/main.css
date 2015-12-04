@@ -3300,25 +3300,19 @@ div.secondary-box label {
 	  /* A centered div above the overlay with a box shadow. */
 	  z-index:100;
 	  position: absolute;
-	  width: 50%; /* Default */
-		
-	  /* Center the dialog */
-	  top: 50%;
-	  left: 50%;
+	  width: 50%; /* Default - often overwritten by 'width' property on element html */
+	  top: 50%;  /* Center the dialog */
+	  left: 50%;  /* Center the dialog */
 	  transform: translate(-50%, -50%);
 	  -webkit-transform: translate(-50%, -50%);
 	  -moz-transform: translate(-50%, -50%);
 	  background-color: none;
-/* 	  background-color: rgba(255,255,255,0.9); */
-/* 	  background-color: #fff; */
-/* 	  box-shadow: 4px 4px 80px #000; */
 	}
 	
 	.ng-modal-content{
 		padding: 10px;
 		padding-top: 17px;
 	}
-	
 	
 	.ng-modal-dialog-content {
 	  padding:10px;
@@ -3335,6 +3329,10 @@ div.secondary-box label {
 	  font-weight: bold;
 	  font-family: 'arial', 'sans-serif';
 	}    
+	
+	#country-select-box{
+	
+	}
 
 
 /*

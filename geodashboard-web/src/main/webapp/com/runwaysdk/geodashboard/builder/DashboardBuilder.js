@@ -187,7 +187,7 @@
   }
 
 
-  angular.module("dashboard-builder", ["builder-service"]);
+  angular.module("dashboard-builder", ["builder-service", "styled-inputs"]);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
    .directive('selectField', SelectField)
