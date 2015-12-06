@@ -113,6 +113,7 @@
     var controller = this;
     controller.expand = false;
     controller.cache = {};
+    controller.labelNamePossibilites = ["label", "displayLabel"];
     
     // Set default value and label attributes
     if($scope.value == null) {
@@ -120,7 +121,13 @@
     }
     
     if($scope.label == null) {
-      $scope.label = 'label';  
+    	for(var i = 0; i < controller.labelNamePossibilites.length; i++) {
+    		var possibleLabel = controller.labelNamePossibilites[i];
+            if(controller.label = $scope.options[i][possibleLabel]) {
+            	$scope.label = possibleLabel;
+            	break;
+            }
+        }
     }   
     
     // Close the pop-up on any click

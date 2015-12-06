@@ -22,55 +22,57 @@
 
 
 <div>
-  <modal-dialog ng-show="ctrl.dashboard != null" width='600px'>
-    <div id="builder-div" role="dialog" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable com-runwaysdk-ui-factory-jquery-Dialog com-runwaysdk-ui-factory-runway-Widget ui-dialog-buttons">
-      <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-        <span class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></span>
+  <modal-dialog ng-show="ctrl.dashboard != null" width='1000px'>
+    <div id="builder-div" role="dialog" class="ng-modal-content modal-content">
+      <div class="heading">
+        <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
-      <form name="form" class="com-runwaysdk-geodashboard-Form com-runwaysdk-ui-factory-runway-Widget">
-        <div class="ui-dialog-content ui-widget-content" style="display: block; width: auto; min-height: 23px; max-height: 630px; height: auto;">
-          <fieldset class="com-runwaysdk-geodashboard-FormList com-runwaysdk-ui-factory-runway-Widget">
-            <section class="form-container">
-              <div ng-repeat="field in ctrl.fields">
-                <div ng-if="field.readable" ng-switch on="field.type">
-                  <select-field ng-switch-when="select" field="field" model="ctrl.dashboard"></select-field>
-                  <text-field ng-switch-when="text" field="field" model="ctrl.dashboard"></text-field>
-                </div>          
-              </div>
-            </section>
-          </fieldset>
-          
-          <div class="panel" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">
-            <h3 class="panel-title">
-              <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a>
-            </h3>          
-            <div id="user-field-row" class="collapse in">
-              <div ng-repeat="user in ctrl.dashboard.options.users">
-                <div>
-                  <input type="checkbox" ng-model="user.hasAccess"></input>
-                  {{user.firstName + ' ' + user.lastName}}
-                </div>
-              </div>
-            </div>
-          </div>
-        
-          <div class="panel" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0">
-            <h3 class="panel-title">
-              <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a>
-            </h3>          
-            <div id="type-field-row" class="collapse in">
-              <div ng-repeat="type in ctrl.dashboard.options.types">
-                <h4 class="panel-title">
-                  <input type="checkbox" ng-model="type.value"></input>              
-                  <a class="opener-link" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
-                </h4>          
-                <div id="type{{$index}}" class="collapse">
-                  <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
-                </div>              
-              </div>
-            </div>
-          </div>
-        </div>      
+      <form name="form" class="modal-form">
+<!--       	<div class="row-holder"> -->
+	        <div class="" style="">
+	          <fieldset class="">
+		          <section class="form-container">
+		              <div ng-repeat="field in ctrl.fields">
+		                <div ng-if="field.readable" ng-switch on="field.type">
+		                  <select-field ng-switch-when="select" field="field" model="ctrl.dashboard"></select-field>
+		                  <text-field ng-switch-when="text" field="field" model="ctrl.dashboard"></text-field>
+		                </div>          
+		              </div>
+		          </section>
+	          
+		          <div class="panel" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">
+		            <h3 class="panel-title">
+		              <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a>
+		            </h3>          
+		            <div id="user-field-row" class="collapse in">
+		              <div ng-repeat="user in ctrl.dashboard.options.users">
+		                <div>
+		                  <input type="checkbox" ng-model="user.hasAccess"></input>
+		                  {{user.firstName + ' ' + user.lastName}}
+		                </div>
+		              </div>
+		            </div>
+		          </div>
+	        
+		          <div class="panel" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0">
+		            <h3 class="panel-title">
+		              <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a>
+		            </h3>          
+		            <div id="type-field-row" class="collapse in">
+		              <div ng-repeat="type in ctrl.dashboard.options.types">
+		                <h4 class="panel-title">
+		                  <input type="checkbox" ng-model="type.value"></input>              
+		                  <a class="opener-link" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
+		                </h4>          
+		                <div id="type{{$index}}" class="collapse">
+		                  <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
+		                </div>              
+		              </div>
+		            </div>
+		          </div>
+	          </fieldset>
+	        </div> 
+<!-- 	    </div>      -->
           
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
           <div class="ui-dialog-buttonset">

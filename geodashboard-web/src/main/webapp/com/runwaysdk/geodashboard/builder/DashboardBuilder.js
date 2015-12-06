@@ -175,9 +175,9 @@
           scope.dialogStyle.width = attrs.width;        
         }
         
-        if (attrs.height) {
-          scope.dialogStyle.height = attrs.height;        
-        }
+//        if (attrs.height) {
+//          scope.dialogStyle.height = attrs.height;        
+//        }
         
         scope.hideModal = function() {
           scope.show = false;
@@ -187,7 +187,7 @@
   }
 
 
-  angular.module("dashboard-builder", ["builder-service"]);
+  angular.module("dashboard-builder", ["builder-service", "styled-inputs"]);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
    .directive('selectField', SelectField)
