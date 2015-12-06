@@ -34,7 +34,7 @@
         <style-basic-fill fill="thematicStyleModel.pointFill" opacity="thematicStyleModel.pointOpacity"></style-basic-fill>
       
         <!-- BASIC STROKE -->
-        <style-stroke stroke="thematicStyleModel.pointStroke" stroke-width="thematicStyleModel.pointStrokeWidth" stroke-opacity="thematicStyleModel.pointStrokeOpacity"></style-stroke>
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.pointStroke" stroke-width="thematicStyleModel.pointStrokeWidth" stroke-opacity="thematicStyleModel.pointStrokeOpacity"></style-stroke>
       
         <!-- BASIC SHAPE -->
         <div class="fill-block">
@@ -57,7 +57,6 @@
         </div>
       </div>
       
-      
       <!-- GRADIENT POINT -->
       <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOINT' }">
       
@@ -65,7 +64,7 @@
         <style-gradient-fill min-fill="thematicStyleModel.gradientPointMinFill" max-fill="thematicStyleModel.gradientPointMaxFill" opacity="thematicStyleModel.gradientPointFillOpacity" class="point-gradient"></style-gradient-fill>
         
         <!-- POINT GRADIENT STROKE -->
-        <style-stroke stroke="thematicStyleModel.gradientPointStroke" stroke-width="thematicStyleModel.gradientPointStrokeWidth" stroke-opacity="thematicStyleModel.gradientPointStrokeOpacity"></style-stroke>
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPointStroke" stroke-width="thematicStyleModel.gradientPointStrokeWidth" stroke-opacity="thematicStyleModel.gradientPointStrokeOpacity"></style-stroke>
         
         <!-- POINT GRADIENT SHAPE -->        
         <div class="fill-block">
@@ -84,7 +83,6 @@
           </div>
         </div>
       </div>
-      
       
       <!-- CATEGORY POINT -->
       <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'CATEGORYPOINT' }">
@@ -129,90 +127,46 @@
             </div>
             
             <!-- RENDER BASIC CATEGORIES -->
-            <div class="panel-group choice-color category-group"  ng-if="!dynamicDataModel.isOntologyAttribute">
-              <div class="panel">
-                <div id="choice-color02" class="panel-collapse">
-                  <ul class="color-list">
-                    <li ng-repeat="cat in categoryWidget.basicPointCatOptionsObj.catLiElems track by $index">
-                      <style-category ng-show="!cat.otherCat || categoryWidget.pointCatOtherOptionSelected" category="cat" auto-complete="basicCategoryAutocompleteSource"></style-category>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            
-              <!-- enable/disable checkbox -->
-              <div class="style-options-block">
-                <styled-check-box id="basic-cat-point-other-option" model="categoryWidget.pointCatOtherOptionSelected" label="<gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>"></styled-check-box>
-              </div>
-            </div>
+            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="basicCategoryAutocompleteSource"></style-category-list>
           </div>
         </div>
-        
         
         <div class="stroke-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
-          <div class="cell-holder">
-<div class="cell">
-<span><gdb:localize key="DashboardLayer.form.color"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-     <span class="ico" style="background:{{thematicStyleModel.categoryPointStroke}}">icon</span>
-     <span class="arrow">arrow</span>
-     <input type="text" style="display: none;" class="color-input" name="style.categoryPointStroke" ng-model="thematicStyleModel.categoryPointStroke" />
-</a>
+          <!-- POINT CATEGORY STROKE -->        
+          <style-stroke stroke="thematicStyleModel.categoryPointStroke" stroke-width="thematicStyleModel.categoryPointStrokeWidth" stroke-opacity="thematicStyleModel.categoryPointStrokeOpacity"></style-stroke>
+        
+          <div id="category-point-radius-block" class="fill-block">
+            <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
+            <div class="cell-holder">
+              <div class="cell">
+                <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
+                <div class="text">
+                  <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="thematicStyleModel.categoryPointSize"></input>
+                </div>
+              </div>
+              <div class="cell">
+                <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
+                <div class="text">
+                  <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
+                    ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"
+                    ng-model="thematicStyleModel.categoryPointFillOpacity">
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="cell">
-            <label for="category-point-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
-            <div class="select-holder">
-             <select id="category-point-stroke-width-select" class="tab-select" name="style.categoryPointStrokeWidth"
-     ng-options="n for n in [] | intrange:1:16"
-     ng-model="thematicStyleModel.categoryPointStrokeWidth">
-   </select>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="category-point-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-             <select id="category-point-stroke-opacity-select" class="tab-select" name="style.categoryPointStrokeOpacity"
-     ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-     ng-model="thematicStyleModel.categoryPointStrokeOpacity">
-   </select>
-            </div>
-          </div>
-          </div>
-
-        <div id="category-point-radius-block" class="fill-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
-          <div class="cell-holder">
-            <div class="cell">
-  <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
-  <div class="text">
-    <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="thematicStyleModel.categoryPointSize"></input>
-  </div>
-</div>
-<div class="cell">
-            <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-  <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
-       ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-       ng-model="thematicStyleModel.categoryPointFillOpacity">
-     </select>  
-            </div>
-          </div>
-          </div>
           
             <div id="category-point-type-container" class="cell">
-          <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-          <div class="select-box">
-            <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName" 
-ng-model="thematicStyleModel.categoryPointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
-            </select>
+              <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
+              <div class="select-box">
+                <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName"
+                  ng-model="thematicStyleModel.categoryPointWellKnownName"
+                  ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-          </div>
-        </div>
-    </div>
+      </div>
     
       
       <!-- BUBBLE -->
@@ -398,140 +352,23 @@ ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label 
       
       <!-- BASICPOLYGON -->
       <div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOLYGON' }">
-        <div class="fill-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
-          <div class="cell-holder">
-            <div class="cell">
-<span><gdb:localize key="DashboardLayer.form.color"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-    <span class="ico" style="background:{{ thematicStyleModel.polygonFill }};">icon</span>
-    <span class="arrow">arrow</span>
-    <input type="text" style="display: none;" class="color-input" name="style.polygonFill" ng-model="thematicStyleModel.polygonFill"  />
-  </a>
-</div>
-            </div>
-            <div class="cell">
-            <label for="basic-polygon-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-             <select id="basic-polygon-fill-opacity-select" class="tab-select" name="style.polygonFillOpacity"
-     ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-     ng-model="thematicStyleModel.polygonFillOpacity">
-   </select>
-            </div>
-          </div>
-          </div>
-        </div>
-          
-        <div class="stroke-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
-          <div class="cell-holder">
-<div class="cell">
-<span><gdb:localize key="DashboardLayer.form.color"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-     <span class="ico" style="background:{{thematicStyleModel.polygonStroke}};">icon</span>
-     <span class="arrow">arrow</span>
-     <input type="text" style="display: none;" class="color-input" name="style.polygonStroke" ng-model="thematicStyleModel.polygonStroke"  />
-</a>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="basic-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
-            <div class="select-holder">
- <select id="basic-polygon-stroke-width-select" class="tab-select" name="style.polygonStrokeWidth"
-       ng-options="n for n in [] | intrange:1:16"
-       ng-model="thematicStyleModel.polygonStrokeWidth">
-     </select>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="basic-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
- <select id="basic-polygon-stroke-opacity-select" class="tab-select" name="style.polygonStrokeOpacity"
-       ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-       ng-model="thematicStyleModel.polygonStrokeOpacity">
-     </select>
-            </div>
-          </div>
-          </div>
-        </div>
+        <!-- BASIC POLYGON FILL -->
+        <style-basic-fill fill="thematicStyleModel.polygonFill" opacity="thematicStyleModel.polygonFillOpacity"></style-basic-fill>
+      
+        <!-- BASIC POLYGON STROKE -->
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.polygonStroke" stroke-width="thematicStyleModel.polygonStrokeWidth" stroke-opacity="thematicStyleModel.polygonStrokeOpacity"></style-stroke>
+                
       </div>
       
       
       <!-- GRADIENT POLYGON -->
       <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOLYGON' }">
-        <div class="gradient-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
-          <div class="cell-holder">
-            <div class="cell">
-<span><gdb:localize key="DashboardLayer.form.min"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-    <span class="ico" style="background:{{thematicStyleModel.gradientPolygonMinFill}};">icon</span>
-    <span class="arrow">arrow</span>
-    <input type="text" style="display: none;" class="color-input" name="style.gradientPolygonMinFill" ng-model="thematicStyleModel.gradientPolygonMinFill"/>
-  </a>
-</div>
-            </div>
-            <div class="cell">
-<span><gdb:localize key="DashboardLayer.form.max"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-    <span class="ico" style="background:{{thematicStyleModel.gradientPolygonMaxFill}};">icon</span>
-    <span class="arrow">arrow</span>
-    <input type="text" style="display: none;" class="color-input" name="style.gradientPolygonMaxFill" ng-model="thematicStyleModel.gradientPolygonMaxFill" />
-  </a>
-</div>
-            </div>
-            <div class="cell">
-            <label for="gradient-polygon-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-
-   <select id="gradient-polygon-fill-opacity-select" class="tab-select" name="style.gradientPolygonFillOpacity"
-       ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-       ng-model="thematicStyleModel.gradientPolygonFillOpacity">
-     </select>
-            </div>
-          </div>
-          </div>
-        </div>
+        <!-- POINT GRADIENT FILL -->
+        <style-gradient-fill min-fill="thematicStyleModel.gradientPolygonMinFill" max-fill="thematicStyleModel.gradientPolygonMaxFill" opacity="thematicStyleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
         
-        <div class="stroke-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
-          <div class="cell-holder">
-<div class="cell">
-<span><gdb:localize key="DashboardLayer.form.color"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-     <span class="ico" style="background:{{thematicStyleModel.gradientPolygonStroke}};">icon</span>
-     <span class="arrow">arrow</span>
-     <input type="text" style="display: none;" class="color-input" name="style.gradientPolygonStroke" ng-model="thematicStyleModel.gradientPolygonStroke" />
-</a>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="gradient-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
-            <div class="select-holder">
-
-   <select id="gradient-polygon-stroke-width-select" class="tab-select" name="style.gradientPolygonStrokeWidth"
-       ng-options="n for n in [] | intrange:1:16"
-       ng-model="thematicStyleModel.gradientPolygonStrokeWidth">
-     </select>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="gradient-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-            
-           <select id="gradient-polygon-stroke-opacity-select" class="tab-select" name="style.gradientPolygonStrokeOpacity"
-       ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-       ng-model="thematicStyleModel.gradientPolygonStrokeOpacity">
-     </select>          
-            </div>
-          </div>
-          </div>
-        </div>
+        <!-- POINT GRADIENT STROKE -->
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPolygonStroke" stroke-width="thematicStyleModel.gradientPolygonStrokeWidth" stroke-opacity="thematicStyleModel.gradientPolygonStrokeOpacity"></style-stroke>
+        
       </div>
       
      
@@ -542,113 +379,39 @@ ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label 
           <div class="heading-list">
             <span><gdb:localize key="DashboardThematicLayer.form.category"/></span>
             <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
-            <span><gdb:localize var="dl_form_cat_input_placeholder" key="DashboardThematicLayer.form.catInputPlaceholder"/></span>
+            <span></span>
           </div>
         <div class="category-block" id="category-colors-container">
-
-<!-- TODO: remove this input after full angular integration -->
-          <input id="categories-polygon-input" data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-type="dynamicDataModel.thematicAttributeDataType" data-categoriesstore="{polygoncategories}" type="hidden" class="category-input" name="style.categoryPointStyles" ></input>
-            <!-- RENDER ONTOLOGY TREE DATA  -->
-            <div class="ontology-category-input-container" ng-if="dynamicDataModel.isOntologyAttribute">
-  <div id="polygon-ontology-tree" data-termtype="{{dynamicDataModel.termType}}" data-reltype="{{dynamicDataModel.relationshipType}}" data-roots='{{dynamicDataModel.roots}}' ></div>
-  <div id="other-cat-poly-container" class="other-cat-container" ng-show="categoryWidget.ontPolygonOtherOptionSelected">
-    <ul class="color-list other-cat">         
-       <li>
-     <div class="category-container">
-        <div class="text category-input-container">
-          <p id="cat-other-basic-label" ><gdb:localize key="Other"/></p>
-        </div>
-        <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
-     <span id="cat-other-color-selector" class="ico ontology-category-color-icon ontology-other-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
-    </a>
-     </div>
-   </li>           
-</ul>
+          <!-- RENDER ONTOLOGY TREE DATA  -->
+          <div class="ontology-category-input-container" ng-if="dynamicDataModel.isOntologyAttribute">
+            <div id="polygon-ontology-tree" data-termtype="{{dynamicDataModel.termType}}" data-reltype="{{dynamicDataModel.relationshipType}}" data-roots='{{dynamicDataModel.roots}}' ></div>
+            <div id="other-cat-poly-container" class="other-cat-container" ng-show="categoryWidget.ontPolygonOtherOptionSelected">
+              <ul class="color-list other-cat">
+                <li>
+                  <div class="category-container">
+                    <div class="text category-input-container">
+                      <p id="cat-other-basic-label" ><gdb:localize key="Other"/></p>
+                    </div>
+                    <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+                      <span id="cat-other-color-selector" class="ico ontology-category-color-icon ontology-other-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="check-block">
+              <input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" ng-model="categoryWidget.ontPolygonOtherOptionSelected"></input>
+              <label for="ont-cat-poly-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
+            </div>
           </div>
           
-    <div class="check-block">
-        <input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" ng-model="categoryWidget.ontPolygonOtherOptionSelected"></input>
-        <label for="ont-cat-poly-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
+          <!-- RENDER BASIC CATEGORIES -->
+          <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="basicCategoryAutocompleteSource"></style-category-list>
+        </div>
       </div>
-</div>
-
-<!-- RENDER BASIC CATEGORIES -->
-            <div class="panel-group choice-color category-group"  ng-if="!dynamicDataModel.isOntologyAttribute">
-  <div class="panel">
-<div id="choice-color02" class="panel-collapse">
-  <ul class="color-list">
-    <li ng-repeat="cat in categoryWidget.polygonCatOptionsObj.catLiElems track by $index" ng-show="!cat.otherCat || categoryWidget.polygonCatOtherOptionSelected">
-             <div class="category-container">
-  <div class="text category-input-container">
-            <!-- thematicStyleModel.categoryPolygonStyles -->
-            <!-- Regular cat  -->
-    <input ng-show="!cat.otherCat" id="cat-{{$index}}" class="category-input"  data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-mdattributetype="{{dynamicDataModel.thematicAttributeDataType}}" type="text" value="{{cat.val}}" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete>
-    <!-- OTHER cat  -->
-    <input ng-show="cat.otherCat" id="cat-{{$index}}-poly" class="category-input"  data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-mdattributetype="{{dynamicDataModel.thematicAttributeDataType}}" type="text" value="{{cat.val}}" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="off" disabled >
-  </div>
-  <div class="cell">
-    <div class="color-holder">
-      <a href="#" class="color-choice">
-        <!-- Regular cat  -->
-        <span ng-show="!cat.otherCat" id="cat-{{$index}}-color-selector" class="ico cat-color-selector" style="background:{{cat.color}}">icon</span>
-        <!-- OTHER cat  -->
-        <span ng-show="cat.otherCat" id="cat-{{$index}}-poly-color-selector" class="ico cat-color-selector" style="background:{{cat.color}}">icon</span>
-        <span class="arrow">arrow</span>
-      </a>
-    </div>
-  </div>
-</div>
-           </li>
-  </ul>
-   </div>
-        </div>
-        
-  <!-- enable/disable checkbox -->
-        <div class="style-options-block">
-    <div class="check-block">
-      <input id="basic-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="" ng-model="categoryWidget.polygonCatOtherOptionSelected"></input>
-      <label for="basic-cat-poly-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
-    </div>
-          </div>
-            </div>
-          </div>
-        </div>
-        
-        
-        <div class="stroke-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.stroke"/></strong>
-          <div class="cell-holder">
-<div class="cell">
-<span><gdb:localize key="DashboardLayer.form.color"/></span>
-<div class="color-holder">
-  <a href="#" class="color-choice">
-     <span class="ico" style="background:{{thematicStyleModel.categoryPolygonStroke}};">icon</span>
-     <span class="arrow">arrow</span>
-     <input type="text" style="display: none;" class="color-input" name="style.categoryPolygonStroke" ng-model="thematicStyleModel.categoryPolygonStroke" />
-</a>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="category-polygon-stroke-width-select"><gdb:localize key="DashboardLayer.form.width"/></label>
-            <div class="select-holder">
-   <select id="category-polygon-stroke-width-select" class="tab-select" name="style.categoryPolygonStrokeWidth"
-       ng-options="n for n in [] | intrange:1:16"
-       ng-model="thematicStyleModel.categoryPolygonStrokeWidth">
-     </select>
-            </div>
-          </div>
-          <div class="cell">
-            <label for="category-polygon-stroke-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
-            <div class="text">
-   <select id="category-polygon-stroke-opacity-select" class="tab-select" name="style.categoryPolygonStrokeOpacity"
-       ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n" 
-       ng-model="thematicStyleModel.categoryPolygonStrokeOpacity">
-     </select>
-            </div>
-          </div>
-          </div>
-        </div>
-    
+      
+      <!-- POINT CATEGORY STROKE -->        
+      <style-stroke class="stroke-block" stroke="thematicStyleModel.categoryPolygonStroke" stroke-width="thematicStyleModel.categoryPolygonStrokeWidth" stroke-opacity="thematicStyleModel.categoryPolygonStrokeOpacity"></style-stroke>
     
     </div> <!--  end style container  -->
   </div>  <!--  end holder  -->

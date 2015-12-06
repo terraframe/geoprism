@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div class="stroke-block">
+<div ng-class="divClass">
   <strong class="title"><gdb:localize key="DashboardLayer.form.stroke"/></strong>
   <div class="cell-holder">
     <div class="cell">

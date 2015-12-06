@@ -56,23 +56,16 @@
     }    
   }
   
-  function StyleCategoryController($scope) {
-    var controller = this;
-    
-  }
-     
-  function StyleCategory($timeout) {
+  function StyleCategoryList($timeout) {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-category.jsp',    
+      templateUrl : '/partial/layer/style-category-list.jsp',    
       scope: {
-        category : '=',
+        categories : '=',
         autoComplete : '&'
       },
-      controller : StyleCategoryController,
-      controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {
+      link: function (scope, element, attrs) {
       }
     };    
   };
@@ -137,6 +130,9 @@
       controller : StyleController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+        if(attrs['class'] != null) {
+          scope.divClass = attrs['class'];
+        }
       }
     };    
   };
@@ -244,71 +240,73 @@
 	      scope: true,
 	      link: function (scope, element, attrs) {
 	    	  
+	    	// Timeout is needed to ensure the tree elements exist on the dom to append the trees to
             $timeout(function(){
 		      // Format the select elements
 	          jcf.customForms.replaceAll(element[0]);
+	          
+	    	  if(scope.dynamicDataModel.isOntologyAttribute){
+		    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
+		    	  for(var i=0; i<layerTypes.length; i++){
+		    		  var type = layerTypes[i];
+	    	
+		    		  if(type === 'CATEGORYPOINT'){
+				          var targetEl = scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID;
+				          scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPointStyles));
+		    		  }
+		    		  else if(type === 'CATEGORYPOLYGON'){
+		    			  var targetEl = scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID;
+		    			  scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPolygonStyles));
+		    		  }
+		    	  	}
+	    	  
+		          	function attachOtherCategoryColorPicker(){
+			              // ontology category layer type colors
+			              $(".ontology-other-color-icon").colpick({
+			                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+			                onShow:function(colPickObj){
+			                  var that = this;
+			                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
+			                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+			                      var colPick = $(that);
+			                      var diff = colPick.offset().top + colPick.height() + 2; 
+			                      var diffStr = diff.toString() + "px";
+			                      colorPicker.css({ top: diffStr });
+			                    });
+			                },
+			                onChange:function(hsb,hex,rgb,el,bySetColor) {
+			                  $(el).css('background','#'+hex);
+			                  $(el).find('.color-input').attr('value', '#'+hex);
+			                },
+			                onHide:function(el) {
+			                	scope.updateAllOntologyCategryModels();
+				            }
+			              });
+		            }
+		          	
+		          	attachOtherCategoryColorPicker();
+	    	  }
+	          
 	          
 	          
 	          
 	          $(element).show();
 	        }, 500);        
 	    	  
-		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
-		      setTimeout(function(){
-		    	  // format the partial
-		    	  // jcf.customForms.replaceAll(element[0]);
-		    	  
-		    	  if(scope.dynamicDataModel.isOntologyAttribute){
-			    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
-			    	  for(var i=0; i<layerTypes.length; i++){
-			    		  var type = layerTypes[i];
-		    	
-			    		  if(type === 'CATEGORYPOINT'){
-					          var targetEl = scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID;
-					          scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPointStyles));
-			    		  }
-			    		  else if(type === 'CATEGORYPOLYGON'){
-			    			  var targetEl = scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID;
-			    			  scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPolygonStyles));
-			    		  }
-			    	  	}
-		    	  
-			          	function attachOtherCategoryColorPicker(){
-				              // ontology category layer type colors
-				              $(".ontology-other-color-icon").colpick({
-				                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-				                onShow:function(colPickObj){
-				                  var that = this;
-				                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-				                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-				                      var colPick = $(that);
-				                      var diff = colPick.offset().top + colPick.height() + 2; 
-				                      var diffStr = diff.toString() + "px";
-				                      colorPicker.css({ top: diffStr });
-				                    });
-				                },
-				                onChange:function(hsb,hex,rgb,el,bySetColor) {
-				                  $(el).css('background','#'+hex);
-				                  $(el).find('.color-input').attr('value', '#'+hex);
-				                },
-				                onHide:function(el) {
-				                	scope.updateAllOntologyCategryModels();
-					            }
-				              });
-			            }
-			          	
-			          	attachOtherCategoryColorPicker();
-		    	  }
-		    	  else{
-//		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
-		    	  }
-		    	  
-	              
-//	              scope.updateAllOntologyCategryModels();
-		    	  
-//		    	  $(element[0]).show();
-		    	  
-		      }, 500);
+//		      setTimeout(function(){
+//		    	  // format the partial
+//		    	  // jcf.customForms.replaceAll(element[0]);
+//		    	  
+//		    	  else{
+////		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
+//		    	  }
+//		    	  
+//	              
+////	              scope.updateAllOntologyCategryModels();
+//		    	  
+////		    	  $(element[0]).show();
+//		    	  
+//		      }, 500);
 	      }
 	    };    
 	};
@@ -582,11 +580,9 @@
 		 */
 		$scope.categoryWidget = {
 			widgetType : '',
-			ontPointOtherOptionSelected : true,
-			pointCatOtherOptionSelected : true,
-			pointCatOtherOptionColor : '#737678',
 			aggregationMap : {},
 			basicPointCatOptionsObj : {
+				otherEnabled : true,				
 				"catLiElems":[
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
@@ -596,10 +592,9 @@
 				              	{"val":"other","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true}
 				              ]
 			},
-			ontPolygonOtherOptionSelected : true,
-			polygonCatOtherOptionSelected : true,
 			polygonCatOtherOptionColor : '#737678',
 			polygonCatOptionsObj : {
+				otherEnabled : true,								
 				"catLiElems":[
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
@@ -610,6 +605,7 @@
 				              ]
 			},
 			secondaryCatOptionsObj : {
+				otherEnabled : true,								
 				"catLiElems":[
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
 				              	{"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
@@ -681,7 +677,8 @@
 	   	      
 	   	      
 	   	    // Update the style model to include the point and polygon category values
-	   	    $scope.thematicStyleModel.categoryPointStyles = $scope.getCategoryValues($scope.categoryWidget.basicPointCatOptionsObj.catLiElems, $scope.categoryWidget.pointCatOtherOptionSelected);
+	   	    $scope.thematicStyleModel.categoryPointStyles = $scope.getCategoryValues($scope.categoryWidget.basicPointCatOptionsObj);
+	   	    $scope.thematicStyleModel.categoryPolygonStyles = $scope.getCategoryValues($scope.categoryWidget.polygonCatOptionsObj);	   	    
 	   	      
    	 		// TODO: double check modal01 is the correct el to pass in
    	 		layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
@@ -690,8 +687,6 @@
       $scope.loadCategoryValues = function(model, json) {
         var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
         var _formatter = Globalize.numberFormatter();
-        
-        var enabled = false;
       
         if(json != null && json != '') {
           var categories = JSON.parse(json);
@@ -711,29 +706,27 @@
               model.catLiElems[model.catLiElems.length - 1] = category;                            
             }
             
-            enabled = category.otherEnabled;
+            model.otherEnabled = category.otherEnabled;
           }          
         }
-        
-        return enabled;
       }
 
          
-      $scope.getCategoryValues = function(categories, otherEnabled) {
+      $scope.getCategoryValues = function(categories) {
         var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
         var _parser = Globalize.numberParser();
            
         var array = [];
                          
-        for(var i = 0; i < categories.length; i++) {
-           var category = categories[i];
+        for(var i = 0; i < categories.catLiElems.length; i++) {
+           var category = categories.catLiElems[i];
              
            // Only send back categories which have values or are the 'other' category 
            if(category.otherCat || (category.val != null && category.val.length > 0)) {
              var object = {};
              angular.copy(category, object);
              
-             object.otherEnabled = otherEnabled;
+             object.otherEnabled = categories.otherEnabled;
                
              if(!category.otherCat && categoryType == 'number') {
                object.val = _parser(object.val);  
@@ -873,8 +866,8 @@
     		var style = state.styles[0];
     		    		
     		// Update the point and polygon category model
-    		$scope.categoryWidget.polygonCatOtherOptionSelected = $scope.loadCategoryValues($scope.categoryWidget.polygonCatOptionsObj, style.categoryPolygonStyles);
-    		$scope.categoryWidget.pointCatOtherOptionSelected = $scope.loadCategoryValues($scope.categoryWidget.basicPointCatOptionsObj, style.categoryPointStyles);
+    		$scope.loadCategoryValues($scope.categoryWidget.polygonCatOptionsObj, style.categoryPolygonStyles);
+    		$scope.loadCategoryValues($scope.categoryWidget.basicPointCatOptionsObj, style.categoryPointStyles);
 	    	
     		$scope.thematicStyleModel = style;
 	    };
@@ -907,6 +900,7 @@
   	    
   	    
   	    $scope.renderOntologyTree = function(targetEl, catsJSONObj){
+  	    	
   		  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
               termType : "com.runwaysdk.geodashboard.ontology.Classifier",
               relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
@@ -1550,7 +1544,7 @@
 	angular.module("dashboard-layer-form")
 		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
 		.directive('colorPicker', ColorPicker)
-		.directive('styleCategory', StyleCategory)
+		.directive('styleCategoryList', StyleCategoryList)
 		.directive('styleBasicFill', StyleBasicFill)
 		.directive('styleGradientFill', StyleGradientFill)
 		.directive('styleStroke', StyleStroke)
