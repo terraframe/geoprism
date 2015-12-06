@@ -29,7 +29,7 @@
     <div class="drop-holder">
       <div class="drop-list">
         <ul>
-          <li ng-repeat="opt in options track by $index" rel="{{$index}}" class="jcfcalc"
+          <li ng-repeat="opt in options() track by $index" rel="{{$index}}" class="jcfcalc"
              ng-style="ctrl.style(opt)"          
              ng-class="{'option-even':($index % 2 == 0), 'current-selected':ctrl.isSelected(opt), 'item-selected':hovering}"
              ng-mouseenter="hovering=true"

@@ -20,28 +20,31 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div class="stroke-block">
-  <strong class="title"><gdb:localize key="DashboardLayer.form.stroke"/></strong>
+<div class="fill-block" ng-class="clazz">
+  <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
   <div class="cell-holder">
     <div class="cell">
-      <span><gdb:localize key="DashboardLayer.form.color"/></span>
+      <span><gdb:localize key="DashboardLayer.form.minFill"/></span>
       <div class="color-holder">
-        <a href="#" class="color-choice" color-picker model="stroke" element='#modal01'>
-          <span class="ico" style="background:{{stroke}};">icon</span>
+        <a href="#" class="color-choice" color-picker model="minFill" element='#modal01'>
+          <span class="ico" style="background:{{minFill}}">icon</span>
           <span class="arrow">arrow</span>
         </a>
       </div>
     </div>
     <div class="cell">
-      <label><gdb:localize key="DashboardLayer.form.width"/></label>
-      <div class="select-holder">
-        <select class="tab-select" ng-options="n for n in [] | intrange:1:16" ng-model="strokeWidth"></select>
+      <span><gdb:localize key="DashboardLayer.form.maxFill"/></span>
+      <div class="color-holder">
+        <a href="#" class="color-choice" color-picker model="maxFill" element='#modal01'>
+          <span class="ico" style="background:{{maxFill}};">icon</span>
+          <span class="arrow">arrow</span>
+        </a>
       </div>
     </div>
-    <div class="cell">
+    <div class="cell opacity">
       <label><gdb:localize key="DashboardLayer.form.opacity"/></label>
       <div class="text">
-        <select class="tab-select" ng-options="ctrl.getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"  ng-model="strokeOpacity"></select>
+        <select class="tab-select" ng-options="ctrl.getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"  ng-model="opacity"></select>
       </div>
     </div>
   </div>

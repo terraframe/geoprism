@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
-<div class="row-holder" ng-cloak>
+<div class="row-holder" style="display: none;" ng-cloak>
   <div class="label-holder style02">
     <strong><gdb:localize key="DashboardThematicLayer.form.labelsAndValues"/></strong>
   </div>
@@ -33,20 +33,20 @@
       <div class="cell style02">
         <label><gdb:localize key="DashboardLayer.form.font"/></label>
         <div class="select-holder">
-          <styled-basic-select style="true" options="availableFonts" model="thematicStyleModel.labelFont" class="font-select"></styled-basic-select>
+          <select class="font-select" name="style.labelFont" id="f55" ng-options="item for item in availableFonts track by item" ng-model="thematicStyleModel.labelFont"></select>
         </div>
       </div>
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.labelSize"/></label>
         <div class="select-holder">
-          <styled-basic-select options="ctrl.sizes" model="thematicStyleModel.labelSize" class="size-select"></styled-basic-select>        
+          <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | intrange:1:31" ></select>
         </div>
       </div>
                 
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
         <div id="label-text-color" class="color-holder">
-          <a href="#" class="color-choice">
+          <a href="#" class="color-choice" color-picker model="thematicStyleModel.labelColor" element='#modal01'>
             <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
             <span class="arrow">arrow</span>
           </a>
@@ -56,7 +56,7 @@
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
         <div id="label-halo-color" class="color-holder">
-          <a href="#" class="color-choice">
+          <a href="#" class="color-choice" color-picker model="thematicStyleModel.labelHalo" element='#modal01'>
             <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
             <span class="arrow">arrow</span>
           </a>
@@ -66,7 +66,7 @@
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.haloWidth"/></label>
         <div class="select-holder">
-          <styled-basic-select options="ctrl.widths" model="thematicStyleModel.labelHaloWidth" class="size-select"></styled-basic-select>
+          <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:1:16" ></select>          
         </div>        
       </div>
     </div>

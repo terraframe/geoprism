@@ -17,32 +17,130 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-	
-  function StyleStrokeController($scope) {
+
+  function ColorPicker() {
+    return {
+      restrict: 'A',
+      scope: {
+        model:'=',
+      },      
+      link: function (scope, element, attrs, ctrl) {
+        // Hook up the color picker
+        $(element).colpick({
+          submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+          onShow:function(colPickObj){
+            var that = this;
+              
+            $(attrs.element).scroll(function(){  
+              var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+              var colPick = $(that);
+              var diff = colPick.offset().top + colPick.height() + 2; 
+              var diffStr = diff.toString() + "px";
+                
+              colorPicker.css({ top: diffStr });
+            });
+          },
+          onChange:function(hsb,hex,rgb,el,bySetColor) {
+            var value = '#'+hex;
+            
+            if(scope.model != value) {
+              scope.model = value;
+              scope.$apply();
+            }
+          }
+        });
+        
+        // Set the default color of the color picker
+        $(element).colpickSetColor(scope.model,false);
+      }
+    }    
+  }
+  
+  function StyleCategoryController($scope) {
     var controller = this;
     
-    controller.getFormattedInt = function(n){
-      return Math.round(n*100);
-    };
   }
      
-  function StyleStroke($timeout) {
+  function StyleCategory($timeout) {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-stroke.jsp',    
+      templateUrl : '/partial/layer/style-category.jsp',    
       scope: {
-        pointStroke:'=',
-        pointStrokeWidth:'=',
-        pointStrokeOpacity:'='
+        category : '=',
+        autoComplete : '&'
       },
-      controller : StyleStrokeController,
+      controller : StyleCategoryController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    };    
+  };
+  
+	
+  function StyleController($scope) {
+    var controller = this;
+    
+    controller.getFormattedInt = function(n){
+      return Math.round(n*100)
+    };
+  }
+     
+  function StyleBasicFill($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/style-basic-fill.jsp',    
+      scope: {
+        fill:'=',
+        opacity:'='
+      },
+      controller : StyleController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
       }
     };    
   };
 	
+  function StyleGradientFill($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/style-gradient-fill.jsp',    
+      scope: {
+        minFill:'=',
+        maxFill:'=',
+        opacity:'='
+      },
+      controller : StyleController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        scope.clazz = {};
+          
+        if (attrs['class']) {
+          scope.clazz = attrs['class'];        
+        }        
+      }
+    };    
+  };
+  
+  function StyleStroke($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/style-stroke.jsp',    
+      scope: {
+        stroke:'=',
+        strokeWidth:'=',
+        strokeOpacity:'='
+      },
+      controller : StyleController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    };    
+  };
+  
 	
 	
 	 function LayerNameInput() {
@@ -56,113 +154,63 @@
 	    };    
 	 };
 	
-	function LayerLabelController($scope) {
-	  var controller = this;
-	  controller.sizes = []; 
-	  controller.widths = [];
-	  
-	  // Populate the potential font sizes
-      for(var i = 1; i < 31; i++) {
-        controller.sizes.push(i);
-      }
-      
-      // Populate the potential halo sizes
-      for(var i = 1; i < 16; i++) {
-        controller.widths.push(i);
-      }   
-	}
-	 
 	function LayerLabel($timeout) {
 	    return {
 	      restrict: 'E',
 	      replace: true,
 	      templateUrl : '/partial/dashboard/dashboard-layer-form-label.jsp',    
 	      scope: true,
-	      controller : LayerLabelController,
-	      controllerAs : 'ctrl',
 	      link: function (scope, element, attrs, ctrl) {
             $timeout(function(){
-              
-              $("#label-text-color").colpick({
-                    submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-                    onShow:function(colPickObj){
-                      var that = this;
-                        $('#modal01').scroll(function(){  
-                          var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                          var colPick = $(that);
-                          var diff = colPick.offset().top + colPick.height() + 2; 
-                          var diffStr = diff.toString() + "px";
-                          colorPicker.css({ top: diffStr });
-                        });
-                    },
-                    onChange:function(hsb,hex,rgb,el,bySetColor) {
-                      $(el).find(".ico").css('background','#'+hex);
-                      scope.thematicStyleModel.labelColor = '#'+hex;
-                    },
-                    onHide:function(el) {
-                      scope.$apply();
-                    }
-                 });
-                
-                $("#label-halo-color").colpick({
-                    submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-                    onShow:function(colPickObj){
-                      var that = this;
-                        $('#modal01').scroll(function(){  
-                          var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                          var colPick = $(that);
-                          var diff = colPick.offset().top + colPick.height() + 2; 
-                          var diffStr = diff.toString() + "px";
-                          colorPicker.css({ top: diffStr });
-                        });
-                    },
-                    onChange:function(hsb,hex,rgb,el,bySetColor) {
-                      $(el).find(".ico").css('background','#'+hex);
-                      scope.thematicStyleModel.labelHalo = '#'+hex;
-                    },
-                    onHide:function(el) {
-                      scope.$apply();
-                    }
-                 });
-              }, 100);
+              jcf.customForms.replaceAll(element[0]);
+              $(element[0]).show();
+            }, 100);
 	      }
 	    };    
 	 };
 	 
-	 function LayerGeoNode() {
-	    return {
-	      restrict: 'E',
-	      replace: true,
-	      templateUrl: '/partial/dashboard/dashboard-layer-form-geonode.jsp',    
-	      scope: true,
-	      link: function (scope, element, attrs) {
-	      }
-	    };    
-	 };
+   function LayerGeoNode($timeout) {
+      return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '/partial/dashboard/dashboard-layer-form-geonode.jsp',    
+        scope: true,
+        link: function (scope, element, attrs) {
+          $timeout(function(){
+            jcf.customForms.replaceAll(element[0]);
+            $(element[0]).show();
+          }, 100);          
+        }
+      };    
+   };
 	 
-	 function LayerAggregationController($scope) {
-	   var controller = this;
-	   
-       controller.showAggregationMethods = function() {
-    	 var strategy = $scope.getCurrentAggregationStrategy();
+   function LayerAggregationController($scope) {
+     var controller = this;
+     
+     controller.showAggregationMethods = function() {
+       var strategy = $scope.getCurrentAggregationStrategy();
          
-         return (strategy != null && strategy.type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
+       return (strategy != null && strategy.type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
+     }
+   }   
+   
+   function LayerAggregation($timeout) {
+     return {
+       restrict: 'E',
+       replace: true,
+       templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
+       scope: true,
+       controller : LayerAggregationController,
+       controllerAs : 'ctrl',
+       link: function (scope, element, attrs) {
+         $timeout(function(){
+           jcf.customForms.replaceAll(element[0]);
+           $(element[0]).show();
+         }, 100);                    
        }
-	 }	 
-	 
-	 function LayerAggregation() {
-	    return {
-	      restrict: 'E',
-	      replace: true,
-	      templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
-	      scope: true,
-	      controller : LayerAggregationController,
-	      controllerAs : 'ctrl',
-	      link: function (scope, element, attrs) {
-	      }
-	    };    
-	};
-	
+     };    
+   };
+  
 	 
 	function LayerTypes() {
 	    return {
@@ -188,13 +236,22 @@
 	};
 	
 	
-	function LayerTypesStyle() {
+	function LayerTypesStyle($timeout) {
 	    return {
 	      restrict: 'E',
 	      replace: true,
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
+	    	  
+            $timeout(function(){
+		      // Format the select elements
+	          jcf.customForms.replaceAll(element[0]);
+	          
+	          
+	          
+	          $(element).show();
+	        }, 500);        
 	    	  
 		      // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
 		      setTimeout(function(){
@@ -243,39 +300,13 @@
 			          	attachOtherCategoryColorPicker();
 		    	  }
 		    	  else{
-		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
+//		    		  scope._setupCategoryColorPicker($(element[0]).find(".color-holder"));
 		    	  }
 		    	  
-		    	  // set color pickers on non-category layer types
-	              $($(element[0]).find(".ico")).colpick({
-		                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-		                onShow:function(colPickObj){
-		                  var that = this;
-		                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-		                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-		                      var colPick = $(that);
-		                      var diff = colPick.offset().top + colPick.height() + 2; 
-		                      var diffStr = diff.toString() + "px";
-		                      colorPicker.css({ top: diffStr });
-		                    });
-		                },
-		                onChange:function(hsb,hex,rgb,el,bySetColor) {
-		                  $(el).css('background','#'+hex);
-		                  $(el).parent().find('.color-input').attr('value', '#'+hex);
-		                  
-		                  var modelAttributeName = $(el).parent().find('.color-input').attr("name").replace("style.", "");
-		                  fillElement($('[ng-model="thematicStyleModel.'+modelAttributeName+'"]'), '#'+hex)
-		                  
-		                  // set ng-model val and trigger the input event so angular registers the change
-		                  function fillElement($el, text) {
-		                	 $el.val(text).trigger('input');
-		                  }
-		                }
-		          });
 	              
-	              scope.updateAllOntologyCategryModels();
+//	              scope.updateAllOntologyCategryModels();
 		    	  
-		    	  $(element[0]).show();
+//		    	  $(element[0]).show();
 		    	  
 		      }, 500);
 	      }
@@ -290,26 +321,6 @@
 	      templateUrl: '/partial/dashboard/dashboard-layer-form-legend-option.jsp',    
 	      scope: true,
 	      link: function (scope, element, attrs) {
-	    	  // format the partial
-	    	  setTimeout(function(){ 
-				  // jcf.customForms.replaceAll(element[0]);
-			  }, 100);
-	    	  
-	    	  //
-	    	  // Setting up click events for checkboxes manually to hook custom ui elements to the angular model binding.
-	    	  //
-	    	  var enableValEl = document.getElementById("f65").previousSibling;
-	    	  enableValEl.onclick = function() { 
-	    		  var theEl = angular.element($(this).next()[0]);
-	    		  if($(this).hasClass("chk-checked")){
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setInLegend(false); // manually set the model to false because the change event hasn't occured yet
-	    		  }
-	    		  else{
-	    			  theEl.triggerHandler('input'); // triggers the angular change event on the hidden input
-	    			  scope.setInLegend(true); // manually set the model to true because the change event hasn't occured yet
-	    		  }
-	    	  };
 	      }
 	    };    
 	 };
@@ -322,11 +333,6 @@
 		      templateUrl: '/partial/dashboard/dashboard-layer-form-action-buttons.jsp',    
 		      scope: true,
 		      link: function (scope, element, attrs) {
-		    	  // format the partial
-		    	  setTimeout(function(){ 
-					  // jcf.customForms.replaceAll(element[0]);
-				  }, 100);
-		    	  
 		      }
 		    };    
 		 };
@@ -336,15 +342,18 @@
 	  * Directive attached to all basic category input elements to hook the actual 
 	  * autocomplete action.
 	  */
-	 function CategoryAutoComplete(layerFormService) {
+	 function CategoryAutoComplete($timeout) {
 		return {
 			restrict: "A",
+			scope:{
+		      source : "&"
+			},
 			link: function (scope, element, attr, ctrl) {
 				
-				setTimeout(function(){
-				    
-			    	  $(element[0]).autocomplete({
-			    		  source: scope.basicCategoryAutocompleteSource,
+				$timeout(function(){
+					
+			    	  $(element).autocomplete({
+			    		  source: scope.source(),
 			    		  minLength: 1
 			    	  });
 				}, 500); 
@@ -384,7 +393,7 @@
 		};
 	
 	
-	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService) {
+	var DashboardThematicLayerFormController = function($scope, $timeout, $compile, layerFormService, localizationService) {
 		var controller = this; 
    	  	
 		 /**
@@ -437,6 +446,7 @@
 	    $scope.newInstance = true; 
 	    $scope.availableFonts = [];
 	    $scope.showModal = true; 
+	    $scope.errors = [];
 	    
 	    
 	    /**
@@ -611,7 +621,6 @@
 			}
 		};
 		
-		
 	    $scope.setEnableValue = function(val){
 	        $scope.thematicStyleModel.enableValue = val;
 	    }; 
@@ -663,9 +672,79 @@
 	   	    	$scope.dashboard.handleLayerEvent(jsonObj);
 	   	      };    
 	   	      
+	           var onFailure = function(e){
+	        	   $scope.errors = [];
+	        	   $scope.errors.push(e.message);
+	        	   
+	        	   $scope.$apply();
+	           };
+	   	      
+	   	      
+	   	    // Update the style model to include the point and polygon category values
+	   	    $scope.thematicStyleModel.categoryPointStyles = $scope.getCategoryValues($scope.categoryWidget.basicPointCatOptionsObj.catLiElems, $scope.categoryWidget.pointCatOtherOptionSelected);
+	   	      
    	 		// TODO: double check modal01 is the correct el to pass in
-   	 		layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess);
+   	 		layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
    	    };
+   	    
+      $scope.loadCategoryValues = function(model, json) {
+        var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
+        var _formatter = Globalize.numberFormatter();
+        
+        var enabled = false;
+      
+        if(json != null && json != '') {
+          var categories = JSON.parse(json);
+          
+          for(var i = 0; i < categories.catLiElems.length; i++) {
+            var category = categories.catLiElems[i];
+            
+            if(!category.otherCat) {
+              if(categoryType == 'number') {
+                category.val = _formatter(category.val);  
+              }
+              
+              model.catLiElems[i] = category;              
+            }
+            else {
+              category.val = 'other';
+              model.catLiElems[model.catLiElems.length - 1] = category;                            
+            }
+            
+            enabled = category.otherEnabled;
+          }          
+        }
+        
+        return enabled;
+      }
+
+         
+      $scope.getCategoryValues = function(categories, otherEnabled) {
+        var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
+        var _parser = Globalize.numberParser();
+           
+        var array = [];
+                         
+        for(var i = 0; i < categories.length; i++) {
+           var category = categories[i];
+             
+           // Only send back categories which have values or are the 'other' category 
+           if(category.otherCat || (category.val != null && category.val.length > 0)) {
+             var object = {};
+             angular.copy(category, object);
+             
+             object.otherEnabled = otherEnabled;
+               
+             if(!category.otherCat && categoryType == 'number') {
+               object.val = _parser(object.val);  
+             }
+               
+             array.push(object);
+           }
+         }
+           
+         return JSON.stringify({catLiElems:array});
+       }
    	 	
    	    
    	 	/**
@@ -697,8 +776,12 @@
 	        
 	        var onSuccess = function(json){
 	          var state = JSON.parse(json);
-	          controller.setLayerOptions(JSON.parse(state.optionsJSON), false);  
+	          var opts = JSON.parse(state.optionsJSON);	          
+	          
+	          controller.setLayerOptions(opts, false);  
 	          controller.setLayerState(state);
+                      
+              $scope.$apply();
 	        };
 	          
 	        layerFormService.getThematicLayerJSON($scope.thematicLayerModel.id, onSuccess);
@@ -715,6 +798,8 @@
 	          var opts = JSON.parse(json);
 	            
 	          controller.setLayerOptions(opts, true);
+	          
+	          $scope.$apply();
 	        };
 	          
 	        layerFormService.getThematicLayerOptionsJSON(attributeId, $scope.dashboard.getDashboardId(), onSuccess);
@@ -766,9 +851,8 @@
 	    		$scope.thematicLayerModel.geoNode = $scope.thematicLayerModel.geoNode || $scope.geoNodes[0].id; // TODO: remove geoNode from init function... this is set in the init function but may be null if new layer
 	    		$scope.thematicStyleModel.labelFont = $scope.availableFonts[0]; 
 	    		$scope.thematicStyleModel.valueFont = $scope.availableFonts[0];	
+	    		$scope.thematicLayerModel.displayInLegend = true;	    		
 	    	}
-    		
-    		$scope.$apply();
 	    };
 	    
 	    
@@ -779,19 +863,22 @@
 	    	
 	    	$scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy.value;
 	    	
-	    	$scope.setPolygonCategories(JSON.parse(state.styles[0].categoryPolygonStyles).catLiElems);
-	    	$scope.setPointCategories(JSON.parse(state.styles[0].categoryPointStyles).catLiElems);
-	    	
 	    	$scope.thematicLayerModel.name = state.layerName;
     		$scope.thematicLayerModel.layerType = state.featureStrategy;
     		$scope.thematicLayerModel.aggregationMethod = state.aggregationMethod;
     		$scope.thematicLayerModel.aggregationType = aggregationMethod = state.aggregationMethod;
     		$scope.thematicLayerModel.geoNode = state.geoNodeId;
-    		
-    		$scope.thematicStyleModel = state.styles[0];
-    		
-    		$scope.$apply();
+    		$scope.thematicLayerModel.displayInLegend = state.inLegend;
+
+    		var style = state.styles[0];
+    		    		
+    		// Update the point and polygon category model
+    		$scope.categoryWidget.polygonCatOtherOptionSelected = $scope.loadCategoryValues($scope.categoryWidget.polygonCatOptionsObj, style.categoryPolygonStyles);
+    		$scope.categoryWidget.pointCatOtherOptionSelected = $scope.loadCategoryValues($scope.categoryWidget.basicPointCatOptionsObj, style.categoryPointStyles);
+	    	
+    		$scope.thematicStyleModel = style;
 	    };
+	    
 	    
 	    
 		/**
@@ -1012,147 +1099,7 @@
                 
             return null;        
         };
-    	
-    	
-    	/**
-         * Scrape basic categories for values and style settings
-         */
-    	$scope.getBasicCategories = function () {    
-          var elements = this.getImpl().find(".category-container");
-          var categories = [];        
-              
-          for(var i=0; i< elements.length; i++){
-            var catInputElem = $(elements[i]).find(".category-input");
-            var catColorElem = $(elements[i]).find(".cat-color-selector");
-            var catColor = LayerForm.rgb2hex($(catColorElem).css("background-color"));
-            var catVal = catInputElem.val();
-                  
-            // parse the formatted number to the format of the data so the SLD can apply categories by this value
-            if(catInputElem.data("type") == "number" ) {
-              var thisNum = this._parser(catVal);
-                
-              if($.isNumeric(thisNum)) {
-                catVal = thisNum;                
-              }
-            }
-                  
-            // Filter out categories with no input values
-            if(catVal !== ""){
-              var category = new Object();
-              category.val = catVal;
-              category.color = catColor;
-              category.isOntologyCat = false;
-                  
-              if(this._checkOther) {
-                if(this.getGeomType() === "polygon"){
-                  category.otherEnabled = $("#basic-cat-poly-other-option").prop("checked");
-                }
-                else if(this.getGeomType() === "point"){
-                  category.otherEnabled = $("#basic-cat-point-other-option").prop("checked");
-                }
-                
-                if(catInputElem[0].id === this.getOtherCatInputId()){
-                  category.otherCat = true;
-                }
-                else{
-                  category.otherCat = false;
-                }
-              }
-              else {
-                category.otherEnabled = false;
-                category.otherCat = false;
-              }
-                       
-              categories.push(category);
-            }
-          }  
-                        
-          return categories;
-        };
-        
-        
-        /**
-         * Get general type representation of a thematic attribte type
-         * 
-         * @param type : thematic attribute type <string>
-         */
-        $scope.getCategoryType = function(type) {
-            if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-                return 'number';
-              }
-              else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-                return 'date';
-              }
-              
-              return 'text';
-        };
-    	
-    	
-    	/**
-         * Add existing categories to the ui
-         * TODO: hook this up and test it. 
-         */
-    	$scope._loadExistingBasicCategories = function() {
-          var catsJSONObj = $(this._storeId).data("categoriesstore");  // TODO: get this data from the model
-            
-          if(catsJSONObj){
-            catsJSONObj = CategoryWidget.getValueFromHTML(catsJSONObj);
-            var catsJSONArr = catsJSONObj.catLiElems;
-              
-            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-              catsJSONArr = catsJSONObj;
-            }          
-                        
-            if(catsJSONArr != null) {
-              
-              var catInputId;
-              var catOtherEnabled = true;
-            
-              for(var i=0; i<catsJSONArr.length; i++){
-                var cat = catsJSONArr[i];
-                  
-                // Controlling for 'other' category 
-                if(cat.otherCat){
-                  catInputId = this.getOtherCatInputId();
-                }
-                else{
-                  catInputId = this._prefix + "-" + (i+1);
-                }
-                  
-                var catColorSelectorId = catInputId + "-color-selector";
-              
-                var value = cat.val;            
-                var categoryType = $("#"+catInputId).data("type");
-              
-                // Localize any existing number category values
-                if(!cat.otherCat && categoryType == "number") {
-                  var number = parseFloat(value);
-                  var localized = this._formatter(number);
-                  
-                  value = localized;
-                }            
-              
-                $("#"+catInputId).val(value);
-                $("#"+catColorSelectorId).css("background", cat.color);
-                catOtherEnabled = cat.otherEnabled;
-              }
-                
-              // Simulate a checkbox click to turn off the checkbox if the 'other' option is disabled
-              // The 'other' option is checked by default making this a valid sequence
-              if(this._checkOther && !catOtherEnabled){
-              
-              if(this.getGeomType() === "polygon"){
-                  $("#basic-cat-poly-other-option").click();
-                }
-                else if(this.getGeomType() === "point"){
-                  $("#basic-cat-point-other-option").click();
-                }
-                $("#" + catInputId).parent().parent().hide();
-              }
-            }
-          }
-        };
-        
+    	        
     	
         /**
          * Handle the ajax request/response for basic category auto complete.
@@ -1161,14 +1108,13 @@
          * @param response : JQuery signature var
          */
     	$scope.basicCategoryAutocompleteSource = function( request, response ) {
-    	   var _parser = Globalize.numberParser();
     	   var _formatter = Globalize.numberFormatter();
     			
 		   var mdAttribute = $scope.thematicLayerModel.mdAttribute;  
 		   var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
-	       var universalId = $scope.dynamicDataModel.aggregationStrategy.value;
+	       var universalId = $scope.getCurrentAggregationStrategy().value;
 	       var geoNodeId = $scope.thematicLayerModel.geoNode;
-	       var aggregationVal = $scope.thematicLayerModel.aggregationMethod.method;
+	       var aggregationVal = $scope.thematicLayerModel.aggregationType;
 	       var conditions = $scope.dashboard.getCompressedState(); 
 	       var limit = 10;
 		          
@@ -1186,29 +1132,13 @@
            };
               
            var onFailure = function(e){
-        	   GDB.ExceptionHandler.handleException(e.message);
+             console.log(e);
            };
            
            var text = request.term;
  			  
            layerFormService.categoryAutoCompleteService(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure );
     	};
-    	
-    	
-	    /**
-	     * Aggregation strategy (universals) watcher.
-	     * Hides the aggregation method dropdown if aggregation is not relevant for the strategy level.
-	     */
-	    $scope.$watch("dynamicDataModel.aggregationStrategy", function(newValue, oldValue) {
-            if($($scope.FORM_CONSTANTS.GEO_AGG_STRATEGY_SELECT_ID+" option:selected").hasClass("universal-leaf")){
-                // Hide the attribute aggregation dropdown because aggregations are irrelevant at this level of universal
-                $($scope.FORM_CONSTANTS.GEO_AGG_METHOD_SELECT_ID).parent().parent().hide();
-              }
-              else{
-                $($scope.FORM_CONSTANTS.GEO_AGG_METHOD_SELECT_ID).parent().parent().show();
-              }
-	    });
-	    
 	    
 	    /**
 	     * Toggle the layer type selection UI based on user actions (model change)
@@ -1251,8 +1181,10 @@
 	     * geoNodes needs to be updated.
 	     */
 	    $scope.$watch("thematicLayerModel.geoNode", function(newValue, oldValue) {
-	    	$scope.getGeographicAggregationOptions(newValue);
-	    });
+	    	if(newValue != null && newValue.length > 0) {	      
+	    	  $scope.getGeographicAggregationOptions(newValue);
+	    	}
+	    }); 
 	    
 	    $scope.$watch("dynamicDataModel.aggregationStrategy", function(newValue, oldValue) {
 	    	if(newValue != null && newValue.length > 0) {
@@ -1582,29 +1514,6 @@
            return html;
          }
          
-         
-         $scope.localizeAllCategoryInputs = function() {
-        	 // TODO: Move these to a more global or better context
-      	   	 var _parser = Globalize.numberParser();
-      	   	 var _formatter = Globalize.numberFormatter();
-    	   
-	         // Localize any existing number cateogry values
-	         // TODO: move all localization to angular
-	         $.each($('.category-input'), function() {
-	           var value = $(this).val();
-	           if(value != null && value.length > 0) {
-	             var categoryType = $(this).data("type"); // TODO: UPDATE from layerFormService getAggregationStrategyType
-	             if(categoryType == "number") {
-	               var number = parseFloat(value);
-	               var localized = _formatter(number);
-	               
-	               $(this).val(localized);
-	             }
-	           }
-	         });  
-         }
-         
-         
  	    /**
  	     * Converts rgb or rgba to hex equivilent.
  	     * 
@@ -1637,9 +1546,13 @@
 	};
 	
 	 
-	angular.module("dashboard-layer-form", ["dashboard", "styled-inputs", "layer-form-service"]);
+	angular.module("dashboard-layer-form", ["layer-form-service", "localization-service", "dashboard", "styled-inputs"]);
 	angular.module("dashboard-layer-form")
 		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
+		.directive('colorPicker', ColorPicker)
+		.directive('styleCategory', StyleCategory)
+		.directive('styleBasicFill', StyleBasicFill)
+		.directive('styleGradientFill', StyleGradientFill)
 		.directive('styleStroke', StyleStroke)
 		.directive('layerNameInput', LayerNameInput)
 		.directive('layerLabel', LayerLabel)

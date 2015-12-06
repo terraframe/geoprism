@@ -19,9 +19,18 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="check-block">
-  <div ng-attr-id="{{id || undefined}}" ng-attr-name="{{name}}" ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area chk-focus">
-    <span></span>
+
+<div class="category-container">
+  <div class="text category-input-container">
+    <!-- Regular cat  -->
+    <input class="category-input" ng-disabled="category.otherCat" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()">
   </div>
-  <label ng-attr-for="{{id || undefined}}">{{label}}</label>
+  <div class="cell"> 
+    <div class="color-holder">
+      <a href="#" class="color-choice" color-picker model="category.color" element='#modal01'>    
+        <span class="ico cat-color-selector" style="background:{{category.color}}">icon</span>
+        <span class="arrow">arrow</span>        
+      </a>
+    </div>
+  </div>
 </div>

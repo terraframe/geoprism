@@ -25,10 +25,11 @@
         var request = new Mojo.ClientRequest({
           onSuccess : onSuccess,
           onFailure : function(e) {
-            GDB.ExceptionHandler.handleException(e);
-                      
             if(onFailure != null) {
-              onFailure(e);
+              onFailure(e);            	
+            }
+            else {
+              GDB.ExceptionHandler.handleException(e);            	
             }
           }
         });
@@ -44,10 +45,11 @@
           var request = new GDB.StandbyClientRequest({
             onSuccess : onSuccess,
             onFailure : function(e){
-              GDB.ExceptionHandler.handleException(e);
-              
               if(onFailure != null) {
-                onFailure(e);
+                onFailure(e);            	
+              }
+              else {
+                GDB.ExceptionHandler.handleException(e);            	
               }
             }
           }, elementId);
@@ -113,7 +115,7 @@
     
     service.applyWithStyle = function(thematicLayerModel, thematicStyleModel, dynamicDataModel, state, element, onSuccess, onFailure) {
     	 
-    	 var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    	 var request = service.createStandbyRequest(element, onSuccess, onFailure);
     	 if(dynamicDataModel.newInstance){
     	    service.thematicLayerDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer();
     		service.thematicStyleDTO = new com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle();

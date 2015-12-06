@@ -34,11 +34,17 @@
       scope: {
         model:'=',
         label:'@',
-        name:'@'
       },
       controller : StyledCheckBoxController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+        if(attrs.id) {
+          scope.id = attrs.id;
+        }
+        
+        if(attrs.name) {
+          scope.name = attrs.name;
+        }
       }
     }    
   }  
@@ -88,7 +94,7 @@
       templateUrl : '/partial/inputs/styled-basic-select.jsp',    
       scope: {
         model:'=',
-        options:'=',
+        options:'&',
         style:'@'        
       },
       controller : StyledBasicSelectController,
@@ -106,7 +112,7 @@
   function StyledSelectController($scope, $window) {
     var controller = this;
     controller.expand = false;
-    controller.label = '';
+    controller.cache = {};
     
     // Set default value and label attributes
     if($scope.value == null) {
@@ -124,19 +130,23 @@
     });
     
     controller.init = function() {
-      if($scope.options != null) {
-            
-        if($scope.model != null) {        
-          for(var i = 0; i < $scope.options.length; i++) {
-            if($scope.options[i][$scope.value] == $scope.model) {
-              controller.label = $scope.options[i][$scope.label];
-            }
+      var options = $scope.options;
+      
+      if(options != null) {
+        var cache = {};
+        
+        for(var i = 0; i < options.length; i++) {
+          var option = options[i];
+          
+          if(option != null) {
+            var id = option[$scope.value];
+            var label = option[$scope.label];
+              
+            cache[id] = label;            
           }
         }
-        else if($scope.options.length > 0) {
-          $scope.model = $scope.options[0][$scope.value];
-          controller.label = $scope.options[0][$scope.label];        
-        }
+        
+        controller.cache = cache;
       }          
     }
     
@@ -160,8 +170,10 @@
       return ($scope.model == option);
     }  
     
-    $scope.$watch('options', function(){
-      controller.init();	
+    $scope.$watch('options', function(newValue){
+      if(newValue != null) {
+        controller.init();            
+      }
     });
   } 
   

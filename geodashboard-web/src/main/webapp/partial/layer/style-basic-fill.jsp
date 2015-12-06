@@ -19,9 +19,25 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="check-block">
-  <div ng-attr-id="{{id || undefined}}" ng-attr-name="{{name}}" ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area chk-focus">
-    <span></span>
+
+<div class="fill-block">
+  <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
+  <div class="cell-holder">
+    <div class="cell">
+      <span><gdb:localize key="DashboardLayer.form.color"/></span>
+      <div class="color-holder">
+        <a href="#" class="color-choice" color-picker model="fill" element='#modal01'>
+          <span class="ico" style="background:{{fill}}">icon</span>
+          <span class="arrow">arrow</span>
+        </a>
+      </div>
+    </div>
+    <div class="cell">
+      <label><gdb:localize key="DashboardLayer.form.opacity"/></label>
+      <div class="text">
+        <select class="tab-select" ng-options="ctrl.getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"  ng-model="opacity"></select>
+      </div>
+    </div>
   </div>
-  <label ng-attr-for="{{id || undefined}}">{{label}}</label>
 </div>
+
