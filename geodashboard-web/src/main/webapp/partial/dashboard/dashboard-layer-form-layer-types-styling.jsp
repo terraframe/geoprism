@@ -97,34 +97,8 @@
           
           <div class="category-block" id="category-point-colors-container">
 
-            <!-- TODO: remove this input after full angular integration -->
-<!-- 
-            <input id="categories-point-input" data-mdattributeid="{{thematicLayerModel.mdAttributeId}}" data-type="dynamicDataModel.thematicAttributeDataType" data-categoriesstore="{pointcategories}" type="hidden" class="category-input" name="style.categoryPointStyles" ></input>
- -->            
-    
             <!-- RENDER ONTOLOGY TREE DATA  -->
-            <div class="ontology-category-input-container" ng-if="dynamicDataModel.isOntologyAttribute">
-              <div id="points-ontology-tree" data-termtype="{{dynamicDataModel.termType}}" data-reltype="{{dynamicDataModel.relationshipType}}" data-roots='{{dynamicDataModel.roots}}' ></div>
-              
-              <div id="other-cat-point-container" class="other-cat-container" ng-show="categoryWidget.ontPointOtherOptionSelected">
-                <ul class="color-list other-cat">
-                  <li>
-                    <div class="category-container">
-                      <div class="text category-input-container">
-                        <p id="cat-point-other-basic-label" ><gdb:localize key="Other"/></p>
-                      </div>
-                      <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
-                        <span id="cat-point-other-color-selector" class="ico ontology-category-color-icon ontology-other-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
-                      </a>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="check-block">
-                <input id="ont-cat-point-other-option" class="other-option-check-box" type="checkbox" name="otherOption" ng-model="categoryWidget.ontPointOtherOptionSelected"></input>
-                <label for="ont-cat-point-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
-              </div>
-            </div>
+            <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" ontology="dynamicDataModel"></style-category-ontology>
             
             <!-- RENDER BASIC CATEGORIES -->
             <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="basicCategoryAutocompleteSource"></style-category-list>
@@ -356,8 +330,7 @@ ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label 
         <style-basic-fill fill="thematicStyleModel.polygonFill" opacity="thematicStyleModel.polygonFillOpacity"></style-basic-fill>
       
         <!-- BASIC POLYGON STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.polygonStroke" stroke-width="thematicStyleModel.polygonStrokeWidth" stroke-opacity="thematicStyleModel.polygonStrokeOpacity"></style-stroke>
-                
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.polygonStroke" stroke-width="thematicStyleModel.polygonStrokeWidth" stroke-opacity="thematicStyleModel.polygonStrokeOpacity"></style-stroke>                
       </div>
       
       
@@ -367,8 +340,7 @@ ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label 
         <style-gradient-fill min-fill="thematicStyleModel.gradientPolygonMinFill" max-fill="thematicStyleModel.gradientPolygonMaxFill" opacity="thematicStyleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
         
         <!-- POINT GRADIENT STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPolygonStroke" stroke-width="thematicStyleModel.gradientPolygonStrokeWidth" stroke-opacity="thematicStyleModel.gradientPolygonStrokeOpacity"></style-stroke>
-        
+        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPolygonStroke" stroke-width="thematicStyleModel.gradientPolygonStrokeWidth" stroke-opacity="thematicStyleModel.gradientPolygonStrokeOpacity"></style-stroke>        
       </div>
       
      
@@ -383,28 +355,8 @@ ng-model="thematicStyleModel.secondaryAttribute" ng-options="attr as attr.label 
           </div>
         <div class="category-block" id="category-colors-container">
           <!-- RENDER ONTOLOGY TREE DATA  -->
-          <div class="ontology-category-input-container" ng-if="dynamicDataModel.isOntologyAttribute">
-            <div id="polygon-ontology-tree" data-termtype="{{dynamicDataModel.termType}}" data-reltype="{{dynamicDataModel.relationshipType}}" data-roots='{{dynamicDataModel.roots}}' ></div>
-            <div id="other-cat-poly-container" class="other-cat-container" ng-show="categoryWidget.ontPolygonOtherOptionSelected">
-              <ul class="color-list other-cat">
-                <li>
-                  <div class="category-container">
-                    <div class="text category-input-container">
-                      <p id="cat-other-basic-label" ><gdb:localize key="Other"/></p>
-                    </div>
-                    <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
-                      <span id="cat-other-color-selector" class="ico ontology-category-color-icon ontology-other-color-icon" style="background:#737678; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>
-                    </a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="check-block">
-              <input id="ont-cat-poly-other-option" class="other-option-check-box" type="checkbox" name="otherOption" ng-model="categoryWidget.ontPolygonOtherOptionSelected"></input>
-              <label for="ont-cat-poly-other-option"><gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/></label>
-            </div>
-          </div>
-          
+          <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" ontology="dynamicDataModel"></style-category-ontology>
+                    
           <!-- RENDER BASIC CATEGORIES -->
           <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="basicCategoryAutocompleteSource"></style-category-list>
         </div>

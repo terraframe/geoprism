@@ -70,6 +70,207 @@
     };    
   };
   
+  function StyleCategoryOntologyController($scope) {
+    var controller = this;
+    
+    /**
+     * Scrape an ontology tree for the style settings
+     */
+    controller.getOntologyCategories = function (treeEl) {
+        
+      if($(treeEl).length > 0) {
+        var categories = [];
+              
+        var elements = $(treeEl).find(".ontology-category-color-icon");
+              
+        $.each(elements, function( index, element ) {
+          var category = {};
+          category.id = element.dataset.rwid; 
+          category.val = element.parentElement.previousSibling.textContent;
+          category.color = controller.rgb2hex($(element).css("background-color"));
+          category.isOntologyCat = true;
+                            
+          categories.push(category);
+        });
+              
+        // Get the other category for the a layer create/edit form term tree
+        var otherElement = $(treeEl).next();
+        
+        if(otherElement.hasClass('other-cat-container')){
+          var color = otherElement.find('.ontology-other-color-icon').first().css("background-color");
+        	
+          var otherCat = {};
+          otherCat.id = "other"; 
+          otherCat.val = "Other";
+          otherCat.color = controller.rgb2hex(color);
+          otherCat.isOntologyCat = false;
+          otherCat.otherCat = true;
+          categories.push(otherCat);
+        }
+        
+        console.log(categories);
+                    
+        return categories;
+      }
+            
+      return null;        
+    };
+
+	
+    /**
+     * Gets the hex color code for an ontology category based on the term id 
+     * 
+     * @param nodeId - id of the node in the ui to get the color for.
+     */
+    controller.getCategoryColor = function(termId, isOther) {
+        
+      if($scope.categories){          
+        var categories = $scope.categories.catLiElems;
+
+        if(categories != null) {
+          if(categories.length > 0){
+            for(var i=0; i < categories.length; i++){
+              var category = categories[i];
+              var catId = category.id;
+             
+              if((isOther && category.otherCat) || (!isOther && category.id === termId)){
+                return category.color;
+              }
+            }
+          }          
+        }
+      }
+      
+      // if no match is found return the default
+      return "#00bfff";
+    };
+    
+    /**
+     * Converts rgb or rgba to hex equivilent.
+     * 
+     * @param rgb or rgba 
+     */
+    controller.rgb2hex = function(rgb) {
+      if(rgb != null) {
+             
+        if (/^#[0-9A-F]{6}$/i.test(rgb)){
+          return rgb;
+        }
+
+        var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);        
+        if(rgbMatch){
+          function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+          }
+            
+          return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+        }
+                
+        var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        if(rgbaMatch){
+          return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+            ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+        }
+      }
+    };
+    
+    controller.setupColorPicker = function(element, treeElement, isOther) {
+      element.colpick({
+        submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
+        onShow:function(colPickObj) {
+          var that = this;
+          var currColor = controller.rgb2hex($(this).css("background-color"));
+          $(this).colpickSetColor(currColor,false);
+                        
+          // Move the color picker widget if the page is scrolled
+          $('#modal01').scroll(function(){  
+            var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+            var colPick = $(that);
+            var diff = colPick.offset().top + colPick.height() + 2; 
+            var diffStr = diff.toString() + "px";
+            colorPicker.css({ top: diffStr });
+          });
+                       
+        },
+        onChange: function(hsb,hex,rgb,el,bySetColor) {
+          var hexStr = '#'+hex;
+          $(el).css('background', hexStr);
+          $(el).next(".color-input").attr('value', hexStr);    
+        },
+        onHide:function(el) {
+          $scope.categories.catLiElems = controller.getOntologyCategories(treeElement);
+              
+          $scope.$apply();
+        },
+        /* checkable: true, */
+        crud: {
+          create: { // This configuration gets merged into the jquery create dialog.
+            height: 320
+          },
+          update: {
+            height: 320
+          }
+        }
+      });      
+    }
+  }
+
+  
+  function StyleCategoryOntology($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/style-category-ontology.jsp',    
+      scope: {
+    	ontology : '=',
+        categories : '=',
+      },
+      controller : StyleCategoryOntologyController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        // Hook up the ontology-tree
+        var treeElement = $(element).find('.ontology-tree').first()[0];    	  
+    	  
+        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
+          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+          rootTerms : scope.ontology.roots.roots,
+          editable : false,
+          slide : false,
+          selectable : false,
+          onCreateLi: function(node, $li) {
+            if(!node.phantom) {
+              var termId = node.runwayId;
+                        
+              // Load the value from the model
+              var catColor = ctrl.getCategoryColor(termId, false);
+                    
+              var thisLi = $.parseHTML(
+                '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
+                  '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
+                '</a>');
+
+              // Add the color icon for category ontology nodes              
+              $li.find('> div').append(thisLi);
+
+              // ontology category layer type colors
+              ctrl.setupColorPicker($(thisLi).find("span"), treeElement);                        
+            }
+          }
+        }); // end tree
+        
+        tree.render(treeElement, null);
+        
+        // Setup the other category color picker
+        var catColor = ctrl.getCategoryColor('', true);
+        $(element).find('.ontology-other-color-icon').css('background', catColor);        
+        
+        ctrl.setupColorPicker($(element).find('.ontology-other-color-icon'), treeElement);
+      }
+    };    
+  }; 
 	
   function StyleController($scope) {
     var controller = this;
@@ -245,47 +446,47 @@
 		      // Format the select elements
 	          jcf.customForms.replaceAll(element[0]);
 	          
-	    	  if(scope.dynamicDataModel.isOntologyAttribute){
-		    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
-		    	  for(var i=0; i<layerTypes.length; i++){
-		    		  var type = layerTypes[i];
-	    	
-		    		  if(type === 'CATEGORYPOINT'){
-				          var targetEl = scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID;
-				          scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPointStyles));
-		    		  }
-		    		  else if(type === 'CATEGORYPOLYGON'){
-		    			  var targetEl = scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID;
-		    			  scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPolygonStyles));
-		    		  }
-		    	  	}
-	    	  
-		          	function attachOtherCategoryColorPicker(){
-			              // ontology category layer type colors
-			              $(".ontology-other-color-icon").colpick({
-			                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-			                onShow:function(colPickObj){
-			                  var that = this;
-			                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-			                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-			                      var colPick = $(that);
-			                      var diff = colPick.offset().top + colPick.height() + 2; 
-			                      var diffStr = diff.toString() + "px";
-			                      colorPicker.css({ top: diffStr });
-			                    });
-			                },
-			                onChange:function(hsb,hex,rgb,el,bySetColor) {
-			                  $(el).css('background','#'+hex);
-			                  $(el).find('.color-input').attr('value', '#'+hex);
-			                },
-			                onHide:function(el) {
-			                	scope.updateAllOntologyCategryModels();
-				            }
-			              });
-		            }
-		          	
-		          	attachOtherCategoryColorPicker();
-	    	  }
+//	    	  if(scope.dynamicDataModel.isOntologyAttribute){
+//		    	  var layerTypes = scope.dynamicDataModel.layerTypeNames;
+//		    	  for(var i=0; i<layerTypes.length; i++){
+//		    		  var type = layerTypes[i];
+//	    	
+//		    		  if(type === 'CATEGORYPOINT'){
+//				          var targetEl = scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID;
+//				          scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPointStyles));
+//		    		  }
+//		    		  else if(type === 'CATEGORYPOLYGON'){
+//		    			  var targetEl = scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID;
+//		    			  scope.renderOntologyTree(targetEl, JSON.parse(scope.thematicStyleModel.categoryPolygonStyles));
+//		    		  }
+//		    	  	}
+//	    	  
+//		          	function attachOtherCategoryColorPicker(){
+//			              // ontology category layer type colors
+//			              $(".ontology-other-color-icon").colpick({
+//			                submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//			                onShow:function(colPickObj){
+//			                  var that = this;
+//			                    $(scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
+//			                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+//			                      var colPick = $(that);
+//			                      var diff = colPick.offset().top + colPick.height() + 2; 
+//			                      var diffStr = diff.toString() + "px";
+//			                      colorPicker.css({ top: diffStr });
+//			                    });
+//			                },
+//			                onChange:function(hsb,hex,rgb,el,bySetColor) {
+//			                  $(el).css('background','#'+hex);
+//			                  $(el).find('.color-input').attr('value', '#'+hex);
+//			                },
+//			                onHide:function(el) {
+//			                	scope.updateAllOntologyCategryModels();
+//				            }
+//			              });
+//		            }
+//		          	
+//		          	attachOtherCategoryColorPicker();
+//	    	  }
 	          
 	          
 	          
@@ -898,201 +1099,6 @@
   	    	return false;
   	    };
   	    
-  	    
-  	    $scope.renderOntologyTree = function(targetEl, catsJSONObj){
-  	    	
-  		  var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-              termType : "com.runwaysdk.geodashboard.ontology.Classifier",
-              relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
-              rootTerms : $scope.dynamicDataModel.roots.roots,
-              editable : false,
-              slide : false,
-              selectable : false,
-              onCreateLi: function(node, $li) {
-                if(!node.phantom) {
-                	var termId = node.runwayId;
-                	
-                  	var catColor = $scope._getCategoryColor(termId, catsJSONObj);
-              
-                  	var thisLi = $.parseHTML(
-                    '<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">' +
-                      '<span data-rwId="'+ termId +'" class="ico ontology-category-color-icon" style="background:'+catColor+'; border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;">icon</span>' +
-                    '</a>');
-
-                  	// Add the color icon for category ontology nodes              
-                  	$li.find('> div').append(thisLi);
-                  
-	                // ontology category layer type colors
-	                $(thisLi).find("span").colpick({
-	                  submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
-	                  onShow:function(colPickObj) {
-	                  var that = this;
-	                    var currColor = $scope.rgb2hex($(this).css("background-color"));
-	                    $(this).colpickSetColor(currColor,false);
-	                    
-	                    // Move the color picker widget if the page is scrolled
-	                    $($scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-	                      var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-	                      var colPick = $(that);
-	                      var diff = colPick.offset().top + colPick.height() + 2; 
-	                      var diffStr = diff.toString() + "px";
-	                      colorPicker.css({ top: diffStr });
-	                    });
-	                    
-	                  },
-	                  onChange: function(hsb,hex,rgb,el,bySetColor) {
-	                    var hexStr = '#'+hex;
-	                    $(el).css('background', hexStr);
-	                    $(el).next(".color-input").attr('value', hexStr);    
-	                  },
-		              onHide:function(el) {
-		            	  $scope.updateAllOntologyCategryModels();
-			          },
-	                  /* checkable: true, */
-	                  crud: {
-	                    create: { // This configuration gets merged into the jquery create dialog.
-	                      height: 320
-	                    },
-	                    update: {
-	                      height: 320
-	                    }
-	                  }
-	                });
-	                
-	                // TODO: This is a bad place for this because it runs for every category.
-	                // A better solution would be to add an onComplete method
-	                $scope.updateAllOntologyCategryModels();
-                }
-              }
-		  }); // end tree
-		  
-		  tree.render(targetEl, null);
-  	    }
-  	    
-    	
-    	/**
-         * Gets the hex color code for an ontology category based on the term id 
-         * 
-         * @param nodeId - id of the node in the ui to get the color for.
-         */
-        $scope._getCategoryColor = function(termId, catsJSONObj) {
-            
-          if(catsJSONObj){          
-            var catsJSONArr = catsJSONObj.catLiElems;
-            
-            if(catsJSONArr == null && Array.isArray(catsJSONObj)) {
-              catsJSONArr = catsJSONObj;
-            }          
-
-            if(catsJSONArr != null) {            
-              if(catsJSONArr.length > 0){
-                for(var i=0; i<catsJSONArr.length; i++){
-                  var cat = catsJSONArr[i];
-                  var catId = cat.id;
-                 
-                  if(catId === termId){
-                    return cat.color;
-                  }
-                  else if(catId === "cat-other-color-selector"){
-                    return cat.color;
-                  }
-                  else if(catId === "cat-point-other-color-selector"){
-                    return cat.color;
-                  }
-                }
-              }          
-            }
-          }
-          // if no match is found return the default
-          return "#00bfff";
-        };
-        
-        
-        // TODO: Test and setup
-        $scope._setupCategoryColorPicker = function(elements) {
-            
-            // color dropdown buttons
-            elements.colpick({
-              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-              onShow:function(colPickObj) {
-              var that = this;
-              var icoEl;
-              var currColor;
-              
-              if($(this).find(".ico")){
-                currColor = $scope.rgb2hex($(this).find(".ico").css("background-color"));
-              }
-              else if($(this).hasClass("ico")){
-                currColor = $scope.rgb2hex($(this).css("background-color"));
-              }
-              
-                $(this).colpickSetColor(currColor,false);
-                
-                $($scope.FORM_CONSTANTS.LAYER_MODAL).scroll(function(){  
-                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                  var colPick = $(that);
-                  var diff = colPick.offset().top + colPick.height() + 2; 
-                  var diffStr = diff.toString() + "px";
-                  colorPicker.css({ top: diffStr });
-                });
-                
-              },
-              onChange:function(hsb,hex,rgb,el,bySetColor) {
-                $(el).find(".ico").css('background','#'+hex);
-                $(el).find('.color-input').attr('value', '#'+hex);
-              }
-            }); 
-        };
-        
-    	
-        /**
-         * Scrape an ontology tree for the style settings
-         */
-    	$scope.getOntologyCategories = function (treeEl) {
-            
-            if($(treeEl).length > 0) {
-              var categories = [];
-                  
-              var elements = $(treeEl).find(".ontology-category-color-icon");
-                  
-              $.each(elements, function( index, element ) {
-                var category = new Object();
-                category.id = element.dataset.rwid; 
-                category.val = element.parentElement.previousSibling.textContent;
-                category.color = $scope.rgb2hex($(element).css("background-color"));
-                category.isOntologyCat = true;
-                                
-                categories.push(category);
-              });
-                  
-              // Get the other category for the a layer create/edit form term tree
-              var thisId = $(treeEl).next().attr('id');
-              if(thisId === "other-cat-point-container"){
-                var otherCat = new Object();
-                otherCat.id = "cat-point-other-color-selector"; 
-                otherCat.val = "Other";
-                otherCat.color = $scope.rgb2hex($("#cat-point-other-color-selector").css("background-color"));
-                otherCat.isOntologyCat = false;
-                otherCat.otherCat = true;
-                otherCat.otherEnabled =  $("#ont-cat-point-other-option").prop("checked");
-                categories.push(otherCat);
-              }
-              else if(thisId === "other-cat-poly-container"){
-                var otherCat = new Object();
-                  otherCat.id = "cat-other-color-selector"; 
-                  otherCat.val = "Other";
-                  otherCat.color = $scope.rgb2hex($("#cat-other-color-selector").css("background-color"));
-                  otherCat.isOntologyCat = false;
-                  otherCat.otherCat = true;
-                  otherCat.otherEnabled =  $("#ont-cat-poly-other-option").prop("checked");
-                  categories.push(otherCat);
-              }
-                        
-              return categories;
-            }
-                
-            return null;        
-        };
     	        
     	
         /**
@@ -1490,53 +1496,6 @@
            
            $($scope.FORM_CONSTANTS.GEO_TYPE_HOLDER).show();
          };
-         
-         
-         /**
-          * Utility function for converting encoded json back to json (de-coding)
-          * 
-          * @param html : encoded json
-          */
-         function getValueFromHTML(html)
-         {
-           if(typeof html === 'string' || html instanceof String) {
-             return JSON.parse(decodeURIComponent(html));                
-           }
-         
-           // The html variable has already been converted into an object
-           // Nothing else is required.
-           return html;
-         }
-         
- 	    /**
- 	     * Converts rgb or rgba to hex equivilent.
- 	     * 
- 	     * @param rgb or rgba 
- 	     */
- 	    $scope.rgb2hex = function(rgb) {
- 	        if(rgb != null) {
- 	            
- 	            if (/^#[0-9A-F]{6}$/i.test(rgb)){
- 	              return rgb;
- 	            }
-
- 	            var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
- 	            if(rgbMatch){
- 	              function hex(x) {
- 	                return ("0" + parseInt(x).toString(16)).slice(-2);
- 	              }
- 	              return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
- 	            }
- 	              
- 	            var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
- 	            if(rgbaMatch){
- 	              return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
- 	                 ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
- 	                 ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
- 	                 ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
- 	            }
- 	         }
- 	    };
 	};
 	
 	 
@@ -1545,6 +1504,7 @@
 		.controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
 		.directive('colorPicker', ColorPicker)
 		.directive('styleCategoryList', StyleCategoryList)
+		.directive('styleCategoryOntology', StyleCategoryOntology)
 		.directive('styleBasicFill', StyleBasicFill)
 		.directive('styleGradientFill', StyleGradientFill)
 		.directive('styleStroke', StyleStroke)
