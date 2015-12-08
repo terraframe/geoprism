@@ -30,12 +30,21 @@
           controller.ids = [];
           controller.dashboards = {};
           controller.editDashboard = response.editDashboard;
+          controller.isLastDashboard = false;
+          controller.isInExistingRow = true;
           
           for(var i = 0; i < response.dashboards.length; i++) {
             var dashboard = response.dashboards[i];
             
             controller.ids.push(dashboard.dashboardId);
-            controller.dashboards[dashboard.dashboardId] = dashboard;            
+            controller.dashboards[dashboard.dashboardId] = dashboard;  
+            
+            if(i === response.dashboards.length - 1){
+            	controller.dashboards[dashboard.dashboardId].isLastDashboard = true;
+            	if((i+1) % 3 === 0){
+            		controller.isInExistingRow = false;
+            	}
+            }
           }
             
           $scope.$apply();

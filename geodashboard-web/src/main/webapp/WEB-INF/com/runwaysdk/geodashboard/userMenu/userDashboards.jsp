@@ -101,7 +101,7 @@
         filter: alpha(opacity=100); 
     }
     
-      .thumbnail:hover a i{
+    .thumbnail:hover a i{
       opacity: 1;
         filter: alpha(opacity=100); 
     }
@@ -110,6 +110,10 @@
       opacity: 1;
         filter: alpha(opacity=100); 
     }
+    
+	a.btn, .btn:active, .btn:focus {
+		padding: 2px 4px 2px 4px;
+	}
     
     img{
       width: 100%;
@@ -133,6 +137,11 @@
         -moz-transition: opacity .2s ease-in-out;
         -webkit-transition: opacity .2s ease-in-out;
     }
+    
+    .fa-pencil:before {
+    	margin-right: 5px;
+    	color: white;
+	}
     
     .frame-box {
       position:relative;
@@ -190,40 +199,104 @@
     <div class="row"></div>
     <div class="col-md-3"></div>
     <div class="col-md-6">
-      <div class="row">
-        <div ng-if="ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
-          <a href="#" class="new-dashboard-btn" >
-            <div class="thumbnail text-center">
-              <div class="frame-box">
-                <div class="inner-frame-box">
-                  <i class="fa fa-plus"></i>
-                </div>
-              </div>
-              <div class="caption">
-                <h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
-              </div>
-            </div>
-          </a>
-        </div>                         
-      
-        <div class="col-sm-6 col-md-4" ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]">
-          <div class="thumbnail text-center">
-            <a ng-href="DashboardViewer?dashboard={{dashboard.dashboardId}}" class="" >
-              
-              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{dashboard.dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
-              
-              <div class="caption">
-                <h3>{{dashboard.label}}</h3>
-              </div>
-            </a>              
-          </div>
-          <div ng-if="ctrl.editDashboard" style="color:white;">          
-            <a href="#" ng-click="ctrl.edit(dashboard.dashboardId)" style="color:white;"><gdb:localize key="dashboard.edit.label"/></a> |
-            <a href="#" ng-click="ctrl.remove(dashboard.dashboardId)" style="color:white;"><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
-          </div>
-        </div>
-      </div>
+    	<div ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]">
+    		<div ng-if="($index ) % 3 === 0" class="row">
+		        <!-- CREATE DASHBOARD CARD CARD #1 
+		        	 Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
+		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]]" class="col-sm-6 col-md-4">
+		          <div  class="thumbnail text-center">
+		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
+		              
+		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              
+		              <div class="caption">
+		                <h3>{{ctrl.dashboards[ctrl.ids[$index]].label}}</h3>
+		                <p ng-if="ctrl.editDashboard" >     
+							<!-- fa fa-pencil ico-edit      -->
+		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
+		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
+		          		</p>
+		              </div>
+		            </a>              
+		          </div>
+		        </div>
+		        
+		        <!-- CREATE DASHBOARD CARD CARD #2 
+		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
+		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 1]]" class="col-sm-6 col-md-4">
+		          <div  class="thumbnail text-center">
+		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" class="" >
+		              
+		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              
+		              <div class="caption">
+		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
+		                <p ng-if="ctrl.editDashboard">          
+		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
+		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
+		          		</p>
+		              </div>
+		            </a>              
+		          </div>
+		        </div>
+		        
+		        <!-- CREATE DASHBOARD CARD CARD #3 
+		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW.-->
+		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 2]]" class="col-sm-6 col-md-4">
+		          <div  class="thumbnail text-center">
+		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" class="" >
+		              
+		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              
+		              <div class="caption">
+		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
+		                <p ng-if="ctrl.editDashboard" >          
+		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
+		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
+		          		</p>
+		              </div>
+		            </a>              
+		          </div>
+		        </div>
+		        
+				<!-- CREATE NEW DASHBOARD LINK IN EXISTING ROW -->
+		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]].isLastDashboard || ctrl.dashboards[ctrl.ids[$index + 1]].isLastDashboard && ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+		        	 <a href="#" class="new-dashboard-btn" >
+			            <div class="thumbnail text-center">
+			              <div class="frame-box">
+			                <div class="inner-frame-box">
+			                  <i class="fa fa-plus"></i>
+			                </div>
+			              </div>
+			              <div class="caption">
+			                <h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
+			              </div>
+			            </div>
+			          </a>
+		        </div>
+		    </div>
+	    </div>
+        
+        <!-- CREATE NEW LINK IN NEW ROW -->
+        <div class="row">
+	        <div ng-if="!ctrl.isInExistingRow && ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+	          <a href="#" class="new-dashboard-btn" >
+	            <div class="thumbnail text-center">
+	              <div class="frame-box">
+	                <div class="inner-frame-box">
+	                  <i class="fa fa-plus"></i>
+	                </div>
+	              </div>
+	              <div class="caption">
+	                <h3><gdb:localize key="userDashboards.newDashboardTitle"/></h3>
+	              </div>
+	            </div>
+	          </a>
+	        </div> 
+      	</div>
     </div>      
     <div class="col-md-3"></div>
        

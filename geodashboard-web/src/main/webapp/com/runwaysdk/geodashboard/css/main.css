@@ -1828,21 +1828,24 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .modal-form .text input[type="text"]::-webkit-input-placeholder{color:#333;}
 .modal-form .text input[type="text"]:-moz-placeholder{color:#333;}
 .modal-form .text input[type="text"]:focus{border-color:#01b1ec;}
+.modal-form .text input[type="text"]:disabled {
+    color: #999;
+}
 .modal-form .check-block{
 	float:left;
 	position:relative;
 	margin:0 7px 0 0;
 	padding:0 0 0 2px;
-	min-width: 150px;
+/* 	min-width: 150px; */
 	white-space: nowrap;
 }
-.modal-form .check-block .chk-area{margin:25px 10px 0 0;}
+.modal-form .check-block .chk-area{margin:25px 0px 0 0;}
 .modal-form .check-block label{
 	float:left;
 	font-size:13px;
 	line-height:16px;
 	font-weight:normal;
-	margin:26px 0 0;
+	margin:26px 5px 0;
 	color:#333;
 	width:110px;
 }
@@ -1881,6 +1884,10 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color:#666;
 	margin:0 0 6px;
 	width:100%;
+}
+
+.disabled{
+	color: #999;
 }
 
 .select-font-select.select-area{
@@ -3366,6 +3373,7 @@ div.secondary-box label {
 	  width:100%;
 	  height:100%;
 	  background-color: rgba(255,255,255,0.95);
+/* 	  display: none; REMOVE LATER */
 	}
 	
 	.ng-modal-dialog {
@@ -3378,7 +3386,10 @@ div.secondary-box label {
 	  transform: translate(-50%, -50%);
 	  -webkit-transform: translate(-50%, -50%);
 	  -moz-transform: translate(-50%, -50%);
-	  background-color: none;
+	   overflow-y: auto;
+       width: 90%;
+       height: 90%;
+       background-color: rgba(255,255,255,0.95);
 	}
 	
 	.ng-modal-content{
@@ -3405,7 +3416,40 @@ div.secondary-box label {
 	#country-select-box{
 	
 	}
-
+	
+	.vertical-checkbox-list{
+		display: flex;
+    	align-items: center;
+	}
+	
+	.vertical-checkbox-list .check-block .chk-area {
+		margin-top: 5px;
+	}
+	
+	.vertical-checkbox-list .check-block label {
+		margin-top: 5px;
+	}
+	
+	.vertical-checkbox-container{
+		float: left;
+		width: 100%;
+	}
+	
+	a.opener-link.checkbox-label{
+		margin-left: 0;
+		margin-top: 5px;
+	}
+	.checkbox-label{
+/* 		clear: both;	 */
+	}
+	
+	
+	.collapsing {
+    	-webkit-transition: none;
+   		transition: none;
+   		overflow: visible;
+	}
+	
 
 /*
 * Scroll bar styling
