@@ -28,6 +28,7 @@
         controller.fields = null;
         controller.dashboard = null;
         
+        //// TODO: review why this causes an in-progress angular error
         $scope.$apply();
       }
         
@@ -51,12 +52,19 @@
     }
     
     controller.load = function() {
-    
       var dashboardId = ($scope.show != null && $scope.show != 'NEW' ? $scope.show : null);
         
       var onSuccess = function(result) {
         controller.fields = result.fields;    
         controller.dashboard = result.object;
+        
+        // Get country display label for the dashboard edit form (when a select isn't needed)
+        for(var i=0; i<result.object.countries.length; i++){
+        	var country = result.object.countries[i];
+        	if(country.value === result.object.country){
+        		controller.dashboard.countryDisplayLabel = country.displayLabel;
+        	}
+        }
         
         $scope.$apply();
       }

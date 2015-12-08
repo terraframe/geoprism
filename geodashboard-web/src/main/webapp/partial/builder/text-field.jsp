@@ -37,8 +37,12 @@
   </div>
   <div ng-if="!field.writable && field.readable">
   	<div class="label-holder">
-    	<label class="">{{field.label}}</label>
-    	<p>{{model[field.name]}}</p>
+    	<strong>{{field.label}}</strong>
+    </div>
+    <div class="holder">
+    	<div class="text">
+    		<input ng-model="model[field.name]" ng-required="field.required" ng-disabled="true" name="{{field.name}}" class="" type="text">
+    	</div>
     </div>
   </div>
 </div>

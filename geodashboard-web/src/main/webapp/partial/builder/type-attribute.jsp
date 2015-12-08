@@ -21,6 +21,10 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <div style="padding-left: 10px;">
-  <input type="checkbox" ng-model="attribute.selected"></input>
-  {{attribute.label}}              
+<!--   <input type="checkbox" ng-model="attribute.selected"></input> -->
+<!--   {{attribute.label}}      -->
+  <styled-check-box model="attribute.selected" name="attribute_{{$index}}" label="{{attribute.label}}"></styled-check-box>
+           
 </div>
+
+

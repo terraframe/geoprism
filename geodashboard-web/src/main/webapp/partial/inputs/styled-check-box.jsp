@@ -20,9 +20,9 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <div class="check-block">
-  <div ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area chk-focus">
+  <div ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area">
     <span></span>
   </div>
   <input class="jcf-hidden" name="{{name}}" ng-model="model" type="checkbox">
-  <label>{{label}}</label>
+  <label ng-if="label.length>0" for="{{name}}">{{label}}</label>
 </div>
