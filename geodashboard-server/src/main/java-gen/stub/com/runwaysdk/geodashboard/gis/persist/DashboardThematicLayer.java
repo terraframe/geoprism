@@ -35,11 +35,13 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.Dashboard;
@@ -51,7 +53,6 @@ import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
-import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.util.CollectionUtil;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
@@ -198,74 +199,22 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     // Determine if the attribute is an ontology attribute
     if (mdAttributeConcrete instanceof MdAttributeTerm)
     {
-      try
-      {
-        attrObj.put("isOntologyAttribute", true);
-        attrObj.put("isTextAttribute", false);
-        attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
-        attrObj.put("termType", Classifier.CLASS);
-      }
-      catch (JSONException e1)
-      {
-        throw new RuntimeException(e1);
-      }
+      MdAttributeTermDAOIF mdAttributeTerm = MdAttributeTermDAO.get(mdAttributeConcrete.getId());
 
-      Classifier[] roots = Dashboard.getClassifierRoots(mdAttribute.getId());
-      JSONObject rootsIds = new JSONObject();
-      JSONArray ids = new JSONArray();
-
-      Map<String, Boolean> selectableMap = new HashMap<String, Boolean>();
-      for (Classifier root : roots)
+      if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
       {
-        JSONObject newJSON = new JSONObject();
         try
         {
-          newJSON.put("termId", root.getId());
+          attrObj.put("isOntologyAttribute", true);
+          attrObj.put("isTextAttribute", false);
+          attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
+          attrObj.put("termType", Classifier.CLASS);
+          attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
         }
         catch (JSONException e)
         {
-          throw new RuntimeException(e);
+          throw new ProgrammingErrorException(e);
         }
-
-        // TODO: verify that getAllClassifierTermAttributeRootsRel() is the correct method
-        OIterator<? extends ClassifierTermAttributeRoot> relationships = root.getAllClassifierTermAttributeRootsRel();
-        for (ClassifierTermAttributeRoot relationship : relationships)
-        {
-          if (relationship.getParentId().equals(mdAttributeConcrete.getId()))
-          {
-            try
-            {
-              newJSON.put("selectable", relationship.getSelectable());
-            }
-            catch (JSONException e)
-            {
-              throw new RuntimeException(e);
-            }
-            selectableMap.put(root.getId(), relationship.getSelectable());
-          }
-        }
-
-        ids.put(newJSON);
-      }
-
-      try
-      {
-        rootsIds.put("roots", ids);
-      }
-      catch (JSONException e)
-      {
-        throw new RuntimeException(e);
-      }
-
-      // Passing ontology root to layer form categories
-      try
-      {
-        attrObj.put("roots", rootsIds);
-        attrObj.put("selectableMap", selectableMap);
-      }
-      catch (JSONException e)
-      {
-        throw new RuntimeException(e);
       }
     }
     else if (mdAttributeConcrete instanceof MdAttributeCharacter || mdAttributeConcrete instanceof MdAttributeText)
@@ -277,7 +226,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
       catch (JSONException e)
       {
-        throw new RuntimeException(e);
+        throw new ProgrammingErrorException(e);
       }
     }
     else
@@ -289,7 +238,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
       catch (JSONException e)
       {
-        throw new RuntimeException(e);
+        throw new ProgrammingErrorException(e);
       }
     }
 
@@ -326,7 +275,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
       JSONArray aggArr = new JSONArray();
       AggregationStrategyView[] aggStrategies = AggregationStrategyView.getAggregationStrategies(geoNode);
-      
+
       for (AggregationStrategyView aggStrat : aggStrategies)
       {
         try
@@ -442,6 +391,20 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     JSONArray secAttrs = new JSONArray();
     MdAttributeView[] secondaryAttributes = DashboardMap.getSecondaryAttributes(mapId, mdAttributeId);
+
+    try
+    {
+      JSONObject object = new JSONObject();
+      object.put("label", "None");
+      object.put("id", "NONE");
+
+      secAttrs.put(object);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
     for (MdAttributeView secAttr : secondaryAttributes)
     {
       JSONObject secAttrObj = new JSONObject();
@@ -451,6 +414,19 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         secAttrObj.put("mdAttributeId", secAttr.getMdAttributeId());
         secAttrObj.put("type", secAttr.getAttributeType());
         secAttrObj.put("label", secAttr.getDisplayLabel());
+
+        MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(secAttr.getMdAttributeId()).getMdAttributeConcrete();
+
+        if (mdAttributeConcrete instanceof MdAttributeTermDAOIF)
+        {
+          MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttributeConcrete;
+
+          if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
+          {
+            secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
+          }
+        }
+
         secAttrs.put(secAttrObj);
       }
       catch (JSONException e)

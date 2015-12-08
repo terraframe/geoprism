@@ -26,9 +26,9 @@
       <ul class="color-list">
         <li ng-repeat="category in categories.catLiElems track by $index">
           
-          <div class="category-container" ng-show="!category.otherCat || categories.otherEnabled">
+          <div class="category-container">
             <div class="text category-input-container">
-              <input class="category-input" ng-disabled="category.otherCat" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()"></input>
+              <input class="category-input" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()"></input>
             </div>
             <div class="cell">
               <div class="color-holder">
@@ -38,14 +38,31 @@
                 </a>
               </div>
             </div>
-          </div>                    
+          </div>
+          
+          <!-- Other category -->
+        </li>
+        <li>
+          <div class="category-container" ng-show="(categories.otherEnabled && showOther == 'true')">
+            <div class="text category-input-container">
+              <input class="category-input" ng-disabled="true" type="text" placeholder="<gdb:localize key="Other"/>"></input>
+            </div>
+            <div class="cell">
+              <div class="color-holder">
+                <a href="#" class="color-choice" color-picker model="categories.other.color" element='#modal01'>
+                  <span class="ico cat-color-selector" style="background:{{categories.other.color}}">icon</span>
+                  <span class="arrow">arrow</span>
+                </a>
+              </div>
+            </div>
+          </div>          
         </li>
       </ul>
     </div>
   </div>
 
   <!-- enable/disable checkbox -->
-  <div class="style-options-block">    
+  <div class="style-options-block" ng-show="showOther == 'true'">    
     <styled-check-box id="basic-cat-point-other-option" model="categories.otherEnabled" label="<gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>"></styled-check-box>
   </div>
 </div>
