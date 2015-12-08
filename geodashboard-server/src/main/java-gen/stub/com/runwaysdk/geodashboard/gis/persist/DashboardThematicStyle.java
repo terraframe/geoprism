@@ -106,7 +106,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       json.put("gradientPolygonStrokeOpacity", this.getGradientPolygonStrokeOpacity());
       json.put("gradientPolygonStrokeWidth", this.getGradientPolygonStrokeWidth());
       json.put("secondaryAggregationType", this.getSecondaryAggregationType());
-      json.put("secondaryAttribute", this.getSecondaryAttribute());
+      json.put("secondaryAttribute", this.getSecondaryAttributeId());
       json.put("secondaryCategories", this.getSecondaryCategories());
       json.put("styleCondition", this.getStyleCondition());
       

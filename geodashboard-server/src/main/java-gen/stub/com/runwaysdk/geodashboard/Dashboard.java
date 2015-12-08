@@ -532,6 +532,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static String getClassifierTree(String mdAttributeId)
   {
+    JSONArray nodes = Dashboard.getClassifierTreeJSON(mdAttributeId);
+
+    return nodes.toString();
+  }
+
+  public static JSONArray getClassifierTreeJSON(String mdAttributeId)
+  {
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(new QueryFactory());
 
@@ -583,7 +590,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
 
-      return nodes.toString();
+      return nodes;
     }
     finally
     {
@@ -1021,13 +1028,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     return this.getGeoNodes(thematicAttributeDAO);
   }
-  
+
   @Override
   public String getGeoNodesJSON(MdAttribute thematicAttribute)
   {
     JSONArray nodesArr = new JSONArray();
     GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
-    for(GeoNode node : nodes)
+    for (GeoNode node : nodes)
     {
       try
       {
@@ -1043,7 +1050,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         throw new ProgrammingErrorException(error, e);
       }
     }
-    
+
     return nodesArr.toString();
   }
 

@@ -21,14 +21,19 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
        
-<div id="geonode-holder" class="row-holder" ng-cloak>
+<div id="geonode-holder" class="row-holder" style="display:none">
   <div class="label-holder style03">
     <strong><gdb:localize key="DashboardThematicLayer.form.defineGeoNode"/></strong>
   </div>
   <div class="holder add">
     <div class="box">
       <label for="geonode-select"><gdb:localize key="DashboardThematicLayer.form.geoNode"/></label>
-      <styled-select options="geoNodes" model="thematicLayerModel.geoNode" value="id" label="displayLabel"></styled-select>              
+      
+      <div class="select-box">
+        <select id="geonode-select" class="method-select" name="layer.geoNode" ng-model="thematicLayerModel.geoNode">
+          <option ng-repeat="node in geoNodes track by node.id" value="{{node.id}}">{{node.displayLabel}}</option>
+        </select>
+      </div>      
     </div>
   </div>
 </div>

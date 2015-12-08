@@ -60,15 +60,15 @@
     </div>
     <fieldset>
           
-      <c:if test="${errorMessage != null || errorMessageArray != null}">
-        <div class="row-holder">
-          <div class="label-holder">
-          </div>
-          <div class="holder">
-            <%@include file="../../../../../../templates/inlineError.jsp" %>
+      <div class="row-holder" ng-show="errors.length > 0">
+        <div class="label-holder">
+        </div>      
+        <div class="holder">
+          <div class="alert alertbox" ng-repeat="error in errors track by $index">
+            <p >{{error}}</p>
           </div>
         </div>
-      </c:if>
+      </div>
             
             
       <layer-name-input></layer-name-input>

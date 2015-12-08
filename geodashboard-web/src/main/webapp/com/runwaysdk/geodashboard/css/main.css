@@ -1890,35 +1890,76 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color: #999;
 }
 
+.select-font-select.select-area{
+/* 	width:92px !important; */
+	width: 100% !important;
+	height:28px;
+	margin:0;
+	font-size:13px;
+	line-height:16px;
+	background:#ddd;
+}
+
+.select-size-select.select-area{
+	width:62px !important;
+	height:28px;
+	margin:0;
+	font-size:13px;
+	line-height:16px;
+	background:#ddd;
+}
+.select-font-select.select-area .center,
+.select-size-select.select-area .center{
+	width:100%;
+	padding:5px 25px 5px 9px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	color:#333;
+}
+.select-font-select.select-area .select-opener,
+.select-size-select.select-area .select-opener{
+	top:10px;
+	right:7px;
+}
+
 .font-select{
-  width: 100% !important;
-  margin:0;
-  font-size:13px;
-  line-height:16px;
-  background:#ddd;
+	width: 100% !important;
+}
+	
+.font-select .select-area{
+/* 	width:92px !important; */
+	height:28px;
+	margin:0;
+	font-size:13px;
+	line-height:16px;
+	background:#ddd;
 }
 
 .size-select{
-  width:62px !important;
-  margin:0;
-  font-size:13px;
-  line-height:16px;
-  background:#ddd;
+	width:62px !important;
 }
 
-.font-select.select-area .center,
-.size-select.select-area .center{
-  width:100%;
-  padding:5px 25px 5px 9px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  color:#333;
+.size-select .select-area{
+	height:28px;
+	margin:0;
+	font-size:13px;
+	line-height:16px;
+	background:#ddd;
 }
-.font-select.select-area .select-opener,
-.size-select.select-area .select-opener{
-  top:10px;
-  right:7px;
+.font-select .select-area .center,
+.size-select .select-area .center{
+	width:100%;
+	padding:5px 25px 5px 9px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	color:#333;
+}
+.font-select .select-area .opener,
+.size-select .select-area .opener{
+	top:10px;
+	right:7px;
 }
 
 .select-font-select.select-area{
@@ -2205,6 +2246,13 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	margin:0 0 0 9px;
 	position:relative;
 }
+.modal-form .point-gradient .cell-holder .opacity{
+	float:left;
+	width:62px;
+	position:relative;
+	margin-left: 0px;
+	margin-top: 10px;	
+}
 .modal-form .cell-holder .cell:first-child{margin:0;}
 .modal-form .label-holder.style04{padding-top:96px;}
 .modal-form .cell-holder{overflow:hidden;}
@@ -2264,6 +2312,29 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color:#333;
 }
 .select-tab-select.select-area .select-opener{
+	top:10px;
+	right:9px;
+}
+
+.tab-select{
+	width:100% !important;
+}
+.tab-select .select-area{
+	height:28px;
+	background:#ddd;
+	font-size:13px;
+	line-height:16px;
+	color:#333;
+	margin:0;
+}
+.tab-select .select-area .center{
+	padding:5px 20px 5px 7px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	color:#333;
+}
+.tab-select .select-area .select-opener{
 	top:10px;
 	right:9px;
 }
@@ -2705,6 +2776,7 @@ span.select-area span.center {
 	  margin-left: 0;
   	  margin-top: 10px;
 	}
+	
 /**
 *
 * JQTree

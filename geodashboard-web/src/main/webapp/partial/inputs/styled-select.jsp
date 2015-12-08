@@ -22,15 +22,15 @@
 <div class="select-box" ng-class="selectClass">
   <span style="width: auto;" class="jcf-unselectable select-method-select select-area" ng-click="ctrl.toggle($event)">
     <span class="left"></span>
-    <span class="center jcf-unselectable">{{ctrl.label}}</span>
+    <span class="center jcf-unselectable">{{ctrl.cache[model]}}</span>
     <a class="select-opener"></a>
   </span>
   <div ng-show="ctrl.expand" style="position: fixed;" ng-style="{'top' : ctrl.offset.top + 35, 'width' : ctrl.width}" class="select-options drop-method-select">
     <div class="drop-holder">
       <div class="drop-list">
         <ul>
-          <li ng-repeat="opt in options track by $index" rel="{{$index}}" class="jcfcalc"
-             ng-class="{'option-even':($index % 2 == 0), 'current-selected':ctrl.isSelected(opt[value]), 'item-selected':hovering}"
+          <li ng-repeat="opt in options track by opt[value]" rel="{{$index}}" class="jcfcalc"
+             ng-class="{'option-even':($index % 2 == 1), 'current-selected':ctrl.isSelected(opt[value]), 'item-selected':hovering}"
              ng-mouseenter="hovering=true"
              ng-mouseleave="hovering=false">
             <a href="#" ng-click="ctrl.setValue(opt)"><span>{{opt[label]}}</span></a>

@@ -154,6 +154,8 @@
             struct.localizedValue = value;
           }
           else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeEnumerationDTO) {
+        	attributeDTO.clear();
+        	
             attributeDTO.add(value);            
           }
           else {
