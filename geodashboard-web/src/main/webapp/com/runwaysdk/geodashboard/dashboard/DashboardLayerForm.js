@@ -30,6 +30,9 @@
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onShow:function(colPickObj){
             var that = this;
+            
+            // Set the current value of the color picker
+            $(this).colpickSetColor(scope.model,false);
               
             $(attrs.element).scroll(function(){  
               var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
@@ -49,9 +52,6 @@
             }
           }
         });
-        
-        // Set the default color of the color picker
-        $(element).colpickSetColor(scope.model,false);
       }
     }    
   }
@@ -335,7 +335,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-name.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-name.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
         }
@@ -346,7 +346,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl : '/partial/dashboard/dashboard-layer-form-label.jsp',    
+        templateUrl : '/partial/layer/dashboard-layer-form-label.jsp',    
         scope: true,
         link: function (scope, element, attrs, ctrl) {
             $timeout(function(){
@@ -361,7 +361,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-geonode.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-geonode.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
           $timeout(function(){
@@ -386,7 +386,7 @@
      return {
        restrict: 'E',
        replace: true,
-       templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
+       templateUrl: '/partial/layer/dashboard-layer-form-aggregation.jsp',    
        scope: true,
        controller : LayerAggregationController,
        controllerAs : 'ctrl',
@@ -404,7 +404,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-layer-types.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
         }
@@ -593,7 +593,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
+      templateUrl: '/partial/layer/dashboard-layer-form-layer-types-styling.jsp',    
       scope: true,
       controller : LayerTypesStyleController,
       controllerAs : 'ctrl',
@@ -615,7 +615,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-legend-option.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-legend-option.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
         }
@@ -627,7 +627,7 @@
         return {
           restrict: 'E',
           replace: true,
-          templateUrl: '/partial/dashboard/dashboard-layer-form-action-buttons.jsp',    
+          templateUrl: '/partial/layer/dashboard-layer-form-action-buttons.jsp',    
           scope: true,
           link: function (scope, element, attrs) {
           }
@@ -1436,7 +1436,7 @@
   };
   
    
-  angular.module("dashboard-layer-form", ["layer-form-service", "localization-service", "dashboard", "styled-inputs"]);
+  angular.module("dashboard-layer-form", ["layer-form-service", "dashboard", "styled-inputs"]);
   angular.module("dashboard-layer-form")
     .controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
     .directive('colorPicker', ColorPicker)

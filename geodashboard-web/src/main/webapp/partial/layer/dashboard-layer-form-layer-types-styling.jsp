@@ -170,7 +170,6 @@
           </div>
         </div>
         
-<!--         TODO: THIS SECONDARY BOX -->
         <div class="secondary-box">
           <strong class="title"><gdb:localize key="DashboardLayer.form.secondaryAttributeStyle"/></strong>
           <div class="cell-holder">        
