@@ -501,7 +501,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               this.createRule(root, filterNodes, color, key, minAttrVal, maxAttrVal, minSize, maxSize);
             }
 
-            String fill = this.style.getPointFill();
+            String fill = tStyle.getBubbleFill();
             NodeBuilder[] filterNodes = this.getElseNode(attributeName, array);
             String label = LocalizationFacade.getFromBundles("Other");
 

@@ -175,15 +175,15 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     return ( (MdAttributeConcrete) mdAttr );
   }
 
-  private static String getCategoryType(MdAttribute mdAttr)
+  private static String getCategoryType(MdAttributeDAOIF mdAttribute)
   {
-    MdAttributeConcrete concrete = getMdAttributeConcrete(mdAttr);
+    MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
 
-    if (concrete instanceof MdAttributeDate)
+    if (mdAttributeConcrete instanceof MdAttributeDateDAOIF)
     {
       return "date";
     }
-    else if (concrete instanceof MdAttributeNumber)
+    else if (mdAttributeConcrete instanceof MdAttributeNumberDAOIF)
     {
       return "number";
     }
@@ -249,6 +249,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
     MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
+
     String[] fonts = DashboardThematicStyle.getSortedFonts();
     OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
     String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
@@ -302,7 +304,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
     JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
     JSONObject attributeType = getMdAttributeType(tAttr);
-    String attrDataType = getCategoryType(tAttr);
+    String attrDataType = getCategoryType(mdAttribute);
 
     // Set possible layer types based on attribute type
     Map<String, String> layerTypes = new LinkedHashMap<String, String>();
@@ -410,12 +412,13 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       JSONObject secAttrObj = new JSONObject();
       try
       {
+        MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(secAttr.getMdAttributeId()).getMdAttributeConcrete();
+
         secAttrObj.put("id", secAttr.getId());
         secAttrObj.put("mdAttributeId", secAttr.getMdAttributeId());
         secAttrObj.put("type", secAttr.getAttributeType());
         secAttrObj.put("label", secAttr.getDisplayLabel());
-
-        MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(secAttr.getMdAttributeId()).getMdAttributeConcrete();
+        secAttrObj.put("categoryType", DashboardThematicLayer.getCategoryType(mdAttributeConcrete));
 
         if (mdAttributeConcrete instanceof MdAttributeTermDAOIF)
         {
@@ -573,7 +576,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   @Override
   public AttributeType getAttributeType()
   {
-    MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO().getMdAttributeConcrete();
+    MdAttributeConcreteDAOIF mdAttribute = this.getMdAttributeDAO().getMdAttributeConcrete();
 
     if (mdAttribute instanceof MdAttributeDateDAOIF)
     {

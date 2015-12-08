@@ -17,6 +17,11 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+	
+  // GLOBAL code to close pop-ups on any click
+  $('body').on('click', function () {
+    $('.styled-select-options').hide();
+  });
 
   function StyledCheckBoxController($scope) {
     var controller = this;
@@ -111,7 +116,6 @@
   
   function StyledSelectController($scope, $window) {
     var controller = this;
-    controller.expand = false;
     controller.cache = {};
     controller.labelNamePossibilites = ["label", "displayLabel"];
     
@@ -129,12 +133,6 @@
             }
         }
     }   
-    
-    // Close the pop-up on any click
-    angular.element($window).bind('click', function (event) {
-      controller.expand = false;
-      $scope.$apply();
-    });
     
     controller.init = function() {
       var options = $scope.options;
@@ -163,7 +161,7 @@
       controller.offset = $(e.currentTarget).offset();      
       controller.width = $(e.currentTarget).width();      
       
-      controller.expand = !controller.expand;       
+      $(e.currentTarget).next().show();      
     }
     
     controller.setValue = function(option) {
@@ -175,7 +173,7 @@
     
     controller.isSelected = function(option) {
       return ($scope.model == option);
-    }  
+    }
     
     $scope.$watch('options', function(newValue){
       if(newValue != null) {
@@ -207,10 +205,81 @@
     }    
   }  
   
+  function NumberController($scope, localizationService) {
+    var controller = this;
+    
+    controller.parseNumber = function(value) {
+      return localizationService.parseNumber(value);
+    }
+    
+    controller.formatNumber = function(value) {
+      return localizationService.formatNumber(value);      
+    }
+  }
   
-  angular.module("styled-inputs", []);
+  function IntegerOnly() {
+    return {
+      restrict: 'A',
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'integerOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
+      
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
+        
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
+            // consider empty models to be valid
+            return true;
+          }
+            
+          var number = ctrl.parseNumber( viewValue );
+          var valid = ($.isNumeric(number) && Math.floor(number) == number);
+          
+          return valid;        
+        }
+      }
+    }    
+  }
+  
+  function NumberOnly() {
+    return {
+      restrict: 'A',
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'numberOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
+      
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
+
+      
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
+            // consider empty models to be valid
+            return true;
+          }
+          
+          var number = ctrl.parseNumber( viewValue );
+          
+          return $.isNumeric(number);        
+        }
+      }
+    }    
+  }
+  
+  
+  
+  angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('numberOnly', NumberOnly)
+    .directive('integerOnly', IntegerOnly);    
 })();

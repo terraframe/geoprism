@@ -500,22 +500,6 @@
       return false;
     };
     
-    /**
-     * Get general type representation of a thematic attribte type
-     * 
-     * @param type : thematic attribute type <string>
-     */
-    controller.getCategoryType = function(type) {
-      if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-        return 'number';
-      }
-      else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-        return 'date';
-      }
-          
-      return 'text';
-    };
-    
     controller.isSecondaryAttributeOntology = function() {
       return ($scope.thematicStyleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
     }
@@ -583,7 +567,7 @@
       var universalId = $scope.getCurrentAggregationStrategy().value;
       var geoNodeId = $scope.thematicLayerModel.geoNode;
       var aggregationVal = $scope.thematicStyleModel.secondaryAggregation.method.value;
-      var categoryType = controller.getCategoryType($scope.thematicStyleModel.secondaryAggregation.attribute.type);
+      var categoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;
       
       controller.categoryAutocomplete(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response );
     };     
@@ -936,7 +920,7 @@
            
       // Update the secondary attribute values       
       if($scope.thematicStyleModel.secondaryAggregation.id != 'NONE'){    	  
-        var secondaryCategoryType = controller.getCategoryType($scope.thematicStyleModel.secondaryAggregation.attribute.type);    	  
+        var secondaryCategoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;    	  
     	  
         $scope.thematicStyleModel.secondaryAttribute = $scope.thematicStyleModel.secondaryAggregation.attribute.mdAttributeId;                   
         $scope.thematicStyleModel.secondaryAggregationType = $scope.thematicStyleModel.secondaryAggregation.method.value;          
@@ -1127,7 +1111,7 @@
           }
         }
         
-        var categoryType = controller.getCategoryType(aggregation.attribute.type);
+        var categoryType = aggregation.attribute.categoryType;
         
         // Load the categories
         controller.loadCategoryValues(aggregation, $scope.thematicStyleModel.secondaryCategories, categoryType);
@@ -1170,17 +1154,6 @@
       }
     }
     
-    controller.getCategoryType = function(type) {
-      if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-        return 'number';
-      }
-      else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-        return 'date';
-      }
-            
-      return 'text';
-    }
-           
     controller.getCategoryValues = function(categories, categoryType) {
       var _parser = Globalize.numberParser();
              

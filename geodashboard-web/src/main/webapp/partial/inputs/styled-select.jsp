@@ -25,7 +25,7 @@
     <span class="center jcf-unselectable">{{ctrl.cache[model]}}</span>
     <a class="select-opener"></a>
   </span>
-  <div ng-show="ctrl.expand" style="position: fixed;" ng-style="{'top' : ctrl.offset.top + 35, 'width' : ctrl.width}" class="select-options drop-method-select">
+  <div style="display:none; position: fixed;" ng-style="{'top' : ctrl.offset.top + 35, 'width' : ctrl.width}" class="select-options drop-method-select styled-select-options">
     <div class="drop-holder">
       <div class="drop-list">
         <ul>
