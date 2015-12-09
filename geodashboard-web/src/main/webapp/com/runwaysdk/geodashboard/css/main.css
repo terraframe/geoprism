@@ -1092,13 +1092,17 @@ i.fa.fa-angle-double-right.toggle-left:focus{
 
 a.fa.fa-times.ico-remove{
   font-size: 16px;
-  margin-right: 10px;
-  margin-top: 0px;
-  float: left;
+/*   margin-right: 10px; */
+  margin: 0px;
+/*   float: left; */
   color: #bababa;
   cursor: pointer;
 }
 
+#overlayLayerContainer .fa.fa-times.ico-remove{
+  margin-right: 10px;
+}
+	
 .fa.fa-times-circle.geoent-problem-msg-icon.geoent-problem-error{
   margin-left: 5px;
   vertical-align: middle;
@@ -2648,16 +2652,21 @@ span.select-area span.center {
 		color: #00bfff;
 	}
 	
-	i.fa.fa-cog.ico-dashboard-options {
-		margin-left: 5px;
-		vertical-align: bottom;
+	.fa.fa-cog.ico-dashboard-options {
+/* 		margin-left: 5px; */
+/* 		vertical-align: bottom; */
   		font-size: 14px;
   		color: #bababa;
   		cursor: pointer;
 	}
 	
-	i.fa.fa-cog.ico-dashboard-options:hover,
-	i.fa.fa-cog.ico-dashboard-options:focus{
+	.nav-bar .fa.fa-cog.ico-dashboard-options{
+		margin-left: 5px;
+		vertical-align: bottom;
+	}
+	
+	.fa.fa-cog.ico-dashboard-options:hover,
+	.fa.fa-cog.ico-dashboard-options:focus{
 		color: #00bfff;
 	}
 	
@@ -3378,7 +3387,7 @@ div.secondary-box label {
 	
 	.ng-modal-dialog {
 	  /* A centered div above the overlay with a box shadow. */
-	  z-index:100;
+	  z-index:9999;
 	  position: absolute;
 	  width: 50%; /* Default - often overwritten by 'width' property on element html */
 	  top: 50%;  /* Center the dialog */

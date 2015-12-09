@@ -363,7 +363,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         this.getDisplayLabel().setValue(object.getString("label"));
       }
-
+      
       this.apply();
 
       if (object.has("users"))
@@ -1428,6 +1428,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("id", this.getId());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
+    object.put("description", this.getDashboardDescription());
+    object.put("countryDisplayLabel", this.getCountry().getDisplayLabel());
     object.put("hasReport", this.hasReport());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
@@ -1483,6 +1485,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     JSONObject object = new JSONObject();
     object.put("label", mdClass.getDisplayLabel().getValue());
     object.put("id", mdClass.getId());
+    object.put("description", this.getDashboardDescription());
     object.put("attributes", attributes);
 
     return object;
@@ -1529,6 +1532,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         JSONObject object = new JSONObject();
         object.put("dashboardId", dashboard.getId());
         object.put("label", dashboard.getDisplayLabel().getValue());
+        object.put("description", dashboard.getDashboardDescription());
+        object.put("focusArea", dashboard.getCountry().getDisplayLabel());
 
         dashboards.put(object);
 
@@ -1641,6 +1646,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       JSONObject object = new JSONObject();
       object.put(Dashboard.NAME, this.getName());
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
+      object.put(Dashboard.DASHBOARDDESCRIPTION, this.getDashboardDescription());
       object.put(Dashboard.COUNTRY, this.getCountryId());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
 

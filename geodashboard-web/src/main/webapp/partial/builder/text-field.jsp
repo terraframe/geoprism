@@ -28,10 +28,11 @@
     </div>
     <div class="holder">
     	<div class="text">
-    		<input ng-model="model[field.name]" ng-required="field.required" name="{{field.name}}" class="" type="text">
+    		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" class="" type="text">
     	</div>
     	<div class="error-message">
       		<p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
+      		<p ng-show="form[field.name].$error.maxlength"><gdb:localize key="dashboard.TextInputExceedMaxLimit"/></p>
     	</div>
     </div>
   </div>
