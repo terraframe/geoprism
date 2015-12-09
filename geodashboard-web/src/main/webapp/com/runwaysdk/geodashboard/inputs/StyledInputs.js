@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-	
+  
   // GLOBAL code to close pop-ups on any click
   $(document).on('click', function () {
     $('.styled-select-options').hide();
@@ -61,7 +61,7 @@
     controller.resized = false;
     
     controller.toggle = function($event){
-      $event.preventDefault();    	
+      $event.preventDefault();      
       $event.stopPropagation();
       
       var dropdown = $($event.currentTarget).next();      
@@ -79,16 +79,23 @@
       
       dropdown.toggle();      
       
-      $($event.currentTarget).addClass('select-focus');            
-      $($event.currentTarget).focus();
+//      $($event.currentTarget).focus();
     }
     
-    controller.keypress = function($event) {
-      $event.preventDefault();    	    	
-      $event.stopPropagation();
-    	
+    controller.focus = function($event) {
+      $($event.currentTarget).addClass('select-focus');                	
+    }
+    
+    controller.blur = function($event) {
+      $($event.currentTarget).removeClass('select-focus');                  
+    }    
+    
+    controller.keypress = function($event) {    	
       // Up arrow
-      if ($event.keyCode == 38) {    	  
+      if ($event.keyCode == 38) {
+        $event.preventDefault();            
+        $event.stopPropagation();          
+    	  
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').prev('.styled-option');
@@ -101,6 +108,9 @@
       }
       // Down arrow
       else if ($event.keyCode == 40) {
+        $event.preventDefault();            
+        $event.stopPropagation();          
+    	  
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').next('.styled-option');
@@ -112,12 +122,8 @@
         }        
       }
       // Enter
-      else if ($event.keyCode == 13) {
-    	  
-    	// Toggle the drop-down
-        var dropdown = $($event.currentTarget).next();      
-
-        dropdown.toggle();          	  
+      else if ($event.keyCode == 13) {        
+        controller.toggle($event);
       }      
     }
     
@@ -194,11 +200,21 @@
       }          
     }
     
-    controller.setValue = function(option) {
-      $scope.model = option[$scope.value];
-      
-      controller.label = option[$scope.label];      
-      controller.expand = false;
+    controller.setOption = function(option) {
+      controller.setValue(option[$scope.value]);
+    }
+    
+    controller.setValue = function(value) {
+      if(value != $scope.model) {
+        $scope.model = value;
+        
+        // Fire the on-change callback if it exists
+        var onChange = $scope.onChange();
+        
+        if(onChange != null) {
+          onChange(value);  
+        }        
+      }
     }
     
     controller.isSelected = function(option) {
@@ -212,7 +228,7 @@
     });
     
     controller.toggle = function($event){
-      $event.preventDefault();    	
+      $event.preventDefault();      
       $event.stopPropagation();
       
       var dropdown = $($event.currentTarget).next();      
@@ -230,16 +246,23 @@
         
       dropdown.toggle();      
         
-      $($event.currentTarget).addClass('select-focus');            
-      $($event.currentTarget).focus();
+//      $($event.currentTarget).focus();
+    }
+    
+    controller.focus = function($event) {
+      $($event.currentTarget).addClass('select-focus');                  
+    }
+    
+    controller.blur = function($event) {
+      $($event.currentTarget).removeClass('select-focus');                  
     }
       
-    controller.keypress = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-      
+    controller.keypress = function($event) {      
       // Up arrow
       if ($event.keyCode == 38) {      
+        $event.preventDefault();
+        $event.stopPropagation();
+    	  
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').prev('.styled-option');
@@ -247,11 +270,14 @@
         if(element.length > 0) {
           var value = element.find('.styled-option-value').data('value');
             
-          $scope.model = value;
+          controller.setValue(value);
         }
       }
       // Down arrow
       else if ($event.keyCode == 40) {
+        $event.preventDefault();
+        $event.stopPropagation();
+    	  
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').next('.styled-option');
@@ -259,16 +285,12 @@
         if(element.length > 0) {
           var value = element.find('.styled-option-value').data('value');
               
-          $scope.model = value;
+          controller.setValue(value);
         }        
       }
       // Enter
       else if ($event.keyCode == 13) {
-    	  
-    	// Toggle the drop-down
-        var dropdown = $($event.currentTarget).next();      
-
-        dropdown.toggle();          	  
+        controller.toggle($event);
       }
     }
   } 
@@ -282,7 +304,8 @@
         model:'=',
         options:'=',
         value:'@',
-        label:'@'
+        label:'@',
+        onChange:'&'
       },
       controller : StyledSelectController,
       controllerAs : 'ctrl',
