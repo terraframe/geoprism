@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <div class="select-box" ng-class="selectClass">
-  <span tabindex="0" style="width: auto;" class="jcf-unselectable select-method-select select-area styled-select-area" ng-click="ctrl.toggle($event)" ng-keydown="ctrl.keypress($event)">
+  <span ng-focus="ctrl.focus($event)" ng-blur="ctrl.blur($event)" ng-click="ctrl.toggle($event)" ng-keydown="ctrl.keypress($event)" tabindex="0" style="width: auto;" class="jcf-unselectable select-method-select select-area styled-select-area">
     <span class="left"></span>
     <span class="center jcf-unselectable" ng-style="ctrl.style(model)">{{model}}</span>
     <a class="select-opener"></a>
