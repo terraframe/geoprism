@@ -30,6 +30,9 @@
           submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
           onShow:function(colPickObj){
             var that = this;
+            
+            // Set the current value of the color picker
+            $(this).colpickSetColor(scope.model,false);
               
             $(attrs.element).scroll(function(){  
               var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
@@ -49,9 +52,6 @@
             }
           }
         });
-        
-        // Set the default color of the color picker
-        $(element).colpickSetColor(scope.model,false);
       }
     }    
   }
@@ -331,13 +331,19 @@
   
   
   
-   function LayerNameInput() {
+   function LayerNameInput($timeout) {
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-name.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-name.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -346,13 +352,15 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl : '/partial/dashboard/dashboard-layer-form-label.jsp',    
+        templateUrl : '/partial/layer/dashboard-layer-form-label.jsp',    
         scope: true,
         link: function (scope, element, attrs, ctrl) {
+          element.ready(function(){
             $timeout(function(){
               jcf.customForms.replaceAll(element[0]);
-              $(element[0]).show();
-            }, 100);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -361,13 +369,15 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-geonode.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-geonode.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
-          $timeout(function(){
-            jcf.customForms.replaceAll(element[0]);
-            $(element[0]).show();
-          }, 100);          
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -386,38 +396,46 @@
      return {
        restrict: 'E',
        replace: true,
-       templateUrl: '/partial/dashboard/dashboard-layer-form-aggregation.jsp',    
+       templateUrl: '/partial/layer/dashboard-layer-form-aggregation.jsp',    
        scope: true,
        controller : LayerAggregationController,
        controllerAs : 'ctrl',
        link: function (scope, element, attrs) {
-         $timeout(function(){
-          jcf.customForms.replaceAll(element[0]);
-          $(element[0]).show();
-         }, 100);                    
+         element.ready(function(){
+           $timeout(function(){
+             jcf.customForms.replaceAll(element[0]);
+             $(element).show();
+           }, 100);          
+         });               
        }
      };    
    };
   
    
-  function LayerTypes() {
+  function LayerTypes($timeout) {
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-layer-types.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
   };
   
   
-  function LayerTypesSelectionDirective() {
+  function LayerTypesSelectionDirective($timeout) {
     return function(scope, element, attrs) {
       // This is needed to process the ng-repeat html
       // It processes just the layer type selector widget
       // Timeout is a bit of a hack to make sure all angular based html is finished
-      setTimeout(function(){ 
+      $timeout(function(){ 
          jcf.customForms.replaceAll(element[0]);
       }, 100);
     };
@@ -500,22 +518,6 @@
       return false;
     };
     
-    /**
-     * Get general type representation of a thematic attribte type
-     * 
-     * @param type : thematic attribute type <string>
-     */
-    controller.getCategoryType = function(type) {
-      if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-        return 'number';
-      }
-      else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-        return 'date';
-      }
-          
-      return 'text';
-    };
-    
     controller.isSecondaryAttributeOntology = function() {
       return ($scope.thematicStyleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
     }
@@ -583,7 +585,7 @@
       var universalId = $scope.getCurrentAggregationStrategy().value;
       var geoNodeId = $scope.thematicLayerModel.geoNode;
       var aggregationVal = $scope.thematicStyleModel.secondaryAggregation.method.value;
-      var categoryType = controller.getCategoryType($scope.thematicStyleModel.secondaryAggregation.attribute.type);
+      var categoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;
       
       controller.categoryAutocomplete(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response );
     };     
@@ -593,7 +595,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/dashboard-layer-form-layer-types-styling.jsp',    
+      templateUrl: '/partial/layer/dashboard-layer-form-layer-types-styling.jsp',    
       scope: true,
       controller : LayerTypesStyleController,
       controllerAs : 'ctrl',
@@ -611,25 +613,37 @@
   };
   
   
-   function LegendOptions() {
+   function LegendOptions($timeout) {
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/dashboard/dashboard-layer-form-legend-option.jsp',    
+        templateUrl: '/partial/layer/dashboard-layer-form-legend-option.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });        	
         }
       };    
    };
    
    
-   function FormActionButtons() {
+   function FormActionButtons($timeout) {
         return {
           restrict: 'E',
           replace: true,
-          templateUrl: '/partial/dashboard/dashboard-layer-form-action-buttons.jsp',    
+          templateUrl: '/partial/layer/dashboard-layer-form-action-buttons.jsp',    
           scope: true,
           link: function (scope, element, attrs) {
+            element.ready(function(){
+              $timeout(function(){
+                jcf.customForms.replaceAll(element[0]);
+                $(element).show();
+              }, 100);          
+            });        	  
           }
         };    
      };
@@ -643,15 +657,20 @@
     return {
       restrict: "A",
       scope:{
-          source : "&"
+        source : "&",
+        ngModel : '='
       },
-      link: function (scope, element, attr) {
+      require : 'ngModel',
+      link: function (scope, element, attr, ngModel) {
         
         $timeout(function(){
           
               $(element).autocomplete({
                 source: scope.source(),
-                minLength: 1
+                minLength: 1,
+                select : function(event, ui) {
+                  ngModel.$setViewValue(ui.item.value);
+                }
               });
         }, 500); 
       }
@@ -665,7 +684,6 @@
      * Initialization Function 
      */
     $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
-      // TODO: possibly remove mapId
       $scope.newInstance = (newInstance === 'true');
       $scope.dynamicDataModel.newInstance = (newInstance === 'true');
       $scope.thematicLayerModel.id = layerId;
@@ -906,10 +924,6 @@
     };
         
         
-      /**
-       * Perist thematic layer to the server
-       * TODO: add error handling
-       */
     $scope.persist = function() {
       var onSuccess = function(response) {      
         $scope.closeLayerModal();
@@ -936,7 +950,7 @@
            
       // Update the secondary attribute values       
       if($scope.thematicStyleModel.secondaryAggregation.id != 'NONE'){    	  
-        var secondaryCategoryType = controller.getCategoryType($scope.thematicStyleModel.secondaryAggregation.attribute.type);    	  
+        var secondaryCategoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;    	  
     	  
         $scope.thematicStyleModel.secondaryAttribute = $scope.thematicStyleModel.secondaryAggregation.attribute.mdAttributeId;                   
         $scope.thematicStyleModel.secondaryAggregationType = $scope.thematicStyleModel.secondaryAggregation.method.value;          
@@ -948,7 +962,6 @@
         $scope.thematicStyleModel.secondaryCategories = '[]';         
       }
            
-      // TODO: double check modal01 is the correct el to pass in
       layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
     };
     
@@ -970,7 +983,6 @@
      * Close the form html
      */
      $scope.closeLayerModal = function() {
-       // TODO: replace jquery with angular mechanism
        $($scope.FORM_CONSTANTS.LAYER_MODAL).modal('hide').html('');
     };
          
@@ -1043,9 +1055,7 @@
         
       $scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategyOptions, $scope.dynamicDataModel.aggregationStrategy);
         
-      $scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap); // TODO: this might need the aggregation value/id for persisting to the database
-
-      //$scope.thematicLayerModel.secondaryAttributes = options.secondaryAttributes[0];  //TODO: review if this actaully should be set
+      $scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap);
       
       // These properties should be set in setLayerState for existing layers (editing a layer)
       if(isNew){
@@ -1127,7 +1137,7 @@
           }
         }
         
-        var categoryType = controller.getCategoryType(aggregation.attribute.type);
+        var categoryType = aggregation.attribute.categoryType;
         
         // Load the categories
         controller.loadCategoryValues(aggregation, $scope.thematicStyleModel.secondaryCategories, categoryType);
@@ -1170,17 +1180,6 @@
       }
     }
     
-    controller.getCategoryType = function(type) {
-      if(type == 'com.runwaysdk.system.metadata.MdAttributeDouble' || type == 'com.runwaysdk.system.metadata.MdAttributeInteger') {
-        return 'number';
-      }
-      else if(type == 'com.runwaysdk.system.metadata.MdAttributeDate') {
-        return 'date';
-      }
-            
-      return 'text';
-    }
-           
     controller.getCategoryValues = function(categories, categoryType) {
       var _parser = Globalize.numberParser();
              
@@ -1303,25 +1302,6 @@
       };
 
       
-      /**
-       * Scrapes the category point and category polygon ontology trees for style settings.
-       */
-      $scope.updateAllOntologyCategryModels = function(){
-        var layerTypes = $scope.dynamicDataModel.layerTypeNames;
-        for(var i=0; i<layerTypes.length; i++){
-          var type = layerTypes[i];
-          if(type === 'CATEGORYPOINT'){
-            var scrapedCategoryEls = $scope.getOntologyCategories($scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID);
-            $scope.setPointCategories(scrapedCategoryEls);
-          }
-          else if(type === 'CATEGORYPOLYGON'){
-            var scrapedCategoryEls = $scope.getOntologyCategories($scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID);
-            $scope.setPolygonCategories(scrapedCategoryEls);
-          }
-        }
-      };
-      
-      
         /**
          * Sets up the geographic aggregation options (universals) based on a lookup.
          * 
@@ -1436,7 +1416,7 @@
   };
   
    
-  angular.module("dashboard-layer-form", ["layer-form-service", "localization-service", "dashboard", "styled-inputs"]);
+  angular.module("dashboard-layer-form", ["layer-form-service", "dashboard", "styled-inputs"]);
   angular.module("dashboard-layer-form")
     .controller('LayerFormController', ['$scope', '$timeout', '$compile', 'layerFormService', DashboardThematicLayerFormController])
     .directive('colorPicker', ColorPicker)
@@ -1454,33 +1434,5 @@
     .directive('layerTypesStyle', LayerTypesStyle)
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('legendOptions', LegendOptions)
-    .directive('formActionButtons', FormActionButtons)
-    .filter('decimalrange', function() {
-      return function(input, min, max) {
-        min = parseInt(min); 
-        max = parseInt(max);
-        for (var i=min; i<max; i++){
-          if(i === 0){
-            input.push(i);
-          }
-          else if(i % 5 === 0){
-            var formattedVal = i/100;
-            input.push(formattedVal);
-          }
-        }
-        return input;
-      };
-    })
-    .filter('intrange', function() {
-      return function(input, min, max) {
-        min = parseInt(min); 
-        max = parseInt(max);
-        for (var i=min; i<max; i++){
-          input.push(i);
-        }
-        return input;
-      };
-    });
-      
-  
+    .directive('formActionButtons', FormActionButtons);
 })();

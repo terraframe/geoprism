@@ -18,12 +18,16 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-
-
-<div class="row-holder">
-	<div class="label-holder"></div>
-	<div class="holder">
-	  <styled-check-box model="thematicLayerModel.displayInLegend" name="layer.displayInLegend" label="<gdb:localize key="DashboardLayer.form.displayInLegend"/>"></styled-check-box>
-	</div>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+        
+<div class="row-holder" style="display: none;">
+  <div class="label-holder">
+    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
+  </div>
+  <div class="holder" >
+	  <label class="none" >{{thematicLayerModel.name}}</label>
+	  <span class="text">
+		  <input type="text" ng-model="thematicLayerModel.name" name="layer.name" required>
+	  </span>
+  </div>
 </div>

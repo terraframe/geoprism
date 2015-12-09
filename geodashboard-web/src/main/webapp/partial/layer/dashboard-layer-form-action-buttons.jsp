@@ -21,7 +21,7 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 
-<div class="row-holder">
+<div class="row-holder" style="display: none;">
 	<div class="label-holder"></div>
 	<div class="holder">
 		<div class="button-holder">

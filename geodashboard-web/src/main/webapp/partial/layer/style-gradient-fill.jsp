@@ -19,6 +19,8 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="fill-block" ng-class="clazz">
   <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
@@ -44,7 +46,12 @@
     <div class="cell opacity">
       <label><gdb:localize key="DashboardLayer.form.opacity"/></label>
       <div class="text">
-        <select class="tab-select" ng-options="ctrl.getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"  ng-model="opacity"></select>
+        <select class="tab-select" ng-model="opacity" convert-to-number>
+          <c:forEach step="5" begin="0" end="100" var="size">
+            <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
+            <option value="${potentialValue}">${size}</option>
+          </c:forEach>        
+        </select>        
       </div>
     </div>
   </div>

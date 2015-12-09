@@ -18,16 +18,17 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-        
-<div class="row-holder" ng-cloak>
-  <div class="label-holder">
-    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
+<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+       
+       
+<div id="geonode-holder" class="row-holder" style="display:none">
+  <div class="label-holder style03">
+    <strong><gdb:localize key="DashboardThematicLayer.form.defineGeoNode"/></strong>
   </div>
-  <div class="holder" >
-	  <label class="none" >{{thematicLayerModel.name}}</label>
-	  <span class="text">
-		  <input type="text" ng-model="thematicLayerModel.name" name="layer.name" required>
-	  </span>
+  <div class="holder add">
+    <div class="box">
+      <label for="geonode-select"><gdb:localize key="DashboardThematicLayer.form.geoNode"/></label>
+      <styled-select options="geoNodes" model="thematicLayerModel.geoNode" value="id" label="displayLabel"></styled-select>
+    </div>
   </div>
 </div>

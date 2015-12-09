@@ -17,6 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+	
+  // GLOBAL code to close pop-ups on any click
+  $(document).on('click', function () {
+    $('.styled-select-options').hide();
+    
+    $('.styled-select-area').removeClass('select-focus');      
+  });
 
   function StyledCheckBoxController($scope) {
     var controller = this;
@@ -50,28 +57,72 @@
   }  
   
   function StyledBasicSelectController($scope, $window) {
-    var controller = this;
-    controller.expand = false;
+    var controller = this;    
+    controller.resized = false;
     
-    // Close the pop-up on any click
-    angular.element($window).bind('click', function (event) {
-      controller.expand = false;
-      $scope.$apply();
-    });
+    controller.toggle = function($event){
+      $event.preventDefault();    	
+      $event.stopPropagation();
+      
+      var dropdown = $($event.currentTarget).next();      
+      
+      if(!controller.resized) {
+        var offset = $($event.currentTarget).offset();      
+        var width = $($event.currentTarget).width(); 
+        var height = $($event.currentTarget).height();
+          
+        dropdown.css('top', (offset.top + height + 2));
+        dropdown.css('width', (width + 2));        
+        
+        controller.resized = true;
+      }
+      
+      dropdown.toggle();      
+      
+      $($event.currentTarget).addClass('select-focus');            
+      $($event.currentTarget).focus();
+    }
     
-    controller.toggle = function(e){
-      e.stopPropagation();
-      
-      controller.offset = $(e.currentTarget).offset();      
-      controller.width = $(e.currentTarget).width();      
-      
-      controller.expand = !controller.expand;       
+    controller.keypress = function($event) {
+      $event.preventDefault();    	    	
+      $event.stopPropagation();
+    	
+      // Up arrow
+      if ($event.keyCode == 38) {    	  
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').prev('.styled-option');
+        
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+          
+          $scope.model = value;
+        }
+      }
+      // Down arrow
+      else if ($event.keyCode == 40) {
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').next('.styled-option');
+          
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+            
+          $scope.model = value;
+        }        
+      }
+      // Enter
+      else if ($event.keyCode == 13) {
+    	  
+    	// Toggle the drop-down
+        var dropdown = $($event.currentTarget).next();      
+
+        dropdown.toggle();          	  
+      }      
     }
     
     controller.setValue = function(option) {
       $scope.model = option;
-      
-      controller.expand = false;
     }
     
     controller.isSelected = function(option) {
@@ -95,12 +146,11 @@
       scope: {
         model:'=',
         options:'&',
-        style:'@'        
+        style:'@'
       },
       controller : StyledBasicSelectController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-        scope.selectClass = {};
           
         if (attrs['class']) {
           scope.selectClass = attrs['class'];        
@@ -111,9 +161,8 @@
   
   function StyledSelectController($scope, $window) {
     var controller = this;
-    controller.expand = false;
+    controller.resized = false;    
     controller.cache = {};
-    controller.labelNamePossibilites = ["label", "displayLabel"];
     
     // Set default value and label attributes
     if($scope.value == null) {
@@ -121,20 +170,8 @@
     }
     
     if($scope.label == null) {
-    	for(var i = 0; i < controller.labelNamePossibilites.length; i++) {
-    		var possibleLabel = controller.labelNamePossibilites[i];
-            if(controller.label = $scope.options[i][possibleLabel]) {
-            	$scope.label = possibleLabel;
-            	break;
-            }
-        }
-    }   
-    
-    // Close the pop-up on any click
-    angular.element($window).bind('click', function (event) {
-      controller.expand = false;
-      $scope.$apply();
-    });
+      $scope.label = 'label';
+    }
     
     controller.init = function() {
       var options = $scope.options;
@@ -157,15 +194,6 @@
       }          
     }
     
-    controller.toggle = function(e){
-      e.stopPropagation();
-    
-      controller.offset = $(e.currentTarget).offset();      
-      controller.width = $(e.currentTarget).width();      
-      
-      controller.expand = !controller.expand;       
-    }
-    
     controller.setValue = function(option) {
       $scope.model = option[$scope.value];
       
@@ -175,13 +203,74 @@
     
     controller.isSelected = function(option) {
       return ($scope.model == option);
-    }  
+    }
     
     $scope.$watch('options', function(newValue){
       if(newValue != null) {
         controller.init();            
       }
     });
+    
+    controller.toggle = function($event){
+      $event.preventDefault();    	
+      $event.stopPropagation();
+      
+      var dropdown = $($event.currentTarget).next();      
+        
+      if(!controller.resized) {
+        var offset = $($event.currentTarget).offset();      
+        var width = $($event.currentTarget).width(); 
+        var height = $($event.currentTarget).height();
+            
+        dropdown.css('top', (offset.top + height + 2));
+        dropdown.css('width', (width + 2));        
+          
+        controller.resized = true;
+      }
+        
+      dropdown.toggle();      
+        
+      $($event.currentTarget).addClass('select-focus');            
+      $($event.currentTarget).focus();
+    }
+      
+    controller.keypress = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      
+      // Up arrow
+      if ($event.keyCode == 38) {      
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').prev('.styled-option');
+          
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+            
+          $scope.model = value;
+        }
+      }
+      // Down arrow
+      else if ($event.keyCode == 40) {
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').next('.styled-option');
+            
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+              
+          $scope.model = value;
+        }        
+      }
+      // Enter
+      else if ($event.keyCode == 13) {
+    	  
+    	// Toggle the drop-down
+        var dropdown = $($event.currentTarget).next();      
+
+        dropdown.toggle();          	  
+      }
+    }
   } 
   
   function StyledSelect() {
@@ -207,10 +296,113 @@
     }    
   }  
   
+  function NumberController($scope, localizationService) {
+    var controller = this;
+    
+    controller.parseNumber = function(value) {
+      return localizationService.parseNumber(value);
+    }
+    
+    controller.formatNumber = function(value) {
+      return localizationService.formatNumber(value);      
+    }
+  }
   
-  angular.module("styled-inputs", []);
+  function IntegerOnly() {
+    return {
+      restrict: 'A',
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'integerOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
+      
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
+        
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
+            // consider empty models to be valid
+            return true;
+          }
+            
+          var number = ctrl.parseNumber( viewValue );
+          var valid = ($.isNumeric(number) && Math.floor(number) == number);
+          
+          return valid;        
+        }
+      }
+    }    
+  }
+  
+  function NumberOnly() {
+    return {
+      restrict: 'A',
+      controller : NumberController,
+      controllerAs : 'ctrl',      
+      require: ['ngModel', 'numberOnly'],
+      link: function (scope, element, attrs, ctrls) {
+        var ngModel = ctrls[0];
+        var ctrl = ctrls[1];
+      
+        ngModel.$parsers.push(ctrl.parseNumber);
+        ngModel.$formatters.push(ctrl.formatNumber);
+
+      
+        ngModel.$validators.integer = function(modelValue, viewValue) {
+          if (ngModel.$isEmpty(viewValue)) {
+            // consider empty models to be valid
+            return true;
+          }
+          
+          var number = ctrl.parseNumber( viewValue );
+          
+          return $.isNumeric(number);        
+        }
+      }
+    }    
+  }
+  
+  function ConvertToNumber() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(val) {
+          return parseFloat(val);
+        });
+       
+        ngModel.$formatters.push(function(val) {
+          return '' + val;
+        });
+      }
+    };
+  }
+  
+  function ConvertToPercent() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(val) {
+          return parseFloat(val);
+        });
+        
+        ngModel.$formatters.push(function(val) {
+          return '' + (val * 100);
+        });
+      }
+    };
+  }
+  
+  
+  
+  angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('convertToPercent', ConvertToPercent)
+    .directive('convertToNumber', ConvertToNumber)
+    .directive('numberOnly', NumberOnly)
+    .directive('integerOnly', IntegerOnly);    
 })();

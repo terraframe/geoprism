@@ -19,6 +19,8 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div ng-class="divClass">
   <strong class="title"><gdb:localize key="DashboardLayer.form.stroke"/></strong>
@@ -35,13 +37,22 @@
     <div class="cell">
       <label><gdb:localize key="DashboardLayer.form.width"/></label>
       <div class="select-holder">
-        <select class="tab-select" ng-options="n for n in [] | intrange:1:16" ng-model="strokeWidth"></select>
+        <select class="tab-select" ng-model="strokeWidth" convert-to-number>
+          <c:forEach begin="1" end="16" var="size">
+            <option value="${size}">${size}</option>
+          </c:forEach>                    
+        </select>
       </div>
     </div>
     <div class="cell">
       <label><gdb:localize key="DashboardLayer.form.opacity"/></label>
       <div class="text">
-        <select class="tab-select" ng-options="ctrl.getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"  ng-model="strokeOpacity"></select>
+        <select class="tab-select" ng-model="strokeOpacity" convert-to-number>
+          <c:forEach step="5" begin="0" end="100" var="size">
+            <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
+            <option value="${potentialValue}">${size}</option>
+          </c:forEach>        
+        </select>        
       </div>
     </div>
   </div>

@@ -417,75 +417,8 @@
     }    
   }
   
-  function NumberController($scope, localizationService) {
-    var controller = this;
-    
-    controller.parseNumber = function(value) {
-      return localizationService.parseNumber(value);
-    }
-    
-    controller.formatNumber = function(value) {
-      return localizationService.formatNumber(value);      
-    }
-  }
   
-  function IntegerOnly() {
-    return {
-      restrict: 'A',
-      controller : NumberController,
-      controllerAs : 'ctrl',      
-      require: ['ngModel', 'integerOnly'],
-      link: function (scope, element, attrs, ctrls) {
-        var ngModel = ctrls[0];
-        var ctrl = ctrls[1];
-      
-        ngModel.$parsers.push(ctrl.parseNumber);
-        ngModel.$formatters.push(ctrl.formatNumber);
-        
-        ngModel.$validators.integer = function(modelValue, viewValue) {
-          if (ngModel.$isEmpty(viewValue)) {
-            // consider empty models to be valid
-            return true;
-          }
-            
-          var number = ctrl.parseNumber( viewValue );
-          var valid = ($.isNumeric(number) && Math.floor(number) == number);
-          
-          return valid;        
-        }
-      }
-    }    
-  }
-  
-  function NumberOnly() {
-    return {
-      restrict: 'A',
-      controller : NumberController,
-      controllerAs : 'ctrl',      
-      require: ['ngModel', 'numberOnly'],
-      link: function (scope, element, attrs, ctrls) {
-        var ngModel = ctrls[0];
-        var ctrl = ctrls[1];
-      
-        ngModel.$parsers.push(ctrl.parseNumber);
-        ngModel.$formatters.push(ctrl.formatNumber);
-
-      
-        ngModel.$validators.integer = function(modelValue, viewValue) {
-          if (ngModel.$isEmpty(viewValue)) {
-            // consider empty models to be valid
-            return true;
-          }
-          
-          var number = ctrl.parseNumber( viewValue );
-          
-          return $.isNumeric(number);        
-        }
-      }
-    }    
-  }
-  
-  angular.module("dashboard-accordion", ["dashboard-service", "jquery-service", "localization-service"]);
+  angular.module("dashboard-accordion", ["dashboard-service", "jquery-service", "styled-inputs"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)
@@ -495,7 +428,5 @@
   .directive('dateType', DateType)
   .directive('characterType', CharacterType)
   .directive('ontologyType', OntologyType)
-  .directive('booleanType', BooleanType)
-  .directive('numberOnly', NumberOnly)
-  .directive('integerOnly', IntegerOnly);
+  .directive('booleanType', BooleanType);
 })();
