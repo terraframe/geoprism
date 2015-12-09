@@ -151,6 +151,12 @@
 	.dashboard-thumbnail-subtext i {
 		margin-right: 4px;
 	}
+	
+	/* this part of the card is clickable but i don't want to confuse users by 
+	 having the cursor apear like the fucus area links to a separate page' */
+	.dashboard-thumbnail-subtext:hover{
+		cursor: default;
+	}
     
     img{
       width: 100%;
