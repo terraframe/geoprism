@@ -657,15 +657,20 @@
     return {
       restrict: "A",
       scope:{
-          source : "&"
+        source : "&",
+        ngModel : '='
       },
-      link: function (scope, element, attr) {
+      require : 'ngModel',
+      link: function (scope, element, attr, ngModel) {
         
         $timeout(function(){
           
               $(element).autocomplete({
                 source: scope.source(),
-                minLength: 1
+                minLength: 1,
+                select : function(event, ui) {
+                  ngModel.$setViewValue(ui.item.value);
+                }
               });
         }, 500); 
       }

@@ -61,6 +61,7 @@
     controller.resized = false;
     
     controller.toggle = function($event){
+      $event.preventDefault();    	
       $event.stopPropagation();
       
       var dropdown = $($event.currentTarget).next();      
@@ -83,6 +84,8 @@
     }
     
     controller.keypress = function($event) {
+      $event.preventDefault();    	    	
+      $event.stopPropagation();
     	
       // Up arrow
       if ($event.keyCode == 38) {    	  
@@ -108,6 +111,14 @@
           $scope.model = value;
         }        
       }
+      // Enter
+      else if ($event.keyCode == 13) {
+    	  
+    	// Toggle the drop-down
+        var dropdown = $($event.currentTarget).next();      
+
+        dropdown.toggle();          	  
+      }      
     }
     
     controller.setValue = function(option) {
@@ -201,6 +212,7 @@
     });
     
     controller.toggle = function($event){
+      $event.preventDefault();    	
       $event.stopPropagation();
       
       var dropdown = $($event.currentTarget).next();      
@@ -223,6 +235,8 @@
     }
       
     controller.keypress = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
       
       // Up arrow
       if ($event.keyCode == 38) {      
@@ -247,6 +261,14 @@
               
           $scope.model = value;
         }        
+      }
+      // Enter
+      else if ($event.keyCode == 13) {
+    	  
+    	// Toggle the drop-down
+        var dropdown = $($event.currentTarget).next();      
+
+        dropdown.toggle();          	  
       }
     }
   } 
