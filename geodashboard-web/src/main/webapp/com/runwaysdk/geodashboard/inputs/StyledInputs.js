@@ -19,8 +19,10 @@
 (function(){
 	
   // GLOBAL code to close pop-ups on any click
-  $('body').on('click', function () {
+  $(document).on('click', function () {
     $('.styled-select-options').hide();
+    
+    $('.styled-select-area').removeClass('select-focus');      
   });
 
   function StyledCheckBoxController($scope) {
@@ -55,28 +57,61 @@
   }  
   
   function StyledBasicSelectController($scope, $window) {
-    var controller = this;
-    controller.expand = false;
+    var controller = this;    
+    controller.resized = false;
     
-    // Close the pop-up on any click
-    angular.element($window).bind('click', function (event) {
-      controller.expand = false;
-      $scope.$apply();
-    });
+    controller.toggle = function($event){
+      $event.stopPropagation();
+      
+      var dropdown = $($event.currentTarget).next();      
+      
+      if(!controller.resized) {
+        var offset = $($event.currentTarget).offset();      
+        var width = $($event.currentTarget).width(); 
+        var height = $($event.currentTarget).height();
+          
+        dropdown.css('top', (offset.top + height + 2));
+        dropdown.css('width', (width + 2));        
+        
+        controller.resized = true;
+      }
+      
+      dropdown.toggle();      
+      
+      $($event.currentTarget).addClass('select-focus');            
+      $($event.currentTarget).focus();
+    }
     
-    controller.toggle = function(e){
-      e.stopPropagation();
-      
-      controller.offset = $(e.currentTarget).offset();      
-      controller.width = $(e.currentTarget).width();      
-      
-      controller.expand = !controller.expand;       
+    controller.keypress = function($event) {
+    	
+      // Up arrow
+      if ($event.keyCode == 38) {    	  
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').prev('.styled-option');
+        
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+          
+          $scope.model = value;
+        }
+      }
+      // Down arrow
+      else if ($event.keyCode == 40) {
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').next('.styled-option');
+          
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+            
+          $scope.model = value;
+        }        
+      }
     }
     
     controller.setValue = function(option) {
       $scope.model = option;
-      
-      controller.expand = false;
     }
     
     controller.isSelected = function(option) {
@@ -100,12 +135,11 @@
       scope: {
         model:'=',
         options:'&',
-        style:'@'        
+        style:'@'
       },
       controller : StyledBasicSelectController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-        scope.selectClass = {};
           
         if (attrs['class']) {
           scope.selectClass = attrs['class'];        
@@ -116,8 +150,8 @@
   
   function StyledSelectController($scope, $window) {
     var controller = this;
+    controller.resized = false;    
     controller.cache = {};
-    controller.labelNamePossibilites = ["label", "displayLabel"];
     
     // Set default value and label attributes
     if($scope.value == null) {
@@ -125,14 +159,8 @@
     }
     
     if($scope.label == null) {
-    	for(var i = 0; i < controller.labelNamePossibilites.length; i++) {
-    		var possibleLabel = controller.labelNamePossibilites[i];
-            if(controller.label = $scope.options[i][possibleLabel]) {
-            	$scope.label = possibleLabel;
-            	break;
-            }
-        }
-    }   
+      $scope.label = 'label';
+    }
     
     controller.init = function() {
       var options = $scope.options;
@@ -155,15 +183,6 @@
       }          
     }
     
-    controller.toggle = function(e){
-      e.stopPropagation();
-    
-      controller.offset = $(e.currentTarget).offset();      
-      controller.width = $(e.currentTarget).width();      
-      
-      $(e.currentTarget).next().show();      
-    }
-    
     controller.setValue = function(option) {
       $scope.model = option[$scope.value];
       
@@ -180,6 +199,56 @@
         controller.init();            
       }
     });
+    
+    controller.toggle = function($event){
+      $event.stopPropagation();
+      
+      var dropdown = $($event.currentTarget).next();      
+        
+      if(!controller.resized) {
+        var offset = $($event.currentTarget).offset();      
+        var width = $($event.currentTarget).width(); 
+        var height = $($event.currentTarget).height();
+            
+        dropdown.css('top', (offset.top + height + 2));
+        dropdown.css('width', (width + 2));        
+          
+        controller.resized = true;
+      }
+        
+      dropdown.toggle();      
+        
+      $($event.currentTarget).addClass('select-focus');            
+      $($event.currentTarget).focus();
+    }
+      
+    controller.keypress = function($event) {
+      
+      // Up arrow
+      if ($event.keyCode == 38) {      
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').prev('.styled-option');
+          
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+            
+          $scope.model = value;
+        }
+      }
+      // Down arrow
+      else if ($event.keyCode == 40) {
+        // Find the currently select value
+        var dropdown = $($event.currentTarget).next();
+        var element = dropdown.find('.current-selected').next('.styled-option');
+            
+        if(element.length > 0) {
+          var value = element.find('.styled-option-value').data('value');
+              
+          $scope.model = value;
+        }        
+      }
+    }
   } 
   
   function StyledSelect() {
@@ -273,6 +342,36 @@
     }    
   }
   
+  function ConvertToNumber() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(val) {
+          return parseFloat(val);
+        });
+       
+        ngModel.$formatters.push(function(val) {
+          return '' + val;
+        });
+      }
+    };
+  }
+  
+  function ConvertToPercent() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(val) {
+          return parseFloat(val);
+        });
+        
+        ngModel.$formatters.push(function(val) {
+          return '' + (val * 100);
+        });
+      }
+    };
+  }
+  
   
   
   angular.module("styled-inputs", ["localization-service"]);
@@ -280,6 +379,8 @@
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('convertToPercent', ConvertToPercent)
+    .directive('convertToNumber', ConvertToNumber)
     .directive('numberOnly', NumberOnly)
     .directive('integerOnly', IntegerOnly);    
 })();

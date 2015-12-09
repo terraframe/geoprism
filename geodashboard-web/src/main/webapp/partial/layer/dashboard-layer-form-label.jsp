@@ -19,8 +19,10 @@
 
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
        
-<div class="row-holder" style="display: none;" ng-cloak>
+<div class="row-holder" style="display: none;">
   <div class="label-holder style02">
     <strong><gdb:localize key="DashboardThematicLayer.form.labelsAndValues"/></strong>
   </div>
@@ -32,14 +34,16 @@
     <div class="row-holder">
       <div class="cell style02">
         <label><gdb:localize key="DashboardLayer.form.font"/></label>
-        <div class="select-holder">
-          <select class="font-select" name="style.labelFont" id="f55" ng-options="item for item in availableFonts track by item" ng-model="thematicStyleModel.labelFont"></select>
-        </div>
+        <styled-basic-select style="true" options="availableFonts" model="thematicStyleModel.labelFont" class="font-select"></styled-basic-select>
       </div>
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.labelSize"/></label>
         <div class="select-holder">
-          <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" ng-options="n for n in [] | intrange:1:31" ></select>
+          <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" convert-to-number>
+            <c:forEach begin="1" end="30" var="size">
+              <option value="${size}">${size}</option>
+            </c:forEach>          
+          </select>
         </div>
       </div>
                 
@@ -66,7 +70,11 @@
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.haloWidth"/></label>
         <div class="select-holder">
-          <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" ng-options="n for n in [] | intrange:1:16" ></select>          
+          <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" convert-to-number>
+            <c:forEach begin="1" end="16" var="size">
+              <option value="${size}">${size}</option>
+            </c:forEach>            
+          </select>          
         </div>        
       </div>
     </div>

@@ -19,6 +19,8 @@
 
 --%>
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
        
 <div class="row-holder" style="display:none">
   <div class="label-holder">
@@ -50,9 +52,7 @@
         
           <div id="point-type-container" class="cell">
             <label for="point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-            <div class="select-box">
-              <select id="category-point-type" class="method-select" name="style.pointWellKnownName" ng-model="thematicStyleModel.pointWellKnownName" ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn"></select>
-            </div>
+            <styled-basic-select options="dynamicDataModel.pointTypes" model="thematicStyleModel.pointWellKnownName" class="method-select"></styled-basic-select>            
           </div>
         </div>
       </div>
@@ -122,8 +122,11 @@
                 <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
                 <div class="text">
                   <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
-                    ng-options="getFormattedInt(n) for n in [] | decimalrange:0:101 track by n"
-                    ng-model="thematicStyleModel.categoryPointFillOpacity">
+                    ng-model="thematicStyleModel.categoryPointFillOpacity" convert-to-number>
+                    <c:forEach step="5" begin="0" end="100" var="size">
+                      <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
+                      <option value="${potentialValue}">${size}</option>
+                    </c:forEach>                    
                   </select>
                 </div>
               </div>
@@ -131,12 +134,7 @@
           
             <div id="category-point-type-container" class="cell">
               <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-              <div class="select-box">
-                <select id="category-point-type" class="method-select" name="style.categoryPointWellKnownName"
-                  ng-model="thematicStyleModel.categoryPointWellKnownName"
-                  ng-options="wkn as wkn for wkn in dynamicDataModel.pointTypes track by wkn">
-                </select>
-              </div>
+              <styled-basic-select options="dynamicDataModel.pointTypes" model="thematicStyleModel.categoryPointWellKnownName" class="method-select"></styled-basic-select>            
             </div>
           </div>
         </div>

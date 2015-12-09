@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
         
-<div class="row-holder" ng-cloak>
+<div class="row-holder" style="display: none;">
   <div class="label-holder">
     <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
   </div>

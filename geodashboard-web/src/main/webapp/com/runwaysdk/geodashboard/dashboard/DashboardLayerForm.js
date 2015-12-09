@@ -331,13 +331,19 @@
   
   
   
-   function LayerNameInput() {
+   function LayerNameInput($timeout) {
       return {
         restrict: 'E',
         replace: true,
         templateUrl: '/partial/layer/dashboard-layer-form-name.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -349,10 +355,12 @@
         templateUrl : '/partial/layer/dashboard-layer-form-label.jsp',    
         scope: true,
         link: function (scope, element, attrs, ctrl) {
+          element.ready(function(){
             $timeout(function(){
               jcf.customForms.replaceAll(element[0]);
-              $(element[0]).show();
-            }, 100);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -364,10 +372,12 @@
         templateUrl: '/partial/layer/dashboard-layer-form-geonode.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
-          $timeout(function(){
-            jcf.customForms.replaceAll(element[0]);
-            $(element[0]).show();
-          }, 100);          
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
    };
@@ -391,33 +401,41 @@
        controller : LayerAggregationController,
        controllerAs : 'ctrl',
        link: function (scope, element, attrs) {
-         $timeout(function(){
-          jcf.customForms.replaceAll(element[0]);
-          $(element[0]).show();
-         }, 100);                    
+         element.ready(function(){
+           $timeout(function(){
+             jcf.customForms.replaceAll(element[0]);
+             $(element).show();
+           }, 100);          
+         });               
        }
      };    
    };
   
    
-  function LayerTypes() {
+  function LayerTypes($timeout) {
       return {
         restrict: 'E',
         replace: true,
         templateUrl: '/partial/layer/dashboard-layer-form-layer-types.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });
         }
       };    
   };
   
   
-  function LayerTypesSelectionDirective() {
+  function LayerTypesSelectionDirective($timeout) {
     return function(scope, element, attrs) {
       // This is needed to process the ng-repeat html
       // It processes just the layer type selector widget
       // Timeout is a bit of a hack to make sure all angular based html is finished
-      setTimeout(function(){ 
+      $timeout(function(){ 
          jcf.customForms.replaceAll(element[0]);
       }, 100);
     };
@@ -595,25 +613,37 @@
   };
   
   
-   function LegendOptions() {
+   function LegendOptions($timeout) {
       return {
         restrict: 'E',
         replace: true,
         templateUrl: '/partial/layer/dashboard-layer-form-legend-option.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
+          element.ready(function(){
+            $timeout(function(){
+              jcf.customForms.replaceAll(element[0]);
+              $(element).show();
+            }, 100);          
+          });        	
         }
       };    
    };
    
    
-   function FormActionButtons() {
+   function FormActionButtons($timeout) {
         return {
           restrict: 'E',
           replace: true,
           templateUrl: '/partial/layer/dashboard-layer-form-action-buttons.jsp',    
           scope: true,
           link: function (scope, element, attrs) {
+            element.ready(function(){
+              $timeout(function(){
+                jcf.customForms.replaceAll(element[0]);
+                $(element).show();
+              }, 100);          
+            });        	  
           }
         };    
      };
@@ -649,7 +679,6 @@
      * Initialization Function 
      */
     $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
-      // TODO: possibly remove mapId
       $scope.newInstance = (newInstance === 'true');
       $scope.dynamicDataModel.newInstance = (newInstance === 'true');
       $scope.thematicLayerModel.id = layerId;
@@ -890,10 +919,6 @@
     };
         
         
-      /**
-       * Perist thematic layer to the server
-       * TODO: add error handling
-       */
     $scope.persist = function() {
       var onSuccess = function(response) {      
         $scope.closeLayerModal();
@@ -932,7 +957,6 @@
         $scope.thematicStyleModel.secondaryCategories = '[]';         
       }
            
-      // TODO: double check modal01 is the correct el to pass in
       layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
     };
     
@@ -954,7 +978,6 @@
      * Close the form html
      */
      $scope.closeLayerModal = function() {
-       // TODO: replace jquery with angular mechanism
        $($scope.FORM_CONSTANTS.LAYER_MODAL).modal('hide').html('');
     };
          
@@ -1027,9 +1050,7 @@
         
       $scope.setGeographicAggregationOptions($scope.dynamicDataModel.aggregationStrategyOptions, $scope.dynamicDataModel.aggregationStrategy);
         
-      $scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap); // TODO: this might need the aggregation value/id for persisting to the database
-
-      //$scope.thematicLayerModel.secondaryAttributes = options.secondaryAttributes[0];  //TODO: review if this actaully should be set
+      $scope.categoryWidget.aggregationMap = JSON.parse(options.aggregationMap);
       
       // These properties should be set in setLayerState for existing layers (editing a layer)
       if(isNew){
@@ -1275,25 +1296,6 @@
           });
       };
 
-      
-      /**
-       * Scrapes the category point and category polygon ontology trees for style settings.
-       */
-      $scope.updateAllOntologyCategryModels = function(){
-        var layerTypes = $scope.dynamicDataModel.layerTypeNames;
-        for(var i=0; i<layerTypes.length; i++){
-          var type = layerTypes[i];
-          if(type === 'CATEGORYPOINT'){
-            var scrapedCategoryEls = $scope.getOntologyCategories($scope.FORM_CONSTANTS.POINT_ONTOLOGY_TREE_ID);
-            $scope.setPointCategories(scrapedCategoryEls);
-          }
-          else if(type === 'CATEGORYPOLYGON'){
-            var scrapedCategoryEls = $scope.getOntologyCategories($scope.FORM_CONSTANTS.POLYGON_ONTOLOGY_TREE_ID);
-            $scope.setPolygonCategories(scrapedCategoryEls);
-          }
-        }
-      };
-      
       
         /**
          * Sets up the geographic aggregation options (universals) based on a lookup.
