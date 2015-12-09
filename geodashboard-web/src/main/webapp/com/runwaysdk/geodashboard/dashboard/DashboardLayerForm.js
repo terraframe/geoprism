@@ -1434,33 +1434,5 @@
     .directive('layerTypesStyle', LayerTypesStyle)
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('legendOptions', LegendOptions)
-    .directive('formActionButtons', FormActionButtons)
-    .filter('decimalrange', function() {
-      return function(input, min, max) {
-        min = parseInt(min); 
-        max = parseInt(max);
-        for (var i=min; i<max; i++){
-          if(i === 0){
-            input.push(i);
-          }
-          else if(i % 5 === 0){
-            var formattedVal = i/100;
-            input.push(formattedVal);
-          }
-        }
-        return input;
-      };
-    })
-    .filter('intrange', function() {
-      return function(input, min, max) {
-        min = parseInt(min); 
-        max = parseInt(max);
-        for (var i=min; i<max; i++){
-          input.push(i);
-        }
-        return input;
-      };
-    });
-      
-  
+    .directive('formActionButtons', FormActionButtons);
 })();
