@@ -1099,7 +1099,8 @@ a.fa.fa-times.ico-remove{
   cursor: pointer;
 }
 
-#overlayLayerContainer .fa.fa-times.ico-remove{
+#overlayLayerContainer .fa.fa-times.ico-remove,
+#ref-layer-container .fa.fa-times.ico-remove{
   margin-right: 10px;
 }
 	
