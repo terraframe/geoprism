@@ -82,7 +82,7 @@
                   <div class="label-holder"></div>
                   <div class="holder">
                     <div class="button-holder">
-                      <input type="button" ng-click="ctrl.apply()" value="<gdb:localize key="dashboardViewer.mapIt"/>" class="btn btn-primary"/>
+                      <input type="button" ng-click="ctrl.apply()" value="<gdb:localize key="dashboardViewer.mapItButton"/>" class="btn btn-primary"/>
                       <input type="button" ng-click="ctrl.cancel()" value="<gdb:localize key="dashboardViewer.cancel"/>" class="btn btn-default" />
                     </div>
                   </div>

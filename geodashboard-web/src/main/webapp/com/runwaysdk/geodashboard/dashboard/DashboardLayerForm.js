@@ -1099,8 +1099,8 @@
         $scope.layerModel.aggregationMethod = options.aggregations[0];
         $scope.layerModel.aggregationType = aggregationMethod = $scope.dynamicDataModel.aggregationMethods[0].method;
         $scope.layerModel.geoNode = $scope.layerModel.geoNode || $scope.geoNodes[0].id; // TODO: remove geoNode from init function... this is set in the init function but may be null if new layer
-        $scope.styleModel.labelFont = $scope.availableFonts[0]; 
-        $scope.styleModel.valueFont = $scope.availableFonts[0];  
+        $scope.styleModel.labelFont = $scope.dynamicDataModel.availableFonts[0]; 
+        $scope.styleModel.valueFont = $scope.dynamicDataModel.availableFonts[0];  
         $scope.layerModel.displayInLegend = true;          
       }
     };
