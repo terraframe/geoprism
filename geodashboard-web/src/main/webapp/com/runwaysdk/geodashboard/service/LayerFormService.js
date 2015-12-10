@@ -278,6 +278,7 @@
 
       // Set default values for the style
       var style = {};
+      style.labelFont = 'Arial';
       style.enableLabel = true;
       style.labelSize = 12;
       style.labelColor = '#E0A4E0';
@@ -297,13 +298,18 @@
       style.polygonStrokeOpacity = 0.65;
         
       runwayService.populateObject(style, service.styleDTO);
-
-        
-      style.labelFont = response.options.availableFonts[0];
+      
+      // pointWellKnownName values come from the server lower cased
+      // but the UI model expects them to be upper cased values
       style.pointWellKnownName = style.pointWellKnownName.toUpperCase();
+
+      // Ensure that the current font is actually available on the system
+      // If not default to the first option
+      if(!service.isValidFont(style.labelFont, response.options.availableFonts)) {
+        style.labelFont = response.options.availableFonts[0];
+      }
         
-      return {layer:layer, style:style, dynamicDataModel:response.options};
-    
+      return {layer:layer, style:style, dynamicDataModel:response.options};    
     }
     
     service.edit = function(layerId, element, onSuccess, onFailure) {
@@ -328,6 +334,17 @@
       var request = service.createStandbyRequest(element, success, onFailure);
       
       com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.newReferenceInstance(request, universalId, mapId);
+    }
+    
+    service.isValidFont = function(font, options) {
+      if(font != null && font.length > 0) {
+        for(var i = 0; i < options.length; i++) {
+          if(font === options[i]) {
+            return true;
+          } 
+        }      
+      }
+      return false;
     }
       
     return service;

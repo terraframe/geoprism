@@ -284,7 +284,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
 
       List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
-      
+
       for (int i = 0; i < savedLayers.size(); i++)
       {
         DashboardLayer savedLayer = savedLayers.get(i);
@@ -326,7 +326,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       if (savedLayerHash.containsKey(universalId))
       {
         JSONObject json = savedLayerHash.get(universalId).toJSON();
-        
+
         jsonArr.put(json);
       }
       else
@@ -342,12 +342,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         json.put("legendYPosition", 0);
         json.put("groupedInLegend", true);
         json.put("featureStrategy", "BASICPOLYGON");
-        json.put("isActive", false);        
+        json.put("isActive", false);
         json.put("layerType", "REFERENCEJSON");
-        json.put("layerExists", false);        
+        json.put("layerExists", false);
         json.put("universalId", universalId);
         json.put("mapId", this.getId());
-                
+
         jsonArr.put(json);
       }
     }
@@ -401,7 +401,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       // Convert from ListArray to Array for Thematic Layers
       DashboardThematicLayer[] orderedTLayersArr = new DashboardThematicLayer[orderedTLayers.size()];
-      
+
       for (int i = 0; i < orderedTLayers.size(); i++)
       {
         orderedTLayersArr[i] = orderedTLayers.get(i);
@@ -416,7 +416,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         JSONObject object = orderedTLayersArr[i].toJSON();
         object.put("index", i);
-        
+
         layers.put(object);
       }
       mapJSON.put("layers", layers);
@@ -431,7 +431,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       mapJSON.put("refLayers", refLayerOptions);
 
       JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
-      
+
       mapJSON.put("bbox", mapBBox);
 
       if (log.isDebugEnabled())
@@ -1071,16 +1071,21 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
   private float getLayerOpacity(DashboardLayer layer)
   {
-    DashboardStyle style = layer.getStyles().get(0);
-    String featureType = layer.getFeatureType().toString();
+    List<? extends DashboardStyle> styles = layer.getStyles();
 
-    if (featureType == "POINT")
+    if (styles.size() > 0)
     {
-      return style.getPointOpacity().floatValue();
-    }
-    else if (featureType == "POLYGON")
-    {
-      return style.getPolygonFillOpacity().floatValue();
+      DashboardStyle style = styles.get(0);
+      String featureType = layer.getFeatureType().toString();
+
+      if (featureType == "POINT")
+      {
+        return style.getPointOpacity().floatValue();
+      }
+      else if (featureType == "POLYGON")
+      {
+        return style.getPolygonFillOpacity().floatValue();
+      }
     }
 
     return (float) 1.0; // return no transparency
