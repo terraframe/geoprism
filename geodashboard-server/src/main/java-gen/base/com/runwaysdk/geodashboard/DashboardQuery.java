@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 844304281)
+@com.runwaysdk.business.ClassSignature(hash = -220396599)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -117,6 +117,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.Dashboard.CREATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.Dashboard.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDashboardDescription()
+  {
+    return getDashboardDescription(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, displayLabel);
 
   }
   public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()
@@ -665,6 +682,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getDashboardDescription();
+    public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias);
+    public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias, String displayLabel);
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole();
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias);
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel);
@@ -828,6 +848,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDashboardDescription()
+  {
+    return getDashboardDescription(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, displayLabel);
 
   }
   public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()
@@ -1311,6 +1348,9 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getDashboardDescription();
+    public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias);
+    public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias, String displayLabel);
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole();
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias);
     public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole(String alias, String displayLabel);
@@ -1495,6 +1535,23 @@ public  class DashboardQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.Dashboard.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDashboardDescription()
+  {
+    return getDashboardDescription(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDashboardDescription(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.Dashboard.DASHBOARDDESCRIPTION, alias, displayLabel);
 
   }
   public com.runwaysdk.system.RolesQuery.RolesQueryReferenceIF getDashboardRole()

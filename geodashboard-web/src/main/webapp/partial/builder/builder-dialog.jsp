@@ -35,7 +35,7 @@
 		              <div ng-repeat="field in ctrl.fields">
 		                <div ng-if="field.readable" ng-switch on="field.type">
 		                  	<select-field ng-switch-when="select" field="field" model="ctrl.dashboard"></select-field>
-		                  	<text-field ng-switch-when="text" field="field" model="ctrl.dashboard"></text-field>
+		                  	<text-field ng-switch-when="text" field="field" maxlength="255" model="ctrl.dashboard"></text-field>
 		                </div>          
 		              </div>
 		          </section>

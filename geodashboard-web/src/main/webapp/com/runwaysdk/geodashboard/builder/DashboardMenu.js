@@ -134,7 +134,7 @@
     
     controller.refreshDashboard = function(dashboard) {
       
-      var newDashboard = {dashboardId:dashboard.id, label:dashboard.label};
+      var newDashboard = {dashboardId:dashboard.id, label:dashboard.label, description:dashboard.description, focusArea:dashboard.countryDisplayLabel};
       var oldDashboard = controller.dashboards[dashboard.id];
       
       if(oldDashboard != null) {    	

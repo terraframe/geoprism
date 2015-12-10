@@ -98,10 +98,26 @@
       require: '^form',      
       scope: {
         field:'=',
-        model:'='
+        model:'=',
+        maxlength:'=',
+        minlength:'='
       },
       link: function (scope, element, attrs, form) {
         scope.form = form;  
+        
+        if(attrs.maxlength && attrs.maxlength > 0){
+        	scope.field.maxlength = attrs.maxlength;
+        }
+        else{
+        	scope.field.maxlength = 5000; // arbitrary default
+        }
+        
+        if(attrs.minlength && attrs.minlength > 0){
+        	scope.field.minlength = attrs.minlength;
+        }
+        else{
+        	scope.field.minlength = 0; // arbitrary default
+        }
       }
     }    
   }
@@ -183,9 +199,9 @@
           scope.dialogStyle.width = attrs.width;        
         }
         
-//        if (attrs.height) {
-//          scope.dialogStyle.height = attrs.height;        
-//        }
+        if (attrs.height) {
+          scope.dialogStyle.height = attrs.height;        
+        }
         
         scope.hideModal = function() {
           scope.show = false;

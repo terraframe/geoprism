@@ -97,22 +97,65 @@
     }
     
     .thumbnail:hover a img{
-      opacity: 1;
-        filter: alpha(opacity=100); 
+      	opacity: 1;
+    	filter: alpha(opacity=100); 
     }
     
     .thumbnail:hover a i{
-      opacity: 1;
+      	opacity: 1;
         filter: alpha(opacity=100); 
     }
     
     .thumbnail:hover a .frame-box{
-      opacity: 1;
+      	opacity: 1;
         filter: alpha(opacity=100); 
     }
     
 	a.btn, .btn:active, .btn:focus {
 		padding: 2px 4px 2px 4px;
+	}
+	
+	.caption a:hover{
+		color: grey;
+	}
+	
+	.caption p{
+		color: grey;
+	}
+	
+	.dashboard-card-ico-button-container{
+		background-color: rgba(255,255,255,.5);
+    	padding: 2px 4px 2px 4px;
+    	padding-top: 5px;
+    	padding-bottom: 0;
+    	z-index: 100;
+    	right: 0;
+    	margin-right: 0;
+    	border-top: 1px solid lightgrey;
+    	background-color: transparent;
+	}
+	
+	.dashboard-card-ico-button-container:hover{
+		background-color: rgba(255,255,255,.9);
+	}
+	
+	.dashboard-thumbnail-ico-group{
+		text-align: right;
+	}
+	
+	.dashboard-thumbnail-subtext{
+	    float: left;
+    	color: grey;
+	}
+	
+	.dashboard-thumbnail-subtext i {
+		margin-right: 4px;
+	}
+	
+	/* this part of the card is clickable but i don't want to confuse users by 
+	 having the cursor apear like the fucus area links to a separate page' */
+	.dashboard-thumbnail-subtext:hover{
+		cursor: default;
 	}
     
     img{
@@ -136,6 +179,16 @@
         transition: opacity .25s ease-in-out;
         -moz-transition: opacity .2s ease-in-out;
         -webkit-transition: opacity .2s ease-in-out;
+    }
+    
+    .frame-box:hover i,
+    .frame-box:hover::before, 
+    .frame-box:hover::after, 
+    .frame-box:hover>:first-child::before, 
+    .frame-box:hover>:first-child::after{
+    	color: #00bfff;
+    	border-color:#00bfff;
+    	opacity: 1;
     }
     
     .fa-pencil:before {
@@ -206,17 +259,21 @@
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
-		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
+		              		onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" 
+		              		alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index]].label}}</h3>
-		                <p ng-if="ctrl.editDashboard" >     
-							<!-- fa fa-pencil ico-edit      -->
-		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
-		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
-		          		</p>
+		                <p>{{ctrl.dashboards[ctrl.ids[$index]].description}}</p>
+						<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
+		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusArea}}</p>
+		            		<div class="dashboard-thumbnail-ico-group">
+		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a>
+		          	  		</div>
+		          	  	</div>
 		              </div>
 		            </a>              
 		          </div>
@@ -233,10 +290,14 @@
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
-		                <p ng-if="ctrl.editDashboard">          
-		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
-		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
-		          		</p>
+		                <p>{{ctrl.dashboards[ctrl.ids[$index + 1]].description}}</p>
+		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
+		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}}</p>
+		            		<div class="dashboard-thumbnail-ico-group">
+		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a>
+		          	  		</div>
+		          	  	</div>
 		              </div>
 		            </a>              
 		          </div>
@@ -253,10 +314,14 @@
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
-		                <p ng-if="ctrl.editDashboard" >          
-		            		<a href="#" class="btn btn-primary" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ><gdb:localize key="dashboard.edit.label"/></a> 
-		            		<a href="#" class="btn btn-danger" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ><gdb:localize key="com.runwaysdk.ui.userstable.DashboardTable.delete"/></a>
-		          		</p>
+		                <p>{{ctrl.dashboards[ctrl.ids[$index + 2]].description}}</p>
+		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
+		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}}</p>
+		            		<div class="dashboard-thumbnail-ico-group">
+		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a>
+		          	  		</div>
+		          	  	</div>
 		              </div>
 		            </a>              
 		          </div>

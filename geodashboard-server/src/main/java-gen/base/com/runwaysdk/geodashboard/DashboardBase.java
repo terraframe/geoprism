@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1196059938)
+@com.runwaysdk.business.ClassSignature(hash = -1262588128)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,6 +32,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DASHBOARDDESCRIPTION = "dashboardDescription";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   private com.runwaysdk.business.Struct displayLabel = null;
@@ -51,7 +52,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1196059938;
+  private static final long serialVersionUID = -1262588128;
   
   public DashboardBase()
   {
@@ -141,6 +142,34 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public String getDashboardDescription()
+  {
+    return getValue(DASHBOARDDESCRIPTION);
+  }
+  
+  public void validateDashboardDescription()
+  {
+    this.validateAttribute(DASHBOARDDESCRIPTION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDashboardDescriptionMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DASHBOARDDESCRIPTION);
+  }
+  
+  public void setDashboardDescription(String value)
+  {
+    if(value == null)
+    {
+      setValue(DASHBOARDDESCRIPTION, "");
+    }
+    else
+    {
+      setValue(DASHBOARDDESCRIPTION, value);
+    }
   }
   
   public com.runwaysdk.system.Roles getDashboardRole()
