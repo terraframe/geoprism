@@ -57,6 +57,7 @@
       var onSuccess = function(result) {
         controller.fields = result.fields;    
         controller.dashboard = result.object;
+        controller.showWidgetType = '';
         
         // Get country display label for the dashboard edit form (when a select isn't needed)
         for(var i=0; i<result.object.countries.length; i++){
@@ -70,6 +71,10 @@
       }
                
       builderService.loadDashboard(dashboardId, onSuccess);    
+    }
+    
+    controller.setCategoryWidgetType = function(typeName) {
+    	controller.showWidgetType = typeName;
     }
   }
   
@@ -90,7 +95,7 @@
     }    
   }
   
-  function TextField() {
+  function TextField($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -105,19 +110,55 @@
       link: function (scope, element, attrs, form) {
         scope.form = form;  
         
-        if(attrs.maxlength && attrs.maxlength > 0){
-        	scope.field.maxlength = attrs.maxlength;
-        }
-        else{
-        	scope.field.maxlength = 5000; // arbitrary default
-        }
+        $timeout(function() {
+        	if(attrs.maxlength && attrs.maxlength > 0){
+            	scope.field.maxlength = attrs.maxlength;
+            }
+            else{
+            	scope.field.maxlength = 5000; // arbitrary default
+            }
+            
+            if(attrs.minlength && attrs.minlength > 0){
+            	scope.field.minlength = attrs.minlength;
+            }
+            else{
+            	scope.field.minlength = 0; // arbitrary default
+            }
+          }, 500);
+      }
+    }    
+  }
+  
+  function TextAreaField($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/builder/text-area-field.jsp',
+      require: '^form',      
+      scope: {
+        field:'=',
+        model:'=',
+        maxlength:'=',
+        minlength:'='
+      },
+      link: function (scope, element, attrs, form) {
+        scope.form = form;  
         
-        if(attrs.minlength && attrs.minlength > 0){
-        	scope.field.minlength = attrs.minlength;
-        }
-        else{
-        	scope.field.minlength = 0; // arbitrary default
-        }
+        $timeout(function() {
+        	if(attrs.maxlength && attrs.maxlength > 0){
+            	scope.field.maxlength = attrs.maxlength;
+            }
+            else{
+            	scope.field.maxlength = 5000; // arbitrary default
+            }
+            
+            if(attrs.minlength && attrs.minlength > 0){
+            	scope.field.minlength = attrs.minlength;
+            }
+            else{
+            	scope.field.minlength = 0; // arbitrary default
+            }
+          }, 500);
       }
     }    
   }
@@ -214,6 +255,7 @@
   angular.module("dashboard-builder", ["builder-service", "styled-inputs"]);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
+   .directive('textAreaField', TextAreaField)
    .directive('selectField', SelectField)
    .directive('modalDialog', ModalDialog)
    .directive('typeAttribute', TypeAttribute)

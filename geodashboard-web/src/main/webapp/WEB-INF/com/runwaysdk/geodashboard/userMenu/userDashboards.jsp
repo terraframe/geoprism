@@ -124,10 +124,7 @@
 	}
 	
 	.dashboard-card-ico-button-container{
-		background-color: rgba(255,255,255,.5);
-    	padding: 2px 4px 2px 4px;
-    	padding-top: 5px;
-    	padding-bottom: 0;
+    	padding: 5px 4px 0px 4px;
     	z-index: 100;
     	right: 0;
     	margin-right: 0;
@@ -136,7 +133,7 @@
 	}
 	
 	.dashboard-card-ico-button-container:hover{
-		background-color: rgba(255,255,255,.9);
+/* 		background-color: rgba(255,255,255,.9); */
 	}
 	
 	.dashboard-thumbnail-ico-group{
