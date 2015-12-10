@@ -157,7 +157,6 @@
       controller : StyledBasicSelectController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-          
         if (attrs['class']) {
           scope.selectClass = attrs['class'];        
         }

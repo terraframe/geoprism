@@ -25,9 +25,9 @@
     <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
   </div>
   <div class="holder" >
-	  <label class="none" >{{thematicLayerModel.name}}</label>
+	  <label class="none" >{{layerModel.name}}</label>
 	  <span class="text">
-		  <input type="text" ng-model="thematicLayerModel.name" name="layer.name" required>
+		  <input type="text" ng-model="layerModel.name" name="layer.name" required>
 	  </span>
   </div>
 </div>

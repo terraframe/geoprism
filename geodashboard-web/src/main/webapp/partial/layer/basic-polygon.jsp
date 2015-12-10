@@ -18,17 +18,12 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-       
-       
-<div id="geonode-holder" class="row-holder" style="display:none">
-  <div class="label-holder style03">
-    <strong><gdb:localize key="DashboardThematicLayer.form.defineGeoNode"/></strong>
-  </div>
-  <div class="holder add">
-    <div class="box">
-      <label for="geonode-select"><gdb:localize key="DashboardThematicLayer.form.geoNode"/></label>
-      <styled-select options="geoNodes" model="layerModel.geoNode" value="id" label="displayLabel"></styled-select>
-    </div>
-  </div>
-</div>
+<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+
+<div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : layerModel.layerType == 'BASICPOLYGON' }">
+  <!-- BASIC POLYGON FILL -->
+  <style-basic-fill fill="styleModel.polygonFill" opacity="styleModel.polygonFillOpacity"></style-basic-fill>
+      
+  <!-- BASIC POLYGON STROKE -->
+  <style-stroke class="stroke-block" stroke="styleModel.polygonStroke" stroke-width="styleModel.polygonStrokeWidth" stroke-opacity="styleModel.polygonStrokeOpacity"></style-stroke>                
+</div>      

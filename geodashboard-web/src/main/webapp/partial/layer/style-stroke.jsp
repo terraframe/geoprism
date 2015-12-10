@@ -38,7 +38,7 @@
       <label><gdb:localize key="DashboardLayer.form.width"/></label>
       <div class="select-holder">
         <select class="tab-select" ng-model="strokeWidth" convert-to-number>
-          <c:forEach begin="1" end="16" var="size">
+          <c:forEach begin="0" end="15" var="size">
             <option value="${size}">${size}</option>
           </c:forEach>                    
         </select>

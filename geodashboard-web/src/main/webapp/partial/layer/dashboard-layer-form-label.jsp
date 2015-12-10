@@ -28,18 +28,18 @@
   </div>
   <div class="holder">
     <div class="row-holder">
-      <styled-check-box model="thematicStyleModel.enableValue" name="style.enableValue" label="<gdb:localize key="DashboardLayer.form.enableValue"/>"></styled-check-box>
-      <styled-check-box model="thematicStyleModel.enableLabel" name="style.enableLabel" label="<gdb:localize key="DashboardLayer.form.enableLabel"/>"></styled-check-box>
+      <styled-check-box ng-if="styleModel.enableValue != null" model="styleModel.enableValue" name="style.enableValue" label="<gdb:localize key="DashboardLayer.form.enableValue"/>"></styled-check-box>
+      <styled-check-box model="styleModel.enableLabel" name="style.enableLabel" label="<gdb:localize key="DashboardLayer.form.enableLabel"/>"></styled-check-box>
     </div>
     <div class="row-holder">
       <div class="cell style02">
         <label><gdb:localize key="DashboardLayer.form.font"/></label>
-        <styled-basic-select style="true" options="availableFonts" model="thematicStyleModel.labelFont" class="font-select"></styled-basic-select>
+        <styled-basic-select style="true" options="dynamicDataModel.availableFonts" model="styleModel.labelFont" class="font-select"></styled-basic-select>
       </div>
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.labelSize"/></label>
         <div class="select-holder">
-          <select class="size-select" id="f95" name="style.labelSize" ng-model="thematicStyleModel.labelSize" convert-to-number>
+          <select class="size-select" id="f95" name="style.labelSize" ng-model="styleModel.labelSize" convert-to-number>
             <c:forEach begin="1" end="30" var="size">
               <option value="${size}">${size}</option>
             </c:forEach>          
@@ -50,8 +50,8 @@
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
         <div id="label-text-color" class="color-holder">
-          <a href="#" class="color-choice" color-picker model="thematicStyleModel.labelColor" element='#modal01'>
-            <span class="ico" style="background:{{thematicStyleModel.labelColor}};">icon</span>
+          <a href="#" class="color-choice" color-picker model="styleModel.labelColor" element='#modal01'>
+            <span class="ico" style="background:{{styleModel.labelColor}};">icon</span>
             <span class="arrow">arrow</span>
           </a>
         </div>
@@ -60,8 +60,8 @@
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
         <div id="label-halo-color" class="color-holder">
-          <a href="#" class="color-choice" color-picker model="thematicStyleModel.labelHalo" element='#modal01'>
-            <span class="ico" style="background:{{thematicStyleModel.labelHalo}};">icon</span>
+          <a href="#" class="color-choice" color-picker model="styleModel.labelHalo" element='#modal01'>
+            <span class="ico" style="background:{{styleModel.labelHalo}};">icon</span>
             <span class="arrow">arrow</span>
           </a>
         </div>
@@ -70,8 +70,8 @@
       <div class="cell">
         <label><gdb:localize key="DashboardLayer.form.haloWidth"/></label>
         <div class="select-holder">
-          <select class="size-select" name="style.haloWidth" id="f54" ng-model="thematicStyleModel.labelHaloWidth" convert-to-number>
-            <c:forEach begin="1" end="16" var="size">
+          <select class="size-select" name="style.haloWidth" id="f54" ng-model="styleModel.labelHaloWidth" convert-to-number>
+            <c:forEach begin="0" end="15" var="size">
               <option value="${size}">${size}</option>
             </c:forEach>            
           </select>          

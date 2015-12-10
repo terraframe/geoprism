@@ -341,11 +341,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         json.put("legendXPosition", 0);
         json.put("legendYPosition", 0);
         json.put("groupedInLegend", true);
-        json.put("featureStrategy", "BASIC");
+        json.put("featureStrategy", "BASICPOLYGON");
         json.put("isActive", false);        
         json.put("layerType", "REFERENCEJSON");
         json.put("layerExists", false);        
         json.put("universalId", universalId);
+        json.put("mapId", this.getId());
                 
         jsonArr.put(json);
       }

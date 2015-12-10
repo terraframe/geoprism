@@ -30,13 +30,13 @@
     <div id="layer-type-styler-container" class="tab-content"> 
       
       <!-- BASICPOINT -->
-      <div ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOINT' }" class="tab-pane" id="tab001basicpoint">
+      <div ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BASICPOINT' }" class="tab-pane" id="tab001basicpoint">
         
         <!-- BASIC FILL -->
-        <style-basic-fill fill="thematicStyleModel.pointFill" opacity="thematicStyleModel.pointOpacity"></style-basic-fill>
+        <style-basic-fill fill="styleModel.pointFill" opacity="styleModel.pointOpacity"></style-basic-fill>
       
         <!-- BASIC STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.pointStroke" stroke-width="thematicStyleModel.pointStrokeWidth" stroke-opacity="thematicStyleModel.pointStrokeOpacity"></style-stroke>
+        <style-stroke class="stroke-block" stroke="styleModel.pointStroke" stroke-width="styleModel.pointStrokeWidth" stroke-opacity="styleModel.pointStrokeOpacity"></style-stroke>
       
         <!-- BASIC SHAPE -->
         <div class="fill-block">
@@ -45,26 +45,26 @@
             <div class="cell">
               <label for="basic-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
               <div class="text">
-                <input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="thematicStyleModel.basicPointSize" placeholder="{{thematicStyleModel.basicPointSize}}"></input>
+                <input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="styleModel.basicPointSize" placeholder="{{styleModel.basicPointSize}}"></input>
               </div>
             </div>
           </div>
         
           <div id="point-type-container" class="cell">
             <label for="point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-            <styled-basic-select options="dynamicDataModel.pointTypes" model="thematicStyleModel.pointWellKnownName" class="method-select"></styled-basic-select>            
+            <styled-basic-select options="dynamicDataModel.pointTypes" model="styleModel.pointWellKnownName" class="method-select"></styled-basic-select>            
           </div>
         </div>
       </div>
       
       <!-- GRADIENT POINT -->
-      <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOINT' }">
+      <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'GRADIENTPOINT' }">
       
         <!-- POINT GRADIENT FILL -->
-        <style-gradient-fill min-fill="thematicStyleModel.gradientPointMinFill" max-fill="thematicStyleModel.gradientPointMaxFill" opacity="thematicStyleModel.gradientPointFillOpacity" class="point-gradient"></style-gradient-fill>
+        <style-gradient-fill min-fill="styleModel.gradientPointMinFill" max-fill="styleModel.gradientPointMaxFill" opacity="styleModel.gradientPointFillOpacity" class="point-gradient"></style-gradient-fill>
         
         <!-- POINT GRADIENT STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPointStroke" stroke-width="thematicStyleModel.gradientPointStrokeWidth" stroke-opacity="thematicStyleModel.gradientPointStrokeOpacity"></style-stroke>
+        <style-stroke class="stroke-block" stroke="styleModel.gradientPointStroke" stroke-width="styleModel.gradientPointStrokeWidth" stroke-opacity="styleModel.gradientPointStrokeOpacity"></style-stroke>
         
         <!-- POINT GRADIENT SHAPE -->        
         <div class="fill-block">
@@ -73,19 +73,19 @@
             <div class="cell">
               <label for="gradient-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
               <div class="text">
-                <input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" ng-model="thematicStyleModel.gradientPointSize"></input>
+                <input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" ng-model="styleModel.gradientPointSize"></input>
               </div>
             </div>
           </div>
           <div id="gradient-point-type-container" class="cell">
             <label for="gradient-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-            <styled-basic-select options="dynamicDataModel.pointTypes" model="thematicStyleModel.gradientPointWellKnownName" class="method-select"></styled-basic-select>            
+            <styled-basic-select options="dynamicDataModel.pointTypes" model="styleModel.gradientPointWellKnownName" class="method-select"></styled-basic-select>            
           </div>
         </div>
       </div>
       
       <!-- CATEGORY POINT -->
-      <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'CATEGORYPOINT' }">
+      <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'CATEGORYPOINT' }">
       
         <div class="color-section">
           <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
@@ -107,7 +107,7 @@
         
         <div class="stroke-block">
           <!-- POINT CATEGORY STROKE -->        
-          <style-stroke stroke="thematicStyleModel.categoryPointStroke" stroke-width="thematicStyleModel.categoryPointStrokeWidth" stroke-opacity="thematicStyleModel.categoryPointStrokeOpacity"></style-stroke>
+          <style-stroke stroke="styleModel.categoryPointStroke" stroke-width="styleModel.categoryPointStrokeWidth" stroke-opacity="styleModel.categoryPointStrokeOpacity"></style-stroke>
         
           <div id="category-point-radius-block" class="fill-block">
             <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
@@ -115,14 +115,14 @@
               <div class="cell">
                 <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
                 <div class="text">
-                  <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="thematicStyleModel.categoryPointSize"></input>
+                  <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="styleModel.categoryPointSize"></input>
                 </div>
               </div>
               <div class="cell">
                 <label for="category-point-fill-opacity-select"><gdb:localize key="DashboardLayer.form.opacity"/></label>
                 <div class="text">
                   <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
-                    ng-model="thematicStyleModel.categoryPointFillOpacity" convert-to-number>
+                    ng-model="styleModel.categoryPointFillOpacity" convert-to-number>
                     <c:forEach step="5" begin="0" end="100" var="size">
                       <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
                       <option value="${potentialValue}">${size}</option>
@@ -134,7 +134,7 @@
           
             <div id="category-point-type-container" class="cell">
               <label for="category-point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-              <styled-basic-select options="dynamicDataModel.pointTypes" model="thematicStyleModel.categoryPointWellKnownName" class="method-select"></styled-basic-select>            
+              <styled-basic-select options="dynamicDataModel.pointTypes" model="styleModel.categoryPointWellKnownName" class="method-select"></styled-basic-select>            
             </div>
           </div>
         </div>
@@ -142,12 +142,12 @@
     
       
       <!-- BUBBLE -->
-      <div class="tab-pane" id="tab002bubble" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BUBBLE' }">
+      <div class="tab-pane" id="tab002bubble" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BUBBLE' }">
         <!-- BASIC FILL -->
-        <style-basic-fill fill="thematicStyleModel.bubbleFill" opacity="thematicStyleModel.bubbleOpacity"></style-basic-fill>
+        <style-basic-fill fill="styleModel.bubbleFill" opacity="styleModel.bubbleOpacity"></style-basic-fill>
       
         <!-- BASIC STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.bubbleStroke" stroke-width="thematicStyleModel.bubbleStrokeWidth" stroke-opacity="thematicStyleModel.bubbleStrokeOpacity"></style-stroke>
+        <style-stroke class="stroke-block" stroke="styleModel.bubbleStroke" stroke-width="styleModel.bubbleStrokeWidth" stroke-opacity="styleModel.bubbleStrokeOpacity"></style-stroke>
       
         <div class="fill-block">
           <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
@@ -155,16 +155,16 @@
             <div class="cell">
               <label for="f76"><gdb:localize key="DashboardLayer.form.min"/></label>
               <div class="text">
-                <input id="f76" name="style.bubbleMinSize" type="text" ng-model="thematicStyleModel.bubbleMinSize"/>
+                <input id="f76" name="style.bubbleMinSize" type="text" ng-model="styleModel.bubbleMinSize"/>
               </div>
             </div>
             <div class="cell">
               <label for="f77"><gdb:localize key="DashboardLayer.form.max"/></label>
               <div class="text">
-                <input id="f77" name="style.bubbleMaxSize" type="text" ng-model="thematicStyleModel.bubbleMaxSize"></input>
+                <input id="f77" name="style.bubbleMaxSize" type="text" ng-model="styleModel.bubbleMaxSize"></input>
               </div>
             </div>
-            <styled-check-box model="thematicStyleModel.bubbleContinuousSize" label="<gdb:localize key="DashboardThematicLayer.form.continuousSize"/>"></styled-check-box>
+            <styled-check-box model="styleModel.bubbleContinuousSize" label="<gdb:localize key="DashboardThematicLayer.form.continuousSize"/>"></styled-check-box>
           </div>
         </div>
         
@@ -174,9 +174,9 @@
             <label class="secondary-label" for="secondaryAttribute" ><gdb:localize key="DashboardLayer.form.secondaryAttribute"/></label>
             <div id="secondary-select-box" class="select-box">
               <select id="secondaryAttribute" class="method-select" name="secondaryAttribute"
-                ng-model="thematicStyleModel.secondaryAggregation.attribute"
+                ng-model="styleModel.secondaryAggregation.attribute"
                 ng-options="attr as attr.label for attr in dynamicDataModel.secondaryAttributes track by attr.id"
-                ng-selected="thematicStyleModel.secondaryAggregation.attribute.id == attr.id"
+                ng-selected="styleModel.secondaryAggregation.attribute.id == attr.id"
                 ng-change="ctrl.onAttributeChange()">
               </select>
             </div>
@@ -188,9 +188,9 @@
               <div class="select-box" id="secondary-aggregation-container">
               
                 <select id="secondaryAggregation" class="method-select" name="secondaryAggregation"
-                  ng-model="thematicStyleModel.secondaryAggregation.method"
+                  ng-model="styleModel.secondaryAggregation.method"
                   ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.value"
-                  ng-selected="thematicStyleModel.secondaryAggregation.method.value == agg.value">
+                  ng-selected="styleModel.secondaryAggregation.method.value == agg.value">
                 </select>
                 
               </div> 
@@ -204,10 +204,10 @@
                 </div>
                 <div class="category-block">
                   <!-- RENDER SECONDARY ONTOLOGY TREE -->
-                  <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology()" categories="thematicStyleModel.secondaryAggregation" nodes="thematicStyleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
+                  <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" nodes="styleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
                   
                   <!-- RENDER SECONDARY CATEGORIES -->
-                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()" categories="thematicStyleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false"></style-category-list>
+                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false"></style-category-list>
                 </div>
               </div>
             </div>
@@ -217,27 +217,27 @@
       
       
       <!-- BASICPOLYGON -->
-      <div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'BASICPOLYGON' }">
+      <div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BASICPOLYGON' }">
         <!-- BASIC POLYGON FILL -->
-        <style-basic-fill fill="thematicStyleModel.polygonFill" opacity="thematicStyleModel.polygonFillOpacity"></style-basic-fill>
+        <style-basic-fill fill="styleModel.polygonFill" opacity="styleModel.polygonFillOpacity"></style-basic-fill>
       
         <!-- BASIC POLYGON STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.polygonStroke" stroke-width="thematicStyleModel.polygonStrokeWidth" stroke-opacity="thematicStyleModel.polygonStrokeOpacity"></style-stroke>                
+        <style-stroke class="stroke-block" stroke="styleModel.polygonStroke" stroke-width="styleModel.polygonStrokeWidth" stroke-opacity="styleModel.polygonStrokeOpacity"></style-stroke>                
       </div>
       
       
       <!-- GRADIENT POLYGON -->
-      <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'GRADIENTPOLYGON' }">
+      <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'GRADIENTPOLYGON' }">
         <!-- POINT GRADIENT FILL -->
-        <style-gradient-fill min-fill="thematicStyleModel.gradientPolygonMinFill" max-fill="thematicStyleModel.gradientPolygonMaxFill" opacity="thematicStyleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
+        <style-gradient-fill min-fill="styleModel.gradientPolygonMinFill" max-fill="styleModel.gradientPolygonMaxFill" opacity="styleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
         
         <!-- POINT GRADIENT STROKE -->
-        <style-stroke class="stroke-block" stroke="thematicStyleModel.gradientPolygonStroke" stroke-width="thematicStyleModel.gradientPolygonStrokeWidth" stroke-opacity="thematicStyleModel.gradientPolygonStrokeOpacity"></style-stroke>        
+        <style-stroke class="stroke-block" stroke="styleModel.gradientPolygonStroke" stroke-width="styleModel.gradientPolygonStrokeWidth" stroke-opacity="styleModel.gradientPolygonStrokeOpacity"></style-stroke>        
       </div>
       
      
       <!-- CATEGORY POLYGON -->
-       <div class="tab-pane" id="tab005categoriespolygon" ng-class="{ 'active' : '{{thematicLayerModel.layerType}}' == 'CATEGORYPOLYGON' }">
+       <div class="tab-pane" id="tab005categoriespolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'CATEGORYPOLYGON' }">
         <div class="color-section">
           <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
           <div class="heading-list">
@@ -255,7 +255,7 @@
       </div>
       
       <!-- POINT CATEGORY STROKE -->        
-      <style-stroke class="stroke-block" stroke="thematicStyleModel.categoryPolygonStroke" stroke-width="thematicStyleModel.categoryPolygonStrokeWidth" stroke-opacity="thematicStyleModel.categoryPolygonStrokeOpacity"></style-stroke>
+      <style-stroke class="stroke-block" stroke="styleModel.categoryPolygonStroke" stroke-width="styleModel.categoryPolygonStrokeWidth" stroke-opacity="styleModel.categoryPolygonStrokeOpacity"></style-stroke>
     
     </div> <!--  end style container  -->
   </div>  <!--  end holder  -->

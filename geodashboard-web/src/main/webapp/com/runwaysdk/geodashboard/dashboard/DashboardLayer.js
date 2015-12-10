@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-	
+
   /**
    * 
    * MAP PANEL CONTROLLER AND WIDGET
@@ -88,10 +88,10 @@
     
     controller.edit = function(layerId) {
       var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-      form.edit(layerId, controller.$compile, controller.$scope);    	
+      form.edit(layerId, controller.$compile, controller.$scope);    
     }
     
-    controller.remove = function(layerId) {    	
+    controller.remove = function(layerId) {    
       var onSuccess =  function(){
           
         if($scope.cache.values[layerId] != null) {
@@ -116,14 +116,14 @@
     controller.setLayerIndexes = function(layerIds) {
       $scope.cache.ids = layerIds;
 
-      $scope.$apply();       	
+      $scope.$apply();       
       
       // // At this point, the cache are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
       $scope.dashboard.renderMap();                  
     }
     
     controller.canEdit = function() {
-      return dashboardService.canEdit();    	
+      return dashboardService.canEdit();    
     }
     
     controller.move = function(e, ui) {
@@ -141,7 +141,7 @@
     }
     
     controller.orderLayers = function(layerIds) {
-    	
+    
       if(dashboardService.edit){
         var mapId = $scope.dashboard.model.mapId;
         
@@ -164,7 +164,7 @@
       }
       else{
         controller.setLayerIndexes(layerIds);        
-      }    	
+      }    
     }
     
     controller.hasValues = function() {
@@ -194,7 +194,7 @@
       controller : ThematicPanelController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-    	
+    
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
           ctrl.expand(element);        
@@ -207,7 +207,7 @@
           el.sortable({
             update: ctrl.move
           });
-          el.disableSelection();            	
+          el.disableSelection();            
         });
       }
     }    
@@ -218,21 +218,26 @@
    * REFERENCE LAYER CONTROLLER AND WIDGET
    * 
    */  
-  function ReferencePanelController($scope, $timeout, dashboardService) {
+  function ReferencePanelController($scope, dashboardService) {
     var controller = this;
-	  
+  
     controller.canEdit = function() {
       return dashboardService.canEdit();      
     }
     
     controller.edit = function(layerId, universalId) {
-      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-      form.edit(layerId);    	
+      var layer = $scope.cache.values[universalId];
+      var mapId = layer.mapId;    	
+    	
+      $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId, mapId:mapId});
+//      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+//      form.edit(layerId);    
     }    
     
     controller.add = function(layerId, universalId) {
-      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-      form.open(universalId);
+      $scope.$emit('newReferenceLayer', {layerId:layerId, universalId:universalId});    
+//      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
+//      form.open(universalId);
     }
 
     controller.toggle = function(layerId, universalId) {
@@ -243,7 +248,7 @@
     }
     
     controller.remove = function(layerId, universalId) {
-      	
+      
       var onSuccess = function(){
         // remove the map layer from the map
         var layer = $scope.cache.values[universalId];
@@ -252,7 +257,7 @@
         layer.layerType = "REFERENCEJSON";
           
         $scope.dashboard.toggleLayer(layer);          
-        	  
+          
         $scope.$apply();
       };
       
@@ -370,10 +375,10 @@
     }
     
     controller.detach = function($event, layer) {
-    	
+    
       layer.groupedInLegend = false;
       
-      if(layer.legendXPosition == 0) {    	  
+      if(layer.legendXPosition == 0) {      
         layer.legendXPosition = $event.clientX + 50;
       }      
       
@@ -447,7 +452,7 @@
       },
       controller : LegendDragController,
       controllerAs : 'ctrl',      
-	  link: function(scope, element, attrs, ctrl) {
+      link: function(scope, element, attrs, ctrl) {
         element.ready(function(){
           $(element).draggable({
             containment: "body", 
@@ -465,7 +470,7 @@
             ctrl.move(newPosition);
           }); 
         });
-	  }
+      }
     }
   }
   

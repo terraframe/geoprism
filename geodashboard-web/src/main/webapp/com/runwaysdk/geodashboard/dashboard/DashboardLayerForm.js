@@ -441,6 +441,40 @@
     };
   };
   
+  function BasicPoint($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/layer/basic-point.jsp',    
+      scope: true,
+      link: function (scope, element, attrs) {
+        element.ready(function(){
+          $timeout(function(){
+            jcf.customForms.replaceAll(element[0]);
+//            $(element).show();
+          }, 100);          
+        });
+      }
+    };    
+  };
+  
+  function BasicPolygon($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/layer/basic-polygon.jsp',    
+      scope: true,
+      link: function (scope, element, attrs) {
+        element.ready(function(){
+          $timeout(function(){
+            jcf.customForms.replaceAll(element[0]);
+//            $(element).show();
+          }, 100);          
+        });
+      }
+    };    
+  };
+  
   function LayerTypesStyleController($scope, $timeout, $compile, layerFormService, localizationService) {
     var controller = this;  
     controller.ready = true;
@@ -460,22 +494,22 @@
       var options = $scope.categoryWidget.aggregationMap[type];
       
       $scope.dynamicDataModel.secondaryAggregationMethods = options;
-      $scope.thematicStyleModel.secondaryAggregation.method = options[0];
+      $scope.styleModel.secondaryAggregation.method = options[0];
     };
     
     controller.onAttributeChange = function() {
       controller.ready = false;
     	
-      var attribute = $scope.thematicStyleModel.secondaryAggregation.attribute;
+      var attribute = $scope.styleModel.secondaryAggregation.attribute;
     	
       if(attribute.id != 'NONE') {
     	
         $('#secondary-aggregation-container').html("");
         
         // Reset the aggregation categories
-        $scope.thematicStyleModel.secondaryAggregation.otherEnabled = false;
-        $scope.thematicStyleModel.secondaryAggregation.other = {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true};
-        $scope.thematicStyleModel.secondaryAggregation.catLiElems = [
+        $scope.styleModel.secondaryAggregation.otherEnabled = false;
+        $scope.styleModel.secondaryAggregation.other = {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true};
+        $scope.styleModel.secondaryAggregation.catLiElems = [
           {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
           {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
           {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
@@ -488,7 +522,7 @@
         // Rebuild the secondary aggregations
         angular.element(document.getElementById('secondary-aggregation-container')).append($compile(
           '<select style="display:none" id="secondaryAggregation" class="method-select" name="secondaryAggregation"'+ 
-            'ng-model="thematicStyleModel.secondaryAggregation.method"'+
+            'ng-model="styleModel.secondaryAggregation.method"'+
             'ng-options="agg as agg.label for agg in dynamicDataModel.secondaryAggregationMethods track by agg.value">'+
           '</select>'
         )($scope));
@@ -509,7 +543,7 @@
      * Test if the selected secondary attribute is valid (not null or empty string)
      */
     controller.secondaryAttributeIsValid = function(){
-      var selection = $scope.thematicStyleModel.secondaryAggregation.attribute;
+      var selection = $scope.styleModel.secondaryAggregation.attribute;
       
       if(selection && selection.id != "NONE" ){
         return true;
@@ -519,7 +553,7 @@
     };
     
     controller.isSecondaryAttributeOntology = function() {
-      return ($scope.thematicStyleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
+      return ($scope.styleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
     }
     
     controller.categoryAutocomplete = function(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response ) {
@@ -565,10 +599,10 @@
      * @param response : JQuery signature var
      */
     controller.basicCategoryAutocompleteSource = function( request, response ) {      
-      var mdAttribute = $scope.thematicLayerModel.mdAttribute;  
+      var mdAttribute = $scope.layerModel.mdAttribute;  
       var universalId = $scope.getCurrentAggregationStrategy().value;
-      var geoNodeId = $scope.thematicLayerModel.geoNode;
-      var aggregationVal = $scope.thematicLayerModel.aggregationType;
+      var geoNodeId = $scope.layerModel.geoNode;
+      var aggregationVal = $scope.layerModel.aggregationType;
       var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
       
       controller.categoryAutocomplete(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response );
@@ -581,11 +615,11 @@
      * @param response : JQuery signature var
      */
     controller.secondaryCategoryAutocompleteSource = function( request, response ) {      
-      var mdAttribute = $scope.thematicStyleModel.secondaryAggregation.attribute.mdAttributeId;  
+      var mdAttribute = $scope.styleModel.secondaryAggregation.attribute.mdAttributeId;  
       var universalId = $scope.getCurrentAggregationStrategy().value;
-      var geoNodeId = $scope.thematicLayerModel.geoNode;
-      var aggregationVal = $scope.thematicStyleModel.secondaryAggregation.method.value;
-      var categoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;
+      var geoNodeId = $scope.layerModel.geoNode;
+      var aggregationVal = $scope.styleModel.secondaryAggregation.method.value;
+      var categoryType = $scope.styleModel.secondaryAggregation.attribute.categoryType;
       
       controller.categoryAutocomplete(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response );
     };     
@@ -686,13 +720,13 @@
     $scope.init = function(layerId, newInstance, geoNodeId, mdAttributeId, mapId) {
       $scope.newInstance = (newInstance === 'true');
       $scope.dynamicDataModel.newInstance = (newInstance === 'true');
-      $scope.thematicLayerModel.id = layerId;
-      $scope.thematicLayerModel.mdAttribute = mdAttributeId;
-      $scope.thematicLayerModel.geoNode = geoNodeId;
+      $scope.layerModel.id = layerId;
+      $scope.layerModel.mdAttribute = mdAttributeId;
+      $scope.layerModel.geoNode = geoNodeId;
       $scope.mapId;
         
       if($scope.newInstance){
-        controller.loadLayerOptions($scope.thematicLayerModel.mdAttribute);
+        controller.loadLayerOptions($scope.layerModel.mdAttribute);
       }
       else{
         controller.loadLayerState();
@@ -721,7 +755,6 @@
      * Layer agnostic properties
      */
     $scope.newInstance = true; 
-    $scope.availableFonts = [];
     $scope.showModal = true; 
     $scope.errors = [];
       
@@ -744,14 +777,15 @@
       ontologyNodes : [],
       termType : '',
       relationshipType : '',
-      thematicAttributeDataType : ''
+      thematicAttributeDataType : '',
+      availableFonts : []      
     };
 
       
     /**
      * Model for a thematic layer
      */
-    $scope.thematicLayerModel = {
+    $scope.layerModel = {
       viewName : '',
 //      sldName : '', // not needed on the client because geoserver uses the sld set on the server based on layer submission
       name : '',
@@ -776,7 +810,7 @@
     /**
      * Model for a thematic style of a thematic layer
      */
-    $scope.thematicStyleModel = {
+    $scope.styleModel = {
       basicPointSize : 10,
       enableLabel : true,
       enableValue : true,
@@ -892,23 +926,23 @@
     };
     
     $scope.setEnableValue = function(val){
-      $scope.thematicStyleModel.enableValue = val;
+      $scope.styleModel.enableValue = val;
     }; 
       
     $scope.setEnableLabel = function(val){
-      $scope.thematicStyleModel.enableLabel = val;
+      $scope.styleModel.enableLabel = val;
     }; 
       
     $scope.setInLegend = function(val){
-      $scope.thematicLayerModel.inLegend = val;
+      $scope.layerModel.inLegend = val;
     };
       
     $scope.setPointCategories = function(catObjects){
-      $scope.thematicStyleModel.categoryPointStyles = {catLiElems:catObjects};
+      $scope.styleModel.categoryPointStyles = {catLiElems:catObjects};
     };
       
     $scope.setPolygonCategories = function(catObjects){
-      $scope.thematicStyleModel.categoryPolygonStyles = {catLiElems:catObjects};
+      $scope.styleModel.categoryPolygonStyles = {catLiElems:catObjects};
     };
       
     $scope.setAggregationStrategyOptions = function(aggregations){
@@ -916,7 +950,7 @@
     };
         
     $scope.setValueFont = function(val){
-      $scope.thematicStyleModel.valueFont = val;
+      $scope.styleModel.valueFont = val;
     };
         
     $scope.getFormattedInt = function(n){
@@ -945,24 +979,24 @@
       var categoryType = $scope.dynamicDataModel.thematicAttributeDataType;
 
       // Update the style model to include the point and polygon category values
-      $scope.thematicStyleModel.categoryPointStyles = JSON.stringify(controller.getCategoryValues($scope.categoryWidget.basicPointCatOptionsObj, categoryType));
-      $scope.thematicStyleModel.categoryPolygonStyles = JSON.stringify(controller.getCategoryValues($scope.categoryWidget.polygonCatOptionsObj, categoryType));
+      $scope.styleModel.categoryPointStyles = JSON.stringify(controller.getCategoryValues($scope.categoryWidget.basicPointCatOptionsObj, categoryType));
+      $scope.styleModel.categoryPolygonStyles = JSON.stringify(controller.getCategoryValues($scope.categoryWidget.polygonCatOptionsObj, categoryType));
            
       // Update the secondary attribute values       
-      if($scope.thematicStyleModel.secondaryAggregation.id != 'NONE'){    	  
-        var secondaryCategoryType = $scope.thematicStyleModel.secondaryAggregation.attribute.categoryType;    	  
+      if($scope.styleModel.secondaryAggregation.id != 'NONE'){    	  
+        var secondaryCategoryType = $scope.styleModel.secondaryAggregation.attribute.categoryType;    	  
     	  
-        $scope.thematicStyleModel.secondaryAttribute = $scope.thematicStyleModel.secondaryAggregation.attribute.mdAttributeId;                   
-        $scope.thematicStyleModel.secondaryAggregationType = $scope.thematicStyleModel.secondaryAggregation.method.value;          
-        $scope.thematicStyleModel.secondaryCategories = JSON.stringify(controller.getCategoryValues($scope.thematicStyleModel.secondaryAggregation, secondaryCategoryType).catLiElems);
+        $scope.styleModel.secondaryAttribute = $scope.styleModel.secondaryAggregation.attribute.mdAttributeId;                   
+        $scope.styleModel.secondaryAggregationType = $scope.styleModel.secondaryAggregation.method.value;          
+        $scope.styleModel.secondaryCategories = JSON.stringify(controller.getCategoryValues($scope.styleModel.secondaryAggregation, secondaryCategoryType).catLiElems);
       }
       else {
-        $scope.thematicStyleModel.secondaryAttribute = '';                   
-        $scope.thematicStyleModel.secondaryAggregationType = '';          
-        $scope.thematicStyleModel.secondaryCategories = '[]';         
+        $scope.styleModel.secondaryAttribute = '';                   
+        $scope.styleModel.secondaryAggregationType = '';          
+        $scope.styleModel.secondaryCategories = '[]';         
       }
            
-      layerFormService.applyWithStyle($scope.thematicLayerModel, $scope.thematicStyleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
+      layerFormService.applyWithStyle($scope.layerModel, $scope.styleModel, $scope.dynamicDataModel, $scope.dashboard.getCompressedState(), '#modal01', onSuccess, onFailure);
     };
     
     
@@ -975,7 +1009,7 @@
         $scope.closeLayerModal();
        }
                
-      layerFormService.unlock($scope.thematicLayerModel.id, onSuccess);
+      layerFormService.unlock($scope.layerModel.id, onSuccess);
      };
          
          
@@ -1003,7 +1037,7 @@
         $scope.$apply();
       };
             
-      layerFormService.getThematicLayerJSON($scope.thematicLayerModel.id, onSuccess);
+      layerFormService.getThematicLayerJSON($scope.layerModel.id, onSuccess);
     };
       
       
@@ -1044,7 +1078,7 @@
       $scope.dynamicDataModel.isOntologyAttribute = options.attributeType.isOntologyAttribute;
       $scope.dynamicDataModel.isTextAttribute = options.attributeType.isTextAttribute;
         
-      $scope.availableFonts = $scope.processFonts(options.fonts);
+      $scope.dynamicDataModel.availableFonts = $scope.processFonts(options.fonts);
       $scope.geoNodes = options.geoNodes;
         
       if(options.attributeType.isOntologyAttribute){
@@ -1061,13 +1095,13 @@
       if(isNew){
         $scope.dynamicDataModel.aggregationStrategy = options.aggegationStrategies[0].aggregationStrategies[0].value;
           
-        $scope.thematicLayerModel.layerType = options.layerTypeNames[0];
-        $scope.thematicLayerModel.aggregationMethod = options.aggregations[0];
-        $scope.thematicLayerModel.aggregationType = aggregationMethod = $scope.dynamicDataModel.aggregationMethods[0].method;
-        $scope.thematicLayerModel.geoNode = $scope.thematicLayerModel.geoNode || $scope.geoNodes[0].id; // TODO: remove geoNode from init function... this is set in the init function but may be null if new layer
-        $scope.thematicStyleModel.labelFont = $scope.availableFonts[0]; 
-        $scope.thematicStyleModel.valueFont = $scope.availableFonts[0];  
-        $scope.thematicLayerModel.displayInLegend = true;          
+        $scope.layerModel.layerType = options.layerTypeNames[0];
+        $scope.layerModel.aggregationMethod = options.aggregations[0];
+        $scope.layerModel.aggregationType = aggregationMethod = $scope.dynamicDataModel.aggregationMethods[0].method;
+        $scope.layerModel.geoNode = $scope.layerModel.geoNode || $scope.geoNodes[0].id; // TODO: remove geoNode from init function... this is set in the init function but may be null if new layer
+        $scope.styleModel.labelFont = $scope.availableFonts[0]; 
+        $scope.styleModel.valueFont = $scope.availableFonts[0];  
+        $scope.layerModel.displayInLegend = true;          
       }
     };
       
@@ -1079,15 +1113,15 @@
         
       $scope.dynamicDataModel.aggregationStrategy = state.aggregationStrategy.value;
         
-      $scope.thematicLayerModel.name = state.layerName;
-      $scope.thematicLayerModel.layerType = state.featureStrategy;
-      $scope.thematicLayerModel.aggregationMethod = state.aggregationMethod;
-      $scope.thematicLayerModel.aggregationType = aggregationMethod = state.aggregationMethod;
-      $scope.thematicLayerModel.geoNode = state.geoNodeId;
-      $scope.thematicLayerModel.displayInLegend = state.inLegend;
+      $scope.layerModel.name = state.layerName;
+      $scope.layerModel.layerType = state.featureStrategy;
+      $scope.layerModel.aggregationMethod = state.aggregationMethod;
+      $scope.layerModel.aggregationType = aggregationMethod = state.aggregationMethod;
+      $scope.layerModel.geoNode = state.geoNodeId;
+      $scope.layerModel.displayInLegend = state.inLegend;
 
       var style = state.styles[0];
-      $scope.thematicStyleModel = style;
+      $scope.styleModel = style;
                 
       // Update the point and polygon category model
       controller.loadCategoryValues($scope.categoryWidget.polygonCatOptionsObj, style.categoryPolygonStyles, $scope.dynamicDataModel.thematicAttributeDataType);
@@ -1110,9 +1144,9 @@
         ]
       };
       
-      var mdAttributeId = $scope.thematicStyleModel.secondaryAttribute;      
+      var mdAttributeId = $scope.styleModel.secondaryAttribute;      
       
-      if($scope.thematicStyleModel.secondaryAttribute != null && $scope.thematicStyleModel.secondaryAttribute != '') {
+      if($scope.styleModel.secondaryAttribute != null && $scope.styleModel.secondaryAttribute != '') {
           
         // Load the attribute value
         for(var i = 0; i < $scope.dynamicDataModel.secondaryAttributes.length; i++) {
@@ -1124,7 +1158,7 @@
         }
 
         // Load the method value
-        var aggregationType = $scope.thematicStyleModel.secondaryAggregationType[0];      
+        var aggregationType = $scope.styleModel.secondaryAggregationType[0];      
         var options = $scope.categoryWidget.aggregationMap[aggregation.attribute.type];
         
         $scope.dynamicDataModel.secondaryAggregationMethods = options;
@@ -1140,10 +1174,10 @@
         var categoryType = aggregation.attribute.categoryType;
         
         // Load the categories
-        controller.loadCategoryValues(aggregation, $scope.thematicStyleModel.secondaryCategories, categoryType);
+        controller.loadCategoryValues(aggregation, $scope.styleModel.secondaryCategories, categoryType);
       }
         
-      $scope.thematicStyleModel.secondaryAggregation = aggregation;
+      $scope.styleModel.secondaryAggregation = aggregation;
     }
       
     controller.loadCategoryValues = function(model, json, categoryType) {
@@ -1227,7 +1261,7 @@
       /**
        * Toggle the layer type selection UI based on user actions (model change)
        */
-      $scope.$watch("thematicLayerModel.layerType", function(newValue, oldValue) {
+      $scope.$watch("layerModel.layerType", function(newValue, oldValue) {
           if(newValue !== ""){
             $(".tab-pane").removeClass("active");
             
@@ -1256,7 +1290,7 @@
       });
       
       
-      $scope.$watch("thematicStyleModel.labelFont", function(newValue, oldValue) {
+      $scope.$watch("styleModel.labelFont", function(newValue, oldValue) {
         $scope.setValueFont(newValue);
       });
       
@@ -1264,7 +1298,7 @@
        * When the aggregation strategy is changed the list of possible
        * geoNodes needs to be updated.
        */
-      $scope.$watch("thematicLayerModel.geoNode", function(newValue, oldValue) {
+      $scope.$watch("layerModel.geoNode", function(newValue, oldValue) {
         if(newValue != null && newValue.length > 0) {        
           $scope.getGeographicAggregationOptions(newValue);
         }
@@ -1415,6 +1449,142 @@
          };
   };
   
+  
+  /*
+   * 
+   * Reference Layer
+   * 
+   */
+  function ReferenceLayerController($scope, $rootScope, referenceLayerFormService) {
+    
+      
+    /*
+     * Controller functions
+     */
+    var controller = this;
+    
+    controller.clear = function() {
+      /*
+       * Clear all model objects
+       */     	
+      $scope.show = false;          
+      $scope.errors = [];
+      $scope.state = null;
+
+      // Objects loaded from the server
+      $scope.layerModel = null;
+      $scope.styleModel = null;
+      $scope.dynamicDataModel = null;
+    }
+    
+    controller.apply = function() {
+      var onSuccess = function(layer) {    	  
+        controller.clear();            
+        $scope.$apply();
+        
+        if(layer != null) {
+          var map = {};
+          map.refLayers = [JSON.parse(layer)];
+        	
+          $scope.$emit('layerChange', {map:map});
+        }
+      }
+      
+      var onFailure = function(e){
+        $scope.errors = [];
+        $scope.errors.push(e.message);
+                 
+        $scope.$apply();
+      };
+      
+      // Clear all the errors
+      $scope.errors = [];
+      
+      referenceLayerFormService.apply($scope.layerModel, $scope.styleModel, $scope.state, '#reference-modal', onSuccess, onFailure);      
+    }
+    
+    controller.cancel = function() {
+      var onSuccess = function(response) {
+        controller.clear();            
+        $scope.$apply();
+      }
+      
+      referenceLayerFormService.unlock($scope.layer, '#reference-modal', onSuccess);      
+    }
+    
+    controller.load = function(response) {
+      $scope.layerModel = response.layer;
+      $scope.styleModel = response.style;
+      $scope.dynamicDataModel = response.dynamicDataModel;
+    }
+    
+    controller.newInstance = function(universalId, mapId) {
+      var onSuccess = function(response) {
+        controller.load(response);
+            
+        $scope.show = true;
+        $scope.$apply();
+      }
+          
+      referenceLayerFormService.newInstance(universalId, mapId, '#mapDivId', onSuccess);
+    }
+    
+    controller.edit = function(layerId, mapId) {
+      var onSuccess = function(response) {
+        controller.load(response);
+            
+        $scope.show = true;
+        $scope.$apply();
+      }
+      
+      referenceLayerFormService.edit(layerId, '#mapDivId', onSuccess);
+    }          
+    
+    /*
+     * Listen for reference layer events
+     */ 
+    $rootScope.$on('editReferenceLayer', function(event, data) {
+      var layerId = data.layerId;
+      var mapId = data.mapId;
+      var state = data.state;
+      
+      $scope.state = state;
+      
+      controller.edit(layerId, mapId);
+    });    
+    
+    $rootScope.$on('newReferenceLayer', function(event, data) {
+      var universalId = data.universalId;
+      var mapId = data.mapId;
+      var state = data.state;
+      
+      $scope.state = state;
+      
+      controller.newInstance(universalId, mapId);
+    });
+    
+    /*
+     * Model initialization
+     */ 
+    controller.clear();
+  }
+  
+  function ReferenceLayer($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/layer/reference-layer.jsp',    
+      scope: {
+    	  
+      },
+      controller : ReferenceLayerController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs) {
+      }
+    };    
+   };  
+  
+  
    
   angular.module("dashboard-layer-form", ["layer-form-service", "dashboard", "styled-inputs"]);
   angular.module("dashboard-layer-form")
@@ -1431,8 +1601,11 @@
     .directive('layerAggregation', LayerAggregation)
     .directive('layerTypes', LayerTypes)
     .directive('layerTypesSelectionDirective', LayerTypesSelectionDirective)
+    .directive('basicPoint', BasicPoint)
+    .directive('basicPolygon', BasicPolygon)
     .directive('layerTypesStyle', LayerTypesStyle)
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('legendOptions', LegendOptions)
-    .directive('formActionButtons', FormActionButtons);
+    .directive('formActionButtons', FormActionButtons)
+    .directive('referenceLayer', ReferenceLayer);
 })();

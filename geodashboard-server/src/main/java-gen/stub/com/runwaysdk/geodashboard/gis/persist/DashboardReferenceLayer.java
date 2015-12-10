@@ -18,7 +18,10 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +64,12 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   }
 
   @Override
+  public String getJSON()
+  {
+    return this.toJSON().toString();
+  }
+
+  @Override
   public JSONObject toJSON()
   {
     try
@@ -76,10 +85,11 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
       json.put("featureStrategy", getFeatureStrategy());
       json.put("universalId", this.getUniversalId());
+      json.put("mapId", this.getDashboardMapId());
       json.put("layerExists", true);
       json.put("isActive", true);
       json.put("layerType", "REFERENCELAYER");
-      
+
       JSONArray jsonStyles = new JSONArray();
       List<? extends DashboardStyle> styles = this.getStyles();
       for (int i = 0; i < styles.size(); ++i)
@@ -186,6 +196,44 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       DashboardReferenceLayer tSource = (DashboardReferenceLayer) source;
 
       this.setUniversal(tSource.getUniversal());
+    }
+  }
+
+  /**
+   * JSONObject with containing all options used in the CRUD form.
+   * 
+   * @return
+   */
+  public static String getOptionsJSON()
+  {
+    try
+    {
+      String[] fonts = DashboardThematicStyle.getSortedFonts();
+
+      // Set possible layer types based on attribute type
+      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
+      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
+
+      JSONArray pointTypes = new JSONArray();
+      pointTypes.put("CIRCLE");
+      pointTypes.put("STAR");
+      pointTypes.put("SQUARE");
+      pointTypes.put("TRIANGLE");
+      pointTypes.put("CROSS");
+      pointTypes.put("X");
+
+      JSONObject object = new JSONObject();
+      object.put("availableFonts", new JSONArray(Arrays.asList(fonts)));
+      object.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
+      object.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
+      object.put("pointTypes", pointTypes);
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
     }
   }
 }

@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,18 +17,18 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-       
-       
-<div id="geonode-holder" class="row-holder" style="display:none">
-  <div class="label-holder style03">
-    <strong><gdb:localize key="DashboardThematicLayer.form.defineGeoNode"/></strong>
-  </div>
-  <div class="holder add">
-    <div class="box">
-      <label for="geonode-select"><gdb:localize key="DashboardThematicLayer.form.geoNode"/></label>
-      <styled-select options="geoNodes" model="layerModel.geoNode" value="id" label="displayLabel"></styled-select>
-    </div>
-  </div>
-</div>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer">
+        <create>
+          <mdMethod name="getOptionsJSON" label="Get Options JSON" static="true" returnType="java.lang.String"></mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
