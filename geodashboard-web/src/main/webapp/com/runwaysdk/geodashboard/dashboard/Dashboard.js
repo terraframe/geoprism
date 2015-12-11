@@ -121,11 +121,11 @@
         var map = Mojo.Util.toObject(json);
 
         $timeout(function() {
-          controller.setMapState(map, false);          
-        }, 10);
-        
-        controller.renderReport();
+          controller.setMapState(map, false);
           
+          controller.renderReport();
+        }, 10);
+                  
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
       };      
       
@@ -502,7 +502,7 @@
     controller.setFeatureInfo = function(info) {
       if(info != null) {
       
-      var attributeValue = info.attributeValue;
+        var attributeValue = info.attributeValue;
       
         /* Localize the value if needed */
         if(typeof attributeValue === 'number'){
@@ -520,6 +520,8 @@
         }    
         
         controller.feature = info;
+        controller.feature.show = true;
+
         controller.geoId = info.geoId;
         
         $scope.$apply();
@@ -593,7 +595,7 @@
         types : []
       };
       
-      if(!controller.isEmpty(oState.location)) {
+      if(!dashboardService.isEmptyFilter(oState.location)) {
         state.location = oState.location;
       }
       
@@ -607,7 +609,7 @@
           for(var j = 0; j < oAttributes.length; j++) {
             var oAttribute = oAttributes[j];
             
-            if(oAttribute.filter != null && !controller.isEmpty(oAttribute.filter)) {
+            if(oAttribute.filter != null && !dashboardService.isEmptyFilter(oAttribute.filter)) {
               attributes.push(oAttribute);
             }            
           }          
@@ -626,16 +628,6 @@
       return state;
     }
     
-    controller.isEmpty = function(filter)
-    {
-      for(var key in filter) {
-        if(key != 'type' && key != 'operation' && filter.hasOwnProperty(key)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
     controller.cloneDashboard = function() {
       var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
       dashboardForm.open();
@@ -727,12 +719,16 @@
     $scope.$on('newThematicLayer', function(event, data) {
       data.mapId = controller.model.mapId;
       data.state = controller.getCompressedState();
-    });    
+    });
     
     $rootScope.$on('layerChange', function(event, data) {
       controller.handleLayerEvent(data.map);      
     });
-        
+          
+    // Report Events
+    $scope.$on('exportReport', function(event, data) {
+      controller.exportReport(data.format);
+    });        
   }
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder", "dashboard-layer-form"]);

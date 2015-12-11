@@ -24,13 +24,14 @@
     service.formatter = Globalize.numberFormatter();
     
     service.parseNumber = function(value) {
-      if(value != null) {            
+      if(value != null && value.length > 0) {            
         //convert data from view format to model format
         var number = service.parser( value );
+        
         return number;
       }
           
-      return value;
+      return null;
     }
     
     service.formatNumber = function(value) {
@@ -45,7 +46,7 @@
         return service.formatter(number);
       }
             
-      return value;
+      return null;
     }
 
     return service;

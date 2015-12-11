@@ -195,9 +195,11 @@
         $(element).find(".opener-link").click();
       }, 1000);
     }
+    
+    
   }
   
-  function AccordionAttribute() {
+  function AccordionAttribute(dashboardService) {
     return {
       restrict: 'E',
       replace: true,
@@ -212,7 +214,7 @@
       
         // Don't collapse the element if there are filtering values            
         element.ready(function(){        
-          if(!$.isEmptyObject(scope.attribute.filter)) {
+          if(!dashboardService.isEmptyFilter(scope.attribute.filter)) {
             ctrl.expand(element);
           }      
         });

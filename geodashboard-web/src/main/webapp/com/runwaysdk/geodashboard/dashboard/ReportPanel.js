@@ -137,8 +137,7 @@
     }    
     
     controller.exportReport = function(format){
-      var dashboard = dashboardService.getDashboard();
-      dashboard.exportReport(format);      
+      $scope.$emit('exportReport', {format:format});
     }
   }
   

@@ -25,7 +25,7 @@
   </div>
       
   <div class="nav-bar">
-    <div id="dashboard-dropdown" class="sales-menu dropdown">
+    <div id="dashboard-dropdown" class="sales-menu dropdown ng-cloak">
       <a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown">{{dashboard.model.label}}</a>
       <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
         <li ng-repeat="da in dashboard.dashboards | orderBy:'label'">
