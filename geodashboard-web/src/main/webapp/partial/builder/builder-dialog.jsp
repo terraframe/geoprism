@@ -28,6 +28,16 @@
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
       <form name="form" class="modal-form">
+      		<div ng-if="ctrl.errors" class="error-container">
+		  		<div class="label-holder">
+					<strong style="color: #8c0000;">Errors</strong>
+				</div>
+		      	<div class="holder">
+		      	 	<div ng-repeat="error in ctrl.errors">
+		      	 		<p class="error-message">{{error}}</p>
+		      	 	</div>
+		      	 </div>
+		    </div>
 	        <div class="" style="">
 	          <fieldset class="">
 				  <!-- Basic dashboard settings (i.e.Name, label, and country) -->

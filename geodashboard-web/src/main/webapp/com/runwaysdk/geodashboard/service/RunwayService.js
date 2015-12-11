@@ -25,10 +25,12 @@
       var request = new Mojo.ClientRequest({
         onSuccess : onSuccess,
         onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
                       
           if(onFailure != null) {
             onFailure(e);
+          }
+          else {
+        	  GDB.ExceptionHandler.handleException(e);
           }
         }
       });
@@ -43,10 +45,12 @@
         var request = new GDB.StandbyClientRequest({
           onSuccess : onSuccess,
           onFailure : function(e){
-            GDB.ExceptionHandler.handleException(e);
               
             if(onFailure != null) {
               onFailure(e);
+            }
+            else {
+            	GDB.ExceptionHandler.handleException(e);
             }
           }
         }, elementId);

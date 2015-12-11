@@ -236,8 +236,14 @@
         var offset = $($event.currentTarget).offset();      
         var width = $($event.currentTarget).width(); 
         var height = $($event.currentTarget).height();
+        var topOffset = offset.top + height + 2
             
-        dropdown.css('top', (offset.top + height + 2));
+        //// TEMPORARY HACK to account for offset from modal to window
+        if( $("#builder-div").length > 0 ){
+        	topOffset = topOffset - $("#builder-div").offset().top + 8;
+        }
+        
+        dropdown.css('top', topOffset);
         dropdown.css('width', (width + 2));        
           
         controller.resized = true;

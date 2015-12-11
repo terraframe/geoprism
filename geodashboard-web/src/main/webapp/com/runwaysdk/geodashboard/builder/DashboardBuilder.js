@@ -48,7 +48,19 @@
         $scope.callback.refreshDashboard(dashboard);
       }    
       
-      builderService.applyWithOptions(controller.dashboard,'#builder-div', onSuccess);
+      var onFailure = function(e){
+    	  controller.errors = [];
+    	  controller.errors.push(e.message);
+                   
+          $scope.$apply();
+          
+          $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
+        };             
+                 
+        // Clear all the errors
+        controller.errors = [];
+      
+      builderService.applyWithOptions(controller.dashboard,'#builder-div', onSuccess, onFailure);
     }
     
     controller.load = function() {
