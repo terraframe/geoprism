@@ -36,7 +36,7 @@
     <!-- Aggregation method (i.e. sum, max, min, majority, minority) -->
     <div class="box" ng-show="ctrl.showAggregationMethods()">
       <label><gdb:localize key="DashboardThematicLayer.form.accordingTo"/></label>
-      <styled-select options="dynamicDataModel.aggregationMethods" model="thematicLayerModel.aggregationType" value="method" class="method-select"></styled-select>
+      <styled-select options="dynamicDataModel.aggregationMethods" model="layerModel.aggregationType" value="method" class="method-select"></styled-select>
     </div>  
   </div>
 </div>

@@ -27,13 +27,13 @@
   <div class="holder style04">
     <ul class="nav-tabs type-tabs">
       
-      <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{thematicLayerModel.layerType}}' }" layer-types-selection-directive>
+      <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{layerModel.layerType}}' }" layer-types-selection-directive>
     
         <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
         <a href="#" data-gdb-tab-type="{{type}}"> 
       
-          <!-- ng-checked="'{{type}}' == '{{thematicLayerModel.layerType}}'"  NG-CHECKED NOT INTENDED TO BE USED WITH NG-MODEL-->
-          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="thematicLayerModel.layerType"></input>
+          <!-- ng-checked="'{{type}}' == '{{layerModel.layerType}}'"  NG-CHECKED NOT INTENDED TO BE USED WITH NG-MODEL-->
+          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="layerModel.layerType"></input>
           <label for="radio{{$index}}">{{dynamicDataModel.layerTypeLabels[$index]}}</label>
         </a>
       </li>

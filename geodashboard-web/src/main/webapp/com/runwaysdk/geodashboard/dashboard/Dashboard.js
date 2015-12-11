@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function DashboardController($scope, $compile, $timeout, dashboardService, mapService) {
+  function DashboardController($scope, $rootScope, $compile, $timeout, dashboardService, mapService) {
     var controller = this;
     
     /* Getting the $compile method reference for use with later functions  */
@@ -690,6 +690,24 @@
       // Load the new dashboard state and refresh the map
       controller.setDashboardState(state);
     }
+    
+    /*
+     * Listen for layer events
+     */ 
+    $scope.$on('editReferenceLayer', function(event, data) {
+      data.mapId = controller.model.mapId;
+      data.state = controller.getCompressedState();
+    });    
+    
+    $scope.$on('newReferenceLayer', function(event, data) {
+      data.mapId = controller.model.mapId;
+      data.state = controller.getCompressedState();
+    });
+    
+    $rootScope.$on('layerChange', function(event, data) {
+      controller.handleLayerEvent(data.map);      
+    });
+        
   }
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder", "dashboard-layer-form"]);

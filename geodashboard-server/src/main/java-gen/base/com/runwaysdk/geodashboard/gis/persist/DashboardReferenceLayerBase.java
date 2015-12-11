@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1479380963)
+@com.runwaysdk.business.ClassSignature(hash = -141536015)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DashboardReferenceLayerBase extends com.runwaysdk.geodashb
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer";
   public static java.lang.String UNIVERSAL = "universal";
-  private static final long serialVersionUID = 1479380963;
+  private static final long serialVersionUID = -141536015;
   
   public DashboardReferenceLayerBase()
   {
@@ -97,6 +97,12 @@ public abstract class DashboardReferenceLayerBase extends com.runwaysdk.geodashb
   public static DashboardReferenceLayer getByKey(String key)
   {
     return (DashboardReferenceLayer) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public static java.lang.String getOptionsJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static DashboardReferenceLayer lock(java.lang.String id)

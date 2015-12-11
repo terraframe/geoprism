@@ -127,5 +127,8 @@
     <!-- Dialog for cloning a dashboard  -->
     <div id="clone-container"></div>  
     <div id="dashboard-edit-container"></div>      
+    
+    <!-- reference layer modal -->  
+    <reference-layer></reference-layer>    
   </body>
 </html>

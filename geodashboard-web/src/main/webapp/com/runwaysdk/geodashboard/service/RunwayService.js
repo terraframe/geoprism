@@ -164,6 +164,47 @@
         }
       }
     }
+    
+    service.populateObject = function(object, dto) {
+      for(var key in object) {
+        var attributeDTO = dto.getAttributeDTO(key);
+
+        if(attributeDTO != null) {
+           
+          var attributeMd = attributeDTO.getAttributeMdDTO();
+              
+          if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeCharacterDTO) {
+            var value = attributeDTO.getValue();
+              
+            if(value != null && value.length > 0) {
+              object[key] = value;
+            }
+          }
+          else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeReferenceDTO) {
+            var value = attributeDTO.getValue();
+              
+            if(value != null && value.length > 0) {
+              object[key] = value;
+            }                        
+          }          
+          else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeLocalCharacterDTO) {
+            var value = attributeDTO.getLocalizedValue();
+            
+            if(value != null && value.length > 0) {
+              object[key] = value;
+            }            
+          }
+          else {
+            var value = attributeDTO.getValue();
+              
+            if(value != null) {
+              object[key] = value;
+            }
+          }
+        }        
+      }      
+    }
+    
         
     return service;  
   }

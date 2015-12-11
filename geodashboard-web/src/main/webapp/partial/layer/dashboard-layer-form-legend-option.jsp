@@ -24,6 +24,6 @@
 <div class="row-holder" style="display: none;">
 	<div class="label-holder"></div>
 	<div class="holder">
-	  <styled-check-box model="thematicLayerModel.displayInLegend" name="layer.displayInLegend" label="<gdb:localize key="DashboardLayer.form.displayInLegend"/>"></styled-check-box>
+	  <styled-check-box model="layerModel.displayInLegend" name="layer.displayInLegend" label="<gdb:localize key="DashboardLayer.form.displayInLegend"/>"></styled-check-box>
 	</div>
 </div>

@@ -17,7 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  
+  /*
+   * 
+   * 
+   * THEMATIC LAYER SERVICE
+   * 
+   * 
+   */
   function LayerFormService(runwayService) {
     var service = {};
     
@@ -172,11 +178,6 @@
         }
     }
     
-    
-    
-    
-    
-    
     service.categoryAutoCompleteService = function(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure){
     	var request = service.createRequest(onSuccess, onFailure);
 		com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(request, mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions);
@@ -185,7 +186,174 @@
     return service;
   }
   
+  /*
+   * 
+   * 
+   * REFERENCE LAYER SERVICE
+   * 
+   * 
+   */  
+  function ReferenceLayerFormService(runwayService) {
+    var service = {};
+      
+    service.createRequest = function(onSuccess, onFailure){
+      var request = new Mojo.ClientRequest({
+        onSuccess : onSuccess,
+        onFailure : function(e) {
+          if(onFailure != null) {
+            onFailure(e);              
+          }
+          else {
+            GDB.ExceptionHandler.handleException(e);              
+          }
+        }
+      });
+          
+      return request;
+    }
+      
+      
+    service.createStandbyRequest = function(elementId, onSuccess, onFailure){
+      var el = $(elementId);
+          
+      if(el.length > 0) {        
+        var request = new GDB.StandbyClientRequest({
+          onSuccess : onSuccess,
+          onFailure : function(e){
+            if(onFailure != null) {
+              onFailure(e);              
+            }
+            else {
+              GDB.ExceptionHandler.handleException(e);              
+            }
+          }
+        }, elementId);
+            
+        return request;        
+      }
+          
+      return service.createRequest(onSuccess, onFailure);
+    }
+    
+    service.apply = function(layer, style, state, element, onSuccess, onFailure) {
+      // Populate the layer
+      runwayService.populate(service.layerDTO, layer);      
+      service.layerDTO.setValue('universal', layer.universalId);
+
+      // Populate the style
+      runwayService.populate(service.styleDTO, style);  
+      
+      var request = service.createStandbyRequest(element, onSuccess, onFailure);
+      
+      service.layerDTO.applyWithStyle(request, service.styleDTO, state.mapId, state);
+    }      
+    
+    service.unlock = function(layer, element, onSuccess, onFailure) {
+      var success = function() {
+        service.layerDTO = null;
+        service.styleDTO = null;
+        
+        onSuccess();      	  
+      }
+
+      if(service.layerDTO == null || service.layerDTO.isNewInstance()) {
+    	success();
+      }
+      else {
+        var request = service.createStandbyRequest(element, success, onFailure);
+
+        service.layerDTO.unlock(request);
+      }        
+    }
+    
+    service.createObjects = function(response) {
+      service.layerDTO = com.runwaysdk.DTOUtil.convertToType(response.layerDTO);
+      service.styleDTO = com.runwaysdk.DTOUtil.convertToType(response.styleDTO);
+        
+      var layer = {};
+      layer.name = response.layer.layerName;
+      layer.universalId = response.layer.universalId;
+      layer.layerType = response.layer.featureStrategy;
+      layer.displayInLegend = response.layer.inLegend;
+
+      // Set default values for the style
+      var style = {};
+      style.labelFont = 'Arial';
+      style.enableLabel = true;
+      style.labelSize = 12;
+      style.labelColor = '#E0A4E0';
+      style.labelHalo = '#000';
+      style.labelHaloWidth = 2;
+      style.pointFill = '#A9DEA4';
+      style.pointOpacity = 0.75;
+      style.pointStroke = '#000';
+      style.pointStrokeWidth = 2;
+      style.pointStrokeOpacity = 0.65;
+      style.basicPointSize = 20;
+      style.pointWellKnownName = 'CIRCLE';
+      style.polygonFill = '#A9DEA4';
+      style.polygonFillOpacity = 0.90;
+      style.polygonStroke = '#000';
+      style.polygonStrokeWidth = 5;
+      style.polygonStrokeOpacity = 0.65;
+        
+      runwayService.populateObject(style, service.styleDTO);
+      
+      // pointWellKnownName values come from the server lower cased
+      // but the UI model expects them to be upper cased values
+      style.pointWellKnownName = style.pointWellKnownName.toUpperCase();
+
+      // Ensure that the current font is actually available on the system
+      // If not default to the first option
+      if(!service.isValidFont(style.labelFont, response.options.availableFonts)) {
+        style.labelFont = response.options.availableFonts[0];
+      }
+        
+      return {layer:layer, style:style, dynamicDataModel:response.options};    
+    }
+    
+    service.edit = function(layerId, element, onSuccess, onFailure) {
+      var success = function(response) {
+        var model = service.createObjects(response);
+            
+        onSuccess(model);
+      }
+          
+      var request = service.createStandbyRequest(element, success, onFailure);
+          
+      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.edit(request, layerId);    	
+    }
+    
+    service.newInstance = function(universalId, mapId, element, onSuccess, onFailure) {
+      var success = function(response) {
+    	var model = service.createObjects(response);
+        
+        onSuccess(model);
+      }
+      
+      var request = service.createStandbyRequest(element, success, onFailure);
+      
+      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.newReferenceInstance(request, universalId, mapId);
+    }
+    
+    service.isValidFont = function(font, options) {
+      if(font != null && font.length > 0) {
+        for(var i = 0; i < options.length; i++) {
+          if(font === options[i]) {
+            return true;
+          } 
+        }      
+      }
+      return false;
+    }
+      
+    return service;
+  }
+	  
+  
+  
   angular.module("layer-form-service", ["runway-service"]);
   angular.module('layer-form-service')
+    .factory('referenceLayerFormService', ReferenceLayerFormService)
     .factory('layerFormService', LayerFormService);
 })();
