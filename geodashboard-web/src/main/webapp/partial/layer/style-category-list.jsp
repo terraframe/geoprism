@@ -33,7 +33,7 @@
             <div class="cell">
               <div class="color-holder">
                 <a href="#" class="color-choice" color-picker model="category.color" element='#modal01'>
-                  <span class="ico cat-color-selector" style="background:{{category.color}}">icon</span>
+                  <span class="ico cat-color-selector" ng-style="{'background' : category.color}">icon</span>
                   <span class="arrow">arrow</span>
                 </a>
               </div>
@@ -50,7 +50,7 @@
             <div class="cell">
               <div class="color-holder">
                 <a href="#" class="color-choice" color-picker model="categories.other.color" element='#modal01'>
-                  <span class="ico cat-color-selector" style="background:{{categories.other.color}}">icon</span>
+                  <span class="ico cat-color-selector" ng-style="{'background' : categories.other.color}">icon</span>
                   <span class="arrow">arrow</span>
                 </a>
               </div>

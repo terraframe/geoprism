@@ -87,8 +87,7 @@
     }
     
     controller.edit = function(layerId) {
-      var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-      form.edit(layerId, controller.$compile, controller.$scope);    
+      $scope.$emit('editThematicLayer', {layerId:layerId});
     }
     
     controller.remove = function(layerId) {    
@@ -226,18 +225,11 @@
     }
     
     controller.edit = function(layerId, universalId) {
-      var layer = $scope.cache.values[universalId];
-      var mapId = layer.mapId;    	
-    	
-      $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId, mapId:mapId});
-//      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-//      form.edit(layerId);    
+      $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId});
     }    
     
     controller.add = function(layerId, universalId) {
       $scope.$emit('newReferenceLayer', {layerId:layerId, universalId:universalId});    
-//      var form = new com.runwaysdk.geodashboard.gis.ReferenceLayerForm($scope.dashboard, $scope.dashboard.model.mapId);
-//      form.open(universalId);
     }
 
     controller.toggle = function(layerId, universalId) {

@@ -133,12 +133,6 @@
       dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container');
     }
     
-    /* Create a new layer */
-    controller.newLayer = function(mdAttributeId) {    
-      var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(controller, controller.model.mapId);
-      form.open(mdAttributeId, controller.$compile, controller.$scope);
-    }  
-    
     controller.getDashboardId = function() {
       return controller.dashboardId;
     }
@@ -703,6 +697,16 @@
       data.mapId = controller.model.mapId;
       data.state = controller.getCompressedState();
     });
+    
+    $scope.$on('editThematicLayer', function(event, data) {
+      data.mapId = controller.model.mapId;
+      data.state = controller.getCompressedState();
+    });    
+    
+    $scope.$on('newThematicLayer', function(event, data) {
+      data.mapId = controller.model.mapId;
+      data.state = controller.getCompressedState();
+    });    
     
     $rootScope.$on('layerChange', function(event, data) {
       controller.handleLayerEvent(data.map);      

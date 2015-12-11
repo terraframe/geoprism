@@ -182,7 +182,7 @@
     }
     
     controller.newLayer = function(mdAttributeId) {
-      dashboardService.getDashboard().newLayer(mdAttributeId);
+      $scope.$emit('newThematicLayer', {mdAttributeId:mdAttributeId});
     }
     
     controller.expand = function(element) {

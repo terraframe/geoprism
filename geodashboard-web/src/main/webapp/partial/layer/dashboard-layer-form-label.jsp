@@ -51,7 +51,7 @@
         <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
         <div id="label-text-color" class="color-holder">
           <a href="#" class="color-choice" color-picker model="styleModel.labelColor" element='#modal01'>
-            <span class="ico" style="background:{{styleModel.labelColor}};">icon</span>
+            <span class="ico" ng-style="{'background' : styleModel.labelColor}">icon</span>
             <span class="arrow">arrow</span>
           </a>
         </div>
@@ -61,7 +61,7 @@
         <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
         <div id="label-halo-color" class="color-holder">
           <a href="#" class="color-choice" color-picker model="styleModel.labelHalo" element='#modal01'>
-            <span class="ico" style="background:{{styleModel.labelHalo}};">icon</span>
+            <span class="ico" ng-style="{'background' : styleModel.labelHalo}">icon</span>
             <span class="arrow">arrow</span>
           </a>
         </div>

@@ -26,54 +26,47 @@
   <!-- ngIf cannot be on the root node or processing doesn't work -->
   <div ng-if="show">
     <div class="modal-backdrop fade in"></div>
-    <div id="reference-modal" style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <div id="thematic-modal" style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
       <dl>
         <form class="modal-form" name="form">
-          <div class="modal-dialog">
-            <div ng-show="ready" class="modal-content" ng-cloak>
+          <div id="DashboardLayer-mainDiv" class="modal-dialog">
+            <div class="modal-content">
               <div class="heading">
-                <h1 ><gdb:localize key="DashboardReferenceLayer.form.heading"/></h1>          
+                <h1 ng-if="layerModel.newInstance"><gdb:localize key="DashboardThematicLayer.form.newHeading"/>{{layerModel.attributeLabel}}</h1>
+                <h1 ng-if="!layerModel.newInstance"><gdb:localize key="DashboardThematicLayer.form.editHeading"/>{{layerModel.attributeLabel}}</h1>          
               </div>
               <fieldset>
           
                 <div class="row-holder" ng-show="errors.length > 0">
-                  <div class="label-holder"></div>      
+                  <div class="label-holder">
+                  </div>      
                   <div class="holder">
                     <div class="alert alertbox" ng-repeat="error in errors track by $index">
                       <p >{{error}}</p>
                     </div>
                   </div>
-                </div>
-                
-                <layer-name-input layer-model="layerModel" disabled="true"></layer-name-input>
-                
+                </div>            
+            
+                <layer-name-input layer-model="layerModel" disabled="false"></layer-name-input>
+            
                 <layer-label></layer-label>
-                
-                <layer-types></layer-types>    
-                
-                <div class="row-holder">
-                  <div class="label-holder">
-                    <strong><gdb:localize key="DashboardThematicLayer.form.styleTheLayer"/></strong>
-                  </div>
-                  <div class="holder">
-                    <div id="layer-type-styler-container" class="tab-content">
-                      <!-- BASICPOINT -->
-                      <basic-point></basic-point>
-                      
-                      <!-- BASICPOLYGON -->
-                      <basic-polygon></basic-polygon>
-                    </div>                            
-                  </div>
-                </div>
-                
+
+                <layer-geo-node></layer-geo-node>
+            
+                <layer-aggregation></layer-aggregation>
+      
+                <layer-types></layer-types>
+   
+                <layer-types-style></layer-types-style>
+
                 <legend-options></legend-options>
-                
-                <form-action-buttons persist="ctrl.apply()" cancel="ctrl.cancel()"></form-action-buttons>
+
+                <form-action-buttons persist="ctrl.persist" cancel="ctrl.cancel"></form-action-buttons>
               </fieldset>
             </div>
           </div>
-        </form>
+        </form>    
       </dl>
-    </div>      
+    </div>
   </div>
 </div>

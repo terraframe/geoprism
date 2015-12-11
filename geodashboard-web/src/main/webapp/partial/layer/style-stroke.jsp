@@ -29,7 +29,7 @@
       <span><gdb:localize key="DashboardLayer.form.color"/></span>
       <div class="color-holder">
         <a href="#" class="color-choice" color-picker model="stroke" element='#modal01'>
-          <span class="ico" style="background:{{stroke}};">icon</span>
+          <span class="ico" ng-style="{'background' : stroke}">icon</span>
           <span class="arrow">arrow</span>
         </a>
       </div>

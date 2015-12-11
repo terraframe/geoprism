@@ -27,7 +27,7 @@
   <div class="holder" >
 	  <label class="none" >{{layerModel.name}}</label>
 	  <span class="text">
-		  <input type="text" ng-model="layerModel.name" name="layer.name" required>
+		  <input type="text" ng-disabled="::disabled()" ng-model="layerModel.name" name="layer.name" required>
 	  </span>
   </div>
 </div>

@@ -128,6 +128,9 @@
     <div id="clone-container"></div>  
     <div id="dashboard-edit-container"></div>      
     
+    <!-- thematic layer modal -->  
+    <thematic-layer></thematic-layer>
+    
     <!-- reference layer modal -->  
     <reference-layer></reference-layer>    
   </body>

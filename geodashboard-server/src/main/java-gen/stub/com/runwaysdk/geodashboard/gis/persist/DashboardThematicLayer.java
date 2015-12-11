@@ -69,7 +69,6 @@ import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeDate;
-import com.runwaysdk.system.metadata.MdAttributeNumber;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
@@ -485,8 +484,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         jsonStyles.put(style.toJSON());
       }
       json.put("styles", jsonStyles);
-
-      json.put("optionsJSON", getOptionsJSON(this.getMdAttributeId(), this.getDashboardMap().getDashboardId()));
 
       return json;
     }

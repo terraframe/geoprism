@@ -30,35 +30,10 @@
     <div id="layer-type-styler-container" class="tab-content"> 
       
       <!-- BASICPOINT -->
-      <div ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BASICPOINT' }" class="tab-pane" id="tab001basicpoint">
-        
-        <!-- BASIC FILL -->
-        <style-basic-fill fill="styleModel.pointFill" opacity="styleModel.pointOpacity"></style-basic-fill>
-      
-        <!-- BASIC STROKE -->
-        <style-stroke class="stroke-block" stroke="styleModel.pointStroke" stroke-width="styleModel.pointStrokeWidth" stroke-opacity="styleModel.pointStrokeOpacity"></style-stroke>
-      
-        <!-- BASIC SHAPE -->
-        <div class="fill-block">
-          <strong class="title"><gdb:localize key="DashboardThematicLayer.form.shapeHeading"/></strong>
-          <div class="cell-holder">
-            <div class="cell">
-              <label for="basic-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
-              <div class="text">
-                <input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="styleModel.basicPointSize" placeholder="{{styleModel.basicPointSize}}"></input>
-              </div>
-            </div>
-          </div>
-        
-          <div id="point-type-container" class="cell">
-            <label for="point-type"><gdb:localize key="DashboardLayer.form.pointType"/></label>
-            <styled-basic-select options="dynamicDataModel.pointTypes" model="styleModel.pointWellKnownName" class="method-select"></styled-basic-select>            
-          </div>
-        </div>
-      </div>
+      <basic-point></basic-point>
       
       <!-- GRADIENT POINT -->
-      <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'GRADIENTPOINT' }">
+      <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : layerModel.layerType == 'GRADIENTPOINT' }">
       
         <!-- POINT GRADIENT FILL -->
         <style-gradient-fill min-fill="styleModel.gradientPointMinFill" max-fill="styleModel.gradientPointMaxFill" opacity="styleModel.gradientPointFillOpacity" class="point-gradient"></style-gradient-fill>
@@ -85,7 +60,7 @@
       </div>
       
       <!-- CATEGORY POINT -->
-      <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'CATEGORYPOINT' }">
+      <div class="tab-pane" id="tab007categoriespoint" ng-class="{ 'active' : layerModel.layerType == 'CATEGORYPOINT' }">
       
         <div class="color-section">
           <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
@@ -142,7 +117,7 @@
     
       
       <!-- BUBBLE -->
-      <div class="tab-pane" id="tab002bubble" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BUBBLE' }">
+      <div class="tab-pane" id="tab002bubble" ng-class="{ 'active' : layerModel.layerType == 'BUBBLE' }">
         <!-- BASIC FILL -->
         <style-basic-fill fill="styleModel.bubbleFill" opacity="styleModel.bubbleOpacity"></style-basic-fill>
       
@@ -217,17 +192,10 @@
       
       
       <!-- BASICPOLYGON -->
-      <div class="tab-pane" id="tab003basicpolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'BASICPOLYGON' }">
-        <!-- BASIC POLYGON FILL -->
-        <style-basic-fill fill="styleModel.polygonFill" opacity="styleModel.polygonFillOpacity"></style-basic-fill>
-      
-        <!-- BASIC POLYGON STROKE -->
-        <style-stroke class="stroke-block" stroke="styleModel.polygonStroke" stroke-width="styleModel.polygonStrokeWidth" stroke-opacity="styleModel.polygonStrokeOpacity"></style-stroke>                
-      </div>
-      
+      <basic-polygon></basic-polygon>            
       
       <!-- GRADIENT POLYGON -->
-      <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'GRADIENTPOLYGON' }">
+      <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : layerModel.layerType == 'GRADIENTPOLYGON' }">
         <!-- POINT GRADIENT FILL -->
         <style-gradient-fill min-fill="styleModel.gradientPolygonMinFill" max-fill="styleModel.gradientPolygonMaxFill" opacity="styleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
         
@@ -237,7 +205,7 @@
       
      
       <!-- CATEGORY POLYGON -->
-       <div class="tab-pane" id="tab005categoriespolygon" ng-class="{ 'active' : '{{layerModel.layerType}}' == 'CATEGORYPOLYGON' }">
+      <div class="tab-pane" id="tab005categoriespolygon" ng-class="{ 'active' : layerModel.layerType == 'CATEGORYPOLYGON' }">
         <div class="color-section">
           <strong class="title"><gdb:localize key="DashboardThematicLayer.form.fill"/></strong>
           <div class="heading-list">
@@ -245,18 +213,19 @@
             <span><gdb:localize key="DashboardThematicLayer.form.color"/></span>
             <span></span>
           </div>
-        <div class="category-block" id="category-colors-container">
-          <!-- RENDER ONTOLOGY TREE DATA  -->
-          <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
+          
+          <div class="category-block" id="category-colors-container">
+            <!-- RENDER ONTOLOGY TREE DATA  -->
+            <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
                     
-          <!-- RENDER BASIC CATEGORIES -->
-          <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource"></style-category-list>
+            <!-- RENDER BASIC CATEGORIES -->
+            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource"></style-category-list>
+          </div>
         </div>
-      </div>
       
-      <!-- POINT CATEGORY STROKE -->        
-      <style-stroke class="stroke-block" stroke="styleModel.categoryPolygonStroke" stroke-width="styleModel.categoryPolygonStrokeWidth" stroke-opacity="styleModel.categoryPolygonStrokeOpacity"></style-stroke>
-    
+        <!-- POINT CATEGORY STROKE -->        
+        <style-stroke class="stroke-block" stroke="styleModel.categoryPolygonStroke" stroke-width="styleModel.categoryPolygonStrokeWidth" stroke-opacity="styleModel.categoryPolygonStrokeOpacity"></style-stroke>
+      </div>    
     </div> <!--  end style container  -->
   </div>  <!--  end holder  -->
 </div> 

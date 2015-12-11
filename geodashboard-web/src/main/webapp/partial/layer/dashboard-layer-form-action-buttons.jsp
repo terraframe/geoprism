@@ -24,20 +24,20 @@
 <div class="row-holder" style="display: none;">
 	<div class="label-holder"></div>
 	<div class="holder">
-		<div class="button-holder">
+		<div class="button-holder">		
 			<input
 				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
 				type="button"
-				value="Map It"
+				value="<gdb:localize key="dashboardViewer.mapItButton"/>"
 				class="btn btn-primary" 
-				ng-click="persist()"
+				ng-click="persist()()"
 				/>
 			<input
 				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
 				type="button"
-				value="Cancel"
+				value="<gdb:localize key="dashboardViewer.cancel"/>"
 				class="btn btn-default" 
-				ng-click="cancel()"
+				ng-click="cancel()()"
 				/>
 		</div>
 	</div>

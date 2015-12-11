@@ -29,7 +29,7 @@
       <span><gdb:localize key="DashboardLayer.form.minFill"/></span>
       <div class="color-holder">
         <a href="#" class="color-choice" color-picker model="minFill" element='#modal01'>
-          <span class="ico" style="background:{{minFill}}">icon</span>
+          <span class="ico" ng-style="{'background' : minFill}">icon</span>
           <span class="arrow">arrow</span>
         </a>
       </div>
@@ -38,7 +38,7 @@
       <span><gdb:localize key="DashboardLayer.form.maxFill"/></span>
       <div class="color-holder">
         <a href="#" class="color-choice" color-picker model="maxFill" element='#modal01'>
-          <span class="ico" style="background:{{maxFill}};">icon</span>
+          <span class="ico"  ng-style="{'background' : maxFill}">icon</span>
           <span class="arrow">arrow</span>
         </a>
       </div>
