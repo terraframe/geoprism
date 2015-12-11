@@ -19,30 +19,20 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-
-<div class="row-holder">
+<div>
 	 <div ng-if="field.writable">
-	    <div class="label-holder">
-    		<strong>{{field.label}}</strong>
-    	</div>
-    	<div class="holder">
 	    	<div id="country-select-box" class="box">
-			    <styled-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}" ng-required="field.required"></styled-select>               
+			    <styled-select class="['select-area']" options="field.options" model="model[field.name]" label="displayLabel" name="{{field.name}}" ng-required="field.required"></styled-select>               
 			    <div class="error-message">
 			      <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>
 			    </div>
 			</div>
-		</div>
 	</div>
 	<div ng-if="!field.writable && field.readable">
-	    <div class="label-holder">
-    		<strong>{{field.label}}</strong>
-    	</div>
-    	<div class="holder">
 	    	<div id="country-select-box" class="box">
-	    	<h4 class="disabled">{{model.countryDisplayLabel}}</h4>
-<!-- 			    <styled-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}" ng-disabled="true" ng-required="field.required"></styled-select>                -->
+	    		<h4 class="disabled">{{model.countryDisplayLabel}}</h4>
+				<!-- NOTE using basic text until we sort out our select widgets so I can effectively disable it -->
+				<!-- <styled-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}" ng-disabled="true" ng-required="field.required"></styled-select>                -->
 			</div>
-		</div>
 	</div>  
 </div>

@@ -30,7 +30,6 @@
           controller.ids = [];
           controller.dashboards = {};
           controller.editDashboard = response.editDashboard;
-          controller.isLastDashboard = false;
           controller.isInExistingRow = true;
           
           for(var i = 0; i < response.dashboards.length; i++) {
@@ -120,6 +119,8 @@
             if(index != null) {
               controller.ids.splice(index, 1);              
               delete controller.dashboards[dashboardId];
+              
+              controller.toggleCreateDashboardIcon();
             }
             
             $scope.$apply();
@@ -133,8 +134,21 @@
     }
     
     controller.refreshDashboard = function(dashboard) {
+    	for(var key in controller.dashboards){
+    		if (controller.dashboards.hasOwnProperty(key)) {
+    			var db = controller.dashboards[key];
+    			if(db.isLastDashboard){
+    				db.isLastDashboard = false;
+    			}
+    		}
+    	}
       
-      var newDashboard = {dashboardId:dashboard.id, label:dashboard.label, description:dashboard.description, focusArea:dashboard.countryDisplayLabel};
+      var newDashboard = {
+    		  dashboardId:dashboard.id, 
+    		  label:dashboard.label, 
+    		  description:dashboard.description, 
+    		  focusArea:dashboard.countryDisplayLabel,
+    		  isLastDashboard:true};
       var oldDashboard = controller.dashboards[dashboard.id];
       
       if(oldDashboard != null) {    	
@@ -145,7 +159,41 @@
         controller.ids.push(dashboard.id);        
       }     
       
+      controller.toggleCreateDashboardIcon();
+      
       $scope.$apply();
+    }
+    
+    controller.toggleCreateDashboardIcon = function(){
+        // handling the toggle of create new dashboard icon when outside of an existing row
+        if(controller.ids.length % 3 === 0){
+      	  controller.isInExistingRow = false;
+        }
+        else if((controller.ids.length - 1) % 3 === 0){
+     		  controller.isInExistingRow = true;
+  	  	}
+        else if((controller.ids.length + 1) % 3 === 0){
+   		  controller.isInExistingRow = true;
+	  	}
+        
+        // maintain the last dashboard status flag
+        var i = 0;
+        for(var key in controller.dashboards){
+    		if (controller.dashboards.hasOwnProperty(key)) {
+    			var db = controller.dashboards[key];
+    			if(db.isLastDashboard){
+    				db.isLastDashboard = false;
+    			}
+    			
+    			if(i === Object.keys(controller.dashboards).length -1){
+    				db.isLastDashboard = true;
+    			}
+    			
+    			i++;
+    		}
+    	}
+        
+        $scope.$apply();
     }
     
     controller.getDashboards();	

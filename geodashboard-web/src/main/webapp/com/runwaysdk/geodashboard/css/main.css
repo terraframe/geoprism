@@ -1836,6 +1836,38 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .modal-form .text input[type="text"]:disabled {
     color: #999;
 }
+
+.modal-form .text input[type="textarea"]{
+	background:#eee;
+	border:1px solid #aaa;
+	width:100%;
+	padding:5px 10px;
+	margin:0;
+	float:left;
+	font-size:18px;
+	line-height:24px;
+	color:#333;
+	box-shadow:none;
+	outline:none;
+	word-wrap: break-word;
+    word-break: break-word;
+    height: 150px;
+    overflow-y: scroll;
+    resize: none;
+    max-height: 150px;
+}
+.modal-form .text input[type="textarea"]::-moz-placeholder{
+	color:#333;
+	opacity:1;
+}
+.modal-form .text input[type="textarea"]:-ms-input-placeholder{color:#333;}
+.modal-form .text input[type="textarea"]::-webkit-input-placeholder{color:#333;}
+.modal-form .text input[type="textarea"]:-moz-placeholder{color:#333;}
+.modal-form .text input[type="textarea"]:focus{border-color:#01b1ec;}
+.modal-form .text input[type="textarea"]:disabled {
+    color: #999;
+}
+
 .modal-form .check-block{
 	float:left;
 	position:relative;
@@ -1893,6 +1925,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 
 .disabled{
 	color: #999;
+	font-weight: bold;
 }
 
 .select-font-select.select-area{
@@ -2752,6 +2785,40 @@ span.select-area span.center {
 	#data-panel-expand-toggle:focus{
 		color: #00bfff;
 	}
+	
+	
+	
+	.builder-dialog-category-ico-container{
+		height:100px;
+	}
+	
+	.builder-dialog-category-ico-container .builder-ico-container{
+		height: 100%;
+	}
+	
+	.builder-dialog-category-ico-container .builder-dialog-ico-label{
+		position: absolute;
+		bottom: 5px;
+		left: 0;
+    	right: 0;
+    	text-align: center;
+	}
+	
+	.builder-dialog-category-ico-container a{
+		font-size: 50px;
+	    text-align: center;
+	    vertical-align: middle;
+	    position: absolute;
+	    line-height: 100px;
+	    left: 0;
+    	right: 0;
+	}
+	
+	#builder-dialog-category-widget-container{
+		padding: 10px;
+    	padding-top: 20px;
+    	border-top: solid lightgrey 1px;
+	}
 
 /** 
 * 
@@ -3382,7 +3449,7 @@ div.secondary-box label {
 	  left:0;
 	  width:100%;
 	  height:100%;
-	  background-color: rgba(255,255,255,0.95);
+	  background-color: rgba(255,255,255,0.3);
 /* 	  display: none; REMOVE LATER */
 	}
 	
@@ -3397,8 +3464,8 @@ div.secondary-box label {
 	  -webkit-transform: translate(-50%, -50%);
 	  -moz-transform: translate(-50%, -50%);
 	   overflow-y: auto;
-       width: 90%;
-       height: 90%;
+       width: 80%;
+       height: 80%;
        background-color: rgba(255,255,255,0.95);
 	}
 	
@@ -3423,8 +3490,10 @@ div.secondary-box label {
 	  font-family: 'arial', 'sans-serif';
 	}    
 	
-	#country-select-box{
-	
+	#country-select-box h4{
+		vertical-align: bottom;
+    	margin: 0;
+    	margin-top: 10px;
 	}
 	
 	.vertical-checkbox-list{
@@ -3460,6 +3529,15 @@ div.secondary-box label {
    		overflow: visible;
 	}
 	
+	.user-notice {
+		font-size: 14px;
+    	font-weight: bold;
+   	 	margin: 10px 0 0;
+    	color: #999;
+    	font-style: italic;
+	}
+	
+
 /*
 * Scroll bar styling
 *

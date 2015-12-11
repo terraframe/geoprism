@@ -124,10 +124,7 @@
 	}
 	
 	.dashboard-card-ico-button-container{
-		background-color: rgba(255,255,255,.5);
-    	padding: 2px 4px 2px 4px;
-    	padding-top: 5px;
-    	padding-bottom: 0;
+    	padding: 5px 4px 0px 4px;
     	z-index: 100;
     	right: 0;
     	margin-right: 0;
@@ -136,7 +133,7 @@
 	}
 	
 	.dashboard-card-ico-button-container:hover{
-		background-color: rgba(255,255,255,.9);
+/* 		background-color: rgba(255,255,255,.9); */
 	}
 	
 	.dashboard-thumbnail-ico-group{
@@ -254,7 +251,7 @@
     <div class="col-md-6">
     	<div ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]">
     		<div ng-if="($index ) % 3 === 0" class="row">
-		        <!-- CREATE DASHBOARD CARD CARD #1 
+		        <!-- CREATE DASHBOARD CARD #1 
 		        	 Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
@@ -279,7 +276,7 @@
 		          </div>
 		        </div>
 		        
-		        <!-- CREATE DASHBOARD CARD CARD #2 
+		        <!-- CREATE DASHBOARD CARD #2 
 		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 1]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
@@ -303,7 +300,7 @@
 		          </div>
 		        </div>
 		        
-		        <!-- CREATE DASHBOARD CARD CARD #3 
+		        <!-- CREATE DASHBOARD CARD #3 
 		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW.-->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 2]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
@@ -328,7 +325,10 @@
 		        </div>
 		        
 				<!-- CREATE NEW DASHBOARD LINK IN EXISTING ROW -->
-		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]].isLastDashboard || ctrl.dashboards[ctrl.ids[$index + 1]].isLastDashboard && ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]].isLastDashboard || 
+		        		ctrl.dashboards[ctrl.ids[$index + 1]].isLastDashboard && 
+		        		ctrl.editDashboard" 
+		        		class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
 		        	 <a href="#" class="new-dashboard-btn" >
 			            <div class="thumbnail text-center">
 			              <div class="frame-box">
@@ -346,8 +346,8 @@
 	    </div>
         
         <!-- CREATE NEW LINK IN NEW ROW -->
-        <div class="row">
-	        <div ng-if="!ctrl.isInExistingRow && ctrl.editDashboard" class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
+        <div ng-if="!ctrl.isInExistingRow && ctrl.editDashboard" class="row">
+	        <div class="col-sm-6 col-md-4" ng-click="ctrl.newDashboard()">
 	          <a href="#" class="new-dashboard-btn" >
 	            <div class="thumbnail text-center">
 	              <div class="frame-box">

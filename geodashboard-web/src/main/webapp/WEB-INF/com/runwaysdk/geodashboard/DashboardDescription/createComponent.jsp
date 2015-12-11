@@ -1,4 +1,4 @@
-<!--
+<%--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,22 +17,13 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
--->
-<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <doIt>
-    <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
-          <create>
-            <attributes>
-<!-- 				<char name="dashboardDescription" label="Description" size="255" required="false" /> -->
-				<localChar name="description" label="Description" size="255" required="false" />
-            </attributes>
-          </create>
-      </mdBusiness>
-
-    </update>
-  </doIt>
-  <undoIt>
-    <delete></delete>
-  </undoIt>
-</version>
+--%>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="page_title" scope="request" value="Create a new Description"/>
+<dl>
+  <mjl:form method="POST" name="com.runwaysdk.geodashboard.DashboardDescription.form.name" id="com.runwaysdk.geodashboard.DashboardDescription.form.id">
+    <%@include file="form.jsp" %>
+    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.create.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.create.mojo" value="Create" />
+  </mjl:form>
+</dl>
