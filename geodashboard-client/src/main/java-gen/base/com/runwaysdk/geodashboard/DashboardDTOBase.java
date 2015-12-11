@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 831896992)
+@com.runwaysdk.business.ClassSignature(hash = 1989436568)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 831896992;
+  private static final long serialVersionUID = 1989436568;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -48,8 +30,8 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
-  public static java.lang.String DASHBOARDDESCRIPTION = "dashboardDescription";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
+  public static java.lang.String DESCRIPTION = "description";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String FILTERDATE = "filterDate";
@@ -177,43 +159,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
   }
   
-  public String getDashboardDescription()
-  {
-    return getValue(DASHBOARDDESCRIPTION);
-  }
-  
-  public void setDashboardDescription(String value)
-  {
-    if(value == null)
-    {
-      setValue(DASHBOARDDESCRIPTION, "");
-    }
-    else
-    {
-      setValue(DASHBOARDDESCRIPTION, value);
-    }
-  }
-  
-  public boolean isDashboardDescriptionWritable()
-  {
-    return isWritable(DASHBOARDDESCRIPTION);
-  }
-  
-  public boolean isDashboardDescriptionReadable()
-  {
-    return isReadable(DASHBOARDDESCRIPTION);
-  }
-  
-  public boolean isDashboardDescriptionModified()
-  {
-    return isModified(DASHBOARDDESCRIPTION);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getDashboardDescriptionMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DASHBOARDDESCRIPTION).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.RolesDTO getDashboardRole()
   {
     if(getValue(DASHBOARDROLE) == null || getValue(DASHBOARDROLE).trim().equals(""))
@@ -261,6 +206,31 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardRoleMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARDROLE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.DashboardDescriptionDTO getDescription()
+  {
+    return (com.runwaysdk.geodashboard.DashboardDescriptionDTO) this.getAttributeStructDTO(DESCRIPTION).getStructDTO();
+  }
+  
+  public boolean isDescriptionWritable()
+  {
+    return isWritable(DESCRIPTION);
+  }
+  
+  public boolean isDescriptionReadable()
+  {
+    return isReadable(DESCRIPTION);
+  }
+  
+  public boolean isDescriptionModified()
+  {
+    return isModified(DESCRIPTION);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeLocalCharacterMdDTO getDescriptionMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeLocalCharacterMdDTO) getAttributeDTO(DESCRIPTION).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.DashboardDisplayLabelDTO getDisplayLabel()

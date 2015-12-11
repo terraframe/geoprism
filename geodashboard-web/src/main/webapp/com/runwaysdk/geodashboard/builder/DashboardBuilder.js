@@ -40,7 +40,7 @@
         $scope.show = null;          
         controller.fields = null;    
         controller.dashboard = null;  
-                
+        
         $scope.$apply();
 
         var dashboard = JSON.parse(result);

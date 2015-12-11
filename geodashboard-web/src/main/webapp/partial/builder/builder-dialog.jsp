@@ -33,7 +33,7 @@
 				  <!-- Basic dashboard settings (i.e.Name, label, and country) -->
 		          <section class="form-container">
 		              <div ng-repeat="field in ctrl.fields">
-		                <div ng-if="field.readable && field.name != 'dashboardDescription' && field.name != 'country'" ng-switch on="field.type">
+		                <div ng-if="field.readable && field.name != 'description' && field.name != 'country'" ng-switch on="field.type">
 		                	<div class="label-holder">
     							<strong>{{field.label}}</strong>
     						</div>

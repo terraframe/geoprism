@@ -51,14 +51,17 @@
         var result = {};
         // Populate the list of country options  
         // ORDER MATTERS for this array of field names. Fields will be added to the form in order.
-        result.fields = runwayService.getFields(service.dto, ['name', 'displayLabel', 'dashboardDescription', 'country']);      
+        result.fields = runwayService.getFields(service.dto, ['name', 'displayLabel', 'description', 'country']);      
         
         // Overwrite name field options
         result.fields[0].writable = dto.isNewInstance();      
         
         // Overwrite country field options
         result.fields[3].options = object.countries;      
-        result.fields[3].writable = dto.isNewInstance();      
+        result.fields[3].writable = dto.isNewInstance();    
+        if(dto.isNewInstance()){
+        	object.country = object.countries[0].value;
+        }
         
         result.object = object;
       

@@ -27,7 +27,8 @@
       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
           <create>
             <attributes>
-				<char name="dashboardDescription" label="Description" size="255" required="false" />
+<!-- 				<char name="dashboardDescription" label="Description" size="255" required="false" /> -->
+				<localChar name="description" label="Description" size="255" required="false" />
             </attributes>
           </create>
       </mdBusiness>
