@@ -30,7 +30,7 @@
       <form name="form" class="modal-form">
       		<div ng-if="ctrl.errors" class="error-container">
 		  		<div class="label-holder">
-					<strong style="color: #8c0000;">Errors</strong>
+					<strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
 				</div>
 		      	<div class="holder">
 		      	 	<div ng-repeat="error in ctrl.errors">
