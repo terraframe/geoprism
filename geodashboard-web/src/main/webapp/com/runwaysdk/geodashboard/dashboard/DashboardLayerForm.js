@@ -996,9 +996,6 @@
       $scope.state = state;
       
       controller.newInstance(mdAttributeId, mapId);
-      
-//    var form = new com.runwaysdk.geodashboard.gis.ThematicLayerForm(controller, controller.model.mapId);
-//    form.open(mdAttributeId, controller.$compile, controller.$scope);
     }); 
         
     /*
@@ -1142,6 +1139,8 @@
     
     $scope.$on('ready', function(event, data) {
       $scope.ready = true;
+      
+      event.stopPropagation();
     });
     
     /*

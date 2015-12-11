@@ -162,6 +162,26 @@
       com.runwaysdk.geodashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
     }
     
+    service.isEmptyFilter = function(filter) {
+      for(var key in filter) {
+        if(key != 'type' && key != 'operation' && key != 'mdAttribute' && filter.hasOwnProperty(key)) {
+          var value = filter[key];
+          
+          if(value != null) {
+            if( $.type( value ) === "string") {
+              if(value.length > 0) {
+                return false;
+              }
+            }
+            else {
+              return false;            
+            }
+          }
+        }
+      }
+      return true;
+    }
+    
     return service;
   }
   

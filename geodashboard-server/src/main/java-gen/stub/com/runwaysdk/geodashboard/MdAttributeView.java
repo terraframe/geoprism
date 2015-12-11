@@ -21,7 +21,15 @@ package com.runwaysdk.geodashboard;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.MdAttributeCharDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeNumberDAO;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardEqualCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardGreaterThanCondition;
 
 public class MdAttributeView extends MdAttributeViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -46,10 +54,22 @@ public class MdAttributeView extends MdAttributeViewBase implements com.runwaysd
     }
     else
     {
-      object.put("filter", new JSONObject());
+      MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(this.getMdAttributeId()).getMdAttributeConcrete();
+
+      JSONObject filter = new JSONObject();
+
+      if (mdAttributeConcrete instanceof MdAttributeNumberDAO)
+      {
+        filter.put(DashboardCondition.OPERATION_KEY, DashboardGreaterThanCondition.OPERATION);
+      }
+      else if (mdAttributeConcrete instanceof MdAttributeCharDAOIF)
+      {
+        filter.put(DashboardCondition.OPERATION_KEY, DashboardEqualCondition.OPERATION);
+      }
+
+      object.put("filter", filter);
     }
 
     return object;
   }
-
 }

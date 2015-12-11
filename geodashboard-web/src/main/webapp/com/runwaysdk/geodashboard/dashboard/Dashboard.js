@@ -572,7 +572,7 @@
         types : []
       };
       
-      if(!controller.isEmpty(oState.location)) {
+      if(!dashboardService.isEmptyFilter(oState.location)) {
         state.location = oState.location;
       }
       
@@ -586,7 +586,7 @@
           for(var j = 0; j < oAttributes.length; j++) {
             var oAttribute = oAttributes[j];
             
-            if(oAttribute.filter != null && !controller.isEmpty(oAttribute.filter)) {
+            if(oAttribute.filter != null && !dashboardService.isEmptyFilter(oAttribute.filter)) {
               attributes.push(oAttribute);
             }            
           }          
@@ -605,16 +605,6 @@
       return state;
     }
     
-    controller.isEmpty = function(filter)
-    {
-      for(var key in filter) {
-        if(key != 'type' && key != 'operation' && filter.hasOwnProperty(key)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
     controller.cloneDashboard = function() {
       var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
       dashboardForm.open();
