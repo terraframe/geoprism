@@ -48,39 +48,39 @@
 		          </section>
 	          
 	          	  <div class="label-holder">
-<!--     			  	<strong>Additional Settings</strong> -->
+					<!-- <strong>Additional Settings</strong> -->
     			  </div>
     			  <div class="holder">
     			  	<div class="row-holder">
     			  		<div class="row builder-dialog-category-ico-container">
     			  		  	<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-list-alt" href="#DESCRIPTION" ng-click="ctrl.setCategoryWidgetType('DESCRIPTION')"></a>
-    			  				<strong class="builder-dialog-ico-label">Description</strong>
+    			  				<a class="fa fa-list-alt" href="#DESCRIPTION" title="<gdb:localize key='dashboard.descriptionTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DESCRIPTION')"></a>
+    			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.descriptionLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-globe" href="#FOCUSAREA" ng-click="ctrl.setCategoryWidgetType('FOCUSAREA')"></a>
-    			  				<strong class="builder-dialog-ico-label">Focus Area</strong>
+    			  				<a class="fa fa-globe" href="#FOCUSAREA" title="<gdb:localize key='dashboard.focusAreaTooltip'/>" ng-click="ctrl.setCategoryWidgetType('FOCUSAREA')"></a>
+    			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.focusAreaLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-users" href="#USERS" ng-click="ctrl.setCategoryWidgetType('USERS')"></a>	
-    			  				<strong class="builder-dialog-ico-label">Users</strong>
+    			  				<a class="fa fa-users" href="#USERS" title="<gdb:localize key='dashboard.usersTooltip'/>" ng-click="ctrl.setCategoryWidgetType('USERS')"></a>	
+    			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.usersLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-table" href="#DATASETS" ng-click="ctrl.setCategoryWidgetType('DATASETS')"></a>
-    			  				<strong class="builder-dialog-ico-label">Data Sets</strong>
+    			  				<a class="fa fa-table" href="#DATASETS" title="<gdb:localize key='dashboard.dataSetsTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DATASETS')"></a>
+    			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.dataSetsLabel'/></strong>
     			  			</div>
     			  		</div>
     			  		<div id="builder-dialog-category-widget-container">
     			  		
     			  		    <div ng-show="ctrl.showWidgetType == 'DESCRIPTION'" class="row-holder"> 
-    			  		    	<text-area-field field="ctrl.fields[2]" maxlength="255" model="ctrl.dashboard"></text-area-field>
+    			  		    	<text-area-field field="ctrl.fields[2]" maxlength="255" placeholdertext="" model="ctrl.dashboard"></text-area-field>
     			  			</div>
     			  		
     			  			<div ng-show="ctrl.showWidgetType == 'FOCUSAREA'" class="row-holder"> 
     			  				<div class="row-holder">
     			  					<div class="label-holder">
 										<!-- <strong>{{field.label}}</strong> -->
-										<strong>Dashboard Focus Area (country):</strong>
+										<strong><gdb:localize key='dashboard.focusAreaSelectLabel'/></strong>
     								</div>
     			  					<select-field field="ctrl.fields[3]" model="ctrl.dashboard"></select-field>
     			  				</div>
@@ -97,6 +97,9 @@
 					              </div>
 					            </div>
 					          </div>
+					          <div class="" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length < 1">
+					          	<h4 class="user-notice"><gdb:localize key='dashboard.noUsersMsg'/></h4>
+					          </div>
 					        </div>
 					        
 			        	   <div ng-show="ctrl.showWidgetType == 'DATASETS'" class="row-holder vertical-checkbox-list">
@@ -108,12 +111,14 @@
 					                	<a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
 					                </div>
 									
-					                
 					                <div id="type{{$index}}" class="collapse">
 					                  <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
 					                </div>              
 					              </div>
 					            </div>
+					          </div>
+					          <div class="" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length < 1">
+					          	<h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
 					          </div>
 					       </div>
 					       
@@ -121,52 +126,7 @@
     			  	</div> <!-- end row-holder -->
     			  </div> <!-- end holder -->
     			  
-	          	  <!-- Dashboard users -->
-<!-- 	          	  <div class="label-holder"> -->
-<!--     			  	<strong>Add users</strong> -->
-<!--     			  </div> -->
-<!-- 	          	  <div class="holder"> -->
-<!-- 		          	  <div class="row-holder vertical-checkbox-list"> -->
-<!-- 				          <div class="" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0"> -->
-<!-- 				            <h3 class="panel-title"> -->
-<%-- 				              <a class="opener-link" data-toggle="collapse" href="#user-field-row"><gdb:localize key='dashboardViewer.addDashboardUsersLabel'/></a> --%>
-<!-- 				            </h3>           -->
-<!-- 				            <div id="user-field-row" class="collapse in"> -->
-<!-- 				              <div ng-repeat="user in ctrl.dashboard.options.users"> -->
-<!-- 				              	<styled-check-box model="user.hasAccess" name="user_{{$index}}" label="{{user.firstName + ' ' + user.lastName}}"></styled-check-box> -->
-<!-- 				              </div> -->
-<!-- 				            </div> -->
-<!-- 				          </div> -->
-<!-- 				      </div> -->
-<!-- 				  </div> -->
-	        
-	        	  <!-- Dashboard types and attributes -->
-<!-- 	        	  <div class="label-holder"> -->
-<!--     				<strong>Add types and attributes</strong> -->
-<!--    	 			  </div> -->
-<!-- 	        	  <div class="holder"> -->
-<!-- 		        	  <div class="vertical-checkbox-list"> -->
-<!-- 				          <div class="" ng-if="ctrl.dashboard.options.types != null && ctrl.dashboard.options.types.length > 0"> -->
-<!-- 				            <h3 class="panel-title"> -->
-<%-- 				              <a class="opener-link" data-toggle="collapse" href="#type-field-row"><gdb:localize key="dashboardbuilder.configureTypes"/></a> --%>
-<!-- 				            </h3>           -->
-<!-- 				            <div id="type-field-row" class="collapse in"> -->
-<!-- 				              <div ng-repeat="type in ctrl.dashboard.options.types"> -->
-<!-- 								<div class="vertical-checkbox-container"> -->
-<!-- 				                	<styled-check-box model="type.value" name="type_{{$index}}" label=""></styled-check-box> -->
-<!-- 				                	<a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a> -->
-<!-- 				                </div> -->
-								
-				                
-<!-- 				                <div id="type{{$index}}" class="collapse"> -->
-<!-- 				                  <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute> -->
-<!-- 				                </div>               -->
-<!-- 				              </div> -->
-<!-- 				            </div> -->
-<!-- 				          </div> -->
-<!-- 				      </div> -->
-<!-- 				   </div> -->
-          
+    			  
 				   <div class="row-holder">
 						<div class="label-holder"></div>
 						<div class="holder">

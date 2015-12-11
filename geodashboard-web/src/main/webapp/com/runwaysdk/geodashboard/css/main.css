@@ -1924,6 +1924,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 
 .disabled{
 	color: #999;
+	font-weight: bold;
 }
 
 .select-font-select.select-area{
@@ -3525,6 +3526,14 @@ div.secondary-box label {
     	-webkit-transition: none;
    		transition: none;
    		overflow: visible;
+	}
+	
+	.user-notice {
+		font-size: 14px;
+    	font-weight: bold;
+   	 	margin: 10px 0 0;
+    	color: #999;
+    	font-style: italic;
 	}
 	
 

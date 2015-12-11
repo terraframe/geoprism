@@ -105,7 +105,8 @@
         field:'=',
         model:'=',
         maxlength:'=',
-        minlength:'='
+        minlength:'=',
+        placeholdertext:'='
       },
       link: function (scope, element, attrs, form) {
         scope.form = form;  
@@ -123,6 +124,18 @@
             }
             else{
             	scope.field.minlength = 0; // arbitrary default
+            }
+            
+            if(attrs.placeholdertext && attrs.placeholdertext.length > 0){
+            	if(attrs.placeholdertext.indexOf("'") == 0){
+            		scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
+            	}
+            	else{
+            		scope.field.placeholdertext = attrs.placeholdertext;
+            	}
+            }
+            else{
+            	scope.field.placeholdertext = ""; // arbitrary default
             }
           }, 500);
       }
@@ -139,7 +152,8 @@
         field:'=',
         model:'=',
         maxlength:'=',
-        minlength:'='
+        minlength:'=',
+        placeholdertext:'='
       },
       link: function (scope, element, attrs, form) {
         scope.form = form;  
@@ -157,6 +171,18 @@
             }
             else{
             	scope.field.minlength = 0; // arbitrary default
+            }
+            
+            if(attrs.placeholdertext && attrs.placeholdertext.length > 0){
+            	if(attrs.placeholdertext.indexOf("'") == 0){
+            		scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
+            	}
+            	else{
+            		scope.field.placeholdertext = attrs.placeholdertext;
+            	}
+            }
+            else{
+            	scope.field.placeholdertext = ""; // arbitrary default
             }
           }, 500);
       }
