@@ -30,7 +30,7 @@
       <dl>
         <form class="modal-form" name="form">
           <div class="modal-dialog">
-            <div ng-show="ready" class="modal-content" ng-cloak>
+            <div ng-show="ready" class="modal-content ng-cloak">
               <div class="heading">
                 <h1 ><gdb:localize key="DashboardReferenceLayer.form.heading"/></h1>          
               </div>
