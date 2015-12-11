@@ -48,7 +48,7 @@
     controller.close = function() {
       mapService.clearOverlays();
       
-      $scope.feature = null;      
+      $scope.feature.show = false;      
     }
     
     controller.addOverlay = function(element, coordinate) {

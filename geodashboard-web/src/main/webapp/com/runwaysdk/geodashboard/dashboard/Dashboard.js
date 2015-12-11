@@ -115,11 +115,11 @@
         var map = Mojo.Util.toObject(json);
 
         $timeout(function() {
-          controller.setMapState(map, false);          
-        }, 10);
-        
-        controller.renderReport();
+          controller.setMapState(map, false);
           
+          controller.renderReport();
+        }, 10);
+                  
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
       };      
       
@@ -481,7 +481,7 @@
     controller.setFeatureInfo = function(info) {
       if(info != null) {
       
-      var attributeValue = info.attributeValue;
+        var attributeValue = info.attributeValue;
       
         /* Localize the value if needed */
         if(typeof attributeValue === 'number'){
@@ -499,6 +499,8 @@
         }    
         
         controller.feature = info;
+        controller.feature.show = true;
+
         controller.geoId = info.geoId;
         
         $scope.$apply();
@@ -696,12 +698,16 @@
     $scope.$on('newThematicLayer', function(event, data) {
       data.mapId = controller.model.mapId;
       data.state = controller.getCompressedState();
-    });    
+    });
     
     $rootScope.$on('layerChange', function(event, data) {
       controller.handleLayerEvent(data.map);      
     });
-        
+          
+    // Report Events
+    $scope.$on('exportReport', function(event, data) {
+      controller.exportReport(data.format);
+    });        
   }
   
   angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder", "dashboard-layer-form"]);
