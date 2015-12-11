@@ -140,7 +140,8 @@ public class JavascriptUtil implements Reloadable
     types.add(RoleViewDTO.CLASS);
     types.add(GeodashboardUserDTO.CLASS);
     types.add(DashboardDTO.CLASS);
-    types.add(DashboardDisplayLabelDTO.CLASS);    
+    types.add(DashboardDisplayLabelDTO.CLASS);   
+    types.add(DashboardController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -252,6 +253,7 @@ public class JavascriptUtil implements Reloadable
     Set<String> types = new HashSet<String>();
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
+    types.add(DashboardController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

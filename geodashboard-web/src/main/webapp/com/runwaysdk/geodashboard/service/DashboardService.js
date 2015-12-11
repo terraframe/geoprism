@@ -81,7 +81,7 @@
     }
     
     service.refreshMap = function(state, elementId, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
               
       com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(request, state.mapId, state);
     }
@@ -99,7 +99,7 @@
     }
     
     service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
       
       com.runwaysdk.geodashboard.Dashboard.saveState(request, dashboardId, state, global);      
     }

@@ -73,7 +73,7 @@
   <script src="/com/runwaysdk/geodashboard/MapConfig.json"></script>
   
   <!-- Google maps API -->
-  <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>  
+<!--   <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>   -->
   
   <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
   

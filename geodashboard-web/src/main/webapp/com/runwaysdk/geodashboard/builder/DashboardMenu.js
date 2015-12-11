@@ -73,6 +73,11 @@
       controller.show = dashboardId;
     }
     
+    controller.cloneDashboard = function(dashboardId) {
+        var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, dashboardId);
+        dashboardForm.open();
+    }
+    
     controller.remove = function(dashboardId) {
       var that = this;
       var fac = com.runwaysdk.ui.Manager.getFactory();

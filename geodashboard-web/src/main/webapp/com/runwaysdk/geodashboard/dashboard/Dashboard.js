@@ -108,8 +108,14 @@
     
     
     /* Refresh Map Function */
-    controller.refresh = function() {
-      onSuccess = function(json, dto, response) {
+    controller.refresh = function(buttonId) {
+      var onSuccess = function(json, dto, response) {
+    	
+        if(buttonId){
+        	controller.icoSpin = null;
+        	$scope.$apply();
+        }
+        
         controller.hideLayers();
                     
         var map = Mojo.Util.toObject(json);
@@ -123,14 +129,29 @@
         GDB.ExceptionHandler.handleInformation(response.getInformation());            
       };      
       
+      if(buttonId){
+    	  controller.icoSpin = buttonId;
+      }
+      
       var state = controller.getCompressedState();
       dashboardService.refreshMap(state, '#filter-buttons-container', onSuccess);
     }
     
-    controller.save = function(global) {
+    controller.save = function(global, buttonId) {
       var state = controller.getCompressedState();
-            
-      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container');
+       
+      var onSuccess = function(json, dto, response) {
+          if(buttonId){
+        	  controller.icoSpin = null;
+        	  $scope.$apply();
+          }
+      };  
+      
+      if(buttonId){
+    	  controller.icoSpin = buttonId;
+      }
+      
+      dashboardService.saveDashboardState(controller.dashboardId, state, global, '#filter-buttons-container', onSuccess);
     }
     
     controller.getDashboardId = function() {

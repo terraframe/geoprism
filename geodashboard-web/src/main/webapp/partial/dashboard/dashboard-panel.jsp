@@ -37,9 +37,9 @@
     <i ng-click="dashboard.openDashboard()" class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
       
     <!-- Clone dashboard button -->
-    <span ng-if="dashboard.canEdit()" id="clone-dashboard">
-      <i ng-click="dashboard.cloneDashboard()" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i>
-    </span>
+<!--     <span ng-if="dashboard.canEdit()" id="clone-dashboard"> -->
+<%--       <i ng-click="dashboard.cloneDashboard()" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i> --%>
+<!--     </span> -->
       
     <i ng-if="dashboard.canEdit()" ng-click="dashboard.editOptions()" id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
           
@@ -53,9 +53,13 @@
     <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
                                                 
     <div id="filter-buttons-container">
-      <a href="#" ng-click="form.$invalid || dashboard.refresh()" ng-disabled="form.$invalid" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
-      <a href="#" ng-click="form.$invalid || dashboard.save(false)" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left""></a>
-      <a ng-if="dashboard.canEdit()" href="#" ng-click="form.$invalid || dashboard.save(true)"  ng-disabled="form.$invalid" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>"></a>
+      <a id="refreshFilterIco" href="#" ng-click="form.$invalid || dashboard.refresh('refreshFilterIco')" ng-disabled="form.$invalid" ng-class="{'fa-spin' : dashboard.icoSpin == 'refreshFilterIco' }" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
+      <a href="#" ng-click="form.$invalid || dashboard.save(false, 'saveToMapIco')" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
+      	<i ng-show="dashboard.icoSpin == 'saveToMapIco'" class="fa fa-refresh fa-spin" style="position: absolute; right: 0px; bottom: 10px; font-size: 23px; color:#bababa; border-radius: 25px; background-color: rgba(66,66,66,0.9);"></i>
+      </a>
+      <a ng-if="dashboard.canEdit()" href="#" ng-click="form.$invalid || dashboard.save(true, 'saveToDashboardIco')"  ng-disabled="form.$invalid" class="icon-dashboard-icons filters-button save-global-filters-button" title="<gdb:localize key="dashboardViewer.saveGlobalFiltersTooltip"/>">
+      	<i ng-show="dashboard.icoSpin == 'saveToDashboardIco'" class="fa fa-refresh fa-spin" style="position: absolute; right: 10px; bottom: 10px; font-size: 23px; color:#bababa; border-radius: 25px; background-color: rgba(66,66,66,0.9);"></i>
+      </a>
     </div>
   </ng-form>
 </aside>

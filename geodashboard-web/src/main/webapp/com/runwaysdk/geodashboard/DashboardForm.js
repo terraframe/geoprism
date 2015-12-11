@@ -104,6 +104,8 @@
         
       _displayDashboardCloneForm : function(html) {
         var that = this;
+        that._dashboardFocusAreaLabel = this._controller.dashboards[this._dashboardId].focusArea;
+        that._dashboardDescription = this._controller.dashboards[this._dashboardId].description;
         
         // Remove the internal form div if it exists
         $( "#dashboard-dialog" ).remove();
@@ -123,7 +125,13 @@
             click : function() {
               var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
                 onSuccess : function(dashboard){
-                  that._controller.addDashboard(dashboard.getId(), dashboard.getDisplayLabel().getLocalizedValue());
+                	that._controller.refreshDashboard({
+                		id : dashboard.getId(), 
+                		label : dashboard.getDisplayLabel().getLocalizedValue(), 
+              		  	description : that._dashboardDescription, 
+              		  	countryDisplayLabel : that._dashboardFocusAreaLabel,
+              		  	isLastDashboard : true
+                		})
                   
                   $( "#dashboard-dialog" ).dialog( "close" );
                 },

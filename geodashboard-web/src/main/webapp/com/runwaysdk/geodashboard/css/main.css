@@ -1092,9 +1092,14 @@ i.fa.fa-angle-double-right.toggle-left:focus{
 
 a.fa.fa-times.ico-remove{
   font-size: 16px;
-/*   margin-right: 10px; */
   margin: 0px;
-/*   float: left; */
+  color: #bababa;
+  cursor: pointer;
+}
+
+a.fa.fa-plus.ico-dashboard{
+  font-size: 15px;
+  margin: 0px;
   color: #bababa;
   cursor: pointer;
 }
@@ -1111,6 +1116,10 @@ a.fa.fa-times.ico-remove{
 
 a.fa.fa-times.ico-remove:hover,
 a.fa.fa-times.ico-remove:focus{
+	color: #00bfff;
+}
+a.fa.fa-plus.ico-dashboard:hover,
+a.fa.fa-plus.ico-dashboard:focus{
 	color: #00bfff;
 }
 
@@ -3234,6 +3243,10 @@ div.alert.alertbox {
   padding: 5px;
   text-align: center;
   z-index: 999;
+}
+
+.fa.fa-refresh.filters-button.apply-filters-button.fa-spin{
+	top: -12% !important;
 }
 
 .fa.fa-refresh.filters-button{
