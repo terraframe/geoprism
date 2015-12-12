@@ -409,7 +409,7 @@
       // Update the point and polygon category model
       service.loadCategoryValues(categoryWidget.polygonCatOptionsObj, service.styleDTO.getCategoryPolygonStyles(), dynamicDataModel.thematicAttributeDataType);
       service.loadCategoryValues(categoryWidget.basicPointCatOptionsObj, service.styleDTO.getCategoryPointStyles(), dynamicDataModel.thematicAttributeDataType);
-      service.loadSecondaryAggregation(dynamicDataModel, service.styleDTO);
+      style.secondaryAggregation = service.loadSecondaryAggregation(dynamicDataModel, service.styleDTO);
       
       return {layer:layer, style:style, categoryWidget:categoryWidget, dynamicDataModel:dynamicDataModel};    
     }
@@ -443,7 +443,7 @@
         }
 
         // Load the method value
-        var aggregationType = styleDTO.getSecondaryAggregationType()[0];      
+        var aggregationType = styleDTO.getSecondaryAggregationType()[0].name();      
         var options = dynamicDataModel.aggregationMap[aggregation.attribute.type];
         
         dynamicDataModel.secondaryAggregationMethods = options;
@@ -459,7 +459,7 @@
         var categoryType = aggregation.attribute.categoryType;
         
         // Load the categories
-        controller.loadCategoryValues(aggregation, styleDTO.getSecondaryCategories(), categoryType);
+        service.loadCategoryValues(aggregation, styleDTO.getSecondaryCategories(), categoryType);
       }
         
       return aggregation;

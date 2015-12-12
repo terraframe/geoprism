@@ -32,6 +32,8 @@ import com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO;
+import com.runwaysdk.geodashboard.gis.persist.AggregationTypeDTO;
+import com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
@@ -236,6 +238,8 @@ public class JavascriptUtil implements Reloadable
     types.add(AggregationStrategyViewDTO.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
     types.add(MappableClassDTO.CLASS);
+    types.add(AllAggregationTypeDTO.CLASS);
+    types.add(AggregationTypeDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
