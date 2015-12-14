@@ -113,6 +113,19 @@
                 **/*servlet-api*.jar,
                 **/*annotations-api*.jar
               </packagingExcludes>
+              <webResources>
+                <resource>
+                  <directory>src/deployed/resources</directory>
+                  <targetPath>WEB-INF/classes</targetPath>
+                  <filtering>true</filtering>
+                </resource>
+                <resource>
+                  <directory>src/deployed/ebextensions</directory>
+                  <targetPath>.ebextensions</targetPath>
+                  <filtering>false</filtering>
+                </resource>
+                <!-- <resource> <directory>src/main/resources</directory> </resource> -->
+              </webResources>              
             </configuration>
           </plugin>
         </plugins>
