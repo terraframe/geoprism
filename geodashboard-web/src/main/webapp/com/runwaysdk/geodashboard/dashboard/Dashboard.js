@@ -643,7 +643,7 @@
     }
     
     controller.editOptions = function() {
-      controller.builder = controller.dashboardId;
+      $scope.$emit('editDashboard', {dashboardId : controller.dashboardId});
     }
     
     controller.getFilterMap = function() {

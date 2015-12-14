@@ -66,11 +66,11 @@
     }
     
     controller.newDashboard = function() {
-      controller.show = 'NEW';      
+      $scope.$emit('newDashboard');
     }
     
     controller.edit = function(dashboardId) {
-      controller.show = dashboardId;
+      $scope.$emit('editDashboard', {dashboardId : dashboardId});
     }
     
     controller.cloneDashboard = function(dashboardId) {

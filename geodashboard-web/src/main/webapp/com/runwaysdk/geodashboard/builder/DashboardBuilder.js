@@ -18,18 +18,24 @@
  */
 (function(){
 
-  function BuilderDialogController($scope, $timeout, builderService) {
+  function BuilderDialogController($scope, $rootScope, $timeout, builderService) {
     var controller = this;
+    $scope.show = false;
+    
+    controller.clear = function() {
+        $scope.show = false;
+        
+        controller.fields = null;
+        controller.dashboard = null;    
+    }
     
     controller.cancel = function() {
-      var onSuccess = function() {      
-        $scope.show = null;
-          
-        controller.fields = null;
-        controller.dashboard = null;
+      var onSuccess = function(newInstance) {      
+        controller.clear();
         
-        //// TODO: review why this causes an in-progress angular error
-        $scope.$apply();
+        if(!newInstance) {
+            $scope.$apply();        	
+        }
       }
         
       builderService.unlock(controller.dashboard, onSuccess);
@@ -37,9 +43,7 @@
     
     controller.persist = function() {
       var onSuccess = function(result) {      
-        $scope.show = null;          
-        controller.fields = null;    
-        controller.dashboard = null;  
+        controller.clear();
         
         $scope.$apply();
 
@@ -63,10 +67,7 @@
       builderService.applyWithOptions(controller.dashboard,'#builder-div', onSuccess, onFailure);
     }
     
-    controller.load = function() {
-      var dashboardId = ($scope.show != null && $scope.show != 'NEW' ? $scope.show : null);
-        
-      var onSuccess = function(result) {
+    controller.init = function(result) {
         controller.fields = result.fields;    
         controller.dashboard = result.object;
         controller.showWidgetType = '';
@@ -77,8 +78,17 @@
         	if(country.value === result.object.country){
         		controller.dashboard.countryDisplayLabel = country.displayLabel;
         	}
-        }
+        }    	
         
+        $scope.show = true;
+    }
+    
+    controller.load = function(dashboardId) {
+        
+      var onSuccess = function(result) {
+    	  
+    	controller.init(result);
+    	
         $scope.$apply();
       }
                
@@ -88,6 +98,18 @@
     controller.setCategoryWidgetType = function(typeName) {
     	controller.showWidgetType = typeName;
     }
+    
+    $rootScope.$on('editDashboard', function(event, data){
+      controller.load(data.dashboardId);
+    });
+    
+    $rootScope.$on('newDashboard', function(event, data){
+      controller.load(null);
+    });
+    
+    // Initialize an empty controller
+    controller.clear();
+
   }
   
   function BuilderDialog() {
@@ -96,13 +118,11 @@
       replace: true,
       templateUrl: '/partial/builder/builder-dialog.jsp',
       scope: {
-        show:'=',
         callback:'='
       },
       controller : BuilderDialogController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
-        ctrl.load();
       }
     }    
   }

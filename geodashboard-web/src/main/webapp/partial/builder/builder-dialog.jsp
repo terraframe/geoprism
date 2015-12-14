@@ -22,7 +22,7 @@
 
 
 <div>
-  <modal-dialog ng-show="ctrl.dashboard != null" width='1000px'>
+  <modal-dialog ng-if="show" width='1000px'>
     <div id="builder-div" role="dialog" class="ng-modal-content modal-content">
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
