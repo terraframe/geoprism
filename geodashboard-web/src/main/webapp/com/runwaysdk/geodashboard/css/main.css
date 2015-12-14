@@ -52,7 +52,10 @@ div.pageContent {
 *
 */
 	a:focus,
-	a:hover{text-decoration:none;}
+	a:hover{
+		text-decoration:none;
+		outline: none;
+	}
 	a:active{
 		text-decoration:none;
 		background-color:transparent;
