@@ -229,7 +229,25 @@
       $timeout(function(){
         jcf.customForms.replaceAll(element[0]);      
       }, 500, false);
-    }  
+    }
+    
+    controller.getTextSuggestions = function(mdAttributeId, request, response ) {
+        
+      var limit = 10;
+              
+      var onSuccess = function(results){
+              
+        response( results );
+      };
+            
+      var onFailure = function(e){
+        console.log(e);
+      };
+         
+      var text = request.term;
+      
+      dashboardService.getTextSuggestions(mdAttributeId, term, 10, onSuccess, onFailure);
+    }
   }
   
   function NumberType() {
@@ -316,7 +334,37 @@
       }
     }    
   }
+  
+  function CharacterTypeController($scope, $timeout, dashboardService) {
+    var controller = this;
 
+    controller.init = function(element) {
+      $timeout(function(){
+        jcf.customForms.replaceAll(element[0]);      
+      }, 500, false);
+    }
+    
+    controller.getTextSuggestions = function(request, response ) {
+        
+      var limit = 10;
+              
+      var onSuccess = function(results){
+              
+        response( results );
+      };
+            
+      var onFailure = function(e){
+        console.log(e);
+      };
+         
+      var term = request.term;
+      var mdAttributeId = $scope.attribute.mdAttributeId;
+      
+      dashboardService.getTextSuggestions(mdAttributeId, term, 10, onSuccess, onFailure);
+    }
+  
+  }
+  
   function CharacterType() {
     return {
       restrict: 'E',
@@ -326,12 +374,12 @@
       scope: {
         attribute:'='
       },
-      controller : AttributeTypeController,
+      controller : CharacterTypeController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrls) {
         scope.form = ctrls[0];
         
-        ctrls[1].init(element);
+        ctrls[1].init(element);        
       }
     }    
   }

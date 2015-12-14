@@ -331,7 +331,7 @@
   
   
   
-   function LayerNameInput($timeout) {
+  function LayerNameInput($timeout) {
       return {
         restrict: 'E',
         replace: true,
@@ -687,36 +687,7 @@
        }
      };    
    };
-     
-  
-   /**
-    * Directive attached to all basic category input elements to hook the actual 
-    * autocomplete action.
-    */
-   function CategoryAutoComplete($timeout) {
-    return {
-      restrict: "A",
-      scope:{
-        source : "&",
-        ngModel : '='
-      },
-      require : 'ngModel',
-      link: function (scope, element, attr, ngModel) {
-        
-        $timeout(function(){
-          
-              $(element).autocomplete({
-                source: scope.source(),
-                minLength: 1,
-                select : function(event, ui) {
-                  ngModel.$setViewValue(ui.item.value);
-                }
-              });
-        }, 500); 
-      }
-    };
-  };
-  
+      
   /*
    * 
    * 
@@ -1183,7 +1154,6 @@
     .directive('basicPoint', BasicPoint)
     .directive('basicPolygon', BasicPolygon)
     .directive('layerTypesStyle', LayerTypesStyle)
-    .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('legendOptions', LegendOptions)
     .directive('formActionButtons', FormActionButtons)
     .directive('thematicLayer', ThematicLayer)

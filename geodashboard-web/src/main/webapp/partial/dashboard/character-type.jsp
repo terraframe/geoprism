@@ -29,6 +29,6 @@
   </div>
   <div class="text">
     <label class="none"><gdb:localize key="dashboardViewer.text"/></label>
-    <input ng-model="attribute.filter.value" name="{{attribute.mdAttributeId}}" ng-class="{'field-error':(form[attribute.mdAttributeId].$invalid && !form[attribute.mdAttributeId].$pristine) }" type="text" placeholder="<gdb:localize key="dashboard.text.label"/>"></input>
+    <input ng-model="attribute.filter.value" name="{{attribute.mdAttributeId}}" ng-class="{'field-error':(form[attribute.mdAttributeId].$invalid && !form[attribute.mdAttributeId].$pristine) }" type="text" placeholder="<gdb:localize key="dashboard.text.label"/>" category-auto-complete source="ctrl.getTextSuggestions"></input>
   </div>
 </div>

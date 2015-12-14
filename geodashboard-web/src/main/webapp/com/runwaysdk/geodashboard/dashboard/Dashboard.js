@@ -721,6 +721,10 @@
       data.state = controller.getCompressedState();
     });
     
+    $scope.$on('toggleLayer', function(event, data) {
+      controller.toggleLayer(data.layer);    
+    });
+    
     $rootScope.$on('layerChange', function(event, data) {
       controller.handleLayerEvent(data.map);      
     });

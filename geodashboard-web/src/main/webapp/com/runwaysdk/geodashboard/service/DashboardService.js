@@ -110,6 +110,12 @@
       com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
     }
     
+    service.getTextSuggestions = function(mdAttributeId, term, limit, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+
+      com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(request, mdAttributeId, term, limit);
+    }
+    
     service.getFeatureInformation = function(feature, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
 

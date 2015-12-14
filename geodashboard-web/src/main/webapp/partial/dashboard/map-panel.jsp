@@ -31,7 +31,7 @@
     <thematic-panel cache="dashboard.thematicLayerCache" dashboard="dashboard" ></thematic-panel>
         
     <!-- Reference Layer Panel -->       
-    <reference-panel cache="dashboard.referenceLayerCache" dashboard="dashboard" ></reference-panel>
+    <reference-panel cache="dashboard.referenceLayerCache"></reference-panel>
 
     <!-- Base Layers Panel -->     
     <base-panel layers="dashboard.baseLayers" dashboard="dashboard" ></base-panel>

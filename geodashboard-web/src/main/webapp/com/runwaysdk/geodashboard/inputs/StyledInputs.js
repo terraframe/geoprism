@@ -422,7 +422,33 @@
     };
   }
   
-  
+  /**
+   * Directive attached to all basic category input elements to hook the actual 
+   * autocomplete action.
+   */
+  function CategoryAutoComplete($timeout) {
+    return {
+      restrict: "A",
+      scope:{
+        source : "&",
+        ngModel : '='
+      },
+      require : 'ngModel',
+      link: function (scope, element, attr, ngModel) {
+       
+        $timeout(function(){
+         
+          $(element).autocomplete({
+            source: scope.source(),
+            minLength: 1,
+            select : function(event, ui) {
+              ngModel.$setViewValue(ui.item.value);
+            }
+          });
+        }, 500); 
+      }
+    };
+  };
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
@@ -432,5 +458,6 @@
     .directive('convertToPercent', ConvertToPercent)
     .directive('convertToNumber', ConvertToNumber)
     .directive('numberOnly', NumberOnly)
-    .directive('integerOnly', IntegerOnly);    
+    .directive('integerOnly', IntegerOnly)
+    .directive('categoryAutoComplete', CategoryAutoComplete);    
 })();

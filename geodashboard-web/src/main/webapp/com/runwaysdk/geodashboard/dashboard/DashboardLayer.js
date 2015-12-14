@@ -69,11 +69,8 @@
    * THEMATIC LAYER CONTROLLER AND WIDGET
    * 
    */
-  function ThematicPanelController($scope, $compile, $timeout, dashboardService) {
+  function ThematicPanelController($scope, $timeout, dashboardService) {
     var controller = this;
-    /* Getting the $compile method reference for use with later functions  */
-    controller.$compile = $compile;
-    controller.$scope = $scope;
     
     controller.getLayer = function(layerId) {
       return $scope.cache.values[layerId];
@@ -83,7 +80,7 @@
       var layer = $scope.cache.values[layerId];      
       layer.isActive = !layer.isActive;
 
-      $scope.dashboard.toggleLayer(layer);
+      $scope.$emit('toggleLayer', {layer:layer});          
     }
     
     controller.edit = function(layerId) {
@@ -99,7 +96,7 @@
           var layer = $scope.cache.values[layerId];
           layer.isActive = false;
               
-          $scope.dashboard.toggleLayer(layer);
+          $scope.$emit('toggleLayer', {layer:layer});          
               
           // Remove value from cache
           delete $scope.cache.values[layerId];        
@@ -236,7 +233,7 @@
       var layer = $scope.cache.values[universalId];      
       layer.isActive = !layer.isActive;
 
-      $scope.dashboard.toggleLayer(layer);
+      $scope.$emit('toggleLayer', {layer:layer});          
     }
     
     controller.remove = function(layerId, universalId) {
@@ -248,7 +245,7 @@
         layer.layerExists = false;
         layer.layerType = "REFERENCEJSON";
           
-        $scope.dashboard.toggleLayer(layer);          
+        $scope.$emit('toggleLayer', {layer:layer});          
           
         $scope.$apply();
       };
@@ -278,8 +275,7 @@
       replace: true,
       templateUrl: '/partial/dashboard/reference-layer-panel.jsp',
       scope: {
-        cache:'=',
-        dashboard:'='
+        cache:'='
       },
       controller : ReferencePanelController,
       controllerAs : 'ctrl',
