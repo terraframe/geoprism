@@ -27,11 +27,11 @@
   <div class="cell-holder">
     <div class="cell">
       <span><gdb:localize key="DashboardLayer.form.minFill"/></span>
-      <styled-color-picker model="minFill" scroll="#layer-modal"></styled-color-picker>                   
+      <styled-color-picker name="min-fill"  model="minFill" scroll="#layer-modal"></styled-color-picker>                   
     </div>
     <div class="cell">
       <span><gdb:localize key="DashboardLayer.form.maxFill"/></span>
-      <styled-color-picker model="maxFill" scroll="#layer-modal"></styled-color-picker>                   
+      <styled-color-picker name="max-fill"  model="maxFill" scroll="#layer-modal"></styled-color-picker>                   
     </div>
     <div class="cell opacity">
       <label><gdb:localize key="DashboardLayer.form.opacity"/></label>

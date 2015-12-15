@@ -49,12 +49,12 @@
                 
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
-        <styled-color-picker id="label-text-color" model="styleModel.labelColor" scroll="#layer-modal"></styled-color-picker>
+        <styled-color-picker name="styleModel.labelColor"  id="label-text-color" model="styleModel.labelColor" scroll="#layer-modal"></styled-color-picker>
       </div>
                 
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
-        <styled-color-picker id="label-halo-color" model="styleModel.labelHalo" scroll="#layer-modal"></styled-color-picker> 
+        <styled-color-picker  name="styleModel.labelHalo" id="label-halo-color" model="styleModel.labelHalo" scroll="#layer-modal"></styled-color-picker> 
       </div>
                 
       <div class="cell">

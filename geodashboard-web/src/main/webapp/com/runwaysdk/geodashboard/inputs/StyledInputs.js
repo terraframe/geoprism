@@ -499,6 +499,7 @@
       link: function (scope, element, attrs, ctrl) {
         
         $timeout(function(){
+//          console.log(attrs.name);
         
           // Hook up the color picker
           $(element).colpick({
@@ -522,8 +523,7 @@
               var hexStr = '#'+hex;
               $(el).find(".ico").css('background', hexStr);
             },
-            onHide:function(el) {
-              
+            onHide:function(el) {              
               var rgb = $(element).find(".ico").css('background-color');
               var value = ctrl.rgb2hex(rgb);
               

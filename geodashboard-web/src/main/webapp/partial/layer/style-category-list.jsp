@@ -31,7 +31,7 @@
               <input class="category-input" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()"></input>
             </div>
             <div class="cell">
-              <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             
+              <styled-color-picker name="{{$index}}" model="category.color" scroll="#layer-modal"></styled-color-picker>             
             </div>
           </div>
           
@@ -43,7 +43,7 @@
               <input class="category-input" ng-disabled="true" type="text" placeholder="<gdb:localize key="Other"/>"></input>
             </div>
             <div class="cell">
-              <styled-color-picker model="categories.other.color" scroll="#layer-modal"></styled-color-picker>             
+              <styled-color-picker name="categories.other.color" model="categories.other.color" scroll="#layer-modal"></styled-color-picker>             
             </div>
           </div>          
         </li>
