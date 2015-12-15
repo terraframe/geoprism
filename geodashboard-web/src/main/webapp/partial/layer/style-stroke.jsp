@@ -27,7 +27,7 @@
   <div class="cell-holder">
     <div class="cell">
       <span><gdb:localize key="DashboardLayer.form.color"/></span>
-      <styled-color-picker name="stroke"  model="stroke" scroll="#layer-modal"></styled-color-picker>             
+      <styled-color-picker model="stroke" scroll="#layer-modal"></styled-color-picker>             
     </div>
     <div class="cell">
       <label><gdb:localize key="DashboardLayer.form.width"/></label>

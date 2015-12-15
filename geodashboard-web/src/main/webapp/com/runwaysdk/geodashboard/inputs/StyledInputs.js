@@ -452,6 +452,14 @@
   
   function StyledColorPickerController() {
     var controller = this;
+
+    controller.generateId = function() {
+      var S4 = function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+      };
+        
+      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }
     
     /**
      * Converts rgb or rgba to hex equivilent.
@@ -497,41 +505,42 @@
       controller : StyledColorPickerController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
+    	scope.id = ctrl.generateId();
         
-        $timeout(function(){
-//          console.log(attrs.name);
-        
-          // Hook up the color picker
-          $(element).colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
-            onShow:function(colPickObj){
-              var that = this;
-            
-              // Set the current value of the color picker
-              $(this).colpickSetColor(scope.model,false);
-            
-              $(scope.scroll).scroll(function(){  
-                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
-                var colPick = $(that);
-                var diff = colPick.offset().top + colPick.height() + 2; 
-                var diffStr = diff.toString() + "px";
-              
-                colorPicker.css({ top: diffStr });
-              });
-            },
-            onChange: function(hsb,hex,rgb,el,bySetColor) {
-              var hexStr = '#'+hex;
-              $(el).find(".ico").css('background', hexStr);
-            },
-            onHide:function(el) {              
-              var rgb = $(element).find(".ico").css('background-color');
-              var value = ctrl.rgb2hex(rgb);
-              
-              scope.model = value;                        
-              scope.$apply();
-            }
-          });
-        }, 0);
+        element.ready(function(){
+          $timeout(function(){
+            // Hook up the color picker
+            $(element).colpick({
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj){
+                var that = this;
+                  
+                // Set the current value of the color picker
+                $(this).colpickSetColor(scope.model,false);
+                  
+                $(scope.scroll).scroll(function(){  
+                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                  var colPick = $(that);
+                  var diff = colPick.offset().top + colPick.height() + 2; 
+                  var diffStr = diff.toString() + "px";
+                    
+                  colorPicker.css({ top: diffStr });
+                });
+              },
+              onChange: function(hsb,hex,rgb,el,bySetColor) {
+                var hexStr = '#'+hex;
+                $(el).find(".ico").css('background', hexStr);
+              },
+              onHide:function(el) {              
+                var rgb = $(element).find(".ico").css('background-color');
+                var value = ctrl.rgb2hex(rgb);
+                    
+                scope.model = value;                        
+                scope.$apply();
+              }
+            });
+          }, 0);       
+        });
       }
     }    
   }
