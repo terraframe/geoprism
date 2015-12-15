@@ -22,7 +22,7 @@
 
 
 <div>
-  <modal-dialog ng-show="ctrl.dashboard != null" width='1000px'>
+  <modal-dialog ng-if="show">
     <div id="builder-div" role="dialog" class="ng-modal-content modal-content">
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
@@ -64,19 +64,19 @@
     			  	<div class="row-holder">
     			  		<div class="row builder-dialog-category-ico-container">
     			  		  	<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-list-alt" href="#DESCRIPTION" title="<gdb:localize key='dashboard.descriptionTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DESCRIPTION')"></a>
+    			  				<a class="fa fa-list-alt" href="#" title="<gdb:localize key='dashboard.descriptionTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DESCRIPTION')"></a>
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.descriptionLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-globe" href="#FOCUSAREA" title="<gdb:localize key='dashboard.focusAreaTooltip'/>" ng-click="ctrl.setCategoryWidgetType('FOCUSAREA')"></a>
+    			  				<a class="fa fa-globe" href="#" title="<gdb:localize key='dashboard.focusAreaTooltip'/>" ng-click="ctrl.setCategoryWidgetType('FOCUSAREA')"></a>
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.focusAreaLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-users" href="#USERS" title="<gdb:localize key='dashboard.usersTooltip'/>" ng-click="ctrl.setCategoryWidgetType('USERS')"></a>	
+    			  				<a class="fa fa-users" href="#" title="<gdb:localize key='dashboard.usersTooltip'/>" ng-click="ctrl.setCategoryWidgetType('USERS')"></a>	
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.usersLabel'/></strong>
     			  			</div>
     			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-table" href="#DATASETS" title="<gdb:localize key='dashboard.dataSetsTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DATASETS')"></a>
+    			  				<a class="fa fa-table" href="#" title="<gdb:localize key='dashboard.dataSetsTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DATASETS')"></a>
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.dataSetsLabel'/></strong>
     			  			</div>
     			  		</div>

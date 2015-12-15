@@ -72,6 +72,20 @@
         padding: 10px;
     }
     
+/*     .modal-form{ */
+/*     	bottom: 0; */
+/*     	position: fixed; */
+/*     } */
+    
+    #builder-dialog-category-widget-container{
+/*     	height: 200px; */
+/*     	overflow-y: auto; */
+    }
+    
+    #builder-dialog-category-widget-container .row-holder{
+    	padding: 0;
+    }
+    
     .user-command-link{
       color: white;
       padding: 5px;
@@ -370,6 +384,6 @@
     </div>      
     <div class="col-md-3"></div>
        
-    <builder-dialog ng-if="ctrl.show != null" show="ctrl.show" callback="ctrl"></builder-dialog>
+    <builder-dialog callback="ctrl"></builder-dialog>
   </div>
 </body>

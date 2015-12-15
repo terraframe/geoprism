@@ -32,10 +32,10 @@
     
     service.unlock = function(object, onSuccess, onFailure) {
       if(service.dto == null || service.dto.isNewInstance()) {
-        onSuccess();  
+        onSuccess(true);  
       }
       else {
-        var request = runwayService.createRequest(onSuccess, onFailure);
+        var request = runwayService.createRequest(function(){onSuccess(false)}, onFailure);
         
         service.dto.unlock(request);  
       }

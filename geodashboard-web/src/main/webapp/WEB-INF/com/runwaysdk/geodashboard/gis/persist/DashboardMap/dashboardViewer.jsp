@@ -122,7 +122,7 @@
     </div>
 
     <!-- dashboard builder modal -->  
-    <builder-dialog ng-if="dashboard.builder != null" show="dashboard.builder" callback="dashboard"></builder-dialog>
+    <builder-dialog callback="dashboard"></builder-dialog>
     
     <!-- Dialog for cloning a dashboard  -->
     <div id="clone-container"></div>  
