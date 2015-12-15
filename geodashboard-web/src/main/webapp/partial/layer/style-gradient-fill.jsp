@@ -27,21 +27,11 @@
   <div class="cell-holder">
     <div class="cell">
       <span><gdb:localize key="DashboardLayer.form.minFill"/></span>
-      <div class="color-holder">
-        <a href="#" class="color-choice" color-picker model="minFill" element='#modal01'>
-          <span class="ico" ng-style="{'background' : minFill}">icon</span>
-          <span class="arrow">arrow</span>
-        </a>
-      </div>
+      <styled-color-picker model="minFill" scroll="#layer-modal"></styled-color-picker>                   
     </div>
     <div class="cell">
       <span><gdb:localize key="DashboardLayer.form.maxFill"/></span>
-      <div class="color-holder">
-        <a href="#" class="color-choice" color-picker model="maxFill" element='#modal01'>
-          <span class="ico"  ng-style="{'background' : maxFill}">icon</span>
-          <span class="arrow">arrow</span>
-        </a>
-      </div>
+      <styled-color-picker model="maxFill" scroll="#layer-modal"></styled-color-picker>                   
     </div>
     <div class="cell opacity">
       <label><gdb:localize key="DashboardLayer.form.opacity"/></label>

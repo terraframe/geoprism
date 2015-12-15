@@ -224,7 +224,7 @@
                     $(this).colpickSetColor(currColor,false);
                                   
                     // Move the color picker widget if the page is scrolled
-                    $('#modal01').scroll(function(){  
+                    $('#layer-modal').scroll(function(){  
                       var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
                       var colPick = $(that);
                       var diff = colPick.offset().top + colPick.height() + 2; 

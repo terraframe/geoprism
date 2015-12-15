@@ -83,19 +83,19 @@
     }
     
     controller.focus = function($event) {
-      $($event.currentTarget).addClass('select-focus');                	
+      $($event.currentTarget).addClass('select-focus');                  
     }
     
     controller.blur = function($event) {
       $($event.currentTarget).removeClass('select-focus');                  
     }    
     
-    controller.keypress = function($event) {    	
+    controller.keypress = function($event) {      
       // Up arrow
       if ($event.keyCode == 38) {
         $event.preventDefault();            
         $event.stopPropagation();          
-    	  
+        
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').prev('.styled-option');
@@ -110,7 +110,7 @@
       else if ($event.keyCode == 40) {
         $event.preventDefault();            
         $event.stopPropagation();          
-    	  
+        
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').next('.styled-option');
@@ -240,7 +240,7 @@
             
         //// TEMPORARY HACK to account for offset from modal to window
         if( $("#builder-div").length > 0 ){
-        	topOffset = topOffset - $("#builder-div").offset().top + 8;
+          topOffset = topOffset - $("#builder-div").offset().top + 8;
         }
         
         dropdown.css('top', topOffset);
@@ -267,7 +267,7 @@
       if ($event.keyCode == 38) {      
         $event.preventDefault();
         $event.stopPropagation();
-    	  
+        
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').prev('.styled-option');
@@ -282,7 +282,7 @@
       else if ($event.keyCode == 40) {
         $event.preventDefault();
         $event.stopPropagation();
-    	  
+        
         // Find the currently select value
         var dropdown = $($event.currentTarget).next();
         var element = dropdown.find('.current-selected').next('.styled-option');
@@ -450,11 +450,99 @@
     };
   };
   
+  function StyledColorPickerController() {
+    var controller = this;
+    
+    /**
+     * Converts rgb or rgba to hex equivilent.
+     * 
+     * @param rgb or rgba 
+     */
+    controller.rgb2hex = function(rgb) {
+      if(rgb != null) {
+             
+        if (/^#[0-9A-F]{6}$/i.test(rgb)){
+          return rgb;
+        }
+
+        var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);        
+        if(rgbMatch){
+          function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+          }
+            
+          return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+        }
+                
+        var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        if(rgbaMatch){
+          return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+            ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+        }
+      }
+    };  
+  }
+  
+  function StyledColorPicker($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/inputs/styled-color-picker.jsp',
+      scope: {
+        model:'=',
+        scroll:'@',
+      },
+      controller : StyledColorPickerController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        
+        $timeout(function(){
+        
+          // Hook up the color picker
+          $(element).colpick({
+            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+            onShow:function(colPickObj){
+              var that = this;
+            
+              // Set the current value of the color picker
+              $(this).colpickSetColor(scope.model,false);
+            
+              $(scope.scroll).scroll(function(){  
+                var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                var colPick = $(that);
+                var diff = colPick.offset().top + colPick.height() + 2; 
+                var diffStr = diff.toString() + "px";
+              
+                colorPicker.css({ top: diffStr });
+              });
+            },
+            onChange: function(hsb,hex,rgb,el,bySetColor) {
+              var hexStr = '#'+hex;
+              $(el).find(".ico").css('background', hexStr);
+            },
+            onHide:function(el) {
+              
+              var rgb = $(element).find(".ico").css('background-color');
+              var value = ctrl.rgb2hex(rgb);
+              
+              scope.model = value;                        
+              scope.$apply();
+            }
+          });
+        }, 0);
+      }
+    }    
+  }
+  
+  
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('styledColorPicker', StyledColorPicker)
     .directive('convertToPercent', ConvertToPercent)
     .directive('convertToNumber', ConvertToNumber)
     .directive('numberOnly', NumberOnly)

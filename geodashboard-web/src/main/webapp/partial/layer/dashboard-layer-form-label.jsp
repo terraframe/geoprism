@@ -49,22 +49,12 @@
                 
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelColor"/></span>
-        <div id="label-text-color" class="color-holder">
-          <a href="#" class="color-choice" color-picker model="styleModel.labelColor" element='#modal01'>
-            <span class="ico" ng-style="{'background' : styleModel.labelColor}">icon</span>
-            <span class="arrow">arrow</span>
-          </a>
-        </div>
+        <styled-color-picker id="label-text-color" model="styleModel.labelColor" scroll="#layer-modal"></styled-color-picker>
       </div>
                 
       <div class="cell">
         <span><gdb:localize key="DashboardLayer.form.labelHalo"/></span>
-        <div id="label-halo-color" class="color-holder">
-          <a href="#" class="color-choice" color-picker model="styleModel.labelHalo" element='#modal01'>
-            <span class="ico" ng-style="{'background' : styleModel.labelHalo}">icon</span>
-            <span class="arrow">arrow</span>
-          </a>
-        </div>
+        <styled-color-picker id="label-halo-color" model="styleModel.labelHalo" scroll="#layer-modal"></styled-color-picker> 
       </div>
                 
       <div class="cell">

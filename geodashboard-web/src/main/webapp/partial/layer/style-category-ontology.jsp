@@ -30,7 +30,7 @@
           <div class="text category-input-container">
             <p><gdb:localize key="Other"/></p>
           </div>
-          <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;" color-picker model="categories.other.color" element='#modal01'>
+          <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;" color-picker model="categories.other.color" element='#layer-modal'>
             <span class="ico ontology-category-color-icon ontology-other-color-icon" style="border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;" ng-style="{'background':categories.other.color}">icon</span>
           </a>
         </div>
