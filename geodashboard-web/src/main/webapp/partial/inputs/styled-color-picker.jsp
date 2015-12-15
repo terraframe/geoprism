@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div class="color-holder" ng-attr-name="name">
+<div class="color-holder">
   <a href="#" class="color-choice">
     <span class="ico" ng-style="::{'background' : model}">icon</span>
     <span class="arrow">arrow</span>
