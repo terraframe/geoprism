@@ -70,7 +70,7 @@
     controller.init = function(result) {
         controller.fields = result.fields;    
         controller.dashboard = result.object;
-        controller.showWidgetType = '';
+        controller.showWidgetType = 'DESCRIPTION';
         
         // Get country display label for the dashboard edit form (when a select isn't needed)
         for(var i=0; i<result.object.countries.length; i++){

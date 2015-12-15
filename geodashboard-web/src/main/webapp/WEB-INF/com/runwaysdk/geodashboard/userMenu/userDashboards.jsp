@@ -72,6 +72,20 @@
         padding: 10px;
     }
     
+/*     .modal-form{ */
+/*     	bottom: 0; */
+/*     	position: fixed; */
+/*     } */
+    
+    #builder-dialog-category-widget-container{
+/*     	height: 200px; */
+/*     	overflow-y: auto; */
+    }
+    
+    #builder-dialog-category-widget-container .row-holder{
+    	padding: 0;
+    }
+    
     .user-command-link{
       color: white;
       padding: 5px;
