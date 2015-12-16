@@ -697,6 +697,9 @@
     service.newInstance = function(universalId, mapId, element, onSuccess, onFailure) {
       var success = function(response) {
     	var model = service.createObjects(response);
+    	
+    	// Ticket #237 - Reference layer should defaut to polygon
+    	model.layer.layerType = 'BASICPOLYGON';
         
         onSuccess(model);
       }
