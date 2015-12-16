@@ -52,6 +52,10 @@
             }
           }
         });
+        
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).colpickDestroy();
+        });        
       }
     }    
   }
@@ -216,7 +220,7 @@
               $li.find('> div').append(thisLi);
 
               // ontology category layer type colors
-              $(thisLi).find("span").colpick({
+              $(thisLi).find("span.ontology-category-color-icon").colpick({
                   submit: 0,  // removes the "ok" button which allows verification of selection and memory for last color
                   onShow:function(colPickObj) {
                     var that = this;
@@ -224,7 +228,7 @@
                     $(this).colpickSetColor(currColor,false);
                                   
                     // Move the color picker widget if the page is scrolled
-                    $('#modal01').scroll(function(){  
+                    $('#layer-modal').scroll(function(){  
                       var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
                       var colPick = $(that);
                       var diff = colPick.offset().top + colPick.height() + 2; 
@@ -259,6 +263,11 @@
         }); // end tree
         
         tree.render(treeElement, nodes);
+        
+        // Clean up all the color pickers
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).find("span.ontology-category-color-icon").colpickDestroy();
+        });
       }
     };    
   }; 

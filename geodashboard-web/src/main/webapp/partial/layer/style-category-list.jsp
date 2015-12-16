@@ -31,12 +31,7 @@
               <input class="category-input" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()"></input>
             </div>
             <div class="cell">
-              <div class="color-holder">
-                <a href="#" class="color-choice" color-picker model="category.color" element='#modal01'>
-                  <span class="ico cat-color-selector" ng-style="{'background' : category.color}">icon</span>
-                  <span class="arrow">arrow</span>
-                </a>
-              </div>
+              <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             
             </div>
           </div>
           
@@ -48,12 +43,7 @@
               <input class="category-input" ng-disabled="true" type="text" placeholder="<gdb:localize key="Other"/>"></input>
             </div>
             <div class="cell">
-              <div class="color-holder">
-                <a href="#" class="color-choice" color-picker model="categories.other.color" element='#modal01'>
-                  <span class="ico cat-color-selector" ng-style="{'background' : categories.other.color}">icon</span>
-                  <span class="arrow">arrow</span>
-                </a>
-              </div>
+              <styled-color-picker model="categories.other.color" scroll="#layer-modal"></styled-color-picker>             
             </div>
           </div>          
         </li>

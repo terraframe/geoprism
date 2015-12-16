@@ -26,7 +26,7 @@
   <!-- ngIf cannot be on the root node or processing doesn't work -->
   <div ng-if="show">
     <div class="modal-backdrop fade in"></div>
-    <div id="thematic-modal" style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <div id="layer-modal" style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
       <dl>
         <form class="modal-form" name="form">
           <div id="DashboardLayer-mainDiv" class="modal-dialog">

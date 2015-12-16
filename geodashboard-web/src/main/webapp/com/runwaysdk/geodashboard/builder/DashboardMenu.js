@@ -201,6 +201,12 @@
         $scope.$apply();
     }
     
+    $scope.$on('dashboardChange', function(event, data){
+      controller.refreshDashboard(data.dashboard);
+      
+      event.stopPropagation();            
+    });
+    
     controller.getDashboards();	
   }
 

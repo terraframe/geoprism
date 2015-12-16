@@ -122,7 +122,7 @@
     </div>
 
     <!-- dashboard builder modal -->  
-    <builder-dialog callback="dashboard"></builder-dialog>
+    <builder-dialog></builder-dialog>
     
     <!-- Dialog for cloning a dashboard  -->
     <div id="clone-container"></div>  

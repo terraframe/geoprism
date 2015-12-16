@@ -699,7 +699,17 @@
     }
     
     /*
-     * Listen for layer events
+     * Dashboard events
+     */    
+    $scope.$on('dashboardChange', function(event, data){
+      controller.refreshDashboard(data.dashboard);
+      
+      event.stopPropagation();            
+    });
+    
+    
+    /*
+     * Layer events
      */ 
     $scope.$on('editReferenceLayer', function(event, data) {
       data.mapId = controller.model.mapId;
@@ -729,7 +739,9 @@
       controller.handleLayerEvent(data.map);      
     });
           
-    // Report Events
+    /*
+     * Report Events
+     */ 
     $scope.$on('exportReport', function(event, data) {
       controller.exportReport(data.format);
     });        

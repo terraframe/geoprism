@@ -49,7 +49,7 @@
 
         var dashboard = JSON.parse(result);
 
-        $scope.callback.refreshDashboard(dashboard);
+        $scope.$emit('dashboardChange', {dashboard:dashboard});            
       }    
       
       var onFailure = function(e){
@@ -118,7 +118,6 @@
       replace: true,
       templateUrl: '/partial/builder/builder-dialog.jsp',
       scope: {
-        callback:'='
       },
       controller : BuilderDialogController,
       controllerAs : 'ctrl',

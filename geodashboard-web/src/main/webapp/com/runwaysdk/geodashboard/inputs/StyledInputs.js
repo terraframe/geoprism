@@ -63,7 +63,6 @@
     // TODO: setup initial model value so dropdown has selected value by default
 //    $scope.model = value;
     
-    
     controller.style = function(value) {
       if($scope.style) {
         return {'font-family' : value};
@@ -292,15 +291,121 @@
             }
           });
         }, 500); 
+        
+        // Clean up the auto-complete widget on destroy
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).autocomplete( "destroy" );
+        });        
       }
     };
   };
+  
+  function StyledColorPickerController() {
+    var controller = this;
+
+    controller.generateId = function() {
+      var S4 = function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+      };
+        
+      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }
+    
+    /**
+     * Converts rgb or rgba to hex equivilent.
+     * 
+     * @param rgb or rgba 
+     */
+    controller.rgb2hex = function(rgb) {
+      if(rgb != null) {
+             
+        if (/^#[0-9A-F]{6}$/i.test(rgb)){
+          return rgb;
+        }
+
+        var rgbMatch = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);        
+        if(rgbMatch){
+          function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+          }
+            
+          return "#" + hex(rgbMatch[1]) + hex(rgbMatch[2]) + hex(rgbMatch[3]);
+        }
+                
+        var rgbaMatch = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        if(rgbaMatch){
+          return (rgbaMatch && rgbaMatch.length === 4) ? "#" +
+            ("0" + parseInt(rgbaMatch[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgbaMatch[3],10).toString(16)).slice(-2) : '';
+        }
+      }
+    };  
+  }
+  
+  function StyledColorPicker($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/inputs/styled-color-picker.jsp',
+      scope: {
+        model:'=',
+        scroll:'@',
+      },
+      controller : StyledColorPickerController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+    	scope.id = ctrl.generateId();
+        
+        element.ready(function(){
+          $timeout(function(){
+            // Hook up the color picker
+            $(element).colpick({
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj){
+                var that = this;
+                  
+                // Set the current value of the color picker
+                $(this).colpickSetColor(scope.model,false);
+                  
+                $(scope.scroll).scroll(function(){  
+                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                  var colPick = $(that);
+                  var diff = colPick.offset().top + colPick.height() + 2; 
+                  var diffStr = diff.toString() + "px";
+                    
+                  colorPicker.css({ top: diffStr });
+                });
+              },
+              onChange: function(hsb,hex,rgb,el,bySetColor) {
+                var hexStr = '#'+hex;
+                $(el).find(".ico").css('background', hexStr);
+              },
+              onHide:function(el) {              
+                var rgb = $(element).find(".ico").css('background-color');
+                var value = ctrl.rgb2hex(rgb);
+                    
+                scope.model = value;                        
+                scope.$apply();
+              }
+            });
+          }, 0);       
+        });
+        
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).colpickDestroy();
+        });
+      }
+    }    
+  }
+  
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('styledColorPicker', StyledColorPicker)
     .directive('convertToPercent', ConvertToPercent)
     .directive('convertToNumber', ConvertToNumber)
     .directive('numberOnly', NumberOnly)
