@@ -384,6 +384,6 @@
     </div>      
     <div class="col-md-3"></div>
        
-    <builder-dialog callback="ctrl"></builder-dialog>
+    <builder-dialog></builder-dialog>
   </div>
 </body>
