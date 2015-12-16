@@ -21,8 +21,9 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <div>
 	 <div ng-if="field.writable">
+	 
 	    	<div id="country-select-box" class="box">
-			    <styled-select class="['select-area']" options="field.options" model="model[field.name]" label="displayLabel" name="{{field.name}}" ng-required="field.required"></styled-select>               
+			    <styled-select class="select-area" options="field.options" model="model[field.name]" label="displayLabel" name="{{field.name}}" ng-required="field.required"></styled-select>               
 			    <div class="error-message">
 			      <p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>
 			    </div>

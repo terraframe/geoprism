@@ -343,7 +343,7 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-              jcf.customForms.replaceAll(element[0]);
+//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -360,7 +360,7 @@
         link: function (scope, element, attrs, ctrl) {
           element.ready(function(){
             $timeout(function(){
-              jcf.customForms.replaceAll(element[0]);
+//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -377,7 +377,7 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-              jcf.customForms.replaceAll(element[0]);
+//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -406,7 +406,7 @@
        link: function (scope, element, attrs) {
          element.ready(function(){
            $timeout(function(){
-             jcf.customForms.replaceAll(element[0]);
+//             jcf.customForms.replaceAll(element[0]);
              $(element).show();
            }, 100);          
          });               
@@ -438,9 +438,9 @@
       // This is needed to process the ng-repeat html
       // It processes just the layer type selector widget
       // Timeout is a bit of a hack to make sure all angular based html is finished
-      $timeout(function(){ 
-         jcf.customForms.replaceAll(element[0]);
-      }, 100);
+//      $timeout(function(){ 
+//         jcf.customForms.replaceAll(element[0]);
+//      }, 100);
     };
   };
   
@@ -453,7 +453,7 @@
       link: function (scope, element, attrs) {
         element.ready(function(){
           $timeout(function(){
-            jcf.customForms.replaceAll(element[0]);
+//            jcf.customForms.replaceAll(element[0]);
 //            $(element).show();
           }, 100);          
         });
@@ -470,7 +470,7 @@
       link: function (scope, element, attrs) {
         element.ready(function(){
           $timeout(function(){
-            jcf.customForms.replaceAll(element[0]);
+//            jcf.customForms.replaceAll(element[0]);
             
             scope.$emit('ready', {});            
           }, 100);          
@@ -640,8 +640,8 @@
         
         // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
         $timeout(function(){
-          // Format the select elements
-          jcf.customForms.replaceAll(element[0]);
+//          // Format the select elements
+//          jcf.customForms.replaceAll(element[0]);
           
           $(element).show();
         }, 500);        
@@ -659,7 +659,7 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-              jcf.customForms.replaceAll(element[0]);
+//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });        	
@@ -680,7 +680,7 @@
        link: function (scope, element, attrs) {
          element.ready(function(){
            $timeout(function(){
-             jcf.customForms.replaceAll(element[0]);
+//             jcf.customForms.replaceAll(element[0]);
              $(element).show();
            }, 100);          
          });          

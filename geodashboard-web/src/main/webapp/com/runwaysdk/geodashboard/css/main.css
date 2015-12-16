@@ -348,7 +348,7 @@ form legend{
 }
 /* custom select styles */
 .select-area{
-	border:1px solid #bbb;
+/* 	border:1px solid #bbb; */
 	position:relative;
 	overflow:hidden;
 	cursor:pointer;
@@ -358,7 +358,7 @@ form legend{
 	font-size:14px;
 	line-height:18px;
 	color:#333;
-	background:#eee;
+/* 	background:#eee; */
 }
 .select-focus{border-color:#019edc;}
 .select-disabled{
@@ -2110,6 +2110,9 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	position:relative;
 	margin:0 27px 0 0;
 	overflow:hidden;
+	
+	height: 34px;
+    padding: 1px;
 }
 .modal-form .box label{
 	float:left;
@@ -2121,16 +2124,60 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 }
 .modal-form .select-box{
 	float:left;
-	width:102px;
+	min-width:100px;
+	max-width: 150px;
+/* 	width:102px; */
 	position:relative;
 	overflow:hidden;
+	padding: 1px;
 }
-.modal-form .select-box select{
+
+/* .modal-form .select-box select{ */
+select{
 	float:left;
 	width:100%;
 	font-size:12px;
 	line-height:15px;
+	cursor: pointer;
+	
+	/* styling native select  */
+	height: 31px;
+    border: 1px solid #bbb;
+    background-color: #eee !important;
+    
+	background:
+	    linear-gradient(45deg, transparent 50%, #999 50%),
+	    linear-gradient(135deg, #999 50%, transparent 50%),
+	    linear-gradient(to right, #eee, #eee);
+	background-position:
+	    calc(100% - 10px) calc(1em + 2px), 
+	    calc(100% - 3px) calc(1em + 2px), 
+	    100% 0;
+	background-size:
+	    8px 6px, 
+	    8px 6px, 
+	    100% 100%;
+	background-repeat: no-repeat;
+	
+	/* styling and reset */
+/* 	padding: 0.5em 3.5em 0.5em 1em; */
+    padding-left: 5px;
+	
+	/* reset */
+	border-radius: 0;
+	margin: 0;      
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+    
 }
+
+.modal-form .select-box select:focus{
+	border-color: #01b1ec;
+}
+
 .select-method-select.select-area{
 	width:100% !important;
 	background:#ddd;
@@ -2976,6 +3023,7 @@ span.select-area span.center {
 		position: absolute;
 		display: block;
 		opacity: 0.8;
+		z-index: 99999 !important;
 	}
 	
 	div.gdb-maincontent-busy {
@@ -2990,6 +3038,7 @@ span.select-area span.center {
 		right: 0px;
 		height: 100%;
 		opacity: 0.8;
+		z-index: 9999999 !important;
 	}
 
 /* 

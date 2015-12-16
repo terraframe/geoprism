@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <div class='ng-modal'>
-  <div class='ng-modal-overlay'></div>
+  <div id='ng-modal-overlay' class='ng-modal-overlay'></div>
   <div class='ng-modal-dialog' ng-style='dialogStyle'>
     <div class='ng-modal-dialog-content' ng-transclude></div>
   </div>

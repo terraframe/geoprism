@@ -19,24 +19,38 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="select-box" ng-class="selectClass">
-  <span ng-focus="ctrl.focus($event)" ng-blur="ctrl.blur($event)"  ng-click="ctrl.toggle($event)" ng-keydown="ctrl.keypress($event)" tabindex="0" style="width: auto;" class="jcf-unselectable select-method-select select-area styled-select-area">
-    <span class="left"></span>
-    <span class="center jcf-unselectable">{{ctrl.cache[model]}}</span>
-    <a class="select-opener"></a>
-  </span>
-  <div style="position: fixed; display: none;" class="select-options drop-method-select styled-select-options">
-    <div class="drop-holder">
-      <div class="drop-list">
-        <ul>
-          <li ng-repeat="opt in options track by opt[value]" rel="{{$index}}" class="jcfcalc styled-option"
-             ng-class="{'option-even':($index % 2 == 1), 'current-selected':ctrl.isSelected(opt[value]), 'item-selected':hovering}"
-             ng-mouseenter="hovering=true"
-             ng-mouseleave="hovering=false">
-            <a href="#" ng-click="ctrl.setOption(opt)"><span class="styled-option-value" ng-attr-data-value="{{::opt[value]}}">{{::opt[label]}}</span></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+
+
+<div class="select-box">
+	
+   <select class="method-select" ng-model="ctrl.model">
+     	<option ng-repeat="opt in options track by opt[value]" value="{{opt.value}}">{{ctrl.cache[opt.value]}}</option>
+   </select>
+   
+<!--    <select class="method-select" ng-options="opt as opt.displayLabel for opt in options track by opt[value]" ng-model="ctrl.model"></select> -->
+   
+   <!-- <div class="select-box" ng-class="selectClass"> -->
+<!--   <span ng-focus="ctrl.focus($event)" ng-blur="ctrl.blur($event)"  ng-click="ctrl.toggle($event)" ng-keydown="ctrl.keypress($event)" tabindex="0" style="width: auto;" class="jcf-unselectable select-method-select select-area styled-select-area"> -->
+<!--     <span class="left"></span> -->
+<!--     <span class="center jcf-unselectable">{{ctrl.cache[model]}}</span> -->
+<!--     <a class="select-opener"></a> -->
+<!--   </span> -->
+<!--   <div style="position: fixed; display: none;" class="select-options drop-method-select styled-select-options"> -->
+<!--     <div class="drop-holder"> -->
+<!--       <div class="drop-list"> -->
+<!--         <ul> -->
+<!--           <li ng-repeat="opt in options track by opt[value]" rel="{{$index}}" class="jcfcalc styled-option" -->
+<!--              ng-class="{'option-even':($index % 2 == 1), 'current-selected':ctrl.isSelected(opt[value]), 'item-selected':hovering}" -->
+<!--              ng-mouseenter="hovering=true" -->
+<!--              ng-mouseleave="hovering=false"> -->
+<!--             <a href="#" ng-click="ctrl.setOption(opt)"><span class="styled-option-value" ng-attr-data-value="{{::opt[value]}}">{{::opt[label]}}</span></a> -->
+<!--           </li> -->
+<!--         </ul> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
+
+
+</div>  
+

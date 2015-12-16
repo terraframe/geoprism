@@ -28,7 +28,7 @@
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
       <form name="form" class="modal-form">
-      		<div ng-if="ctrl.errors" class="error-container">
+      		<div ng-if="ctrl.errors.length > 0" class="error-container">
 		  		<div class="label-holder">
 					<strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
 				</div>

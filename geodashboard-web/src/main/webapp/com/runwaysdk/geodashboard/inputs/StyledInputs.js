@@ -60,80 +60,9 @@
     var controller = this;    
     controller.resized = false;
     
-    controller.toggle = function($event){
-      $event.preventDefault();      
-      $event.stopPropagation();
-      
-      var dropdown = $($event.currentTarget).next();      
-      
-      if(!controller.resized) {
-        var offset = $($event.currentTarget).offset();      
-        var width = $($event.currentTarget).width(); 
-        var height = $($event.currentTarget).height();
-          
-        dropdown.css('top', (offset.top + height + 2));
-        dropdown.css('width', (width + 2));        
-        
-        controller.resized = true;
-      }
-      
-      dropdown.toggle();      
-      
-//      $($event.currentTarget).focus();
-    }
+    // TODO: setup initial model value so dropdown has selected value by default
+//    $scope.model = value;
     
-    controller.focus = function($event) {
-      $($event.currentTarget).addClass('select-focus');                	
-    }
-    
-    controller.blur = function($event) {
-      $($event.currentTarget).removeClass('select-focus');                  
-    }    
-    
-    controller.keypress = function($event) {    	
-      // Up arrow
-      if ($event.keyCode == 38) {
-        $event.preventDefault();            
-        $event.stopPropagation();          
-    	  
-        // Find the currently select value
-        var dropdown = $($event.currentTarget).next();
-        var element = dropdown.find('.current-selected').prev('.styled-option');
-        
-        if(element.length > 0) {
-          var value = element.find('.styled-option-value').data('value');
-          
-          $scope.model = value;
-        }
-      }
-      // Down arrow
-      else if ($event.keyCode == 40) {
-        $event.preventDefault();            
-        $event.stopPropagation();          
-    	  
-        // Find the currently select value
-        var dropdown = $($event.currentTarget).next();
-        var element = dropdown.find('.current-selected').next('.styled-option');
-          
-        if(element.length > 0) {
-          var value = element.find('.styled-option-value').data('value');
-            
-          $scope.model = value;
-        }        
-      }
-      // Enter
-      else if ($event.keyCode == 13) {        
-        controller.toggle($event);
-      }      
-    }
-    
-    controller.setValue = function(option) {
-      $scope.model = option;
-    }
-    
-    controller.isSelected = function(option) {
-      return ($scope.model == option);
-    }
     
     controller.style = function(value) {
       if($scope.style) {
@@ -184,6 +113,9 @@
       if(options != null) {
         var cache = {};
         
+        // TODO: setup initial model value so dropdown has selected value by default
+//        $scope.model = options[0].value;
+        
         for(var i = 0; i < options.length; i++) {
           var option = options[i];
           
@@ -196,29 +128,10 @@
         }
         
         controller.cache = cache;
-      }          
-    }
-    
-    controller.setOption = function(option) {
-      controller.setValue(option[$scope.value]);
-    }
-    
-    controller.setValue = function(value) {
-      if(value != $scope.model) {
-        $scope.model = value;
-        
-        // Fire the on-change callback if it exists
-        var onChange = $scope.onChange();
-        
-        if(onChange != null) {
-          onChange(value);  
-        }        
       }
+      
     }
     
-    controller.isSelected = function(option) {
-      return ($scope.model == option);
-    }
     
     $scope.$watch('options', function(newValue){
       if(newValue != null) {
@@ -226,78 +139,11 @@
       }
     });
     
-    controller.toggle = function($event){
-      $event.preventDefault();      
-      $event.stopPropagation();
-      
-      var dropdown = $($event.currentTarget).next();      
-        
-      if(!controller.resized) {
-        var offset = $($event.currentTarget).offset();      
-        var width = $($event.currentTarget).width(); 
-        var height = $($event.currentTarget).height();
-        var topOffset = offset.top + height + 2
-            
-        //// TEMPORARY HACK to account for offset from modal to window
-        if( $("#builder-div").length > 0 ){
-        	topOffset = topOffset - $("#builder-div").offset().top + 8;
-        }
-        
-        dropdown.css('top', topOffset);
-        dropdown.css('width', (width + 2));        
-          
-        controller.resized = true;
-      }
-        
-      dropdown.toggle();      
-        
-//      $($event.currentTarget).focus();
-    }
+    // TESTING
+    $scope.$watch('model', function(newValue){
+          console.log(newValue);          
+      });
     
-    controller.focus = function($event) {
-      $($event.currentTarget).addClass('select-focus');                  
-    }
-    
-    controller.blur = function($event) {
-      $($event.currentTarget).removeClass('select-focus');                  
-    }
-      
-    controller.keypress = function($event) {      
-      // Up arrow
-      if ($event.keyCode == 38) {      
-        $event.preventDefault();
-        $event.stopPropagation();
-    	  
-        // Find the currently select value
-        var dropdown = $($event.currentTarget).next();
-        var element = dropdown.find('.current-selected').prev('.styled-option');
-          
-        if(element.length > 0) {
-          var value = element.find('.styled-option-value').data('value');
-            
-          controller.setValue(value);
-        }
-      }
-      // Down arrow
-      else if ($event.keyCode == 40) {
-        $event.preventDefault();
-        $event.stopPropagation();
-    	  
-        // Find the currently select value
-        var dropdown = $($event.currentTarget).next();
-        var element = dropdown.find('.current-selected').next('.styled-option');
-            
-        if(element.length > 0) {
-          var value = element.find('.styled-option-value').data('value');
-              
-          controller.setValue(value);
-        }        
-      }
-      // Enter
-      else if ($event.keyCode == 13) {
-        controller.toggle($event);
-      }
-    }
   } 
   
   function StyledSelect() {

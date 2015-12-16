@@ -64,7 +64,7 @@
         // Clear all the errors
         controller.errors = [];
       
-      builderService.applyWithOptions(controller.dashboard,'#builder-div', onSuccess, onFailure);
+      builderService.applyWithOptions(controller.dashboard,'#ng-modal-overlay', onSuccess, onFailure);
     }
     
     controller.init = function(result) {
@@ -225,9 +225,6 @@
     var controller = this;
 
     controller.init = function(element) {
-//  $timeout(function(){
-//    jcf.customForms.replaceAll(element[0]);      
-//  }, 50, false);
     }    
   }
   
