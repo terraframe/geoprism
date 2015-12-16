@@ -352,7 +352,6 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -369,7 +368,6 @@
         link: function (scope, element, attrs, ctrl) {
           element.ready(function(){
             $timeout(function(){
-//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -386,7 +384,6 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });
@@ -415,7 +412,6 @@
        link: function (scope, element, attrs) {
          element.ready(function(){
            $timeout(function(){
-//             jcf.customForms.replaceAll(element[0]);
              $(element).show();
            }, 100);          
          });               
@@ -442,17 +438,6 @@
   };
   
   
-  function LayerTypesSelectionDirective($timeout) {
-    return function(scope, element, attrs) {
-      // This is needed to process the ng-repeat html
-      // It processes just the layer type selector widget
-      // Timeout is a bit of a hack to make sure all angular based html is finished
-//      $timeout(function(){ 
-//         jcf.customForms.replaceAll(element[0]);
-//      }, 100);
-    };
-  };
-  
   function BasicPoint($timeout) {
     return {
       restrict: 'E',
@@ -462,8 +447,7 @@
       link: function (scope, element, attrs) {
         element.ready(function(){
           $timeout(function(){
-//            jcf.customForms.replaceAll(element[0]);
-//            $(element).show();
+            $(element).show();
           }, 100);          
         });
       }
@@ -479,8 +463,6 @@
       link: function (scope, element, attrs) {
         element.ready(function(){
           $timeout(function(){
-//            jcf.customForms.replaceAll(element[0]);
-            
             scope.$emit('ready', {});            
           }, 100);          
         });
@@ -542,7 +524,6 @@
                   
                   
         $timeout(function(){ 
-          jcf.customForms.replaceAll($('#secondary-aggregation-container').get(0));
                     
           // ui hack to hide the select list while the UI process manipulates dom elements. 
           $("#secondaryAggregation").show();
@@ -649,9 +630,6 @@
         
         // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
         $timeout(function(){
-//          // Format the select elements
-//          jcf.customForms.replaceAll(element[0]);
-          
           $(element).show();
         }, 500);        
       }
@@ -668,7 +646,6 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-//              jcf.customForms.replaceAll(element[0]);
               $(element).show();
             }, 100);          
           });        	
@@ -689,7 +666,6 @@
        link: function (scope, element, attrs) {
          element.ready(function(){
            $timeout(function(){
-//             jcf.customForms.replaceAll(element[0]);
              $(element).show();
            }, 100);          
          });          
@@ -1159,7 +1135,6 @@
     .directive('layerGeoNode', LayerGeoNode)
     .directive('layerAggregation', LayerAggregation)
     .directive('layerTypes', LayerTypes)
-    .directive('layerTypesSelectionDirective', LayerTypesSelectionDirective)
     .directive('basicPoint', BasicPoint)
     .directive('basicPolygon', BasicPolygon)
     .directive('layerTypesStyle', LayerTypesStyle)

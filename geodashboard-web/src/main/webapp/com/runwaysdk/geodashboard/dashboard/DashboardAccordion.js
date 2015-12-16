@@ -226,9 +226,6 @@
     var controller = this;
 
     controller.init = function(element) {
-      $timeout(function(){
-        jcf.customForms.replaceAll(element[0]);      
-      }, 500, false);
     }
     
     controller.getTextSuggestions = function(mdAttributeId, request, response ) {
@@ -339,9 +336,6 @@
     var controller = this;
 
     controller.init = function(element) {
-      $timeout(function(){
-        jcf.customForms.replaceAll(element[0]);      
-      }, 500, false);
     }
     
     controller.getTextSuggestions = function(request, response ) {
@@ -459,10 +453,6 @@
       },
       link: function (scope, element, attrs, ctrl) {
         scope.form = ctrl;
-        
-        element.ready(function(){
-          jcf.customForms.replaceAll(element[0]);
-        });        
       }
     }    
   }

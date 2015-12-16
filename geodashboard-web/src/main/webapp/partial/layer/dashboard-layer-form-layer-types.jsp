@@ -27,7 +27,7 @@
   <div class="holder style04">
     <ul class="nav-tabs type-tabs">
       
-      <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{layerModel.layerType}}' }" layer-types-selection-directive>
+      <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{layerModel.layerType}}' }">
     
         <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
         <a href="#" data-gdb-tab-type="{{type}}"> 

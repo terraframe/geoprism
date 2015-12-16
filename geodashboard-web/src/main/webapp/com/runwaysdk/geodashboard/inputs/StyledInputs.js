@@ -60,9 +60,6 @@
     var controller = this;    
     controller.resized = false;
     
-    // TODO: setup initial model value so dropdown has selected value by default
-//    $scope.model = value;
-    
     controller.style = function(value) {
       if($scope.style) {
         return {'font-family' : value};
@@ -113,7 +110,7 @@
         var cache = {};
         
         // TODO: setup initial model value so dropdown has selected value by default
-//        $scope.model = options[0].value;
+        $scope.model = options[0][$scope.value];
         
         for(var i = 0; i < options.length; i++) {
           var option = options[i];
@@ -132,17 +129,18 @@
     }
     
     
-    $scope.$watch('options', function(newValue){
-      if(newValue != null) {
-        controller.init();            
-      }
-    });
+//    $scope.$watch('options', function(newValue){
+//      if(newValue != null) {
+//        controller.init();            
+//      }
+//    });
     
     // TESTING
-    $scope.$watch('model', function(newValue){
-          console.log(newValue);          
-      });
+//    $scope.$watch('model', function(newValue){
+//          console.log(newValue);          
+//      });
     
+    controller.init(); 
   } 
   
   function StyledSelect() {
@@ -154,8 +152,7 @@
         model:'=',
         options:'=',
         value:'@',
-        label:'@',
-        onChange:'&'
+        label:'@'
       },
       controller : StyledSelectController,
       controllerAs : 'ctrl',
