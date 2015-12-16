@@ -52,6 +52,10 @@
             }
           }
         });
+        
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).colpickDestroy();
+        });        
       }
     }    
   }
@@ -259,6 +263,11 @@
         }); // end tree
         
         tree.render(treeElement, nodes);
+        
+        // Clean up all the color pickers
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).find("span.ontology-category-color-icon").colpickDestroy();
+        });
       }
     };    
   }; 

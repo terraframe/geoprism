@@ -434,7 +434,10 @@ For usage and examples: colpick.com/plugin
 						}
 					}
 				});
-			}
+			},
+			destroy: function(col, setCurrent) {
+				$('#' + $(this).data('colpickId')).remove();
+			}			
 		};
 	}();
 	//Color space convertions
@@ -505,7 +508,8 @@ For usage and examples: colpick.com/plugin
 		colpick: colpick.init,
 		colpickHide: colpick.hidePicker,
 		colpickShow: colpick.showPicker,
-		colpickSetColor: colpick.setColor
+		colpickSetColor: colpick.setColor,
+		colpickDestroy: colpick.destroy
 	});
 	$.extend({
 		colpick:{ 

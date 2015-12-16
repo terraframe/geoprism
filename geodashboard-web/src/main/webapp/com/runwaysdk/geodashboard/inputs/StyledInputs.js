@@ -446,6 +446,11 @@
             }
           });
         }, 500); 
+        
+        // Clean up the auto-complete widget on destroy
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).autocomplete( "destroy" );
+        });        
       }
     };
   };
@@ -540,6 +545,10 @@
               }
             });
           }, 0);       
+        });
+        
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).colpickDestroy();
         });
       }
     }    
