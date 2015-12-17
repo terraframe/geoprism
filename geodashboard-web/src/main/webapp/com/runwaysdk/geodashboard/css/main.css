@@ -1657,6 +1657,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	margin:0 6px 0 0;
 	position:relative;
 	overflow:hidden;
+	height: 28px;
 }
 .filter-block select{
 	float:left;
@@ -1931,7 +1932,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	line-height:15px;
 	font-weight:normal;
 	color:#666;
-	margin:0 0 6px;
+	margin:0 0 5px;
 	width:100%;
 }
 
@@ -2059,13 +2060,14 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	float:left;
 	position:relative;
 	width:100%;
+	height: 31px;
 }
 .modal-form .color-choice{float:left;}
 .color-choice{
 	display:inline-block;
 	vertical-align:top;
 	width:62px;
-	height:28px;
+	height:100%;
 	padding:3px;
 	border:1px solid #ccc;
 	position:relative;
@@ -2088,14 +2090,14 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .color-choice .ico{
 	float:left;
 	width:30px;
-	height:20px;
+	height:100%;
 	text-indent:-9999px;
 	overflow:hidden;
 	background:#000;
 }
 .color-choice .arrow{
 	position:absolute;
-	top:10px;
+	top:11px;
 	right:7px;
 	width:0;
 	height:0;
@@ -2132,38 +2134,17 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	padding: 1px;
 }
 
-/* .modal-form .select-box select{ */
 select{
 	float:left;
 	width:100%;
 	font-size:12px;
 	line-height:15px;
 	cursor: pointer;
-	
-	/* styling native select  */
-	height: 31px;
-    border: 1px solid #bbb;
+	border: 1px solid #bbb;
     background-color: #eee !important;
-    
-	background:
-	    linear-gradient(45deg, transparent 50%, #999 50%),
-	    linear-gradient(135deg, #999 50%, transparent 50%),
-	    linear-gradient(to right, #eee, #eee);
-	background-position:
-	    calc(100% - 10px) calc(1em + 2px), 
-	    calc(100% - 3px) calc(1em + 2px), 
-	    100% 0;
-	background-size:
-	    8px 6px, 
-	    8px 6px, 
-	    100% 100%;
-	background-repeat: no-repeat;
-	
-	/* styling and reset */
-/* 	padding: 0.5em 3.5em 0.5em 1em; */
     padding-left: 5px;
-	
-	/* reset */
+    
+    	/* reset */
 	border-radius: 0;
 	margin: 0;      
 	-webkit-box-sizing: border-box;
@@ -2171,7 +2152,33 @@ select{
 	box-sizing: border-box;
 	-webkit-appearance:none;
 	-moz-appearance:none;
+	
+	background:
+	    linear-gradient(45deg, transparent 50%, #999 50%),
+	    linear-gradient(135deg, #999 50%, transparent 50%),
+	    linear-gradient(to right, #eee, #eee);
+	background-size:
+	    8px 6px, 
+	    8px 6px, 
+	    100% 100%;
+	background-repeat: no-repeat;
+}
+
+.filter-block select {
+    height: 27px;
+    background-position:
+	    calc(100% - 10px) calc(1em - 1px), 
+	    calc(100% - 3px) calc(1em - 1px), 
+	    100% 0;
+}
+
+.modal-form select{	
+	height: 31px;
     
+	background-position:
+	    calc(100% - 10px) calc(1em + 1px), 
+	    calc(100% - 3px) calc(1em + 1px), 
+	    100% 0;
 }
 
 .modal-form .select-box select:focus{
