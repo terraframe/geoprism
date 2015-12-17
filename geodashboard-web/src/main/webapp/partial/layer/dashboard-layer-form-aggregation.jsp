@@ -21,7 +21,7 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
        
-<div id="agg-level-holder" class="row-holder" style="display: none;">
+<div id="agg-level-holder" class="row-holder">
   <div class="label-holder style03">
     <strong><gdb:localize key="DashboardThematicLayer.form.defineAggMeth"/></strong>
   </div>

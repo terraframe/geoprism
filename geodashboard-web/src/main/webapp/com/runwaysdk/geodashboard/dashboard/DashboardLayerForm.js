@@ -350,11 +350,6 @@
           disabled : '&'
         },
         link: function (scope, element, attrs) {
-          element.ready(function(){
-            $timeout(function(){
-              $(element).show();
-            }, 100);          
-          });
         }
       };    
    };
@@ -366,11 +361,6 @@
         templateUrl : '/partial/layer/dashboard-layer-form-label.jsp',    
         scope: true,
         link: function (scope, element, attrs, ctrl) {
-          element.ready(function(){
-            $timeout(function(){
-              $(element).show();
-            }, 100);          
-          });
         }
       };    
    };
@@ -382,11 +372,6 @@
         templateUrl: '/partial/layer/dashboard-layer-form-geonode.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
-          element.ready(function(){
-            $timeout(function(){
-              $(element).show();
-            }, 100);          
-          });
         }
       };    
    };
@@ -410,11 +395,6 @@
        controller : LayerAggregationController,
        controllerAs : 'ctrl',
        link: function (scope, element, attrs) {
-         element.ready(function(){
-           $timeout(function(){
-             $(element).show();
-           }, 100);          
-         });               
        }
      };    
    };
@@ -430,7 +410,6 @@
           element.ready(function(){
             $timeout(function(){
               jcf.customForms.replaceAll(element[0]);
-              $(element).show();
             }, 100);          
           });
         }
@@ -445,11 +424,6 @@
       templateUrl: '/partial/layer/basic-point.jsp',    
       scope: true,
       link: function (scope, element, attrs) {
-        element.ready(function(){
-          $timeout(function(){
-            $(element).show();
-          }, 100);          
-        });
       }
     };    
   };
@@ -461,11 +435,6 @@
       templateUrl: '/partial/layer/basic-polygon.jsp',    
       scope: true,
       link: function (scope, element, attrs) {
-        element.ready(function(){
-          $timeout(function(){
-            scope.$emit('ready', {});            
-          }, 100);          
-        });
       }
     };    
   };
@@ -627,11 +596,6 @@
       controller : LayerTypesStyleController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs) {
-        
-        // Timeout is needed to ensure the tree elements exist on the dom to append the trees to
-        $timeout(function(){
-          $(element).show();
-        }, 500);        
       }
     };    
   };
@@ -644,11 +608,6 @@
         templateUrl: '/partial/layer/dashboard-layer-form-legend-option.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
-          element.ready(function(){
-            $timeout(function(){
-              $(element).show();
-            }, 100);          
-          });        	
         }
       };    
    };
@@ -664,11 +623,6 @@
          cancel : '&'
        },
        link: function (scope, element, attrs) {
-         element.ready(function(){
-           $timeout(function(){
-             $(element).show();
-           }, 100);          
-         });          
        }
      };    
    };
@@ -1092,13 +1046,7 @@
       controller.newInstance(universalId, mapId);
     });
     
-    
-    $scope.$on('ready', function(event, data) {
-      $scope.ready = true;
-      
-      event.stopPropagation();
-    });
-    
+        
     /*
      * Model initialization
      */ 
@@ -1119,8 +1067,6 @@
       }
     };    
   };  
-  
-  
    
   angular.module("dashboard-layer-form", ["layer-form-service", "dashboard", "styled-inputs"]);
   angular.module("dashboard-layer-form")

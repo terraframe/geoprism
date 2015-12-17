@@ -21,7 +21,7 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
        
        
-<div id="geonode-holder" class="row-holder" style="display:none">
+<div id="geonode-holder" class="row-holder">
   <div class="label-holder style03">
     <strong><gdb:localize key="DashboardThematicLayer.form.defineGeoNode"/></strong>
   </div>

@@ -21,7 +21,7 @@
 <%@ taglib uri="../../WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 
-<div class="row-holder" style="display: none;">
+<div class="row-holder">
 	<div class="label-holder"></div>
 	<div class="holder">
 	  <styled-check-box model="layerModel.displayInLegend" name="layer.displayInLegend" label="<gdb:localize key="DashboardLayer.form.displayInLegend"/>"></styled-check-box>

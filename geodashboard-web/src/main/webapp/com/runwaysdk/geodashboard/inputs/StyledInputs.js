@@ -91,8 +91,6 @@
   
   function StyledSelectController($scope, $window) {
     var controller = this;
-    controller.resized = false;    
-    controller.cache = {};
     
     // Set default value and label attributes
     if($scope.value == null) {
@@ -102,45 +100,6 @@
     if($scope.label == null) {
       $scope.label = 'label';
     }
-    
-    controller.init = function() {
-      var options = $scope.options;
-      
-      if(options != null) {
-        var cache = {};
-        
-        // TODO: setup initial model value so dropdown has selected value by default
-        $scope.model = options[0][$scope.value];
-        
-        for(var i = 0; i < options.length; i++) {
-          var option = options[i];
-          
-          if(option != null) {
-            var id = option[$scope.value];
-            var label = option[$scope.label];
-              
-            cache[id] = label;            
-          }
-        }
-        
-        controller.cache = cache;
-      }
-      
-    }
-    
-    
-//    $scope.$watch('options', function(newValue){
-//      if(newValue != null) {
-//        controller.init();            
-//      }
-//    });
-    
-    // TESTING
-//    $scope.$watch('model', function(newValue){
-//          console.log(newValue);          
-//      });
-    
-    controller.init(); 
   } 
   
   function StyledSelect() {
@@ -297,6 +256,34 @@
     };
   };
   
+  
+  function ShowOnReady() {
+    return {
+      restrict: "A",
+      link: function (scope, element, attr, ngModel) {
+        scope.$on('angular-ready', function(event, data) {
+          $(element).show();
+          
+          event.stopPropagation();
+        });      
+      }
+    };
+  };
+  
+  function FireOnReady($timeout) {
+    return {
+      restrict: "A",
+      link: function (scope, element, attr, ngModel) {
+        element.ready(function(){
+          $timeout(function(){
+            scope.$emit('angular-ready', {});            
+          }, 0);          
+        });
+      }
+    };
+  };
+  
+  
   function StyledColorPickerController() {
     var controller = this;
 
@@ -405,6 +392,8 @@
     .directive('styledColorPicker', StyledColorPicker)
     .directive('convertToPercent', ConvertToPercent)
     .directive('convertToNumber', ConvertToNumber)
+    .directive('showOnReady', ShowOnReady)
+    .directive('fireOnReady', FireOnReady)
     .directive('numberOnly', NumberOnly)
     .directive('integerOnly', IntegerOnly)
     .directive('categoryAutoComplete', CategoryAutoComplete);    

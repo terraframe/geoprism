@@ -25,5 +25,5 @@
   <style-basic-fill fill="styleModel.polygonFill" opacity="styleModel.polygonFillOpacity"></style-basic-fill>
       
   <!-- BASIC POLYGON STROKE -->
-  <style-stroke class="stroke-block" stroke="styleModel.polygonStroke" stroke-width="styleModel.polygonStrokeWidth" stroke-opacity="styleModel.polygonStrokeOpacity"></style-stroke>                
+  <style-stroke class="stroke-block" stroke="styleModel.polygonStroke" stroke-width="styleModel.polygonStrokeWidth" stroke-opacity="styleModel.polygonStrokeOpacity" fire-on-ready></style-stroke>                
 </div>      

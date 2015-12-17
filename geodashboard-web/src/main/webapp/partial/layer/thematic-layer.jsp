@@ -30,7 +30,7 @@
       <dl>
         <form class="modal-form" name="form">
           <div id="DashboardLayer-mainDiv" class="modal-dialog">
-            <div class="modal-content ng-cloak">
+            <div class="modal-content" style="display: none;" show-on-ready>
               <div class="heading">
                 <h1 ng-if="layerModel.newInstance"><gdb:localize key="DashboardThematicLayer.form.newHeading"/>{{layerModel.attributeLabel}}</h1>
                 <h1 ng-if="!layerModel.newInstance"><gdb:localize key="DashboardThematicLayer.form.editHeading"/>{{layerModel.attributeLabel}}</h1>          
