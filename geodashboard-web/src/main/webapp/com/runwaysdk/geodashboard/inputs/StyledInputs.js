@@ -284,7 +284,7 @@
   };
   
   
-  function StyledColorPickerController() {
+  function ColorPickerController() {
     var controller = this;
 
     controller.generateId = function() {
@@ -336,7 +336,7 @@
         model:'=',
         scroll:'@',
       },
-      controller : StyledColorPickerController,
+      controller : ColorPickerController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
     	scope.id = ctrl.generateId();
@@ -383,6 +383,60 @@
     }    
   }
   
+  function SimpleColorPicker($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/inputs/simple-color-picker.jsp',
+      scope: {
+        category:'=',
+        scroll:'@',
+      },
+      controller : ColorPickerController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+        element.ready(function(){
+          $timeout(function(){
+            // Hook up the color picker
+            $(element).colpick({
+              submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+              onShow:function(colPickObj){
+                var that = this;
+                
+                // Set the current value of the color picker
+                $(this).colpickSetColor(scope.category.color,false);
+                
+                $(scope.scroll).scroll(function(){  
+                  var colorPicker = $(".colpick.colpick_full.colpick_full_ns:visible");
+                  var colPick = $(that);
+                  var diff = colPick.offset().top + colPick.height() + 2; 
+                  var diffStr = diff.toString() + "px";
+                  
+                  colorPicker.css({ top: diffStr });
+                });
+              },
+              onChange: function(hsb,hex,rgb,el,bySetColor) {
+                var hexStr = '#'+hex;
+                $(el).find(".ico").css('background', hexStr);
+              },
+              onHide:function(el) {              
+                var rgb = $(element).find(".ico").css('background-color');
+                var value = ctrl.rgb2hex(rgb);
+                
+                scope.category.color = value;                        
+                scope.$apply();
+              }
+            });
+          }, 0);       
+        });
+        
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).colpickDestroy();
+        });
+      }
+    }    
+  }
+  
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
@@ -390,6 +444,7 @@
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
     .directive('styledColorPicker', StyledColorPicker)
+    .directive('simpleColorPicker', SimpleColorPicker)
     .directive('convertToPercent', ConvertToPercent)
     .directive('convertToNumber', ConvertToNumber)
     .directive('showOnReady', ShowOnReady)

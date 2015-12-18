@@ -20,22 +20,6 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div class="ontology-category-input-container">
-  <div class="ontology-tree"></div>
-  
-  <div class="other-cat-container" ng-show="categories.otherEnabled && showOther == 'true'">
-    <ul class="color-list other-cat">
-      <li>
-        <div class="category-container">
-          <div class="text category-input-container">
-            <p><gdb:localize key="Other"/></p>
-          </div>
-          <simple-color-picker category="categories.other" scroll="#layer-modal"></simple-color-picker>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div class="check-block" ng-show="showOther == 'true'">
-    <styled-check-box model="categories.otherEnabled" label="<gdb:localize key="DashboardThematicLayer.form.categoryOtherOptionLabel"/>"></styled-check-box>
-  </div>
-</div>
+<a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+  <span class="ico ontology-category-color-icon ontology-other-color-icon" ng-style="::{'background' : category.color}" style="border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;"></span>
+</a>
