@@ -53,10 +53,8 @@ import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
@@ -402,6 +400,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
     clone.setName(name);
+    clone.getDescription().setDefaultValue(this.getDescription().getValue());
     clone.setCountry(this.getCountry());
     clone.setRemovable(true);
     clone.apply();
