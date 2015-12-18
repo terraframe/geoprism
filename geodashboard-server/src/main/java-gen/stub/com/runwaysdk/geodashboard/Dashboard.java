@@ -53,12 +53,15 @@ import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.DuplicateDashboardException;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -331,9 +334,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       Roles role = new Roles();
       role.setRoleName(RoleView.DASHBOARD_NAMESPACE + "." + roleName);
       role.getDisplayLabel().setValue(dashboardLabel);
-      role.apply();
-
-      this.setDashboardRole(role);
+      try{
+        role.apply();
+        this.setDashboardRole(role);
+      }
+      catch(com.runwaysdk.dataaccess.DuplicateDataException e){
+        throw new DuplicateDashboardException(e);
+      }
     }
 
     super.apply();
