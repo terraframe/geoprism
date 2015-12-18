@@ -19,7 +19,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="select-box" ng-class="selectClass">
+<div class="select-holder" ng-class="selectClass">
 
 	<select class="method-select" ng-model="model">
      	<option ng-repeat="opt in options() track by $index" ng-style="{'font-family' : opt}" value="{{opt}}">{{opt}}</option>
