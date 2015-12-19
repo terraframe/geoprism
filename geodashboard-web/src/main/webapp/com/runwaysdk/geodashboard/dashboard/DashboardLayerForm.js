@@ -718,6 +718,12 @@
          
     controller.newInstance = function(mdAttributeId, mapId) {
       var onSuccess = function(response) {
+    	  
+    	// setting a simple default layer name for new layers
+    	if(response.layer.name.length === 0){
+    		response.layer.name = response.layer.attributeLabel;
+    	}
+    	
         controller.load(response);
                   
         $scope.show = true;

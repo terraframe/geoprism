@@ -23,14 +23,24 @@
   <!-- Thematic layers -->
   <div ng-repeat="layerId in thematicCache.ids" ng-init="layer = thematicCache.values[layerId]">
     <div ng-if="layer.inLegend && layer.isActive && !layer.groupedInLegend" class="info-box legend-container legend-snapable" ng-style="{'top':layer.legendYPosition + 'px', 'left':layer.legendXPosition + 'px'}"  legend-drag layer="layer">
+      
+      
+      
       <div id="legend-items-container" ng-dblclick="ctrl.attach(layer)">
         <ul id="legend-list">
           <li class="legend-item legend-grouped">
-            <img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
-            {{layer.layerName}}
+          	<div class="legend-item-element-group">
+            	<p ng-if="layer.featureStrategy != 'BASICPOINT' && layer.featureStrategy != 'BASICPOLYGON'" class="legend-item-title">{{layer.layerName}}</p>
+            
+            	<img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
+            	
+				<!-- basic feature legends have a different layout -->
+           	 	<p ng-if="layer.featureStrategy == 'BASICPOINT' || layer.featureStrategy == 'BASICPOLYGON'" class="legend-item-label">{{layer.layerName}}</p>
+          	</div>
           </li>        
         </ul>
       </div>
+      
     </div>
   </div>
   
@@ -40,8 +50,14 @@
       <div id="legend-items-container" ng-dblclick="ctrl.attach(layer)">
         <ul id="legend-list">
           <li class="legend-item legend-grouped">
-            <img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
-            {{layer.layerName}}
+            <div class="legend-item-element-group">
+            	<p ng-if="layer.featureStrategy != 'BASICPOINT' && layer.featureStrategy != 'BASICPOLYGON'" class="legend-item-title">{{layer.layerName}}</p>
+            
+            	<img class="legend-image" ng-src="{{ctrl.getSrc(layer)}}" alt="{{layer.layerName}}" />
+            	
+				<!-- basic feature legends have a different layout -->
+           	 	<p ng-if="layer.featureStrategy == 'BASICPOINT' || layer.featureStrategy == 'BASICPOLYGON'" class="legend-item-label">{{layer.layerName}}</p>
+          	</div>
           </li>        
         </ul>
       </div>

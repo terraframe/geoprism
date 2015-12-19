@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,14 +17,15 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-<div class="select-holder" ng-class="selectClass">
-
-	<select class="method-select" ng-model="model">
-     	<option ng-repeat="opt in options() track by $index" ng-style="{'font-family' : opt}" value="{{opt}}">{{opt}}</option>
-   	</select>
-   	
-<!--    	<select class="method-select" ng-options="opt as opt for opt in options() track by $index" ng-model="model"></select> -->
-
-</div>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+    	<mdException name="com.runwaysdk.geodashboard.gis.DuplicateDashboardException" label="Duplicate Dashboard Exception" description="Thrown when a user tries to create a dashboard with the same name as another." message="A dashboard with this name already exists in the system.">
+      	</mdException>
+    </create>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

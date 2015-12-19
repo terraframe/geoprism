@@ -59,6 +59,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.DuplicateDashboardException;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -331,9 +332,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       Roles role = new Roles();
       role.setRoleName(RoleView.DASHBOARD_NAMESPACE + "." + roleName);
       role.getDisplayLabel().setValue(dashboardLabel);
-      role.apply();
-
-      this.setDashboardRole(role);
+      try{
+        role.apply();
+        this.setDashboardRole(role);
+      }
+      catch(com.runwaysdk.dataaccess.DuplicateDataException e){
+        throw new DuplicateDashboardException(e);
+      }
     }
 
     super.apply();
@@ -395,6 +400,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
     clone.setName(name);
+    clone.getDescription().setDefaultValue(this.getDescription().getValue());
     clone.setCountry(this.getCountry());
     clone.setRemovable(true);
     clone.apply();

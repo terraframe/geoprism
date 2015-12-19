@@ -1886,8 +1886,11 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	position:relative;
 	margin:0 7px 0 0;
 	padding:0 0 0 2px;
-/* 	min-width: 150px; */
+	min-width: 150px;
 	white-space: nowrap;
+}
+.modal-form .vertical-checkbox-container .check-block{ 
+	min-width: 0;
 }
 .modal-form .check-block .chk-area{margin:25px 0px 0 0;}
 .modal-form .check-block label{
@@ -1908,7 +1911,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 }
 .modal-form .cell.style02{
 /* 	width:92px; */
-	width: 160px;
+	width: 250px;
 	margin:0;
 }
 .modal-form .select-holder{
@@ -2127,13 +2130,17 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 .modal-form .select-box{
 	float:left;
 	min-width:100px;
-	max-width: 150px;
+/* 	max-width: 150px; */
 /* 	width:102px; */
 	position:relative;
 	overflow:hidden;
 	padding: 1px;
 }
 
+select:-moz-focusring {
+    color: transparent !important;
+    text-shadow: 0 0 0 #000;
+}
 select{
 	float:left;
 	width:100%;
@@ -2164,6 +2171,8 @@ select{
 	background-repeat: no-repeat;
 }
 
+option[selected]{ font-weight:bold}
+
 .filter-block select {
     height: 27px;
     background-position:
@@ -2182,6 +2191,10 @@ select{
 }
 
 .modal-form .select-box select:focus{
+	border-color: #01b1ec;
+}
+
+.modal-form .select-holder select:focus{
 	border-color: #01b1ec;
 }
 
@@ -3149,6 +3162,21 @@ span.select-area span.center {
 		overflow: hidden;
 	}
 	
+	.legend-item-title{
+		text-align: center;
+    	font-weight: bold;
+	}
+	
+	.legend-item-label{
+		vertical-align: middle;
+    	display: table-cell;
+    	font-weight: bold;
+	}
+	
+	.legend-item-element-group{
+		    display: table;
+	}
+	
 	ul#legend-list {
 		list-style-type: none;
 		padding: 2px;
@@ -3163,6 +3191,7 @@ span.select-area span.center {
 	
 	.legend-grouped {
 		cursor: pointer;
+		width: 100%;
 	}
 	
 	a.legend-opener.opener {
@@ -3177,7 +3206,8 @@ span.select-area span.center {
 	}
 	
 	.legend-image {
-		margin-right: 10px;
+/* 		margin-right: 10px; */
+		float: left;
 	}
 	
 /* 
