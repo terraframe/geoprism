@@ -161,6 +161,43 @@
 	.dashboard-thumbnail-subtext:hover{
 		cursor: default;
 	}
+	
+	.focus-area-label{
+    	max-width: 50%;
+    	white-space: nowrap;
+    	overflow: hidden;
+    }
+    
+    .dashboard-focus-area-label-mask{
+  		background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));  
+    	height: 19px;
+    	width: 50%;
+    	position: absolute;
+    	opacity: 0; /* set to hidden initially when thumbnail is semi-transparent */
+    	transition: opacity .25s;
+        -webkit-transition: opacity .25s;
+    }
+    
+    .dashboard-focus-area-label-mask-grey{
+    	background: linear-gradient(to left, rgba(238,238,238,1), rgba(225, 255, 255, 0));  
+    	height: 19px;
+    	width: 50%;
+    	position: absolute;
+    	opacity: 1; /* set visible initially when thumbnail is semi-transparent (i.e. grey) */
+    	transition: opacity .25s;
+        -webkit-transition: opacity .25s;
+    }
+    
+    .thumbnail:hover .dashboard-focus-area-label-mask{
+       	background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));   
+		opacity: 1;  
+        filter: alpha(opacity=100); 
+    }
+    
+    .thumbnail:hover .dashboard-focus-area-label-mask-grey{
+      	opacity: 0;  
+        filter: alpha(opacity=0);   
+	}
     
     img{
       width: 100%;
@@ -274,7 +311,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index]].description}}</p>
 						<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusArea}}</p>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusArea}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index]].dashboardId)"></a>
@@ -299,7 +338,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 1]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}}</p>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"></div>
+		            		<div  class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)"></a>
@@ -324,7 +365,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 2]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/>"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}}</p>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)"></a>
