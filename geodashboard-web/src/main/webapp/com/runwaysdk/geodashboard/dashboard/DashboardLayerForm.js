@@ -886,7 +886,7 @@
         var option = $scope.dynamicDataModel.universals[i];
         
         if(option.value == $scope.layerModel.universalId) {
-          $scope.layerModel.name = option.label;
+          $scope.layerModel.nameLabel = option.label;
         }
       }
     }
