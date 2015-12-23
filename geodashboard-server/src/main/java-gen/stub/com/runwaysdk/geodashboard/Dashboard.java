@@ -79,6 +79,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
 import com.runwaysdk.geodashboard.report.ReportItem;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
+import com.runwaysdk.geodashboard.service.SeedKeyGenerator;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
@@ -109,6 +110,7 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
+
   private static class ThumbnailThread implements Runnable, Reloadable
   {
     private Dashboard          dashboard;
@@ -138,7 +140,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   }
 
-  private static final long serialVersionUID = 2043512251;
+  private static final long           serialVersionUID = 2043512251;
+
+  private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
 
   public Dashboard()
   {
@@ -329,8 +333,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     if (this.isNew() && !this.isAppliedToDB())
     {
+      if (this.getName() == null || this.getName().length() == 0)
+      {
+        this.setName(generator.generateKey(""));
+      }
+
       String dashboardLabel = this.getDisplayLabel().getValue();
-      String roleName = dashboardLabel.replaceAll("\\s", "");
+      String roleName = this.getName().replaceAll("\\s", "");
 
       // Create the Dashboard Role
       Roles role = new Roles();
