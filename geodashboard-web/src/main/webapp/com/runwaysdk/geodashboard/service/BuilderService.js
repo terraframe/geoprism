@@ -61,7 +61,7 @@
         
         // Overwrite name field options       
         if(!dto.isNewInstance()) {
-          result.fields[0].writable = dto.isNewInstance();              
+          result.fields[1].writable = dto.isNewInstance();              
         }
         
         result.object = object;
