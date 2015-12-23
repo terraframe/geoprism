@@ -89,6 +89,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
@@ -272,85 +273,25 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
    * 
    * @return
    */
-  private JSONArray getAvailableReferenceLayers()
+  public JSONArray getReferenceLayersJSON()
   {
-    try
+    Map<String, Integer> indices = this.getDashboard().getUniversalIndices();
+
+    JSONArray array = new JSONArray();
+
+    List<? extends DashboardLayer> layers = this.getAllHasLayer().getAll();
+
+    for (DashboardLayer layer : layers)
     {
-      Universal root = Universal.getRoot();
-      Universal universal = this.getDashboard().getCountry().getUniversal();
-
-      List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
-
-      HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
-
-      List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
-
-      for (int i = 0; i < savedLayers.size(); i++)
+      if (layer instanceof DashboardReferenceLayer)
       {
-        DashboardLayer savedLayer = savedLayers.get(i);
+        DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) layer;
 
-        if (savedLayer instanceof DashboardReferenceLayer)
-        {
-          DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) savedLayer;
-
-          String savedLayerUniId = referenceLayer.getUniversal().getId();
-          savedLayerHash.put(savedLayerUniId, savedLayer);
-        }
+        array.put(referenceLayer.toJSON(indices));
       }
-
-      JSONArray jsonArr = new JSONArray();
-
-      populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, universal);
-
-      for (Term child : children)
-      {
-        populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, child);
-      }
-
-      return jsonArr;
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
     }
 
-  }
-
-  private void populateAvailableReferenceJSON(HashMap<String, DashboardLayer> savedLayerHash, JSONArray jsonArr, Universal root, Term child) throws JSONException
-  {
-    if (!child.getId().equals(root.getId()))
-    {
-      String uniDispLabel = child.getDisplayLabel().toString();
-      String universalId = child.getId();
-
-      if (savedLayerHash.containsKey(universalId))
-      {
-        JSONObject json = savedLayerHash.get(universalId).toJSON();
-
-        jsonArr.put(json);
-      }
-      else
-      {
-        // Spoof a place holder for the universal
-        JSONObject json = new JSONObject();
-        json.put("viewName", (String) null);
-        json.put("sldName", (String) null);
-        json.put("layerName", uniDispLabel);
-        json.put("layerId", universalId);
-        json.put("inLegend", false);
-        json.put("legendXPosition", 0);
-        json.put("legendYPosition", 0);
-        json.put("groupedInLegend", true);
-        json.put("featureStrategy", "BASICPOLYGON");
-        json.put("isActive", false);
-        json.put("layerType", "REFERENCEJSON");
-        json.put("layerExists", false);
-        json.put("universalId", universalId);
-        json.put("mapId", this.getId());
-
-        jsonArr.put(json);
-      }
-    }
+    return array;
   }
 
   /**
@@ -427,7 +368,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // TODO: Resolve the situation where a reference layer is saved and loaded
       // compared to the results of getAvailableReferenceLayers()
       //
-      JSONArray refLayerOptions = this.getAvailableReferenceLayers();
+      JSONArray refLayerOptions = this.getReferenceLayersJSON();
       mapJSON.put("refLayers", refLayerOptions);
 
       JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
@@ -456,8 +397,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     if (dashboard != null)
     {
-      GeoEntity country = dashboard.getCountry();
-      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      List<GeoEntity> countries = dashboard.getCountries();
+
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
       MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
 
@@ -466,13 +408,27 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       String idColumnName = mdAttributeId.getColumnName();
 
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ST_AsText(ST_Expand(" + tableName + "." + geoColumnName + "," + expandVal + ")) AS bbox");
+      sql.append("SELECT ST_AsText(ST_Expand(ST_Collect(" + tableName + "." + geoColumnName + "), " + expandVal + ")) AS bbox");
       sql.append(" FROM " + tableName);
-      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      boolean first = true;
+
+      for (GeoEntity country : countries)
+      {
+        if (first)
+        {
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+          first = false;
+        }
+        else
+        {
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+        }
+      }
 
       ResultSet resultSet = Database.query(sql.toString());
       bboxArr = this.formatBBox(resultSet);
-
     }
 
     return bboxArr;
@@ -485,8 +441,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     if (dashboard != null)
     {
-      GeoEntity country = dashboard.getCountry();
-      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      List<GeoEntity> countries = dashboard.getCountries();
+
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
       MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
 
@@ -497,7 +454,22 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT ST_AsText(ST_Extent(" + tableName + "." + geoColumnName + ")) AS bbox");
       sql.append(" FROM " + tableName);
-      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      boolean first = true;
+
+      for (GeoEntity country : countries)
+      {
+        if (first)
+        {
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+          first = false;
+        }
+        else
+        {
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+        }
+      }
 
       ResultSet resultSet = Database.query(sql.toString());
       bboxArr = this.formatBBox(resultSet);
@@ -534,7 +506,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     JSONArray bboxArr = new JSONArray();
     Dashboard dashboard = this.getDashboard();
-    GeoEntity country = dashboard.getCountry();
 
     try
     {
@@ -576,8 +547,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
           }
           else
           {
-            String label = country.getDisplayLabel().getValue();
-            String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
+            String error = "The countries of dashboard [" + dashboard.getDisplayLabel().getValue() + "] could not be used to create a valid bounding box";
 
             throw new ProgrammingErrorException(error);
           }

@@ -330,16 +330,27 @@
           var oldLayer = cache.values[layer.universalId];
             
           if (oldLayer != null) {
-          if((oldLayer.layerExists && layer.layerExists) || (!oldLayer.layerExists && !layer.layerExists)) {          
+            if((oldLayer.layerExists && layer.layerExists) || (!oldLayer.layerExists && !layer.layerExists)) {          
               layer.isActive = oldLayer.isActive;
-          }
+            }
           
-          angular.copy(layer, oldLayer);
+            angular.copy(layer, oldLayer);
           }
           else {          
             /* Add new item to the cache */
+            var index = cache.ids.length;
           
-            cache.ids.unshift(layer.universalId);
+            for(var i = 0; i < cache.ids.length; i++) {
+              var id = cache.ids[i];
+              var cLayer = cache.values[id];              
+              
+              if(layer.index > cLayer.index) {
+                index = i;
+              }
+            }
+            
+            cache.ids.splice(index, 0, layer.universalId);
+          
             cache.values[layer.universalId] = layer;  
           }
         }

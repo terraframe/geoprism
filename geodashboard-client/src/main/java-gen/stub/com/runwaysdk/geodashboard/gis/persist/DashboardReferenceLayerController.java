@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.transport.conversion.ClientConversionFacade;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
@@ -53,9 +52,10 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
     try
     {
       DashboardReferenceLayerDTO layer = DashboardReferenceLayerDTO.lock(request, id);
+      DashboardMapDTO map = layer.getDashboardMap();
       DashboardStyleDTO style = layer.getAllHasStyle().get(0);
 
-      String options = DashboardReferenceLayerDTO.getOptionsJSON(request);
+      String options = DashboardReferenceLayerDTO.getOptionsJSON(request, map.getDashboardId());
 
       JSONObject response = new JSONObject();
       response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());
@@ -101,17 +101,14 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
 
     try
     {
-      UniversalDTO universal = UniversalDTO.get(request, universalId);
       DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
 
       DashboardReferenceLayerDTO layer = new DashboardReferenceLayerDTO(request);
-      layer.setUniversal(universal);
       layer.setDashboardMap(map);
-      layer.getNameLabel().setValue(universal.getDisplayLabel().getValue());
 
       DashboardStyleDTO style = new DashboardStyleDTO(request);
 
-      String options = DashboardReferenceLayerDTO.getOptionsJSON(request);
+      String options = DashboardReferenceLayerDTO.getOptionsJSON(request, map.getDashboardId());
 
       JSONObject response = new JSONObject();
       response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());

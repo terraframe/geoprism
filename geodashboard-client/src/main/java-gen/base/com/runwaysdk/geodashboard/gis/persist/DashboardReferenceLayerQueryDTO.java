@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = -2109685432)
+@com.runwaysdk.business.ClassSignature(hash = 672720111)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package com.runwaysdk.geodashboard.gis.persist;
 public class DashboardReferenceLayerQueryDTO extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -2109685432;
+private static final long serialVersionUID = 672720111;
 
   protected DashboardReferenceLayerQueryDTO(String type)
   {

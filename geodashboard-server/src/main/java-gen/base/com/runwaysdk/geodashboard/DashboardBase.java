@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1327365352)
+@com.runwaysdk.business.ClassSignature(hash = 1216306150)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,6 @@ package com.runwaysdk.geodashboard;
 public abstract class DashboardBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
@@ -54,53 +53,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1327365352;
+  private static final long serialVersionUID = 1216306150;
   
   public DashboardBase()
   {
     super();
     description = super.getStruct("description");
     displayLabel = super.getStruct("displayLabel");
-  }
-  
-  public com.runwaysdk.system.gis.geo.GeoEntity getCountry()
-  {
-    if (getValue(COUNTRY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.GeoEntity.get(getValue(COUNTRY));
-    }
-  }
-  
-  public String getCountryId()
-  {
-    return getValue(COUNTRY);
-  }
-  
-  public void validateCountry()
-  {
-    this.validateAttribute(COUNTRY);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCountryMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(COUNTRY);
-  }
-  
-  public void setCountry(com.runwaysdk.system.gis.geo.GeoEntity value)
-  {
-    if(value == null)
-    {
-      setValue(COUNTRY, "");
-    }
-    else
-    {
-      setValue(COUNTRY, value.getId());
-    }
   }
   
   public java.util.Date getCreateDate()

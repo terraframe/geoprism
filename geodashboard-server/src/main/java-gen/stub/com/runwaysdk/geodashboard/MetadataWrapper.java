@@ -27,12 +27,16 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.metadata.MdClass;
@@ -72,6 +76,36 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     }
 
     super.delete();
+
+    List<GeoEntity> countries = dashboard.getCountries();
+
+    // Delete any existing layers
+    QueryFactory factory = new QueryFactory();
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+
+    for (GeoEntity country : countries)
+    {
+      aptQuery.OR(aptQuery.getParentTerm().EQ(country.getUniversal()));
+    }
+
+    DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
+    query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+
+    OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardReferenceLayer layer = it.next();
+        layer.delete();
+      }
+    }
+    finally
+    {
+      it.close();
+    }
   }
 
   public MdAttributeView[] getSortedAttributes()

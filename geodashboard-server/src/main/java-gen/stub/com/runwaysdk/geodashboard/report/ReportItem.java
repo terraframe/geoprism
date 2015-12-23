@@ -68,7 +68,6 @@ import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
@@ -506,22 +505,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(parameter.getParameterName(), parameter.getParameterValue());
     }
 
-    /*
-     * Set the default category if one is not provided. The default category is the geo Id of the country of the
-     * dashboard.
-     */
-    String geoId = map.get(CATEGORY);
-
-    if (geoId == null || geoId.length() == 0)
-    {
-      Dashboard dashboard = this.getDashboard();
-      GeoEntity country = dashboard.getCountry();
-
-      map.put(CATEGORY, country.getGeoId());
-    }
-
-    map.put("categoryLabel", this.getLabel(map));
-
     if (map.containsKey(STATE))
     {
       String state = map.get(STATE);
@@ -545,22 +528,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return map;
   }
 
-  private String getLabel(Map<String, String> map)
-  {
-    String layerId = map.get(LAYER_ID);
-    String categoryId = map.get(CATEGORY);
-
-    if (layerId == null || layerId.length() == 0)
-    {
-      GeoEntity geoEntity = GeoEntity.getByKey(categoryId);
-      String label = geoEntity.getDisplayLabel().getValue();
-
-      return label;
-    }
-
-    DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
-    return layer.getCategoryLabel(categoryId);
-  }
 
   private String getFormat(Map<String, String> parameters)
   {

@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1989436568)
+@com.runwaysdk.business.ClassSignature(hash = -1775957402)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1989436568;
+  private static final long serialVersionUID = -1775957402;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,7 +45,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return CLASS;
   }
   
-  public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
@@ -66,55 +65,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  public com.runwaysdk.system.gis.geo.GeoEntityDTO getCountry()
-  {
-    if(getValue(COUNTRY) == null || getValue(COUNTRY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.GeoEntityDTO.get(getRequest(), getValue(COUNTRY));
-    }
-  }
-  
-  public String getCountryId()
-  {
-    return getValue(COUNTRY);
-  }
-  
-  public void setCountry(com.runwaysdk.system.gis.geo.GeoEntityDTO value)
-  {
-    if(value == null)
-    {
-      setValue(COUNTRY, "");
-    }
-    else
-    {
-      setValue(COUNTRY, value.getId());
-    }
-  }
-  
-  public boolean isCountryWritable()
-  {
-    return isWritable(COUNTRY);
-  }
-  
-  public boolean isCountryReadable()
-  {
-    return isReadable(COUNTRY);
-  }
-  
-  public boolean isCountryModified()
-  {
-    return isModified(COUNTRY);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCountryMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(COUNTRY).getAttributeMdDTO();
-  }
-  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));

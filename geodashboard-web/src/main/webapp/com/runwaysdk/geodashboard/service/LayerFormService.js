@@ -641,7 +641,8 @@
       service.styleDTO = com.runwaysdk.DTOUtil.convertToType(response.styleDTO);
         
       var layer = {};
-      layer.nameLabel = response.layer.layerName;
+      layer.newInstance = service.layerDTO.isNewInstance();
+	  layer.nameLabel = response.layer.layerName;
       layer.universalId = response.layer.universalId;
       layer.layerType = response.layer.featureStrategy;
       layer.displayInLegend = response.layer.inLegend;
@@ -694,19 +695,21 @@
       com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.edit(request, layerId);    	
     }
     
-    service.newInstance = function(universalId, mapId, element, onSuccess, onFailure) {
+    service.newInstance = function(mapId, element, onSuccess, onFailure) {
       var success = function(response) {
     	var model = service.createObjects(response);
     	
     	// Ticket #237 - Reference layer should defaut to polygon
     	model.layer.layerType = 'BASICPOLYGON';
+    	model.layer.universalId = model.dynamicDataModel.universals[0].value;
+    	model.layer.name = model.dynamicDataModel.universals[0].label;
         
         onSuccess(model);
       }
       
       var request = service.createStandbyRequest(element, success, onFailure);
       
-      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.newReferenceInstance(request, universalId, mapId);
+      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.newReferenceInstance(request, '', mapId);
     }
     
     service.isValidFont = function(font, options) {

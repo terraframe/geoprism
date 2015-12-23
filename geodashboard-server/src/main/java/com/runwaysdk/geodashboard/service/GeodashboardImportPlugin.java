@@ -21,7 +21,9 @@ package com.runwaysdk.geodashboard.service;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+
 import org.xml.sax.Attributes;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -50,7 +52,6 @@ import com.runwaysdk.geodashboard.dashboard.DashboardBuilder;
 import com.runwaysdk.geodashboard.dashboard.DashboardTypeInfo;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -305,7 +306,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
     {
       String name = attributes.getValue(NAME);
       String label = attributes.getValue(LABEL);
-      String country = attributes.getValue(COUNTRY);
       String removable = attributes.getValue(REMOVABLE);
 
       Dashboard dashboard = this.getOrCreateDashboard(name);
@@ -313,11 +313,6 @@ public class GeodashboardImportPlugin implements ImportPluginIF
       if (label != null && label.length() > 0)
       {
         dashboard.getDisplayLabel().setDefaultValue(label);
-      }
-
-      if (country != null && country.length() > 0)
-      {
-        dashboard.setCountry(GeoEntity.getByKey(country));
       }
 
       if (removable != null && removable.length() > 0)

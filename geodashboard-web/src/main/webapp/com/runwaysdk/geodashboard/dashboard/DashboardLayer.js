@@ -191,9 +191,11 @@
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
     
-        // open the overlay panel if there are cache and it is collapsed        
+        // open the overlay panel if there are layers and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-          ctrl.expand(element);        
+          if(oldVal == null || (newVal != null && newVal.ids.length > 0 && newVal.ids.length != oldVal.ids.length)) {
+            ctrl.expand(element);                  
+          }
         }, true);
         
         /* Hook-up drag and drop */
@@ -225,8 +227,8 @@
       $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId});
     }    
     
-    controller.add = function(layerId, universalId) {
-      $scope.$emit('newReferenceLayer', {layerId:layerId, universalId:universalId});    
+    controller.add = function() {
+      $scope.$emit('newReferenceLayer', {});    
     }
 
     controller.toggle = function(layerId, universalId) {
@@ -240,13 +242,19 @@
       
       var onSuccess = function(){
         // remove the map layer from the map
-        var layer = $scope.cache.values[universalId];
-        layer.isActive = false;
-        layer.layerExists = false;
-        layer.layerType = "REFERENCEJSON";
-          
-        $scope.$emit('toggleLayer', {layer:layer});          
-          
+        if($scope.cache.values[universalId] != null) {
+              
+          // Remove the layer from the map
+          var layer = $scope.cache.values[universalId];
+          layer.isActive = false;
+                  
+          $scope.$emit('toggleLayer', {layer:layer});          
+                  
+          // Remove value from cache
+          delete $scope.cache.values[universalId];        
+          $scope.cache.ids.splice( $.inArray(universalId, $scope.cache.ids), 1 );
+        }
+                
         $scope.$apply();
       };
       
@@ -284,8 +292,10 @@
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
           element.ready(function() {
-            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
-              $(element).find("#ref-layer-opener-button").click();            
+            if(oldVal == null || (newVal != null && newVal.ids.length > 0 && newVal.ids.length != oldVal.ids.length)) {
+              if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
+                $(element).find("#ref-layer-opener-button").click();
+              }
             }            
           });
         }, true);

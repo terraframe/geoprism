@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 874955633)
+@com.runwaysdk.business.ClassSignature(hash = 1107020312)
 public abstract class DashboardReferenceLayerDTOBase extends com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer";
-  private static final long serialVersionUID = 874955633;
+  private static final long serialVersionUID = 1107020312;
   
   protected DashboardReferenceLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -95,10 +95,10 @@ public abstract class DashboardReferenceLayerDTOBase extends com.runwaysdk.geoda
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
   }
   
-  public static final java.lang.String getOptionsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final java.lang.String getOptionsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String dashboardId)
   {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{dashboardId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO.CLASS, "getOptionsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

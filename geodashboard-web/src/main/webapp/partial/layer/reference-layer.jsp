@@ -45,7 +45,18 @@
                   </div>
                 </div>
                 
-                <layer-name-input layer-model="layerModel" disabled="true"></layer-name-input>
+                <layer-name-input ng-if="!layerModel.newInstance" layer-model="layerModel" disabled="true"></layer-name-input>
+                
+                <div ng-if="layerModel.newInstance" class="row-holder">
+                  <div class="label-holder">
+                    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
+                  </div>
+                  <div class="holder">
+                    <div class="box">
+                      <select class="universal-select" ng-options="opt.value as opt.label for opt in dynamicDataModel.universals" ng-model="layerModel.universalId"></select>
+                    </div>
+                  </div>
+                </div>
                 
                 <layer-label></layer-label>
                 
