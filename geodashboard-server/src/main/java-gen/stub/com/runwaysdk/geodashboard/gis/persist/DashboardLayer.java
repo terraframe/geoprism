@@ -77,6 +77,16 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   {
     return this.conditions;
   }
+  
+  public String getName()
+  {
+    return this.getNameLabel().getValue();
+  }
+  
+  public void setName(String val)
+  {
+    this.getNameLabel().setValue(val);
+  }
 
   @Override
   public FeatureStrategy getFeatureStrategy()

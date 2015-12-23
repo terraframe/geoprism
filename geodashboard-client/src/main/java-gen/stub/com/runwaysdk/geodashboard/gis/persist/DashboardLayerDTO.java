@@ -46,7 +46,7 @@ public class DashboardLayerDTO extends DashboardLayerDTOBase
     
     try {
       json.put("id", this.getId());
-      json.put("name", this.getName());
+      json.put("name", this.getNameLabel().getValue());
     }
     catch (JSONException e) {
       throw new RuntimeException(e);

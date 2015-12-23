@@ -720,8 +720,8 @@
       var onSuccess = function(response) {
     	  
     	// setting a simple default layer name for new layers
-    	if(response.layer.name.length === 0){
-    		response.layer.name = response.layer.attributeLabel;
+    	if(response.layer.nameLabel.length === 0){
+    		response.layer.nameLabel = response.layer.attributeLabel;
     	}
     	
         controller.load(response);

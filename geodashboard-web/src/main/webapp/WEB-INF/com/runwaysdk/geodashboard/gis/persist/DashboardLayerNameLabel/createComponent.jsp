@@ -18,16 +18,12 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-        
-<div class="row-holder">
-  <div class="label-holder">
-    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
-  </div>
-  <div class="holder" >
-	  <label class="none" >{{layerModel.nameLabel}}</label>
-	  <span class="text">
-		  <input type="text" ng-disabled="::disabled()" ng-model="layerModel.nameLabel" name="layer.nameLabel" required>
-	  </span>
-  </div>
-</div>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="page_title" scope="request" value="Create a new Name"/>
+<dl>
+  <mjl:form method="POST" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.name" id="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.id">
+    <%@include file="form.jsp" %>
+    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.create.button" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabelController.create.mojo" value="Create" />
+  </mjl:form>
+</dl>

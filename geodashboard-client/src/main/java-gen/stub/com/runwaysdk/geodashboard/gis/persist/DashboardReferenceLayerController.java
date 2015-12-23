@@ -107,7 +107,7 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
       DashboardReferenceLayerDTO layer = new DashboardReferenceLayerDTO(request);
       layer.setUniversal(universal);
       layer.setDashboardMap(map);
-      layer.setName(universal.getDisplayLabel().getValue());
+      layer.getNameLabel().setValue(universal.getDisplayLabel().getValue());
 
       DashboardStyleDTO style = new DashboardStyleDTO(request);
 
