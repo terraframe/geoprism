@@ -83,6 +83,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     super();
   }
+  
+//  @Override
+//  public String getName()
+//  {
+//    return this.getNameLabel().getValue();
+//  }
 
   @Transaction
   public void applyAll(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)

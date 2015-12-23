@@ -94,7 +94,7 @@
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" isAbstract="true" label="Layer" generateController="true" cacheAlgorithm="everything">
         <attributes>
-          <char name="name" label="Name" size="64" required="true" />
+          <localChar name="nameLabel" label="Name" size="64" required="true" />
           <boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
           <boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
           <enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />

@@ -241,7 +241,7 @@
        */
       var layer = {
         newInstance : true,
-        name : '',
+        nameLabel : '',
         displayInLegend : true,
         mdAttribute : '',
         layerType : '',
@@ -254,7 +254,7 @@
       };
 
       layer.newInstance = service.layerDTO.isNewInstance();
-      layer.name = response.layer.layerName;
+      layer.nameLabel = response.layer.layerName;
       layer.mdAttribute = response.layer.mdAttributeId;
       layer.attributeLabel = response.layer.attributeLabel;
       layer.layerType = response.layer.featureStrategy;
@@ -642,7 +642,7 @@
         
       var layer = {};
       layer.newInstance = service.layerDTO.isNewInstance();
-      layer.name = response.layer.layerName;
+	  layer.nameLabel = response.layer.layerName;
       layer.universalId = response.layer.universalId;
       layer.layerType = response.layer.featureStrategy;
       layer.displayInLegend = response.layer.inLegend;

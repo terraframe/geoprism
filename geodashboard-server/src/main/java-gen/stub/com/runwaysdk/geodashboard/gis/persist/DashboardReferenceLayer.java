@@ -65,7 +65,16 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
   {
     return new DashboardReferenceLayer();
   }
-
+  
+//  @Override
+//  public String getName()
+//  {
+//    return this.getNameLabel().getValue();
+//  }
+  public void setName(String val)
+  {
+    this.getNameLabel().setValue(val);
+  }
   @Override
   public String getJSON()
   {

@@ -18,16 +18,10 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
-        
-<div class="row-holder">
-  <div class="label-holder">
-    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
-  </div>
-  <div class="holder" >
-	  <label class="none" >{{layerModel.nameLabel}}</label>
-	  <span class="text">
-		  <input type="text" ng-disabled="::disabled()" ng-model="layerModel.nameLabel" name="layer.nameLabel" required>
-	  </span>
-  </div>
-</div>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<mjl:component item="${item}" param="dto">
+  <mjl:dt attribute="defaultLocale">
+    <mjl:input param="defaultLocale" type="text" />
+  </mjl:dt>
+</mjl:component>
