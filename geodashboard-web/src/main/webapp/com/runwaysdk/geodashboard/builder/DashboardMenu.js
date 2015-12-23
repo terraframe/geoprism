@@ -153,7 +153,7 @@
     		  dashboardId:dashboard.id, 
     		  label:dashboard.label, 
     		  description:dashboard.description, 
-    		  focusAreas:dashboard.countryDisplayLabel,
+    		  focusAreasAsString:dashboard.countryDisplayLabel.toString(),
     		  isLastDashboard:true};
       var oldDashboard = controller.dashboards[dashboard.id];
       

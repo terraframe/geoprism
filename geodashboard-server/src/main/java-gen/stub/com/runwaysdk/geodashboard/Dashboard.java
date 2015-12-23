@@ -1516,6 +1516,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
+    
+    List<GeoEntity> countries = this.getCountries();
+
+    JSONArray areas = new JSONArray();
+
+    for (GeoEntity country : countries)
+    {
+      areas.put(country.getDisplayLabel().getValue());
+    }
+
+    object.put("focusAreas", areas);
 
     if (map != null)
     {
@@ -1710,6 +1721,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
+      
+      List<GeoEntity> countries = this.getCountries();
+
+      JSONArray areas = new JSONArray();
+
+      for (GeoEntity country : countries)
+      {
+        areas.put(country.getDisplayLabel().getValue());
+      }
+
+      object.put("focusAreas", areas);
 
       object.put("options", options);
 
