@@ -311,9 +311,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index]].description}}</p>
 						<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusArea}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"></div>
-		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusArea}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index]].dashboardId)"></a>
@@ -338,9 +338,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 1]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"></div>
-		            		<div  class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusArea}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"></div>
+		            		<div  class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)"></a>
@@ -365,9 +365,9 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 2]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"></div>
-		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusArea}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
 		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a> 
 		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)"></a>

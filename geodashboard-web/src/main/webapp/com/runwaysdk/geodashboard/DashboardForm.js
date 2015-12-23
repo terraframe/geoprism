@@ -104,8 +104,8 @@
         
       _displayDashboardCloneForm : function(html) {
         var that = this;
-        that._dashboardFocusAreaLabel = this._controller.dashboards[this._dashboardId].focusArea;
-        that._dashboardDescription = this._controller.dashboards[this._dashboardId].description;
+        that._dashboardFocusAreaLabel = this._controller.dashboards[this._dashboardId].focusAreas;
+        that._dashboardDescription = this._controller.dashboards[this._dashboardId].descriptions;
         
         // Remove the internal form div if it exists
         $( "#dashboard-dialog" ).remove();
