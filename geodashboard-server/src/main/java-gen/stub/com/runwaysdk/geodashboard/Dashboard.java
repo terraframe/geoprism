@@ -58,6 +58,7 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.DuplicateDashboardException;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
@@ -81,9 +82,11 @@ import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
+import com.runwaysdk.query.Condition;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
@@ -94,12 +97,13 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
-import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -332,11 +336,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       Roles role = new Roles();
       role.setRoleName(RoleView.DASHBOARD_NAMESPACE + "." + roleName);
       role.getDisplayLabel().setValue(dashboardLabel);
-      try{
+      try
+      {
         role.apply();
         this.setDashboardRole(role);
       }
-      catch(com.runwaysdk.dataaccess.DuplicateDataException e){
+      catch (com.runwaysdk.dataaccess.DuplicateDataException e)
+      {
         throw new DuplicateDashboardException(e);
       }
     }
@@ -368,7 +374,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         this.getDisplayLabel().setValue(object.getString("label"));
       }
-      
+
       this.apply();
 
       if (object.has("users"))
@@ -401,7 +407,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     clone.getDisplayLabel().setDefaultValue(name);
     clone.setName(name);
     clone.getDescription().setDefaultValue(this.getDescription().getValue());
-    clone.setCountry(this.getCountry());
     clone.setRemovable(true);
     clone.apply();
 
@@ -699,8 +704,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static Dashboard[] getDashboardsForCountry(GeoEntity country)
   {
-    DashboardQuery query = new DashboardQuery(new QueryFactory());
-    query.WHERE(query.getCountry().EQ(country));
+    QueryFactory factory = new QueryFactory();
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(country));
+
+    UniversalQuery uQuery = new UniversalQuery(factory);
+    uQuery.WHERE(uQuery.EQ(aiQuery.getChild()));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.universal(uQuery));
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getWrappedMdClass().EQ(mcQuery.getWrappedMdClass()));
+
+    DashboardQuery query = new DashboardQuery(factory);
+    query.WHERE(query.metadata(mwQuery));
 
     OIterator<? extends Dashboard> it = query.getIterator();
 
@@ -716,11 +735,49 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
+  public List<GeoEntity> getCountries()
+  {
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getDashboard().EQ(this));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    GeoEntityQuery query = new GeoEntityQuery(factory);
+    query.WHERE(query.getUniversal().EQ(aptQuery.getParentTerm()));
+    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
+
+    OIterator<? extends GeoEntity> it = query.getIterator();
+
+    try
+    {
+      List<? extends GeoEntity> entities = it.getAll();
+
+      return new LinkedList<GeoEntity>(entities);
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+
   public ValueQuery getGeoEntitySuggestions(String text, Integer limit)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
-    GeoEntity country = this.getCountry();
+    List<GeoEntity> countries = this.getCountries();
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
     GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
@@ -735,10 +792,24 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
+    Condition cCondition = null;
+
+    for (GeoEntity country : countries)
+    {
+      if (cCondition == null)
+      {
+        cCondition = aptQuery.getParentTerm().EQ(country);
+      }
+      else
+      {
+        cCondition = OR.get(cCondition, aptQuery.getParentTerm().EQ(country));
+      }
+    }
+
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    query.AND(aptQuery.getParentTerm().EQ(country));
     query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+    query.AND(cCondition);
 
     query.ORDER_BY_ASC(geoLabel);
 
@@ -1010,19 +1081,25 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public Map<String, Integer> getUniversalIndices()
   {
-    Universal universal = this.getCountry().getUniversal();
-
-    Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+    List<GeoEntity> countries = this.getCountries();
 
     Map<String, Integer> indices = new HashMap<String, Integer>();
 
     int count = 0;
 
-    indices.put(universal.getId(), count++);
-
-    for (Term child : children)
+    for (GeoEntity country : countries)
     {
-      indices.put(child.getId(), count++);
+      Universal universal = country.getUniversal();
+
+      Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+
+      indices.put(universal.getId(), count++);
+
+      for (Term child : children)
+      {
+        indices.put(child.getId(), count++);
+      }
+
     }
 
     return indices;
@@ -1435,7 +1512,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
-    object.put("countryDisplayLabel", this.getCountry().getDisplayLabel());
     object.put("hasReport", this.hasReport());
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
@@ -1539,7 +1615,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         object.put("dashboardId", dashboard.getId());
         object.put("label", dashboard.getDisplayLabel().getValue());
         object.put("description", dashboard.getDescription().getValue());
-        object.put("focusArea", dashboard.getCountry().getDisplayLabel());
+
+        List<GeoEntity> countries = dashboard.getCountries();
+
+        JSONArray areas = new JSONArray();
+
+        for (GeoEntity country : countries)
+        {
+          areas.put(country.getDisplayLabel().getValue());
+        }
+
+        object.put("focusAreas", areas);
 
         dashboards.put(object);
 
@@ -1605,36 +1691,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return array;
   }
 
-  private JSONArray getCountiesJSON() throws JSONException
-  {
-    JSONArray countries = new JSONArray();
-    GeoEntity country = this.getCountry();
-
-    OIterator<Term> it = GeoEntity.getRoot().getDirectDescendants(LocatedIn.CLASS);
-
-    try
-    {
-      while (it.hasNext())
-      {
-        GeoEntity entity = (GeoEntity) it.next();
-        boolean selected = country != null && country.getId().equals(entity.getId());
-
-        JSONObject object = new JSONObject();
-        object.put("displayLabel", entity.getDisplayLabel().getValue());
-        object.put("value", entity.getId());
-        object.put("checked", selected);
-
-        countries.put(object);
-      }
-    }
-    finally
-    {
-      it.close();
-    }
-
-    return countries;
-  }
-
   @Override
   public String getDashboardDefinition()
   {
@@ -1653,10 +1709,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       object.put(Dashboard.NAME, this.getName());
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
-      object.put(Dashboard.COUNTRY, this.getCountryId());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
 
-      object.put("countries", this.getCountiesJSON());
       object.put("options", options);
 
       return object.toString();

@@ -191,9 +191,11 @@
       controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrl) {
     
-        // open the overlay panel if there are cache and it is collapsed        
+        // open the overlay panel if there are layers and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-          ctrl.expand(element);        
+          if(oldVal == null || (newVal != null && newVal.ids.length > 0 && newVal.ids.length != oldVal.ids.length)) {
+            ctrl.expand(element);                  
+          }
         }, true);
         
         /* Hook-up drag and drop */
@@ -284,8 +286,10 @@
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
           element.ready(function() {
-            if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
-              $(element).find("#ref-layer-opener-button").click();            
+            if(oldVal == null || (newVal != null && newVal.ids.length > 0 && newVal.ids.length != oldVal.ids.length)) {
+              if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
+                $(element).find("#ref-layer-opener-button").click();
+              }
             }            
           });
         }, true);

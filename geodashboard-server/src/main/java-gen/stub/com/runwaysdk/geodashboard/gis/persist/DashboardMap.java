@@ -89,6 +89,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
@@ -277,37 +278,42 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     try
     {
       Universal root = Universal.getRoot();
-      Universal universal = this.getDashboard().getCountry().getUniversal();
+      List<GeoEntity> countries = this.getDashboard().getCountries();
 
-      List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+      JSONArray array = new JSONArray();
 
-      HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
-
-      List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
-
-      for (int i = 0; i < savedLayers.size(); i++)
+      for (GeoEntity country : countries)
       {
-        DashboardLayer savedLayer = savedLayers.get(i);
+        Universal universal = country.getUniversal();
 
-        if (savedLayer instanceof DashboardReferenceLayer)
+        List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+        HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
+
+        List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
+
+        for (int i = 0; i < savedLayers.size(); i++)
         {
-          DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) savedLayer;
+          DashboardLayer savedLayer = savedLayers.get(i);
 
-          String savedLayerUniId = referenceLayer.getUniversal().getId();
-          savedLayerHash.put(savedLayerUniId, savedLayer);
+          if (savedLayer instanceof DashboardReferenceLayer)
+          {
+            DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) savedLayer;
+
+            String savedLayerUniId = referenceLayer.getUniversal().getId();
+            savedLayerHash.put(savedLayerUniId, savedLayer);
+          }
+        }
+
+        populateAvailableReferenceJSON(savedLayerHash, array, root, universal);
+
+        for (Term child : children)
+        {
+          populateAvailableReferenceJSON(savedLayerHash, array, root, child);
         }
       }
 
-      JSONArray jsonArr = new JSONArray();
-
-      populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, universal);
-
-      for (Term child : children)
-      {
-        populateAvailableReferenceJSON(savedLayerHash, jsonArr, root, child);
-      }
-
-      return jsonArr;
+      return array;
     }
     catch (JSONException e)
     {
@@ -456,8 +462,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     if (dashboard != null)
     {
-      GeoEntity country = dashboard.getCountry();
-      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      List<GeoEntity> countries = dashboard.getCountries();
+
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
       MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
 
@@ -466,13 +473,27 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       String idColumnName = mdAttributeId.getColumnName();
 
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ST_AsText(ST_Expand(" + tableName + "." + geoColumnName + "," + expandVal + ")) AS bbox");
+      sql.append("SELECT ST_AsText(ST_Expand(ST_Collect(" + tableName + "." + geoColumnName + "), " + expandVal + ")) AS bbox");
       sql.append(" FROM " + tableName);
-      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      boolean first = true;
+
+      for (GeoEntity country : countries)
+      {
+        if (first)
+        {
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+          first = false;
+        }
+        else
+        {
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+        }
+      }
 
       ResultSet resultSet = Database.query(sql.toString());
       bboxArr = this.formatBBox(resultSet);
-
     }
 
     return bboxArr;
@@ -485,8 +506,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     if (dashboard != null)
     {
-      GeoEntity country = dashboard.getCountry();
-      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) country.getMdClass();
+      List<GeoEntity> countries = dashboard.getCountries();
+
+      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
       MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
 
@@ -497,7 +519,23 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT ST_AsText(ST_Extent(" + tableName + "." + geoColumnName + ")) AS bbox");
       sql.append(" FROM " + tableName);
-      sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+      boolean first = true;
+
+      for (GeoEntity country : countries)
+      {
+        if (first)
+        {
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+          first = false;
+        }
+        else
+        {
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+        }
+      }
+
 
       ResultSet resultSet = Database.query(sql.toString());
       bboxArr = this.formatBBox(resultSet);
@@ -534,7 +572,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
   {
     JSONArray bboxArr = new JSONArray();
     Dashboard dashboard = this.getDashboard();
-    GeoEntity country = dashboard.getCountry();
 
     try
     {
@@ -576,8 +613,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
           }
           else
           {
-            String label = country.getDisplayLabel().getValue();
-            String error = "The geometry [" + label + "] could not be used to create a valid bounding box";
+            String error = "The countries of dashboard [" + dashboard.getDisplayLabel().getValue() + "] could not be used to create a valid bounding box";
 
             throw new ProgrammingErrorException(error);
           }
