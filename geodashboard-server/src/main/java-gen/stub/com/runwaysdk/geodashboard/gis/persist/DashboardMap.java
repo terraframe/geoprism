@@ -273,90 +273,25 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
    * 
    * @return
    */
-  private JSONArray getAvailableReferenceLayers()
+  public JSONArray getReferenceLayersJSON()
   {
-    try
+    Map<String, Integer> indices = this.getDashboard().getUniversalIndices();
+
+    JSONArray array = new JSONArray();
+
+    List<? extends DashboardLayer> layers = this.getAllHasLayer().getAll();
+
+    for (DashboardLayer layer : layers)
     {
-      Universal root = Universal.getRoot();
-      List<GeoEntity> countries = this.getDashboard().getCountries();
-
-      JSONArray array = new JSONArray();
-
-      for (GeoEntity country : countries)
+      if (layer instanceof DashboardReferenceLayer)
       {
-        Universal universal = country.getUniversal();
+        DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) layer;
 
-        List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
-
-        HashMap<String, DashboardLayer> savedLayerHash = new HashMap<String, DashboardLayer>();
-
-        List<? extends DashboardLayer> savedLayers = this.getAllHasLayer().getAll();
-
-        for (int i = 0; i < savedLayers.size(); i++)
-        {
-          DashboardLayer savedLayer = savedLayers.get(i);
-
-          if (savedLayer instanceof DashboardReferenceLayer)
-          {
-            DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) savedLayer;
-
-            String savedLayerUniId = referenceLayer.getUniversal().getId();
-            savedLayerHash.put(savedLayerUniId, savedLayer);
-          }
-        }
-
-        populateAvailableReferenceJSON(savedLayerHash, array, root, universal);
-
-        for (Term child : children)
-        {
-          populateAvailableReferenceJSON(savedLayerHash, array, root, child);
-        }
-      }
-
-      return array;
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-
-  }
-
-  private void populateAvailableReferenceJSON(HashMap<String, DashboardLayer> savedLayerHash, JSONArray jsonArr, Universal root, Term child) throws JSONException
-  {
-    if (!child.getId().equals(root.getId()))
-    {
-      String uniDispLabel = child.getDisplayLabel().toString();
-      String universalId = child.getId();
-
-      if (savedLayerHash.containsKey(universalId))
-      {
-        JSONObject json = savedLayerHash.get(universalId).toJSON();
-
-        jsonArr.put(json);
-      }
-      else
-      {
-        // Spoof a place holder for the universal
-        JSONObject json = new JSONObject();
-        json.put("viewName", (String) null);
-        json.put("sldName", (String) null);
-        json.put("layerName", uniDispLabel);
-        json.put("layerId", universalId);
-        json.put("inLegend", false);
-        json.put("legendXPosition", 0);
-        json.put("legendYPosition", 0);
-        json.put("groupedInLegend", true);
-        json.put("featureStrategy", "BASICPOLYGON");
-        json.put("isActive", false);
-        json.put("layerType", "REFERENCEJSON");
-        json.put("layerExists", false);
-        json.put("universalId", universalId);
-        json.put("mapId", this.getId());
-
-        jsonArr.put(json);
+        array.put(referenceLayer.toJSON(indices));
       }
     }
+
+    return array;
   }
 
   /**
@@ -433,7 +368,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // TODO: Resolve the situation where a reference layer is saved and loaded
       // compared to the results of getAvailableReferenceLayers()
       //
-      JSONArray refLayerOptions = this.getAvailableReferenceLayers();
+      JSONArray refLayerOptions = this.getReferenceLayersJSON();
       mapJSON.put("refLayers", refLayerOptions);
 
       JSONArray mapBBox = getMapLayersBBox(orderedTLayersArr);
@@ -535,7 +470,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
           sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
         }
       }
-
 
       ResultSet resultSet = Database.query(sql.toString());
       bboxArr = this.formatBBox(resultSet);

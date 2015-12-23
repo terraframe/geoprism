@@ -861,6 +861,8 @@
       // Clear all the errors
       $scope.errors = [];
       
+      controller.setLayerName();
+      
       referenceLayerFormService.apply($scope.layerModel, $scope.styleModel, $scope.state, '#reference-modal', onSuccess, onFailure);      
     }
     
@@ -879,7 +881,17 @@
       $scope.dynamicDataModel = response.dynamicDataModel;
     }
     
-    controller.newInstance = function(universalId, mapId) {
+    controller.setLayerName = function() {
+      for(var i = 0; i < $scope.dynamicDataModel.universals.length; i++) {
+        var option = $scope.dynamicDataModel.universals[i];
+        
+        if(option.value == $scope.layerModel.universalId) {
+          $scope.layerModel.name = option.label;
+        }
+      }
+    }
+    
+    controller.newInstance = function(mapId) {
       var onSuccess = function(response) {
         controller.load(response);
             
@@ -887,7 +899,7 @@
         $scope.$apply();
       }
           
-      referenceLayerFormService.newInstance(universalId, mapId, '#mapDivId', onSuccess);
+      referenceLayerFormService.newInstance(mapId, '#mapDivId', onSuccess);
     }
     
     controller.edit = function(layerId) {
@@ -914,13 +926,12 @@
     });    
     
     $rootScope.$on('newReferenceLayer', function(event, data) {
-      var universalId = data.universalId;
       var mapId = data.mapId;
       var state = data.state;
       
       $scope.state = state;
       
-      controller.newInstance(universalId, mapId);
+      controller.newInstance(mapId);
     });
     
         

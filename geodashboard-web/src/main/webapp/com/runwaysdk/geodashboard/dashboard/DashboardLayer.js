@@ -227,8 +227,8 @@
       $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId});
     }    
     
-    controller.add = function(layerId, universalId) {
-      $scope.$emit('newReferenceLayer', {layerId:layerId, universalId:universalId});    
+    controller.add = function() {
+      $scope.$emit('newReferenceLayer', {});    
     }
 
     controller.toggle = function(layerId, universalId) {
@@ -242,13 +242,19 @@
       
       var onSuccess = function(){
         // remove the map layer from the map
-        var layer = $scope.cache.values[universalId];
-        layer.isActive = false;
-        layer.layerExists = false;
-        layer.layerType = "REFERENCEJSON";
-          
-        $scope.$emit('toggleLayer', {layer:layer});          
-          
+        if($scope.cache.values[universalId] != null) {
+              
+          // Remove the layer from the map
+          var layer = $scope.cache.values[universalId];
+          layer.isActive = false;
+                  
+          $scope.$emit('toggleLayer', {layer:layer});          
+                  
+          // Remove value from cache
+          delete $scope.cache.values[universalId];        
+          $scope.cache.ids.splice( $.inArray(universalId, $scope.cache.ids), 1 );
+        }
+                
         $scope.$apply();
       };
       
