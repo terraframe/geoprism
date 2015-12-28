@@ -40,7 +40,7 @@
 		    </div>
 	        <div class="" style="">
 	          <fieldset class="">
-				  <!-- Basic dashboard settings (i.e.Name, label, and country) -->
+				  <!-- Basic dashboard settings (i.e.Name and label) -->
 		          <section class="form-container">
 		              <div ng-repeat="field in ctrl.fields">
 		                <div ng-if="field.readable && field.name != 'description' && field.name != 'country'" ng-switch on="field.type">
@@ -63,19 +63,15 @@
     			  <div class="holder">
     			  	<div class="row-holder">
     			  		<div class="row builder-dialog-category-ico-container">
-    			  		  	<div class="col-xs-3 col-md-3 builder-ico-container">
+    			  		  	<div class="col-xs-4 col-md-4 builder-ico-container">
     			  				<a class="fa fa-list-alt" href="#" title="<gdb:localize key='dashboard.descriptionTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DESCRIPTION')"></a>
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.descriptionLabel'/></strong>
     			  			</div>
-    			  			<div class="col-xs-3 col-md-3 builder-ico-container">
-    			  				<a class="fa fa-globe" href="#" title="<gdb:localize key='dashboard.focusAreaTooltip'/>" ng-click="ctrl.setCategoryWidgetType('FOCUSAREA')"></a>
-    			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.focusAreaLabel'/></strong>
-    			  			</div>
-    			  			<div class="col-xs-3 col-md-3 builder-ico-container">
+    			  			<div class="col-xs-4 col-md-4 builder-ico-container">
     			  				<a class="fa fa-users" href="#" title="<gdb:localize key='dashboard.usersTooltip'/>" ng-click="ctrl.setCategoryWidgetType('USERS')"></a>	
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.usersLabel'/></strong>
     			  			</div>
-    			  			<div class="col-xs-3 col-md-3 builder-ico-container">
+    			  			<div class="col-xs-4 col-md-4 builder-ico-container">
     			  				<a class="fa fa-table" href="#" title="<gdb:localize key='dashboard.dataSetsTooltip'/>" ng-click="ctrl.setCategoryWidgetType('DATASETS')"></a>
     			  				<strong class="builder-dialog-ico-label"><gdb:localize key='dashboard.dataSetsLabel'/></strong>
     			  			</div>
@@ -83,18 +79,9 @@
     			  		<div id="builder-dialog-category-widget-container">
     			  		
     			  		    <div ng-show="ctrl.showWidgetType == 'DESCRIPTION'" class="row-holder"> 
-    			  		    	<text-area-field field="ctrl.fields[2]" maxlength="255" placeholdertext="" model="ctrl.dashboard"></text-area-field>
+    			  		    	<text-area-field field="ctrl.fields[1]" maxlength="255" placeholdertext="" model="ctrl.dashboard"></text-area-field>
     			  			</div>
     			  		
-    			  			<div ng-show="ctrl.showWidgetType == 'FOCUSAREA'" class="row-holder"> 
-    			  				<div class="row-holder">
-    			  					<div class="label-holder">
-										<!-- <strong>{{field.label}}</strong> -->
-										<strong><gdb:localize key='dashboard.focusAreaSelectLabel'/></strong>
-    								</div>
-    			  					<select-field field="ctrl.fields[3]" model="ctrl.dashboard"></select-field>
-    			  				</div>
-    			  			</div>
 	    			  		
 	    			  		<div ng-show="ctrl.showWidgetType == 'USERS'" class="row-holder vertical-checkbox-list"> 
 					          <div class="" ng-if="ctrl.dashboard.options.users != null && ctrl.dashboard.options.users.length > 0">

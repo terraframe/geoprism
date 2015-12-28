@@ -51,7 +51,7 @@
         var result = {};
         // Populate the list of country options  
         // ORDER MATTERS for this array of field names. Fields will be added to the form in order.
-        var attributeNames = ['displayLabel', 'name', 'description'];
+        var attributeNames = ['displayLabel', 'description', 'name'];
         
         if(dto.isNewInstance()) {
           attributeNames = ['displayLabel', 'description'];
@@ -61,7 +61,7 @@
         
         // Overwrite name field options       
         if(!dto.isNewInstance()) {
-          result.fields[1].writable = dto.isNewInstance();              
+          result.fields[2].writable = dto.isNewInstance();              
         }
         
         result.object = object;

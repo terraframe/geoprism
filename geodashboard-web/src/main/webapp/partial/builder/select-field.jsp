@@ -31,9 +31,7 @@
 	</div>
 	<div ng-if="!field.writable && field.readable">
 	    	<div id="country-select-box" class="box">
-	    		<h4 class="disabled">{{model.countryDisplayLabel}}</h4>
-				<!-- NOTE using basic text until we sort out our select widgets so I can effectively disable it -->
-				<!-- <styled-select class="['select-area']" options="field.options" model="model[field.name]" name="{{field.name}}" ng-disabled="true" ng-required="field.required"></styled-select>                -->
+				<styled-select class="select-area" options="field.options" model="model[field.name]" label="displayLabel" name="{{field.name}}" ng-disabled="true" ng-required="field.required"></styled-select>               
 			</div>
 	</div>  
 </div>

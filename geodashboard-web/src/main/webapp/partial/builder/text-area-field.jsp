@@ -33,7 +33,7 @@
   </div>
   <div ng-if="!field.writable && field.readable">
     	<div class="text">
-    		<input ng-model="model[field.name]" ng-required="field.required" ng-disabled="true" name="{{field.name}}" class="" cols="30" rows="10" type="textarea">
+    		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" class="" type="textarea" ng-disabled="true">
     	</div>
   </div>
 </div>
