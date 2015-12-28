@@ -253,7 +253,7 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
           {
             JSONObject object = new JSONObject();
             object.put("value", child.getId());
-            object.put("label", child.getDisplayLabel().getValue() + " (" + country.getDisplayLabel().getValue() + ")");
+            object.put("label", country.getDisplayLabel().getValue() + " (" + child.getDisplayLabel().getValue() + ")");
 
             options.put(child.getId(), object);
           }
