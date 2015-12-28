@@ -50,6 +50,7 @@ import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -60,7 +61,6 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.DuplicateDashboardException;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
@@ -335,7 +335,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       if (this.getName() == null || this.getName().length() == 0)
       {
-        this.setName(generator.generateKey(""));
+        this.setName("AAA");
       }
 
       String dashboardLabel = this.getDisplayLabel().getValue();
@@ -345,15 +345,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       Roles role = new Roles();
       role.setRoleName(RoleView.DASHBOARD_NAMESPACE + "." + roleName);
       role.getDisplayLabel().setValue(dashboardLabel);
-      try
-      {
-        role.apply();
-        this.setDashboardRole(role);
-      }
-      catch (com.runwaysdk.dataaccess.DuplicateDataException e)
-      {
-        throw new DuplicateDashboardException(e);
-      }
+      role.apply();
+
+      this.setDashboardRole(role);
     }
 
     super.apply();
@@ -372,8 +366,24 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  @Transaction
   public String applyWithOptions(String options)
+  {
+    // Loop until a name is selected which works
+    while (true)
+    {
+      try
+      {
+        return this.applyWithOptionsInTransaction(options);
+      }
+      catch (DuplicateDataException e)
+      {
+        this.setName(generator.generateKey(""));
+      }
+    }
+  }
+
+  @Transaction
+  private String applyWithOptionsInTransaction(String options)
   {
     try
     {
@@ -1525,7 +1535,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
     object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
-    
+
     List<GeoEntity> countries = this.getCountries();
 
     JSONArray areas = new JSONArray();
@@ -1730,7 +1740,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
-      
+
       List<GeoEntity> countries = this.getCountries();
 
       JSONArray areas = new JSONArray();
