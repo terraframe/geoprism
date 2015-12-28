@@ -1170,6 +1170,7 @@ a.fa.fa-plus.referenceLayer.ico-enable:focus{
 
 a.fa.fa-plus.referenceLayer.ico-enable::before{
 	margin-right: 3px;
+	font-size: 11px;
 }
 
 
