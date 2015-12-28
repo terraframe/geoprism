@@ -335,7 +335,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       if (this.getName() == null || this.getName().length() == 0)
       {
-        this.setName("AAA");
+        this.setName(generator.generateKey(""));
       }
 
       String dashboardLabel = this.getDisplayLabel().getValue();
