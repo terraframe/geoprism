@@ -34,7 +34,7 @@
         controller.clear();
         
         if(!newInstance) {
-            $scope.$apply();        	
+            $scope.$apply();
         }
       }
         
@@ -42,28 +42,63 @@
     }
     
     controller.persist = function() {
+      controller.busy = true;
+    	
+      var onSuccess = function(result) {      
+        var layerNames = JSON.parse(result);
+        
+        if(layerNames.length > 0) {
+          var message = com.runwaysdk.Localize.localize("dashboardViewer", "removeLayers", "This change will remove the following layers: {0}");
+          message = message.replace('{0}', layerNames.toString());
+                
+          var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "information", "Information"));
+          dialog.appendContent(message);          
+          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "ok", "Ok"), function() {
+            controller.busy = false;            
+            dialog.close();            
+            $scope.$apply();
+            
+            controller.applyWithOptions(); 
+          }, null, {class:'btn btn-primary'});
+          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), function() {
+            controller.busy = false;            
+            dialog.close();            
+            $scope.$apply();
+          }, null, {class:'btn btn-default'});
+          dialog.setStyle("z-index", 10001);          
+          dialog.render();
+        }
+        else {
+          controller.applyWithOptions();
+        }
+      }    
+      
+      builderService.getLayersToDelete(controller.dashboard,'#ng-modal-overlay', onSuccess);
+    }
+    
+    controller.applyWithOptions = function() {
       var onSuccess = function(result) {      
         controller.clear();
-        
+            
         $scope.$apply();
 
         var dashboard = JSON.parse(result);
 
         $scope.$emit('dashboardChange', {dashboard:dashboard});            
-      }    
-      
-      var onFailure = function(e){
-    	  controller.errors = [];
-    	  controller.errors.push(e.message);
-                   
-          $scope.$apply();
+      }
           
-          $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
-        };             
-                 
-        // Clear all the errors
+      var onFailure = function(e){
         controller.errors = [];
-      
+        controller.errors.push(e.message);
+                       
+        $scope.$apply();
+              
+        $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
+      };             
+                     
+      // Clear all the errors
+      controller.errors = [];
+          
       builderService.applyWithOptions(controller.dashboard,'#ng-modal-overlay', onSuccess, onFailure);
     }
     
@@ -71,6 +106,7 @@
       controller.fields = result.fields;    
       controller.dashboard = result.object;
       controller.showWidgetType = 'DESCRIPTION';
+      controller.busy = false;
         
       // Get country display label for the dashboard edit form (when a select isn't needed)
       $scope.show = true;
@@ -79,9 +115,9 @@
     controller.load = function(dashboardId) {
         
       var onSuccess = function(result) {
-    	  
-    	controller.init(result);
-    	
+        
+      controller.init(result);
+      
         $scope.$apply();
       }
                
@@ -89,7 +125,7 @@
     }
     
     controller.setCategoryWidgetType = function(typeName) {
-    	controller.showWidgetType = typeName;
+      controller.showWidgetType = typeName;
     }
     
     $rootScope.$on('editDashboard', function(event, data){
@@ -136,30 +172,30 @@
         scope.form = form;  
         
         $timeout(function() {
-        	if(attrs.maxlength && attrs.maxlength > 0){
-            	scope.field.maxlength = attrs.maxlength;
+          if(attrs.maxlength && attrs.maxlength > 0){
+              scope.field.maxlength = attrs.maxlength;
             }
             else{
-            	scope.field.maxlength = 5000; // arbitrary default
+              scope.field.maxlength = 5000; // arbitrary default
             }
             
             if(attrs.minlength && attrs.minlength > 0){
-            	scope.field.minlength = attrs.minlength;
+              scope.field.minlength = attrs.minlength;
             }
             else{
-            	scope.field.minlength = 0; // arbitrary default
+              scope.field.minlength = 0; // arbitrary default
             }
             
             if(attrs.placeholdertext && attrs.placeholdertext.length > 0){
-            	if(attrs.placeholdertext.indexOf("'") == 0){
-            		scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
-            	}
-            	else{
-            		scope.field.placeholdertext = attrs.placeholdertext;
-            	}
+              if(attrs.placeholdertext.indexOf("'") == 0){
+                scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
+              }
+              else{
+                scope.field.placeholdertext = attrs.placeholdertext;
+              }
             }
             else{
-            	scope.field.placeholdertext = ""; // arbitrary default
+              scope.field.placeholdertext = ""; // arbitrary default
             }
           }, 500);
       }
@@ -183,30 +219,30 @@
         scope.form = form;  
         
         $timeout(function() {
-        	if(attrs.maxlength && attrs.maxlength > 0){
-            	scope.field.maxlength = attrs.maxlength;
+          if(attrs.maxlength && attrs.maxlength > 0){
+              scope.field.maxlength = attrs.maxlength;
             }
             else{
-            	scope.field.maxlength = 5000; // arbitrary default
+              scope.field.maxlength = 5000; // arbitrary default
             }
             
             if(attrs.minlength && attrs.minlength > 0){
-            	scope.field.minlength = attrs.minlength;
+              scope.field.minlength = attrs.minlength;
             }
             else{
-            	scope.field.minlength = 0; // arbitrary default
+              scope.field.minlength = 0; // arbitrary default
             }
             
             if(attrs.placeholdertext && attrs.placeholdertext.length > 0){
-            	if(attrs.placeholdertext.indexOf("'") == 0){
-            		scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
-            	}
-            	else{
-            		scope.field.placeholdertext = attrs.placeholdertext;
-            	}
+              if(attrs.placeholdertext.indexOf("'") == 0){
+                scope.field.placeholdertext = attrs.placeholdertext.replace("'", "").slice(0, -1);
+              }
+              else{
+                scope.field.placeholdertext = attrs.placeholdertext;
+              }
             }
             else{
-            	scope.field.placeholdertext = ""; // arbitrary default
+              scope.field.placeholdertext = ""; // arbitrary default
             }
           }, 500);
       }

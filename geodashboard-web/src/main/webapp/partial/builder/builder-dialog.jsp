@@ -129,19 +129,18 @@
 						<div class="holder">
 							<div class="button-holder">
 								<input
-									name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
 									type="button"
 									value="<gdb:localize key="dashboard.Ok"/>"
 									class="btn btn-primary" 
 									ng-click="ctrl.persist()"
-									ng-disabled="form.$invalid"
+									ng-disabled="form.$invalid || ctrl.busy"
 									/>
 								<input
-									name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
 									type="button"
 									value="<gdb:localize key="dashboard.Cancel"/>"
 									class="btn btn-default" 
 									ng-click="ctrl.cancel()"
+									ng-disabled="form.$invalid || ctrl.busy"									
 									/>
 							</div>
 						</div>

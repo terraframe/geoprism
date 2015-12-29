@@ -18,6 +18,8 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -36,9 +38,11 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
 
@@ -290,5 +294,61 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     }
 
     return null;
+  }
+
+  public Collection<String> getLayersToDelete()
+  {
+    Collection<String> layerNames = new HashSet<String>();
+
+    Dashboard dashboard = this.getDashboard();
+
+    for (AttributeWrapper aw : this.getAllAttributeWrapper())
+    {
+      layerNames.addAll(aw.getLayersToDelete(dashboard));
+    }
+
+    // Check if any existing reference layers will be deleted
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
+    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
+    
+    DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
+    query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+
+    OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardReferenceLayer layer = it.next();
+
+        layerNames.add(layer.getName());
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return layerNames;
   }
 }

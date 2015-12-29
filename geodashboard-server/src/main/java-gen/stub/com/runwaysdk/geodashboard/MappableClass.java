@@ -18,8 +18,10 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -218,8 +220,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     try
     {
-      int index = dashboard.getMaxOrder() + 1;      
-      
+      int index = dashboard.getMaxOrder() + 1;
+
       for (int i = 0; i < types.length(); i++)
       {
         JSONObject type = types.getJSONObject(i);
@@ -228,7 +230,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
         MappableClass mClass = MappableClass.get(id);
         MdClass mdClass = mClass.getWrappedMdClass();
-        
+
         MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
         query.WHERE(query.getDashboard().EQ(dashboard));
         query.AND(query.getWrappedMdClass().EQ(mdClass));
@@ -245,7 +247,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
             DashboardMetadata metadata = dashboard.addMetadata(wrapper);
             metadata.setListOrder(index + i);
             metadata.apply();
-            
+
             // Add all of the attributes
             JSONArray attributes = type.getJSONArray("attributes");
 
@@ -260,17 +262,17 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
               while (iterator.hasNext())
               {
                 MetadataWrapper wrapper = iterator.next();
-                
+
                 // Add all of the attributes
                 JSONArray attributes = type.getJSONArray("attributes");
-                
-                MappableClass.assign(dashboard, wrapper, attributes);            
+
+                MappableClass.assign(dashboard, wrapper, attributes);
               }
             }
             finally
             {
               iterator.close();
-            }            
+            }
           }
         }
         else if (!checked && query.getCount() > 0)
@@ -304,7 +306,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     try
     {
       int index = wrapper.getMaxOrder() + 1;
-      
+
       for (int i = 0; i < attributes.length(); i++)
       {
         JSONObject type = attributes.getJSONObject(i);
@@ -412,4 +414,121 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
     return false;
   }
+
+  public static Collection<String> getLayersToDelete(Dashboard dashboard, JSONArray types)
+  {
+    try
+    {
+      Collection<String> layerNames = new HashSet<String>();
+
+      for (int i = 0; i < types.length(); i++)
+      {
+        JSONObject type = types.getJSONObject(i);
+        String id = type.getString("id");
+        boolean checked = type.getBoolean("value");
+
+        MappableClass mClass = MappableClass.get(id);
+        MdClass mdClass = mClass.getWrappedMdClass();
+
+        MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+        query.WHERE(query.getDashboard().EQ(dashboard));
+        query.AND(query.getWrappedMdClass().EQ(mdClass));
+
+        if (checked && query.getCount() != 0)
+        {
+          OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+          try
+          {
+            while (iterator.hasNext())
+            {
+              MetadataWrapper wrapper = iterator.next();
+
+              JSONArray attributes = type.getJSONArray("attributes");
+
+              layerNames.addAll(MappableClass.getLayersToDelete(dashboard, wrapper, attributes));
+            }
+          }
+          finally
+          {
+            iterator.close();
+          }
+        }
+        else if (!checked && query.getCount() > 0)
+        {
+          OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+          try
+          {
+            while (iterator.hasNext())
+            {
+              MetadataWrapper wrapper = iterator.next();
+              layerNames.addAll(wrapper.getLayersToDelete());
+            }
+          }
+          finally
+          {
+            iterator.close();
+          }
+        }
+      }
+
+      return layerNames;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  private static Collection<String> getLayersToDelete(Dashboard dashboard, MetadataWrapper wrapper, JSONArray attributes)
+  {
+    Collection<String> layerNames = new HashSet<String>();
+
+    try
+    {
+      for (int i = 0; i < attributes.length(); i++)
+      {
+        JSONObject type = attributes.getJSONObject(i);
+        String id = type.getString("id");
+        boolean checked = type.getBoolean("selected");
+
+        MdAttribute mdAttribute = MdAttribute.get(id);
+
+        QueryFactory factory = new QueryFactory();
+
+        MetadataWrapperQuery wQuery = new MetadataWrapperQuery(factory);
+        wQuery.WHERE(wQuery.getId().EQ(wrapper.getId()));
+
+        AttributeWrapperQuery query = new AttributeWrapperQuery(factory);
+        query.WHERE(query.dashboardMetadata(wQuery));
+        query.AND(query.getWrappedMdAttribute().EQ(mdAttribute));
+
+        if (!checked && query.getCount() > 0)
+        {
+          OIterator<? extends AttributeWrapper> iterator = query.getIterator();
+
+          try
+          {
+            while (iterator.hasNext())
+            {
+              AttributeWrapper attribute = iterator.next();
+              layerNames.addAll(attribute.getLayersToDelete(dashboard));
+            }
+          }
+          finally
+          {
+            iterator.close();
+          }
+        }
+      }
+
+      return layerNames;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
 }

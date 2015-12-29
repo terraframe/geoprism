@@ -419,6 +419,36 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
+  public String getLayersToDelete(String options)
+  {
+    try
+    {
+      JSONArray layers = new JSONArray();
+
+      JSONObject object = new JSONObject(options);
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        Collection<String> layerNames = MappableClass.getLayersToDelete(this, types);
+
+        for (String layerName : layerNames)
+        {
+          layers.put(layerName);
+        }
+      }
+
+      return layers.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+  }
+
+  @Override
   @Transaction
   public Dashboard clone(String name)
   {

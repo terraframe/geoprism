@@ -30,6 +30,12 @@
       service.dto.applyWithOptions(request, object.options);
     }
     
+    service.getLayersToDelete = function(object, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+       
+      service.dto.getLayersToDelete(request, object.options);    
+    }
+    
     service.unlock = function(object, onSuccess, onFailure) {
       if(service.dto == null || service.dto.isNewInstance()) {
         onSuccess(true);  
