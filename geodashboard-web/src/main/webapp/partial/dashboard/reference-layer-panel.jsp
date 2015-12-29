@@ -26,10 +26,11 @@
       <a class="map-layers-opener opener" id="ref-layer-opener-button" data-toggle="collapse" data-parent="#ref-layer-container" href="#collapse-ref-layer"><gdb:localize key="dashboardViewer.refLayer"/></a>
     </div>	
     <div id="collapse-ref-layer" class="accordion-body" style="height: 0px;">
-      <div style="display: block;">
-        <a href="#" ng-click="ctrl.add()" class="fa fa-plus referenceLayer ico-enable" title="<gdb:localize key="dashboardViewer.refLayerEnableTooltip"/>"></a>     
-      </div>
+<!--       <div style="display: block;"> -->
+<%--         <a href="#" ng-click="ctrl.add()" class="fa fa-plus referenceLayer ico-enable" title="<gdb:localize key="dashboardViewer.refLayerEnableTooltip"/>"></a>      --%>
+<!--       </div> -->
       <div class="accordion-inner holder" id="refLayerContainer">
+      
         <div class="row-form" ng-repeat="universalId in cache.ids" ng-init="layer = cache.values[universalId]">
           <div class="com-runwaysdk-ui-factory-runway-Widget check" ng-class="{'com-runwaysdk-ui-factory-runway-checkbox-CheckBox' : layer.layerExists, 'checked' : layer.isActive}" ng-click="ctrl.toggle(layer.layerId, layer.universalId)"></div>
           <label>{{layer.layerName}}</label>
@@ -39,6 +40,7 @@
             <a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(layer.layerId, layer.universalId)" title="<gdb:localize key="dashboardViewer.editLayerTooltip"/>"></a>            
           </div>
         </div>
+         <a href="#" ng-click="ctrl.add()" class="fa fa-plus referenceLayer ico-enable" title="<gdb:localize key="dashboardViewer.refLayerEnableTooltip"/>">map new</a>     
       </div>
     </div>
   </div>

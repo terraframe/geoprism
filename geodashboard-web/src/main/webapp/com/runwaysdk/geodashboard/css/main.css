@@ -1151,16 +1151,28 @@ a.fa.fa-pencil.ico-edit:focus{
 }
 
 a.fa.fa-plus.referenceLayer.ico-enable{
-  font-size: 15px;
+/*   font-size: 15px; */
   margin-right: 5px;
   float: left;
   color: #bababa;
   cursor: pointer;
+  
+    margin-top: 15px;
+    display: inline-block;
+    font-size: 13px;
+    padding: 2px;
+    /* color: #019edc; */
 }
 a.fa.fa-plus.referenceLayer.ico-enable:hover,
 a.fa.fa-plus.referenceLayer.ico-enable:focus{
 	color: #00bfff;
 }
+
+a.fa.fa-plus.referenceLayer.ico-enable::before{
+	margin-right: 3px;
+	font-size: 11px;
+}
+
 
 .control-form .ico-enable{
 	float:left;
@@ -2172,6 +2184,10 @@ select{
 }
 
 option[selected]{ font-weight:bold}
+
+.universal-select-container{
+	width: 95%;
+}
 
 .filter-block select {
     height: 27px;

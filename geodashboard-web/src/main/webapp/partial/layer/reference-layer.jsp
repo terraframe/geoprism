@@ -49,10 +49,10 @@
                 
                 <div ng-if="layerModel.newInstance" class="row-holder">
                   <div class="label-holder">
-                    <strong><gdb:localize key="DashboardThematicLayer.form.nameTheLayer"/></strong>
+                    <strong><gdb:localize key="DashboardReferenceLayer.form.nameTheLayer"/></strong>
                   </div>
                   <div class="holder">
-                    <div class="box">
+                    <div class="universal-select-container">
                       <select class="universal-select" ng-options="opt.value as opt.label for opt in dynamicDataModel.universals" ng-model="layerModel.universalId"></select>
                     </div>
                   </div>
