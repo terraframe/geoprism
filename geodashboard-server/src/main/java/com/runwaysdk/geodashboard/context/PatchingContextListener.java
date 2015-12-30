@@ -80,19 +80,29 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
     this.patchMetadata();
   }
 
+  protected String[] getModules()
+  {
+    return new String[] { "geodashboard" };
+  }
+
   @Transaction
   protected void patchMetadata()
   {
-    File metadata = new File(DeployProperties.getDeployBin() + "/metadata");
+    String[] modules = this.getModules();
 
-    if (metadata.exists() && metadata.isDirectory())
+    for (String module : modules)
     {
-      logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
-      Versioning.main(new String[] { metadata.getAbsolutePath() });
-    }
-    else
-    {
-      logger.error("Metadata schema files were not found! Unable to import schemas.");
+      File metadata = new File(DeployProperties.getDeployBin() + "/metadata/" + module);
+
+      if (metadata.exists() && metadata.isDirectory())
+      {
+        logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
+        Versioning.main(new String[] { metadata.getAbsolutePath() });
+      }
+      else
+      {
+        logger.error("Metadata schema files were not found! Unable to import schemas.");
+      }
     }
   }
 

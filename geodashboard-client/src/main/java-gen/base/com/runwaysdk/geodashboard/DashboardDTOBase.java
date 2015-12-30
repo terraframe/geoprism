@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -915240850)
+@com.runwaysdk.business.ClassSignature(hash = 1207821353)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = -915240850;
+  private static final long serialVersionUID = 1207821353;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -761,22 +761,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{dashboardId, userIds};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "assignUsers", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public final java.lang.String checkLayers(java.lang.String options)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{options};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "checkLayers", _declaredTypes);
-    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final java.lang.String checkLayers(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String options)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, options};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "checkLayers", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final com.runwaysdk.geodashboard.DashboardDTO clone(java.lang.String name)
