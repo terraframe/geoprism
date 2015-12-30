@@ -18,13 +18,48 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerQuery;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+
 public class AttributeWrapper extends AttributeWrapperBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = -1313778104;
-  
+
   public AttributeWrapper()
   {
     super();
+  }
+
+  @Transaction
+  public void delete(Dashboard dashboard)
+  {
+    // Delete any existing layers
+    DashboardThematicLayerQuery query = new DashboardThematicLayerQuery(new QueryFactory());
+    query.WHERE(query.getDashboardMap().getDashboard().EQ(dashboard));
+    query.AND(query.getMdAttribute().EQ(this.getWrappedMdAttribute()));
+
+    OIterator<? extends DashboardThematicLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardThematicLayer layer = it.next();
+        layer.delete();
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    this.delete();
   }
 
   public AttributeWrapper clone(MetadataWrapper metadata, Integer order)
@@ -32,12 +67,39 @@ public class AttributeWrapper extends AttributeWrapperBase implements com.runway
     AttributeWrapper clone = new AttributeWrapper();
     clone.setWrappedMdAttribute(this.getWrappedMdAttribute());
     clone.apply();
-    
+
     DashboardAttributes attribute = metadata.addAttributeWrapper(clone);
     attribute.setListOrder(order);
     attribute.apply();
-    
+
     return clone;
   }
-  
+
+  public Collection<String> getLayersToDelete(Dashboard dashboard)
+  {
+    Collection<String> layerNames = new HashSet<String>();
+
+    // Delete any existing layers
+    DashboardThematicLayerQuery query = new DashboardThematicLayerQuery(new QueryFactory());
+    query.WHERE(query.getDashboardMap().getDashboard().EQ(dashboard));
+    query.AND(query.getMdAttribute().EQ(this.getWrappedMdAttribute()));
+
+    OIterator<? extends DashboardThematicLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardThematicLayer layer = it.next();
+
+        layerNames.add(layer.getName());
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return layerNames;
+  }
 }

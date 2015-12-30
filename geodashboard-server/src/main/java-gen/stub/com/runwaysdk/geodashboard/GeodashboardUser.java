@@ -160,16 +160,21 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
   public static Boolean isRoleMemeber(String roles)
   {
-    Map<String, String> map = Session.getCurrentSession().getUserRoles();
-    Set<String> keySet = map.keySet();
+    SessionIF session = Session.getCurrentSession();
 
-    String[] roleNames = roles.split(",");
-
-    for (String roleName : roleNames)
+    if (session != null)
     {
-      if (keySet.contains(roleName))
+      Map<String, String> map = session.getUserRoles();
+      Set<String> keySet = map.keySet();
+
+      String[] roleNames = roles.split(",");
+
+      for (String roleName : roleNames)
       {
-        return true;
+        if (keySet.contains(roleName))
+        {
+          return true;
+        }
       }
     }
 
@@ -178,13 +183,18 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
 
   public Boolean isAssigned(Roles role)
   {
-    QueryFactory factory = new QueryFactory();
+    if (role != null)
+    {
+      QueryFactory factory = new QueryFactory();
 
-    AssignmentsQuery query = new AssignmentsQuery(factory);
-    query.WHERE(query.getParent().EQ(this));
-    query.AND(query.getChild().EQ(role));
+      AssignmentsQuery query = new AssignmentsQuery(factory);
+      query.WHERE(query.getParent().EQ(this));
+      query.AND(query.getChild().EQ(role));
 
-    return ( query.getCount() > 0 );
+      return ( query.getCount() > 0 );
+    }
+
+    return false;
   }
 
   public static GeodashboardUser[] getAllUsers()

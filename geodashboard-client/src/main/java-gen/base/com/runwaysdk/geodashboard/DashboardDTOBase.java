@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1620526988)
+@com.runwaysdk.business.ClassSignature(hash = 1207821353)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = -1620526988;
+  private static final long serialVersionUID = 1207821353;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,10 +45,10 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return CLASS;
   }
   
-  public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
+  public static java.lang.String DESCRIPTION = "description";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String FILTERDATE = "filterDate";
@@ -65,55 +65,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  public com.runwaysdk.system.gis.geo.GeoEntityDTO getCountry()
-  {
-    if(getValue(COUNTRY) == null || getValue(COUNTRY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.GeoEntityDTO.get(getRequest(), getValue(COUNTRY));
-    }
-  }
-  
-  public String getCountryId()
-  {
-    return getValue(COUNTRY);
-  }
-  
-  public void setCountry(com.runwaysdk.system.gis.geo.GeoEntityDTO value)
-  {
-    if(value == null)
-    {
-      setValue(COUNTRY, "");
-    }
-    else
-    {
-      setValue(COUNTRY, value.getId());
-    }
-  }
-  
-  public boolean isCountryWritable()
-  {
-    return isWritable(COUNTRY);
-  }
-  
-  public boolean isCountryReadable()
-  {
-    return isReadable(COUNTRY);
-  }
-  
-  public boolean isCountryModified()
-  {
-    return isModified(COUNTRY);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCountryMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(COUNTRY).getAttributeMdDTO();
-  }
-  
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -223,6 +174,31 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getDashboardRoleMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(DASHBOARDROLE).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.geodashboard.DashboardDescriptionDTO getDescription()
+  {
+    return (com.runwaysdk.geodashboard.DashboardDescriptionDTO) this.getAttributeStructDTO(DESCRIPTION).getStructDTO();
+  }
+  
+  public boolean isDescriptionWritable()
+  {
+    return isWritable(DESCRIPTION);
+  }
+  
+  public boolean isDescriptionReadable()
+  {
+    return isReadable(DESCRIPTION);
+  }
+  
+  public boolean isDescriptionModified()
+  {
+    return isModified(DESCRIPTION);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeLocalCharacterMdDTO getDescriptionMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeLocalCharacterMdDTO) getAttributeDTO(DESCRIPTION).getAttributeMdDTO();
   }
   
   public com.runwaysdk.geodashboard.DashboardDisplayLabelDTO getDisplayLabel()
@@ -763,20 +739,20 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final void applyWithOptions(java.lang.String[] userIds, java.lang.String name)
+  public final java.lang.String applyWithOptions(java.lang.String options)
   {
-    String[] _declaredTypes = new String[]{"[Ljava.lang.String;", "java.lang.String"};
-    Object[] _parameters = new Object[]{userIds, name};
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{options};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "applyWithOptions", _declaredTypes);
-    getRequest().invokeMethod(_metadata, this, _parameters);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void applyWithOptions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String[] userIds, java.lang.String name)
+  public static final java.lang.String applyWithOptions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String options)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, userIds, name};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{id, options};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "applyWithOptions", _declaredTypes);
-    clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void assignUsers(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String dashboardId, java.lang.String[] userIds)
@@ -859,10 +835,18 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.lang.String[] getCategoryInputSuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] conditions)
+  public static final java.lang.String getAvailableDashboardsAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String dashboardId)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, conditions};
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{dashboardId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getAvailableDashboardsAsJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String[] getCategoryInputSuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, java.lang.String state)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "java.lang.String"};
+    Object[] _parameters = new Object[]{mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, state};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getCategoryInputSuggestions", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -891,22 +875,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] getConditions()
-  {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getConditions", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[] getConditions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getConditions", _declaredTypes);
-    return (com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
   public final java.lang.String getConditionsJSON()
   {
     String[] _declaredTypes = new String[]{};
@@ -920,6 +888,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getConditionsJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.String getDashboardDefinition()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getDashboardDefinition", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getDashboardDefinition(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getDashboardDefinition", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -953,6 +937,54 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     Object[] _parameters = new Object[]{id, thematicAttribute};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoNodes", _declaredTypes);
     return (com.runwaysdk.system.gis.geo.GeoNodeDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.String getGeoNodesJSON(com.runwaysdk.system.metadata.MdAttributeDTO thematicAttribute)
+  {
+    String[] _declaredTypes = new String[]{"com.runwaysdk.system.metadata.MdAttribute"};
+    Object[] _parameters = new Object[]{thematicAttribute};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoNodesJSON", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getGeoNodesJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, com.runwaysdk.system.metadata.MdAttributeDTO thematicAttribute)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.system.metadata.MdAttribute"};
+    Object[] _parameters = new Object[]{id, thematicAttribute};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getGeoNodesJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.String getJSON()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.lang.String getLayersToDelete(java.lang.String options)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{options};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getLayersToDelete", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String getLayersToDelete(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String options)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{id, options};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "getLayersToDelete", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.String getMapId()
@@ -1051,6 +1083,22 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public final java.lang.String saveState(java.lang.String state, java.lang.Boolean global)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.Boolean"};
+    Object[] _parameters = new Object[]{state, global};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "saveState", _declaredTypes);
+    return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.lang.String saveState(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String state, java.lang.Boolean global)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.Boolean"};
+    Object[] _parameters = new Object[]{id, state, global};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "saveState", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public final void setBaseLayerState(java.lang.String baseLayerState)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
@@ -1064,6 +1112,38 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{id, baseLayerState};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "setBaseLayerState", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final void setDashboardAttributesOrder(java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{typeId, attributeIds};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "setDashboardAttributesOrder", _declaredTypes);
+    getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final void setDashboardAttributesOrder(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{id, typeId, attributeIds};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "setDashboardAttributesOrder", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final void setMetadataWrapperOrder(java.lang.String[] typeIds)
+  {
+    String[] _declaredTypes = new String[]{"[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{typeIds};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "setMetadataWrapperOrder", _declaredTypes);
+    getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final void setMetadataWrapperOrder(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String[] typeIds)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{id, typeIds};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DashboardDTO.CLASS, "setMetadataWrapperOrder", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

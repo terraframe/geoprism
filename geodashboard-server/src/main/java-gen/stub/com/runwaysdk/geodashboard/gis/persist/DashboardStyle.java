@@ -120,7 +120,39 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
   public JSONObject toJSON() throws JSONException
   {
     JSONObject json = new JSONObject();
-
+    json.put("id", this.getId());
+    json.put("basicPointSize", this.getBasicPointSize());
+    json.put("enableLabel", this.getEnableLabel());
+    json.put("enableValue", this.getEnableValue());
+    json.put("labelColor", this.getLabelColor());
+    json.put("labelFont", this.getLabelFont());
+    json.put("labelHalo", this.getLabelHalo());
+    json.put("labelHaloWidth", this.getLabelHaloWidth());
+    json.put("labelSize", this.getLabelSize());
+    json.put("lineOpacity", this.getLineOpacity());
+    json.put("lineStroke", this.getLineStroke());
+    json.put("lineStrokeCap", this.getLineStrokeCap());
+    json.put("lineStrokeWidth", this.getLineStrokeWidth());
+    json.put("pointFill", this.getPointFill());
+    json.put("pointOpacity", this.getPointOpacity());
+    json.put("pointRotation", this.getPointRotation());
+    json.put("pointStroke", this.getPointStroke());
+    json.put("pointStrokeOpacity", this.getPointStrokeOpacity());
+    json.put("pointStrokeWidth", this.getPointStrokeWidth());
+    json.put("pointWellKnownName", this.getPointWellKnownName());
+    json.put("polygonFill", this.getPolygonFill());
+    json.put("polygonFillOpacity", this.getPolygonFillOpacity());
+    json.put("polygonStroke", this.getPolygonStroke());
+    json.put("polygonStrokeOpacity", this.getPolygonStrokeOpacity());
+    json.put("polygonStrokeWidth", this.getPolygonStrokeWidth());
+    json.put("valueColor", this.getValueColor());
+    json.put("valueFont", this.getValueFont());
+    json.put("valueHalo", this.getValueHalo());
+    json.put("valueHaloWidth", this.getValueHaloWidth());
+    json.put("valueSize", this.getValueSize());
+    json.put("sortedFonts", getSortedFonts());
+    
+    
     return json;
   }
 

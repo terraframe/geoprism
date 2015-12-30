@@ -372,19 +372,23 @@ public class GeoserverRestService implements GeoserverService, Reloadable
   {
     double[] bbox = getBBOX(layer);
 
-    double minX = bbox[MINX_INDEX];
-    double minY = bbox[MINY_INDEX];
-    double maxX = bbox[MAXX_INDEX];
-    double maxY = bbox[MAXY_INDEX];
-
     GSFeatureTypeEncoder fte = new GSFeatureTypeEncoder();
     fte.setEnabled(true);
     fte.setName(layer);
     fte.setSRS(SRS);
     fte.setTitle(layer);
     fte.addKeyword(layer);
-    fte.setNativeBoundingBox(minX, minY, maxX, maxY, SRS);
-    fte.setLatLonBoundingBox(minX, minY, maxX, maxY, SRS);
+
+    if (bbox != null)
+    {
+      double minX = bbox[MINX_INDEX];
+      double minY = bbox[MINY_INDEX];
+      double maxX = bbox[MAXX_INDEX];
+      double maxY = bbox[MAXY_INDEX];
+
+      fte.setNativeBoundingBox(minX, minY, maxX, maxY, SRS);
+      fte.setLatLonBoundingBox(minX, minY, maxX, maxY, SRS);
+    }
 
     GSLayerEncoder le = new GSLayerEncoder();
     le.setDefaultStyle(styleName);
@@ -585,6 +589,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     outer.FROM("(" + collected.getSQL() + ")", "collected");
 
     OIterator<? extends ValueObject> iter = outer.getIterator();
+
     try
     {
       ValueObject o = iter.next();
@@ -599,7 +604,8 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     }
     catch (Exception e)
     {
-      throw new NoLayerDataException();
+      return null;
+      // throw new NoLayerDataException();
     }
     finally
     {

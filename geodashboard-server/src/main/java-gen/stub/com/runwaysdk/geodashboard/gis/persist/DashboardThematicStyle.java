@@ -55,12 +55,63 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
     return this.getStyleCondition();
   }
 
+  @Override
   public JSONObject toJSON()
   {
     try
     {
       JSONObject json = new JSONObject();
       json.put("bubbleContinuousSize", this.getBubbleContinuousSize());
+      
+      JSONObject dashboardLayerJSON = super.toJSON();
+      for(String key : JSONObject.getNames(dashboardLayerJSON))
+      {
+        json.put(key, dashboardLayerJSON.get(key));
+      }
+
+      json.put("bubbleFill", this.getBubbleFill());
+      json.put("bubbleMaxSize", this.getBubbleMaxSize());
+      json.put("bubbleMinSize", this.getBubbleMinSize());
+      json.put("bubbleOpacity", this.getBubbleOpacity());
+      json.put("bubbleRotation", this.getBubbleRotation());
+      json.put("bubbleSize", this.getBubbleSize());
+      json.put("bubbleStroke", this.getBubbleStroke());
+      json.put("bubbleStrokeOpacity", this.getBubbleStrokeOpacity());
+      json.put("bubbleStrokeWidth", this.getBubbleStrokeWidth());
+      json.put("bubbleWellKnownName", this.getBubbleWellKnownName());
+      json.put("categoryPointFillOpacity", this.getCategoryPointFillOpacity());
+      json.put("categoryPointSize", this.getCategoryPointSize());
+      json.put("categoryPointStroke", this.getCategoryPointStroke());
+      json.put("categoryPointStrokeOpacity", this.getCategoryPointStrokeOpacity());
+      json.put("categoryPointStrokeWidth", this.getCategoryPointStrokeWidth());
+      json.put("categoryPointStyles", this.getCategoryPointStyles());
+      json.put("categoryPointWellKnownName", this.getCategoryPointWellKnownName());
+      json.put("categoryPolygonFillOpacity", this.getCategoryPolygonFillOpacity());
+      json.put("categoryPolygonStroke", this.getCategoryPolygonStroke());
+      json.put("categoryPolygonStrokeOpacity", this.getCategoryPolygonStrokeOpacity());
+      json.put("categoryPolygonStrokeWidth", this.getCategoryPolygonStrokeWidth());
+      json.put("categoryPolygonStyles", this.getCategoryPolygonStyles());
+      json.put("gradientPointFillOpacity", this.getGradientPointFillOpacity());
+      json.put("gradientPointMaxFill", this.getGradientPointMaxFill());
+      json.put("gradientPointMinFill", this.getGradientPointMinFill());
+      json.put("gradientPointSize", this.getGradientPointSize());
+      json.put("gradientPointStroke", this.getGradientPointStroke());
+      json.put("gradientPointStrokeOpacity", this.getGradientPointStrokeOpacity());
+      json.put("gradientPointStrokeWidth", this.getGradientPointStrokeWidth());
+      json.put("gradientPointWellKnownName", this.getGradientPointWellKnownName());
+      json.put("gradientPolygonFillOpacity", this.getGradientPolygonFillOpacity());
+      json.put("gradientPolygonMaxFill", this.getGradientPolygonMaxFill());
+      json.put("gradientPolygonMinFill", this.getGradientPolygonMinFill());
+      json.put("gradientPolygonStroke", this.getGradientPolygonStroke());
+      json.put("gradientPolygonStrokeOpacity", this.getGradientPolygonStrokeOpacity());
+      json.put("gradientPolygonStrokeWidth", this.getGradientPolygonStrokeWidth());
+      json.put("secondaryAggregationType", this.getSecondaryAggregationType());
+      json.put("secondaryAttribute", this.getSecondaryAttributeId());
+      json.put("secondaryCategories", this.getSecondaryCategories());
+      json.put("styleCondition", this.getStyleCondition());
+      
+      json.put("aggregationMap", DashboardStyle.getAggregationJSON());
+      
 
       return json;
     }

@@ -31,11 +31,9 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategy;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
-import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
@@ -232,6 +230,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
   private void addGeometryQuery(QueryConfiguration config, GeneratedComponentQuery query, DashboardThematicLayer layer)
   {
+    String categoryId = config.getCategory();
+
     ValueQuery vQuery = config.getValueQuery();
     String aggregation = config.getAggregation();
 
@@ -256,7 +256,12 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     geoId.setUserDefinedAlias(GeoEntity.GEOID);
     geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
 
-    vQuery.SELECT(geoLocation, geoId);
+    SelectableSQLCharacter categoryLabel = vQuery.aSQLCharacter("categoryLabel", "'" + layer.getCategoryLabel(categoryId) + "'");
+    categoryLabel.setColumnAlias("categoryLabel");
+    categoryLabel.setUserDefinedAlias("categoryLabel");
+    categoryLabel.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles("categoryLabel"));
+
+    vQuery.SELECT(geoLocation, geoId, categoryLabel);
 
     if (aggregation != null && aggregation.equals(TYPE))
     {
@@ -311,6 +316,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
     vQuery.SELECT(geoLocation, geoId);
 
+    this.addGeoLabel(vQuery, "category", geoEntity);
+
     if (aggregation != null && aggregation.equals(COUSINS))
     {
       // cousins
@@ -345,6 +352,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
 
       this.addGeoLabel(vQuery, "parent", parentQuery.getParent());
+      this.addGeoLabel(vQuery, "category", geoEntity);
     }
     else if (aggregation != null && aggregation.equals(CHILDREN))
     {
@@ -434,6 +442,19 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     vQuery.AND(parentEntityQuery.EQ(parent));
   }
 
+  private void addGeoLabel(ValueQuery vQuery, String suffix, GeoEntity entity)
+  {
+    GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+    Coalesce parentLocation = query.getDisplayLabel().localize();
+    parentLocation.setColumnAlias(suffix + "Label");
+    parentLocation.setUserDefinedAlias(suffix + "Label");
+    parentLocation.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles(suffix + "Label"));
+
+    vQuery.SELECT(parentLocation);
+    vQuery.AND(query.getId().EQ(entity.getId()));
+  }
+
   private void addUniversalLabel(ValueQuery vQuery, String suffix, SelectableReference parent)
   {
     UniversalQuery universalQuery = new UniversalQuery(vQuery);
@@ -478,16 +499,6 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       {
         // Incoming data is bad, just use the default geo id
       }
-    }
-
-    if (config.hasLayerId())
-    {
-      String layerId = config.getLayerId();
-      DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
-      DashboardMap map = layer.getDashboardMap();
-      Dashboard dashboard = map.getDashboard();
-
-      return dashboard.getCountry();
     }
 
     if (config.hasDefaultGeoId())

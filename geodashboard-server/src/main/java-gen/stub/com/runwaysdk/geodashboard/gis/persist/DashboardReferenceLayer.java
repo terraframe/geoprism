@@ -18,13 +18,18 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
@@ -35,6 +40,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -60,40 +66,25 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
     return new DashboardReferenceLayer();
   }
 
+  public void setName(String val)
+  {
+    this.getNameLabel().setValue(val);
+  }
+
+  @Override
+  public String getJSON()
+  {
+    return this.toJSON().toString();
+  }
+
   @Override
   public JSONObject toJSON()
   {
-    try
-    {
-      JSONObject json = new JSONObject();
-      json.put("viewName", getViewName());
-      json.put("sldName", getSLDName());
-      json.put("layerName", getName());
-      json.put("layerId", getId());
-      json.put("inLegend", this.getDisplayInLegend());
-      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
-      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
-      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
-      json.put("featureStrategy", getFeatureStrategy());
-      json.put("layerType", "REFERENCELAYER");
-      json.put("uniId", this.getUniversal().getId());
+    DashboardMap map = this.getDashboardMap();
+    Dashboard dashboard = map.getDashboard();
+    Map<String, Integer> indices = dashboard.getUniversalIndices();
 
-      JSONArray jsonStyles = new JSONArray();
-      List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i)
-      {
-        DashboardStyle style = styles.get(i);
-        jsonStyles.put(style.toJSON());
-      }
-      json.put("styles", jsonStyles);
-
-      return json;
-    }
-    catch (JSONException ex)
-    {
-      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
-      throw new ProgrammingErrorException(ex);
-    }
+    return this.toJSON(indices);
   }
 
   /**
@@ -184,6 +175,151 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       DashboardReferenceLayer tSource = (DashboardReferenceLayer) source;
 
       this.setUniversal(tSource.getUniversal());
+    }
+  }
+
+  /**
+   * JSONObject with containing all options used in the CRUD form.
+   * 
+   * @return
+   */
+  public static String getOptionsJSON(String dashboardId)
+  {
+    try
+    {
+      Dashboard dashboard = Dashboard.get(dashboardId);
+
+      String[] fonts = DashboardThematicStyle.getSortedFonts();
+
+      // Set possible layer types based on attribute type
+      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
+      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
+
+      JSONArray pointTypes = new JSONArray();
+      pointTypes.put("CIRCLE");
+      pointTypes.put("STAR");
+      pointTypes.put("SQUARE");
+      pointTypes.put("TRIANGLE");
+      pointTypes.put("CROSS");
+      pointTypes.put("X");
+
+      JSONObject object = new JSONObject();
+      object.put("availableFonts", new JSONArray(Arrays.asList(fonts)));
+      object.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
+      object.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
+      object.put("pointTypes", pointTypes);
+
+      object.put("universals", getUniversalsJSON(dashboard));
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  /**
+   * Returns the reference layer options.
+   * 
+   * @return
+   */
+  public static JSONArray getUniversalsJSON(Dashboard dashboard)
+  {
+    try
+    {
+      Universal root = Universal.getRoot();
+      List<GeoEntity> countries = dashboard.getCountries();
+      DashboardMap map = dashboard.getMap();
+
+      JSONArray array = new JSONArray();
+
+      Map<String, JSONObject> options = new LinkedHashMap<String, JSONObject>();
+
+      for (GeoEntity country : countries)
+      {
+        Universal universal = country.getUniversal();
+
+        List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+        for (Term child : children)
+        {
+          if (!child.getId().equals(root.getId()))
+          {
+            JSONObject object = new JSONObject();
+            object.put("value", child.getId());
+            object.put("label", country.getDisplayLabel().getValue() + " (" + child.getDisplayLabel().getValue() + ")");
+
+            options.put(child.getId(), object);
+          }
+        }
+      }
+
+      // Remove all reference layer options which have already exist
+      List<? extends DashboardLayer> layers = map.getAllHasLayer().getAll();
+
+      for (DashboardLayer layer : layers)
+      {
+        if (layer instanceof DashboardReferenceLayer)
+        {
+          DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) layer;
+
+          options.remove(referenceLayer.getUniversalId());
+        }
+      }
+
+      // Add all options into the array
+      for (JSONObject option : options.values())
+      {
+        array.put(option);
+      }
+
+      return array;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+  }
+
+  public JSONObject toJSON(Map<String, Integer> indices)
+  {
+    try
+    {
+      JSONObject json = new JSONObject();
+      json.put("viewName", getViewName());
+      json.put("sldName", getSLDName());
+      json.put("layerName", getName());
+      json.put("layerId", getId());
+      json.put("inLegend", this.getDisplayInLegend());
+      json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
+      json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());
+      json.put("groupedInLegend", this.getDashboardLegend().getGroupedInLegend());
+      json.put("featureStrategy", getFeatureStrategy());
+      json.put("universalId", this.getUniversalId());
+      json.put("mapId", this.getDashboardMapId());
+      json.put("layerExists", true);
+      json.put("isActive", true);
+      json.put("layerType", "REFERENCELAYER");
+      json.put("index", indices.get(this.getUniversalId()));
+
+      JSONArray jsonStyles = new JSONArray();
+      List<? extends DashboardStyle> styles = this.getStyles();
+      for (int i = 0; i < styles.size(); ++i)
+      {
+        DashboardStyle style = styles.get(i);
+        jsonStyles.put(style.toJSON());
+      }
+      json.put("styles", jsonStyles);
+
+      return json;
+    }
+    catch (JSONException ex)
+    {
+      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
+      throw new ProgrammingErrorException(ex);
     }
   }
 }

@@ -148,6 +148,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
       JSONObject object = new JSONObject();
       object.put("type", this.getClass().getSimpleName());
       object.put("value", VALUE);
+      object.put("id", this.getId());
 
       return object;
     }

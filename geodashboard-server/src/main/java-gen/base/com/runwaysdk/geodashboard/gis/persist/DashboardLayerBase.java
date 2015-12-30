@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.gis.persist;
 
-@com.runwaysdk.business.ClassSignature(hash = 1409447649)
+@com.runwaysdk.business.ClassSignature(hash = 1319696710)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,19 +47,22 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String LAYERENABLED = "layerEnabled";
   public static java.lang.String LAYERTYPE = "layerType";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String NAME = "name";
+  public static java.lang.String NAMELABEL = "nameLabel";
+  private com.runwaysdk.business.Struct nameLabel = null;
+  
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1409447649;
+  private static final long serialVersionUID = 1319696710;
   
   public DashboardLayerBase()
   {
     super();
     dashboardLegend = super.getStruct("dashboardLegend");
+    nameLabel = super.getStruct("nameLabel");
   }
   
   public Boolean getBBoxIncluded()
@@ -496,32 +499,20 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
-  public String getName()
+  public com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel getNameLabel()
   {
-    return getValue(NAME);
+    return (com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel) nameLabel;
   }
   
-  public void validateName()
+  public void validateNameLabel()
   {
-    this.validateAttribute(NAME);
+    this.validateAttribute(NAMELABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getNameLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.gis.persist.DashboardLayer.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(NAME);
-  }
-  
-  public void setName(String value)
-  {
-    if(value == null)
-    {
-      setValue(NAME, "");
-    }
-    else
-    {
-      setValue(NAME, value);
-    }
+    return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(NAMELABEL);
   }
   
   public com.runwaysdk.system.Actor getOwner()
@@ -746,16 +737,28 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
     return (DashboardLayer) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public java.lang.String applyWithStyle(com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, java.lang.String state)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final java.lang.String applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static final java.lang.String applyWithStyle(java.lang.String id, com.runwaysdk.geodashboard.gis.persist.DashboardStyle style, java.lang.String mapId, java.lang.String state)
   {
     DashboardLayer _instance = DashboardLayer.get(id);
-    return _instance.applyWithStyle(style, mapId, conditions);
+    return _instance.applyWithStyle(style, mapId, state);
+  }
+  
+  public java.lang.String getJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getJSON(java.lang.String id)
+  {
+    DashboardLayer _instance = DashboardLayer.get(id);
+    return _instance.getJSON();
   }
   
   public static com.runwaysdk.system.gis.geo.UniversalQuery getSortedUniversals()

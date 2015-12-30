@@ -36,7 +36,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
 
-  public void cancel(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void cancel(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     if (!dto.isNewInstance())
     {
@@ -44,13 +44,12 @@ public class DashboardController extends DashboardControllerBase implements com.
     }
   }
 
-  public void failCancel(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCancel(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     this.edit(dto.getId());
   }
-  
 
-  public void create(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void create(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -71,13 +70,13 @@ public class DashboardController extends DashboardControllerBase implements com.
     }
   }
 
-  public void failCreate(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCreate(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("dashboard", dto);
     render("createComponent.jsp");
   }
 
-  public void delete(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void delete(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -90,7 +89,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     }
   }
 
-  public void failDelete(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failDelete(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
@@ -98,15 +97,10 @@ public class DashboardController extends DashboardControllerBase implements com.
 
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.geodashboard.DashboardDTO dto = com.runwaysdk.geodashboard.DashboardDTO.lock(super.getClientRequest(), id);
-    req.setAttribute("item", dto);
-    
-    DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), id);
-    req.setAttribute("dashboard", dashboard);
-    
-    String dashboardUsersJSON = dashboard.getAllDashboardUsersJSON();
-    req.setAttribute("dashboardUsersJSON", EscapeUtil.escapeHTMLAttribut(dashboardUsersJSON));
-    
+    DashboardDTO dto = DashboardDTO.lock(super.getClientRequest(), id);
+
+    req.setAttribute("dashboard", dto);
+
     render("editComponent.jsp");
   }
 
@@ -118,9 +112,9 @@ public class DashboardController extends DashboardControllerBase implements com.
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.DashboardDTO dto = new com.runwaysdk.geodashboard.DashboardDTO(clientRequest);
+    DashboardDTO dto = new DashboardDTO(clientRequest);
     req.setAttribute("dashboard", dto);
-      
+
     render("createComponent.jsp");
   }
 
@@ -129,7 +123,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     this.viewAll();
   }
 
-  public void update(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void update(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
@@ -142,7 +136,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     }
   }
 
-  public void failUpdate(com.runwaysdk.geodashboard.DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failUpdate(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
@@ -151,7 +145,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", com.runwaysdk.geodashboard.DashboardDTO.get(clientRequest, id));
+    req.setAttribute("item", DashboardDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
 
@@ -163,7 +157,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.DashboardQueryDTO query = com.runwaysdk.geodashboard.DashboardDTO.getAllInstances(clientRequest, null, true, 20, 1);
+    DashboardQueryDTO query = DashboardDTO.getAllInstances(clientRequest, null, true, 20, 1);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -176,7 +170,7 @@ public class DashboardController extends DashboardControllerBase implements com.
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    com.runwaysdk.geodashboard.DashboardQueryDTO query = com.runwaysdk.geodashboard.DashboardDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+    DashboardQueryDTO query = DashboardDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -192,7 +186,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), dashboardId);
 
     req.setAttribute("dashboard", dashboard);
-    
+
     render("newClone.jsp");
   }
 }

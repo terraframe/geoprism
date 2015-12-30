@@ -198,6 +198,139 @@
     }
   });  
   
+  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckListFormEntry', {
+    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+    Instance : {
+      initialize : function(id, displayLabel, options)
+      {
+        this.$initialize();
+        
+        this._inputs = [];
+        
+//        <div class="field-row clearfix" id="add-dashboard-type-field-row" >
+//        <div class="holder">
+//          <div class="row-holder">
+//            <label><gdb:localize key='dashboardbuilder.configureTypes'/></label>
+//            <div id="add-dashboard-type-container" class="accordion-inner holder ui-sortable left" data-classes="${classesJSON}">
+//            </div>
+//          </div>
+//        </div>
+//      </div>          
+        
+        var html = '<div class="holder"><div class="row-holder">';
+        
+        if(types.length > 0){
+          for(var i=0; i<types.length; i++){
+            var type = types[i];
+            var id = type.id;
+            var checked = "";
+            
+            if(type.selected){
+              checked = "checked";
+            }
+            
+            var chk = '<div class="check-block">' +
+            '<input id="'+id+'" class="add-user-checkbox" type="checkbox" '+checked+'></input>' +
+            '<label for="'+id+'">'+ type.label +'</label>' +
+            '</div>';
+            
+            html += chk;
+          }
+        }
+        else{
+          html += '<p class="dialog-msg">'+ com.runwaysdk.Localize.localize("dashboard", "noMappableTypesMsg") +'</p>';
+        }
+        
+        html += '</div></div>';
+
+        
+        this._div = this.getFactory().newElement('div');
+        this._div.setAttribute('class', 'field-row clearfix');
+        
+        var holder = this.getFactory().newElement('div');
+        holder.setAttribute('class', 'holder');
+        
+        var holder = this.getFactory().newElement('div');
+        holder.setAttribute('class', 'holder');
+        
+        
+        var _span = this.getFactory().newElement('span');
+        _span.setAttribute('class', 'label-text');
+        _span.setInnerHTML(displayLabel);
+        
+        var _innerDiv = this.getFactory().newElement('div');
+        _innerDiv.setAttribute('class', 'checks-frame');
+        
+        for (var i = 0; i < options.length; ++i) {
+          var option = options[i];
+          
+          var input = this._buildOptionInput(option);
+          
+          if(option.checked)
+          {
+            input.setAttribute('checked', true);          
+          }
+          
+          var label = new com.runwaysdk.ui.factory.runway.Label(option.displayLabel);
+          label.setAttribute('for', option.value);
+          
+          _innerDiv.appendChild(input);   
+          _innerDiv.appendChild(label);
+          
+          this._inputs.push(input);
+        }  
+        
+        this._error = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
+        
+        this._div.appendChild(_span);
+        this._div.appendChild(_innerDiv);
+        this._div.appendChild(this._error);   
+        
+        this.setId(id);
+      },
+      _buildOptionInput : function (option)
+      {
+        IsAbstract : true;
+      },      
+      getName : function()
+      {
+        return this.getId();
+      },
+      getDiv : function()
+      {
+        return this._div;
+      },
+      hasError : function() 
+      {
+        return this._error.getInnerHTML() != '';
+      },      
+      removeInlineError : function ()
+      {
+        this._error.setInnerHTML('');              
+        this._div.removeClassName('field-error');        
+      },    
+      addInlineError : function (msg) {
+        this._error.setInnerHTML(msg);        
+        this._div.addClassName('field-error');
+      },
+      getValues : function() {
+        var selectedOptions = [];
+        
+        for (var i = 0; i < this._inputs.length; i++)
+        {
+          if (this._inputs[i].getRawEl().checked)
+          {
+            selectedOptions.push(this._inputs[i].getValue());
+          }
+        }
+        return selectedOptions;
+      },      
+      accept : function(visitor) {
+        visitor.visitSelect(this);      
+      }           
+    }
+  });  
+  
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractGroupFormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
     Instance : {

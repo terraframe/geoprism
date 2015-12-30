@@ -38,10 +38,10 @@ import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
@@ -77,11 +77,31 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   {
     return this.conditions;
   }
+  
+  public String getName()
+  {
+    return this.getNameLabel().getValue();
+  }
+  
+  public void setName(String val)
+  {
+    this.getNameLabel().setValue(val);
+  }
 
   @Override
   public FeatureStrategy getFeatureStrategy()
   {
-    AllLayerType type = this.getLayerType().get(0);
+    AllLayerType type = null;
+    List<AllLayerType> types = this.getLayerType();
+    if(types.size() < 1)
+    {
+      // This will occur for new layers where layer types don't exist yet
+      type = AllLayerType.getDefault();
+    }
+    else
+    {
+      type = types.get(0);
+    }
     return FeatureStrategy.valueOf(type.name());
   }
 
@@ -111,6 +131,13 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   }
 
   @Override
+  public String applyWithStyle(DashboardStyle style, String mapId, String state)
+  {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
+
+    return this.applyWithStyle(style, mapId, conditions);
+  }
+
   public String applyWithStyle(DashboardStyle style, String mapId, DashboardCondition[] conditions)
   {
     this.applyAll(style, mapId, conditions);
@@ -249,7 +276,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
       batch.addLayerToPublish(this);
     }
   }
-  
+
   /**
    * For easy reference, the name of the SLD is the same as the db view name. The .sld extension is automatically added
    * 

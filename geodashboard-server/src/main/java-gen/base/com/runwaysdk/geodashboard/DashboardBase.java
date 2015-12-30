@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1292293876)
+@com.runwaysdk.business.ClassSignature(hash = -25197911)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,10 +29,12 @@ package com.runwaysdk.geodashboard;
 public abstract class DashboardBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  public static java.lang.String COUNTRY = "country";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
+  public static java.lang.String DESCRIPTION = "description";
+  private com.runwaysdk.business.Struct description = null;
+  
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   private com.runwaysdk.business.Struct displayLabel = null;
   
@@ -51,52 +53,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1292293876;
+  private static final long serialVersionUID = -25197911;
   
   public DashboardBase()
   {
     super();
+    description = super.getStruct("description");
     displayLabel = super.getStruct("displayLabel");
-  }
-  
-  public com.runwaysdk.system.gis.geo.GeoEntity getCountry()
-  {
-    if (getValue(COUNTRY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.gis.geo.GeoEntity.get(getValue(COUNTRY));
-    }
-  }
-  
-  public String getCountryId()
-  {
-    return getValue(COUNTRY);
-  }
-  
-  public void validateCountry()
-  {
-    this.validateAttribute(COUNTRY);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCountryMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(COUNTRY);
-  }
-  
-  public void setCountry(com.runwaysdk.system.gis.geo.GeoEntity value)
-  {
-    if(value == null)
-    {
-      setValue(COUNTRY, "");
-    }
-    else
-    {
-      setValue(COUNTRY, value.getId());
-    }
   }
   
   public java.util.Date getCreateDate()
@@ -181,6 +144,22 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     {
       setValue(DASHBOARDROLE, value.getId());
     }
+  }
+  
+  public com.runwaysdk.geodashboard.DashboardDescription getDescription()
+  {
+    return (com.runwaysdk.geodashboard.DashboardDescription) description;
+  }
+  
+  public void validateDescription()
+  {
+    this.validateAttribute(DESCRIPTION);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getDescriptionMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.Dashboard.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(DESCRIPTION);
   }
   
   public com.runwaysdk.geodashboard.DashboardDisplayLabel getDisplayLabel()
@@ -669,16 +648,16 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     _instance.applyGlobalConditions(conditions);
   }
   
-  public void applyWithOptions(java.lang.String[] userIds, java.lang.String name)
+  public java.lang.String applyWithOptions(java.lang.String options)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final void applyWithOptions(java.lang.String id, java.lang.String[] userIds, java.lang.String name)
+  public static final java.lang.String applyWithOptions(java.lang.String id, java.lang.String options)
   {
     Dashboard _instance = Dashboard.get(id);
-    _instance.applyWithOptions(userIds, name);
+    return _instance.applyWithOptions(options);
   }
   
   public static void assignUsers(java.lang.String dashboardId, java.lang.String[] userIds)
@@ -741,7 +720,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.getAllDashboardUsersJSON();
   }
   
-  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] conditions)
+  public static java.lang.String getAvailableDashboardsAsJSON(java.lang.String dashboardId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, java.lang.String state)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -765,18 +750,6 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] getConditions()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[] getConditions(java.lang.String id)
-  {
-    Dashboard _instance = Dashboard.get(id);
-    return _instance.getConditions();
-  }
-  
   public java.lang.String getConditionsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
@@ -787,6 +760,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getConditionsJSON();
+  }
+  
+  public java.lang.String getDashboardDefinition()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getDashboardDefinition(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getDashboardDefinition();
   }
   
   public com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
@@ -811,6 +796,42 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getGeoNodes(thematicAttribute);
+  }
+  
+  public java.lang.String getGeoNodesJSON(com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getGeoNodesJSON(java.lang.String id, com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getGeoNodesJSON(thematicAttribute);
+  }
+  
+  public java.lang.String getJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getJSON(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getJSON();
+  }
+  
+  public java.lang.String getLayersToDelete(java.lang.String options)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getLayersToDelete(java.lang.String id, java.lang.String options)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getLayersToDelete(options);
   }
   
   public java.lang.String getMapId()
@@ -885,6 +906,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return _instance.hasReport();
   }
   
+  public java.lang.String saveState(java.lang.String state, java.lang.Boolean global)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String saveState(java.lang.String id, java.lang.String state, java.lang.Boolean global)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.saveState(state, global);
+  }
+  
   public void setBaseLayerState(java.lang.String baseLayerState)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
@@ -895,6 +928,30 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     _instance.setBaseLayerState(baseLayerState);
+  }
+  
+  public void setDashboardAttributesOrder(java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setDashboardAttributesOrder(java.lang.String id, java.lang.String typeId, java.lang.String[] attributeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setDashboardAttributesOrder(typeId, attributeIds);
+  }
+  
+  public void setMetadataWrapperOrder(java.lang.String[] typeIds)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void setMetadataWrapperOrder(java.lang.String id, java.lang.String[] typeIds)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    _instance.setMetadataWrapperOrder(typeIds);
   }
   
   public static Dashboard lock(java.lang.String id)

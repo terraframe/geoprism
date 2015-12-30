@@ -145,6 +145,44 @@
     }
   });
   
+  var ExceptionHandler = Mojo.Meta.newClass(Constants.ROOT_PACKAGE+'ExceptionHandler', {
+    Static :{
+      renderDialog : function(title, message) {
+        var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(title, {modal: true});
+        dialog.appendContent(message);
+        dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){dialog.close();}, null, {class:'btn btn-primary'});
+        dialog.render();                
+      },
+      handleException : function(e) {
+        if($.type( e ) === "string") {
+          ExceptionHandler.handleErrorMessage(e);
+        }
+        else {
+          ExceptionHandler.handleErrorMessage(e.getLocalizedMessage());
+        }
+      },
+      handleErrorMessage : function(message) {
+        var title = com.runwaysdk.Localize.get("rError", "Error");
+      
+        ExceptionHandler.renderDialog(title, message);
+      },
+      handleInformation : function(information) {
+        if(information != null) {
+          var html = '<ul>';
+        
+          for(var i = 0; i < information.length; i++) {
+            html += '<li>' + information[i].getMessage() +'</li>'
+          }
+          html += '</ul>';
+
+          var title = com.runwaysdk.Localize.get("rInformation", "Information");
+          
+          ExceptionHandler.renderDialog(title, html);
+        }
+      }
+    }
+  });
+  
 
   // Alias the project's root to GDB
   Mojo.GLOBAL[ALIAS] = Mojo.$.com.runwaysdk.geodashboard;

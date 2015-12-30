@@ -32,6 +32,8 @@ import com.runwaysdk.geodashboard.gis.GeoEntityExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.UniversalExportMenuDTO;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyDTO;
 import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyViewDTO;
+import com.runwaysdk.geodashboard.gis.persist.AggregationTypeDTO;
+import com.runwaysdk.geodashboard.gis.persist.AllAggregationTypeDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayerViewDTO;
@@ -40,18 +42,12 @@ import com.runwaysdk.geodashboard.gis.persist.DashboardMapDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerViewDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController;
 import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerDTO;
+import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleDTO;
 import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategyDTO;
 import com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategyDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.ClassifierConditionDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqualDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqualDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardNotEqualDTO;
-import com.runwaysdk.geodashboard.gis.persist.condition.LocationConditionDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierController;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO;
@@ -77,9 +73,6 @@ import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
-import com.runwaysdk.system.metadata.MdAttributeDTO;
-import com.runwaysdk.system.metadata.MdClassDTO;
-import com.runwaysdk.system.metadata.MdTypeDTO;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.system.scheduler.ExecutableJobDTO;
 import com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO;
@@ -148,6 +141,9 @@ public class JavascriptUtil implements Reloadable
     types.add(RolesDTO.CLASS);
     types.add(RoleViewDTO.CLASS);
     types.add(GeodashboardUserDTO.CLASS);
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);   
+    types.add(DashboardController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -212,26 +208,21 @@ public class JavascriptUtil implements Reloadable
   public static void loadDynamicMapBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardMapDTO.CLASS);
     types.add(DashboardLayerDTO.CLASS);
     types.add(DashboardLayerViewDTO.CLASS);
     types.add(DashboardLayerController.CLASS);
     types.add(DashboardThematicLayerDTO.CLASS);
+    types.add(DashboardStyleDTO.CLASS);
+    types.add(DashboardThematicStyleDTO.CLASS);
     types.add(DashboardThematicLayerController.CLASS);
     types.add(DashboardReferenceLayerDTO.CLASS);
     types.add(DashboardReferenceLayerViewDTO.CLASS);
     types.add(DashboardReferenceLayerController.CLASS);
-    types.add(DashboardGreaterThanDTO.CLASS);
-    types.add(DashboardGreaterThanOrEqualDTO.CLASS);
-    types.add(DashboardLessThanDTO.CLASS);
-    types.add(DashboardLessThanOrEqualDTO.CLASS);
-    types.add(DashboardEqualDTO.CLASS);
-    types.add(DashboardNotEqualDTO.CLASS);
-    types.add(ClassifierConditionDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(DashboardMapController.CLASS);
-    types.add(DashboardDTO.CLASS);
-    types.add(LocationConditionDTO.CLASS);
     types.add(ReportItemController.CLASS);
     types.add(ReportItemDTO.CLASS);
     types.add(ReportItemViewDTO.CLASS);
@@ -246,6 +237,9 @@ public class JavascriptUtil implements Reloadable
     types.add(GeoNodeDTO.CLASS);
     types.add(AggregationStrategyViewDTO.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+    types.add(MappableClassDTO.CLASS);
+    types.add(AllAggregationTypeDTO.CLASS);
+    types.add(AggregationTypeDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -254,7 +248,16 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(DashboardDTO.CLASS);
-    
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+
+  public static void loadBuilderBundle(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
+    types.add(DashboardController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

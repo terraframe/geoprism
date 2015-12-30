@@ -27,9 +27,9 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.LocationCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardAttributeCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.AggregateFunction;
@@ -98,7 +98,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
     if (style != null && style instanceof DashboardThematicStyle)
     {
       ValueQuery thematicQuery = this.build();
-      
+
       DashboardThematicStyle tStyle = (DashboardThematicStyle) style;
 
       MdAttributeDAOIF secondaryMdAttribute = tStyle.getSecondaryAttributeDAO();
@@ -316,7 +316,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
       {
         if (condition instanceof DashboardAttributeCondition)
         {
-          String mdAttributeId = ( (DashboardAttributeCondition) condition ).getDefiningMdAttributeId();
+          String mdAttributeId = ( (DashboardAttributeCondition) condition ).getMdAttributeId();
 
           MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
           MdClassDAOIF definedByClass = mdAttribute.definedByClass();

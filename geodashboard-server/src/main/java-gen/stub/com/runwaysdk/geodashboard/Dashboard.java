@@ -25,14 +25,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +50,7 @@ import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -60,7 +59,10 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
+import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.gis.persist.DashboardMap;
@@ -69,51 +71,88 @@ import com.runwaysdk.geodashboard.gis.persist.GeoEntityThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy;
 import com.runwaysdk.geodashboard.gis.persist.GeometryThematicQueryBuilder;
 import com.runwaysdk.geodashboard.gis.persist.ThematicQueryBuilder;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.persist.condition.DashboardConditionQuery;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTableQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot;
 import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
+import com.runwaysdk.geodashboard.report.ReportItem;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
+import com.runwaysdk.geodashboard.service.SeedKeyGenerator;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
+import com.runwaysdk.query.Condition;
 import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.ReadPermissionException;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static class MdClassComparator implements Comparator<MdClass>, Reloadable
+
+  private static class ThumbnailThread implements Runnable, Reloadable
   {
+    private Dashboard          dashboard;
+
+    private GeodashboardUser[] users;
+
+    private String             sessionId;
+
+    public ThumbnailThread(String sessionId, Dashboard dashboard, GeodashboardUser... users)
+    {
+      this.dashboard = dashboard;
+      this.users = users;
+      this.sessionId = sessionId;
+    }
 
     @Override
-    public int compare(MdClass m1, MdClass m2)
+    public void run()
     {
-      return m1.getDisplayLabel().getValue().compareTo(m2.getDisplayLabel().getValue());
+      this.execute(this.sessionId);
     }
+
+    @Request(RequestType.SESSION)
+    public void execute(String sessionId)
+    {
+      dashboard.generateThumbnailImage(users);
+    }
+
   }
 
-  private static final long serialVersionUID = 2043512251;
+  private static final long           serialVersionUID = 2043512251;
+
+  private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
 
   public Dashboard()
   {
     super();
+  }
+
+  @Override
+  public String toString()
+  {
+    return this.getDisplayLabel().getValue();
   }
 
   public static DashboardQuery getSortedDashboards()
@@ -160,18 +199,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       throw ex;
     }
 
-    // Delete all saved conditions
-    DashboardConditionQuery query = new DashboardConditionQuery(new QueryFactory());
+    // Delete all saved states
+    DashboardStateQuery query = new DashboardStateQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(this));
 
-    OIterator<? extends DashboardCondition> it = query.getIterator();
+    OIterator<? extends DashboardState> it = query.getIterator();
 
     try
     {
       while (it.hasNext())
       {
-        DashboardCondition condition = it.next();
-        condition.delete();
+        DashboardState state = it.next();
+        state.delete();
       }
     }
     finally
@@ -196,6 +235,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     finally
     {
       mIterator.close();
+    }
+
+    // Delete the corresponding report item
+    ReportItem report = ReportItem.getByDashboard(this.getId());
+
+    if (report != null)
+    {
+      report.delete();
     }
 
     Roles role = this.getDashboardRole();
@@ -244,14 +291,21 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public MdClass[] getSortedTypes()
   {
     // This operation should use only cached objects
-    OIterator<? extends MetadataWrapper> iter = this.getAllMetadata();
+    DashboardMetadataQuery query = new DashboardMetadataQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(this));
+    query.ORDER_BY_ASC(query.getListOrder());
+
+    OIterator<? extends DashboardMetadata> iter = query.getIterator();
 
     List<MdClass> mdClasses = new LinkedList<MdClass>();
+
     try
     {
       while (iter.hasNext())
       {
-        MetadataWrapper mw = iter.next();
+        DashboardMetadata dm = iter.next();
+        MetadataWrapper mw = dm.getChild();
+
         mdClasses.add(mw.getWrappedMdClass());
       }
     }
@@ -259,8 +313,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       iter.close();
     }
-
-    Collections.sort(mdClasses, new MdClassComparator());
 
     return mdClasses.toArray(new MdClass[mdClasses.size()]);
   }
@@ -281,8 +333,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     if (this.isNew() && !this.isAppliedToDB())
     {
+      if (this.getName() == null || this.getName().length() == 0)
+      {
+        this.setName(generator.generateKey(""));
+      }
+
       String dashboardLabel = this.getDisplayLabel().getValue();
-      String roleName = dashboardLabel.replaceAll("\\s", "");
+      String roleName = this.getName().replaceAll("\\s", "");
 
       // Create the Dashboard Role
       Roles role = new Roles();
@@ -309,15 +366,86 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Override
-  @Transaction
-  public void applyWithOptions(String[] userIds, String name)
+  public String applyWithOptions(String options)
   {
-    this.lock();
-    this.getDisplayLabel().setValue(name);
-    this.apply();
-    this.unlock();
+    // Loop until a name is selected which works
+    while (true)
+    {
+      try
+      {
+        return this.applyWithOptionsInTransaction(options);
+      }
+      catch (DuplicateDataException e)
+      {
+        this.setName(generator.generateKey(""));
+      }
+    }
+  }
 
-    assignUsers(this.getId(), userIds);
+  @Transaction
+  private String applyWithOptionsInTransaction(String options)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(options);
+
+      if (object.has("label"))
+      {
+        this.getDisplayLabel().setValue(object.getString("label"));
+      }
+
+      this.apply();
+
+      if (object.has("users"))
+      {
+        JSONArray users = object.getJSONArray("users");
+
+        assignUsers(this.getId(), users);
+      }
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        MappableClass.assign(this, types);
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+    return this.getJSON();
+  }
+
+  @Override
+  public String getLayersToDelete(String options)
+  {
+    try
+    {
+      JSONArray layers = new JSONArray();
+
+      JSONObject object = new JSONObject(options);
+
+      if (object.has("types"))
+      {
+        JSONArray types = object.getJSONArray("types");
+
+        Collection<String> layerNames = MappableClass.getLayersToDelete(this, types);
+
+        for (String layerName : layerNames)
+        {
+          layers.put(layerName);
+        }
+      }
+
+      return layers.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
   }
 
   @Override
@@ -327,7 +455,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
     clone.setName(name);
-    clone.setCountry(this.getCountry());
+    clone.getDescription().setDefaultValue(this.getDescription().getValue());
     clone.setRemovable(true);
     clone.apply();
 
@@ -464,6 +592,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static String getClassifierTree(String mdAttributeId)
   {
+    JSONArray nodes = Dashboard.getClassifierTreeJSON(mdAttributeId);
+
+    return nodes.toString();
+  }
+
+  public static JSONArray getClassifierTreeJSON(String mdAttributeId)
+  {
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(new QueryFactory());
 
@@ -515,7 +650,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
 
-      return nodes.toString();
+      return nodes;
     }
     finally
     {
@@ -555,8 +690,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  public static String[] getCategoryInputSuggestions(String mdAttributeId, String geoNodeId, String universalId, String aggregationVal, String text, Integer limit, DashboardCondition[] conditions)
+  public static String[] getCategoryInputSuggestions(String mdAttributeId, String geoNodeId, String universalId, String aggregationVal, String text, Integer limit, String state)
   {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
+
     Set<String> suggestions = new TreeSet<String>();
 
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
@@ -616,8 +753,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static Dashboard[] getDashboardsForCountry(GeoEntity country)
   {
-    DashboardQuery query = new DashboardQuery(new QueryFactory());
-    query.WHERE(query.getCountry().EQ(country));
+    QueryFactory factory = new QueryFactory();
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(country));
+
+    UniversalQuery uQuery = new UniversalQuery(factory);
+    uQuery.WHERE(uQuery.EQ(aiQuery.getChild()));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.universal(uQuery));
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getWrappedMdClass().EQ(mcQuery.getWrappedMdClass()));
+
+    DashboardQuery query = new DashboardQuery(factory);
+    query.WHERE(query.metadata(mwQuery));
 
     OIterator<? extends Dashboard> it = query.getIterator();
 
@@ -633,11 +784,49 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
+  public List<GeoEntity> getCountries()
+  {
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getDashboard().EQ(this));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    GeoEntityQuery query = new GeoEntityQuery(factory);
+    query.WHERE(query.getUniversal().EQ(aptQuery.getParentTerm()));
+    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
+
+    OIterator<? extends GeoEntity> it = query.getIterator();
+
+    try
+    {
+      List<? extends GeoEntity> entities = it.getAll();
+
+      return new LinkedList<GeoEntity>(entities);
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+
   public ValueQuery getGeoEntitySuggestions(String text, Integer limit)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
-    GeoEntity country = this.getCountry();
+    List<GeoEntity> countries = this.getCountries();
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
     GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
@@ -652,10 +841,24 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
+    Condition cCondition = null;
+
+    for (GeoEntity country : countries)
+    {
+      if (cCondition == null)
+      {
+        cCondition = aptQuery.getParentTerm().EQ(country);
+      }
+      else
+      {
+        cCondition = OR.get(cCondition, aptQuery.getParentTerm().EQ(country));
+      }
+    }
+
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    query.AND(aptQuery.getParentTerm().EQ(country));
     query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+    query.AND(cCondition);
 
     query.ORDER_BY_ASC(geoLabel);
 
@@ -673,72 +876,96 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return ( query.getCount() > 0 );
   }
 
-  @Override
   public DashboardCondition[] getConditions()
   {
     DashboardState state = this.getDashboardState();
-    String json = state.getConditions();
 
-    DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+    if (state != null)
+    {
+      String json = state.getConditions();
 
-    return conditions;
+      if (json != null && json.length() > 0)
+      {
+        DashboardCondition[] conditions = DashboardCondition.deserialize(json);
+
+        return conditions;
+      }
+    }
+
+    return new DashboardCondition[] {};
   }
 
-  @Override
-  @Transaction
-  public void applyConditions(DashboardCondition[] conditions)
+  public Map<String, DashboardCondition> getConditionMap()
   {
-    /*
-     * First delete any conditions which exist
-     */
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    Map<String, DashboardCondition> map = new HashMap<String, DashboardCondition>();
 
-    byte[] image = this.generateThumbnail();
-
-    JSONArray array = new JSONArray();
+    DashboardCondition[] conditions = this.getConditions();
 
     for (DashboardCondition condition : conditions)
     {
-      array.put(condition.getJSON());
+      map.put(condition.getJSONKey(), condition);
     }
 
-    DashboardState state = DashboardState.getDashboardState(this, user);
-
-    if (state == null)
-    {
-      state = new DashboardState();
-      state.setDashboard(this);
-      state.setGeodashboardUser(user);
-    }
-    else
-    {
-      state.lock();
-    }
-
-    state.setConditions(array.toString());
-    state.setMapThumbnail(image);
-    state.apply();
+    return map;
   }
 
-  @Override
-  @Transaction
-  public void applyGlobalConditions(DashboardCondition[] conditions)
-  {
-    byte[] image = this.generateThumbnail();
+  // HEADS UP
 
-    JSONArray array = new JSONArray();
-
-    for (DashboardCondition condition : conditions)
-    {
-      array.put(condition.getJSON());
-    }
-
-    DashboardState state = DashboardState.getDashboardState(this, null);
-    state.lock();
-    state.setConditions(array.toString());
-    state.setMapThumbnail(image);
-    state.apply();
-  }
+  // @Override
+  // @Transaction
+  // public void applyConditions(DashboardCondition[] conditions)
+  // {
+  // /*
+  // * First delete any conditions which exist
+  // */
+  // GeodashboardUser user = GeodashboardUser.getCurrentUser();
+  //
+  // byte[] image = this.generateThumbnail();
+  //
+  // JSONArray array = new JSONArray();
+  //
+  // for (DashboardCondition condition : conditions)
+  // {
+  // array.put(condition.getJSON());
+  // }
+  //
+  // DashboardState state = DashboardState.getDashboardState(this, user);
+  //
+  // if (state == null)
+  // {
+  // state = new DashboardState();
+  // state.setDashboard(this);
+  // state.setGeodashboardUser(user);
+  // }
+  // else
+  // {
+  // state.lock();
+  // }
+  //
+  // state.setConditions(array.toString());
+  // state.setMapThumbnail(image);
+  // state.apply();
+  // }
+  //
+  // @Override
+  // @Transaction
+  // public void applyGlobalConditions(DashboardCondition[] conditions)
+  // {
+  // byte[] image = this.generateThumbnail();
+  //
+  // JSONArray array = new JSONArray();
+  //
+  // for (DashboardCondition condition : conditions)
+  // {
+  // array.put(condition.getJSON());
+  // }
+  //
+  // DashboardState state = DashboardState.getDashboardState(this, null);
+  // state.lock();
+  // state.setConditions(array.toString());
+  // state.setMapThumbnail(image);
+  // state.apply();
+  // }
 
   @Override
   public String getConditionsJSON()
@@ -759,14 +986,19 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
 
-    Boolean access = currentUser.isAssigned(this.getDashboardRole());
-
-    if (!access)
+    if (currentUser != null)
     {
-      return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      Boolean access = currentUser.isAssigned(this.getDashboardRole());
+
+      if (!access)
+      {
+        return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+      }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   /*
@@ -811,9 +1043,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public String getAllDashboardUsersJSON()
   {
+    JSONArray usersArr = this.getDashboardUsersJSON();
+
+    return usersArr.toString();
+  }
+
+  private JSONArray getDashboardUsersJSON()
+  {
     JSONArray usersArr = new JSONArray();
 
     GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
+
     for (int i = 0; i < gdUsers.length; i++)
     {
       JSONObject userObj = new JSONObject();
@@ -839,70 +1079,27 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
     }
-
-    return usersArr.toString();
+    return usersArr;
   }
 
-  public static void assignUsers(String dashboardId, String[] userIds)
+  public static void assignUsers(String dashboardId, JSONArray users)
   {
     Dashboard dashboard = Dashboard.get(dashboardId);
-    Roles dbRole = dashboard.getDashboardRole();
-    String dbRoleId = dbRole.getId();
-    Roles[] allGeodashRoles = RoleView.getGeodashboardRoles();
+    String roleId = dashboard.getDashboardRoleId();
+    RoleDAO roleDAO = RoleDAO.get(roleId).getBusinessDAO();
 
-    for (String userJSON : userIds)
+    for (int i = 0; i < users.length(); i++)
     {
-      List<String> roleIds = new ArrayList<String>();
-      Set<String> set;
-      UserDAOIF user = null;
       try
       {
-        String userId = null;
-        JSONObject userObj = new JSONObject(userJSON);
+        JSONObject userObj = users.getJSONObject(i);
 
-        @SuppressWarnings("unchecked")
-        Iterator<String> userObjKeys = userObj.keys();
-        while (userObjKeys.hasNext())
-        {
-          userId = userObjKeys.next().toString();
-        }
+        String userId = userObj.getString(GeodashboardUser.ID);
+        boolean assignToDashboard = (Boolean) userObj.get("hasAccess");
 
-        GeodashboardUser gdUser = GeodashboardUser.get(userId);
-        user = UserDAO.get(userId);
+        UserDAOIF user = UserDAO.get(userId);
 
-        boolean assignToDashboard = (Boolean) userObj.get(userId);
         if (assignToDashboard)
-        {
-          roleIds.add(dbRoleId);
-        }
-
-        List<? extends Roles> userRoles = gdUser.getAllAssignedRole().getAll();
-        for (Roles existingRole : userRoles)
-        {
-          // filter out roles for this dashboard if it already exists on the user
-          // because the dashboard role assignment happens above
-          if (!dbRoleId.equals(existingRole.getId()))
-          {
-            roleIds.add(existingRole.getId());
-          }
-        }
-      }
-      catch (JSONException e)
-      {
-        String msg = "Could not properly parse user json.";
-        throw new ProgrammingErrorException(msg, e);
-      }
-
-      set = new HashSet<String>(roleIds);
-
-      /*
-       * Assign roles
-       */
-      for (Roles role : allGeodashRoles)
-      {
-        RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
-
-        if (set.contains(role.getId()))
         {
           roleDAO.assignMember(user);
         }
@@ -910,6 +1107,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         {
           roleDAO.deassignMember(user);
         }
+      }
+      catch (JSONException e)
+      {
+        String msg = "Could not properly parse user json.";
+        throw new ProgrammingErrorException(msg, e);
       }
     }
   }
@@ -928,19 +1130,25 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public Map<String, Integer> getUniversalIndices()
   {
-    Universal universal = this.getCountry().getUniversal();
-
-    Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+    List<GeoEntity> countries = this.getCountries();
 
     Map<String, Integer> indices = new HashMap<String, Integer>();
 
     int count = 0;
 
-    indices.put(universal.getId(), count++);
-
-    for (Term child : children)
+    for (GeoEntity country : countries)
     {
-      indices.put(child.getId(), count++);
+      Universal universal = country.getUniversal();
+
+      Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+
+      indices.put(universal.getId(), count++);
+
+      for (Term child : children)
+      {
+        indices.put(child.getId(), count++);
+      }
+
     }
 
     return indices;
@@ -951,6 +1159,31 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MdAttributeDAOIF thematicAttributeDAO = MdAttributeDAO.get(thematicAttribute.getId());
 
     return this.getGeoNodes(thematicAttributeDAO);
+  }
+
+  @Override
+  public String getGeoNodesJSON(MdAttribute thematicAttribute)
+  {
+    JSONArray nodesArr = new JSONArray();
+    GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
+    for (GeoNode node : nodes)
+    {
+      try
+      {
+        JSONObject nodeJSON = new JSONObject();
+        nodeJSON.put("id", node.getId());
+        nodeJSON.put("type", node.getType());
+        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+        nodesArr.put(nodeJSON);
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not build GeoNode JSON.";
+        throw new ProgrammingErrorException(error, e);
+      }
+    }
+
+    return nodesArr.toString();
   }
 
   public GeoNode[] getGeoNodes(MdAttributeDAOIF thematicAttribute)
@@ -1054,18 +1287,61 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return state;
   }
 
+  private DashboardState getOrCreateDashboardState(GeodashboardUser user)
+  {
+    DashboardState state = DashboardState.getDashboardState(this, user);
+
+    if (state == null)
+    {
+      state = new DashboardState();
+      state.setDashboard(this);
+      state.setGeodashboardUser(user);
+    }
+    else
+    {
+      state.lock();
+    }
+    return state;
+  }
+
   @Override
-  @Transaction
   public void generateThumbnailImage()
   {
-    byte[] image = this.generateThumbnail();
+    /*
+     * This method is only invoked when a new layer is created. As such, it generates a thumbnail for both the current
+     * users state and the global state. Normally you just want to generate a thumbnail for one or the other.
+     */
+    this.executeThumbnailThread(GeodashboardUser.getCurrentUser(), null);
+  }
 
-    GeodashboardUser[] users = new GeodashboardUser[] { null, GeodashboardUser.getCurrentUser() };
+  private void executeThumbnailThread(GeodashboardUser... users)
+  {
+    String sessionId = Session.getCurrentSession().getId();
+
+    // Write the thumbnail
+    Thread t = new Thread(new ThumbnailThread(sessionId, this, users));
+    t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+    {
+      @Override
+      public void uncaughtException(Thread t, Throwable e)
+      {
+        e.printStackTrace();
+      }
+    });
+    t.setDaemon(true);
+    t.start();
+  }
+
+  @Transaction
+  private void generateThumbnailImage(GeodashboardUser[] users)
+  {
+    byte[] image = this.generateThumbnail();
 
     for (GeodashboardUser user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
-      if(state != null)
+      
+      if (state != null)
       {
         state.lock();
         state.setMapThumbnail(image);
@@ -1081,7 +1357,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     BufferedImage base = null;
     Graphics mapBaseGraphic = null;
     BufferedImage resizedImage = null;
-    int defaultWidth = 800;
+    int defaultWidth = 1179;
     int defaultHeight = 750;
     Double bottom;
     Double top;
@@ -1163,7 +1439,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     try
     {
-      resizedImage = Thumbnails.of(base).size(210, 210).asBufferedImage();
+      resizedImage = Thumbnails.of(base).size(330, 210).asBufferedImage();
     }
     catch (IOException e)
     {
@@ -1215,5 +1491,420 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     dm.lock();
     dm.setActiveBaseMap(baseLayerState);
     dm.unlock();
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClass mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+    query.AND(query.getDashboard().EQ(this));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  @Override
+  public String getJSON()
+  {
+    try
+    {
+      return this.toJSON().toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public JSONObject toJSON() throws JSONException
+  {
+    /*
+     * Ensure the user has permissions to read this dashboard
+     */
+    if (!this.hasAccess())
+    {
+      UserDAOIF user = Session.getCurrentSession().getUser();
+      throw new ReadPermissionException("", this, user);
+    }
+
+    return getJSON(this.getConditionMap());
+  }
+
+  public JSONObject getJSON(Map<String, DashboardCondition> conditions) throws JSONException
+  {
+    MdClass[] mdClasses = this.getSortedTypes();
+
+    JSONArray types = new JSONArray();
+
+    for (MdClass mdClass : mdClasses)
+    {
+      types.put(this.toJSON(mdClass, conditions));
+    }
+
+    DashboardMap map = this.getMap();
+
+    JSONObject object = new JSONObject();
+    object.put("id", this.getId());
+    object.put("name", this.getName());
+    object.put("label", this.getDisplayLabel().getValue());
+    object.put("description", this.getDescription().getValue());
+    object.put("hasReport", this.hasReport());
+    object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+    object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
+    object.put("types", types);
+
+    List<GeoEntity> countries = this.getCountries();
+
+    JSONArray areas = new JSONArray();
+
+    for (GeoEntity country : countries)
+    {
+      areas.put(country.getDisplayLabel().getValue());
+    }
+
+    object.put("focusAreas", areas);
+
+    if (map != null)
+    {
+      object.put("mapId", map.getId());
+    }
+
+    String activeBaseMap = map.getActiveBaseMap();
+
+    if (activeBaseMap != null && activeBaseMap.length() > 0)
+    {
+      object.put("activeBaseMap", new JSONObject(activeBaseMap));
+    }
+    else
+    {
+      JSONObject baseMap = new JSONObject();
+      baseMap.put("LAYER_SOURCE_TYPE", "OSM");
+
+      object.put("activeBaseMap", baseMap);
+    }
+
+    if (conditions.containsKey(LocationCondition.CONDITION_TYPE))
+    {
+      DashboardCondition condition = conditions.get(LocationCondition.CONDITION_TYPE);
+
+      object.put("location", condition.getJSON());
+    }
+    else
+    {
+      object.put("location", new JSONObject());
+    }
+
+    return object;
+  }
+
+  private JSONObject toJSON(MdClass mdClass, Map<String, DashboardCondition> conditions) throws JSONException
+  {
+    JSONArray attributes = new JSONArray();
+
+    MetadataWrapper wrapper = this.getMetadataWrapper(mdClass);
+    MdAttributeView[] views = wrapper.getSortedAttributes();
+
+    for (MdAttributeView view : views)
+    {
+      DashboardCondition condition = conditions.get(view.getMdAttributeId());
+
+      attributes.put(view.toJSON(condition));
+    }
+
+    JSONObject object = new JSONObject();
+    object.put("label", mdClass.getDisplayLabel().getValue());
+    object.put("id", mdClass.getId());
+    object.put("description", this.getDescription().getValue());
+    object.put("attributes", attributes);
+
+    return object;
+  }
+
+  @Override
+  public String saveState(String json, Boolean global)
+  {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
+
+    GeodashboardUser user = null;
+
+    if (!global)
+    {
+      user = GeodashboardUser.getCurrentUser();
+    }
+
+    DashboardState state = this.getOrCreateDashboardState(user);
+
+    state.setConditions(DashboardCondition.serialize(conditions));
+    state.apply();
+
+    this.executeThumbnailThread(user);
+
+    return "";
+  }
+
+  public static String getAvailableDashboardsAsJSON(String dashboardId)
+  {
+    DashboardQuery query = Dashboard.getSortedDashboards();
+    OIterator<? extends Dashboard> iterator = query.getIterator();
+
+    try
+    {
+      JSONArray dashboards = new JSONArray();
+      boolean first = true;
+
+      JSONObject response = new JSONObject();
+
+      while (iterator.hasNext())
+      {
+        Dashboard dashboard = iterator.next();
+
+        JSONObject object = new JSONObject();
+        object.put("dashboardId", dashboard.getId());
+        object.put("label", dashboard.getDisplayLabel().getValue());
+        object.put("description", dashboard.getDescription().getValue());
+
+        List<GeoEntity> countries = dashboard.getCountries();
+
+        JSONArray areas = new JSONArray();
+
+        for (GeoEntity country : countries)
+        {
+          areas.put(country.getDisplayLabel().getValue());
+        }
+
+        object.put("focusAreas", areas);
+
+        dashboards.put(object);
+
+        if (first || dashboard.getId().equals(dashboardId))
+        {
+          response.put("state", dashboard.toJSON());
+
+          first = false;
+        }
+      }
+
+      response.put("dashboards", dashboards);
+      response.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+
+      return response.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+  }
+
+  public MetadataWrapper getMetadataWrapper(MdClassDAOIF mdClass)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(this));
+    query.AND(query.getWrappedMdClass().EQ(mdClass.getId()));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        return iterator.next();
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  private JSONArray getMappableClassJSON() throws JSONException
+  {
+    List<? extends MetadataWrapper> wrappers = this.getAllMetadata().getAll();
+
+    JSONArray array = new JSONArray();
+
+    MappableClass[] mClasses = MappableClass.getAll();
+
+    for (MappableClass mClass : mClasses)
+    {
+      array.put(mClass.toJSON(this, wrappers));
+    }
+    return array;
+  }
+
+  @Override
+  public String getDashboardDefinition()
+  {
+    try
+    {
+      if (!this.isNew())
+      {
+        this.lock();
+      }
+
+      JSONObject options = new JSONObject();
+      options.put("types", this.getMappableClassJSON());
+      options.put("users", this.getDashboardUsersJSON());
+
+      JSONObject object = new JSONObject();
+      object.put(Dashboard.NAME, this.getName());
+      object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
+      object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
+      object.put(Dashboard.REMOVABLE, this.getRemovable());
+
+      List<GeoEntity> countries = this.getCountries();
+
+      JSONArray areas = new JSONArray();
+
+      for (GeoEntity country : countries)
+      {
+        areas.put(country.getDisplayLabel().getValue());
+      }
+
+      object.put("focusAreas", areas);
+
+      object.put("options", options);
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public int getMaxOrder()
+  {
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+
+    MetadataWrapperQuery wQuery = new MetadataWrapperQuery(vQuery);
+    DashboardMetadataQuery dmQuery = new DashboardMetadataQuery(vQuery);
+
+    vQuery.WHERE(wQuery.getDashboard().EQ(this));
+    vQuery.AND(dmQuery.hasChild(wQuery));
+
+    MAX selectable = F.MAX(dmQuery.getListOrder());
+    selectable.setColumnAlias("order_max");
+    selectable.setUserDefinedAlias("order_max");
+
+    vQuery.SELECT(selectable);
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ValueObject result = iterator.next();
+        String value = result.getValue("order_max");
+
+        if (value != null && value.length() > 0)
+        {
+          return Integer.parseInt(value);
+        }
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return 0;
+  }
+
+  @Override
+  @Transaction
+  public void setMetadataWrapperOrder(String[] typeIds)
+  {
+    DashboardMetadataQuery query = new DashboardMetadataQuery(new QueryFactory());
+    query.WHERE(query.getParent().EQ(this));
+
+    OIterator<? extends DashboardMetadata> it = query.getIterator();
+
+    try
+    {
+      List<? extends DashboardMetadata> dms = it.getAll();
+
+      for (DashboardMetadata dm : dms)
+      {
+        MetadataWrapper wrapper = dm.getChild();
+
+        for (int i = 0; i < typeIds.length; i++)
+        {
+          String typeId = typeIds[i];
+
+          if (wrapper.getWrappedMdClassId().equals(typeId))
+          {
+            dm.lock();
+            dm.setListOrder(i);
+            dm.apply();
+          }
+        }
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+  }
+
+  @Override
+  @Transaction
+  public void setDashboardAttributesOrder(String classId, String[] attributeIds)
+  {
+    MetadataWrapper wrapper = MetadataWrapper.getByWrappedMdClassId(this, classId);
+
+    if (wrapper != null)
+    {
+      DashboardAttributesQuery query = new DashboardAttributesQuery(new QueryFactory());
+      query.WHERE(query.getParent().EQ(wrapper));
+
+      OIterator<? extends DashboardAttributes> it = query.getIterator();
+
+      try
+      {
+        List<? extends DashboardAttributes> attributes = it.getAll();
+
+        for (DashboardAttributes attribute : attributes)
+        {
+          AttributeWrapper aw = attribute.getChild();
+
+          for (int i = 0; i < attributeIds.length; i++)
+          {
+            String attributeId = attributeIds[i];
+
+            if (aw.getWrappedMdAttributeId().equals(attributeId))
+            {
+              attribute.lock();
+              attribute.setListOrder(i);
+              attribute.apply();
+            }
+          }
+        }
+      }
+      finally
+      {
+        it.close();
+      }
+    }
   }
 }

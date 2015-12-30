@@ -67,7 +67,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.Dashboard;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
+import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.geodashboard.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
@@ -107,6 +107,10 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   public static final String  CATEGORY              = "category";
 
   public static final String  CRITERIA              = "criteria";
+
+  public static final String  CRITERIA_INFO         = "criteriaInfo";
+
+  public static final String  STATE                 = "state";
 
   public static final String  BASE_URL              = "dss.vector.solutions.report.ReportController.generate.mojo?report=";
 
@@ -501,33 +505,22 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       map.put(parameter.getParameterName(), parameter.getParameterValue());
     }
 
-    /*
-     * Set the default category if one is not provided. The default category is the geo Id of the country of the
-     * dashboard.
-     */
-    String geoId = map.get(CATEGORY);
-
-    if (geoId == null || geoId.length() == 0)
+    if (map.containsKey(STATE))
     {
-      Dashboard dashboard = this.getDashboard();
-      GeoEntity country = dashboard.getCountry();
-
-      map.put(CATEGORY, country.getGeoId());
-    }
-
-    map.put("categoryLabel", this.getLabel(map));
-
-    if (map.containsKey(CRITERIA))
-    {
-      String criteria = map.get(CRITERIA);
+      String state = map.get(STATE);
+      DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
 
       // Get the user friendly description of the criteria
-      if (criteria != null && criteria.length() > 0)
+      if (conditions.length > 0)
       {
-        String information = ReportProviderUtil.getConditionInformation(criteria);
+        map.put(CRITERIA, DashboardCondition.serialize(conditions));
 
-        map.put("criteriaInfo", information);
+        String information = ReportProviderUtil.getConditionInformation(conditions);
+
+        map.put(CRITERIA_INFO, information);
       }
+
+      map.remove(STATE);
     }
 
     map.put(CONTEXT, new JSONObject(map).toString());
@@ -535,22 +528,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return map;
   }
 
-  private String getLabel(Map<String, String> map)
-  {
-    String layerId = map.get(LAYER_ID);
-    String categoryId = map.get(CATEGORY);
-
-    if (layerId == null || layerId.length() == 0)
-    {
-      GeoEntity geoEntity = GeoEntity.getByKey(categoryId);
-      String label = geoEntity.getDisplayLabel().getValue();
-
-      return label;
-    }
-
-    DashboardThematicLayer layer = DashboardThematicLayer.get(layerId);
-    return layer.getCategoryLabel(categoryId);
-  }
 
   private String getFormat(Map<String, String> parameters)
   {

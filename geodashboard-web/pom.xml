@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.3-SNAPSHOT</version>
+      <version>2.0.4</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -125,7 +125,7 @@
                   <filtering>false</filtering>
                 </resource>
                 <!-- <resource> <directory>src/main/resources</directory> </resource> -->
-              </webResources>
+              </webResources>              
             </configuration>
           </plugin>
         </plugins>

@@ -18,19 +18,31 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer;
+import com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerQuery;
+import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
 
@@ -60,12 +72,44 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
   @Override
   public void delete()
   {
+    Dashboard dashboard = this.getDashboard();
+
     for (AttributeWrapper aw : this.getAllAttributeWrapper())
     {
-      aw.delete();
+      aw.delete(dashboard);
     }
 
     super.delete();
+
+    List<GeoEntity> countries = dashboard.getCountries();
+
+    // Delete any existing layers
+    QueryFactory factory = new QueryFactory();
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+
+    for (GeoEntity country : countries)
+    {
+      aptQuery.OR(aptQuery.getParentTerm().EQ(country.getUniversal()));
+    }
+
+    DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
+    query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+
+    OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardReferenceLayer layer = it.next();
+        layer.delete();
+      }
+    }
+    finally
+    {
+      it.close();
+    }
   }
 
   public MdAttributeView[] getSortedAttributes()
@@ -76,7 +120,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     Locale locale = Session.getCurrentLocale();
 
     QueryFactory f = new QueryFactory();
-    
+
     DashboardAttributesQuery daQ = new DashboardAttributesQuery(f);
 
     daQ.WHERE(daQ.parentId().EQ(this.getId()));
@@ -190,4 +234,121 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     return clone;
   }
 
+  public int getMaxOrder()
+  {
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+
+    DashboardAttributesQuery query = new DashboardAttributesQuery(vQuery);
+
+    vQuery.WHERE(query.getParent().EQ(this));
+
+    MAX selectable = F.MAX(query.getListOrder());
+    selectable.setColumnAlias("order_max");
+    selectable.setUserDefinedAlias("order_max");
+
+    vQuery.SELECT(selectable);
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        ValueObject result = iterator.next();
+        String value = result.getValue("order_max");
+
+        if (value != null && value.length() > 0)
+        {
+          return Integer.parseInt(value);
+        }
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return 0;
+  }
+
+  public static MetadataWrapper getByWrappedMdClassId(Dashboard dashboard, String classId)
+  {
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getDashboard().EQ(dashboard));
+    query.AND(query.getWrappedMdClass().EQ(classId));
+
+    OIterator<? extends MetadataWrapper> it = query.getIterator();
+
+    try
+    {
+      if (it.hasNext())
+      {
+        MetadataWrapper wrapper = it.next();
+
+        return wrapper;
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return null;
+  }
+
+  public Collection<String> getLayersToDelete()
+  {
+    Collection<String> layerNames = new HashSet<String>();
+
+    Dashboard dashboard = this.getDashboard();
+
+    for (AttributeWrapper aw : this.getAllAttributeWrapper())
+    {
+      layerNames.addAll(aw.getLayersToDelete(dashboard));
+    }
+
+    // Check if any existing reference layers will be deleted
+    QueryFactory factory = new QueryFactory();
+
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
+    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
+    
+    DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
+    query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+
+    OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
+
+    try
+    {
+      while (it.hasNext())
+      {
+        DashboardReferenceLayer layer = it.next();
+
+        layerNames.add(layer.getName());
+      }
+    }
+    finally
+    {
+      it.close();
+    }
+
+    return layerNames;
+  }
 }
