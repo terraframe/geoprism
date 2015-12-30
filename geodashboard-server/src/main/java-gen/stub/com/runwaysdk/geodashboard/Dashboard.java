@@ -355,7 +355,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     if (isNew)
     {
       DashboardMap map = new DashboardMap();
-      map.setName(this.getDisplayLabel().getValue());
+      map.setName(this.getName());
       map.setDashboard(this);
       map.apply();
 
