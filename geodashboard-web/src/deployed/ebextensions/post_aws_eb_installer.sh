@@ -23,7 +23,7 @@ export TOMCAT_HOME=/usr/share/tomcat8
 # This script is run by the AWS Elastic Beanstalk installer and it runs after tomcat is installed.
 
 # Copy geoserver to the webapps
-mv $TOMCAT_HOME/conf/geoserver.war $TOMCAT_HOME/webapps/geoserver.war
+cp $TOMCAT_HOME/conf/geoserver.war $TOMCAT_HOME/webapps/geoserver.war
 
 # Make vault directory
 mkdir $TOMCAT_HOME/vault
