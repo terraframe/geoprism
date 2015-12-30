@@ -436,64 +436,67 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
   public JSONArray getMapLayersBBox(DashboardLayer[] layers)
   {
-    JSONArray bboxArr = new JSONArray();
     Dashboard dashboard = this.getDashboard();
 
     if (dashboard != null)
     {
       List<GeoEntity> countries = dashboard.getCountries();
 
-      MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
-      MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
-      MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
-
-      String tableName = mdClass.getTableName();
-      String geoColumnName = mdAttributeGeom.getColumnName();
-      String idColumnName = mdAttributeId.getColumnName();
-
-      StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ST_AsText(ST_Extent(" + tableName + "." + geoColumnName + ")) AS bbox");
-      sql.append(" FROM " + tableName);
-
-      boolean first = true;
-
-      for (GeoEntity country : countries)
+      if (countries.size() > 0)
       {
-        if (first)
-        {
-          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
 
-          first = false;
-        }
-        else
+        MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
+        MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
+        MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
+
+        String tableName = mdClass.getTableName();
+        String geoColumnName = mdAttributeGeom.getColumnName();
+        String idColumnName = mdAttributeId.getColumnName();
+
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT ST_AsText(ST_Extent(" + tableName + "." + geoColumnName + ")) AS bbox");
+        sql.append(" FROM " + tableName);
+
+        boolean first = true;
+
+        for (GeoEntity country : countries)
         {
-          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+          if (first)
+          {
+            sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+
+            first = false;
+          }
+          else
+          {
+            sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+          }
         }
+
+        ResultSet resultSet = Database.query(sql.toString());
+        return this.formatBBox(resultSet);
       }
-
-      ResultSet resultSet = Database.query(sql.toString());
-      bboxArr = this.formatBBox(resultSet);
 
     }
 
-    // There are no layers in the map (that contain data) so return the
-    // Cambodian defaults
-    if (bboxArr.length() == 0)
+    /*
+     * There are geometries in the map, use Cambodian defaults
+     */
+    try
     {
-      try
-      {
-        bboxArr.put(99.60205078124999);
-        bboxArr.put(10.28249130152419);
-        bboxArr.put(111.33544921874999);
-        bboxArr.put(14.764259178591587);
-      }
-      catch (JSONException ex)
-      {
-        throw new ProgrammingErrorException(ex);
-      }
-    }
+      JSONArray bboxArr = new JSONArray();
 
-    return bboxArr;
+      bboxArr.put(99.60205078124999);
+      bboxArr.put(10.28249130152419);
+      bboxArr.put(111.33544921874999);
+      bboxArr.put(14.764259178591587);
+
+      return bboxArr;
+    }
+    catch (JSONException ex)
+    {
+      throw new ProgrammingErrorException(ex);
+    }
   }
 
   /**

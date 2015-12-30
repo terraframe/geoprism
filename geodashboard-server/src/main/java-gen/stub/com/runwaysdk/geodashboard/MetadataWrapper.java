@@ -39,7 +39,6 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -81,20 +80,32 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     super.delete();
 
-    List<GeoEntity> countries = dashboard.getCountries();
-
-    // Delete any existing layers
+    // Delete any reference layers
     QueryFactory factory = new QueryFactory();
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
+    mwQuery.AND(mwQuery.getId().NE(this.getId()));
 
-    for (GeoEntity country : countries)
-    {
-      aptQuery.OR(aptQuery.getParentTerm().EQ(country.getUniversal()));
-    }
+    MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
 
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
     query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+    query.AND(query.getDashboardMap().EQ(dashboard.getMap()));
 
     OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
 
@@ -329,9 +340,10 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
-    
+
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
     query.WHERE(query.getUniversal().SUBSELECT_NOT_IN(aptQuery.getChildTerm()));
+    query.AND(query.getDashboardMap().EQ(dashboard.getMap()));
 
     OIterator<? extends DashboardReferenceLayer> it = query.getIterator();
 
