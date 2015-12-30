@@ -454,7 +454,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     Dashboard clone = new Dashboard();
     clone.getDisplayLabel().setDefaultValue(name);
-    clone.setName(name);
     clone.getDescription().setDefaultValue(this.getDescription().getValue());
     clone.setRemovable(true);
     clone.apply();
