@@ -1339,7 +1339,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     for (GeodashboardUser user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
-
+      
       if (state != null)
       {
         state.lock();

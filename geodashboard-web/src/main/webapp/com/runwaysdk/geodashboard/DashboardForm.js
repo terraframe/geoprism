@@ -129,7 +129,7 @@
                 		id : dashboard.getId(), 
                 		label : dashboard.getDisplayLabel().getLocalizedValue(), 
               		  	description : that._dashboardDescription, 
-              		  	countryDisplayLabel : that._dashboardFocusAreaLabel,
+              		  	focusAreas : that._dashboardFocusAreaLabel,
               		  	isLastDashboard : true
                 		})
                   
