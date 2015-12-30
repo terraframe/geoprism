@@ -352,7 +352,6 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       vQuery.AND(geoEntityAttribute.EQ(aptQuery.getChildTerm()));
 
       this.addGeoLabel(vQuery, "parent", parentQuery.getParent());
-      this.addGeoLabel(vQuery, "category", geoEntity);
     }
     else if (aggregation != null && aggregation.equals(CHILDREN))
     {
