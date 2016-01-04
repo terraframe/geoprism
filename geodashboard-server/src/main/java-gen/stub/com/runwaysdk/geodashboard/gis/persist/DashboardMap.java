@@ -480,16 +480,16 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
 
     /*
-     * There are geometries in the map, use Cambodian defaults
+     * There are geometries in the map, use World defaults
      */
     try
     {
       JSONArray bboxArr = new JSONArray();
 
-      bboxArr.put(99.60205078124999);
-      bboxArr.put(10.28249130152419);
-      bboxArr.put(111.33544921874999);
-      bboxArr.put(14.764259178591587);
+      bboxArr.put(-179.0);
+      bboxArr.put(-89.0);
+      bboxArr.put(179.0);
+      bboxArr.put(89.0);
 
       return bboxArr;
     }
