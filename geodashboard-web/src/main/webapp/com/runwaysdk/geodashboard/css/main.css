@@ -2250,6 +2250,13 @@ select{
 	    8px 6px, 
 	    100% 100%;
 	background-repeat: no-repeat;
+	
+		height: 31px;
+    
+	background-position:
+	    calc(100% - 10px) calc(1em + 1px), 
+	    calc(100% - 3px) calc(1em + 1px), 
+	    100% 0;
 }
 
 option[selected]{ font-weight:bold}
@@ -2266,14 +2273,6 @@ option[selected]{ font-weight:bold}
 	    100% 0;
 }
 
-.modal-form select{	
-	height: 31px;
-    
-	background-position:
-	    calc(100% - 10px) calc(1em + 1px), 
-	    calc(100% - 3px) calc(1em + 1px), 
-	    100% 0;
-}
 
 .modal-form .select-box select:focus{
 	border-color: #01b1ec;

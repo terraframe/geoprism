@@ -73,3 +73,8 @@ div#databrowser {
 	overflow: auto;
 	max-height: 600px;
 }
+
+.geodashboard-databrowser-table select {
+	height: 31px;
+}
+}
