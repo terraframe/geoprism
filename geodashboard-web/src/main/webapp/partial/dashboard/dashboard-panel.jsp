@@ -24,26 +24,31 @@
     <i id="data-panel-expand-toggle" ng-click="ctrl.toggle()" class="fa" ng-class="{'fa-angle-double-right' : ctrl.expanded, 'fa-angle-double-left' : !ctrl.expanded}"></i>
   </div>
       
-  <div class="nav-bar">
-    <div id="dashboard-dropdown" class="sales-menu dropdown ng-cloak">
-      <a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown">{{dashboard.model.label}}</a>
-      <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
-        <li ng-repeat="da in dashboard.dashboards | orderBy:'label'">
-          <a ng-if="dashboard.dashboardId != da.dashboardId" ng-click="dashboard.setDashboardId(da.dashboardId)">{{da.label}}</a>
-        </li>
-      </ul>
-    </div>
-      
-    <i ng-click="dashboard.openDashboard()" class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
-      
-    <!-- Clone dashboard button -->
-<!--     <span ng-if="dashboard.canEdit()" id="clone-dashboard"> -->
-<%--       <i ng-click="dashboard.cloneDashboard()" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ></i> --%>
-<!--     </span> -->
-      
-    <i ng-if="dashboard.canEdit()" ng-click="dashboard.editOptions()" id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
-          
-    <a href="/menu" class="fa fa-bars opener-drop pull-right" data-toggle="tooltip" data-placement="bottom" title="Menu"></a>
+  <div class="nav-bar sidebar-nav-bar">
+   		<ul class="nav">
+   			<li id="dashboard-dropdown" class="sales-menu dropdown ng-cloak">
+		      <a href="#" class="link-opener dropdown-toggle active" data-toggle="dropdown">{{dashboard.model.label}}</a>
+		      <ul id="gdb-dashboard-dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="sales-dropdown">
+		        <li ng-repeat="da in dashboard.dashboards | orderBy:'label'">
+		          <a ng-if="dashboard.dashboardId != da.dashboardId" ng-click="dashboard.setDashboardId(da.dashboardId)">{{da.label}}</a>
+		        </li>
+		      </ul>
+		    </li>
+		    <li class="sidebar-nav-bar-btn">  
+		    	<i ng-click="dashboard.openDashboard()" class="fa fa-external-link ico-dashboard-tab" title="<gdb:localize key='dashboardViewer.newDashboardTabTooltip'/>" ></i> 
+		    </li>
+		    <li class="sidebar-nav-bar-btn">
+		   		<i ng-if="dashboard.canEdit()" ng-click="dashboard.editOptions()" id="dashboard-options-btn" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key='dashboardViewer.dashboardOptionsTooltip'/>" ></i>
+		 	</li>
+		 	
+   			<li class="dropdown navigation-dropdown">      
+   				<a href="/dashboards" class="fa fa-bars opener-drop dropdown-toggle dropdown-toggle-compact pull-right" ></a>
+	    			<ul class="dropdown-menu navigation-menu pull-right">
+       				<li><a href="/dashboards"><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></a></li>
+           			<li ng-if="dashboard.canEdit()"><a href="/"><gdb:localize key="dashboardViewer.administrationLinkLabel"/></a></li>
+       			</ul>
+       		</li>
+       	</ul>
   </div>
     
   <ng-form name="form">    
