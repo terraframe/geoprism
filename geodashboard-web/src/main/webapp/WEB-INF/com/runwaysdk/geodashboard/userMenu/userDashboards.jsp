@@ -31,7 +31,6 @@
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
   <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
-  <jwr:style src="/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css" useRandomParam="false"/> 
   
   <!-- User account Javascript -->
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>

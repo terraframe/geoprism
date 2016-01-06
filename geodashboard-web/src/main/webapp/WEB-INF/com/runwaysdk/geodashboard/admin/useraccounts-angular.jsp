@@ -88,8 +88,6 @@
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
 
-	<jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/>  
-
 	<!-- User account Javascript -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>	
 	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
