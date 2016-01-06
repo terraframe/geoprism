@@ -104,7 +104,6 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -754,14 +753,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     QueryFactory factory = new QueryFactory();
 
-    AllowedInQuery aiQuery = new AllowedInQuery(factory);
-    aiQuery.WHERE(aiQuery.getParent().EQ(country));
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(country.getUniversal()));
 
-    UniversalQuery uQuery = new UniversalQuery(factory);
-    uQuery.WHERE(uQuery.EQ(aiQuery.getChild()));
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getChild().EQ(aptQuery.getChildTerm()));
 
     MappableClassQuery mcQuery = new MappableClassQuery(factory);
-    mcQuery.WHERE(mcQuery.universal(uQuery));
+    mcQuery.WHERE(mcQuery.universal(cuQuery));
 
     MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
     mwQuery.WHERE(mwQuery.getWrappedMdClass().EQ(mcQuery.getWrappedMdClass()));
@@ -1339,7 +1338,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     for (GeodashboardUser user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
-      
+
       if (state != null)
       {
         state.lock();

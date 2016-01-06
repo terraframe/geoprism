@@ -223,6 +223,10 @@
       return dashboardService.canEdit();      
     }
     
+    controller.getLayer = function(layerId) {
+      return $scope.cache.values[layerId];
+    }
+    
     controller.edit = function(layerId, universalId) {
       $scope.$emit('editReferenceLayer', {layerId:layerId, universalId:universalId});
     }    

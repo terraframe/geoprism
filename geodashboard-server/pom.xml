@@ -89,22 +89,22 @@
       <artifactId>gt-epsg-hsql</artifactId>
       <version>${geotools.version}</version>
     </dependency>
-           <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-image</artifactId>
-            <version>${geotools.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-wms</artifactId>
-            <version>${geotools.version}</version>
-        </dependency>
-        
-        <dependency>
-		  <groupId>net.coobird</groupId>
-		  <artifactId>thumbnailator</artifactId>
-		  <version>[0.4, 0.5)</version>
-		</dependency>    
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-image</artifactId>
+      <version>${geotools.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-wms</artifactId>
+      <version>${geotools.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>[0.4, 0.5)</version>
+    </dependency>
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->
