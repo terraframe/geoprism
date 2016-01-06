@@ -31,7 +31,7 @@
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
   <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
-  <jwr:style src="/font-awesome-font-icons/font-awesome-4.3.0/css/font-awesome.min.css" useRandomParam="false"/> 
+  <jwr:style src="/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css" useRandomParam="false"/> 
   
   <!-- User account Javascript -->
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -131,7 +131,7 @@
 	}
 	
 	.dashboard-card-ico-button-container{
-    	padding: 5px 4px 0px 4px;
+    	padding: 10px 4px 0px 4px;
     	z-index: 100;
     	right: 0;
     	margin-right: 0;
@@ -150,6 +150,7 @@
 	.dashboard-thumbnail-subtext{
 	    float: left;
     	color: grey;
+    	font-size: 14px;
 	}
 	
 	.dashboard-thumbnail-subtext i {
@@ -162,6 +163,31 @@
 		cursor: default;
 	}
 	
+	.fa.fa-globe.focus-area{
+    	color: #bababa;
+    	cursor: pointer;
+	}
+	
+	.fa.fa-clone.ico-dashboard{
+    	color: #bababa;
+    	cursor: pointer;
+	}
+	
+	.fa.fa-trash-o.ico-remove{
+    	color: #bababa;
+    	cursor: pointer;
+	}
+	
+	.dashboard-thumnail-ico-ctrl{
+		font-size: 20px !important;
+		padding-left: 5px;
+		    vertical-align: middle;
+	}
+	
+	.dashboard-thumnail-ico-ctrl:hover {
+		color: #00bfff !important;
+	}
+	
 	.focus-area-label{
     	max-width: 50%;
     	white-space: nowrap;
@@ -171,7 +197,7 @@
     .dashboard-focus-area-label-mask{
   		background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));  
     	height: 19px;
-    	width: 50%;
+    	width: 40%;
     	position: absolute;
     	opacity: 0; /* set to hidden initially when thumbnail is semi-transparent */
     	transition: opacity .25s;
@@ -181,7 +207,7 @@
     .dashboard-focus-area-label-mask-grey{
     	background: linear-gradient(to left, rgba(238,238,238,1), rgba(225, 255, 255, 0));  
     	height: 19px;
-    	width: 50%;
+    	width: 40%;
     	position: absolute;
     	opacity: 1; /* set visible initially when thumbnail is semi-transparent (i.e. grey) */
     	transition: opacity .25s;
@@ -311,13 +337,13 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index]].description}}</p>
 						<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"></div>
-		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"><i class="fa fa-globe focus-area dashboard-thumnail-ico-ctrl"></i>{{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
-		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a> 
-		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index]].dashboardId)"></a>
-		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a>
+		            			<a href="#" class="fa fa-cog ico-dashboard-options dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-clone ico-dashboard dashboard-thumnail-ico-ctrl" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index]].dashboardId)"></a>
+		            			<a href="#" class="fa fa-trash-o ico-remove dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index]].dashboardId)" ></a>
 		          	  		</div>
 		          	  	</div>
 		              </div>
@@ -338,13 +364,13 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 1]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"></div>
-		            		<div  class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"><i class="fa fa-globe focus-area dashboard-thumnail-ico-ctrl"></i>{{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
+		            		<div  class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 1]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
-		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a> 
-		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)"></a>
-		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a>
+		            			<a href="#" class="fa fa-cog ico-dashboard-options dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-clone ico-dashboard dashboard-thumnail-ico-ctrl" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)"></a>
+		            			<a href="#" class="fa fa-trash-o ico-remove dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId)" ></a>
 		          	  		</div>
 		          	  	</div>
 		              </div>
@@ -365,13 +391,13 @@
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
 		                <p>{{ctrl.dashboards[ctrl.ids[$index + 2]].description}}</p>
 		          		<div ng-if="ctrl.editDashboard" class="dashboard-card-ico-button-container">     
-		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"><i class="fa fa-globe"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}}</p>
-		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"></div>
-		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}})"></div>
+		            		<p class="dashboard-thumbnail-subtext focus-area-label" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"><i class="fa fa-globe focus-area dashboard-thumnail-ico-ctrl"></i>{{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString}}</p>
+		            		<div class="dashboard-focus-area-label-mask-grey" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
+		            		<div class="dashboard-focus-area-label-mask" title="<gdb:localize key="userDashboards.dashboardFocusAreaTooltip"/> ({{ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString ? ctrl.dashboards[ctrl.ids[$index + 2]].focusAreasAsString : '<gdb:localize key="userDashboards.noFocusAreaMsg"/>'}})"></div>
 		            		<div class="dashboard-thumbnail-ico-group">
-		            			<a href="#" class="fa fa-cog ico-dashboard-options" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a> 
-		            			<a href="#" class="fa fa-plus ico-dashboard" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)"></a>
-		            			<a href="#" class="fa fa-times ico-remove" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a>
+		            			<a href="#" class="fa fa-cog ico-dashboard-options dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.editDashboardTooltip"/>" ng-click="ctrl.edit(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a> 
+		            			<a href="#" class="fa fa-clone ico-dashboard dashboard-thumnail-ico-ctrl" title="<gdb:localize key='dashboardViewer.newDashboardTooltip'/>" ng-click="ctrl.cloneDashboard(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)"></a>
+		            			<a href="#" class="fa fa-trash-o ico-remove dashboard-thumnail-ico-ctrl" title="<gdb:localize key="userDashboards.deleteDashboardTooltip"/>" ng-click="ctrl.remove(ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId)" ></a>
 		          	  		</div>
 		          	  	</div>
 		              </div>
