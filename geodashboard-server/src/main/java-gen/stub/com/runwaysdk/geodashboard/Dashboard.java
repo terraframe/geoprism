@@ -501,6 +501,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       roleDAO.assignMember(UserDAO.get(user.getId()));
     }
 
+    // Clone the report
+    if (this.hasReport())
+    {
+      ReportItem item = ReportItem.getByDashboard(this.getId());
+      item.clone(clone);
+    }
+
     return clone;
   }
 

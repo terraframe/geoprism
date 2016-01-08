@@ -129,6 +129,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   @Transaction
   public void delete()
   {
+    super.delete();
 
     /*
      * Delete the design file and if there is a document file delete that too
@@ -144,8 +145,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       VaultFile file = VaultFile.lock(this.getDocument());
       file.delete();
     }
-
-    super.delete();
   }
 
   @Override
@@ -528,7 +527,6 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     return map;
   }
 
-
   private String getFormat(Map<String, String> parameters)
   {
     if (parameters.containsKey(FORMAT))
@@ -643,9 +641,15 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   {
     IReportEngine engine = BirtEngine.getBirtEngine(LocalProperties.getLogDirectory());
 
+    SessionIF session = Session.getCurrentSession();
+
     HashMap<String, Object> contextMap = new HashMap<String, Object>();
     contextMap.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, this.getClass().getClassLoader());
-    contextMap.put(IClientSession.SESSION_ID, Session.getCurrentSession().getId());
+
+    if (session != null)
+    {
+      contextMap.put(IClientSession.SESSION_ID, session.getId());
+    }
 
     IReportRunnable design = engine.openReportDesign(stream);
 
@@ -1098,6 +1102,30 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
     if (report != null)
     {
       report.unlock();
+    }
+  }
+
+  public void clone(Dashboard dashboard)
+  {
+    InputStream stream = this.getDesignAsStream();
+
+    try
+    {
+      ReportItem clone = new ReportItem();
+      clone.setDashboard(dashboard);
+      clone.setReportName(this.getReportName());
+      clone.applyWithFile(stream);
+    }
+    finally
+    {
+      try
+      {
+        stream.close();
+      }
+      catch (IOException e)
+      {
+        throw new ProgrammingErrorException("Unable to get a report document", e);
+      }
     }
   }
 
