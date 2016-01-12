@@ -144,6 +144,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);   
     types.add(DashboardController.CLASS);
+    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -240,6 +241,7 @@ public class JavascriptUtil implements Reloadable
     types.add(MappableClassDTO.CLASS);
     types.add(AllAggregationTypeDTO.CLASS);
     types.add(AggregationTypeDTO.CLASS);
+    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -258,6 +260,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
+    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

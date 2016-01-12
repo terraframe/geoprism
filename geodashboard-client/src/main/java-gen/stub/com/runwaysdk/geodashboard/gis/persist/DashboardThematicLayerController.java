@@ -21,26 +21,19 @@ package com.runwaysdk.geodashboard.gis.persist;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.geodashboard.JSONControllerUtil;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
-import com.runwaysdk.transport.conversion.ClientConversionFacade;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
-import com.runwaysdk.transport.conversion.json.JSONReturnObject;
-import com.runwaysdk.web.json.JSONRunwayExceptionDTO;
 
 public class DashboardThematicLayerController extends DashboardThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardThematicLayer/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
-
-  private static final Log   log     = LogFactory.getLog(DashboardThematicLayerController.class);
 
   public DashboardThematicLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
@@ -67,34 +60,11 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       response.put("layer", new JSONObject(layer.getJSON()));
       response.put("options", new JSONObject(options));
 
-      JSONReturnObject ret = new JSONReturnObject();
-      ret.setReturnValue(response);
-
-      String content = ret.getJSON().toString();
-      byte[] bytes = content.getBytes("UTF-8");
-
-      this.resp.setStatus(200);
-      this.resp.setContentType("application/json");
-
-      ServletOutputStream ostream = this.resp.getOutputStream();
-      ostream.write(bytes);
-      ostream.flush();
-      ostream.close();
+      JSONControllerUtil.writeReponse(this.resp, response);
     }
     catch (Throwable t)
     {
-      RuntimeException throwable = ClientConversionFacade.buildJSONThrowable(t, request.getSessionId(), false);
-      JSONRunwayExceptionDTO ex = new JSONRunwayExceptionDTO(throwable);
-
-      String content = ex.getJSON();
-
-      this.resp.setStatus(500);
-      this.resp.setContentType("application/json");
-
-      ServletOutputStream ostream = this.resp.getOutputStream();
-      ostream.write(content.getBytes("UTF-8"));
-      ostream.flush();
-      ostream.close();
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
   }
 
@@ -122,34 +92,11 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
       response.put("layer", new JSONObject(layer.getJSON()));
       response.put("options", new JSONObject(options));
 
-      JSONReturnObject ret = new JSONReturnObject();
-      ret.setReturnValue(response);
-
-      String content = ret.getJSON().toString();
-      byte[] bytes = content.getBytes("UTF-8");
-
-      this.resp.setStatus(200);
-      this.resp.setContentType("application/json");
-
-      ServletOutputStream ostream = this.resp.getOutputStream();
-      ostream.write(bytes);
-      ostream.flush();
-      ostream.close();
+      JSONControllerUtil.writeReponse(this.resp, response);
     }
     catch (Throwable t)
     {
-      RuntimeException throwable = ClientConversionFacade.buildJSONThrowable(t, request.getSessionId(), false);
-      JSONRunwayExceptionDTO ex = new JSONRunwayExceptionDTO(throwable);
-
-      String content = ex.getJSON();
-
-      this.resp.setStatus(500);
-      this.resp.setContentType("application/json");
-
-      ServletOutputStream ostream = this.resp.getOutputStream();
-      ostream.write(content.getBytes("UTF-8"));
-      ostream.flush();
-      ostream.close();
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
   }
 

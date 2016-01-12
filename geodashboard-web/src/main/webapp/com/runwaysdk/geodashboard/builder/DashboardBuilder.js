@@ -18,15 +18,17 @@
  */
 (function(){
 
-  function BuilderDialogController($scope, $rootScope, $timeout, builderService) {
+  function BuilderDialogController($scope, $rootScope, $timeout, builderService, dataService) {
     var controller = this;
-    $scope.show = false;
     
     controller.clear = function() {
-        $scope.show = false;
+      $scope.show = false;
+      $scope.busy = false;   
+      $scope.showWidgetType = 'DESCRIPTION';
+      $scope.errors = [];
         
-        controller.fields = null;
-        controller.dashboard = null;    
+      $scope.fields = null;
+      $scope.dashboard = null;    
     }
     
     controller.cancel = function() {
@@ -34,16 +36,16 @@
         controller.clear();
         
         if(!newInstance) {
-            $scope.$apply();
+          $scope.$apply();
         }
       }
         
-      builderService.unlock(controller.dashboard, onSuccess);
+      builderService.unlock($scope.dashboard, onSuccess);
     }
     
     controller.persist = function() {
-      controller.busy = true;
-    	
+      $scope.busy = true;
+   
       var onSuccess = function(result) {      
         var layerNames = JSON.parse(result);
         
@@ -54,14 +56,14 @@
           var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "information", "Information"));
           dialog.appendContent(message);          
           dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "ok", "Ok"), function() {
-            controller.busy = false;            
+            $scope.busy = false;            
             dialog.close();            
             $scope.$apply();
             
             controller.applyWithOptions(); 
           }, null, {class:'btn btn-primary'});
           dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), function() {
-            controller.busy = false;            
+        $scope.busy = false;            
             dialog.close();            
             $scope.$apply();
           }, null, {class:'btn btn-default'});
@@ -73,7 +75,7 @@
         }
       }    
       
-      builderService.getLayersToDelete(controller.dashboard,'#ng-modal-overlay', onSuccess);
+      builderService.getLayersToDelete($scope.dashboard,'#ng-modal-overlay', onSuccess);
     }
     
     controller.applyWithOptions = function() {
@@ -88,8 +90,8 @@
       }
           
       var onFailure = function(e){
-        controller.errors = [];
-        controller.errors.push(e.message);
+    $scope.errors = [];
+    $scope.errors.push(e.message);
                        
         $scope.$apply();
               
@@ -97,18 +99,16 @@
       };             
                      
       // Clear all the errors
-      controller.errors = [];
+      $scope.errors = [];
           
-      builderService.applyWithOptions(controller.dashboard,'#ng-modal-overlay', onSuccess, onFailure);
+      builderService.applyWithOptions($scope.dashboard,'#ng-modal-overlay', onSuccess, onFailure);
     }
     
     controller.init = function(result) {
-      controller.fields = result.fields;    
-      controller.dashboard = result.object;
-      controller.showWidgetType = 'DESCRIPTION';
-      controller.busy = false;
-        
-      // Get country display label for the dashboard edit form (when a select isn't needed)
+      controller.clear();
+      
+      $scope.fields = result.fields;    
+      $scope.dashboard = result.object;
       $scope.show = true;
     }
     
@@ -125,9 +125,39 @@
     }
     
     controller.setCategoryWidgetType = function(typeName) {
-      controller.showWidgetType = typeName;
+      $scope.showWidgetType = typeName;
     }
     
+    /*
+     * Data Upload Section
+     */
+    controller.uploadSpreadsheet = function() {
+      var onSuccess = function(response) {
+        var sheets = JSON.parse(response);
+    
+        $scope.$emit('dataUpload', {sheets:sheets});            
+      }
+      
+      var onFailure = function(e){
+      $scope.errors = [];
+      $scope.errors.push(e.message);
+                         
+        $scope.$apply();
+                
+        $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
+      };             
+        
+      dataService.uploadSpreadsheet($scope.file, onSuccess, onFailure);
+    }
+    
+    controller.setSpreadsheet = function(file) {
+      $scope.file = file;
+      $scope.errors = [];
+    }
+    
+    /*
+     * Event Listeners
+     */
     $rootScope.$on('editDashboard', function(event, data){
       controller.load(data.dashboardId);
     });
@@ -138,7 +168,6 @@
     
     // Initialize an empty controller
     controller.clear();
-
   }
   
   function BuilderDialog() {
@@ -335,7 +364,7 @@
   }
 
 
-  angular.module("dashboard-builder", ["builder-service", "styled-inputs"]);
+  angular.module("dashboard-builder", ["builder-service", "data-service", "styled-inputs"]);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
    .directive('textAreaField', TextAreaField)
