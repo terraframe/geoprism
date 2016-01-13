@@ -223,10 +223,18 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       if (thematic && style.getEnableLabel() && style.getEnableValue())
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
+        
+        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
+              node(OGC, "Function").attr("name", "isNull").child(
+                  node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())).build(),
+              this.getPropertyValueNode(tLayer),
+              node(OGC, "Function").attr("name", "Concatenate").child(
+                  node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+                  node(OGC, "Literal").text(" (").build(),
+                  this.getPropertyValueNode(tLayer),
+                  node(OGC, "Literal").text(")").build()).build()).build();
 
-        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(), this.getPropertyValueNode(tLayer) };
-
-        return new TextSymbolizer(visitor, layer, style, nodes);
+        return new TextSymbolizer(visitor, layer, style, node);
       }
       else if (style.getEnableLabel())
       {
@@ -1433,6 +1441,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         el.appendChild(this.doc.createTextNode(text));
       }
 
+      return this;
+    }
+    
+    private NodeBuilder cdata(String text)
+    {
+      if (text != null)
+      {
+        el.appendChild(this.doc.createCDATASection(text));
+      }
+      
       return this;
     }
 
