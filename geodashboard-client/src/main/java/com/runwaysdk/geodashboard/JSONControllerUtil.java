@@ -24,7 +24,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.transport.conversion.ClientConversionFacade;
 import com.runwaysdk.transport.conversion.json.JSONExceptionDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 import com.runwaysdk.web.json.JSONRunwayExceptionDTO;

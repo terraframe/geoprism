@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +43,8 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -363,13 +366,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     JSONArray array = new JSONArray();
 
+    Collection<String> ids = this.getGeoNodeAttributeIds();
+
     List<? extends MdAttributeDAOIF> mdAttributes = mdClass.getAllDefinedMdAttributes();
 
     Collections.sort(mdAttributes, new LabelComparator(Session.getCurrentLocale()));
 
     for (MdAttributeDAOIF mdAttribute : mdAttributes)
     {
-      if (this.isValid(mdAttribute))
+      if (this.isValid(mdAttribute, ids))
       {
         boolean selected = this.isSelected(mdAttribute, attributes);
 
@@ -385,7 +390,42 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     return array;
   }
 
-  private boolean isValid(MdAttributeDAOIF mdAttribute)
+  private Collection<String> getGeoNodeAttributeIds()
+  {
+    Collection<String> collection = new TreeSet<String>();
+
+    OIterator<? extends GeoNode> iterator = this.getAllGeoNode();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        GeoNode node = iterator.next();
+
+        collection.add(node.getGeoEntityAttributeId());
+
+        if (node instanceof GeoNodeGeometry)
+        {
+          GeoNodeGeometry geometry = (GeoNodeGeometry) node;
+
+          collection.add(geometry.getDisplayLabelAttributeId());
+          collection.add(geometry.getIdentifierAttributeId());
+          collection.add(geometry.getGeometryAttributeId());
+          collection.add(geometry.getMultiPolygonAttributeId());
+          collection.add(geometry.getPointAttributeId());
+        }
+      }
+
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    return collection;
+  }
+
+  private boolean isValid(MdAttributeDAOIF mdAttribute, Collection<String> ids)
   {
     MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
 
@@ -399,7 +439,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       return isClassifier;
     }
 
-    return !mdAttributeConcrete.isSystem() && ( mdAttributeConcrete instanceof MdAttributePrimitiveDAOIF );
+    return !mdAttributeConcrete.isSystem() && ( mdAttributeConcrete instanceof MdAttributePrimitiveDAOIF ) && !ids.contains(mdAttributeConcrete.getId());
   }
 
   private boolean isSelected(MdAttributeDAOIF mdAttribute, List<? extends AttributeWrapper> attributes)

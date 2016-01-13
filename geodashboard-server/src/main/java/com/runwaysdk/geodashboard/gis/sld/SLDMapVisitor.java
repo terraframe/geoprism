@@ -224,15 +224,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         
-        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
-              node(OGC, "Function").attr("name", "isNull").child(
-                  node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase())).build(),
-              this.getPropertyValueNode(tLayer),
-              node(OGC, "Function").attr("name", "Concatenate").child(
-                  node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-                  node(OGC, "Literal").text(" (").build(),
-                  this.getPropertyValueNode(tLayer),
-                  node(OGC, "Literal").text(")").build()).build()).build();
+        Node node = node(OGC, "Function").attr("name", "Concatenate").child(
+          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+          node(OGC, "Literal").text(" (").build(),
+          this.getPropertyValueNode(tLayer),
+          node(OGC, "Literal").text(")").build()).build();
 
         return new TextSymbolizer(visitor, layer, style, node);
       }
@@ -245,9 +241,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       else if (thematic && style.getEnableValue())
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
-        Node[] nodes = new Node[] { this.getPropertyValueNode(tLayer) };
+        
+        Node node = node(OGC, "Function").attr("name", "Concatenate").child(
+          node(OGC, "Literal").text(" (").build(),
+          this.getPropertyValueNode(tLayer),
+          node(OGC, "Literal").text(")").build()).build();
 
-        return new TextSymbolizer(visitor, layer, style, nodes);
+        return new TextSymbolizer(visitor, layer, style, node);
       }
 
       return null;
@@ -1443,16 +1443,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       return this;
     }
-    
-    private NodeBuilder cdata(String text)
-    {
-      if (text != null)
-      {
-        el.appendChild(this.doc.createCDATASection(text));
-      }
-      
-      return this;
-    }
+//    
+//    private NodeBuilder cdata(String text)
+//    {
+//      if (text != null)
+//      {
+//        el.appendChild(this.doc.createCDATASection(text));
+//      }
+//      
+//      return this;
+//    }
 
     private Node build(Node parent)
     {
