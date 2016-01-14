@@ -224,12 +224,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         
-        Node node = node(OGC, "Function").attr("name", "Concatenate").child(
-          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-          node(OGC, "Literal").text(" (").build(),
-          this.getPropertyValueNode(tLayer),
-          node(OGC, "Literal").text(")").build()).build();
-
+        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
+            node(OGC, "Function").attr("name", "isNull").child(
+                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
+            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+            node(OGC, "Function").attr("name", "Concatenate").child(
+                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+                node(OGC, "Literal").text(" (").build(),
+                this.getPropertyValueNode(tLayer),
+                node(OGC, "Literal").text(")").build()).build()).build();
+        
         return new TextSymbolizer(visitor, layer, style, node);
       }
       else if (style.getEnableLabel())
@@ -242,10 +246,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         
-        Node node = node(OGC, "Function").attr("name", "Concatenate").child(
-          node(OGC, "Literal").text(" (").build(),
-          this.getPropertyValueNode(tLayer),
-          node(OGC, "Literal").text(")").build()).build();
+        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
+            node(OGC, "Function").attr("name", "isNull").child(
+                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
+            node(OGC, "Literal").text("").build(),
+            node(OGC, "Function").attr("name", "Concatenate").child(
+                node(OGC, "Literal").text(" (").build(),
+                this.getPropertyValueNode(tLayer),
+                node(OGC, "Literal").text(")").build()).build()).build();
 
         return new TextSymbolizer(visitor, layer, style, node);
       }
