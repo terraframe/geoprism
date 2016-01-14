@@ -149,20 +149,9 @@
             <exclude>**/.keyStore</exclude>
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
-            <exclude>**/webapp/jstree/**</exclude>
-            <exclude>**/webapp/leaflet/**</exclude>
-            <exclude>**/webapp/openlayers/**</exclude>
-            <exclude>**/webapp/leaflet_plugins/**</exclude>
-            <exclude>**/webapp/jquery/**</exclude>
-            <exclude>**/webapp/jquerytree/**</exclude>
-            <exclude>**/webapp/jquery-colorpicker/**</exclude>
-            <exclude>**/webapp/cldrjs-0.4.0/**</exclude>
-            <exclude>**/webapp/bootstrap/**</exclude>
-            <exclude>**/webapp/font-awesome-font-icons/**</exclude>
-            <exclude>**/webapp/globalize-1.0.0-alpha.17/**</exclude>
+            <exclude>**/webapp/3rd-party/**</exclude>
             <exclude>**/webapp/com/runwaysdk/geodashboard/fonts/**</exclude>
             <exclude>**/webapp/ie.js</exclude>
-            <exclude>**/webapp/angular/**</exclude>
           </excludes>
           <properties>
             <name>${project.name}</name>
