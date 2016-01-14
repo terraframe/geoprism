@@ -1,0 +1,54 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdUtil name="com.runwaysdk.geodashboard.DataUploader" label="Data Uploader">
+        <mdMethod name="getAttributeInformation" label="Get Attribute Information" static="true" returnType="java.lang.String">
+          <mdParameter name="fileName" label="File name" order="0" type="java.lang.String" />
+          <mdParameter name="fileStream" label="File stream" order="1" type="java.io.InputStream" />
+        </mdMethod>
+      </mdUtil>
+      
+      <mdController name="com.runwaysdk.geodashboard.DataUploaderController" label="Data Upload Controller">
+        <mdAction name="getAttributeInformation" label="Get attribute information" isPost="true" isQuery="false">
+          <mdParameter name="file" type="com.runwaysdk.controller.MultipartFileParameter" label="File" order="0"/>
+        </mdAction>
+      </mdController>
+      
+      <mdException name="com.runwaysdk.geodashboard.excel.InvalidExcelFileException" label="Invalid Excel File Exception" message="The file [{fileName}] is not a valid 2007+ Excel file">
+        <attributes>
+          <text name="fileName" label="File name" />
+        </attributes>
+      </mdException>
+
+      <mdException name="com.runwaysdk.geodashboard.excel.InvalidHeaderRowException" label="Invalid Header Row Exception" message="Header row must contain only text cells with unique values" />
+    </create>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.excel.InvalidHeaderRowException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="com.runwaysdk.geodashboard.excel.InvalidExcelFileException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="com.runwaysdk.geodashboard.DataUploaderController" type="com.runwaysdk.system.metadata.MdController"/>
+      <object key="com.runwaysdk.geodashboard.DataUploader" type="com.runwaysdk.system.metadata.MdView"/>
+    </delete>
+  </undoIt>
+</version>
