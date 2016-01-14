@@ -2982,6 +2982,11 @@ span.select-area span.center {
     	padding-top: 20px;
     	border-top: solid lightgrey 1px;
 	}
+	
+	div.builder-data-set {
+    border-right: 1px solid rgb(211, 211, 211);
+    padding-right: 25px;	
+	}
 
 /** 
 * 

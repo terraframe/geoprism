@@ -22,8 +22,9 @@ import java.io.InputStream;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
-import org.json.JSONException;
 
+import com.runwaysdk.RunwayException;
+import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
 import com.runwayskd.geodashboard.excel.AttributeInfoContentsHandler;
@@ -58,9 +59,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       throw ex;
     }
-    catch (JSONException e)
+    catch (RunwayException | SmartException e)
     {
-      throw new ProgrammingErrorException(e);
+      throw e;
     }
     catch (Exception e)
     {

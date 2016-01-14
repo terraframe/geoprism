@@ -26,6 +26,7 @@
       $scope.busy = false;   
       $scope.showWidgetType = 'DESCRIPTION';
       $scope.errors = [];
+      $scope.fileErrors = [];
         
       $scope.fields = null;
       $scope.dashboard = null;    
@@ -63,7 +64,7 @@
             controller.applyWithOptions(); 
           }, null, {class:'btn btn-primary'});
           dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), function() {
-        $scope.busy = false;            
+            $scope.busy = false;            
             dialog.close();            
             $scope.$apply();
           }, null, {class:'btn btn-default'});
@@ -90,8 +91,7 @@
       }
           
       var onFailure = function(e){
-    $scope.errors = [];
-    $scope.errors.push(e.message);
+        $scope.errors.push(e.message);
                        
         $scope.$apply();
               
@@ -131,7 +131,7 @@
     /*
      * Data Upload Section
      */
-    controller.uploadSpreadsheet = function() {
+    controller.uploadFile = function(files) {
       var onSuccess = function(response) {
         var sheets = JSON.parse(response);
     
@@ -139,20 +139,16 @@
       }
       
       var onFailure = function(e){
-      $scope.errors = [];
-      $scope.errors.push(e.message);
+        $scope.fileErrors.push(e.message);
                          
         $scope.$apply();
                 
         $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
       };             
-        
-      dataService.uploadSpreadsheet($scope.file, onSuccess, onFailure);
-    }
-    
-    controller.setSpreadsheet = function(file) {
-      $scope.file = file;
-      $scope.errors = [];
+
+      // Reset the file Errors
+      $scope.fileErrors = [];
+      dataService.uploadSpreadsheet(files[0], onSuccess, onFailure);
     }
     
     /*
@@ -364,7 +360,7 @@
   }
 
 
-  angular.module("dashboard-builder", ["builder-service", "data-service", "styled-inputs"]);
+  angular.module("dashboard-builder", ["builder-service", "data-service", "styled-inputs", 'ngFileUpload']);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
    .directive('textAreaField', TextAreaField)

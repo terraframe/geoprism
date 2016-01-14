@@ -28,12 +28,16 @@
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
       <form name="form" class="modal-form">
-        <div ng-if="errors.length > 0" class="error-container">
+        <div ng-if="errors.length > 0 || fileErrors.length > 0" class="error-container">
           <div class="label-holder">
             <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
           </div>
           <div class="holder">
             <div ng-repeat="error in errors">
+              <p class="error-message">{{error}}</p>
+            </div>
+            
+            <div ng-repeat="error in fileErrors">
               <p class="error-message">{{error}}</p>
             </div>
           </div>
@@ -100,7 +104,7 @@
                   </div>
                   
                    <div ng-show="showWidgetType == 'DATASETS'" class="row-holder vertical-checkbox-list">
-                    <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length > 0">
+                    <div class="builder-data-set" ng-if="dashboard.options.types != null && dashboard.options.types.length > 0" >
                       <div id="type-field-row" class="collapse in">
                         <div ng-repeat="type in dashboard.options.types">
                           <div class="vertical-checkbox-container">
@@ -116,6 +120,10 @@
                     </div>
                     <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length < 1">
                       <h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
+                    </div>
+                    
+                    <div style="padding-left: 20px;" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
+                      <gdb:localize key="dashboardbuilder.uploadDataSet"/>
                     </div>
                  </div>
                  
@@ -146,42 +154,6 @@
             </div>
            </div>
           
-          </fieldset>
-        </div>
-      </form>
-      
-      <hr />
-      
-      <form name="uForm" class="modal-form" method="POST" enctype="multipart/form-data">
-        <div class="" style="">
-          <fieldset class="">    
-            <section class="form-container">
-              <div>
-                <div>
-                  <div class="label-holder">
-                    <strong>Data Set Upload</strong>
-                  </div>
-                  <div class="holder">
-                    <div class="row-holder">
-                      <input type="file" file-model callback="ctrl.setSpreadsheet"/>
-                    </div>
-                  </div>
-                </div>          
-              </div>
-            </section> 
-            <div class="row-holder">
-             <div class="label-holder"></div>
-             <div class="holder">
-               <div class="button-holder">
-                 <input
-                  type="button"
-                  value="<gdb:localize key="dashboard.Ok"/>"
-                  class="btn btn-primary" 
-                  ng-click="ctrl.uploadSpreadsheet()"
-                  />
-               </div>
-             </div>
-            </div>            
           </fieldset>
         </div>
       </form>

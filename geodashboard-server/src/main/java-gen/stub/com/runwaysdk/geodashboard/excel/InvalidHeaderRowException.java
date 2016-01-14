@@ -16,26 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.excel;
+package com.runwaysdk.geodashboard.excel;
 
-import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
-
-
-public interface SheetHandler
+public class InvalidHeaderRowException extends InvalidHeaderRowExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public void startSheet(String sheetName);
-
-  public void endSheet();
-
-  /** A row with the (zero based) row number has started */
-  public void startRow(int rowNum);
-
-  /** A row with the (zero based) row number has ended */
-  public void endRow();
-
-  /** A cell, with the given formatted value, was encountered */
-  public void cell(String cellReference, String formattedValue, DataType cellType);
-
-  /** A header or footer has been encountered */
-  public void headerFooter(String text, boolean isHeader, String tagName);
+  private static final long serialVersionUID = -245469900;
+  
+  public InvalidHeaderRowException()
+  {
+    super();
+  }
+  
+  public InvalidHeaderRowException(java.lang.String developerMessage)
+  {
+    super(developerMessage);
+  }
+  
+  public InvalidHeaderRowException(java.lang.String developerMessage, java.lang.Throwable cause)
+  {
+    super(developerMessage, cause);
+  }
+  
+  public InvalidHeaderRowException(java.lang.Throwable cause)
+  {
+    super(cause);
+  }
+  
 }

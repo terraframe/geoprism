@@ -21,6 +21,7 @@ package com.runwayskd.geodashboard.excel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.poi.ss.util.CellReference;
 import org.json.JSONArray;
@@ -28,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.geodashboard.excel.InvalidHeaderRowException;
+import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
 
 public class AttributeInfoContentsHandler implements SheetHandler
 {
@@ -45,6 +48,11 @@ public class AttributeInfoContentsHandler implements SheetHandler
    * Column-Attribute Map for the current sheet
    */
   private Map<Integer, JSONObject> map;
+  
+  /**
+   * Set of the attributes names in the current sheet
+   */
+  private Set<String>              attributeNames;  
 
   /**
    * JSONArray containing attribute information for all of the sheets.
@@ -80,6 +88,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
     this.sheetName = sheetName;
     this.rowNum = 0;
     this.map = new HashMap<Integer, JSONObject>();
+    this.attributeNames = new TreeSet<String>();
   }
 
   @Override
@@ -120,12 +129,17 @@ public class AttributeInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void cell(String cellReference, String formattedValue)
+  public void cell(String cellReference, String formattedValue, DataType cellType)
   {
     try
     {
       if (this.rowNum == 0)
       {
+        if (!cellType.equals(DataType.SST_STRING) || !this.attributeNames.add(formattedValue))
+        {
+          throw new InvalidHeaderRowException();
+        }
+
         JSONObject attribute = this.getAttribute(cellReference);
         attribute.put("name", formattedValue);
         attribute.put("values", new JSONArray());
@@ -148,5 +162,4 @@ public class AttributeInfoContentsHandler implements SheetHandler
   public void headerFooter(String text, boolean isHeader, String tagName)
   {
   }
-
 }
