@@ -34,8 +34,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <%--   <title><gdb:localize key="login.title" /></title> --%>
   
-	<script src="jquery/jquery-1.9.0.min.js"></script>
-
 	<style>
 		body {
 		    background-color: #333;
