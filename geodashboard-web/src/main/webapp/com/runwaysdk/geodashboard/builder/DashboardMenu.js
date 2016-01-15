@@ -211,7 +211,7 @@
     controller.getDashboards();	
   }
 
-  angular.module("dashboard-menu", ["dashboard-service", "dashboard-builder"]);
+  angular.module("dashboard-menu", ["dashboard-service", "dashboard-builder", "data-uploader"]);
   angular.module("dashboard-menu")
    .controller('DashboardMenuController', DashboardMenuController)
 })();

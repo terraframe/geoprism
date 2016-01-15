@@ -22,7 +22,12 @@
     var controller = this;
     
     controller.clear = function() {
+      // Flag indicating if the modal and all of its elements should be destroyed
       $scope.show = false;
+      
+      // Flag indicating if the modal should be hidden, but preserve the elements
+      $scope.hidden = false;
+      
       $scope.busy = false;   
       $scope.showWidgetType = 'DESCRIPTION';
       $scope.errors = [];
@@ -134,8 +139,12 @@
     controller.uploadFile = function(files) {
       var onSuccess = function(response) {
         var sheets = JSON.parse(response);
-    
+        
         $scope.$emit('dataUpload', {sheets:sheets});            
+        
+        // Hide modal, but preserve the elements and values        
+        $scope.hidden = true;
+        $scope.$apply();
       }
       
       var onFailure = function(e){
@@ -161,6 +170,11 @@
     $rootScope.$on('newDashboard', function(event, data){
       controller.load(null);
     });
+    
+    $rootScope.$on('closeUploader', function(event, data){
+      $scope.hidden = false;
+      $scope.$apply();
+    }); 
     
     // Initialize an empty controller
     controller.clear();

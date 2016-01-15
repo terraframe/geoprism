@@ -460,5 +460,7 @@
     <div class="col-md-2"></div>
        
     <builder-dialog></builder-dialog>
+    
+    <uploader-dialog></uploader-dialog>
   </div>
 </body>

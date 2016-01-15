@@ -437,23 +437,6 @@
     }    
   }
   
-  function FileModel($parse) {
-    return {
-      restrict: 'A',
-      scope: {
-        callback:'&',
-      },
-      link: function(scope, element, attrs) {
-        element.bind('change', function(){
-          scope.$apply(function(){
-            scope.callback()(element[0].files[0]);
-          });
-        });
-      }
-    };
-  }
-  
-  
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
@@ -467,6 +450,5 @@
     .directive('fireOnReady', FireOnReady)
     .directive('numberOnly', NumberOnly)
     .directive('integerOnly', IntegerOnly)
-    .directive('fileModel', FileModel)
     .directive('categoryAutoComplete', CategoryAutoComplete);    
 })();
