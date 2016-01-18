@@ -28,6 +28,7 @@ import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
 import com.runwayskd.geodashboard.excel.AttributeInfoContentsHandler;
+import com.runwayskd.geodashboard.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.excel.ExcelSheetReader;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
@@ -44,8 +45,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     try
     {
       AttributeInfoContentsHandler handler = new AttributeInfoContentsHandler();
+      ExcelDataFormatter formatter = new ExcelDataFormatter();
 
-      ExcelSheetReader reader = new ExcelSheetReader(handler);
+      ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
       reader.process(fileStream);
 
       JSONArray information = handler.getAttributeInformation();
