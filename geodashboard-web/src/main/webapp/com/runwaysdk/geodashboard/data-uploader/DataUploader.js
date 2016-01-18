@@ -17,7 +17,29 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+
+  function NamePage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/data-set-name-page.jsp',
+      scope: true,
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }  
   
+  function AttributesPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/data-set-attributes-page.jsp',
+      scope: true,
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }	
+	
   function UploaderDialogController($scope, $rootScope) {
     var controller = this;
     
@@ -29,33 +51,58 @@
       $scope.busy = false;   
       
       // List of errors
-      $scope.errors = [];          
+      $scope.errors = [];
+      
+      // Stack of state snapshots captured when the user clicks next
+      $scope.snapshots = [];
     }
     
     controller.persist = function() {
       controller.clear();
-    	
+    
       $scope.$emit('closeUploader', {});                    
     }
     
     controller.cancel = function() {
       controller.clear();
-    	
+    
       $scope.$emit('closeUploader', {});                
     }
     
-    controller.load = function(sheets) {
-      $scope.attributes = sheets[0].attributes;      
+    controller.load = function(sheets, options) {
+      $scope.options = options;
+      $scope.currentSheet = 0;
+      
+      $scope.sheet = sheets[$scope.currentSheet];      
       $scope.show = true;
+
+      $scope.currentPage = 1;
+      $scope.pageCount = 2;
       
       $scope.$apply();
     }
     
+    controller.next = function() {
+      // Snapshot the current state
+      $scope.snapshots.push($scope.sheet);
+    	
+      $scope.currentPage = $scope.currentPage + 1;
+    }
+    
+    controller.prev = function() {
+      $scope.currentPage = $scope.currentPage - 1;
+      
+      // Revert back to a previous snapshot
+      $scope.sheet = $scope.snapshots.pop();
+    }
+    
     $rootScope.$on('dataUpload', function(event, data){
       if(data.sheets != null && data.sheets.length > 0) {
-        controller.load(data.sheets);
+        controller.load(data.sheets, data.options);
       }
-    });    
+    });
+    
+    controller.clear();
   } 
   
   function UploaderDialog() {
@@ -74,5 +121,7 @@
   
   angular.module("data-uploader", ["data-service"]);
   angular.module("data-uploader")
+   .directive('attributesPage', AttributesPage)
+   .directive('namePage', NamePage)
    .directive('uploaderDialog', UploaderDialog);
 })();

@@ -25,6 +25,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.generation.loader.Reloadable;
@@ -48,9 +51,11 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
       try
       {
-        String information = DataUploaderDTO.getAttributeInformation(request, fileName, stream);
+        JSONObject object = new JSONObject();
+        object.put("information", new JSONArray(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
+        object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
 
-        JSONControllerUtil.writeReponse(this.resp, information);
+        JSONControllerUtil.writeReponse(this.resp, object.toString());
       }
       finally
       {

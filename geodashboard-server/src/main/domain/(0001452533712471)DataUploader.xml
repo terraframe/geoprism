@@ -26,6 +26,7 @@
           <mdParameter name="fileName" label="File name" order="0" type="java.lang.String" />
           <mdParameter name="fileStream" label="File stream" order="1" type="java.io.InputStream" />
         </mdMethod>
+        <mdMethod name="getOptionsJSON" label="get Options JSON" static="true" returnType="java.lang.String" />        
       </mdUtil>
       
       <mdController name="com.runwaysdk.geodashboard.DataUploaderController" label="Data Upload Controller">
@@ -41,6 +42,8 @@
       </mdException>
 
       <mdException name="com.runwaysdk.geodashboard.excel.InvalidHeaderRowException" label="Invalid Header Row Exception" message="Header row must contain only text cells with unique values" />
+      
+      <mdException name="com.runwaysdk.geodashboard.excel.ExcelFormulaException" label="Excel Formula Exception" message="Workbook cannot contain any forumla cells" />
     </create>
   </doIt>
   <undoIt>

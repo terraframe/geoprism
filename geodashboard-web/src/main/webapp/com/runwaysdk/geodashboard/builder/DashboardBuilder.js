@@ -138,9 +138,9 @@
      */
     controller.uploadFile = function(files) {
       var onSuccess = function(response) {
-        var sheets = JSON.parse(response);
+        var result = JSON.parse(response);
         
-        $scope.$emit('dataUpload', {sheets:sheets});            
+        $scope.$emit('dataUpload', {sheets:result.information, options:result.options});            
         
         // Hide modal, but preserve the elements and values        
         $scope.hidden = true;
@@ -157,7 +157,7 @@
 
       // Reset the file Errors
       $scope.fileErrors = [];
-      dataService.uploadSpreadsheet(files[0], onSuccess, onFailure);
+      dataService.uploadSpreadsheet(files[0], '#builder-div', onSuccess, onFailure);
     }
     
     /*

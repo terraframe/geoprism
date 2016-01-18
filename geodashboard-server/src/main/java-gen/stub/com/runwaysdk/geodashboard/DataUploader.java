@@ -22,11 +22,18 @@ import java.io.InputStream;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwayskd.geodashboard.excel.AttributeInfoContentsHandler;
 import com.runwayskd.geodashboard.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.excel.ExcelSheetReader;
@@ -66,6 +73,51 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       throw e;
     }
     catch (Exception e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static String getOptionsJSON()
+  {
+    try
+    {
+      JSONArray countries = new JSONArray();
+
+      QueryFactory factory = new QueryFactory();
+      AllowedInQuery aiQuery = new AllowedInQuery(factory);
+      aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+      UniversalQuery uQuery = new UniversalQuery(factory);
+      uQuery.WHERE(uQuery.EQ(aiQuery.getChild()));
+      uQuery.ORDER_BY_ASC(uQuery.getDisplayLabel().localize());
+
+      OIterator<? extends Universal> it = uQuery.getIterator();
+
+      try
+      {
+        while (it.hasNext())
+        {
+          Universal universal = it.next();
+
+          JSONObject country = new JSONObject();
+          country.put("label", universal.getDisplayLabel().getValue());
+          country.put("value", universal.getId());
+
+          countries.put(country);
+        }
+      }
+      finally
+      {
+        it.close();
+      }
+
+      JSONObject options = new JSONObject();
+      options.put("countries", countries);
+
+      return options.toString();
+    }
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

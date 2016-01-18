@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1871891621)
+@com.runwaysdk.business.ClassSignature(hash = 620000675)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1871891621;
+  private static final long serialVersionUID = 620000675;
   
   public DataUploaderBase()
   {
@@ -64,6 +64,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
   }
   
   public static java.lang.String getAttributeInformation(java.lang.String fileName, java.io.InputStream fileStream)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getOptionsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

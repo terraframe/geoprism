@@ -23,7 +23,7 @@
 
 <div>
   <modal-dialog ng-if="show" ng-show="!hidden">
-    <div id="builder-div" role="dialog" class="ng-modal-content modal-content">
+    <div id="builder-div" role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
@@ -122,7 +122,7 @@
                       <h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
                     </div>
                     
-                    <div style="padding-left: 20px;" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
+                    <div style="padding-left: 20px;" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
                       <gdb:localize key="dashboardbuilder.uploadDataSet"/>
                     </div>
                  </div>

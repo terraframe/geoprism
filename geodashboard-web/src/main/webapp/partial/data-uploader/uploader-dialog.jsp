@@ -41,37 +41,48 @@
         <div class="" style="">
           <fieldset class="">
             <section class="form-container">
-              <div>
-                <div ng-repeat="attribute in attributes">
-                  <div class="holder">
-                    <div class="row-holder">{{attribute.name}}</div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            
-            <div class="row-holder">
-              <div class="label-holder"></div>
-              <div class="holder">
-                <div class="button-holder">
-                  <input
-                    type="button"
-                    value="<gdb:localize key="dashboard.Ok"/>"
-                    class="btn btn-primary" 
-                    ng-click="ctrl.persist()"
-                    ng-disabled="form.$invalid || busy"
-                  />
-                  <input
-                    type="button"
-                    value="<gdb:localize key="dashboard.Cancel"/>"
-                    class="btn btn-default" 
-                    ng-click="ctrl.cancel()"
-                    ng-disabled="form.$invalid || busy"                  
-                  />
-                </div>
-              </div>
-            </div>          
+              <name-page ng-if="currentPage == 1"></name-page>
+              <attributes-page ng-if="currentPage == 2"></attributes-page>
+            </section>            
           </fieldset>
+          <div class="row-holder">
+            <div class="label-holder"></div>
+            <div class="holder">
+              <div class="button-holder">
+                <input
+                  ng-if="currentPage > 1"      
+                  type="button"
+                  value="<gdb:localize key="dataUploader.previous"/>"
+                  class="btn btn-primary" 
+                  ng-click="ctrl.prev()"
+                  ng-disabled="busy"
+                />
+                <input
+                  ng-if="currentPage < pageCount"      
+                  type="button"
+                  value="<gdb:localize key="dataUploader.next"/>"
+                  class="btn btn-primary" 
+                  ng-click="ctrl.next()"
+                  ng-disabled="form.$invalid || busy"
+                />
+                <input 
+                  ng-if="currentPage == pageCount"
+                  type="button"
+                  value="<gdb:localize key="dashboard.Ok"/>"
+                  class="btn btn-primary" 
+                  ng-click="ctrl.persist()"
+                  ng-disabled="form.$invalid || busy"
+                />      
+                <input
+                  type="button"
+                  value="<gdb:localize key="dashboard.Cancel"/>"
+                  class="btn btn-default" 
+                  ng-click="ctrl.cancel()"
+                  ng-disabled="busy"                  
+                />
+              </div>
+            </div>
+          </div>          
         </div>
       </form>
     </div>

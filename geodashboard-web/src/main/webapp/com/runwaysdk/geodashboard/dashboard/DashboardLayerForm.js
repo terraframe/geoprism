@@ -314,11 +314,6 @@
     var controller = this;  
     controller.ready = true;
     
-    // TODO Change this to use the localizationService
-    controller._formatter = Globalize.numberFormatter();
-    controller._parser = Globalize.numberParser();
-    
-    
     /**
      * Setter for dynamic secondary aggregation methods which are updated on
      * selection of secondary attributes by the user.
@@ -399,7 +394,7 @@
         if(categoryType == 'number') {
           for(var i = 0; i < results.length; i++) {
             var number = parseFloat(results[i]);
-            var localized = controller._formatter(number);
+            var localized = localizationService.formatNumber(number);
             results[i] = localized;
           }
         }
@@ -414,7 +409,7 @@
       var text = request.term;
       
       if(categoryType == 'number') {
-        var parsed = controller._parser(text);
+        var parsed = localizationService.parseNumber(text);
         
         if($.isNumeric(parsed)) {
           text = parsed;
