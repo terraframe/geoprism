@@ -38,8 +38,8 @@
       link: function (scope, element, attrs) {
       }
     }   
-  }	
-	
+  }
+
   function UploaderDialogController($scope, $rootScope) {
     var controller = this;
     
@@ -64,6 +64,43 @@
 
       $scope.currentPage = 0;
       $scope.pageCount = 0;
+    }
+    
+    controller.setCountry = function(country) {
+      $scope.sheet.country = country;
+    }
+    
+    controller.updateUniversalOptions = function() {
+      if($scope.options != null) {
+      var countries = $scope.options.countries;
+        for(var i = 0; i < countries.length; i++) {
+          var country = countries[i];
+          
+          if(country.value == $scope.sheet.country) {
+            $scope.universals = country.options;
+          }
+        }
+      }
+    }
+    
+    controller.isUniqueLabel = function(label) {
+      if($scope.sheet != null) {
+        var count = 0;
+        
+        for(var i = 0; i < $scope.sheet.attributes.length; i++) {
+          var attribute = $scope.sheet.attributes[i];
+          
+          if(attribute.name == label) {
+            count++;
+          }            
+        }
+        
+        if(count > 1) {
+          return false;
+        }
+      }  
+      
+      return true;
     }
     
     controller.persist = function() {
@@ -95,9 +132,9 @@
     controller.next = function() {
       if($scope.currentPage < $scope.pageCount) {
         // Snapshot the current state
-        $scope.snapshots.push($scope.sheet);
-        	
-        $scope.currentPage = $scope.currentPage + 1;    	  
+        $scope.snapshots.push(angular.copy($scope.sheet));
+        
+        $scope.currentPage = $scope.currentPage + 1;  
       }
     }
     
@@ -117,6 +154,24 @@
     });    
   } 
   
+  function ValidateUnique() {
+    return {
+      restrict: "A",
+      scope : {
+        validator : '&'  
+      },
+      require: ['ngModel', '^form'],
+      link: function (scope, element, attr, ctrls) {
+        var ngModel = ctrls[0];
+      
+        element.bind('blur', function (e) {
+          var unique = scope.validator()(element.val());
+          ngModel.$setValidity('unique', unique);
+        });            
+      }
+    };
+  };  
+  
   function UploaderDialog() {
     return {
       restrict: 'E',
@@ -131,9 +186,10 @@
     }   
   }  
   
-  angular.module("data-uploader", ["data-service"]);
+  angular.module("data-uploader", ["data-service", ]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
+   .directive('validateUnique', ValidateUnique)
    .directive('uploaderDialog', UploaderDialog);
 })();

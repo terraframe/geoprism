@@ -256,7 +256,6 @@
     };
   };
   
-  
   function ShowOnReady() {
     return {
       restrict: "A",

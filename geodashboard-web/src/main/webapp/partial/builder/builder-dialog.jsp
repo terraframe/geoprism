@@ -148,7 +148,7 @@
                   value="<gdb:localize key="dashboard.Cancel"/>"
                   class="btn btn-default" 
                   ng-click="ctrl.cancel()"
-                  ng-disabled="form.$invalid || busy"                  
+                  ng-disabled="busy"                  
                   />
               </div>
             </div>

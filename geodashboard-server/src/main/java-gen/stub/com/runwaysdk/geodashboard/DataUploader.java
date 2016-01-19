@@ -104,16 +104,17 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
           Universal universal = it.next();
 
           List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+          children.add(0, universal);
 
           JSONArray options = new JSONArray();
 
           for (Term child : children)
           {
-            JSONObject object = new JSONObject();
-            object.put("value", child.getId());
-            object.put("label", child.getDisplayLabel().getValue());
+            JSONObject option = new JSONObject();
+            option.put("value", child.getId());
+            option.put("label", child.getDisplayLabel().getValue());
 
-            options.put(options);
+            options.put(option);
           }
 
           JSONObject country = new JSONObject();

@@ -3733,6 +3733,51 @@ div.secondary-box label {
     	font-style: italic;
 	}
 	
+	.modal-form .inline-text {
+    float: left;
+    position: relative;
+    width: 200px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
+	
+	.modal-form .inline-text input[type="text"] {
+    background: #EEE none repeat scroll 0% 0%;
+    border: 1px solid #AAA;
+    margin: 0px;
+    float: left;
+    font-size: 14px;
+    color: #333;
+    box-shadow: none;
+    outline: medium none;
+    height: 32px;
+    line-height: 24px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+  }
+  
+  .modal-form .inline-box {
+    float: left;
+    position: relative;
+    overflow: hidden;
+    height: 34px;
+    padding: 1px;
+  }
+  
+  .modal-form .inline-error-message {
+    float: left;
+    padding: 6px 0px 0px;
+    font-size: 13px;
+    line-height: 18px;
+    color: #8C0000;
+    word-wrap: break-word;
+    padding-left: 10px;
+  }
+	
+	.ng-invalid {
+    border-color:#e09999 !important;
+  }
 
 /*
 * Scroll bar styling

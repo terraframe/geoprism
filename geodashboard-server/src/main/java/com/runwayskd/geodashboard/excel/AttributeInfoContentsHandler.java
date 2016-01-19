@@ -92,7 +92,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
       }
       else
       {
-        object.put("type", DataType.UNDEFINED.name());
+        object.put("type", "");
       }
 
       return object;
@@ -171,7 +171,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
       }
 
       JSONObject sheet = new JSONObject();
-      sheet.put("name", this.sheetName);
+      sheet.put("label", this.sheetName);
       sheet.put("attributes", attributes);
 
       this.information.put(sheet);

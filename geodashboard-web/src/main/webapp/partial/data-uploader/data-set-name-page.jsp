@@ -41,7 +41,7 @@
   <div class="holder">
     <div class="row-holder">
       <div class="box">
-        <select class="select-area" ng-model="sheet.country" name="country" ng-options="opt.value as opt.label for opt in options.countries" ng-required="true"></select>      
+        <select class="select-area" ng-model="sheet.country" name="country" ng-change="ctrl.updateUniversalOptions()" ng-options="opt.value as opt.label for opt in options.countries" ng-required="true"></select>      
       </div>
       <div class="error-message">
         <p ng-show="form.country.$error.required"><gdb:localize key="dashboard.Required"/></p>    
