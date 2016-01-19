@@ -137,8 +137,7 @@
      * Data Upload Section
      */
     controller.uploadFile = function(files) {
-      var onSuccess = function(response) {
-        var result = JSON.parse(response);
+      var onSuccess = function(result) {
         
         $scope.$emit('dataUpload', {sheets:result.information, options:result.options});            
         

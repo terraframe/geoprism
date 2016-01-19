@@ -20,8 +20,15 @@
 
   function DataService(runwayService) {
     var service = {};
+    
     service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {      
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var success = function(response) {
+        var result = JSON.parse(response);
+    	
+        onSuccess(result);
+      };
+      
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
       
       var params = new FormData();
       params.append('file', file);

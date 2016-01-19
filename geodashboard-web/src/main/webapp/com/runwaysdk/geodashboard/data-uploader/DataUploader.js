@@ -43,6 +43,9 @@
   function UploaderDialogController($scope, $rootScope) {
     var controller = this;
     
+    // Flag indicating if the modal and all of its elements should be destroyed
+    $scope.show = false;    
+    
     controller.clear = function() {
       // Flag indicating if the modal and all of its elements should be destroyed
       $scope.show = false;
@@ -55,6 +58,12 @@
       
       // Stack of state snapshots captured when the user clicks next
       $scope.snapshots = [];
+      
+      $scope.options = null;      
+      $scope.sheet = null;      
+
+      $scope.currentPage = 0;
+      $scope.pageCount = 0;
     }
     
     controller.persist = function() {
@@ -71,38 +80,41 @@
     
     controller.load = function(sheets, options) {
       $scope.options = options;
-      $scope.currentSheet = 0;
       
-      $scope.sheet = sheets[$scope.currentSheet];      
+      $scope.sheet = sheets[0];      
       $scope.show = true;
 
       $scope.currentPage = 1;
       $scope.pageCount = 2;
       
+      $scope.snapshots = [];
+      
       $scope.$apply();
     }
     
     controller.next = function() {
-      // Snapshot the current state
-      $scope.snapshots.push($scope.sheet);
-    	
-      $scope.currentPage = $scope.currentPage + 1;
+      if($scope.currentPage < $scope.pageCount) {
+        // Snapshot the current state
+        $scope.snapshots.push($scope.sheet);
+        	
+        $scope.currentPage = $scope.currentPage + 1;    	  
+      }
     }
     
     controller.prev = function() {
-      $scope.currentPage = $scope.currentPage - 1;
-      
-      // Revert back to a previous snapshot
-      $scope.sheet = $scope.snapshots.pop();
+      if($scope.currentPage > 1) {
+        $scope.currentPage = $scope.currentPage - 1;
+          
+        // Revert back to a previous snapshot
+        $scope.sheet = $scope.snapshots.pop();
+      }        
     }
     
     $rootScope.$on('dataUpload', function(event, data){
       if(data.sheets != null && data.sheets.length > 0) {
         controller.load(data.sheets, data.options);
       }
-    });
-    
-    controller.clear();
+    });    
   } 
   
   function UploaderDialog() {

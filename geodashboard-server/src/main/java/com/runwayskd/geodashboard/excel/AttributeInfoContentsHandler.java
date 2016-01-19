@@ -171,7 +171,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
       }
 
       JSONObject sheet = new JSONObject();
-      sheet.put("sheetName", this.sheetName);
+      sheet.put("name", this.sheetName);
       sheet.put("attributes", attributes);
 
       this.information.put(sheet);

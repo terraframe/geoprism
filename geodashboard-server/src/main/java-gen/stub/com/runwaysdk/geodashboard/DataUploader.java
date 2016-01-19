@@ -19,6 +19,7 @@
 package com.runwaysdk.geodashboard;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
@@ -27,10 +28,12 @@ import org.json.JSONObject;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
@@ -100,9 +103,23 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
         {
           Universal universal = it.next();
 
+          List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+          JSONArray options = new JSONArray();
+
+          for (Term child : children)
+          {
+            JSONObject object = new JSONObject();
+            object.put("value", child.getId());
+            object.put("label", child.getDisplayLabel().getValue());
+
+            options.put(options);
+          }
+
           JSONObject country = new JSONObject();
           country.put("label", universal.getDisplayLabel().getValue());
           country.put("value", universal.getId());
+          country.put("options", options);
 
           countries.put(country);
         }
