@@ -30,8 +30,9 @@
         <input ng-model="attribute.name" name="{{::$index + '-name'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
       </div>
       <div class="inline-box">
-        <select class="select-area" ng-model="attribute.type" name="{{::$index + '-type'}}" ng-required="true">
+        <select class="select-area" ng-model="attribute.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted attribute="attribute">
           <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
           <option value="SST_STRING"><gdb:localize key="dataUploader.text"/></option>
           <option value="NUMBER"><gdb:localize key="dataUploader.number"/></option>
@@ -55,6 +56,9 @@
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
+        <p ng-show="form[$index + '-type'].$error.accepted">
+          <a ng-click="ctrl.accept(attribute)"><gdb:localize key="dataUploader.acceptType"/></a>
+        </p>
       </div>      
     </div>
   </div> 

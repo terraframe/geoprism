@@ -103,6 +103,10 @@
       return true;
     }
     
+    controller.accept = function(attribute) {
+      attribute.accepted = true;
+    }
+    
     controller.persist = function() {
       controller.clear();
     
@@ -160,14 +164,28 @@
       scope : {
         validator : '&'  
       },
-      require: ['ngModel', '^form'],
-      link: function (scope, element, attr, ctrls) {
-        var ngModel = ctrls[0];
+      require: 'ngModel',
+      link: function (scope, element, attr, ngModel) {
       
         element.bind('blur', function (e) {
           var unique = scope.validator()(element.val());
           ngModel.$setValidity('unique', unique);
         });            
+      }
+    };
+  };  
+  
+  function ValidateAccepted() {
+    return {
+      restrict: "A",
+      scope : {
+        attribute : '='  
+      },
+      require: 'ngModel',
+      link: function (scope, element, attr, ngModel) {
+        scope.$watch('attribute.accepted', function() {
+          ngModel.$setValidity('accepted', scope.attribute.accepted);        	
+        });
       }
     };
   };  
@@ -191,5 +209,6 @@
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
    .directive('validateUnique', ValidateUnique)
+   .directive('validateAccepted', ValidateAccepted)
    .directive('uploaderDialog', UploaderDialog);
 })();

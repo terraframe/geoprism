@@ -83,6 +83,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
         DataType type = this.dataTypes.iterator().next();
 
         object.put("type", type.name());
+        object.put("accepted", false);
 
         if (type.equals(DataType.NUMBER))
         {
@@ -93,6 +94,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
       else
       {
         object.put("type", "");
+        object.put("accepted", true);        
       }
 
       return object;
