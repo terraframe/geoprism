@@ -27,15 +27,19 @@
   <div class="holder">
     <div class="row-holder" ng-repeat="attribute in sheet.attributes">
       <div class="inline-text">
+        <label><gdb:localize key="dataUploader.label"/></label>
         <input ng-model="attribute.name" name="{{::$index + '-name'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
       </div>
       <div class="inline-box">
+        <label><gdb:localize key="dataUploader.type"/></label>
         <select class="select-area" ng-model="attribute.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted attribute="attribute" ng-change="ctrl.accept(attribute)">
           <option value=""><gdb:localize key="dataUploader.undefined"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
-          <option value="SST_STRING"><gdb:localize key="dataUploader.text"/></option>
+          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
           <option value="NUMBER"><gdb:localize key="dataUploader.number"/></option>
+          <option value="LONG"><gdb:localize key="dataUploader.long"/></option>
+          <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
           <option value="DATE"><gdb:localize key="dataUploader.date"/></option>
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
           <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
@@ -45,19 +49,30 @@
         </select>      
       </div>      
       <div class="inline-box" ng-if="attribute.type == 'LOCATION'">
+        <label><gdb:localize key="dataUploader.universal"/></label>
         <select class="select-area" ng-model="attribute.universal" name="{{::$index + '-universal'}}" ng-required="true" ng-options="opt.value as opt.label for opt in universals">
           <option value=""></option>          
         </select>
       </div>      
+      <div class="inline-number" ng-if="attribute.type == 'DOUBLE'">
+        <label><gdb:localize key="dataUploader.precision"/></label>
+        <input ng-model="attribute.precision" name="{{::$index + 'precision'}}" ng-required="true" type="text" integer-only></input>
+      </div>
+      <div class="inline-number" ng-if="attribute.type == 'DOUBLE'">
+        <label><gdb:localize key="dataUploader.scale"/></label>
+        <input ng-model="attribute.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
+      </div>
       <div class="inline-error-message">
+<!-- 
         <p ng-show="form[$index + '-name'].$error.required || form[$index + '-type'].$error.required || form[$index + '-universal'].$error.required">
           <gdb:localize key="dashboard.Required"/>
         </p>    
+ -->      
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
-        <p ng-show="form[$index + '-type'].$error.accepted">
-          <a ng-click="ctrl.accept(attribute)"><gdb:localize key="dataUploader.acceptType"/></a>
+        <p ng-show="form[$index + '-type'].$error.accepted" style="padding-top: 26px;">
+          <i class="fa fa-exclamation" ng-click="ctrl.accept(attribute)" title="<gdb:localize key="dataUploader.acceptType"/>"></i>
         </p>
       </div>      
     </div>

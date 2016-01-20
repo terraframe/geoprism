@@ -17,7 +17,6 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-
   function NamePage() {
     return {
       restrict: 'E',
@@ -29,12 +28,42 @@
     }   
   }  
   
+  function AttributesPageController($scope) {
+    var controller = this;
+  
+    controller.isUniqueLabel = function(label) {
+      if($scope.sheet != null) {
+        var count = 0;
+          
+        for(var i = 0; i < $scope.sheet.attributes.length; i++) {
+          var attribute = $scope.sheet.attributes[i];
+            
+          if(attribute.name == label) {
+            count++;
+          }            
+        }
+          
+        if(count > 1) {
+          return false;
+        }
+      }  
+        
+      return true;
+    }
+      
+    controller.accept = function(attribute) {
+      attribute.accepted = true;
+    }
+  }
+  
   function AttributesPage() {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/data-uploader/data-set-attributes-page.jsp',
       scope: true,
+      controller : AttributesPageController,
+      controllerAs : 'ctrl',      
       link: function (scope, element, attrs) {
       }
     }   
@@ -65,47 +94,24 @@
       $scope.currentPage = 0;
       $scope.pageCount = 0;
     }
-    
+
     controller.setCountry = function(country) {
       $scope.sheet.country = country;
     }
-    
+        
     controller.updateUniversalOptions = function() {
       if($scope.options != null) {
-      var countries = $scope.options.countries;
+        var countries = $scope.options.countries;
+          
         for(var i = 0; i < countries.length; i++) {
           var country = countries[i];
-          
+             
           if(country.value == $scope.sheet.country) {
             $scope.universals = country.options;
           }
         }
       }
-    }
-    
-    controller.isUniqueLabel = function(label) {
-      if($scope.sheet != null) {
-        var count = 0;
-        
-        for(var i = 0; i < $scope.sheet.attributes.length; i++) {
-          var attribute = $scope.sheet.attributes[i];
-          
-          if(attribute.name == label) {
-            count++;
-          }            
-        }
-        
-        if(count > 1) {
-          return false;
-        }
-      }  
-      
-      return true;
-    }
-    
-    controller.accept = function(attribute) {
-      attribute.accepted = true;
-    }
+    }    
     
     controller.persist = function() {
       controller.clear();
@@ -158,6 +164,20 @@
     });    
   } 
   
+  function UploaderDialog() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/uploader-dialog.jsp',
+      scope: {
+      },
+      controller : UploaderDialogController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }   
+  }  
+  
   function ValidateUnique() {
     return {
       restrict: "A",
@@ -184,27 +204,14 @@
       require: 'ngModel',
       link: function (scope, element, attr, ngModel) {
         scope.$watch('attribute.accepted', function() {
-          ngModel.$setValidity('accepted', scope.attribute.accepted);        	
+          ngModel.$setValidity('accepted', scope.attribute.accepted);        
         });
       }
     };
   };  
   
-  function UploaderDialog() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: '/partial/data-uploader/uploader-dialog.jsp',
-      scope: {
-      },
-      controller : UploaderDialogController,
-      controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {
-      }
-    }   
-  }  
   
-  angular.module("data-uploader", ["data-service", ]);
+  angular.module("data-uploader", ["data-service", "styled-inputs"]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)

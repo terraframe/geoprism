@@ -53,7 +53,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
    * These are the different kinds of cells we support. We keep track of the current one between the start and end.
    */
   public static enum DataType {
-    BOOLEAN, ERROR, FORMULA, INLINE_STRING, SST_STRING, NUMBER, UNDEFINED, DATE
+    BOOLEAN, ERROR, FORMULA, INLINE_STRING, TEXT, NUMBER, UNDEFINED, DATE, LONG, DOUBLE
   }
 
   /**
@@ -242,7 +242,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
       else if ("inlineStr".equals(cellType))
         nextDataType = DataType.INLINE_STRING;
       else if ("s".equals(cellType))
-        nextDataType = DataType.SST_STRING;
+        nextDataType = DataType.TEXT;
       else if ("str".equals(cellType))
         nextDataType = DataType.FORMULA;
       else if (cellStyleStr != null)
@@ -316,7 +316,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           thisStr = rtsi.toString();
           break;
 
-        case SST_STRING:
+        case TEXT:
           String sstIndex = value.toString();
           try
           {

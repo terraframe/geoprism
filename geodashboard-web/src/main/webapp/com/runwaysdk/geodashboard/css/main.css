@@ -3736,7 +3736,7 @@ div.secondary-box label {
 	.modal-form .inline-text {
     float: left;
     position: relative;
-    width: 200px;
+    width: 150px;
     padding-right: 5px;
     padding-top: 1px;
   }
@@ -3757,12 +3757,36 @@ div.secondary-box label {
     width: 100%;
   }
   
+	.modal-form .inline-number {
+    float: left;
+    position: relative;
+    width: 70px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
+	
+	.modal-form .inline-number input[type="text"] {
+    background: #EEE none repeat scroll 0% 0%;
+    border: 1px solid #AAA;
+    margin: 0px;
+    float: left;
+    font-size: 14px;
+    color: #333;
+    box-shadow: none;
+    outline: medium none;
+    height: 32px;
+    line-height: 24px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+  }
+  
   .modal-form .inline-box {
     float: left;
     position: relative;
     overflow: hidden;
-    height: 34px;
     padding: 1px;
+    padding-right: 5px;    
   }
   
   .modal-form .inline-error-message {

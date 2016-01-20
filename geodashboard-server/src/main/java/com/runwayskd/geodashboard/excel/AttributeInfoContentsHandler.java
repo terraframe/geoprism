@@ -87,14 +87,22 @@ public class AttributeInfoContentsHandler implements SheetHandler
 
         if (type.equals(DataType.NUMBER))
         {
-          object.put("precision", this.precision);
-          object.put("scale", this.scale);
+          if (this.scale > 0)
+          {
+            object.put("precision", this.precision);
+            object.put("scale", this.scale);
+            object.put("type", DataType.DOUBLE.name());
+          }
+          else
+          {
+            object.put("type", DataType.LONG.name());
+          }
         }
       }
       else
       {
         object.put("type", "");
-        object.put("accepted", true);        
+        object.put("accepted", true);
       }
 
       return object;
@@ -198,14 +206,14 @@ public class AttributeInfoContentsHandler implements SheetHandler
   @Override
   public void cell(String cellReference, String formattedValue, DataType cellType)
   {
-    if(cellType.equals(DataType.FORMULA))
+    if (cellType.equals(DataType.FORMULA))
     {
       throw new ExcelFormulaException();
     }
-    
+
     if (this.rowNum == 0)
     {
-      if (!cellType.equals(DataType.SST_STRING) || !this.attributeNames.add(formattedValue))
+      if (!cellType.equals(DataType.TEXT) || !this.attributeNames.add(formattedValue))
       {
         throw new InvalidHeaderRowException();
       }
