@@ -30,7 +30,7 @@
         <input ng-model="attribute.name" name="{{::$index + '-name'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
       </div>
       <div class="inline-box">
-        <select class="select-area" ng-model="attribute.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted attribute="attribute">
+        <select class="select-area" ng-model="attribute.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted attribute="attribute" ng-change="ctrl.accept(attribute)">
           <option value=""><gdb:localize key="dataUploader.undefined"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
