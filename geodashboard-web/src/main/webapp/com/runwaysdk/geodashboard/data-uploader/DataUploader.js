@@ -21,7 +21,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/data-set-name-page.jsp',
+      templateUrl: '/partial/data-uploader/name-page.jsp',
       scope: true,
       link: function (scope, element, attrs) {
       }
@@ -35,10 +35,10 @@
       if($scope.sheet != null) {
         var count = 0;
           
-        for(var i = 0; i < $scope.sheet.attributes.length; i++) {
-          var attribute = $scope.sheet.attributes[i];
+        for(var i = 0; i < $scope.sheet.fields.length; i++) {
+          var field = $scope.sheet.fields[i];
             
-          if(attribute.name == label) {
+          if(field.label == label) {
             count++;
           }            
         }
@@ -51,8 +51,8 @@
       return true;
     }
       
-    controller.accept = function(attribute) {
-      attribute.accepted = true;
+    controller.accept = function(field) {
+      field.accepted = true;
     }
   }
   
@@ -60,14 +60,28 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/data-set-attributes-page.jsp',
+      templateUrl: '/partial/data-uploader/attributes-page.jsp',
       scope: true,
       controller : AttributesPageController,
       controllerAs : 'ctrl',      
       link: function (scope, element, attrs) {
+        scope.attribute = {
+          label : "Test"
+        };
       }
     }   
   }
+  
+  function LocationPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/location-page.jsp',
+      scope: true,
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }  
 
   function UploaderDialogController($scope, $rootScope) {
     var controller = this;
@@ -83,16 +97,17 @@
       $scope.busy = false;   
       
       // List of errors
-      $scope.errors = [];
+      $scope.errors = null;
       
       // Stack of state snapshots captured when the user clicks next
-      $scope.snapshots = [];
+      $scope.snapshots = null;      
+      $scope.currentPage = null;
+      $scope.pageCount = null;
+
       
       $scope.options = null;      
       $scope.sheet = null;      
-
-      $scope.currentPage = 0;
-      $scope.pageCount = 0;
+      $scope.universals = null;
     }
 
     controller.setCountry = function(country) {
@@ -132,7 +147,7 @@
       $scope.show = true;
 
       $scope.currentPage = 1;
-      $scope.pageCount = 2;
+      $scope.pageCount = 3;
       
       $scope.snapshots = [];
       
@@ -199,12 +214,12 @@
     return {
       restrict: "A",
       scope : {
-        attribute : '='  
+        field : '='  
       },
       require: 'ngModel',
       link: function (scope, element, attr, ngModel) {
-        scope.$watch('attribute.accepted', function() {
-          ngModel.$setValidity('accepted', scope.attribute.accepted);        
+        scope.$watch('field.accepted', function() {
+          ngModel.$setValidity('accepted', scope.field.accepted);        
         });
       }
     };
@@ -215,6 +230,7 @@
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
+   .directive('locationPage', LocationPage)
    .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
    .directive('uploaderDialog', UploaderDialog);

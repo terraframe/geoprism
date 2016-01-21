@@ -3786,7 +3786,8 @@ div.secondary-box label {
     position: relative;
     overflow: hidden;
     padding: 1px;
-    padding-right: 5px;    
+    padding-right: 5px; 
+    width: 150px;   
   }
   
   .modal-form .inline-error-message {

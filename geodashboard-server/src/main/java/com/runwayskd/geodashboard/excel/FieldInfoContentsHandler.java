@@ -34,9 +34,9 @@ import com.runwaysdk.geodashboard.excel.ExcelFormulaException;
 import com.runwaysdk.geodashboard.excel.InvalidHeaderRowException;
 import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
 
-public class AttributeInfoContentsHandler implements SheetHandler
+public class FieldInfoContentsHandler implements SheetHandler
 {
-  private static class Attribute
+  private static class Field
   {
     private String        name;
 
@@ -46,7 +46,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
 
     private int           scale;
 
-    public Attribute()
+    public Field()
     {
       this.dataTypes = new TreeSet<DataType>();
       this.precision = 0;
@@ -77,12 +77,14 @@ public class AttributeInfoContentsHandler implements SheetHandler
     {
       JSONObject object = new JSONObject();
       object.put("name", this.name);
+      object.put("label", this.name);
 
       if (this.dataTypes.size() == 1)
       {
         DataType type = this.dataTypes.iterator().next();
 
         object.put("type", type.name());
+        object.put("columnType", type.name());
         object.put("accepted", false);
 
         if (type.equals(DataType.NUMBER))
@@ -102,6 +104,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
       else
       {
         object.put("type", "");
+        object.put("columnType", "");        
         object.put("accepted", true);
       }
 
@@ -112,47 +115,47 @@ public class AttributeInfoContentsHandler implements SheetHandler
   /**
    * Current row number
    */
-  private int                     rowNum;
+  private int                  rowNum;
 
   /**
    * Current sheet name
    */
-  private String                  sheetName;
+  private String               sheetName;
 
   /**
    * Column-Attribute Map for the current sheet
    */
-  private Map<Integer, Attribute> map;
+  private Map<Integer, Field> map;
 
   /**
    * Set of the attributes names in the current sheet
    */
-  private Set<String>             attributeNames;
+  private Set<String>          attributeNames;
 
   /**
    * JSONArray containing attribute information for all of the sheets.
    */
-  private JSONArray               information;
+  private JSONArray            information;
 
-  public AttributeInfoContentsHandler()
+  public FieldInfoContentsHandler()
   {
     this.information = new JSONArray();
   }
 
-  private Attribute getAttribute(String cellReference)
+  private Field getField(String cellReference)
   {
     CellReference reference = new CellReference(cellReference);
     Integer column = new Integer(reference.getCol());
 
     if (!this.map.containsKey(column))
     {
-      this.map.put(column, new Attribute());
+      this.map.put(column, new Field());
     }
 
     return this.map.get(column);
   }
 
-  public JSONArray getAttributeInformation()
+  public JSONArray getFields()
   {
     return this.information;
   }
@@ -162,7 +165,7 @@ public class AttributeInfoContentsHandler implements SheetHandler
   {
     this.sheetName = sheetName;
     this.rowNum = 0;
-    this.map = new HashMap<Integer, Attribute>();
+    this.map = new HashMap<Integer, Field>();
     this.attributeNames = new TreeSet<String>();
   }
 
@@ -171,18 +174,18 @@ public class AttributeInfoContentsHandler implements SheetHandler
   {
     try
     {
-      JSONArray attributes = new JSONArray();
+      JSONArray fields = new JSONArray();
 
       Set<Integer> keys = this.map.keySet();
 
       for (Integer key : keys)
       {
-        attributes.put(this.map.get(key).toJSON());
+        fields.put(this.map.get(key).toJSON());
       }
 
       JSONObject sheet = new JSONObject();
       sheet.put("label", this.sheetName);
-      sheet.put("attributes", attributes);
+      sheet.put("fields", fields);
 
       this.information.put(sheet);
     }
@@ -218,12 +221,12 @@ public class AttributeInfoContentsHandler implements SheetHandler
         throw new InvalidHeaderRowException();
       }
 
-      Attribute attribute = this.getAttribute(cellReference);
+      Field attribute = this.getField(cellReference);
       attribute.setName(formattedValue);
     }
     else
     {
-      Attribute attribute = this.getAttribute(cellReference);
+      Field attribute = this.getField(cellReference);
       attribute.addDataType(cellType);
 
       if (cellType.equals(DataType.NUMBER))

@@ -43,6 +43,7 @@
             <section class="form-container">
               <name-page ng-if="currentPage == 1"></name-page>
               <attributes-page ng-if="currentPage == 2"></attributes-page>
+              <location-page ng-if="currentPage == 3"></location-page>
             </section>            
           </fieldset>
           <div class="row-holder">

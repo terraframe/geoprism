@@ -37,7 +37,7 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwayskd.geodashboard.excel.AttributeInfoContentsHandler;
+import com.runwayskd.geodashboard.excel.FieldInfoContentsHandler;
 import com.runwayskd.geodashboard.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.excel.ExcelSheetReader;
 
@@ -54,13 +54,13 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   {
     try
     {
-      AttributeInfoContentsHandler handler = new AttributeInfoContentsHandler();
+      FieldInfoContentsHandler handler = new FieldInfoContentsHandler();
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
       reader.process(fileStream);
 
-      JSONArray information = handler.getAttributeInformation();
+      JSONArray information = handler.getFields();
 
       return information.toString();
     }
