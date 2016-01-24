@@ -3803,6 +3803,21 @@ div.secondary-box label {
 	.ng-invalid {
     border-color:#e09999 !important;
   }
+  
+  .modal-form .inline-check-block label {
+    float: left;
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: normal;
+    color: #333;
+  }
+  
+  .modal-form .inline-check-block {
+    float: left;
+    position: relative;
+    white-space: nowrap;
+    width: 100%;
+  }
 
 /*
 * Scroll bar styling
