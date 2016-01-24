@@ -69,9 +69,9 @@
     }   
   }
   
-  function LocationAttributeFormController($scope) {
+  function LocationPageController($scope, $rootScope) {
     var controller = this;
-    
+        
     // Initialize the scope
     $scope.count = 0;
     $scope.attribute = {
@@ -79,87 +79,6 @@
       fields : {},
       id : -1
     };      
-    
-    controller.toggleField = function(universal, field) {
-      if($scope.attribute.fields[universal.value] != null && $scope.attribute.fields[universal.value].name == field.name){
-        delete $scope.attribute.fields[universal.value];
-      }
-      else {        
-        $scope.attribute.fields[universal.value] = field;      
-      }
-    }
-    
-    controller.newAttribute = function() {
-      if($scope.attribute.id == -1) {
-        $scope.attribute.id = ($scope.count++);      
-        $scope.sheet.attributes.ids.push($scope.attribute.id);
-      }     
-      $scope.sheet.attributes.values[$scope.attribute.id] = $scope.attribute;              
-      
-      $scope.attribute = {
-        label : "",
-        fields : {},
-        id : -1
-      };  
-    }
-    
-    controller.isUniqueLabel = function(label) {
-      if($scope.sheet != null) {
-        var count = 0;
-            
-        for(var i = 0; i < $scope.sheet.fields.length; i++) {
-          var field = $scope.sheet.fields[i];
-              
-          if(field.label == label) {
-            count++;
-          }            
-        }
-        
-        for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
-          var id = $scope.sheet.attributes.ids[i];
-          var attribute = $scope.sheet.attributes.values[id];          
-          
-          if(attribute.label == label) {
-            count++;
-          }            
-        }
-            
-        if(count > 0) {
-          return false;
-        }
-      }  
-          
-      return true;
-    }
-    
-    $scope.$watch('attribute.fields', function(){
-      var length = Object.keys($scope.attribute.fields).length;
-      var valid = (length > 1);
-      
-      controller.attributeForm.$setValidity("size",  valid);
-    }, true);
-  }
-  
-  function LocationAttributeForm() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: '/partial/data-uploader/location-attribute-form.jsp',
-      scope: {
-        sheet : '=',
-        universals : '=',        
-      },
-      controller : LocationAttributeFormController,
-      controllerAs : 'ctrl',      
-      link: function (scope, element, attrs) {
-      }
-    }   
-  }  
-  
-  function LocationPageController($scope, $rootScope) {
-    var controller = this;
-    
-    // Initialize the scope
     $scope.sheet.attributes = {ids:[], values : {}};  
     
     controller.edit = function(attribute) {
@@ -172,7 +91,67 @@
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
       }
-    }    
+    }
+    
+    controller.toggleField = function(universal, field) {
+        if($scope.attribute.fields[universal.value] != null && $scope.attribute.fields[universal.value].name == field.name){
+          delete $scope.attribute.fields[universal.value];
+        }
+        else {        
+          $scope.attribute.fields[universal.value] = field;      
+        }
+      }
+      
+      controller.newAttribute = function() {
+        if($scope.attribute.id == -1) {
+          $scope.attribute.id = ($scope.count++);      
+          $scope.sheet.attributes.ids.push($scope.attribute.id);
+        }     
+        $scope.sheet.attributes.values[$scope.attribute.id] = $scope.attribute;              
+        
+        $scope.attribute = {
+          label : "",
+          fields : {},
+          id : -1
+        };  
+      }
+      
+      controller.isUniqueLabel = function(label) {
+        if($scope.sheet != null) {
+          var count = 0;
+              
+          for(var i = 0; i < $scope.sheet.fields.length; i++) {
+            var field = $scope.sheet.fields[i];
+                
+            if(field.label == label) {
+              count++;
+            }            
+          }
+          
+          for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
+            var id = $scope.sheet.attributes.ids[i];
+            var attribute = $scope.sheet.attributes.values[id];          
+            
+            if(attribute.label == label) {
+              count++;
+            }            
+          }
+              
+          if(count > 0) {
+            return false;
+          }
+        }  
+            
+        return true;
+      }
+      
+      $scope.$watch('attribute.fields', function(){
+        var length = Object.keys($scope.attribute.fields).length;
+        var valid = (length > 1);
+        
+        controller.attributeForm.$setValidity("size",  valid);
+      }, true);
+    
   }
   
   function LocationPage() {
@@ -341,7 +320,6 @@
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
-   .directive('locationAttributeForm', LocationAttributeForm)
    .directive('locationPage', LocationPage)
    .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
