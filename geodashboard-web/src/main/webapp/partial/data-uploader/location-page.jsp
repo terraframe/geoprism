@@ -68,7 +68,7 @@
                       <span></span>
                     </div>
                     <label>{{field.label}}</label>
-                    <span ng-if="field.selected">Selected</span>                  
+                    <span ng-if="!field.selected">(Not in use)</span>                  
                   </div>            
                 </li>
               </ul>       

@@ -82,7 +82,7 @@
     $scope.sheet.attributes = {ids:[], values : {}};  
     
     controller.edit = function(attribute) {
-      $scope.attribute = attribute;
+      $scope.attribute = angular.copy(attribute);
     }
       
     controller.remove = function(attribute) {
@@ -90,68 +90,106 @@
               
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
+        
+        // Update the field.selected status
+        controller.setFieldSelected();
       }
     }
     
     controller.toggleField = function(universal, field) {
-        if($scope.attribute.fields[universal.value] != null && $scope.attribute.fields[universal.value].name == field.name){
-          delete $scope.attribute.fields[universal.value];
-        }
-        else {        
-          $scope.attribute.fields[universal.value] = field;      
-        }
+      if($scope.attribute.fields[universal.value] != null && $scope.attribute.fields[universal.value].name == field.name){
+        delete $scope.attribute.fields[universal.value];
       }
+      else {        
+        $scope.attribute.fields[universal.value] = field;      
+      }
+    }
       
-      controller.newAttribute = function() {
-        if($scope.attribute.id == -1) {
-          $scope.attribute.id = ($scope.count++);      
-          $scope.sheet.attributes.ids.push($scope.attribute.id);
-        }     
-        $scope.sheet.attributes.values[$scope.attribute.id] = $scope.attribute;              
+    controller.newAttribute = function() {
+      if($scope.attribute.id == -1) {
+        $scope.attribute.id = ($scope.count++);      
+        $scope.sheet.attributes.ids.push($scope.attribute.id);
+        $scope.sheet.attributes.values[$scope.attribute.id] = {};              
+      }     
+      
+      var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
+      angular.copy($scope.attribute, attribute);              
         
-        $scope.attribute = {
-          label : "",
-          fields : {},
-          id : -1
-        };  
-      }
+      $scope.attribute = {
+        label : "",
+        fields : {},
+        id : -1
+      };  
       
-      controller.isUniqueLabel = function(label) {
-        if($scope.sheet != null) {
-          var count = 0;
-              
-          for(var i = 0; i < $scope.sheet.fields.length; i++) {
-            var field = $scope.sheet.fields[i];
-                
-            if(field.label == label) {
-              count++;
-            }            
-          }
-          
-          for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
-            var id = $scope.sheet.attributes.ids[i];
-            var attribute = $scope.sheet.attributes.values[id];          
-            
-            if(attribute.label == label) {
-              count++;
-            }            
-          }
-              
-          if(count > 0) {
-            return false;
-          }
-        }  
-            
-        return true;
-      }
-      
-      $scope.$watch('attribute.fields', function(){
-        var length = Object.keys($scope.attribute.fields).length;
-        var valid = (length > 1);
-        
-        controller.attributeForm.$setValidity("size",  valid);
-      }, true);
+      // Update the field.selected status
+      controller.setFieldSelected();
+    }
     
+    controller.setFieldSelected = function() {
+      for(var i = 0; i < $scope.sheet.fields.length; i++) {     
+    	var field = $scope.sheet.fields[i]
+    	
+    	if(field.type == 'LOCATION') {
+          field.selected = controller.isSelected(field);    		
+    	}
+        else {
+          field.selected = false;                
+        }
+      }          
+    }
+    
+    controller.isSelected = function(field) {
+      for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
+        var id = $scope.sheet.attributes.ids[i];
+        var attribute = $scope.sheet.attributes.values[id];
+                  
+        for (var key in attribute.fields) {
+          if (attribute.fields.hasOwnProperty(key)) {
+            if(attribute.fields[key].name == field.name) {
+              return true;
+            }
+          }
+        }        
+      }
+      
+      return false;
+    }
+    
+    controller.isUniqueLabel = function(label) {
+      if($scope.sheet != null) {
+        var count = 0;
+             
+        for(var i = 0; i < $scope.sheet.fields.length; i++) {
+          var field = $scope.sheet.fields[i];
+                
+          if(field.label == label) {
+            count++;
+          }            
+        }
+          
+        for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
+          var id = $scope.sheet.attributes.ids[i];
+          var attribute = $scope.sheet.attributes.values[id];          
+            
+          if(attribute.label == label) {
+            count++;
+          }            
+        }
+              
+        if(count > 0) {
+          return false;
+        }
+      }  
+            
+      return true;
+    }
+      
+    $scope.$watch('attribute.fields', function(){
+      var length = Object.keys($scope.attribute.fields).length;
+      var valid = (length > 1);
+        
+      controller.attributeForm.$setValidity("size",  valid);
+    }, true);    
   }
   
   function LocationPage() {
