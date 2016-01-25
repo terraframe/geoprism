@@ -123,6 +123,8 @@
     <!-- dashboard builder modal -->  
     <builder-dialog></builder-dialog>
     
+    <uploader-dialog></uploader-dialog>
+    
     <!-- Dialog for cloning a dashboard  -->
     <div id="clone-container"></div>  
     <div id="dashboard-edit-container"></div>      
